@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RS-D 주거 분양 · 주택 · 공간 시나리오 · 세탁실 · 드레스룸</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">세탁실 · 드레스룸 · 문제 → 해결</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">R 건설 세탁실 · 드레스룸은 눅눅하지 않고, 빨래와 옷 관리가 가볍습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">④ 세탁실 · 드레스룸 — 입주 후 매일 생기는 세 가지 문제, 지금의 방식과 삼성이 바꾸는 것, 달라지는 지표</div>
+
+  <!-- 왼쪽 공간 패널 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 270px; height: 494px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 76px; top: 168px; width: 246px; height: 148px; border-radius: 12px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">세탁실 · 드레스룸 사진</div>
+  <div style="position: absolute; left: 80px; top: 328px; height: 22px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">4</span>
+    <span style="font-size: 16px; font-weight: 800; line-height: 22px">세탁실 · 드레스룸</span>
+  </div>
+  <sc-for list="{{who}}" as="w" hint-placeholder-count="2">
+    <div style="{{w.pos}}"><span style="width: 30px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: #8a91a0">{{w.k}}</span><span>{{w.t}}</span></div>
+  </sc-for>
+  <div style="position: absolute; left: 80px; top: 404px; width: 238px; height: 1px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 80px; top: 414px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">놓는 제품</div>
+  <sc-for list="{{prods}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.pos}}">
+      <sc-if value="{{p.wash}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"></rect><circle cx="12" cy="13" r="5"></circle><path d="M8 6h2"></path></svg></sc-if>
+      <sc-if value="{{p.dress}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M12 6v2l-4 4h8l-4-4"></path></svg></sc-if>
+      <sc-if value="{{p.sens}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M6 6a8 8 0 0 0 0 12M18 6a8 8 0 0 1 0 12"></path></svg></sc-if>
+      <sc-if value="{{p.vent}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M7 10h10M7 14h10"></path></svg></sc-if>
+      <sc-if value="{{p.ac}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"></rect><rect x="8" y="8" width="8" height="8"></rect></svg></sc-if>
+      <span style="font-size: 12.5px; font-weight: 700; color: #121417">{{p.t}}</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 11px; color: #8a91a0">{{p.at}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 80px; top: 550px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">솔루션 · 설계 조건</div>
+  <div style="position: absolute; left: 80px; top: 568px; width: 238px; display: flex; gap: 6px">
+    <sc-for list="{{lsols}}" as="s" hint-placeholder-count="1">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.t}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 80px; top: 598px; width: 238px; font-size: 11px; line-height: 16px; color: #596170">환기 연동은 전열교환기 (ERV) 설치,<br>모든 기기는 Wi-Fi · 삼성 계정 하나로</div>
+
+  <!-- 오른쪽 열 머리 -->
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="3">
+    <div style="{{h.pos}}">{{h.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 358px; top: 182px; width: 858px; height: 1px; background: #e2e5ea"></div>
+
+  <!-- 세 문제 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.pBox}}">
+      <div style="position: absolute; left: 16px; top: 16px; height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8; background: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #596170; display: flex; align-items: center; justify-content: center">{{r.n}}</span>
+        <span style="font-size: 11px; color: #8a91a0">{{r.loc}}</span>
+      </div>
+      <div style="position: absolute; left: 16px; top: 50px; font-size: 15px; font-weight: 800; line-height: 21px; white-space: nowrap">{{r.title}}</div>
+      <div style="position: absolute; left: 16px; top: 78px; font-size: 12.5px; line-height: 18px; color: #596170; white-space: nowrap">{{r.now1}}</div>
+      <div style="position: absolute; left: 16px; top: 96px; font-size: 12.5px; line-height: 18px; color: #596170; white-space: nowrap">{{r.now2}}</div>
+    </div>
+    <div style="{{r.a1}}">→</div>
+    <div style="{{r.sBox}}">
+      <div style="position: absolute; left: 16px; top: 14px; display: flex; gap: 6px; white-space: nowrap">
+        <sc-for list="{{r.sols}}" as="s" hint-placeholder-count="2">
+          <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{s.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 16px; top: 46px; font-size: 13px; font-weight: 700; line-height: 19px; white-space: nowrap">{{r.act1}}</div>
+      <div style="position: absolute; left: 16px; top: 65px; font-size: 13px; font-weight: 700; line-height: 19px; white-space: nowrap">{{r.act2}}</div>
+      <div style="position: absolute; left: 16px; top: 96px; height: 18px; display: flex; align-items: center; gap: 7px; font-size: 12px; color: #3d4452; white-space: nowrap"><span style="font-size: 10.5px; font-weight: 800; color: #6f82d6">기기</span><span>{{r.dev}}</span></div>
+    </div>
+    <div style="{{r.a2}}">→</div>
+    <div style="{{r.vBox}}">
+      <div style="position: absolute; left: 16px; top: 15px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{r.kl}}</div>
+      <div style="position: absolute; left: 16px; top: 34px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 24px; font-weight: 800; line-height: 30px; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{r.kv}}</div>
+      <div style="position: absolute; left: 16px; top: 76px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{r.vd1}}</div>
+      <div style="position: absolute; left: 16px; top: 93px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{r.vd2}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 하단: 한 공간 표준 구성 -->
+  <div style="position: absolute; left: 358px; top: 612px; width: 858px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; margin-right: 4px">한 공간 표준 구성</span>
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · 아파트 분양 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = (t) => ({ t });
+
+    const who = [['이용', '입주민 · 맞벌이 3–4인 가족'], ['운영', 'R 건설 CS · 삼성 서비스']].map(([k, t], i) => ({
+      k, t, pos: A + box(80, 356 + i * 20, 238, 18) + 'display: flex; align-items: center; gap: 4px; font-size: 12px; color: #3d4452; white-space: nowrap;'
+    }));
+    const P = [
+      ['wash', '빌트인 드럼 세탁기 · 건조기', '직렬'],
+      ['dress', '에어드레서', '드레스룸'],
+      ['sens', '에어모니터', '세탁실'],
+      ['vent', '시스템 청정환기 (ERV)', '천장'],
+      ['ac', '무풍 시스템에어컨', '드레스룸']
+    ];
+    const prods = P.map(([k, t, at], i) => ({
+      t, at, wash: k === 'wash', dress: k === 'dress', sens: k === 'sens', vent: k === 'vent', ac: k === 'ac',
+      pos: A + box(80, 432 + i * 22, 238, 20) + 'display: flex; align-items: center; gap: 8px; white-space: nowrap;'
+    }));
+    const lsols = ['SmartThings 자동화 · 알림'].map(T);
+
+    const PX = 358, PW = 250, SX = 636, SW = 340, VX = 1004, VW = 212;
+    const heads = [[PX, '지금의 문제', '#121417'], [SX, '솔루션이 하는 일', '#1428a0'], [VX, '가치', '#1428a0']].map(([x, t, c]) => ({
+      t, pos: A + 'left: ' + px(x) + 'top: 158px; font-size: 13px; font-weight: 800; line-height: 18px; color: ' + c + '; white-space: nowrap;'
+    }));
+
+    const R = [
+      { loc: '세탁실 · 드레스룸', title: '습기 · 곰팡이',
+        now: ['환기창이 작아 빨래 뒤 습기가 고이고', '제습기를 따로 들여 물통을 비웁니다'],
+        sols: ['SmartThings 자동화'],
+        act: ['에어모니터가 습도 상승을 감지하면', '청정환기 · 에어컨 제습이 함께 돕니다'],
+        dev: '에어모니터 · 청정환기 (ERV) · 무풍',
+        kl: '결로 · 곰팡이 하자 접수', kv: '[00]% ↓', vd: ['입주 후 첫 장마에도', '하자 접수가 늘지 않습니다'] },
+      { loc: '세탁실', title: '빨래 동선 · 시간',
+        now: ['세탁이 끝났는지 몇 번씩 가서 보고', '젖은 빨래를 다시 꺼내 옮깁니다'],
+        sols: ['SmartThings'],
+        act: ['세탁 · 건조가 끝나면 폰 · TV로 알림,', '직렬 설치로 옮겨 담기는 한 걸음'],
+        dev: '빌트인 드럼 세탁기 · 건조기 (직렬 설치)',
+        kl: '세탁실 확인 · 이동', kv: '[0]회 → [0]회', vd: ['빨래 때문에 다른 집안일이', '끊기지 않습니다'] },
+      { loc: '드레스룸', title: '옷 냄새 · 관리',
+        now: ['한 번 입은 외투도 매번 세탁하거나', '냄새가 밴 채 옷장에 다시 겁니다'],
+        sols: ['SmartThings'],
+        act: ['드레스룸 가구에 맞춘 에어드레서로 케어,', '외출 중 앱으로 시작 · 끝나면 알림'],
+        dev: '에어드레서 · 드레스룸 가구 일체 설계',
+        kl: '드레스룸 옵션 선택률', kv: '[00]%', vd: ['모델하우스에서 보여 줄', '드레스룸 차별점이 됩니다'] }
+    ];
+    const RH = 130;
+    const ARW = 'font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; line-height: 24px; color: #6f82d6; text-align: center;';
+    const rows = R.map((r, i) => {
+      const y = 190 + i * (RH + 10);
+      return {
+        n: i + 1, loc: r.loc, title: r.title, now1: r.now[0], now2: r.now[1],
+        sols: r.sols.map(T), act1: r.act[0], act2: r.act[1], dev: r.dev,
+        kl: r.kl, kv: r.kv, vd1: r.vd[0], vd2: r.vd[1],
+        pBox: A + box(PX, y, PW, RH) + 'border-radius: 12px; background: #f5f6f8;',
+        sBox: A + box(SX, y, SW, RH) + 'border-radius: 12px; background: #eaeefb;',
+        vBox: A + box(VX, y, VW, RH) + 'box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #d5d9e0;',
+        a1: A + box(PX + PW, y + RH / 2 - 12, SX - PX - PW, 24) + ARW,
+        a2: A + box(SX + SW, y + RH / 2 - 12, VX - SX - SW, 24) + ARW
+      };
+    });
+
+    const kit = ['세탁기 · 건조기 직렬 1세트', '에어드레서 1', '에어모니터 1', '청정환기 · 무풍 연동'].map(T);
+
+    return { who, prods, lsols, heads, rows, kit };
+  }
+}
+</script>
+</body>
+</html>

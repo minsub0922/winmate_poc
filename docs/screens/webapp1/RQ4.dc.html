@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>요구사항 · 저장 완료</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+input::placeholder,textarea::placeholder{color:#a3a9b5}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="requirements" current="E 자산운용 용산 AI Ready 오피스" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="고객 요구사항" title="E 자산운용 용산 AI Ready 오피스" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{done}}" hint-size="1180px,56px"></dc-import>
+    <section style="position: relative; width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding-top: 24px; flex-shrink: 0">
+        <span style="width: 56px; height: 56px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+        <h1 style="margin: 6px 0 0 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">저장했어요</h1>
+        <span style="font-size: 14px; color: #596170">v1</span>
+        <div style="display: flex; gap: 10px; margin-top: 4px">
+          <a href="RQ6.dc.html" style="height: 38px; padding: 0 16px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">정의서 보기</a>
+          <a href="RQ5.dc.html" style="height: 38px; padding: 0 16px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px">고객에게 물을 것 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">2</span></a>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0; margin-top: 18px">
+        <span style="font-size: 14px; font-weight: 700; padding: 0 2px">다음</span>
+        <sc-for list="{{next}}" as="n" hint-placeholder-count="3">
+          <a href="{{n.href}}" style="{{n.style}}">
+            <span style="{{n.iconBox}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="{{n.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.icon}}"/></svg></span>
+            <span style="font-size: 15px; font-weight: 700; flex-grow: 1">{{n.title}}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const steps = ["입력", "심층 작성", "저장"];
+    const C3 = 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe';
+    const next = [
+      ['SB1.dc.html', 'M4 5h16v14H4z M4 11h16 M10 11v8', '전략 수립 Storyboard', true],
+      ['MI1.dc.html', 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2', 'Market Intelligence', false],
+      [C3, 'M3 4h18v12H3z M8 20h8 M12 16v4 M7 12l3-3 2 2 4-4', 'B2B 제안서', false]
+    ].map(([href, icon, title, main]) => ({ href, icon, title,
+      style: 'height: 62px; box-sizing: border-box; padding: 0 18px; border-radius: 14px; background: #ffffff; color: #121417; display: flex; align-items: center; gap: 14px;' + (main ? ' border: 1.5px solid #1428a0;' : ' border: 1px solid #e2e5ea;'),
+      iconBox: 'width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; display: flex; align-items: center; justify-content: center; background: ' + (main ? '#1428a0;' : '#eaeefb;'),
+      iconColor: main ? '#ffffff' : '#1428a0' }));
+    return { yes: true, steps, cur: 3, done: true, next };
+  }
+}
+</script>
+</body>
+</html>

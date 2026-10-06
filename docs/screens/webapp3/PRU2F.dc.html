@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>기존 제안서 · 기준 상세 · 논리 흐름</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="새 제안서" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <!-- 머리: 뒤로 · 기준 제목 · 상태 · 기준 전환 -->
+      <div style="width: 1100px; height: 32px; display: flex; align-items: center; gap: 10px; flex-shrink: 0">
+        <a href="PRU2.dc.html" style="display: flex; align-items: center; gap: 3px; font-size: 12.5px; font-weight: 600; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>기준별 분석 결과</a>
+        <span style="width: 1px; height: 16px; background: #e2e5ea; flex-shrink: 0"></span>
+        <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0; line-height: 1">2</span>
+        <span style="font-size: 16px; font-weight: 700; white-space: nowrap">논리 흐름</span>
+        <span style="height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap; color: #121417; background: #ffffff; border: 1px solid #121417">확인 필요 <span style="color: #8a3b00">· 필수</span></span>
+        <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">신뢰도 82% · 다음 단계로 가려면 확인이 필요해요</span>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 11.5px; color: #596170; white-space: nowrap">기준</span>
+        <div role="tablist" aria-label="기준 전환" style="display: flex; gap: 4px">
+          <sc-for list="{{chips}}" as="c" hint-placeholder-count="9">
+            <button role="tab" aria-selected="{{c.on}}" aria-label="{{c.aria}}" style="{{c.style}}">{{c.no}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 안내문 -->
+      <div style="width: 1100px; margin-top: 10px; display: flex; gap: 12px; flex-shrink: 0">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="font-size: 14.5px; line-height: 1.5; padding-top: 3px; flex-grow: 1; min-width: 0">24장 각각이 설득 흐름에서 맡은 역할을 태그했어요. 역할이 틀리면 바꿔 주세요 — <span style="font-weight: 600">유저가 고친 태그는 다시 분석해도 바뀌지 않아요.</span> 이 흐름이 이번 제안서 시트 구성의 뼈대가 돼요.</div>
+      </div>
+
+      <!-- 스토리라인 띠 -->
+      <div style="width: 1100px; height: 120px; margin-top: 12px; box-sizing: border-box; padding: 14px 16px; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 4px">
+          <sc-for list="{{flow}}" as="s" hint-placeholder-count="9">
+            <sc-if value="{{s.hasArrow}}" hint-placeholder-val="{{true}}">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b8bec8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </sc-if>
+            <div style="{{s.style}}">
+              <div style="display: flex; align-items: center; gap: 5px; min-width: 0">
+                <sc-if value="{{s.dashed}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"/></svg></sc-if>
+                <sc-if value="{{s.hasDot}}" hint-placeholder-val="{{true}}"><span style="{{s.dotStyle}}"></span></sc-if>
+                <span style="font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.name}}</span>
+              </div>
+              <span style="{{s.subStyle}}">{{s.sub}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #596170; white-space: nowrap">
+          <span style="font-weight: 700; color: #121417">패턴 · 문제 해결형</span><span style="color: #8a91a0">Problem → Solution</span>
+          <span style="width: 1px; height: 12px; background: #e2e5ea"></span>
+          <span>주장 → 근거 연결 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">11 / 14</span></span>
+          <span style="width: 1px; height: 12px; background: #e2e5ea"></span>
+          <span>끊긴 고리 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #8a3b00">3</span></span>
+          <span style="color: #8a91a0">· p.3 출처 없음 · p.8 근거 없음 · Why Samsung 단계 없음</span>
+          <span style="flex-grow: 1"></span>
+          <span style="color: #8a91a0">점선 단계는 원본에 없어 이번 시트 구성에 추가를 제안해요</span>
+        </div>
+      </div>
+
+      <!-- 시트별 역할 표 + 에이전트 메모 -->
+      <div style="width: 1100px; height: 410px; margin-top: 12px; display: grid; grid-template-columns: minmax(0, 1fr) 250px; gap: 14px; flex-shrink: 0">
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+          <div style="{{headStyle}}">
+            <span>쪽</span><span></span><span>원본 제목 · 추출 텍스트</span><span>역할 태그</span><span>주장 → 근거</span><span>상태</span>
+          </div>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+            <div style="{{r.rowStyle}}">
+              <span style="display: flex; align-items: center; gap: 3px; min-width: 0"><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #8a91a0; white-space: nowrap">{{r.no}}</span><sc-if value="{{r.locked}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0b6e4f" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 11V8a5 5 0 0 1 10 0v3 M5 11h14v10H5z"/></svg></sc-if></span>
+              <div style="{{r.cardStyle}}">
+                <sc-for list="{{r.bars}}" as="b" hint-placeholder-count="3">
+                  <span style="{{b.style}}"></span>
+                </sc-for>
+              </div>
+              <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{r.title}}</span>
+              <sc-if value="{{r.dual}}" hint-placeholder-val="{{false}}">
+                <div role="radiogroup" aria-label="{{r.roleAria}}" style="display: flex; gap: 2px; padding: 2px; border-radius: 7px; border: 1px dashed #8a3b00; background: #ffffff; box-sizing: border-box; height: 26px">
+                  <button role="radio" aria-checked="true" style="flex: 1 1 0; min-width: 0; height: 20px; border: none; border-radius: 5px; background: #fdf0e6; color: #8a3b00; font-size: 10.5px; font-weight: 700; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.cand1}}</button>
+                  <button role="radio" aria-checked="false" style="flex: 1 1 0; min-width: 0; height: 20px; border: none; border-radius: 5px; background: transparent; color: #596170; font-size: 10.5px; font-weight: 500; padding: 0 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.cand2}}</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{r.single}}" hint-placeholder-val="{{true}}">
+                <button aria-haspopup="listbox" aria-expanded="false" aria-label="{{r.roleAria}}" style="{{r.roleStyle}}"><span style="{{r.dotStyle}}"></span><span style="flex-grow: 1; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.role}}</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 9l6 6 6-6"/></svg></button>
+              </sc-if>
+              <span style="{{r.evStyle}}"><sc-if value="{{r.evWarn}}" hint-placeholder-val="{{false}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8a3b00" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 3l10 18H2L12 3z M12 10v4 M12 17.5v.5"/></svg></sc-if><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.ev}}</span></span>
+              <span style="{{r.badgeStyle}}"><sc-if value="{{r.locked}}" hint-placeholder-val="{{false}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3 M5 11h14v10H5z"/></svg></sc-if>{{r.state}}</span>
+            </div>
+          </sc-for>
+          <button aria-expanded="false" style="height: 32px; flex-shrink: 0; border: none; border-top: 1px solid #e2e5ea; background: #fbfbfc; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap">쪽 11–24 더 보기 <span style="color: #8a91a0; font-weight: 500">· 확인 필요 1 · 수정함 0</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        </div>
+
+        <!-- 에이전트 메모 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <div style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 6px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 10px; display: flex; align-items: center; justify-content: center">W</div>
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">에이전트 메모</span>
+            <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">· 이번 제안서에 쓸 때</span>
+          </div>
+          <div style="padding: 12px 14px 0 14px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
+            <sc-for list="{{memos}}" as="m" hint-placeholder-count="3">
+              <div style="display: flex; gap: 8px">
+                <span style="width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{m.no}}</span>
+                <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+                  <span style="font-size: 12px; line-height: 1.5; color: #121417">{{m.text}}</span>
+                  <div style="display: flex; align-items: center; gap: 4px">
+                    <span style="{{m.tagStyle}}">{{m.tag}}</span>
+                    <span style="font-size: 11px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{m.act}}</span>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin: auto 14px 12px 14px; padding-top: 10px; border-top: 1px solid #f0f2f5; font-size: 11px; line-height: 1.5; color: #8a91a0">메모는 활용 방식 추천과 시트 구성 초안에 그대로 반영돼요.</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 12px 40px 22px 40px">
+      <div style="width: 1100px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); padding: 14px 18px; display: flex; align-items: center; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">논리 흐름 확인 <span style="color: #596170; font-weight: 500">· 24장 중 태그 확인 {{okCount}} · 수정 {{editCount}} · 남음 {{leftCount}}</span></div>
+          <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">남은 2장은 확인하지 않으면 에이전트 태그로 넘어가요 · 고정한 태그는 재분석에서 제외</span>
+        </div>
+        <div aria-label="{{progressAria}}" style="width: 140px; height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden; flex-shrink: 0"><div style="{{progressStyle}}"></div></div>
+        <div style="display: flex; gap: 6px; flex-shrink: 0">
+          <sc-for list="{{tally}}" as="ty" hint-placeholder-count="4">
+            <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+          </sc-for>
+        </div>
+        <span style="flex-grow: 1"></span>
+        <a href="PRU2.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">이전</a>
+        <a href="PRU2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+          <span>이 흐름으로 확인</span>
+        </a>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 기준 9개 전환 칩 (2 선택)
+    const CRIT = ['문서 구조', '논리 흐름', '핵심 메시지', '고객 · 프로젝트 맥락', '제품 · 솔루션', '데이터 · 수치', '이미지 · 자산', '디자인 · 템플릿', '비복제 · 민감 항목'];
+    const chips = CRIT.map((name, i) => ({
+      no: String(i + 1), on: i === 1, aria: (i + 1) + ' · ' + name,
+      style: 'width: 26px; height: 26px; box-sizing: border-box; border-radius: 7px; padding: 0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;' + (i === 1 ? ' border: none; background: #1428a0; color: #ffffff;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #596170;')
+    }));
+
+    // 역할 색 (PRU2 섹션 색과 동일)
+    const ROLE = {
+      '표지': '#8a91a0', '문제 제기': '#121417', '시장 변화': '#1428a0', '고객 과제': '#8a3b00', '가치 제안': '#0b6e4f',
+      '솔루션 구성': '#5b3fd1', '도입 사례': '#0e7490', '제품 스펙': '#596170', '견적 · 일정': '#b42318', '공간 시나리오': '#5b3fd1'
+    };
+    const dot = (c) => 'width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: ' + c + ';';
+
+    // 스토리라인: [이름, 장수, 점선(원본에 없음), 부제]
+    const STEP = [
+      ['문제 제기', 1, false, ''], ['시장 변화', 3, false, ''], ['고객 과제', 3, false, ''], ['가치 제안', 4, false, ''],
+      ['솔루션 구성', 5, false, ''], ['도입 사례', 3, false, ''], ['Why Samsung · 경쟁 비교', 0, true, '원본에 없음 → 이번엔 추가 제안'],
+      ['제품 스펙', 2, false, ''], ['견적 · 일정', 3, false, '자동 제외']
+    ];
+    const flow = STEP.map(([name, n, dashed, note], i) => {
+      const excluded = name === '견적 · 일정';
+      return {
+        name, dashed, hasDot: !dashed, hasArrow: i > 0,
+        sub: dashed ? note : (n + '장' + (note ? ' · ' + note : '')),
+        dotStyle: dot(ROLE[name] || '#8a91a0'),
+        subStyle: 'font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (dashed ? ' color: #0b6e4f;' : excluded ? ' color: #8a91a0;' : ' color: #596170;'),
+        style: 'height: 54px; box-sizing: border-box; min-width: 0; padding: 0 9px; border-radius: 10px; display: flex; flex-direction: column; justify-content: center; gap: 3px;' + (dashed ? ' flex: 2 1 0; border: 1px dashed #0b6e4f; background: #ffffff; color: #0b6e4f;' : excluded ? ' flex: 1 1 0; border: 1px solid #e2e5ea; background: #f0f2f5; color: #8a91a0;' : ' flex: 1 1 0; border: 1px solid #e2e5ea; background: #f5f7fd; color: #121417;')
+      };
+    });
+
+    // 시트별 역할: [쪽, 제목, 역할, 근거, 상태(auto · ok · edited · need), 후보2(확인 필요일 때)]
+    const R = [
+      [1, '표지 · B 베이커리 매장 사이니지 제안', '표지', '—', 'auto', ''],
+      [2, '오프라인 매장, 디지털 전환의 기로', '문제 제기', '근거 p.3 시장 수치', 'ok', ''],
+      [3, '국내 QSR 디지털 메뉴보드 도입 추이', '시장 변화', '[출처 없음] · 수치 출처 미기재', 'auto', ''],
+      [4, '경쟁 브랜드 도입 현황', '시장 변화', '근거 p.3 보강 · 경쟁 5개 브랜드', 'ok', ''],
+      [5, 'B 베이커리 매장 운영 과제 3가지', '고객 과제', '근거 p.6 점주 인터뷰', 'edited', ''],
+      [6, '점주 인터뷰 요약', '고객 과제', 'p.5의 근거 역할 · 인용 4건', 'auto', ''],
+      [7, '가치 제안: 본사 통제 · 운영 부담 ↓', '가치 제안', '근거 p.8 기대 효과', 'ok', ''],
+      [8, '기대 효과 Before / After', '가치 제안', '근거 없음 · 수치 출처 없음', 'auto', ''],
+      [9, '솔루션 구성도 MagicINFO', '솔루션 구성', '근거 p.17 도입 사례', 'auto', ''],
+      [10, '매장 동선별 사이니지 배치', '솔루션 구성', '역할 후보 2 · 공간 시나리오로 볼 수도', 'need', '공간 시나리오']
+    ];
+    const STATE = {
+      auto: ['자동', ' color: #ffffff; background: #1428a0;'],
+      ok: ['확인됨', ' color: #1428a0; background: #eaeefb;'],
+      edited: ['수정함', ' color: #0b6e4f; background: #e6f4ee;'],
+      need: ['확인 필요', ' color: #121417; background: #ffffff; border: 1px solid #121417;']
+    };
+    const cols = 'grid-template-columns: 40px 56px minmax(0, 1fr) 150px 184px 76px; gap: 0 10px;';
+    const rows = R.map(([p, title, role, ev, st, cand2], i) => {
+      const dual = st === 'need';
+      const locked = st === 'edited';
+      const warn = ev.indexOf('없음') >= 0 || dual;
+      const widths = p === 1 ? [30, 18] : [[34, 22, 14], [26, 36, 18], [40, 20, 28]][i % 3];
+      return {
+        no: 'p.' + p, title, role, ev, locked, dual, single: !dual, cand1: role, cand2, evWarn: warn,
+        roleAria: 'p.' + p + ' 역할 태그',
+        state: STATE[st][0],
+        dotStyle: dot(ROLE[role]),
+        bars: widths.map((w, bi) => ({ style: 'display: block; height: ' + (bi === 0 ? 3 : 2) + 'px; width: ' + w + 'px; border-radius: 1px; background: ' + (bi === 0 ? '#8a91a0' : '#c3c8d1') + ';' })),
+        cardStyle: 'width: 56px; height: 30px; box-sizing: border-box; border-radius: 4px; background: #f0f2f5; border: 1px solid #e2e5ea; padding: 6px 6px 0 6px; display: flex; flex-direction: column; gap: 3px;' + (p === 1 ? ' align-items: center; justify-content: center; padding-top: 0;' : ''),
+        roleStyle: 'height: 26px; box-sizing: border-box; padding: 0 7px 0 8px; border-radius: 7px; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; min-width: 0;' + (locked ? ' border: 1px solid #0b6e4f;' : ' border: 1px solid #e2e5ea;'),
+        evStyle: 'display: flex; align-items: center; gap: 4px; min-width: 0; font-size: 11.5px;' + (warn ? ' color: #8a3b00; font-weight: 600;' : ev === '—' ? ' color: #8a91a0;' : ' color: #596170;'),
+        badgeStyle: 'justify-self: start; height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; gap: 3px; white-space: nowrap;' + STATE[st][1],
+        rowStyle: 'display: grid; ' + cols + ' align-items: center; height: 34px; padding: 0 14px; box-sizing: border-box; border-bottom: 1px solid #f0f2f5;' + (dual ? ' background: #fdf8f3;' : locked ? ' background: #f8fcfa;' : '')
+      };
+    });
+
+    // 에이전트 메모
+    const M = [
+      ['Why Samsung 단계가 없어 R5 POS 연동의 신뢰 근거가 약해요. 경쟁 비교 시트 2장 추가를 제안해요.', 'R5', '시트 구성에 신규 추가'],
+      ['p.8 기대 효과는 출처가 없어요. 흐름(Before / After)만 가져오고 수치는 이번 고객 기준으로 새로 채워요.', '수치', '[00]% 플레이스홀더 · 확정 필요 등록'],
+      ['p.10을 공간 시나리오로 보면 이번 320개 매장 단계 도입(R4)에 맞아요. 역할을 바꾸면 로드맵 시트와 이어져요.', 'R4', '역할 후보 선택 대기']
+    ];
+    const memos = M.map(([text, tag, act], i) => ({
+      no: String(i + 1), text, tag, act,
+      tagStyle: 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (tag === '수치' ? ' color: #8a3b00; background: #fdf0e6;' : ' color: #1428a0; background: #eaeefb;')
+    }));
+
+    // 24장 전체 집계: 확인 21 · 수정 1 · 남음 2
+    const okCount = 21, editCount = 1, leftCount = 2;
+    const total = 24;
+    const pct = Math.round(((okCount + editCount) / total) * 100);
+    const tally = [['확인', okCount, STATE.ok[1]], ['수정함', editCount, STATE.edited[1]], ['확인 필요', leftCount, STATE.need[1]]]
+      .map(([label, c, s]) => ({ label, n: c, style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + s }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+      chips, flow, rows, memos, tally, okCount, editCount, leftCount,
+      progressAria: '태그 확인 진행률 ' + (okCount + editCount) + ' / ' + total,
+      progressStyle: 'width: ' + pct + '%; height: 6px; border-radius: 999px; background: #1428a0;',
+      headStyle: 'display: grid; ' + cols + ' align-items: center; height: 34px; padding: 0 14px; box-sizing: border-box; background: #fbfbfc; border-bottom: 1px solid #e2e5ea; font-size: 11.5px; color: #596170; flex-shrink: 0;'
+    };
+  }
+}
+</script>
+</body>
+</html>

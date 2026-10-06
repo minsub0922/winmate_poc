@@ -1,0 +1,48 @@
+ 
+ 시나리오 1/4 — 유형 선택 
+ W 
+ 공간 시나리오는 고객의 공간에서 하루 또는 특정 상황이 어떻게 흘러가는지를 이야기로 풀고, 그 안에 삼성 제품의 활용 장면을 넣습니다. 솔루션을 함께 엮을지 먼저 정해주세요. 
+ 시나리오 유형 · 하나 선택 · 1 / 4 
+ WITH 솔루션 
+ 솔루션 + 연관 제품 활용 
+ 시나리오 속에 MagicINFO·SmartThings Pro 같은 솔루션이 동작하는 장면과, 그 솔루션에 연결된 제품 활용을 함께 넣습니다. 운영·관리 효과를 보여줄 때 적합. 
+ 본사 원격 배포 장면 에너지 자동 제어 
+ WITHOUT 솔루션 
+ 제품 활용만 
+ 고객의 공간 시나리오에 제품이 쓰이는 장면만 넣습니다. 하드웨어 중심 제안이나 솔루션 도입 전 단계에 적합. 
+ 메뉴보드 시청 장면 키오스크 주문 
+ 조감도 추가 
+ {{aerialTag}} 
+ 장면이 일어나는 위치를 공간 조감도 위에 번호로 표시해 시나리오와 함께 넣습니다. 
+ 새로 만들기 
+ 시나리오 공간으로 조감도 생성 
+ 기존 조감도 연결 
+ 조감도 작업 3개에서 고르기 
+ 공간 시나리오 입력 
+class Component extends DCLogic {
+ renderVals() {
+ // 조감도 추가: 기본 꺼짐. 켜면 조감도를 새로 만들지, 기존 조감도 작업에 연결할지 고른다.
+ const st = this.state || {};
+ const on = st.aerial === true;
+ const src = st.src === 'exist' ? 'exist' : 'new';
+ const opt = (sel) => '' + (sel ? '' : '');
+ return {
+ steps: ['시나리오 유형', '공간 시나리오 입력', '솔루션 · 제품 입력', '시나리오 생성'], cur: 1,
+ aerialOn: on,
+ aerialPressed: on ? 'true' : 'false',
+ toggleAerial: () => this.setState({ aerial: !on }),
+ aerialTag: on ? '켜짐' : '선택 · 기본 꺼짐',
+ aerialTagStyle: '' + (on ? '' : ''),
+ iconBoxStyle: '' + (on ? '' : '') + ';',
+ iconStroke: on ? '' : '',
+ toggleStyle: '' + (on ? '' : '') + ';',
+ knobStyle: '' + (on ? '' : '') + '',
+ pickNew: () => this.setState({ src: 'new' }),
+ pickExist: () => this.setState({ src: 'exist' }),
+ newPressed: src === 'new' ? 'true' : 'false',
+ existPressed: src === 'exist' ? 'true' : 'false',
+ newStyle: opt(src === 'new'),
+ existStyle: opt(src === 'exist')
+ };
+ }
+}

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SC-C 카드형 라인업 비교</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">매장 안팎, 화면 세 가지로 끝납니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 860px; font-size: 15px; color: #596170">A 커피 표준 매장 구성 · 값이 다른 사양은 파란 점</div>
+  <div style="position: absolute; right: 64px; top: 116px; display: flex; align-items: center; gap: 16px; font-size: 11.5px; color: #8a91a0; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span>이 제품만 다른 값</span>
+    <span>[ ] 최종 견적 시 확정</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column">
+        <div style="position: relative; width: 368px; height: 200px">
+          <dc-import name="Img" pid="{{c.pid}}" zoom="{{c.zoom}}" w="368" h="200" bg="soft" radius="14" credit="tr" hint-size="368px,200px"></dc-import>
+          <span style="position: absolute; left: 12px; top: 10px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #8a91a0">{{c.no}}</span>
+        </div>
+        <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.01em">{{c.model}}</span>
+          <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; box-sizing: border-box; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c.cat}}</span>
+        </div>
+        <span style="margin-top: 3px; font-size: 13px; color: #596170; white-space: nowrap">{{c.use}}</span>
+        <div style="margin-top: 12px; border-top: 2px solid #121417">
+          <sc-for list="{{c.rows}}" as="r" hint-placeholder-count="4">
+            <div style="height: 33px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: center; font-size: 13px">
+              <span style="color: #8a91a0">{{r.k}}</span>
+              <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="{{r.dot}}"></span><span style="{{r.vs}}">{{r.v}}</span></span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top: 12px; height: 70px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 3px">
+            <span style="font-size: 11.5px; font-weight: 700; color: #596170">제안 수량</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 32px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0">{{c.qty}}</span>
+          </div>
+          <span style="height: 26px; padding: 0 11px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12px; font-weight: 700; color: #3d4452; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>{{c.place}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 매장 디지털 전환 제안 · 제품 이미지 samsung.com 공식 · 사양은 모델 · 지역에 따라 다를 수 있음</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 27</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 가로형 제품 컷은 zoom 0.84로 여백을 둬 모서리 출처 칩과 겹치지 않게 (세로형은 1)
+    // 사양 행 라벨은 세 카드가 같은 순서. 한 행에서 그 제품에만 있는 값(다른 두 제품과 다른 값)에 파란 점 + 굵게 — 자동 계산
+    const LABELS = ['화면 크기', '밝기', '설치 방식', '운영 환경'];
+    const P = [
+      { pid: 'qm55c.front', zoom: 0.84, cat: '실내 사이니지', model: 'QM55C', use: '카운터 위 메뉴보드 · 신메뉴 프로모션', vals: ['55형', '[000] nit', '벽걸이 · 천장 [확인]', '실내'], qty: '[00]대', place: '카운터 메뉴보드' },
+      { pid: 'oh55a.front', zoom: 0.84, cat: '옥외 사이니지', model: 'OH55A-S', use: '드라이브스루 · 매장 앞 옥외 메뉴판', vals: ['55형', '[0000] nit', '스탠드 [확인]', '옥외'], qty: '[00]대', place: '드라이브스루' },
+      { pid: 'km24c.front', zoom: 1, cat: '셀프 키오스크', model: 'KM24C', use: '셀프 주문 · 결제 · 대기 번호 호출', vals: ['24형', '[000] nit', '카운터 · 스탠드 · 벽걸이', '실내'], qty: '[00]대', place: '입구 · 카운터 옆' }
+    ];
+    const unique = (row, v) => P.filter((p) => p.vals[row] === v).length === 1;
+    const cards = P.map((p, i) => ({
+      pid: p.pid, cat: p.cat, zoom: p.zoom, model: p.model, use: p.use, qty: p.qty, place: p.place,
+      no: String(i + 1).padStart(2, '0'),
+      rows: LABELS.map((k, j) => {
+        const v = p.vals[j];
+        const d = unique(j, v);
+        return {
+          k, v,
+          dot: d ? 'width: 7px; height: 7px; flex-shrink: 0; border-radius: 50%; background: #1428a0' : 'width: 7px; height: 7px; flex-shrink: 0',
+          vs: d ? 'font-weight: 800; color: #1428a0' : 'font-weight: 500; color: #121417'
+        };
+      })
+    }));
+    return { cards };
+  }
+}
+</script>
+</body>
+</html>

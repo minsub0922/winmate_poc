@@ -1,0 +1,140 @@
+ 
+ B2B 제안서 · 버전 · 변경 이력 
+ 결과 
+ A커피_디지털메뉴보드_제안서 
+ v3 · 현재 
+ 버전 3 · 변경 기록 9 
+ 편집 
+ 확정 필요 4 
+ 검토 
+ 내보내기 
+ 버전 · 변경 이력 
+ 버전만 
+ 모든 변경 
+ 두 버전에 A · B 를 붙이면 바로 비교해요. 
+ {{h.text}} 
+ {{h.ver}} 
+ 현재 
+ {{h.mark}} 
+ {{h.meta}} 
+ {{h.desc}} 
+ {{sb.t}} 
+ {{sb.text}} 
+ 지금 상태를 v4로 저장 
+ 자동 저장 기록은 30일 동안 남아요 
+ A v2 
+ B v3 
+ 비교 
+ 바뀐 시트 4 · 바뀐 곳 6 
+ 나란히 
+ 바뀐 곳만 
+ {{t.no}} {{t.name}} {{t.count}} 
+ {{sd.tag}} 
+ {{sd.meta}} 
+ WHY SAMSUNG 
+ {{sd.title}} 
+ A 커피 요구사항 6개 기준 · 출처 MI 경쟁사 분석 
+ 비교 항목 
+ 삼성 제안 
+ 경쟁사 A 
+ 경쟁사 B 
+ {{r.label}} 
+ {{c.txt}} 
+ 21 
+ {{m.n}} 
+ {{d.n}} 
+ {{d.where}} 
+ {{d.kind}} 
+ {{d.from}} 
+ {{d.to}} 
+ {{d.why}} 
+ 되돌리기 
+ 되돌려도 v3는 이력에 남아요. 언제든 다시 돌아올 수 있어요. 
+ 이 시트만 v2로 
+ v2 전체로 되돌리기 
+ v3로 내보내기 
+class Component extends DCLogic {
+ renderVals() {
+ // ── 이력 (최신 → 과거)
+ const markBase = '';
+ const H = [
+ { ver: 'v3', cur: 1, meta: '오늘 14:20 · 최민섭', desc: '검토 코멘트 반영', mark: 'B',
+ subs: [['14:18', '21 머리글 색 → 표준 블루'], ['14:12', '21 경쟁사 B 값 → 노트로'], ['14:06', '21 제목 다듬기 · W'], ['13:30', '09 매장 수 확정 · 08 · 11 반영']] },
+ { event: '검토 요청 · 오늘 11:00 · 3명에게' },
+ { ver: 'v2', meta: '오늘 10:55 · 최민섭', desc: '유지보수 행 추가 · 수치 2곳 확정', mark: 'A',
+ subs: [['10:52', '21 유지보수 응답 시간 행 추가'], ['10:40', '03 · 22 수치 확정 · 사내 자료']] },
+ { ver: 'v1', meta: '어제 18:30 · W', desc: '표준 제안서 24시트 처음 생성', mark: '' }
+ ];
+ const history = H.map((h) => {
+ if (h.event) return { isEvent: true, isVer: false, text: h.event, ver: '', isCur: false, meta: '', desc: '', mark: '', markAria: '', markStyle: '', cardStyle: '', nodeStyle: '', hasSubs: false, subs: [] };
+ const sel = h.mark === 'B' ? 'b' : h.mark === 'A' ? 'a' : '';
+ return {
+ isEvent: false, isVer: true, ver: h.ver, isCur: !!h.cur, meta: h.meta, desc: h.desc,
+ mark: h.mark || '비교', markAria: h.mark ? h.ver + ' · ' + h.mark + '로 비교 중' : h.ver + '와 비교',
+ markStyle: markBase + (sel === 'b' ? '' : sel === 'a' ? '' : ''),
+ cardStyle: '' + (sel === 'b' ? '' : sel === 'a' ? '' : ''),
+ nodeStyle: '' + (sel === 'b' ? '' : sel === 'a' ? '' : ''),
+ hasSubs: !!(h.subs && h.subs.length), subs: (h.subs || []).map(([t, text]) => ({ t, text }))
+ };
+ });
+ // ── 바뀐 시트 탭
+ const tabs = [['21', '경쟁 비교', 3, 1], ['09', '카운터 · 메뉴보드', 1, 0], ['08', '공간 맵', 1, 0], ['11', '주문 · 대기 공간', 1, 0]].map(([no, name, count, on]) => ({
+ no, name, count, on: !!on,
+ style: '' + (on ? '' : ''),
+ countStyle: '' + (on ? '' : '')
+ }));
+ // ── 21 경쟁 비교 · v2 / v3
+ const cellBase = '';
+ const dot = (t, sam) => {
+ const b = '';
+ if (t === 'f') return b + ' background: ' + (sam ? '' : '') + ';';
+ if (t === 'h') return b + '';
+ return b + '';
+ };
+ const build = (v3) => {
+ const ROWS = [
+ ['원격 콘텐츠 배포', ['f', '본사 일괄 배포'], ['f', '일괄 배포'], ['h', '매장별 등록']],
+ ['POS 가격 연동', ['f', '자동 반영'], ['h', '수동 업로드'], ['n', '미지원']],
+ ['사내 서버 · 보안', ['f', '설치형 · 사내망'], ['n', '클라우드 전용'], ['h', '별도 구축']],
+ ['매장 에너지 관리', ['f', 'SmartThings Pro'], ['n', '미지원'], ['n', '미지원']],
+ ['전국 설치 · A/S', ['f', '직영 서비스망'], ['h', '협력사 위탁'], ['h', '협력사 위탁']],
+ ['유지보수 응답 시간', ['', '[00]시간 이내'], ['', '[00]시간'], ['', v3 ? '공개 자료 없음' : '[00]시간']]
+ ];
+ return ROWS.map(([label, ...cs]) => ({
+ label,
+ cells: cs.map(([d, txt], j) => {
+ const flagged = txt.indexOf('[') >= 0;
+ return {
+ txt, hasDot: d !== '', dotStyle: d ? dot(d, j === 0) : '',
+ cellStyle: cellBase + (j === 0 ? '' : ''),
+ txtStyle: '' + (flagged ? '' : j === 0 ? '' : '')
+ };
+ })
+ }));
+ };
+ // 바뀐 곳: [번호, left, top, width, height] (슬라이드 좌표 620×349)
+ const BOX = [[1, 22, 31, 334, 32], [2, 190, 94, 156, 32], [3, 466, 272, 128, 34]];
+ const marks = (v3) => BOX.map(([n, l, t, w, h]) => ({
+ n: String(n),
+ boxStyle: 'position: absolute; left: ' + l + '' + t + '' + w + '' + h + '' + (v3 ? '' : ''),
+ badgeStyle: '' + (v3 ? '' : '')
+ }));
+ const head = (bg) => '' + bg + '';
+ const tag = '';
+ const sides = [
+ { tag: 'A v2', meta: '오늘 10:55 · 검토 요청한 버전', title: '운영 · 지원에서 앞서는 삼성', headStyle: head(''), rows: build(false), marks: marks(false), tagStyle: tag + '' },
+ { tag: 'B v3', meta: '오늘 14:20 · 현재', title: '매장 운영 · 지원, 경쟁사보다 앞섭니다', headStyle: head(''), rows: build(true), marks: marks(true), tagStyle: tag + '' }
+ ];
+ // ── 바뀐 곳 목록
+ const sw = (c) => '' + c + ';';
+ const diffs = [
+ { n: '1', where: '제목', kind: '텍스트', from: '운영 · 지원에서 앞서는 삼성', to: '매장 운영 · 지원, 경쟁사보다 앞섭니다', why: 'W 다듬기 · 최민섭 요청' },
+ { n: '2', where: '머리글 · 삼성 열', kind: '서식', from: '검정 배경', to: '표준 블루', why: '이서연 코멘트 반영', sw: ['', ''] },
+ { n: '3', where: '6행 · 경쟁사 B', kind: '텍스트 · 노트', from: '[00]시간', to: '공개 자료 없음', why: '김지훈 코멘트 반영' }
+ ].map((d) => ({
+ n: d.n, where: d.where, kind: d.kind, from: d.from, to: d.to, why: d.why, aria: d.where + ' 변경 되돌리기',
+ hasSw: !!d.sw, fromSw: d.sw ? sw(d.sw[0]) : '', toSw: d.sw ? sw(d.sw[1]) : ''
+ }));
+ return { steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6, history, tabs, sides, diffs };
+ }
+}

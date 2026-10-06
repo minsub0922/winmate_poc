@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-3·4 세 공간 · 솔루션 4개 — 공통 기반 + 추가 (컨벤션 센터)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 3곳 · 솔루션 4개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">W 컨벤션 센터, 건물 전체는 b.IoT 위에 — 공간마다 필요한 솔루션을 얹습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 700px; font-size: 15px; color: #596170; white-space: nowrap">공통 기반 하나 + 공간별 추가 셋 — 로비 · 전시홀 · 회의실</div>
+
+  <!-- 식: 기반 1 + 추가 3 = 솔루션 4 -->
+  <div style="position: absolute; right: 64px; top: 110px; height: 24px; display: flex; align-items: center; gap: 6px; white-space: nowrap; font-size: 12px; font-weight: 800">
+    <span style="height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; display: flex; align-items: center">기반 1</span>
+    <span style="color: #8a91a0; font-family: Manrope, sans-serif; font-size: 14px">+</span>
+    <span style="height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; display: flex; align-items: center">추가 3</span>
+    <span style="color: #8a91a0; font-family: Manrope, sans-serif; font-size: 14px">=</span>
+    <span style="height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; display: flex; align-items: center">솔루션 4</span>
+  </div>
+
+  <!-- 기둥 3개 -->
+  <sc-for list="{{pillars}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.card}}">
+      <span style="position: absolute; left: 16px; top: 16px; width: 30px; height: 30px; border-radius: 50%; background: #f5f6f8; border: 1px solid #d5d9e0; box-sizing: border-box; color: #121417; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.n}}</span>
+      <div style="position: absolute; left: 56px; top: 12px; font-size: 19px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{p.space}}</div>
+      <div style="position: absolute; left: 56px; top: 37px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{p.who}}</div>
+      <div style="position: absolute; left: 8px; top: 66px; width: 350px; height: 62px; border-radius: 10px; background: #1428a0">
+        <div style="position: absolute; left: 14px; top: 10px; font-size: 11px; line-height: 15px; font-weight: 700; color: #c8d3ff; white-space: nowrap">{{p.tag}}</div>
+        <div style="position: absolute; left: 14px; top: 27px; font-size: 18px; line-height: 24px; font-weight: 800; color: #ffffff; white-space: nowrap">{{p.sol}}</div>
+        <div style="position: absolute; right: 14px; top: 31px; font-size: 11.5px; line-height: 16px; font-weight: 700; color: #c8d3ff; white-space: nowrap">{{p.role}}</div>
+      </div>
+      <div style="position: absolute; left: 18px; top: 144px; font-size: 11px; line-height: 15px; font-weight: 800; color: #8a91a0; white-space: nowrap">이 공간에서 하는 일</div>
+      <div style="position: absolute; left: 18px; top: 162px; font-size: 13px; line-height: 20px; color: #3d4452; white-space: nowrap">{{p.d1}}</div>
+      <div style="position: absolute; left: 18px; top: 183px; font-size: 13px; line-height: 20px; color: #3d4452; white-space: nowrap">{{p.d2}}</div>
+      <div style="position: absolute; left: 18px; top: 216px; height: 22px; display: flex; align-items: center; gap: 5px; white-space: nowrap">
+        <sc-for list="{{p.prods}}" as="q" hint-placeholder-count="3">
+          <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{q.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 8px; top: 254px; width: 350px; height: 60px; border-radius: 10px; background: #eaeefb">
+        <div style="position: absolute; left: 12px; top: 10px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">가치</div>
+        <div style="position: absolute; left: 12px; top: 28px; font-size: 13px; line-height: 18px; font-weight: 800; color: #121417; white-space: nowrap">{{p.kpiL}}</div>
+        <div style="position: absolute; right: 14px; top: 16px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 22px; line-height: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{p.kpi}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 공통 기반 · b.IoT -->
+  <div style="position: absolute; left: 64px; top: 498px; width: 1152px; height: 142px; border-radius: 14px; background: #121417">
+    <div style="position: absolute; left: 24px; top: 20px; height: 24px; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; border: 1px solid #596170; color: #b8bec8; font-size: 11px; font-weight: 700; display: flex; align-items: center">공통 기반</span>
+      <span style="font-size: 22px; font-weight: 800; color: #ffffff">b.IoT</span>
+      <span style="font-size: 12px; color: #b8bec8">삼성 빌딩 IoT 통합 관제 · 건물 단위</span>
+    </div>
+    <div style="position: absolute; left: 24px; top: 58px; font-size: 16px; line-height: 24px; font-weight: 700; color: #ffffff; white-space: nowrap">공조 · 조명 · 전력 · 설비를 건물 전체 한 화면에서</div>
+    <div style="position: absolute; left: 24px; top: 86px; font-size: 12.5px; line-height: 18px; color: #b8bec8; white-space: nowrap">로비 · 전시홀 · 회의실이 모두 이 위에서 — 에너지 분석과 이상 알림까지</div>
+    <div style="position: absolute; left: 24px; top: 112px; font-size: 10.5px; line-height: 15px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+    <sc-for list="{{baseVals}}" as="v" hint-placeholder-count="2">
+      <div style="{{v.style}}">
+        <div style="position: absolute; left: 16px; top: 14px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">기반 가치</div>
+        <div style="position: absolute; left: 16px; top: 32px; font-size: 13px; line-height: 18px; font-weight: 800; color: #121417; white-space: nowrap">{{v.label}}</div>
+        <div style="position: absolute; left: 16px; top: 58px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 22px; line-height: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{v.kpi}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 컨벤션 · 전시 · 행사장 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 기둥: 4열 × 3 (x 64 · 456 · 848, 폭 368), 아래 기반 블록과 간격 8
+    const X = [64, 456, 848], W = 368, TOP = 160, H = 330;
+    const P = [
+      { space: '로비', who: '1층 출입구 · 방문객 · 참가자', tag: '추가 솔루션 1', sol: 'MagicINFO', role: '구축형 사이니지 CMS',
+        d1: '오늘의 행사 안내 · 길 찾기 화면을 편성', d2: '스폰서 화면은 행사 일정에 맞춰 교체',
+        prods: ['LED 사이니지', '키오스크 KM24C'], kpiL: '길 안내 문의', kpi: '[00]% ↓' },
+      { space: '전시홀', who: '부스 · 참가 기업 · 관람객', tag: '추가 솔루션 2', sol: 'Samsung VXT', role: '클라우드 사이니지 CMS',
+        d1: '부스 대여 사이니지를 행사마다 웹에서 교체', d2: '설치 없이 템플릿으로, 상태는 원격으로 확인',
+        prods: ['스마트 사이니지 QM 시리즈 ×[00]'], kpiL: '부스 화면 설치 · 교체', kpi: '[0]일 → [0]시간' },
+      { space: '회의실', who: '[00]실 · 주최 측 · 연사', tag: '추가 솔루션 3', sol: 'SmartThings Pro', role: '기업용 SmartThings',
+        d1: '회의 모드 루틴으로 조명 · 냉난방 · 화면을 함께', d2: '재실에 맞춰 빈 회의실은 자동 OFF',
+        prods: ['삼성 Flip', '조명', '시스템에어컨', '재실 센서'], kpiL: '빈 회의실 전력', kpi: '[00]% ↓' }
+    ];
+    const pillars = P.map((p, i) => ({
+      n: i + 1, space: p.space, who: p.who, tag: p.tag, sol: p.sol, role: p.role,
+      d1: p.d1, d2: p.d2, kpiL: p.kpiL, kpi: p.kpi,
+      prods: p.prods.map((t) => ({ t })),
+      card: box(X[i], TOP, W, H) + 'box-sizing: border-box; border-radius: 14px 14px 6px 6px; border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+
+    // 기반 블록 안 가치 타일 (블록 기준 좌표)
+    const baseVals = [
+      { label: '행사 없는 날 전력', kpi: '[00]% ↓' },
+      { label: '설비 이상 대응', kpi: '[00]분 → [0]분' }
+    ].map((v, i) => ({
+      label: v.label, kpi: v.kpi,
+      style: box(1152 - 24 - 220 - (1 - i) * 232, 20, 220, 102) + 'border-radius: 10px; background: #ffffff;'
+    }));
+
+    return { pillars, baseVals };
+  }
+}
+</script>
+</body>
+</html>

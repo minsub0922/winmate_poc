@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SF-E 솔루션 포트폴리오 타일</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">리조트 운영에 필요한 여섯 가지 중, 이번에 세 가지부터</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 700px; font-size: 15px; color: #596170; white-space: nowrap">I 리조트 · 솔루션 단계 제안</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 110px; display: flex; align-items: center; gap: 8px">
+    <span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">이번 제안</span>
+    <span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; border: 1.5px solid #1428a0; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">2단계 확장</span>
+    <span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">참고</span>
+  </div>
+
+  <!-- 3 × 2 타일 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px; row-gap: 20px">
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="6">
+      <div style="{{t.card}}">
+        <div style="width: 352px; height: 140px; flex-shrink: 0">
+          <dc-import name="Img" pid="{{t.pid}}" kind="{{t.kind}}" hint="{{t.hint}}" w="352" h="140" radius="10" pos="{{t.pos}}" zoom="{{t.zoom}}" credit="off" hint-size="352px,140px"></dc-import>
+        </div>
+        <div style="padding: 10px 8px 0; display: flex; flex-direction: column; gap: 4px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+            <span style="font-size: 17px; font-weight: 800; line-height: 1.35; white-space: nowrap">{{t.name}}</span>
+            <span style="{{t.badge}}">{{t.status}}</span>
+          </div>
+          <span style="font-size: 13px; line-height: 1.5; color: #3d4452; white-space: nowrap">{{t.desc}}</span>
+          <span style="font-size: 12px; line-height: 1.5; color: #8a91a0; white-space: nowrap">{{t.scope}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>I 리조트 · 운영 통합 솔루션 제안 · 이미지 samsung.com 공식 솔루션 이미지</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 17</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 상태: now = 이번 제안 · next = 2단계 확장 · ref = 참고
+    // [이름, 상태, pid(없으면 ''), kind, hint, pos, 한 줄 설명, 적용 범위]
+    const T = [
+      ['MagicINFO', 'now', 'ui.mi.kv', 'kv', '', '50% 50%', '로비 · 연회장 · 식음 매장 사이니지를 한 곳에서 운영', '적용 · 로비 · 연회장 · F&B 매장'],
+      ['SmartThings Pro', 'now', 'ui.stp.map', 'ui', '', '42% 22%', '객실동 · 부대시설의 냉난방과 전력을 원격으로 관리', '적용 · 객실동 · 부대시설 [N]개 동'],
+      ['LYNK Cloud', 'now', '', 'kv', '객실 TV 홈 화면 · 호텔 브랜드 웰컴', '50% 50%', '객실 TV로 웰컴 · 시설 안내 · 룸서비스 주문', '적용 · 객실 [000]실 호텔 TV'],
+      ['b.IoT', 'next', '', 'kv', '건물 층별 공조 관리 대시보드', '50% 50%', '건물 층별 공조 · 조명을 하나의 대시보드로', '대상 · 본관 · 컨벤션동'],
+      ['삼성 통합공조', 'next', '', 'kv', '옥상 실외기와 중앙 공조 설비', '50% 50%', '중앙 공조 설비와 실외기를 통합 제어', '대상 · 기계실 · 옥상 설비'],
+      ['Knox Suite', 'ref', '', 'kv', '직원용 갤럭시 태블릿 보안 관리', '50% 50%', '직원용 갤럭시 태블릿의 보안 · 원격 관리', '대상 · 프런트 · 하우스키핑 단말']
+    ];
+    const LABEL = { now: '이번 제안', next: '2단계 확장', ref: '참고' };
+    const chip = 'height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const BADGE = {
+      now: chip + ' background: #1428a0; color: #ffffff;',
+      next: chip + ' border: 1.5px solid #1428a0; color: #1428a0;',
+      ref: chip + ' background: #f5f6f8; color: #596170;'
+    };
+    // 테두리 + 안쪽 여백 = 8px로 맞춰 이미지 폭(352)을 모든 타일에서 같게
+    const card = (st) => 'height: 236px; box-sizing: border-box; border-radius: 14px; display: flex; flex-direction: column; ' +
+      (st === 'now' ? 'border: 2px solid #1428a0; padding: 6px;' : 'border: 1px solid #e2e5ea; padding: 7px;');
+    // 노트북 목업처럼 가장자리가 밝은 화면 이미지는 살짝 확대해 화면부만 보이게
+    const tiles = T.map(([name, st, pid, kind, hint, pos, desc, scope]) => ({
+      name, pid: pid || 'none', kind, hint, pos, desc, scope,
+      zoom: pid === 'ui.stp.map' ? 1.16 : 1,
+      status: LABEL[st], badge: BADGE[st], card: card(st)
+    }));
+    return { tiles };
+  }
+}
+</script>
+</body>
+</html>

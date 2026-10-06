@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>고객 요구사항 · 흐름 한눈에</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 36px 40px 28px 40px; display: flex; flex-direction: column; gap: 22px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+
+  <div style="display: flex; align-items: flex-end; justify-content: space-between; flex-shrink: 0">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">USE CASE MAP · RQ</span>
+      <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">고객 요구사항 흐름</h1>
+    </div>
+    <div style="display: flex; gap: 28px">
+      <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+          <span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 1.1; color: #1428a0">{{s.n}}</span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">{{s.label}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 3단계 + 나중에 + 폼 구성 -->
+  <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) 300px; gap: 14px; flex-grow: 1; min-height: 0">
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="4">
+      <div style="{{c.style}}">
+        <div style="display: flex; align-items: center; gap: 8px; height: 28px">
+          <span style="{{c.badge}}">{{c.n}}</span>
+          <span style="font-size: 17px; font-weight: 700">{{c.title}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{c.screens}}" as="s" hint-placeholder-count="3">
+            <a href="{{s.href}}" style="box-sizing: border-box; padding: 10px 12px; border-radius: 10px; background: #ffffff; border: 1px solid #e2e5ea; color: #121417; display: flex; flex-direction: column; gap: 3px">
+              <span style="display: flex; align-items: center; gap: 6px"><span style="height: 18px; padding: 0 6px; border-radius: 5px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">{{s.code}}</span><span style="font-size: 13px; font-weight: 700">{{s.name}}</span></span>
+              <span style="font-size: 11.5px; color: #596170; line-height: 1.45">{{s.one}}</span>
+            </a>
+          </sc-for>
+        </div>
+        <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452">
+          <span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0; flex-shrink: 0"></span>AI · {{c.ai}}
+        </div>
+      </div>
+    </sc-for>
+    <div style="box-sizing: border-box; padding: 16px 16px 14px 16px; border-radius: 16px; border: 1.5px solid #1428a0; background: #ffffff; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 8px; height: 28px">
+        <span style="font-size: 17px; font-weight: 700">폼</span>
+        <span style="font-size: 12px; color: #596170">모두 선택</span>
+      </div>
+      <sc-for list="{{fields}}" as="f" hint-placeholder-count="5">
+        <div style="{{f.style}}">
+          <span style="font-size: 13.5px; font-weight: 700">{{f.k}}</span>
+          <span style="font-size: 11.5px; color: #596170; line-height: 1.45">{{f.v}}</span>
+        </div>
+      </sc-for>
+      <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452">
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0; flex-shrink: 0"></span>파일을 놓으면 칸마다 출처와 함께 채움
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 22px; flex-shrink: 0; font-size: 12.5px; color: #3d4452">
+    <span style="font-weight: 700; color: #121417">화면 규칙</span>
+    <sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>{{r}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <a href="RQ0.dc.html" style="font-weight: 600">요구사항 목록 →</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const col = (later) => 'box-sizing: border-box; padding: 16px 14px 14px 14px; border-radius: 16px; display: flex; flex-direction: column; gap: 10px; overflow: hidden;' + (later ? ' border: 1px dashed #b8bec8; background: #fbfbfc;' : ' background: #f5f6f8;');
+    const badge = (later) => 'width: 26px; height: 26px; border-radius: 50%; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;' + (later ? ' background: #e2e5ea; color: #3d4452;' : ' background: #1428a0; color: #ffffff;');
+    const S = (code, name, one) => ({ code, name, one, href: code + '.dc.html' });
+    const cols = [
+      { n: '1', title: '입력', screens: [S('RQ1', '빈 폼', '드롭존 · 칸 5'), S('RQ1D', '끌어다 놓기', '어디에 놓아도 됨'), S('RQ1G', '채우는 중', '채운 칸부터 보임'), S('RQ2', '채워진 폼', '출처 배지 · 가중치')], ai: '파일을 읽고 폼 칸에 나눠 채움' },
+      { n: '2', title: '심층 작성', screens: [S('RQ3', '보강할 곳', '5 · 완성도'), S('RQ3A', '질의 · 빈칸', '선택지 + 직접 입력'), S('RQ3B', '질의 · 구체화', '답 → 폼 문장 제안'), S('RQ3C', '결과', '보강 4 · 고객 확인 2')], ai: '부족한 곳 찾기 · 질문 · 문장으로 다듬기' },
+      { n: '3', title: '저장', screens: [S('RQ4', '저장 완료', '다음 3'), S('RQ5', '고객에게 물을 것', '2'), S('RQ6', '정의서', '키맨별 · 가중치')], ai: '정의서 전달 · 메일 문구 생성' },
+      { n: '+', title: '나중에', screens: [S('RQ7', '답변 붙여넣기', '메일 · 첨부'), S('RQ7B', '바뀌는 곳 확인', '전 → 후 3')], ai: '바뀐 곳만 찾아 반영', later: true }
+    ].map((c) => Object.assign(c, { style: col(!!c.later), badge: badge(!!c.later) }));
+    const fields = [['프로젝트명', ''], ['고객사', ''], ['최종 제안대상', ''], ['키맨별 요구사항', '키맨 여러 명 · 키맨마다 요구사항 리스트 · 2명 이상이면 가중치 (합 100%)'], ['제작자 의견', '내부용 · 고객 문서 제외']].map(([k, v]) => ({ k, v,
+      style: 'box-sizing: border-box; padding: 10px 12px; border-radius: 10px; background: #f5f6f8; display: flex; flex-direction: column; gap: 3px;' }));
+    const rules = ['폼 하나 · 모두 선택', '파일 → 폼 자동 채움', '질문은 심층 작성에서만', '모르면 고객 확인으로'];
+    const stats = [['3', '단계'], ['14', '화면'], ['5', '폼 항목']].map(([n, label]) => ({ n, label }));
+    return { cols, fields, rules, stats };
+  }
+}
+</script>
+</body>
+</html>

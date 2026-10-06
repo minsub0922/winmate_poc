@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BM-D 단계별 도입 물량</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">한 번에 320곳이 아니라 — 10 → 100 → 320</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">매장당 QM55C 3 · KM24C 1 · QM65C 1 · QM43C 1 = 6대, 가두 매장은 OH55C 2대 추가 · 수치는 예시</div>
+
+  <!-- 시간축: 단계별 구간 (y 160–186) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px">
+    <sc-for list="{{phases}}" as="p" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column">
+        <div style="height: 18px; display: flex; align-items: center; gap: 6px; font-size: 13px">
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-weight: 800">{{p.step}}</span>
+          <span style="color: #596170">{{p.when}}</span>
+        </div>
+        <div style="{{p.axis}}"></div>
+      </div>
+    </sc-for>
+  </div>
+  <svg style="position: absolute; left: 437px; top: 177px" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5l4.5 4.5L5 11.5"/></svg>
+  <svg style="position: absolute; left: 829px; top: 177px" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5l4.5 4.5L5 11.5"/></svg>
+
+  <!-- 단계 카드 3열 (y 196–568) -->
+  <div style="position: absolute; left: 64px; top: 196px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px">
+    <sc-for list="{{phases}}" as="p" hint-placeholder-count="3">
+      <div style="height: 372px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 15px 19px; display: flex; flex-direction: column">
+        <div style="height: 44px; display: flex; align-items: center; justify-content: space-between">
+          <div style="display: flex; flex-direction: column; gap: 1px">
+            <span style="font-size: 19px; font-weight: 800; line-height: 1.25">{{p.name}}</span>
+            <span style="font-size: 12.5px; color: #596170">{{p.sub}}</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 3px">
+            <span style="font-family: Manrope, sans-serif; font-size: 40px; font-weight: 800; line-height: 44px; letter-spacing: -0.02em; color: #1428a0">{{p.stores}}</span>
+            <span style="font-size: 15px; font-weight: 800; color: #1428a0">곳</span>
+          </div>
+        </div>
+        <div style="height: 14px; margin-top: 8px; display: flex; align-items: center; gap: 8px">
+          <div style="position: relative; flex-grow: 1; height: 8px; border-radius: 4px; background: #f5f6f8"><span style="{{p.fill}}"></span></div>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; color: #596170; white-space: nowrap">{{p.share}}</span>
+        </div>
+        <div style="height: 20px; margin-top: 10px; display: flex; align-items: center; gap: 8px">
+          <span style="font-size: 12px; font-weight: 700; color: #1428a0">목적</span>
+          <span style="font-size: 13.5px; white-space: nowrap">{{p.goal}}</span>
+        </div>
+        <div style="margin-top: 10px; border-top: 1px solid #121417; display: flex; flex-direction: column">
+          <sc-for list="{{p.rows}}" as="r" hint-placeholder-count="5">
+            <div style="height: 22px; box-sizing: border-box; border-bottom: 1px solid #eef0f3; display: grid; grid-template-columns: 58px minmax(0, 1fr) 34px 64px; column-gap: 6px; align-items: center">
+              <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800">{{r.model}}</span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">{{r.desc}}</span>
+              <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600; color: #596170">{{r.per}}</span>
+              <span style="{{r.qtyStyle}}">{{r.qty}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height: 30px; display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 13px; font-weight: 700">이 단계 합계</span>
+          <span style="display: flex; align-items: baseline; gap: 4px">
+            <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; color: #1428a0">{{p.hw}}</span>
+            <span style="font-size: 13px; font-weight: 700; color: #1428a0">대</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; color: #596170; padding-left: 2px">+ OH55C {{p.oh}}</span>
+          </span>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px">
+          <span style="height: 17px; font-size: 12px; font-weight: 700; line-height: 17px; color: #1428a0">{{p.gateLabel}}</span>
+          <sc-for list="{{p.gates}}" as="g" hint-placeholder-count="2">
+            <div style="height: 19px; display: flex; align-items: center; gap: 6px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+              <span style="font-size: 13px; white-space: nowrap">{{g}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 누적 막대: 10 | 100 | 320 (y 584–640) -->
+  <div style="position: absolute; left: 64px; top: 584px; width: 1152px; height: 56px">
+    <div style="position: absolute; left: 0; top: 0; width: 112px; display: flex; flex-direction: column; gap: 1px">
+      <span style="font-size: 14px; font-weight: 800; line-height: 20px">누적 도입</span>
+      <span style="font-size: 11.5px; line-height: 16px; color: #596170">실내 기기 기준</span>
+      <span style="font-size: 11.5px; line-height: 16px; color: #596170">OH55C 별도</span>
+    </div>
+    <div style="position: absolute; left: 120px; top: 0; width: 1032px; height: 26px; display: flex; border-radius: 6px; overflow: hidden">
+      <sc-for list="{{segs}}" as="s" hint-placeholder-count="3">
+        <div style="{{s.style}}">{{s.t}}</div>
+      </sc-for>
+    </div>
+    <div style="position: absolute; left: 120px; top: 34px; width: 1032px; height: 22px">
+      <sc-for list="{{cums}}" as="c" hint-placeholder-count="3">
+        <span style="{{c.style}}"><span style="color: #596170">누적</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{c.stores}}</span><span>곳 ·</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{c.hw}}</span><span style="color: #1428a0; font-weight: 700">대</span></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const TOTAL = 320;
+    const TIER = ['#1428a0', '#6f82d6', '#b8c3ee'];
+    const TIER_TEXT = ['#ffffff', '#ffffff', '#121417'];
+    // 매장당 대수 [모델, 설명, 매장당] — OH55C는 가두 매장만이라 단계별 수량 미정
+    const PER = [
+      ['QM55C', '카운터 메뉴보드', 3],
+      ['OH55C', '가두 매장만', 2],
+      ['KM24C', '주문 키오스크', 1],
+      ['QM65C', '대기 공간', 1],
+      ['QM43C', '픽업 호출', 1]
+    ];
+    // [단계, 기간, 이름, 대상, 매장 수, 목적, 게이트 제목, 게이트 조건, OH55C 자리표시]
+    const PH = [
+      ['1차', '[00]주', '파일럿', '직영 매장', 10, '운영 검증 — 콘텐츠 · 장애 대응', '다음 단계로 가는 조건', ['콘텐츠 교체 리드타임 [00]분 이내', '장애 [0]건 이하 · [0]주 연속'], '[00]'],
+      ['2차', '[00]주', '확대', '수도권 매장', 90, '설치 · 점주 교육 표준화', '다음 단계로 가는 조건', ['주당 설치 [00]곳 속도 확보', '점주 교육 이수율 [00]% 이상'], '[000]'],
+      ['3차', '[00]주', '전 지점', '나머지 전국 매장', 220, '권역별 동시 설치', '완료 기준', ['전 매장 MagicINFO 원격 관리', '권역별 A/S [0]시간 내 대응'], '[000]']
+    ];
+    const perStore = PER.filter((p) => p[0] !== 'OH55C').reduce((a, p) => a + p[2], 0);
+    let prev = 0;
+    const phases = PH.map(([step, when, name, sub, n, goal, gateLabel, gates, oh], i) => {
+      const left = (prev / TOTAL) * 100;
+      const width = (n / TOTAL) * 100;
+      prev += n;
+      return {
+        step, when, name, sub, goal, gateLabel, gates, oh,
+        stores: String(n),
+        axis: 'height: 4px; margin-top: 4px; border-radius: 2px; background: ' + TIER[i],
+        fill: 'position: absolute; top: 0; bottom: 0; left: ' + left.toFixed(2) + '%; width: ' + width.toFixed(2) + '%; border-radius: 4px; background: ' + TIER[i],
+        share: '전체의 ' + Math.round(width) + '%',
+        hw: fmt(perStore * n),
+        rows: PER.map(([model, desc, q]) => {
+          const known = model !== 'OH55C';
+          return {
+            model, desc,
+            per: '×' + q,
+            qty: known ? fmt(q * n) : oh,
+            qtyStyle: 'text-align: right; font-family: Manrope, sans-serif; font-size: 14.5px; font-weight: 800; color: ' + (known ? '#121417' : '#596170')
+          };
+        })
+      };
+    });
+    // 누적 막대 (폭 1032px = 320곳)
+    const W = 1032;
+    let acc = 0;
+    let edge = 0;
+    const segs = [];
+    const cums = [];
+    PH.forEach(([step, , name, , n], i) => {
+      acc += n;
+      const w = (n / TOTAL) * W;
+      edge += w;
+      segs.push({
+        t: i === 0 ? String(n) : '+' + n + ' · ' + step + ' ' + name,
+        style: 'width: ' + w.toFixed(2) + 'px; flex-shrink: 0; box-sizing: border-box; background: ' + TIER[i] + '; color: ' + TIER_TEXT[i] +
+          '; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; white-space: nowrap' +
+          (i < PH.length - 1 ? '; border-right: 2px solid #ffffff' : '')
+      });
+      const anchor = i === 0 ? 'left: 0' : 'right: ' + (W - edge).toFixed(2) + 'px';
+      cums.push({
+        stores: String(acc),
+        hw: fmt(perStore * acc),
+        style: 'position: absolute; top: 0; ' + anchor + '; height: 22px; display: flex; align-items: center; gap: 4px; font-size: 12.5px; white-space: nowrap'
+      });
+    });
+    return { phases, segs, cums };
+  }
+}
+</script>
+</body>
+</html>

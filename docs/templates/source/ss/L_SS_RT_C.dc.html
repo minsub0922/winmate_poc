@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RT-C 리테일 · 브랜드 플래그십 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">H 백화점의 하루, 고객이 닿기 전에 화면과 공기가 먼저 준비됩니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">이용(쇼핑 고객 · VIP)과 운영(VMD · 마케팅팀 · 시설팀) 네 줄로 본 하루 — 공간 번호는 공간 맵과 같고, 시간은 예시입니다</div>
+
+  <!-- 시간대 머리 -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 30px; display: flex; flex-direction: column; justify-content: center; white-space: nowrap"><span style="font-size: 12px; font-weight: 800; line-height: 15px">역할 · 시간대</span><span style="font-size: 10.5px; line-height: 14px; color: #8a91a0">시간은 예시</span></div>
+  <sc-for list="{{phases}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.style}}"><span style="font-size: 12.5px; font-weight: 800">{{p.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{p.hours}}</span></div>
+  </sc-for>
+
+  <!-- 레인 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.row}}"></div>
+    <div style="{{l.box}}">
+      <div style="position: absolute; left: 10px; top: 10px; width: 20px; height: 20px">
+        <sc-if value="{{l.i1}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></sc-if>
+        <sc-if value="{{l.i2}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l3 5-9 11L3 9l3-5z"></path><path d="M3 9h18"></path></svg></sc-if>
+        <sc-if value="{{l.i3}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"></rect><path d="M12 16v4"></path><path d="M8 20h8"></path></svg></sc-if>
+        <sc-if value="{{l.i4}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path><path d="M4.9 4.9l2.1 2.1"></path><path d="M17 17l2.1 2.1"></path><path d="M4.9 19.1l2.1-2.1"></path><path d="M17 7l2.1-2.1"></path></svg></sc-if>
+      </div>
+      <div style="{{l.tag}}">{{l.group}}</div>
+      <div style="position: absolute; left: 10px; top: 38px; font-size: 13.5px; font-weight: 800; line-height: 18px; white-space: nowrap">{{l.name}}</div>
+      <div style="position: absolute; left: 10px; top: 60px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{l.sub}}</div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 393px; width: 1152px; height: 0px; border-top: 1px dashed #b8bec8"></div>
+
+  <!-- 장면 블록 -->
+  <sc-for list="{{blocks}}" as="b" hint-placeholder-count="17">
+    <div style="{{b.style}}">
+      <div style="position: absolute; left: 10px; top: 8px; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">{{b.time}}</div>
+      <div style="position: absolute; right: 8px; top: 8px; height: 18px; box-sizing: border-box; padding: 0 6px 0 2px; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 4px; white-space: nowrap"><span style="min-width: 14px; height: 14px; box-sizing: border-box; padding: 0 3px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{b.n}}</span><span style="font-size: 10.5px; font-weight: 700; color: #121417">{{b.space}}</span></div>
+      <div style="position: absolute; left: 10px; top: 31px; width: 164px; font-size: 12px; line-height: 16px; color: #121417; white-space: nowrap">{{b.a1}}</div>
+      <div style="position: absolute; left: 10px; top: 47px; width: 164px; font-size: 12px; line-height: 16px; color: #121417; white-space: nowrap">{{b.a2}}</div>
+      <div style="position: absolute; left: 10px; top: 66px; width: 164px; font-size: 11.5px; font-weight: 800; line-height: 15px; color: #1428a0; white-space: nowrap">→ {{b.out}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 이어지는 장면 (이용 ↔ 운영) -->
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.line}}"></div>
+    <div style="{{k.from}}"></div>
+    <div style="{{k.dot}}"></div>
+    <div style="{{k.to}}"></div>
+    <div style="{{k.head}}"></div>
+  </sc-for>
+
+  <!-- 시즌 · 특별 일정 -->
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 16px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">시즌 · 특별 일정</span>
+    <sc-for list="{{breaks}}" as="v" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="{{v.badge}}">{{v.n}}</span>{{v.t}}</span>
+    </sc-for>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #3d4452"><span style="width: 0px; height: 16px; border-left: 2px dashed #1428a0"></span>이어지는 장면</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 백화점 · 플래그십 점포 공간 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 격자 — 시간대 5열 (x 188부터 폭 200 · 간격 7), 레인 4줄 (이용 2 · 운영 2)
+    const PX = (i) => 188 + i * 207, PW = 200, BW = 182, BH = 86;
+    const LY = [198, 294, 402, 498], LH = 90;
+
+    const PH = [['개점 전', '08–10:30'], ['오전', '10:30–12'], ['점심', '12–14'], ['오후 행사', '14–20'], ['폐점 후', '20–24']];
+    const phases = PH.map(([name, hours], i) => ({
+      name, hours,
+      style: A + box(PX(i), 160, PW, 30) + 'box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; justify-content: space-between; white-space: nowrap;'
+    }));
+
+    const L = [
+      ['쇼핑 고객', '가족 · 직장인 · 외국인', '이용'],
+      ['VIP 고객', '퍼스널 쇼퍼 동행', '이용'],
+      ['VMD · 마케팅팀', '화면 · 콘텐츠 · 행사', '운영'],
+      ['시설팀', '공조 · 냉장 · 전력', '운영']
+    ];
+    const lanes = L.map(([name, sub, group], i) => {
+      const user = i < 2;
+      return {
+        name, sub, group,
+        i1: i === 0, i2: i === 1, i3: i === 2, i4: i === 3,
+        row: A + box(188, LY[i], 1028, LH) + 'border-radius: 10px; background: #f8f9fb;',
+        box: A + box(64, LY[i], 112, LH) + 'border-radius: 10px; background: ' + (user ? '#eaeefb' : '#f5f6f8') + ';',
+        tag: A + 'right: 8px; top: 11px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; ' +
+          (user ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #3d4452;')
+      };
+    });
+
+    // [레인, 시간대, 시각, 공간 번호, 공간, 하는 일 1, 하는 일 2, 결과]
+    const B = [
+      [0, 1, '10:40', '2', '1층 로비', '들어서면 로비 비디오월에서', '오늘 행사 · 층 안내 확인', '길 묻는 시간 [0]분 ↓'],
+      [0, 2, '12:30', '4', 'B1 식품관', '온도가 지켜진 신선 코너,', '가격은 화면에서 바로', '신선도 클레임 [00]% ↓'],
+      [0, 3, '15:00', '5', '문화센터', '라이브 스튜디오 클래스를', 'LED 배경 앞에서 수강', '클래스 재방문 [00]% ↑'],
+      [0, 4, '20:10', '1', '외벽 LED', '퇴점길 외벽에 이어지는', '시즌 미디어아트', '거리의 랜드마크로'],
+      [1, 1, '11:00', '6', 'VIP 라운지', '예약 시각에 맞춰 준비된', '라운지에서 쇼퍼 상담', '도착 즉시 상담 시작'],
+      [1, 2, '13:00', '6', 'VIP 라운지', '티타임 동안 맡긴 외투는', '에어드레서가 정리', '먼지 · 냄새 없이 다시 쇼핑'],
+      [1, 3, '15:30', '3', 'VMD존', '쇼퍼와 함께 칼럼 앞에서', 'VIP 프리뷰 영상 · 상품', '프리뷰 구매 [00]% ↑'],
+      [2, 0, '08:50', '1·2', '외벽 · 로비', '오늘 행사 순서대로', '외벽 · 로비 화면 예약', '개점과 동시에 송출'],
+      [2, 2, '12:00', '2', '1층 로비', '점심 시간 로비 화면을', '식품관 · 식당가 안내로', 'B1 유입 [00]% ↑'],
+      [2, 3, '15:10', '3', 'VMD존', 'VIP 프리뷰 시간에만', '칼럼을 전용 영상으로', '현장 교체 없이 전환'],
+      [2, 4, '21:00', '3', 'VMD존', '내일 시즌 영상을 검수해', '전 층 화면에 예약 편성', '다음 날 일괄 교체'],
+      [3, 0, '09:00', '7', '관리실', '층별 공조를 개점 시각에', '맞춰 미리 가동', '개점 때 이미 쾌적'],
+      [3, 1, '10:50', '6', 'VIP 라운지', '예약 전에 라운지 냉난방 ·', '공기청정을 원격으로 켬', '조용하고 맑은 공기'],
+      [3, 2, '12:20', '4', 'B1 식품관', '쇼케이스 온도 이탈 알림을', '관리실 화면 · 폰으로', '폐기 [00]% ↓'],
+      [3, 3, '17:00', '7', '관리실', '피크 시간 전력 · 공조를', 'b.IoT 한 화면에서 조정', '피크 전력 [00]% ↓'],
+      [3, 4, '20:30', '7', '관리실', '폐점 후 전 층 공조 · 조명 OFF,', '식품관 냉장만 감시 유지', '야간 전력 [00]% ↓']
+    ];
+    const blocks = B.map(([lane, ph, time, n, space, a1, a2, out]) => ({
+      time, n, space, a1, a2, out,
+      style: A + box(PX(ph), LY[lane] + 2, BW, BH) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid ' + (lane < 2 ? '#b8c3ee' : '#d5d9e0') + ';'
+    }));
+
+    // 이어지는 장면 — [시간대, 보내는 레인, 받는 레인]
+    const K = [[1, 3, 1], [2, 3, 0], [3, 2, 1]];
+    const links = K.map(([ph, a, b]) => {
+      const cx = PX(ph) + 191;
+      const ya = LY[a] + 2 + BH / 2, yb = LY[b] + 2 + BH / 2;
+      const top = Math.min(ya, yb), h = Math.abs(yb - ya);
+      return {
+        line: A + box(cx - 1, top, 0, h) + 'border-left: 2px dashed #1428a0;',
+        from: A + box(PX(ph) + BW, ya - 1, 9, 2) + 'background: #1428a0;',
+        dot: A + box(cx - 4, ya - 4, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;',
+        to: A + box(PX(ph) + BW + 6, yb - 1, 4, 2) + 'background: #1428a0;',
+        head: A + 'left: ' + px(PX(ph) + BW) + 'top: ' + px(yb - 5) + 'width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid #1428a0;'
+      };
+    });
+
+    // 시즌 · 특별 일정
+    const badge = 'min-width: 16px; height: 16px; box-sizing: border-box; padding: 0 4px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
+    const V = [['1', '연말 시즌 — 외벽 · 로비 연출을 시즌 단위로 예약 편성'], ['4', '명절 선물 시즌 — 늘린 쇼케이스도 같은 온도 기록'], ['7', '휴점일 — 케어 서비스로 화면 · 에어컨 정기 점검']];
+    const breaks = V.map(([n, t]) => ({ n, t, badge }));
+
+    return { phases, lanes, blocks, links, breaks };
+  }
+}
+</script>
+</body>
+</html>

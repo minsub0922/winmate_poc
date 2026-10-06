@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-TP-A 테마파크 · 관광 · 전시 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">Z 파크의 일곱 구역, 기다림부터 공연까지 화면과 공기가 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">파크 배치는 예시 — 구역마다 놓을 삼성 제품 · 솔루션과 그 구역의 가치, 아래는 솔루션 ↔ 제품 ↔ 구역 전체 구성</div>
+
+  <!-- 지도 머리 + 범례 -->
+  <div style="position: absolute; left: 64px; top: 158px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">Z 파크 · 구역 배치</span><span style="font-size: 11.5px; color: #8a91a0">배치는 예시 · 파크 도면으로 교체</span></div>
+  <div style="position: absolute; left: 616px; top: 158px; width: 600px; height: 20px; display: flex; align-items: center; justify-content: flex-end; gap: 14px; white-space: nowrap; font-size: 11.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 12px; border-radius: 999px; background: #1428a0"></span>솔루션 · 서비스</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 12px; border-radius: 3px; background: #eaeefb; border: 1px solid #b8c3ee; box-sizing: border-box"></span>구역의 가치</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 22px; height: 8px; border-radius: 999px; background: #ffffff; border: 1px solid #c3c9d2; box-sizing: border-box"></span>파크 동선 · 중앙 광장</span>
+  </div>
+
+  <!-- 부지 지도 -->
+  <div style="position: absolute; left: 64px; top: 184px; width: 1152px; height: 378px; border-radius: 16px; background: #e9ecf0"></div>
+  <svg style="position: absolute; left: 64px; top: 184px" width="940" height="378" viewBox="0 0 940 378" fill="none">
+    <ellipse cx="474" cy="58" rx="54" ry="24" fill="#d5dde8"></ellipse>
+    <g stroke="#f8f9fb" stroke-width="13" stroke-linecap="round">
+      <path d="M474 189 C 420 120 380 69 300 69"></path>
+      <path d="M474 189 C 528 120 568 69 648 69"></path>
+      <path d="M474 189 L300 189"></path>
+      <path d="M474 189 L648 189"></path>
+      <path d="M474 189 L474 392"></path>
+      <path d="M474 336 Q 420 309 300 309"></path>
+      <path d="M474 336 Q 528 309 648 309"></path>
+    </g>
+    <circle cx="474" cy="189" r="56" fill="#f8f9fb"></circle>
+    <circle cx="474" cy="189" r="36" fill="#dbe1e8"></circle>
+    <g fill="#d5dbe3">
+      <circle cx="372" cy="22" r="8"></circle><circle cx="390" cy="32" r="6"></circle><circle cx="578" cy="24" r="8"></circle><circle cx="560" cy="34" r="6"></circle>
+      <circle cx="380" cy="248" r="8"></circle><circle cx="398" cy="262" r="6"></circle><circle cx="568" cy="248" r="8"></circle><circle cx="550" cy="262" r="6"></circle>
+      <circle cx="400" cy="358" r="7"></circle><circle cx="548" cy="358" r="7"></circle>
+    </g>
+  </svg>
+  <div style="position: absolute; left: 508px; top: 365px; width: 60px; font-size: 11px; line-height: 16px; font-weight: 800; color: #596170; text-align: center; white-space: nowrap">중앙 광장</div>
+  <div style="position: absolute; left: 489px; top: 538px; width: 98px; height: 18px; box-sizing: border-box; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; white-space: nowrap">주차장 · 진입로</div>
+  <div style="position: absolute; left: 498px; top: 233px; width: 80px; font-size: 10.5px; line-height: 14px; color: #8a91a0; text-align: center; white-space: nowrap">호수 정원</div>
+
+  <!-- 구역 카드 -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.style}}">
+      <span style="position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 42px; top: 10px; font-size: 14.5px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; white-space: nowrap">{{s.name}}</div>
+      <div style="position: absolute; right: 12px; top: 12px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; display: flex; align-items: center; white-space: nowrap">{{s.who}}</div>
+      <div style="position: absolute; left: 12px; top: 38px; font-size: 12px; line-height: 17px; letter-spacing: -0.01em; color: #3d4452; white-space: nowrap">{{s.prods}}</div>
+      <div style="position: absolute; left: 12px; top: 60px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+        <sc-for list="{{s.sols}}" as="c" hint-placeholder-count="2">
+          <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span>
+        </sc-for>
+      </div>
+      <sc-if value="{{s.focus}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; right: 12px; top: 60px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1.5px solid #1428a0; color: #1428a0; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">대표 공간</span>
+      </sc-if>
+      <div style="position: absolute; left: 8px; top: 84px; width: 282px; height: 22px; box-sizing: border-box; padding: 0 10px; border-radius: 7px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{s.value}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 파크 운영실 (허브) -->
+  <div style="position: absolute; left: 1012px; top: 196px; width: 192px; height: 352px; border-radius: 12px; background: #1428a0">
+    <span style="position: absolute; left: 12px; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: #ffffff; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">7</span>
+    <div style="position: absolute; left: 42px; top: 12px; font-size: 15px; font-weight: 800; line-height: 22px; color: #ffffff; white-space: nowrap">파크 운영실</div>
+    <div style="position: absolute; left: 12px; top: 40px; font-size: 11.5px; line-height: 16px; color: #c8d3ff; white-space: nowrap">운영 · 공연 · 콘텐츠 · 안전팀</div>
+    <div style="position: absolute; left: 12px; top: 64px; width: 168px; height: 92px; border-radius: 8px; overflow: hidden; background: #ffffff">
+      <img src="/_blob/354dabcbf57ff57d9161e3db80cd40d2" alt="MagicINFO 웹 콘솔 화면 (예시 화면)" style="position: absolute; left: 0; top: 0; width: 168px; height: 92px; object-fit: contain; mix-blend-mode: multiply">
+      <div style="position: absolute; left: 6px; top: 70px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 화면</div>
+    </div>
+    <div style="position: absolute; left: 12px; top: 166px; font-size: 10.5px; line-height: 14px; font-weight: 700; color: #c8d3ff; white-space: nowrap">한 화면에서 보는 것</div>
+    <div style="position: absolute; left: 12px; top: 183px; display: flex; flex-direction: column; gap: 2px; font-size: 12px; line-height: 17px; color: #ffffff; white-space: nowrap"><span>구역별 대기 · 화면 상태</span><span>키즈존 공기질 · 냉난방</span><span>스태프 워치 · 안전 알림</span></div>
+    <div style="position: absolute; left: 12px; top: 248px; font-size: 11.5px; line-height: 16px; color: #c8d3ff; white-space: nowrap">모니터 · 갤럭시 탭 · 갤럭시 워치</div>
+    <div style="position: absolute; left: 12px; top: 272px; display: flex; flex-wrap: wrap; gap: 5px; width: 170px">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">MagicINFO</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">Knox Suite</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">안전 관제 앱</span>
+    </div>
+    <div style="position: absolute; left: 8px; top: 322px; width: 176px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 7px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">파크 전체를 한곳에서 운영</div>
+  </div>
+
+  <!-- 전체 구성 -->
+  <div style="position: absolute; left: 64px; top: 574px; width: 1152px; height: 74px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 584px; font-size: 14px; line-height: 20px; font-weight: 800; white-space: nowrap">전체 구성</div>
+  <div style="position: absolute; left: 80px; top: 606px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">솔루션 ↔ 제품 ↔ 구역</div>
+  <div style="position: absolute; left: 80px; top: 623px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">번호는 위 지도의 구역</div>
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+    <div style="{{g.rule}}"></div>
+    <div style="{{g.style}}">
+      <div style="height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">{{g.sol}}</span>
+        <sc-for list="{{g.at}}" as="a" hint-placeholder-count="3">
+          <span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{a.n}}</span>
+        </sc-for>
+        <sc-if value="{{g.all}}" hint-placeholder-val="{{false}}">
+          <span style="height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10px; font-weight: 800; display: flex; align-items: center">전 구역 · 1–7</span>
+        </sc-if>
+      </div>
+      <div style="margin-top: 3px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{g.role}}</div>
+      <div style="margin-top: 1px; font-size: 11.5px; line-height: 16px; color: #121417; white-space: nowrap">{{g.prods}}</div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>Z 파크 · 파크 경험 · 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 중앙 광장 좌우로 3행 × 2열 구역 카드 (폭 300 · 높이 112), 가운데 x 376–700은 광장 · 동선
+    const COLX = [76, 700], ROWY = [196, 316, 436];
+    const S = [
+      [3, '실내 몰입 체험관', '관람객', '스마트 LED 사이니지(곡면) · 하만 프로 오디오', ['MagicINFO', '케어 서비스'], '어두운 관 안에서도 빈틈없는 360° 몰입', 0, 0],
+      [2, '입장 대기 동선 · 프리쇼', '대기 방문객', '스마트 LED 사이니지 · QM55C · JBL 스피커', ['MagicINFO', '콘텐츠 제작 지원'], '기다림이 체험의 첫 장면이 됩니다', 0, 1],
+      [1, '입장 게이트 · 매표', '전 방문객', '실외용 사이니지 OH55C · 키오스크 KM24C', ['MagicINFO', '커스터마이징'], '줄 서기 전에 오늘 공연 · 대기를 한눈에', 0, 2],
+      [4, '야외 공연 무대', '관람객 · 공연팀', '스마트 LED 사이니지(실외) · 하만 프로 오디오', ['MagicINFO', '안전 관제 앱'], '한낮 햇빛에도, 밤 쇼에도 선명한 무대', 1, 0],
+      [5, '키즈 실내 놀이존', '아이 · 보호자', '시스템에어컨 360 · 공기청정기 · 에어모니터', ['SmartThings Pro', 'MagicINFO'], '아이가 노는 공기 · 온도를 숫자로 확인', 1, 1],
+      [6, '식음 · 기념품', '방문객 · 매장 직원', '메뉴보드 QM55C · 시스템에어컨 360', ['MagicINFO', 'SmartThings Pro'], '공연 · 대기 흐름에 맞춘 메뉴 · 상품 안내', 1, 2]
+    ];
+    const spaces = S.map(([n, name, who, prods, sols, value, c, r]) => {
+      const focus = n === 2;
+      return {
+        n, name, who, prods, value, focus,
+        sols: sols.map((t) => ({ t })),
+        style: box(COLX[c], ROWY[r], 300, 112) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; ' + (focus ? 'border: 2px solid #1428a0;' : 'border: 1px solid #d5d9e0;')
+      };
+    });
+
+    // 전체 구성 — 솔루션 · 서비스 ↔ 연결 제품 ↔ 구역 번호
+    const G = [
+      ['MagicINFO', '파크 화면 편성 · 대기시간 연동', 'LED · 사이니지 · 키오스크', [1, 2, 3, 4, 6]],
+      ['SmartThings Pro', '공기질 · 냉난방 자동 운영', '360 에어컨 · 공기청정기 · 에어모니터', [5, 6]],
+      ['Knox · 안전 관제 앱', '스태프 기기 관리 · 안전 알림', '갤럭시 워치 · 갤럭시 탭', [4, 5, 7]],
+      ['콘텐츠 제작 지원', '프리쇼 · 몰입 · 공연 콘텐츠', '스마트 LED · 하만 프로 오디오', [2, 3, 4]],
+      ['케어 · 유지관리', 'LED · 오디오 점검 · 공조 세척', '전 구역 화면 · 음향 · 공조', null]
+    ];
+    const groups = G.map(([sol, role, prods, at], i) => ({
+      sol, role, prods,
+      all: at === null,
+      at: (at || []).map((n) => ({ n })),
+      rule: box(206 + i * 202, 586, 1, 50) + 'background: #d5d9e0;',
+      style: A + 'left: ' + px(218 + i * 202) + 'top: 583px; width: 186px;'
+    }));
+
+    return { spaces, groups };
+  }
+}
+</script>
+</body>
+</html>

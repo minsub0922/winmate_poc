@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CCH-D 삼성 콜드체인 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · 삼성 콜드체인</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>삼성 콜드체인 · 냉장 · 냉동 + 공조</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">냉기는 배관으로, 상태는 클라우드로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구성도 · 실외기와 매장 설비는 냉매 배관으로, 상태와 제어는 Link Controller를 거쳐 b.IoT Cloud로 이어집니다</div>
+
+  <!-- 경계: 실외 · 매장 안 · 클라우드 -->
+  <div style="position: absolute; left: 64px; top: 184px; width: 204px; height: 420px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 292px; top: 184px; width: 432px; height: 420px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 748px; top: 184px; width: 196px; height: 420px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 76px; top: 174px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">실외 (옥상 · 후면)</div>
+  <div style="position: absolute; left: 304px; top: 174px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">매장 안</div>
+  <div style="position: absolute; left: 760px; top: 174px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">클라우드</div>
+
+  <!-- 배관 · 데이터 선 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="24">
+    <div style="{{w.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 300px; top: 218px; height: 16px; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; line-height: 16px; color: #3d4452; white-space: nowrap">최장 70m</div>
+  <div style="position: absolute; left: 300px; top: 468px; height: 16px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">냉매 배관</div>
+
+  <!-- 실외: 콘덴싱 유닛 (제품 사진) -->
+  <div style="position: absolute; left: 80px; top: 208px; width: 172px; height: 136px; box-sizing: border-box; border-radius: 12px; border: 1.5px solid #121417; background: #ffffff"></div>
+  <img src="/_blob/55f2688f1ff527e9408efc6bc2789202" alt="삼성 인버터 콘덴싱 유닛 제품 사진" style="position: absolute; left: 92px; top: 218px; width: 54px; height: 64px; object-fit: contain">
+  <div style="position: absolute; left: 156px; top: 228px; width: 88px; display: flex; flex-direction: column; gap: 1px; white-space: nowrap">
+    <span style="font-size: 10.5px; line-height: 14px; color: #596170">삼성 · 냉장</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0">AQ0[00]</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; line-height: 19px">×[0]</span>
+  </div>
+  <div style="position: absolute; left: 92px; top: 290px; width: 152px; height: 20px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">인버터 콘덴싱 유닛</div>
+  <div style="position: absolute; left: 92px; top: 311px; width: 152px; height: 16px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">AQ020~050 · 2~5HP</div>
+  <!-- 실외: 시스템에어컨 실외기 (카탈로그 제품 이미지) -->
+  <div style="position: absolute; left: 96px; top: 420px; width: 156px; height: 80px; box-sizing: border-box; border-radius: 12px; border: 1.5px solid #121417; background: #ffffff"></div>
+  <div style="{{odu.wrap}}"><img src="{{odu.src}}" alt="{{odu.alt}}" style="{{odu.img}} object-fit: contain"></div>
+  <div style="position: absolute; left: 160px; top: 440px; width: 88px; display: flex; flex-direction: column; gap: 2px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800; line-height: 18px">시스템에어컨</span>
+    <span style="font-size: 12px; line-height: 16px; color: #596170">실외기 <span style="font-family: Manrope, sans-serif; font-weight: 700">×[0]</span></span>
+  </div>
+
+  <!-- 매장 안: 설비 (실물 썸네일) -->
+  <sc-for list="{{units}}" as="u" hint-placeholder-count="3">
+    <div style="{{u.box}}">
+      <div style="{{u.wrap}}"><img src="{{u.src}}" alt="{{u.alt}}" style="{{u.img}} object-fit: contain"></div>
+      <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; white-space: nowrap">
+        <span style="font-size: 14px; font-weight: 800; line-height: 20px">{{u.t}}</span>
+        <span style="font-size: 11.5px; line-height: 16px; color: #596170">{{u.sub}}</span>
+      </div>
+    </div>
+  </sc-for>
+  <!-- 매장 안: Link Controller (카탈로그 제품 이미지) -->
+  <div style="position: absolute; left: 588px; top: 504px; width: 124px; height: 88px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #1428a0; background: #eaeefb"></div>
+  <div style="{{link.wrap}}"><img src="{{link.src}}" alt="{{link.alt}}" style="{{link.img}} object-fit: contain"></div>
+  <div style="position: absolute; left: 598px; top: 548px; width: 108px; display: flex; flex-direction: column; gap: 1px; white-space: nowrap">
+    <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 17px; color: #1428a0">Link Controller</span>
+    <span style="font-size: 11px; line-height: 15px; color: #3d4452">로컬 제어기도 가능</span>
+  </div>
+
+  <!-- 클라우드: b.IoT Cloud (로고는 흰 칩 위) -->
+  <div style="position: absolute; left: 764px; top: 232px; width: 164px; height: 244px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 16px 16px">
+    <div style="width: 132px; height: 32px; box-sizing: border-box; border-radius: 8px; background: #ffffff; padding: 0 8px; display: flex; align-items: center"><img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 워드마크" style="width: 116px; height: 21px; object-fit: contain"></div>
+    <div style="margin-top: 12px; font-size: 20px; font-weight: 800; line-height: 26px; letter-spacing: -0.01em; white-space: nowrap">b.IoT Cloud</div>
+    <div style="font-size: 11.5px; line-height: 18px; color: #c8d3ff; white-space: nowrap">콜드체인 + 에어컨 통합</div>
+    <div style="margin-top: 12px; height: 1px; background: rgba(255,255,255,0.2)"></div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 4px">
+      <sc-for list="{{features}}" as="f" hint-placeholder-count="3">
+        <span style="height: 20px; display: flex; align-items: center; gap: 7px; font-size: 12.5px; white-space: nowrap"><span style="width: 5px; height: 5px; flex-shrink: 0; border-radius: 1px; background: #ffffff"></span>{{f}}</span>
+      </sc-for>
+    </div>
+    <div style="position: absolute; left: 16px; top: 216px; height: 16px; font-size: 11px; line-height: 16px; color: #c8d3ff; white-space: nowrap">옵션 · [이용 조건 확인]</div>
+  </div>
+  <div style="position: absolute; left: 812px; top: 492px; height: 16px; font-size: 11.5px; font-weight: 700; line-height: 16px; color: #1428a0; white-space: nowrap">상태 · 알람 ↑</div>
+  <div style="position: absolute; left: 812px; top: 510px; height: 16px; font-size: 11.5px; font-weight: 700; line-height: 16px; color: #3d4452; white-space: nowrap">원격 제어 ↓</div>
+
+  <!-- 우: 보는 곳 · 조치하는 곳 -->
+  <div style="position: absolute; left: 968px; top: 202px; height: 18px; font-size: 12px; font-weight: 800; line-height: 18px; color: #596170; white-space: nowrap">본사 · 점장 · 서비스</div>
+  <div style="position: absolute; left: 968px; top: 404px; width: 248px; height: 200px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 980px; top: 394px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">유지보수 가입 매장</div>
+  <sc-for list="{{outs}}" as="o" hint-placeholder-count="4">
+    <div style="{{o.box}}">
+      <sc-if value="{{o.photo}}" hint-placeholder-val="{{false}}">
+        <div style="{{o.wrap}}"><img src="{{o.src}}" alt="{{o.alt}}" style="{{o.img}} object-fit: contain"></div>
+      </sc-if>
+      <sc-if value="{{o.drawn}}" hint-placeholder-val="{{true}}">
+        <div style="{{o.iconBox}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{o.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{o.icon}}"/></svg></div>
+      </sc-if>
+      <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; white-space: nowrap">
+        <span style="font-size: 14px; font-weight: 800; line-height: 20px">{{o.t}}</span>
+        <span style="font-size: 11.5px; line-height: 16px; color: #596170">{{o.sub}}</span>
+      </div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 984px; top: 574px; height: 16px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">전용 콜센터 <span style="font-family: Manrope, sans-serif; font-weight: 700">24/365</span> · 전국 7개 서비스센터</div>
+
+  <!-- 탭 지점 -->
+  <sc-for list="{{taps}}" as="t" hint-placeholder-count="5">
+    <div style="{{t.style}}"></div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 620px; height: 18px; display: flex; align-items: center; gap: 18px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 28px; height: 4px; border-radius: 2px; background: #3d4452"></span>냉매 배관 · 최장 70m (멀티 50m)</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 28px; height: 0px; border-top: 2px dashed #1428a0"></span>데이터 · 상태 · 알람 ↑ / 원격 제어 ↓</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 24px; height: 12px; box-sizing: border-box; border: 1.5px dashed #b8bec8; border-radius: 3px"></span>설치 위치 경계</span>
+  </div>
+  <div style="position: absolute; right: 64px; top: 620px; height: 18px; font-size: 11.5px; line-height: 18px; color: #8a91a0; white-space: nowrap">제품 사진: 카탈로그 이미지 · 쇼케이스 · 유닛쿨러 · 저장고는 협력사 제품</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 매장 콜드체인 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => (Math.round(n * 10) / 10) + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const BLUE = '#1428a0', INK = '#121417', PIPE = '#3d4452';
+    const h = (x1, x2, y, c, dash) => ({ style: A + 'left: ' + px(Math.min(x1, x2)) + 'top: ' + px(y - 1) + 'width: ' + px(Math.abs(x2 - x1)) + (dash ? 'height: 0px; border-top: 2px dashed ' + c + ';' : 'height: 2px; background: ' + c + ';') });
+    const v = (x, y1, y2, c, dash) => ({ style: A + 'left: ' + px(x - 1) + 'top: ' + px(Math.min(y1, y2)) + 'height: ' + px(Math.abs(y2 - y1)) + (dash ? 'width: 0px; border-left: 2px dashed ' + c + ';' : 'width: 2px; background: ' + c + ';') });
+    const ar = (x, y, dir, c) => {
+      const s = 'position: absolute; width: 0px; height: 0px; ';
+      if (dir === 'r') return { style: s + 'left: ' + px(x - 7) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + c + ';' };
+      if (dir === 'l') return { style: s + 'left: ' + px(x) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid ' + c + ';' };
+      if (dir === 'd') return { style: s + 'left: ' + px(x - 5) + 'top: ' + px(y - 7) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid ' + c + ';' };
+      return { style: s + 'left: ' + px(x - 5) + 'top: ' + px(y) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + c + ';' };
+    };
+    // 냉매 배관: 굵은 4px 선
+    const pipe = (x1, x2, y) => ({ style: A + 'left: ' + px(x1) + 'top: ' + px(y - 2) + 'width: ' + px(x2 - x1) + 'height: 4px; border-radius: 2px; background: ' + PIPE + ';' });
+
+    // 좌표: 콘덴싱 유닛 x 80–252 · 실외기 x 96–252 · 매장 설비 x 364–556 (중심 y 240 / 312 / 460)
+    // 데이터 버스 x 572 · 하단 버스 y 556 → Link Controller x 588–712 → 수직 x 800 → b.IoT Cloud (y 232–476)
+    const wires = [
+      pipe(252, 364, 240), pipe(252, 364, 312), pipe(252, 364, 460),
+      h(556, 572, 240, BLUE, true), h(556, 572, 312, BLUE, true), h(556, 572, 460, BLUE, true),
+      v(572, 240, 556, BLUE, true),
+      v(92, 344, 556, BLUE, true), v(178, 500, 556, BLUE, true),
+      h(92, 581, 556, BLUE, true), ar(588, 556, 'r', BLUE),
+      v(800, 483, 556, BLUE, true), ar(800, 476, 'u', BLUE),
+      h(719, 800, 556, BLUE, true), ar(712, 556, 'l', BLUE),
+      h(928, 961, 262, BLUE, true), ar(968, 262, 'r', BLUE),
+      h(928, 961, 342, BLUE, true), ar(968, 342, 'r', BLUE),
+      h(928, 977, 448, BLUE, true), ar(984, 448, 'r', BLUE),
+      v(1092, 476, 501, INK), ar(1092, 508, 'd', INK)
+    ];
+    const taps = [[92, 344], [178, 500], [556, 240], [556, 312], [556, 460]].map(([x, y]) => ({
+      style: A + 'left: ' + px(x - 5) + 'top: ' + px(y - 5) + 'width: 10px; height: 10px; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff;'
+    }));
+
+    // ---- 실물 썸네일 ----
+    const SRC = {
+      biot: '/_blob/bc66c58778e0a0f32df80c812dfef991',   // 930×221 카탈로그 b.IoT Cloud 구성도
+      walk: '/_blob/7e87cbc4b607423496c9b8b9c3393632',   // 956×428 저온 저장고 카탈로그 이미지
+      multi: '/_blob/6ae507f9d1633159e9dce37c40ff2af0',  // 협력사 오픈 다단 쇼케이스
+      shop: '/_blob/4e4fd3e034845eb1928daa8637fdf04c'    // 385×316 매장 천장 360 실내기
+    };
+    const NAT = { biot: [930, 221], walk: [956, 428], shop: [385, 316] };
+    // crop: 원본 영역(rx, ry, rw, rh)을 bw×bh 상자에 맞춰 보여 준다 (배율 ≤ 1)
+    const crop = (key, alt, rx, ry, rw, rh, bw, bh, wrapPos) => {
+      const s = Math.min(bw / rw, bh / rh);
+      const offX = (bw - rw * s) / 2, offY = (bh - rh * s) / 2;
+      return {
+        src: SRC[key], alt,
+        wrap: wrapPos + 'width: ' + px(bw) + 'height: ' + px(bh) + 'overflow: hidden; border-radius: 6px; background: #ffffff;',
+        img: 'position: absolute; left: ' + px(offX - rx * s) + 'top: ' + px(offY - ry * s) + 'width: ' + px(NAT[key][0] * s) + 'height: ' + px(NAT[key][1] * s)
+      };
+    };
+    const full = (key, alt, bw, bh, wrapPos) => ({
+      src: SRC[key], alt,
+      wrap: wrapPos + 'width: ' + px(bw) + 'height: ' + px(bh) + 'overflow: hidden; border-radius: 6px; background: #ffffff;',
+      img: 'position: absolute; left: 2px; top: 2px; width: ' + px(bw - 4) + 'height: ' + px(bh - 4)
+    });
+    const at = (x, y) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y);
+    const inFlex = 'position: relative; flex-shrink: 0; box-sizing: border-box; border: 1px solid #e2e5ea; ';
+
+    const odu = crop('biot', '시스템에어컨 실외기 (카탈로그 제품 이미지)', 222, 44, 64, 56, 50, 44, at(104, 438));
+    const link = crop('biot', 'Link Controller (카탈로그 제품 이미지)', 40, 44, 78, 56, 50, 36, at(598, 510));
+
+    const boxAt = (x, y, w, hh, partner) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(hh) + 'border-radius: 12px; padding: 0 10px 0 8px; display: flex; align-items: center; gap: 10px; ' +
+      (partner ? 'background: #f5f6f8;' : 'background: #ffffff; border: 1.5px solid #121417;');
+    const U = [
+      ['쇼케이스', '디저트 · 음료 · 협력사', 212, true, full('multi', '협력사 오픈 다단 쇼케이스', 40, 44, inFlex)],
+      ['워크인 저장고', '유닛쿨러 · 협력사', 284, true, crop('walk', '협력사 워크인 저장고 도어 (카탈로그 이미지)', 245, 60, 173, 190, 40, 44, inFlex)],
+      ['시스템에어컨 360', '실내기 · 매장 공조', 432, false, crop('shop', '매장 천장의 시스템에어컨 360 실내기', 150, 0, 140, 154, 40, 44, inFlex)]
+    ];
+    const units = U.map(([t, sub, y, partner, th]) => Object.assign({ t, sub, box: boxAt(364, y, 192, 56, partner) }, th));
+
+    const features = ['통합 원격 제어', '모니터링', '대시보드 · 리포트'];
+
+    const I = {
+      mobile: 'M7 2h10v20H7z M11 18h2',
+      center: 'M4 15v-3a8 8 0 0 1 16 0v3 M4 15h3v5H4z M17 15h3v5h-3z',
+      engineer: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z'
+    };
+    const outBox = (x, y, w) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: 56px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; padding: 0 12px 0 8px; display: flex; align-items: center; gap: 10px;';
+    const outIcon = (svc) => 'width: 30px; height: 30px; flex-shrink: 0; margin-left: 4px; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: ' + (svc ? '#121417' : '#eaeefb') + ';';
+    const dash = crop('biot', 'b.IoT Cloud 대시보드 모니터 (카탈로그 이미지)', 740, 52, 188, 148, 46, 40, inFlex);
+    const O = [
+      ['본사 대시보드 · 리포트', 'PC · 전 매장 현황', '', 968, 234, 248, false, dash],
+      ['점장 모바일', '매장 상태 확인 · 원격 제어', I.mobile, 968, 314, 248, false, null],
+      ['24시간 모니터링센터', '상태 · 알람 수신', I.center, 984, 420, 216, true, null],
+      ['전담 엔지니어', '사이트별 배정 · HASS 진단', I.engineer, 984, 508, 216, true, null]
+    ];
+    const outs = O.map(([t, sub, ic, x, y, w, svc, ph]) => Object.assign(
+      { t, sub, icon: ic, box: outBox(x, y, w), iconBox: outIcon(svc), stroke: svc ? '#ffffff' : '#1428a0', photo: !!ph, drawn: !ph, src: '', alt: '', wrap: '', img: '' },
+      ph || {}
+    ));
+
+    return { wires, taps, odu, link, units, features, outs };
+  }
+}
+</script>
+</body>
+</html>

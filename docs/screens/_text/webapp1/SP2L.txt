@@ -1,0 +1,73 @@
+ 
+ Spec 시트 · 출력 형식 · 언어 · 단위 
+ 해외 본사 구매팀 검토용이라 영문, inch 단위로도 필요해요 
+ W 
+ Excel과 PDF로 만들고 영문 · inch · lb 기준으로 바꿨습니다. 단위가 바뀐 셀은 파랗게 표시했어요. 고객사 양식이 있으면 올려 주세요. 같은 칸 순서로 맞춰 드립니다. 
+ {{t.label}} 
+ 미리보기 
+ English · inch · lb 
+ A B C 
+ {{r.n}} 
+ {{r.a}} 
+ {{r.b}} 
+ {{r.c}} 
+ Comparison 
+ Notes & Sources 
+ 단위 바뀐 셀 4개 · 소수점 첫째 자리 반올림 · mm 원래 값은 셀 메모에 보관 
+ 출력 형식 · 언어 · 단위 · 2 / 3 
+ 고객사 양식 올리기 
+ 내 기본값으로 저장 
+ {{g.label}} 
+ {{ch.label}} 
+ 파일명 
+ .xlsx · .pdf 
+ 이전 
+ 시트 생성 
+class Component extends DCLogic {
+ renderVals() {
+ const tabBase = '';
+ const tabs = [
+ ['Excel (.xlsx)', 'M4 4h16v16H4z M4 10h16 M10 4v16', 'on'],
+ ['PDF · A4 가로', 'M6 3h8l5 5v13H6V3z M14 3v5h5', 'sel'],
+ ['PPT 슬라이드', 'M3 5h18v12H3z M8 21h8 M12 17v4', 'off']
+ ].map(([label, icon, st]) => ({
+ label, icon,
+ style: tabBase + (st === 'on'
+ ? ''
+ : st === 'sel' ? ''
+ : '')
+ }));
+ const cols = '';
+ const gridHead = cols + '';
+ const cell = '';
+ const conv = '';
+ const ROWS = [
+ ['Samsung Smart Signage 55" Comparison', '', '', 'title'],
+ ['Item', 'QM55C', 'QB55C', 'head'],
+ ['Screen Size', '55"', '55"', ''],
+ ['Resolution', 'UHD', 'UHD', ''],
+ ['Brightness', '[00] nit', '[00] nit', ''],
+ ['Dimensions (W × H × D)', '[00] × [00] × [00] in', '[00] × [00] × [00] in', 'conv'],
+ ['Weight (Set / Package)', '[00] lb / [00] lb', '[00] lb / [00] lb', 'conv'],
+ ['Power Consumption (Typ. / Max)', '[00] W / [00] W', '[00] W / [00] W', ''],
+ ['MagicINFO', 'Supported', 'Supported', '']
+ ];
+ const sheet = ROWS.map(([a, b, c, kind], i) => {
+ const base = cols + '';
+ const aStyle = cell + (kind === 'title' ? '' : kind === 'head' ? '' : '');
+ const v = cell + (kind === 'head' ? '' : kind === 'conv' ? conv : kind === 'title' ? ' border-right: none;' : '');
+ return { n: i + 1, a, b, c, aStyle, bStyle: v, cStyle: v, rowStyle: base };
+ });
+ const on = '';
+ const off = '';
+ const groups = [
+ ['형식', [['Excel', 1], ['PDF', 1], ['PPT 슬라이드', 0]]],
+ ['언어', [['한국어', 0], ['English', 1], ['한/영 병기', 0]]],
+ ['길이', [['mm', 0], ['inch', 1], ['둘 다 표기', 0]]],
+ ['무게', [['kg', 0], ['lb', 1], ['둘 다 표기', 0]]],
+ ['용지', [['A4 가로', 1], ['A4 세로', 0], ['Letter', 0]]],
+ ['숫자', [['1,234.5', 1], ['1.234,5', 0]]]
+ ].map(([label, chips]) => ({ label, chips: chips.map(([l, v]) => ({ label: l, style: v ? on : off })) }));
+ return { steps: ['제품 입력', '항목 · 형식', '시트 생성'], cur: 2, tabs, gridHead, sheet, groups };
+ }
+}

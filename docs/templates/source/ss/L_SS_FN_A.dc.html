@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-FN-A 금융 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">T 은행의 여섯 공간이 본점 한 곳에서 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">본점 · 영업점 · 영업점 밖 — 공간마다 놓이는 제품 · 솔루션과 그곳의 가치, 화면과 단말은 본점이 일괄 관리</div>
+
+  <!-- 구역 머리: 본점 → 영업점 → 영업점 밖 -->
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="3">
+    <div style="{{z.labelStyle}}"><span style="font-size: 14px; font-weight: 800; color: #121417">{{z.name}}</span><span style="font-size: 11.5px; color: #8a91a0">{{z.note}}</span></div>
+    <div style="{{z.lineStyle}}"></div>
+  </sc-for>
+  <sc-for list="{{zoneArrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.style}}"></div>
+  </sc-for>
+
+  <!-- 공간 도면: 본점 단면 · 영업점 평면 · 고객의 집 -->
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}"></div>
+  </sc-for>
+  <svg style="position: absolute; left: 1074px; top: 204px; width: 132px; height: 46px; overflow: visible" width="132" height="46" viewBox="0 0 132 46" fill="none">
+    <polygon points="4,44 66,4 128,44" stroke="#b8bec8" stroke-width="2" stroke-linejoin="round" fill="#ffffff"></polygon>
+  </svg>
+  <svg style="position: absolute; left: 1156px; top: 297px; width: 20px; height: 20px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"></path><path d="M9 12l2 2 4-4"></path></svg>
+  <sc-for list="{{labels}}" as="l" hint-placeholder-count="12">
+    <div style="{{l.style}}">{{l.text}}</div>
+  </sc-for>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="6">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+
+  <!-- 본점 운영 띠: 모든 공간 아래에서 -->
+  <sc-for list="{{ups}}" as="u" hint-placeholder-count="3">
+    <div style="{{u.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 358px; width: 1152px; height: 26px; border-radius: 8px; background: #1428a0"></div>
+  <div style="position: absolute; left: 78px; top: 358px; width: 1124px; height: 26px; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; color: #ffffff">본점 운영실에서 일괄 관리</span>
+    <sc-for list="{{band}}" as="b" hint-placeholder-count="3">
+      <span style="width: 1px; height: 12px; background: #6f82d6"></span>
+      <span style="font-size: 12px; font-weight: 800; color: #ffffff">{{b.name}}</span>
+      <span style="font-size: 12px; color: #dfe6ff">{{b.what}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 공간 카드 6개 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.box}}"></div>
+    <div style="{{c.numStyle}}">{{c.n}}</div>
+    <div style="{{c.nameStyle}}">{{c.name}}</div>
+    <sc-if value="{{c.focus}}" hint-placeholder-val="{{false}}">
+      <div style="{{c.tagStyle}}">대표 공간</div>
+    </sc-if>
+    <sc-for list="{{c.prods}}" as="p" hint-placeholder-count="3">
+      <div style="{{p.style}}"><span style="width: 4px; height: 4px; flex-shrink: 0; border-radius: 50%; background: #8a91a0"></span><span>{{p.t}}</span></div>
+    </sc-for>
+    <div style="{{c.solRow}}">
+      <sc-for list="{{c.sols}}" as="v" hint-placeholder-count="2">
+        <span style="height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{v.t}}</span>
+      </sc-for>
+    </div>
+    <div style="{{c.valBox}}"></div>
+    <div style="{{c.valStyle}}">{{c.value}}</div>
+  </sc-for>
+
+  <!-- 전체 구성: 제품 ↔ 솔루션 ↔ 공간 -->
+  <div style="position: absolute; left: 64px; top: 580px; width: 1152px; height: 68px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 592px; width: 140px; height: 20px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">전체 구성</div>
+  <div style="position: absolute; left: 80px; top: 616px; width: 140px; height: 16px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">칩 = 솔루션 · 번호 = 공간</div>
+  <sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.sepStyle}}"></div>
+    <div style="{{k.chipStyle}}">{{k.name}}</div>
+    <sc-for list="{{k.spots}}" as="o" hint-placeholder-count="3">
+      <div style="{{o.style}}">{{o.n}}</div>
+    </sc-for>
+    <div style="{{k.prodStyle}}">{{k.prods}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+    const SCREEN = 'background: #1f232a; border: 2px solid #121417; box-sizing: border-box; border-radius: 2px;';
+    const MUPUNG = 'box-sizing: border-box; border: 1.5px dashed #6f82d6; border-radius: 2px;';
+
+    // 구역 — 본점(x 64–432) · 영업점(456–1014) · 영업점 밖(1038–1216)
+    const Z = [
+      ['본점 · 본사', '브랜드 · 임직원 · 행사', 64, 368, false],
+      ['T 은행 영업점 × [000]곳', '내점 · 대기 · 창구', 456, 558, true],
+      ['영업점 밖', '방문 상담', 1038, 178, false]
+    ];
+    const zones = Z.map(([name, note, x, w, focus]) => ({
+      name, note,
+      labelStyle: box(x, 160, w, 20) + 'display: flex; align-items: center; gap: 10px; white-space: nowrap;',
+      lineStyle: box(x, 184, w, 2) + 'background: ' + (focus ? BLUE : '#d5d9e0') + ';'
+    }));
+    const zoneArrows = [440, 1022].map((x) => ({
+      style: 'position: absolute; left: ' + px(x) + 'top: 179px; width: 0px; height: 0px; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 7px solid #b8bec8;'
+    }));
+
+    const shapes = [];
+    const add = (x, y, w, h, st) => shapes.push({ style: box(x, y, w, h) + st });
+
+    // ── 본점 단면: 위층 대강당 / 아래층 로비 · 라운지 · 사내 카페
+    add(72, 198, 352, 152, 'box-sizing: border-box; border: 2px solid #b8bec8; border-radius: 6px;');
+    add(72, 273, 352, 2, 'background: #b8bec8;');
+    add(168, 212, 160, 44, 'background: #1f232a; border: 3px solid #121417; box-sizing: border-box; border-radius: 3px;');   // 무대 LED
+    for (let r = 0; r < 2; r++) {
+      for (let c = 0; c < 2; c++) {
+        add(94 + c * 19, 220 + r * 15, 17, 13, 'background: #1f232a;');    // 좌측 비디오월
+        add(364 + c * 19, 220 + r * 15, 17, 13, 'background: #1f232a;');   // 우측 비디오월
+      }
+    }
+    add(150, 261, 196, 2, 'background: #d5d9e0;');
+    add(150, 267, 196, 2, 'background: #d5d9e0;');
+    add(108, 296, 14, 50, SCREEN);                     // LED 기둥
+    add(152, 296, 14, 50, SCREEN);
+    add(196, 300, 40, 28, 'box-sizing: border-box; background: #dfe3ea; border: 3px solid #596170; border-radius: 2px;');   // 더 프레임
+    add(300, 292, 56, 20, SCREEN);                     // 사내 카페 사이니지
+    add(286, 334, 124, 8, 'background: #d5d9e0; border-radius: 2px;');
+    add(258, 281, 14, 14, MUPUNG);
+    add(380, 281, 14, 14, MUPUNG);
+
+    // ── 영업점 평면: 입구 · 객장 | 창구 대기 공간 | 영업점 창구
+    add(462, 198, 546, 152, 'box-sizing: border-box; border: 2px solid #b8bec8; border-radius: 6px;');
+    add(461, 246, 4, 44, 'background: #ffffff;');                    // 출입구
+    add(438, 267, 18, 2, 'background: ' + BLUE + ';');
+    shapes.push({ style: 'position: absolute; left: 456px; top: 262px; width: 0px; height: 0px; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid ' + BLUE + ';' });
+    add(612, 214, 0, 124, 'border-left: 1px dashed #d5d9e0;');
+    add(800, 214, 0, 124, 'border-left: 1px dashed #d5d9e0;');
+    add(560, 226, 24, 44, SCREEN);                     // 세로형 사이니지
+    add(520, 296, 18, 24, 'background: #b8bec8; border-radius: 3px;');   // 번호표
+    add(522, 226, 14, 14, MUPUNG);
+    add(640, 222, 64, 26, SCREEN);                     // 객장 화면
+    for (let r = 0; r < 3; r++) {
+      for (let j = 0; j < 5; j++) add(628 + j * 20, 272 + r * 18, 14, 10, 'background: #d5d9e0; border-radius: 3px;');
+    }
+    for (let k = 0; k < 2; k++) {                       // 대기석 거치대 태블릿
+      add(752 + k * 26, 276, 2, 26, 'background: #b8bec8;');
+      add(746 + k * 26, 301, 14, 2, 'background: #b8bec8;');
+      add(744 + k * 26, 262, 18, 14, SCREEN);
+    }
+    add(712, 326, 14, 14, MUPUNG);
+    add(896, 214, 12, 128, 'background: #d5d9e0; border-radius: 3px;');  // 창구 카운터
+    for (let i = 0; i < 4; i++) {
+      const y = 222 + i * 30;
+      add(872, y + 2, 14, 14, 'background: #b8bec8; border-radius: 4px;');   // 고객석
+      add(920, y + 2, 14, 14, 'background: #596170; border-radius: 4px;');   // 직원석
+      add(895, y, 14, 18, SCREEN);                                           // 창구 태블릿
+    }
+    add(972, 252, 14, 14, MUPUNG);
+    add(930, 331, 10, 10, MUPUNG);                                           // 범례 기호
+
+    // ── 영업점 밖: 고객의 집 · 사업장
+    add(1008, 300, 72, 0, 'border-top: 1.5px dashed ' + BLUE + ';');
+    add(1082, 247, 116, 99, 'box-sizing: border-box; border: 2px solid #b8bec8; border-top: 0px solid #b8bec8;');
+    add(1104, 318, 72, 6, 'background: #d5d9e0; border-radius: 2px;');
+    add(1124, 298, 26, 18, SCREEN);
+
+    // 도면 라벨
+    const L = [
+      [84, 203, 120, '대강당', '#596170', 700, 11],
+      [208, 228, 80, 'LED', '#8a91a0', 800, 10],
+      [84, 279, 160, '로비 · 라운지 · 사내 카페', '#596170', 700, 11],
+      [474, 204, 120, '입구 · 객장', '#596170', 700, 11],
+      [470, 262, 40, '입구', BLUE, 700, 10.5],
+      [512, 322, 50, '번호표', '#8a91a0', 500, 10],
+      [624, 204, 120, '창구 대기 공간', '#596170', 700, 11],
+      [812, 204, 120, '영업점 창구', '#596170', 700, 11],
+      [944, 328, 64, '천장 무풍', '#8a91a0', 500, 10],
+      [1040, 284, 40, '방문', BLUE, 700, 10.5],
+      [1090, 254, 104, '고객의 집 · 사업장', '#596170', 700, 10.5]
+    ];
+    const labels = L.map(([x, y, w, text, color, wt, fs]) => ({
+      text,
+      style: box(x, y, w, 16) + 'font-size: ' + fs + 'px; font-weight: ' + wt + '; line-height: 16px; color: ' + color + '; white-space: nowrap;' + (text === 'LED' ? ' text-align: center; font-family: Manrope, sans-serif; letter-spacing: 0.08em;' : '')
+    }));
+
+    // 공간 번호 표식 (도면 위)
+    const M = [[1, 128, 302], [2, 334, 214], [3, 588, 222], [4, 756, 234], [5, 944, 222], [6, 1096, 288]];
+    const marks = M.map(([n, x, y]) => ({
+      n,
+      style: box(x, y, 22, 22) + 'box-sizing: border-box; border-radius: 50%; background: ' + BLUE + '; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 운영 띠 → 각 구역으로 올라가는 표식
+    const ups = [248, 735, 1127].map((cx) => ({
+      style: 'position: absolute; left: ' + px(cx - 6) + 'top: 352px; width: 0px; height: 0px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 6px solid ' + BLUE + ';'
+    }));
+    const band = [
+      { name: 'MagicINFO', what: '본점 · 전 지점 화면의 콘텐츠 · 스케줄' },
+      { name: 'Knox', what: '전 지점 · 방문 상담 태블릿의 보안 정책' },
+      { name: 'T 은행 앱', what: '미리작성 · 전자서식 · 상품 영상 연동' }
+    ];
+
+    // 공간 카드
+    const CX = [64, 254, 456, 646, 836, 1038];
+    const CY = 392, CW = 178, CH = 174;
+    const C = [
+      [1, '본점 로비 · 라운지', ['LED 사이니지 · 기둥 맞춤', '더 프레임 · 카페 사이니지', '무풍 시스템에어컨 4Way'], ['MagicINFO'], '보수적 이미지 대신 디지털 은행의 첫인상'],
+      [2, '본점 대강당', ['LED 사이니지 · 메인 무대', '비디오월 · 양측 벽면'], ['MagicINFO'], '현수막 없이 행사 전환, 뒷좌석까지 또렷'],
+      [3, '영업점 입구 · 객장', ['세로형 스마트 사이니지', '객장 화면 · 상품 · 공지', '무풍 시스템에어컨 4Way'], ['MagicINFO'], '본점이 바꾸면 전 지점 안내가 동시에'],
+      [4, '창구 대기 공간', ['갤럭시 탭 + 대기석 거치대', '무풍 4Way · 공기청정 옵션'], ['미리작성 앱', 'Knox'], '기다리는 동안 서식 작성, 직바람 없는 대기'],
+      [5, '영업점 창구', ['갤럭시 탭 + S펜', '직원 모니터', '무풍 시스템에어컨 4Way'], ['전자서식 연동', 'Knox'], '종이 없는 창구, 중장년도 쉬운 작성 · 서명'],
+      [6, '방문 상담 · 현장 영업', ['갤럭시 탭 · 이동형 창구', 'S펜 · 현장 전자서명'], ['Knox 업무 영역'], '찾아가 그 자리에서 가입, 분실해도 데이터 보호']
+    ];
+    const cards = C.map(([n, name, prods, sols, value], i) => {
+      const x = CX[i], y = CY;
+      const focus = n === 5;
+      return {
+        n, name, value, focus,
+        box: box(x, y, CW, CH) + 'box-sizing: border-box; border-radius: 14px; background: #ffffff; border: ' + (focus ? '2px solid ' + BLUE : '1px solid #e2e5ea') + ';',
+        numStyle: box(x + 12, y + 12, 20, 20) + 'border-radius: 50%; background: ' + BLUE + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        nameStyle: box(x + 38, y + 12, focus ? 76 : 132, 20) + 'font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        tagStyle: focus ? box(x + 116, y + 13, 52, 18) + 'border-radius: 999px; background: #eaeefb; color: ' + BLUE + '; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; white-space: nowrap;' : '',
+        prods: prods.map((t, j) => ({ t, style: box(x + 12, y + 42 + j * 18, 156, 18) + 'display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 18px; color: #3d4452; white-space: nowrap;' })),
+        sols: sols.map((t) => ({ t })),
+        solRow: box(x + 12, y + 100, 156, 22) + 'display: flex; gap: 4px;',
+        valBox: box(x + 8, y + 128, 162, 38) + 'border-radius: 8px; background: #eaeefb;',
+        valStyle: box(x + 16, y + 128, 146, 38) + 'display: flex; align-items: center; font-size: 12px; font-weight: 700; line-height: 16px; color: #121417;'
+      };
+    });
+
+    // 전체 구성 — 솔루션(칩) ↔ 제품 ↔ 공간 번호
+    const K = [
+      ['MagicINFO', true, 'LED · 비디오월 · 스마트 사이니지', [1, 2, 3]],
+      ['Knox', true, '갤럭시 탭 — 칩 단계 보안 · 기능 통제', [4, 5, 6]],
+      ['T 은행 앱 · 전자서식', true, '미리작성 · 상품 영상 · 전자서명', [4, 5, 6]],
+      ['무풍 시스템에어컨', false, '4Way · 공기청정 옵션 · 직바람 없이', [1, 3, 4, 5]]
+    ];
+    const kit = K.map(([name, sol, prods, sp], i) => {
+      const gx = 236 + i * 245;
+      return {
+        name, prods,
+        sepStyle: box(gx - 7, 592, 1, 44) + 'background: #d5d9e0;',
+        chipStyle: 'position: absolute; left: ' + px(gx) + 'top: 590px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + (sol ? 'background: ' + BLUE + '; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #121417;'),
+        prodStyle: box(gx, 618, 233, 18) + 'font-size: 11.5px; line-height: 18px; color: #3d4452; white-space: nowrap;',
+        spots: sp.map((n, j) => ({
+          n,
+          style: box(gx + 233 - (sp.length - j) * 21 + 3, 592, 18, 18) + 'border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+        }))
+      };
+    });
+
+    return { zones, zoneArrows, shapes, labels, marks, ups, band, cards, kit };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SM-B 공간 × 제품 수량 매트릭스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">다섯 공간, 다섯 제품 — 어디에 몇 대</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">표준 매장 1곳 기준 · 칸의 숫자는 설치 대수</div>
+
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; display: flex; flex-direction: column">
+    <!-- 헤더: 제품 열 -->
+    <div style="display: grid; grid-template-columns: 212px repeat(5, minmax(0, 1fr)) 150px; height: 94px; box-sizing: border-box; border-bottom: 2px solid #121417">
+      <span style="align-self: end; padding: 0 0 12px 4px; font-size: 12.5px; color: #596170">공간 ↓ · 제품 →</span>
+      <sc-for list="{{products}}" as="p" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 3px; padding-bottom: 10px">
+          <div style="height: 30px; display: flex; align-items: flex-end; margin-bottom: 4px"><div style="{{p.screen}}"></div></div>
+          <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800">{{p.model}}</span>
+          <span style="font-size: 12px; color: #596170">{{p.cat}}</span>
+        </div>
+      </sc-for>
+      <div style="display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; border-left: 1px solid #d5d9e0; font-size: 13px; font-weight: 800">매장당 합계</div>
+    </div>
+    <!-- 행: 공간 -->
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+      <div style="display: grid; grid-template-columns: 212px repeat(5, minmax(0, 1fr)) 150px; height: 60px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea">
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 2px; padding-left: 4px"><span style="font-size: 15px; font-weight: 700">{{r.name}}</span><span style="font-size: 12px; color: #8a91a0">{{r.sub}}</span></div>
+        <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="5">
+          <div style="display: flex; align-items: center; justify-content: center"><span style="{{c.style}}">{{c.t}}</span></div>
+        </sc-for>
+        <div style="display: flex; align-items: center; justify-content: center; border-left: 1px solid #d5d9e0; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800">{{r.total}}</div>
+      </div>
+    </sc-for>
+    <!-- 합계 행 -->
+    <div style="display: grid; grid-template-columns: 212px repeat(5, minmax(0, 1fr)) 150px; height: 56px; background: #f5f6f8; border-radius: 0 0 10px 10px">
+      <div style="display: flex; align-items: center; padding-left: 4px; font-size: 15px; font-weight: 800">합계</div>
+      <sc-for list="{{colTotals}}" as="t" hint-placeholder-count="5">
+        <div style="display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800">{{t}}</div>
+      </sc-for>
+      <div style="display: flex; align-items: center; justify-content: center; border-left: 1px solid #d5d9e0"><span style="width: 38px; height: 38px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{grand}}</span></div>
+    </div>
+  </div>
+
+  <!-- 범례 + 전체 물량 -->
+  <div style="position: absolute; left: 68px; top: 626px; display: flex; align-items: center; gap: 16px; font-size: 11.5px; color: #8a91a0">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; background: #eaeefb"></span>설치 대수</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="color: #b8bec8; font-size: 13px">—</span>설치 없음</span>
+  </div>
+  <div style="position: absolute; right: 64px; top: 618px; display: flex; align-items: baseline; gap: 6px; font-size: 14px; color: #596170">
+    <span style="font-family: Manrope, sans-serif; font-weight: 700">× 320</span><span>개 매장 =</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; color: #1428a0">[0,000]</span><span style="font-weight: 700; color: #1428a0">대</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const land = 'width: 44px; height: 26px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417';
+    const port = 'width: 16px; height: 28px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417';
+    const products = [
+      { model: 'OH55C', cat: '옥외 사이니지', screen: land },
+      { model: 'KM24C', cat: '키오스크', screen: port },
+      { model: 'QM55C', cat: '메뉴보드', screen: land },
+      { model: 'QM65C', cat: '대형 사이니지', screen: land },
+      { model: 'QM43C', cat: '호출 사이니지', screen: land }
+    ];
+    // 공간 × 제품 대수 (매장당, 샘플 구성)
+    const S = [
+      ['매장 외부', '거리 · 외벽', [1, 0, 0, 0, 0]],
+      ['입구', '출입문 · 대기열', [1, 1, 0, 0, 0]],
+      ['매장 카운터', '주문 · 결제', [0, 0, 3, 0, 0]],
+      ['대기 공간', '좌석 · 벽면', [0, 0, 0, 1, 0]],
+      ['픽업대', '음료 수령', [0, 0, 0, 0, 1]]
+    ];
+    const on = 'width: 32px; height: 32px; border-radius: 50%; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center';
+    const off = 'font-size: 15px; color: #b8bec8';
+    const rows = S.map(([name, sub, q]) => ({
+      name, sub,
+      cells: q.map((n) => (n ? { t: String(n), style: on } : { t: '—', style: off })),
+      total: String(q.reduce((a, b) => a + b, 0))
+    }));
+    const colTotals = products.map((_, j) => String(S.reduce((a, s) => a + s[2][j], 0)));
+    const grand = String(S.reduce((a, s) => a + s[2].reduce((x, y) => x + y, 0), 0));
+    return { products, rows, colTotals, grand };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>LYN-D LYNK Cloud 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · LYNK Cloud</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>LYNK Cloud · 호스피탈리티 TV 플랫폼</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">PMS와 객실 TV가 LYNK Cloud로 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구성도 · 투숙 정보는 PMS에서 지점별 객실 TV로, 객실의 요청과 기기 상태는 운영 부서로</div>
+
+  <!-- 연결선 · 화살표 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="12">
+    <div style="{{w.style}}"></div>
+  </sc-for>
+  <!-- 흐름 라벨 -->
+  <sc-for list="{{flowLabels}}" as="f" hint-placeholder-count="7">
+    <div style="{{f.style}}">{{f.t}}</div>
+  </sc-for>
+
+  <!-- 호텔 PMS -->
+  <div style="position: absolute; left: 64px; top: 262px; font-size: 12px; font-weight: 700; color: #596170">B 호텔 기존 시스템</div>
+  <div style="position: absolute; left: 64px; top: 288px; width: 164px; height: 204px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+    <div style="width: 36px; height: 36px; border-radius: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v6H4z M4 14h16v6H4z M8 7h.01 M8 17h.01"/></svg></div>
+    <span style="font-size: 17px; font-weight: 800; line-height: 1.4">호텔 PMS</span>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <sc-for list="{{pms}}" as="p" hint-placeholder-count="3">
+        <span style="height: 26px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #ffffff; font-size: 12.5px; display: flex; align-items: center; gap: 6px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #121417"></span>{{p}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- LYNK Cloud -->
+  <div style="position: absolute; left: 352px; top: 172px; width: 200px; height: 328px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 14px; display: flex; flex-direction: column; gap: 6px">
+    <div style="position: relative; width: 172px; height: 92px; flex-shrink: 0; border-radius: 9px; overflow: hidden; background: #121417"><img src="/_blob/ea32e2ebb6f3411eeff85046c27dc3ca" alt="LYNK Cloud 개념 비주얼 — 구름 속 호텔 TV 홈 화면" style="position: absolute; left: -61px; top: -32px; width: 420px; height: 180px; object-fit: cover"><span style="position: absolute; left: 6px; bottom: 6px; height: 16px; padding: 0 6px; border-radius: 999px; background: rgba(255,255,255,0.92); color: #3d4452; font-size: 9.5px; font-weight: 700; display: flex; align-items: center">카탈로그 비주얼</span></div>
+    <div style="display: flex; align-items: center; gap: 10px; height: 36px; margin-top: 4px">
+      <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16a4 4 0 0 1 1-7.9A6 6 0 0 1 17 8a4 4 0 0 1 1 8H4z"/></svg></div>
+      <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em">LYNK Cloud</span>
+    </div>
+    <span style="font-size: 11.5px; color: #c8d3ff; line-height: 1.45">호스피탈리티 TV 플랫폼</span>
+    <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 6px">
+      <sc-for list="{{modules}}" as="m" hint-placeholder-count="4">
+        <span style="height: 26px; box-sizing: border-box; padding: 0 10px; border-radius: 7px; background: rgba(255,255,255,0.14); font-size: 12px; display: flex; align-items: center; white-space: nowrap">{{m}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- OTT · 스트리밍 앱 -->
+  <div style="position: absolute; left: 688px; top: 160px; width: 280px; height: 56px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 14px; display: flex; align-items: center; gap: 12px">
+    <div style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4l14 8-14 8z"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14.5px; font-weight: 800">OTT · 스트리밍 앱</span><span style="font-size: 11.5px; color: #596170">Netflix 등 · 투숙객 본인 계정 로그인</span></div>
+  </div>
+
+  <!-- 객실 TV = 호환 호텔 TV (실제 제품) -->
+  <div style="position: absolute; left: 984px; top: 160px; width: 232px; height: 80px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 12px 0 8px; display: flex; align-items: center; gap: 8px">
+    <div style="position: relative; width: 84px; height: 56px; flex-shrink: 0"><img src="/_blob/de937a6bf01079533fdf948daa80a39c" alt="호환 호텔 TV 제품 정면" style="position: absolute; left: 0px; top: 0px; width: 84px; height: 56px; object-fit: contain"></div>
+    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 14px; font-weight: 800; line-height: 1.4">객실 TV</span><span style="font-size: 11.5px; color: #3d4452; line-height: 1.4; white-space: nowrap">호환 호텔 TV [모델명]</span><span style="font-size: 11px; color: #8a91a0; line-height: 1.4; white-space: nowrap">아래 격자 1칸 = 1대</span></div>
+  </div>
+  <div style="position: absolute; left: 1100px; top: 240px; width: 0px; height: 18px; border-left: 2px dotted #b8bec8"></div>
+
+  <!-- 호텔 지점 경계 -->
+  <div style="position: absolute; left: 676px; top: 258px; width: 540px; height: 254px; box-sizing: border-box; border-radius: 16px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 688px; top: 248px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">B 호텔 · 지점 [0]곳</div>
+  <div style="position: absolute; left: 688px; top: 276px; width: 516px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{props}}" as="p" hint-placeholder-count="3">
+      <div style="height: 224px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 14px; display: flex; flex-direction: column">
+        <span style="font-size: 15px; font-weight: 800; line-height: 1.45">{{p.name}}</span>
+        <span style="font-size: 11.5px; color: #596170; line-height: 1.45">{{p.sub}}</span>
+        <div style="margin-top: 10px; display: grid; grid-template-columns: repeat(3, 38px); gap: 8px">
+          <sc-for list="{{p.rooms}}" as="r" hint-placeholder-count="12">
+            <div style="{{r}}"></div>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <span style="font-size: 11.5px; color: #596170; line-height: 1.45">{{p.status}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 하단: 운영 부서 -->
+  <div style="position: absolute; left: 64px; top: 560px; width: 340px; height: 76px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 14px 0 7px; display: flex; align-items: center; gap: 12px">
+    <div style="position: relative; width: 92px; height: 62px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #dfe3ea"><img src="/_blob/6682f7d3868ea35e6813529c821e528f" alt="프런트 직원이 LYNK Cloud 관리 화면으로 객실 TV를 원격 관리" style="position: absolute; left: 0px; top: 0px; width: 92px; height: 62px; object-fit: cover; object-position: 50% 35%"></div>
+    <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0"><span style="font-size: 15px; font-weight: 800; line-height: 1.4">운영 대시보드</span><span style="font-size: 12px; line-height: 1.45; color: #596170">본사 · 호텔 운영팀 — 원격 설정 · 콘텐츠 배포</span></div>
+  </div>
+  <div style="position: absolute; left: 428px; top: 560px; width: 300px; height: 76px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 16px; display: flex; align-items: center; gap: 12px">
+    <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h18 M5 18a7 7 0 0 1 14 0 M12 8v3 M10 8h4"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0"><span style="font-size: 15px; font-weight: 800">F&amp;B · 컨시어지 부서</span><span style="font-size: 12px; color: #596170; white-space: nowrap">룸서비스 주문 · 시설 예약 접수</span></div>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 752px; top: 560px; width: 464px; display: flex; flex-direction: column; gap: 10px; font-size: 12px; color: #596170">
+    <div style="display: flex; align-items: center; gap: 16px; height: 18px">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 24px; height: 2px; background: #1428a0"></span>전달 · 배포</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 24px; height: 0; border-top: 2px dashed #8a91a0"></span>요청 · 알림</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px; height: 18px">
+      <sc-for list="{{tvLegend}}" as="k" hint-placeholder-count="3">
+        <span style="display: flex; align-items: center; gap: 6px"><span style="{{k.style}}"></span>{{k.t}}</span>
+      </sc-for>
+    </div>
+    <div style="height: 18px; display: flex; align-items: center; font-size: 12px; color: #8a91a0">지점이 늘어도 같은 구성 · 호환 호텔 TV [모델명] · 수치는 예시</div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 호텔 · 객실 TV 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const BLUE = '#1428a0', GRAY = '#8a91a0';
+    // 선: 실선(blue) · 점선(gray dashed)
+    const h = (x1, x2, y, c, dash) => ({ style: A + 'left: ' + px(Math.min(x1, x2)) + 'top: ' + px(y - 1) + 'width: ' + px(Math.abs(x2 - x1)) + (dash ? 'height: 0px; border-top: 2px dashed ' + c + ';' : 'height: 2px; background: ' + c + ';') });
+    const v = (x, y1, y2, c, dash) => ({ style: A + 'left: ' + px(x - 1) + 'top: ' + px(Math.min(y1, y2)) + 'height: ' + px(Math.abs(y2 - y1)) + (dash ? 'width: 0px; border-left: 2px dashed ' + c + ';' : 'width: 2px; background: ' + c + ';') });
+    // 화살촉: (x, y)가 끝점
+    const ar = (x, y, dir, c) => {
+      const s = 'position: absolute; width: 0px; height: 0px; ';
+      if (dir === 'r') return { style: s + 'left: ' + px(x - 7) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + c + ';' };
+      if (dir === 'l') return { style: s + 'left: ' + px(x) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid ' + c + ';' };
+      if (dir === 'd') return { style: s + 'left: ' + px(x - 5) + 'top: ' + px(y - 7) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid ' + c + ';' };
+      return { style: s + 'left: ' + px(x - 5) + 'top: ' + px(y) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + c + ';' };
+    };
+
+    const wires = [
+      // PMS → Cloud
+      h(228, 345, 352, BLUE), ar(352, 352, 'r', BLUE),
+      h(228, 345, 424, BLUE), ar(352, 424, 'r', BLUE),
+      // Cloud → 지점 (웰컴 · 콘텐츠 · 설정)
+      h(552, 669, 352, BLUE), ar(676, 352, 'r', BLUE),
+      // 지점 → Cloud (주문 · 예약 · 상태)
+      h(559, 676, 424, GRAY, true), ar(552, 424, 'l', GRAY),
+      // OTT → 지점 TV
+      v(828, 216, 251, BLUE), ar(828, 258, 'd', BLUE),
+      // Cloud → 운영 대시보드 / F&B
+      v(380, 500, 553, GRAY, true), ar(380, 560, 'd', GRAY),
+      v(520, 500, 553, GRAY, true), ar(520, 560, 'd', GRAY)
+    ];
+
+    const lab = (l, t, txt, c, right) => ({ t: txt, style: 'position: absolute; left: ' + px(l) + 'top: ' + px(t) + (right ? 'width: 130px; text-align: right; ' : '') + 'font-size: 11.5px; font-weight: 700; line-height: 1.4; white-space: nowrap; color: ' + c + ';' });
+    const flowLabels = [
+      lab(236, 330, '체크인/아웃 이벤트', BLUE),
+      lab(236, 402, '투숙객 이름 · 언어', BLUE),
+      lab(560, 330, '웰컴 · 콘텐츠 · 설정', BLUE),
+      lab(560, 402, '주문 · 예약 · 상태', '#596170'),
+      lab(838, 226, '앱 스트리밍 재생', BLUE),
+      lab(240, 518, '상태 · 오류 알림', '#596170', true),
+      lab(530, 518, '주문 · 예약 요청', '#596170')
+    ];
+
+    // 객실 TV 격자: 1 = 투숙 중(웰컴 화면) · 0 = 빈 객실 · 2 = 오류 알림
+    const tv = (s) => 'width: 38px; height: 22px; box-sizing: border-box; border-radius: 2px; ' + (s === 1
+      ? 'background: #1428a0; border: 2px solid #121417;'
+      : s === 2
+        ? 'background: #ffffff; border: 1.5px dashed #121417;'
+        : 'background: #1f232a; border: 2px solid #121417;');
+    const P = [
+      ['B 호텔 서울', [1, 1, 0, 1, 1, 1, 0, 1, 2, 1, 1, 0]],
+      ['B 호텔 부산', [1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1]],
+      ['B 호텔 제주', [0, 1, 1, 1, 0, 1, 1, 1, 1, 2, 1, 1]]
+    ];
+    const props = P.map(([name, rs]) => ({ name, sub: '객실 TV [000]대', rooms: rs.map(tv), status: '투숙 [00]실 · 오류 [0]건' }));
+
+    const tvLegend = [
+      { t: '투숙 중 · 웰컴 화면', style: tv(1) + ' width: 22px; height: 13px;' },
+      { t: '빈 객실', style: tv(0) + ' width: 22px; height: 13px;' },
+      { t: '오류 알림', style: tv(2) + ' width: 22px; height: 13px;' }
+    ];
+
+    return {
+      wires, flowLabels, props, tvLegend,
+      pms: ['체크인', '체크아웃', '투숙객 정보'],
+      modules: ['PMS 연동 · 계정 초기화', '콘텐츠 · 설정 배포', '모니터링 · 오류 알림', '투숙객 행동 분석']
+    };
+  }
+}
+</script>
+</body>
+</html>

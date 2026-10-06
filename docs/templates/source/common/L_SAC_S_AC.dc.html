@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SAC-S-AC 시스템에어컨 제어 공간 시나리오 · 학원</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SAC 제어 시스템</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SAC 제어 · 시스템에어컨 제어 시스템</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">수업 시간표대로 켜고, 마지막 수업 뒤엔 한 번에 끕니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">H 학원 예시 · 인포데스크 터치제어기는 시간표, 교실 유선리모컨은 제한 안의 조절, 교무실 On/Off 제어기는 마감을 맡습니다</div>
+
+  <!-- 모서리: 읽는 법 · 범례 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 180px; height: 152px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 12px 14px; display: flex; flex-direction: column; gap: 5px; white-space: nowrap">
+    <span style="font-size: 14.5px; font-weight: 800; line-height: 20px">학원의 하루</span>
+    <span style="font-size: 11.5px; line-height: 16px; color: #596170">세로 = 시간 · 가로 = 공간</span>
+    <span style="display: flex; align-items: center; gap: 7px; font-size: 11px; color: #3d4452"><span style="width: 18px; height: 12px; border-radius: 3px; background: #eaeefb"></span>SAC가 운전 · 제어</span>
+    <span style="display: flex; align-items: center; gap: 7px; font-size: 11px; color: #3d4452"><span style="width: 18px; height: 12px; box-sizing: border-box; border-radius: 3px; background: #ffffff; border: 1px solid #b8bec8"></span>정지 · OFF</span>
+    <span style="display: flex; align-items: center; gap: 7px; font-size: 11px; color: #3d4452"><span style="width: 18px; height: 12px; box-sizing: border-box; border-radius: 3px; background: #ffffff; border: 1px dashed #d5d9e0"></span>해당 없음</span>
+    <span style="font-size: 10.5px; color: #8a91a0">시간은 예시</span>
+  </div>
+
+  <!-- 열 머리: 학원 공간 사진 (입구/인포데스크 → 교실 → 교무실) -->
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+    <img src="{{c.src}}" alt="{{c.alt}}" style="position: absolute; object-fit: cover; border-radius: 12px; {{c.photo}}">
+    <div style="{{c.tiny}}">예시 사진 · 고객 공간으로 교체</div>
+    <div style="{{c.card}}">
+      <img src="{{c.pSrc}}" alt="{{c.pAlt}}" style="position: absolute; object-fit: contain; {{c.pSt}}">
+      <span style="{{c.pLabel}}">{{c.pName}}</span>
+    </div>
+    <div style="{{c.head}}">
+      <span style="font-size: 13.5px; font-weight: 800">{{c.name}}</span>
+      <span style="font-size: 11.5px; color: #596170">{{c.role}}</span>
+      <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #1428a0">{{c.code}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 행: 시간 · 고민 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+    <div style="{{r.labelBox}}">
+      <div style="height: 22px; display: flex; align-items: baseline; gap: 6px; white-space: nowrap">
+        <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{r.time}}</span>
+        <span style="font-size: 13px; font-weight: 800">{{r.phase}}</span>
+      </div>
+      <span style="font-size: 10.5px; line-height: 14px; color: #596170">{{r.quote}}</span>
+    </div>
+    <sc-for list="{{r.cells}}" as="k" hint-placeholder-count="3">
+      <div style="{{k.style}}">
+        <sc-if value="{{k.empty}}" hint-placeholder-val="{{false}}">
+          <span style="font-size: 14px; color: #b8bec8">—</span>
+        </sc-if>
+        <sc-if value="{{k.full}}" hint-placeholder-val="{{true}}">
+          <span style="font-size: 13px; font-weight: 800; line-height: 19px; white-space: nowrap; color: {{k.ink}}">{{k.t}}</span>
+          <span style="font-size: 11.5px; line-height: 17px; color: #3d4452; white-space: nowrap">{{k.d}}</span>
+        </sc-if>
+      </div>
+    </sc-for>
+  </sc-for>
+
+  <!-- 마지막 행: 원장 원격 확인 (공간 밖) -->
+  <div style="position: absolute; left: 256px; top: 586px; width: 960px; height: 60px; box-sizing: border-box; border-radius: 10px; background: #eaeefb"></div>
+  <div style="position: absolute; left: 268px; top: 594px; width: 56px; height: 44px; border-radius: 8px; overflow: hidden; background: #ffffff">
+    <img src="/_blob/da713bd5673882f831a4af6e5c6e83d1" alt="Wi-Fi Kit AIM-H04N" style="position: absolute; left: 6px; top: 6px; width: 44px; height: 31px; object-fit: contain">
+  </div>
+  <div style="position: absolute; left: 332px; top: 600px; width: 28px; height: 32px; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10v20H7z M11 18h2"/></svg></div>
+  <div style="position: absolute; left: 368px; top: 595px; display: flex; flex-direction: column; white-space: nowrap">
+    <span style="font-size: 13.5px; font-weight: 800; line-height: 20px; color: #1428a0">원장은 학원 밖에서도 확인 — <span style="font-family: Manrope, sans-serif">Wi-Fi Kit</span> · SmartThings 앱</span>
+    <span style="font-size: 11.5px; line-height: 17px; color: #3d4452">모바일로 운전 상태 확인 · 원격 제어 · 에너지 모니터링</span>
+  </div>
+  <div style="position: absolute; right: 78px; top: 604px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #121417; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>모든 교실 OFF 확인</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 학원 체인 · 냉난방 제어 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // ---- 열: x · 폭 (모서리 64–244, 공간 열 간격 12) ----
+    const PH_T = 160, PH_H = 126;            // 사진 y 160–286, 열 머리 글 y 292–312
+    const C = [
+      { x: 256, w: 268, src: '/_blob/f89a574d90d608e60d69e5116140ffe8', alt: '학원 입구 · 인포데스크와 천장 시스템에어컨', pos: '50% 20%',
+        name: '입구 · 인포데스크', role: '터치제어기', code: 'ACM-A300BN',
+        p: { src: '/_blob/56e937b702b293adaa073b70c2937a50', alt: '터치제어기 ACM-A300BN', name: '관리 지점', cw: 92, ch: 74, iw: 80, ih: 54 } },
+      { x: 536, w: 400, src: '/_blob/63585062805dbaad5afe600b39c4e854', alt: '학원 교실 — 전자칠판과 책상', pos: '50% 30%',
+        name: '교실 ×[0]', role: '교실마다 유선리모컨', code: 'AWR-WE13N',
+        p: { src: '/_blob/99bb1b59cc337f7f8d2eed6fed537a92', alt: '통합 유선리모컨 AWR-WE13N', name: '교실마다', cw: 66, ch: 72, iw: 47, ih: 50 } },
+      { x: 948, w: 268, src: '/_blob/1e3ea1c41b7093b3b76827ed95f2aa69', alt: '학원 교무실 — 복합기와 노트북이 있는 책상', pos: '0% 50%',
+        name: '교무실', role: 'On/Off 제어기', code: 'ACM-A202DN',
+        p: { src: '/_blob/760a1087c670c4364c202a1415aa46ed', alt: 'On/Off 제어기 ACM-A202DN', name: '마감 버튼', cw: 76, ch: 60, iw: 46, ih: 33 } }
+    ];
+    const cols = C.map((c) => {
+      const cx = c.x + c.w - 8 - c.p.cw, cy = PH_T + PH_H - 8 - c.p.ch;
+      return {
+        src: c.src, alt: c.alt, name: c.name, role: c.role, code: c.code,
+        photo: box(c.x, PH_T, c.w, PH_H) + 'object-position: ' + c.pos + ';',
+        tiny: A + box(c.x + 8, PH_T + PH_H - 26, 140, 18) + 'border-radius: 999px; background: rgba(18,20,23,0.72); color: #ffffff; font-size: 9.5px; display: flex; align-items: center; justify-content: center; white-space: nowrap;',
+        card: A + box(cx, cy, c.p.cw, c.p.ch) + 'border-radius: 8px; background: #ffffff;',
+        pSrc: c.p.src, pAlt: c.p.alt, pName: c.p.name,
+        pSt: box(Math.round((c.p.cw - c.p.iw) / 2), 4, c.p.iw, c.p.ih),
+        pLabel: A + box(0, c.p.ih + 6, c.p.cw, 12) + 'font-size: 10px; font-weight: 800; line-height: 12px; text-align: center; color: #121417; white-space: nowrap;',
+        head: A + box(c.x, 292, c.w, 20) + 'display: flex; align-items: baseline; gap: 6px; white-space: nowrap; overflow: hidden;'
+      };
+    });
+
+    // ---- 행: 시간 순서, 셀 = 그 시간 그 공간에서 SAC가 하는 일 ----
+    const ON = 'on', OFF = 'off', NONE = 'none';
+    const R = [
+      ['14:50', '수업 전', '“수업 준비시간을 아낄 수 있을까요?”', [
+        [ON, '교실 존별 스케줄 운전', '터치제어기 · 스케줄 50 · 존 50'],
+        [ON, '수업 [00]분 전부터 미리 운전', '학생이 들어오면 이미 쾌적한 교실'],
+        [ON, '업무 시간 스케줄 ON', '같은 터치제어기에서 관리']]],
+      ['15:00~', '수업 중', '“수업을 하다 보면 점점 더워져요”', [
+        [ON, '상 · 하한 · 리모컨 허용/금지', '교실 리모컨의 조절 범위를 정함'],
+        [ON, '유선리모컨으로 바로 조절', '희망온도 상 · 하한 [00]~[00]℃ 안에서만'],
+        [NONE]]],
+      ['16:30', '쉬는 시간 · 빈 교실', '“수업이 없을 때도 불필요하게 에너지가 낭비돼요”', [
+        [ON, '빈 교실 존은 스케줄에서 제외', '수업 없는 교실은 OFF 유지'],
+        [OFF, '켜둔 채 비면 자동 정지', '설정 [00]분 동안 사용이 없으면 운전 정지'],
+        [NONE]]],
+      ['22:10', '마지막 수업 후', '“끄지 않고 퇴근할까 걱정돼요”', [
+        [NONE],
+        [OFF, '전 교실 OFF', '교무실에서 그룹 버튼 한 번으로'],
+        [ON, '그룹 버튼으로 일괄 OFF', 'On/Off 제어기 · 최대 16 그룹']]],
+      ['22:40', '원장 · 원격', '학원 밖, 휴대폰으로', []]
+    ];
+    const ROW_T = 322, ROW_H = 60, ROW_GAP = 6;
+    const skin = {
+      on: 'background: #eaeefb;',
+      off: 'background: #ffffff; border: 1px solid #b8bec8;',
+      none: 'background: #ffffff; border: 1px dashed #d5d9e0; align-items: center;'
+    };
+    const rows = R.map(([time, phase, quote, cells], i) => {
+      const top = ROW_T + i * (ROW_H + ROW_GAP);
+      return {
+        time, phase, quote,
+        labelBox: A + box(64, top, 180, ROW_H) + 'padding-top: 5px; display: flex; flex-direction: column; gap: 2px;',
+        cells: cells.map(([st, t, d], j) => ({
+          t: t || '', d: d || '',
+          empty: st === NONE, full: st !== NONE,
+          ink: st === ON ? '#1428a0' : '#121417',
+          style: A + box(C[j].x, top, C[j].w, ROW_H) + 'border-radius: 10px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; ' + skin[st]
+        }))
+      };
+    });
+
+    return { cols, rows };
+  }
+}
+</script>
+</body>
+</html>

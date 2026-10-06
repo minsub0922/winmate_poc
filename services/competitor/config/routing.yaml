@@ -1,0 +1,146 @@
+# 경쟁사 분석 라우팅 규칙 — CAR 보드 원문(04-competitor.md §3.3) + 규칙 · 임계값(§10).
+# 서버 판단 코드(rules.py)와 GET /v1/routing-rules 가 이 파일 하나를 읽는다.
+# 환경 변수로 덮을 수 있는 값: CA_ASK_SLOTS_REQUIRE_AMBIGUOUS_INDUSTRY(true|false) · CA_TODAY(YYYY-MM-DD, 테스트 고정 시계).
+
+header:
+  kicker: "ROUTING · COMPETITOR ANALYSIS"
+  title: "경쟁사 찾기 — 스스로 정하는 것, 묻는 것"
+  desc: "네 단계마다 입력 신호를 읽고 갈 길을 정해요. 맨 아래 두 경우만 사람에게 묻습니다."
+
+modes:
+  auto: {chip: "자동", legend: "진행"}
+  check: {chip: "확인 권장", legend: "진행 + 결과에 표시"}
+  ask: {chip: "선택 필요", legend: "답 받고 진행"}
+  pin: {chip: "고정", legend: "사람이 정함"}
+
+stages:
+  - no: "1"
+    title: "입력 판별"
+    sub: "무엇으로 시작했나 — 정의서 · 자유 양식 · 첨부 · MI 작업"
+    rules:
+      - ["요구사항 정의서 연결", "고객사 · 업종 · 장소 · 제품 상속", auto]
+      - ["자유 양식 한 문단", "4가지 읽기 · 읽힌 것 칩으로", auto]
+      - ["RFP · 회의록 첨부", "경쟁사 언급 · 평가 기준 추출", auto]
+      - ["MI 작업에서 넘어옴", "그 작업의 경쟁사 후보 상속", auto]
+      - ["업종 · 제품만 있음", "찾되 '업종 기준' 칩", check]
+  - no: "2"
+    title: "빈 정보"
+    sub: "고객사 · 업종 · 장소 · 제품 중 비어 있는 것"
+    rules:
+      - ["고객사 · 장소 둘 다 없음", "한 번 묻기 (CA2Q · 건너뛰기 가능)", ask]
+      - ["장소만 없음", "전국 기준 · 결과에 '지역 미반영' 칩", check]
+      - ["제품 없음", "업종 사례 상위 제품군으로", auto]
+      - ["업종 못 읽음", "MI 업종 판별 규칙 재사용", auto]
+      - ["고객사만 있음", "공개 자료에서 업종 · 장소 추정 · 칩", check]
+  - no: "3"
+    title: "후보 선정"
+    sub: "신뢰 점수 · 유저가 넣고 뺀 것 · 개수"
+    rules:
+      - ["신뢰 0.70 이상", "추천 · 켜 둠", auto]
+      - ["0.50 ~ 0.69", "'확인 필요' 로 꺼 둠", check]
+      - ["0.50 미만", "제외 제안 · 목록엔 남김", auto]
+      - ["유저가 넣거나 뺀 곳", "재분석해도 유지", pin]
+      - ["후보 7곳 넘음", "상위 6 + '더 보기'", auto]
+  - no: "4"
+    title: "분석 · 내보내기"
+    sub: "기준 · 수치 · 출처 · 익명 · 갱신"
+    rules:
+      - ["비교 기준", "요구사항 3 + 업종 사례 1 + 기본 2", auto]
+      - ["경쟁사 수치 못 찾음", "[확인 필요] · 추정 금지", auto]
+      - ["출처끼리 20% 이상 차이", "둘 다 표시", check]
+      - ["고객 제출물에 실명", "묻기", ask]
+      - ["분석 30일 경과 · 경쟁사 신제품", "업데이트 권유", auto]
+
+ladder:
+  title: "찾는 순서 — 신호가 많을수록 좁아져요"
+  sub: "신호가 더해질수록 후보는 줄고 근거는 정확해져요 · 못 읽은 신호는 결과에 칩으로 남겨요"
+  example: "A 커피 시나리오 — 4개 모두 읽음 → 후보 6 · 추천 4"
+  rows:
+    - {signal: "업종만", how: "업종 사례 23건", n: "8~12", tag: "넓음", o: "업종 사례 빈도 상위", desc: "같은 업종 도입사례에서 자주 비교된 곳을 모두 올려요. 후보가 넓어 확인할 곳이 많아요.", width: 100}
+    - {signal: "+ 제품", how: "제품군 겹침", n: "5~8", tag: "좁힘", o: "제품군 겹침으로 좁힘", desc: "55\" 사이니지 · 콘텐츠 배포처럼 제품군이 겹치는 곳만 남겨요. 하드웨어 없는 곳은 '일부 겹침'으로 표시해요.", width: 65}
+    - {signal: "+ 장소", how: "지역 설치 · 레퍼런스", n: "4~6", tag: "지역 반영", o: "지역 설치 파트너 · 레퍼런스", desc: "수도권처럼 장소가 정해지면 그 지역 설치 파트너망과 레퍼런스가 있는 곳을 앞에 둬요.", width: 42}
+    - {signal: "+ 고객사", how: "지난 제안 · 입찰", n: "3~5", tag: "가장 정확", o: "그 고객의 지난 제안 · 입찰 경쟁", desc: "그 고객사에 제안했거나 입찰에서 맞붙은 곳을 사내 사례 DB에서 찾아요. 근거가 가장 정확해요.", width: 28}
+
+asks:
+  title: "사람에게 묻는 두 경우"
+  footer: "답이 없으면 업종 기준 · 익명 표기로 진행해요"
+  rows:
+    - {n: 1, t: "고객사 · 장소가 모두 없고 업종이 두 갈래", where: "CA2Q", default: "건너뛰기와 같음 → 업종 기준(1위 업종)으로 찾고 '업종 기준' 칩"}
+    - {n: 2, t: "경쟁사 실명을 고객 제출물에 넣을 때", where: "CA5", default: "익명 표기"}
+
+# ── 규칙 · 임계값(§10) ───────────────────────────────────
+thresholds:
+  rec: 0.70                  # 추천 · 켜 둠
+  check: 0.50                # 확인 필요 · 꺼 둠(미만 = 제외 제안)
+  slot_found: 0.60           # 칸 found: 값 있음 · 신뢰 ≥ 0.6 (제안)
+  ambiguous_gap: 0.10        # 업종 1 · 2위 차이 < 0.10 = 두 갈래
+  segment_min: 0.50          # 1위 < 0.50 → 범용(GEN)
+  chip_signal: 0.50          # 근거 칩 = 신호 강도 ≥ 0.5
+  summary_cap: 0.70          # 근거가 모두 웹 검색 요약이면 신호 강도 상한
+  partial_product_cap: 0.60  # 제품 일부 겹침이면 제품 신호 상한
+  conflict_ratio: 0.20       # 출처끼리 수치 차이 ≥ 20% → 둘 다 표시
+  stale_months: 24           # 오래된 출처
+  recent_months: 12          # 최근 동향 범위
+  number_tolerance_ratio: 0.005
+
+ask_slots_require_ambiguous_industry: true   # CA_ASK_SLOTS_REQUIRE_AMBIGUOUS_INDUSTRY(§11 Q1)
+
+weights: {industry: 0.30, product: 0.40, place: 0.15, customer: 0.15}
+
+page_size: 6                 # 한 화면 후보 6곳, 7곳 이상이면 상위 6 + 더 보기
+# 추천 + 확인 필요 상한(§10.2) — 입력에 있는 신호 중 가장 좁은 단의 상한
+caps: {industry: 12, product: 8, place: 6, customer: 5}
+drop_extra: 3                # 제외 제안은 상한 밖으로 최대 3곳 더
+
+criteria:
+  requirements: 3
+  industry: 1
+  total: 6
+  req_importance: [5, 4, 4]
+  industry_importance: 3
+  user_importance: 3
+  defaults:
+    - {name: "가격대", importance: 3}
+    - {name: "레퍼런스 · AS", importance: 2}
+  suggestions: 2
+  name_max: 10
+
+strengths: {max: 3, title_max: 12, note_max: 30}
+cautions: {max: 2}
+positioning_max: 40
+
+facts:
+  order: [lineup, solution, references, price, recent]   # 모으는 순서(CA3 문장 순서)
+  labels: {lineup: "제품 라인업", price: "가격대", solution: "솔루션", references: "레퍼런스", recent: "최근 동향"}
+  progress: {lineup: "제품", solution: "솔루션", references: "레퍼런스", price: "가격대", recent: "최근 동향"}
+
+budgets:
+  find: {websearch: 8, fetch: 12, llm: 10}
+  analyze: {websearch: 5, fetch: 6, llm: 4}             # 경쟁사마다
+
+concurrency: 2                                         # 동시에 분석하는 경쟁사 수
+eta: {find_s: 30, analyze_base_s: 20, analyze_per_s: 25, research_s: 40}
+recheck_days: 30
+
+# 후보에서 뺄 자기 회사 · 계열사(§7.1 self_entities)
+self_entities:
+  - 삼성전자
+  - 삼성
+  - Samsung
+  - Samsung Electronics
+  - 삼성디스플레이
+  - Samsung Display
+  - 삼성SDS
+  - Samsung SDS
+  - 하만
+  - Harman
+  - 삼성전기
+  - 삼성물산
+  - 삼성생명
+  - 삼성화재
+  - 삼성카드
+  - 삼성증권
+  - 제일기획
+  - Cheil
+  - 에스원
+  - S-1

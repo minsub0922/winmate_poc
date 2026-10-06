@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>이미지 생성 · 참조 이미지 고르기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="image" current="카페 매장 메뉴보드 시안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="이미지 생성" title="카페 매장 메뉴보드 시안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 24px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 12px 16px; font-size: 14.5px; line-height: 1.65"><span style="font-weight: 600">공간</span> · 카페 카운터 위에 3연 메뉴보드가 걸린 장면, 낮 시간, 손님 2~3명</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">참조할 이미지를 골라 주세요. 사내 자산은 브랜드 검수를 마친 이미지라 색감과 구도를 그대로 따라도 됩니다. 고른 이미지마다 무엇을 따를지 정할 수 있어요.</div>
+
+            <div style="width: 760px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+              <div style="height: 44px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; justify-content: space-between">
+                <div style="display: flex; gap: 2px; height: 44px">
+                  <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+                    <span style="{{t.style}}">
+                      <sc-if value="{{t.upload}}" hint-placeholder-val="{{false}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg></sc-if>
+                      <span>{{t.label}}</span>
+                    </span>
+                  </sc-for>
+                </div>
+                <div style="width: 210px; height: 30px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; background: #ffffff; display: flex; align-items: center; gap: 7px; padding: 0 10px">
+                  <label for="rq" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">참조 이미지 검색</label>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                  <input id="rq" value="카페 메뉴보드" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 12.5px; color: #121417; outline: none">
+                </div>
+              </div>
+
+              <div style="padding: 10px 14px 0 14px; display: flex; align-items: center; gap: 6px">
+                <span style="font-size: 12px; color: #596170; margin-right: 2px; flex-shrink: 0">업종</span>
+                <sc-for list="{{inds}}" as="c" hint-placeholder-count="4">
+                  <button style="{{c.style}}">{{c.label}}</button>
+                </sc-for>
+                <span style="width: 1px; height: 16px; background: #e2e5ea; margin: 0 4px; flex-shrink: 0"></span>
+                <span style="font-size: 12px; color: #596170; margin-right: 2px; flex-shrink: 0">스타일</span>
+                <sc-for list="{{styles}}" as="c" hint-placeholder-count="4">
+                  <button style="{{c.style}}">{{c.label}}</button>
+                </sc-for>
+                <div style="flex-grow: 1"></div>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">8</span>개 · 검수 완료</span>
+              </div>
+
+              <div style="padding: 12px 14px 14px 14px; display: grid; grid-template-columns: repeat(4, 175px); grid-auto-rows: 100px; gap: 10px">
+                <sc-for list="{{refs}}" as="r" hint-placeholder-count="8">
+                  <button aria-label="{{r.label}}" style="{{r.tileStyle}}">
+                    <img src="{{r.src}}" alt="{{r.alt}}" style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; object-position: {{r.pos}}">
+                    <sc-if value="{{r.sel}}" hint-placeholder-val="{{false}}">
+                      <span style="position: absolute; top: 7px; right: 7px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.num}}</span>
+                      <span style="position: absolute; top: 7px; left: 7px; height: 20px; padding: 0 7px; border-radius: 5px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{r.role}}</span>
+                    </sc-if>
+                    <span style="position: absolute; left: 7px; bottom: 7px; max-width: 150px; box-sizing: border-box; font-size: 11px; line-height: 16px; color: #121417; background: rgba(255,255,255,0.92); border-radius: 4px; padding: 1px 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.label}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">참조 이미지 2장 · 무엇을 따를지 <span style="color: #596170; font-weight: 500">· 2 / 3</span></div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            <span>참조 속 사람 얼굴 · 타사 로고는 따라 그리지 않아요</span>
+          </div>
+        </div>
+
+        <div style="padding: 10px 18px 0 18px; display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{picked}}" as="p" hint-placeholder-count="2">
+            <div style="height: 48px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 0 8px 0 6px; display: flex; align-items: center; gap: 10px">
+              <div style="position: relative; width: 56px; height: 36px; flex-shrink: 0; border-radius: 7px; overflow: hidden; background: #e2e5ea">
+                <img src="{{p.src}}" alt="{{p.alt}}" style="position: absolute; left: 0; top: 0; width: 56px; height: 36px; object-fit: cover; object-position: {{p.pos}}">
+                <span style="position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.num}}</span>
+              </div>
+              <div style="width: 168px; flex-shrink: 0; display: flex; flex-direction: column; min-width: 0">
+                <span style="font-size: 13px; font-weight: 600; line-height: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.label}}</span>
+                <span style="font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.source}}</span>
+              </div>
+              <div style="display: flex; gap: 6px; flex-grow: 1; min-width: 0">
+                <sc-for list="{{p.aspects}}" as="asp" hint-placeholder-count="4">
+                  <button style="{{asp.style}}">{{asp.label}}</button>
+                </sc-for>
+              </div>
+              <span style="font-size: 12px; color: #596170; flex-shrink: 0">강도</span>
+              <div style="display: flex; flex-shrink: 0; border: 1px solid #e2e5ea; border-radius: 8px; overflow: hidden">
+                <sc-for list="{{p.levels}}" as="l" hint-placeholder-count="3">
+                  <button style="{{l.style}}">{{l.label}}</button>
+                </sc-for>
+              </div>
+              <button aria-label="참조 빼기" style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 7px; border: none; background: transparent; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12.5px; color: #596170; white-space: nowrap">적용하면 상세 조건의 참조 이미지로 들어갑니다</span>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <a href="IMG2.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">취소</a>
+            <a href="IMG3G.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">적용하고 바로 4장 생성</a>
+            <a href="IMG2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>참조 2장 적용</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tabBase = 'height: 44px; box-sizing: border-box; padding: 0 10px; display: flex; align-items: center; gap: 5px; font-size: 13px; white-space: nowrap;';
+    const tabs = [['사내 자산', true, false], ['내 생성 이미지', false, false], ['유관 사례', false, false], ['내 파일 올리기', false, true]].map(([label, on, upload]) => ({
+      label, upload,
+      style: tabBase + (on ? ' font-weight: 700; color: #1428a0; border-bottom: 2px solid #1428a0;' : ' font-weight: 500; color: #596170; border-bottom: 2px solid transparent;')
+    }));
+
+    const chip = 'height: 28px; padding: 0 11px; border-radius: 999px; font-size: 12px; white-space: nowrap; flex-shrink: 0;';
+    const on = ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 600;';
+    const off = ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;';
+    const mk = (labels, active) => labels.map((label) => ({ label, style: chip + (label === active ? on : off) }));
+    const inds = mk(['외식 · 카페', '리테일', '호텔', '오피스'], '외식 · 카페');
+    const styles = mk(['전체', '실사', '일러스트'], '전체');
+
+    const R = [
+      ['카페 메뉴보드 A · 2025', '/_blob/47e4d92f573bbbec3f574b1876ea339d', '카운터 상단 3면 메뉴보드가 걸린 카페 도입사례', '50% 30%', 1, '구도'],
+      ['카운터 상단 4면 메뉴보드', '/_blob/0cdfe2fe8a6c9a33452c09005ff66219', '카운터 위 4면 메뉴보드 사이니지', '50% 25%', 0, ''],
+      ['바 좌석 웜톤 조명', '/_blob/1e69ed0f790e205dafa892750ba814cf', '웜톤 조명의 바 좌석과 천장 시스템에어컨', '50% 55%', 2, '색감 · 조명'],
+      ['카페 거리 일러스트', '/_blob/3f7c0f02927e0f5aa212d7649a70a5d0', '카페와 베이커리 거리 아이소메트릭 일러스트', '50% 45%', 0, ''],
+      ['버거 매장 메뉴보드', '/_blob/82135d2a8180d09cf6fe3d62c19249de', '벽돌벽 버거 매장 메뉴보드', '50% 50%', 0, ''],
+      ['드라이브스루 메뉴보드', '/_blob/c381f86ed3ba405682196a1cf1feb3ea', '드라이브스루 메뉴보드 사이니지와 고객', '50% 35%', 0, ''],
+      ['시간대별 메뉴보드', '/_blob/8289c7698a4471570b71a47afc600535', '시간대별로 바뀌는 메뉴보드 2대', '50% 40%', 0, ''],
+      ['테이블오더 매장', '/_blob/e272c67d5ee4bdfabb99d661c1e50118', '테이블 위 태블릿 주문 장면', '50% 50%', 0, '']
+    ];
+    const refs = R.map(([label, src, alt, pos, num, role]) => ({
+      label, src, alt, pos, num, role, sel: num > 0,
+      tileStyle: 'position: relative; width: 175px; height: 100px; box-sizing: border-box; padding: 0; border-radius: 10px; overflow: hidden; background: #e2e5ea; text-align: left;' + (num > 0 ? ' border: 2px solid #1428a0;' : ' border: 2px solid transparent;')
+    }));
+
+    const aChip = 'height: 26px; padding: 0 10px; border-radius: 999px; font-size: 12px; white-space: nowrap; flex-shrink: 0;';
+    const seg = 'width: 30px; height: 26px; border: none; font-size: 12px;';
+    const ASPECTS = ['색감 · 조명', '구도', '제품 배치', '소재'];
+    const LEVELS = ['약', '중', '강'];
+    const pick = (num, label, src, alt, pos, onAspects, level) => ({
+      num, label, src, alt, pos, source: '사내 자산 · 도입사례 사진',
+      aspects: ASPECTS.map((a) => ({ label: a, style: aChip + (onAspects.includes(a) ? on : off) })),
+      levels: LEVELS.map((l, i) => ({ label: l, style: seg + (l === level ? ' background: #1428a0; color: #ffffff; font-weight: 600;' : ' background: #ffffff; color: #596170; font-weight: 500;') + (i > 0 ? ' border-left: 1px solid #e2e5ea;' : '') }))
+    });
+    const picked = [
+      pick(1, '카페 메뉴보드 A · 2025', R[0][1], R[0][2], R[0][3], ['구도', '제품 배치'], '중'),
+      pick(2, '바 좌석 웜톤 조명', R[2][1], R[2][2], R[2][3], ['색감 · 조명', '소재'], '강')
+    ];
+
+    return { steps: ['이미지 유형', '상세 조건', '생성 결과'], cur: 2, tabs, inds, styles, refs, picked };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>EF-A KPI 전 → 후</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">도입 1년 후, 네 가지 지표가 이렇게 달라집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">예상치 · 유사 사례 기준 · 출처: [사례명]</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 170px; width: 1152px; height: 24px; display: grid; grid-template-columns: 220px minmax(0, 1fr) 48px minmax(0, 1fr) 120px; column-gap: 16px; align-items: center; font-size: 13px; font-weight: 800; letter-spacing: 0.04em">
+    <span style="color: #8a91a0">지표</span>
+    <span style="color: #596170">지금</span>
+    <span></span>
+    <span style="color: #1428a0">도입 후</span>
+    <span style="color: #8a91a0; text-align: center">변화</span>
+  </div>
+
+  <!-- KPI 행: 같은 축 위의 막대 길이로 전 · 후 차이를 보여줌 -->
+  <div style="position: absolute; left: 64px; top: 202px; width: 1152px; display: flex; flex-direction: column; border-bottom: 1px solid #e2e5ea">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div style="height: 104px; box-sizing: border-box; border-top: 1px solid #e2e5ea; display: grid; grid-template-columns: 220px minmax(0, 1fr) 48px minmax(0, 1fr) 120px; column-gap: 16px; align-items: center">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 16px; font-weight: 700">{{r.k}}</span>
+          <span style="font-size: 12.5px; color: #8a91a0">{{r.basis}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: baseline; gap: 5px"><span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #121417">{{r.before}}</span><span style="font-size: 14px; font-weight: 700; color: #596170">{{r.bu}}</span></div>
+          <div style="width: 100%; height: 10px; border-radius: 5px; background: #f5f6f8"><div style="{{r.bBar}}"></div></div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: baseline; gap: 5px"><span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #1428a0">{{r.after}}</span><span style="font-size: 14px; font-weight: 700; color: #1428a0">{{r.au}}</span></div>
+          <div style="width: 100%; height: 10px; border-radius: 5px; background: #f5f6f8"><div style="{{r.aBar}}"></div></div>
+        </div>
+        <div style="display: flex; justify-content: center"><span style="height: 34px; padding: 0 14px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; display: flex; align-items: center">{{r.chg}}</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 626px; width: 1152px; font-size: 11.5px; color: #8a91a0">수치는 예시 · 데이터 연결 시 자동 반영 · 막대는 지표마다 도입 전을 100으로 둔 상대 길이</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 막대: 지표마다 도입 전 = 100(회색 전체 길이), 도입 후 = 그 대비 길이(파랑). 길이는 예시 형상.
+    const bar = (pct, color) => 'width: ' + pct + '%; height: 10px; border-radius: 5px; background: ' + color + ';';
+    const R = [
+      ['메뉴 교체 소요', '신메뉴 1회 · 전 매장 반영', '[0]', '일', '[00]', '분', 100, 12, '▼ [00]%'],
+      ['가격 표기 오류', '월 · 전 매장', '[00]', '건', '[0]', '건', 100, 20, '▼ [00]%'],
+      ['주문 대기 시간', '피크 시간 · 평균', '[0.0]', '분', '[0.0]', '분', 100, 70, '▼ [00]%'],
+      ['매장 전력 사용', '매장당 · 월', '[000]', 'kWh', '[000]', 'kWh', 100, 78, '▼ [00]%']
+    ];
+    return { rows: R.map(([k, basis, before, bu, after, au, bp, ap, chg]) => ({ k, basis, before, bu, after, au, chg, bBar: bar(bp, '#b8bec8'), aBar: bar(ap, '#1428a0') })) };
+  }
+}
+</script>
+</body>
+</html>

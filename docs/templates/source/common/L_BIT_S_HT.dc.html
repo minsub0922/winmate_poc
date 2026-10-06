@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BIT-S-HT b.IoT 공간 시나리오 · 비즈니스 호텔</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · b.IoT</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>b.IoT · 빌딩 에너지 관리</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">투숙객이 있는 층만 쾌적하게, 나머지는 절전으로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">프론트 · 로비 → 객실층 → 레스토랑 — 운영 시간이 다른 공간을 b.IoT 중앙 관제 한 곳에서 스케줄 · 제어합니다</div>
+
+  <!-- ① 프론트 · 로비 / ③ 레스토랑 : 운영시간 스케줄 공간 (좌) -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="2">
+    <div style="{{s.cardStyle}}"></div>
+    <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; left: 65px; top: {{s.imgTop}}px; width: 318px; height: 104px; object-fit: cover; object-position: {{s.pos}}; border-radius: 13px 13px 0 0">
+    <div style="{{s.chipStyle}}">예시 사진 · 고객 공간으로 교체</div>
+    <div style="{{s.headStyle}}">
+      <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+      <span style="font-size: 17px; font-weight: 800; white-space: nowrap">{{s.name}}</span>
+      <span style="flex-grow: 1"></span>
+      <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">운영시간 스케줄</span>
+    </div>
+    <div style="{{s.trackStyle}}"></div>
+    <sc-for list="{{s.segs}}" as="g" hint-placeholder-count="3">
+      <div style="{{g}}"></div>
+    </sc-for>
+    <sc-for list="{{s.ticks}}" as="k" hint-placeholder-count="5">
+      <div style="{{k.style}}">{{k.t}}</div>
+    </sc-for>
+    <div style="{{s.stepStyle}}">
+      <sc-for list="{{s.steps}}" as="p" hint-placeholder-count="2">
+        <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{p.time}}</span><span style="margin: 0 10px 0 4px">{{p.t}}</span>
+      </sc-for>
+    </div>
+    <div style="{{s.noteStyle}}">
+      <sc-if value="{{s.hasQuote}}" hint-placeholder-val="{{false}}">
+        <span style="height: 16px; padding: 0 6px; border-radius: 4px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 10px; font-weight: 700; color: #596170; display: flex; align-items: center; flex-shrink: 0">고민</span>
+      </sc-if>
+      <span>{{s.note}}</span>
+    </div>
+  </sc-for>
+
+  <!-- ② 객실층 : 투숙 층만 쾌적 (우) -->
+  <div style="position: absolute; left: 896px; top: 160px; width: 320px; height: 488px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <img src="/_blob/025a0a090d09a9c62536b558c29698c3" alt="호텔 객실 예시 사진 — 침대 옆 공간" style="position: absolute; left: 897px; top: 161px; width: 318px; height: 120px; object-fit: cover; object-position: 55% 50%; border-radius: 13px 13px 0 0">
+  <div style="position: absolute; left: 905px; top: 255px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; font-size: 10px; color: #3d4452; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+  <div style="position: absolute; left: 912px; top: 292px; width: 288px; height: 24px; display: flex; align-items: center; gap: 8px">
+    <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+    <span style="font-size: 17px; font-weight: 800; white-space: nowrap">객실층</span>
+    <span style="flex-grow: 1"></span>
+    <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">투숙 층만 쾌적</span>
+  </div>
+  <sc-for list="{{roomFloors}}" as="r" hint-placeholder-count="7">
+    <div style="{{r.labelStyle}}">{{r.f}}</div>
+    <div style="{{r.barStyle}}"><span style="font-weight: 700">{{r.k}}</span><span style="flex-grow: 1"></span><span style="font-family: Manrope, sans-serif; font-weight: 700">{{r.v}}</span></div>
+  </sc-for>
+  <div style="position: absolute; left: 912px; top: 504px; width: 288px; display: flex; flex-direction: column; gap: 4px">
+    <sc-for list="{{roomSteps}}" as="p" hint-placeholder-count="3">
+      <div style="height: 18px; display: flex; align-items: center; gap: 8px; font-size: 12px; white-space: nowrap"><span style="width: 40px; flex-shrink: 0; font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{p.time}}</span><span>{{p.t}}</span></div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 912px; top: 576px; width: 288px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 912px; top: 586px; width: 288px; display: flex; align-items: flex-start; gap: 6px">
+    <span style="height: 16px; margin-top: 1px; padding: 0 6px; border-radius: 4px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 10px; font-weight: 700; color: #596170; display: flex; align-items: center; flex-shrink: 0">고민</span>
+    <span style="font-size: 11.5px; line-height: 1.5; color: #596170">“객실에 맞게 에어컨 온도가 알아서 조절되면 좋겠어요”</span>
+  </div>
+  <div style="position: absolute; left: 912px; top: 622px; font-size: 12px; font-weight: 800; color: #1428a0; white-space: nowrap">→ 투숙 층은 AI 공조 최적화, 빈 층은 절전</div>
+
+  <!-- 중앙 허브: b.IoT 중앙 관제 -->
+  <div style="position: absolute; left: 424px; top: 160px; width: 432px; height: 488px; box-sizing: border-box; border-radius: 16px; border: 2px solid #1428a0; background: #ffffff"></div>
+  <img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 로고" style="position: absolute; left: 442px; top: 177px; width: 140px; height: 25px; object-fit: contain; border-radius: 0px">
+  <div style="position: absolute; left: 594px; top: 175px; font-size: 17px; font-weight: 800; color: #1428a0; white-space: nowrap; line-height: 1.6">중앙 관제</div>
+  <div style="position: absolute; left: 700px; top: 182px; width: 140px; text-align: right; font-size: 11.5px; color: #596170; white-space: nowrap">로비 · 객실층 · 레스토랑</div>
+  <img src="/_blob/5a4ac42a10af63328d12de232610e2d7" alt="b.IoT 통합 모니터링 대시보드 화면" style="position: absolute; left: 440px; top: 212px; width: 400px; height: 188px; object-fit: cover; border-radius: 10px">
+  <div style="position: absolute; left: 772px; top: 378px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 10px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">실제 화면</div>
+
+  <div style="position: absolute; left: 440px; top: 412px; width: 400px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 12.5px; font-weight: 800">기기별 에너지 → 공간 합계 vs 목표</span><span style="flex-grow: 1"></span><span style="font-size: 11px; color: #8a91a0">이번 달 · kWh</span></div>
+  <sc-for list="{{energy}}" as="e" hint-placeholder-count="3">
+    <div style="{{e.labelStyle}}">{{e.name}}</div>
+    <div style="{{e.targetBar}}"></div>
+    <div style="{{e.actualBar}}"></div>
+    <div style="{{e.textStyle}}">목표 [000] · 실제 [000]</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 440px; top: 520px; width: 400px; height: 46px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; padding: 0 12px; display: flex; align-items: center; gap: 10px">
+    <div style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 7px; background: #121417; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z M10 21h4"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 0px; white-space: nowrap; min-width: 0">
+      <span style="font-size: 12.5px; font-weight: 800; line-height: 1.4">비효율 알림 <span style="font-family: Manrope, sans-serif; color: #596170; font-weight: 700; margin-left: 4px">14:20</span></span>
+      <span style="font-size: 11.5px; color: #3d4452; line-height: 1.4">공실 6F 실내기 운전 중 → 관리자 PC · 모바일로 알림</span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 440px; top: 576px; width: 400px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <span style="height: 16px; padding: 0 6px; border-radius: 4px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 10px; font-weight: 700; color: #596170; display: flex; align-items: center; flex-shrink: 0">고민</span>
+    <span style="font-size: 11.5px; color: #596170">“비싼 전기료가 걱정이에요”</span>
+    <span style="font-size: 11.5px; font-weight: 800; color: #1428a0">→ 기기별 사용량을 목표와 비교</span>
+  </div>
+  <div style="position: absolute; left: 440px; top: 602px; display: flex; align-items: center; gap: 10px; font-size: 11px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #1428a0"></span>ON 쾌적</span>
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #d5d9e0"></span>절전</span>
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; box-sizing: border-box; border-radius: 2px; border: 1px solid #b8bec8; background: #ffffff"></span>OFF</span>
+    <span style="display: flex; align-items: center; gap: 4px; margin-left: 6px"><span style="width: 16px; height: 2px; background: #1428a0"></span>제어 · 스케줄</span>
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 16px; height: 0; border-top: 2px dashed #8a91a0"></span>사용량 · 상태</span>
+  </div>
+  <div style="position: absolute; left: 440px; top: 623px; font-size: 11px; color: #8a91a0; white-space: nowrap">시간 · 온도 · 수치는 예시 · 데이터 연결 시 자동 반영</div>
+
+  <!-- 허브 ↔ 공간 연결 -->
+  <sc-for list="{{links}}" as="w" hint-placeholder-count="12">
+    <div style="{{w}}"></div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 빌딩 에너지 관리 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const BLUE = '#1428a0', GRAY = '#8a91a0';
+
+    // 하루 막대: x 80–368 (24시간 → 12px/시간)
+    const X0 = 80, PH = 12;
+    const segColor = { on: 'background: #1428a0;', eco: 'background: #d5d9e0;', off: 'background: #ffffff; border: 1px solid #b8bec8;' };
+    const space = (o) => {
+      const T = o.top; // 카드 상단
+      const barTop = T + 146;
+      return {
+        no: o.no, name: o.name, src: o.src, alt: o.alt, pos: o.pos, note: o.note, hasQuote: o.hasQuote,
+        imgTop: T + 1,
+        cardStyle: A + 'left: 64px; top: ' + px(T) + 'width: 320px; height: 236px; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff;',
+        chipStyle: 'position: absolute; left: 73px; top: ' + px(T + 79) + 'height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; font-size: 10px; color: #3d4452; display: flex; align-items: center; white-space: nowrap;',
+        headStyle: 'position: absolute; left: 80px; top: ' + px(T + 114) + 'width: 288px; height: 24px; display: flex; align-items: center; gap: 8px;',
+        trackStyle: A + 'left: ' + px(X0) + 'top: ' + px(barTop) + 'width: ' + px(24 * PH) + 'height: 12px; border-radius: 3px; background: #ffffff; border: 1px solid #e2e5ea;',
+        segs: o.segs.map(([a, b, kind]) => A + 'left: ' + px(X0 + Math.round(a * PH)) + 'top: ' + px(barTop) + 'width: ' + px(Math.round((b - a) * PH)) + 'height: 12px; ' + segColor[kind] + (a === 0 ? ' border-radius: 3px 0 0 3px;' : '') + (b === 24 ? ' border-radius: 0 3px 3px 0;' : '')),
+        ticks: [0, 6, 12, 18, 24].map((hh) => ({ t: (hh < 10 ? '0' : '') + hh, style: 'position: absolute; left: ' + px(X0 + hh * PH - 10) + 'top: ' + px(barTop + 15) + 'width: 20px; text-align: center; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #8a91a0; line-height: 14px;' })),
+        steps: o.steps,
+        stepStyle: 'position: absolute; left: 80px; top: ' + px(T + 182) + 'width: 288px; font-size: 12px; line-height: 18px; white-space: nowrap; display: flex;',
+        noteStyle: 'position: absolute; left: 80px; top: ' + px(T + 206) + 'width: 288px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 17px; color: #596170; white-space: nowrap;'
+      };
+    };
+    const spaces = [
+      space({
+        no: 1, name: '프론트 · 로비', top: 160,
+        src: '/_blob/70c2af7dd8001ce4a8db53f71003ae34', alt: '호텔 프론트 로비 예시 사진 — 로비 벽면 LED 사이니지', pos: '50% 85%',
+        segs: [[0, 6, 'eco'], [6, 24, 'on']],
+        steps: [{ time: '06:00', t: '스케줄 ON 24℃' }, { time: '00:00', t: '심야 절전 26℃' }],
+        note: '24시간 공간도 심야엔 절전 온도로 자동 전환', hasQuote: false
+      }),
+      space({
+        no: 3, name: '레스토랑', top: 412,
+        src: '/_blob/94000251b94c4ce1bf67eebd306e7a35', alt: '호텔 레스토랑 예시 사진 — 벽면 메뉴 디스플레이와 식사 고객', pos: '50% 82%',
+        segs: [[0, 6.5, 'off'], [6.5, 10, 'on'], [10, 18, 'off'], [18, 22, 'on'], [22, 24, 'off']],
+        steps: [{ time: '06:30–10:00', t: '조식 ON' }, { time: '18:00–22:00', t: '석식 ON' }],
+        note: '“에너지가 불필요하게 낭비될 때가 있어요”', hasQuote: true
+      })
+    ];
+
+    // 객실층: 투숙 → ON · 공실 → 절전 · 공실인데 운전 중 → 알림
+    const RS = {
+      on: { k: '투숙 · ON', v: '24℃', bar: 'background: #eaeefb; color: #1428a0;' },
+      eco: { k: '공실 · 절전', v: '26℃', bar: 'background: #f5f6f8; border: 1px solid #d5d9e0; color: #596170;' },
+      alert: { k: '공실 · 실내기 운전 중 → 알림', v: '', bar: 'background: #ffffff; border: 1.5px solid #121417; color: #121417;' }
+    };
+    const RF = [['9F', 'eco'], ['8F', 'eco'], ['7F', 'on'], ['6F', 'alert'], ['5F', 'on'], ['4F', 'on'], ['3F', 'on']];
+    const roomFloors = RF.map(([f, kind], i) => {
+      const top = 326 + i * 24;
+      const s = RS[kind];
+      return {
+        f, k: s.k, v: s.v,
+        labelStyle: 'position: absolute; left: 912px; top: ' + px(top) + 'width: 30px; height: 20px; line-height: 20px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800;',
+        barStyle: A + 'left: 946px; top: ' + px(top) + 'width: 254px; height: 20px; border-radius: 5px; padding: 0 8px; display: flex; align-items: center; font-size: 11.5px; white-space: nowrap; ' + s.bar
+      };
+    });
+    const roomSteps = [
+      { time: '15:00', t: '체크인 층 — 중앙 제어로 ON 24℃' },
+      { time: '상시', t: '투숙 층 — AI 공조 최적화로 쾌적 · 효율' },
+      { time: '11:00', t: '체크아웃 층 — 스케줄로 절전 26℃' }
+    ];
+
+    // 공간 합계 vs 목표 (예시 형상): 막대 x 508 · 최대 200
+    const E = [['로비', 150, 132], ['객실층', 180, 196], ['레스토랑', 110, 92]];
+    const energy = E.map(([name, tw, aw], i) => {
+      const T = 436 + i * 26;
+      const over = aw > tw;
+      return {
+        name,
+        labelStyle: 'position: absolute; left: 440px; top: ' + px(T) + 'width: 64px; font-size: 12px; font-weight: 700; line-height: 20px; white-space: nowrap;',
+        targetBar: 'position: absolute; left: 508px; top: ' + px(T + 2) + 'width: ' + px(tw) + 'height: 7px; border-radius: 2px; background: #d5d9e0;',
+        actualBar: 'position: absolute; left: 508px; top: ' + px(T + 11) + 'width: ' + px(aw) + 'height: 7px; border-radius: 2px; background: ' + (over ? '#121417' : '#1428a0') + ';',
+        textStyle: 'position: absolute; left: 716px; top: ' + px(T + 1) + 'width: 124px; text-align: right; font-size: 11px; line-height: 18px; white-space: nowrap; color: ' + (over ? '#121417; font-weight: 700' : '#596170') + ';'
+      };
+    });
+
+    // 허브 ↔ 공간 연결선 (제어 = 파랑 실선 · 허브 → 공간 / 사용량 · 상태 = 회색 점선 · 공간 → 허브)
+    const h = (x1, x2, y, c, dash) => A + 'left: ' + px(Math.min(x1, x2)) + 'top: ' + px(y - 1) + 'width: ' + px(Math.abs(x2 - x1)) + (dash ? 'height: 0px; border-top: 2px dashed ' + c + ';' : 'height: 2px; background: ' + c + ';');
+    const arL = (x, y, c) => 'position: absolute; width: 0px; height: 0px; left: ' + px(x) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid ' + c + ';';
+    const arR = (x, y, c) => 'position: absolute; width: 0px; height: 0px; left: ' + px(x - 7) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + c + ';';
+    const links = [];
+    // 좌측 카드 (x 384) ↔ 허브 (x 424)
+    [278, 530].forEach((cy) => {
+      links.push(h(391, 424, cy - 8, BLUE), arL(384, cy - 8, BLUE));
+      links.push(h(384, 417, cy + 8, GRAY, true), arR(424, cy + 8, GRAY));
+    });
+    // 허브 (x 856) ↔ 객실층 카드 (x 896)
+    links.push(h(856, 889, 396, BLUE), arR(896, 396, BLUE));
+    links.push(h(863, 896, 412, GRAY, true), arL(856, 412, GRAY));
+
+    return { spaces, roomFloors, roomSteps, energy, links };
+  }
+}
+</script>
+</body>
+</html>

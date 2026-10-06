@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IS-A 현장 조사 · 사진 모자이크</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · 고객 현장</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">외래동 1층, 여섯 곳을 직접 보고 왔습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 760px; font-size: 15px; color: #596170; white-space: nowrap">C 종합병원 · 현장 조사 2026.09.[00] · 실측 포함</div>
+  <div style="position: absolute; right: 64px; top: 110px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 12px; font-weight: 700; color: #3d4452; display: flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg><span>사진 <span style="font-family: Manrope, sans-serif; font-weight: 800">[00]</span>장</span></span>
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 12px; font-weight: 700; color: #3d4452; display: flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l5-5 13 13-5 5z"/><path d="M7 7l2 2 M10 4l1.5 1.5 M11 11l2 2 M14 8l1.5 1.5"/></svg><span>실측 <span style="font-family: Manrope, sans-serif; font-weight: 800">6</span>곳</span></span>
+  </div>
+
+  <!-- 3 × 2 사진 카드 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px; display: grid; grid-template-columns: repeat(3, 368px); column-gap: 24px; row-gap: 16px">
+    <sc-for list="{{spots}}" as="s" hint-placeholder-count="6">
+      <div style="width: 368px; height: 243px; display: flex; flex-direction: column">
+        <div style="width: 368px; height: 164px; flex-shrink: 0">
+          <dc-import name="Img" kind="space" origin="site" hint="{{s.hint}}" w="368" h="164" radius="12" credit="off" hint-size="368px,164px"></dc-import>
+        </div>
+        <div style="margin-top: 10px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap">
+          <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{s.no}}</span>
+          <span style="font-size: 15px; font-weight: 800; letter-spacing: -0.01em">{{s.name}}</span>
+        </div>
+        <span style="margin-top: 3px; height: 19px; font-size: 13px; line-height: 19px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.now}}</span>
+        <div style="margin-top: 6px; display: flex; gap: 6px">
+          <sc-for list="{{s.m}}" as="m" hint-placeholder-count="3">
+            <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 4px; white-space: nowrap"><span style="font-size: 11px; color: #8a91a0">{{m.k}}</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #121417">{{m.v}}</span></span>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 종합병원 · 외래동 디지털 안내 제안 · 사진 · 고객 현장 직접 촬영 · 외부 제출 시 환자 얼굴 비식별 처리</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [공간, 촬영 지시(hint), 현황 한 줄, 면적, 천장 높이, 전원]
+    const S = [
+      ['정문 로비', '정문 자동문 안쪽에서 본 로비 전경 · 안내 데스크 포함', '안내 데스크에 길 묻는 문의가 몰림', '[00]㎡', '[0.0]m', '[N]구'],
+      ['원무 수납 창구', '수납 창구 정면 · 번호 발권기와 대기 번호 표시기 포함', '대기 번호 표시가 작아 순번 확인이 어려움', '[00]㎡', '[0.0]m', '[N]구'],
+      ['외래 대기 홀', '대기 홀 뒤쪽에서 본 좌석 전체 · 기존 TV 위치 포함', '기존 TV [N]대 · 공지는 USB로 수동 교체', '[000]㎡', '[0.0]m', '[N]구'],
+      ['진료과 앞 복도', '복도 끝에서 본 진료과 입구 · 벽면 안내판 포함', '진료과 안내가 인쇄 표지판 · 변경이 잦음', '[00]㎡', '[0.0]m', '[N]구'],
+      ['약제부 대기', '약제부 창구와 대기석 · 호출 표시기 포함', '약 수령 호출이 음성 위주 · 대기석 소음', '[00]㎡', '[0.0]m', '[N]구'],
+      ['엘리베이터 홀', '엘리베이터 문 맞은편에서 본 홀 · 층별 안내판 포함', '층 안내 고정 사인 · 진료과 이동 미반영', '[00]㎡', '[0.0]m', '[N]구']
+    ];
+    const spots = S.map(([name, hint, now, a, c, p], i) => ({
+      no: String(i + 1).padStart(2, '0'), name, hint, now,
+      m: [{ k: '면적', v: a }, { k: '천장', v: c }, { k: '전원', v: p }]
+    }));
+    return { spots };
+  }
+}
+</script>
+</body>
+</html>

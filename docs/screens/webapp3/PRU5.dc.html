@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>제안서 생성 완료 · 원본 대비 변경 요약</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{true}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <!-- 안내문 -->
+      <div style="width: 1100px; height: 46px; display: flex; gap: 12px; flex-shrink: 0; overflow: hidden">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="font-size: 14.5px; line-height: 1.55; padding-top: 3px; flex-grow: 1; min-width: 0">PPTX <span style="font-weight: 600">22장</span>을 만들었어요. 원본(A 커피 2025 · 21장)과 비교해 무엇을 그대로 두고, 무엇을 바꾸고, 무엇을 새로 넣었는지 정리했어요. 갱신한 수치 · 모델은 검토 필요 목록에 모았어요.</div>
+      </div>
+
+      <!-- 요약 숫자 띠 -->
+      <div style="width: 1100px; height: 70px; margin-top: 10px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); flex-shrink: 0; overflow: hidden">
+        <sc-for list="{{summary}}" as="s" hint-placeholder-count="5">
+          <div style="{{s.cellStyle}}">
+            <span style="{{s.numStyle}}">{{s.n}}</span>
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+              <span style="display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 700; white-space: nowrap"><span style="{{s.dotStyle}}"></span>{{s.label}}</span>
+              <span style="font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.desc}}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- 시트 매핑 도식 -->
+      <div style="width: 1100px; height: 290px; margin-top: 10px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; flex-shrink: 0">
+        <div style="{{mapHeadStyle}}">
+          <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">섹션별 매핑</span>
+          <span style="font-size: 11px; color: #8a91a0; white-space: nowrap; text-align: right">원본 21장 · A 커피 2025 v4</span>
+          <span></span>
+          <div style="display: flex; gap: 4px; justify-content: center">
+            <sc-for list="{{legend}}" as="lg" hint-placeholder-count="6">
+              <span style="{{lg.style}}">{{lg.label}}</span>
+            </sc-for>
+          </div>
+          <span></span>
+          <span style="font-size: 11px; color: #1428a0; font-weight: 700; white-space: nowrap">새 제안서 22장</span>
+        </div>
+        <div style="padding: 6px 14px 0 14px; display: flex; flex-direction: column">
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="11">
+            <div style="{{r.rowStyle}}">
+              <span style="{{r.nameStyle}}">{{r.name}}</span>
+              <div style="display: flex; justify-content: flex-end; gap: 3px">
+                <sc-for list="{{r.left}}" as="sq" hint-placeholder-count="3">
+                  <span style="{{sq.style}}"></span>
+                </sc-for>
+              </div>
+              <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #596170; text-align: right; white-space: nowrap">{{r.origLabel}}</span>
+              <div style="display: flex; align-items: center; gap: 4px; min-width: 0">
+                <span style="{{r.lineL}}"></span>
+                <sc-for list="{{r.chips}}" as="c" hint-placeholder-count="2">
+                  <span style="{{c.style}}">{{c.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{c.n}}</span></span>
+                </sc-for>
+                <span style="{{r.lineR}}"></span>
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="{{r.arrowColor}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg>
+              </div>
+              <span style="{{r.newLabelStyle}}">{{r.newLabel}}</span>
+              <div style="display: flex; gap: 3px">
+                <sc-for list="{{r.right}}" as="sq" hint-placeholder-count="3">
+                  <span style="{{sq.style}}"></span>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 검토 필요 · 원본에 남긴 흔적 -->
+      <div style="width: 1100px; height: 184px; margin-top: 10px; display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 14px; flex-shrink: 0">
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; min-width: 0">
+          <div style="height: 34px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.3"/></svg>
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">검토 필요 6곳</span>
+            <span style="font-size: 11px; color: #596170; white-space: nowrap">갱신한 수치 · 모델 · 원본과 달라진 곳</span>
+            <span style="flex-grow: 1"></span>
+            <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">확정하지 않은 곳은 PPTX에 표시가 남아요</span>
+          </div>
+          <sc-for list="{{reviews}}" as="rv" hint-placeholder-count="4">
+            <div style="{{rv.style}}">
+              <span style="width: 28px; height: 20px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{rv.no}}</span>
+              <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-grow: 1">{{rv.pre}}<span style="color: #8a3b00; font-weight: 700">{{rv.mark}}</span>{{rv.post}}</span>
+              <span style="{{rv.tagStyle}}">{{rv.tag}}</span>
+              <a href="PR7Q.dc.html" style="height: 24px; padding: 0 9px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">바로 고치기</a>
+            </div>
+          </sc-for>
+          <div style="height: 30px; box-sizing: border-box; padding: 0 14px; background: #fbfbfc; display: flex; align-items: center; gap: 8px">
+            <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; flex-grow: 1">2곳 더 · 기대 효과 수치 출처 · 유관 사례 공개 범위</span>
+            <a href="PR7Q.dc.html" style="font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 3px; white-space: nowrap">검토 필요 목록 전체<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; min-width: 0">
+          <div style="height: 34px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 8v4l3 2M3 12a9 9 0 1 0 3-6.7M3 4v4h4"/></svg>
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">원본에 남긴 흔적</span>
+            <span style="flex-grow: 1"></span>
+            <a href="PR7V.dc.html" style="font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 3px; white-space: nowrap">버전 · 변경 이력<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+          </div>
+          <div style="padding: 10px 14px 0 14px; display: flex; flex-direction: column; gap: 8px">
+            <sc-for list="{{traces}}" as="t" hint-placeholder-count="3">
+              <div style="display: flex; align-items: flex-start; gap: 8px; height: 34px">
+                <span style="{{t.iconStyle}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"/></svg></span>
+                <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                  <span style="font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.title}}</span>
+                  <span style="font-size: 10.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.sub}}</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 12px 40px 22px 40px">
+      <div style="width: 1100px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; gap: 12px">
+          <span style="width: 22px; height: 22px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">완료 <span style="color: #596170; font-weight: 500">· 22장 · 원본 대비 변경 11장 · 6 / 6</span></div>
+          <span style="flex-grow: 1"></span>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{tally}}" as="ty" hint-placeholder-count="5">
+              <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">A커피_디지털메뉴보드_제안_v1.pptx · 22장 · 16:9 · 삼성 B2B 표준 템플릿 · 원본 제안서는 바뀌지 않았어요.</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="PR7P.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">미리보기 · 시트 편집</a>
+            <a href="PR7C.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">검토 요청</a>
+            <a href="PR7.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg>
+              <span>PPTX 다운로드</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 판정 색 (SPEC): 유지 · 갱신 · 재작성 · 신규 · 제외 + 자동(표지 · 목차 · Spec 시트 작업 등 판정 없이 생성)
+    const V = {
+      keep: ['유지', '#1428a0', ' color: #1428a0; background: #eaeefb;'],
+      upd: ['갱신', '#8a3b00', ' color: #8a3b00; background: #fdf0e6;'],
+      rew: ['재작성', '#121417', ' color: #121417; background: #ffffff; border: 1px solid #121417;'],
+      add: ['신규', '#0b6e4f', ' color: #0b6e4f; background: #e6f4ee;'],
+      drop: ['제외', '#8a91a0', ' color: #8a91a0; background: #f0f2f5; text-decoration: line-through;'],
+      auto: ['자동', '#1428a0', ' color: #ffffff; background: #1428a0;']
+    };
+    const dot = (c) => 'width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; background: ' + c + ';';
+
+    // 요약 숫자 띠 (활용 계획 PRU3A 와 동일)
+    const SUM = [
+      ['keep', 5, '원본 그대로 · 공간 맵 · 대기 공간 · Why Samsung'],
+      ['upd', 5, '모델 · 수치 현행화 · QM55C · MagicINFO 9 · 320곳'],
+      ['rew', 3, '역할만 두고 다시 씀 · 가치 제안 · 기대 효과 · 구성도'],
+      ['add', 2, '요구사항 갭 · R3 가격 차등 · R4 단계 도입 로드맵'],
+      ['drop', 6, '견적 · 일정 · 조감도 · 매장 경험 KM · 지난 사례']
+    ];
+    const summary = SUM.map(([k, n, desc], i) => ({
+      n, label: V[k][0], desc,
+      dotStyle: dot(V[k][1]),
+      numStyle: 'font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; line-height: 1; width: 40px; flex-shrink: 0; text-align: right; color: ' + (k === 'drop' ? '#8a91a0' : '#121417') + ';',
+      cellStyle: 'display: flex; align-items: center; gap: 12px; padding: 0 16px; min-width: 0;' + (i > 0 ? ' border-left: 1px solid #f0f2f5;' : '')
+    }));
+
+    // 매핑 행: [섹션, 원본 칸 판정 목록, 새 칸 판정 목록, 칩 [[판정, n]]]
+    const M = [
+      ['표지 · 목차 · 간지', ['auto'], ['auto', 'auto', 'auto', 'auto', 'auto'], [['auto', 5]]],
+      ['Market Intelligence', ['upd', 'upd', 'keep'], ['upd', 'upd', 'keep'], [['upd', 2], ['keep', 1]]],
+      ['Value Props', ['rew', 'rew', 'drop'], ['rew', 'rew'], [['rew', 2], ['drop', 1]]],
+      ['조감도', ['drop'], ['auto'], [['drop', 1], ['auto', 1]]],
+      ['공간별 제품', ['upd', 'upd', 'keep'], ['upd', 'upd', 'keep'], [['upd', 2], ['keep', 1]]],
+      ['솔루션 제안', ['upd', 'rew'], ['upd', 'rew'], [['upd', 1], ['rew', 1]]],
+      ['유관 사례', ['keep', 'drop'], ['keep'], [['keep', 1], ['drop', 1]]],
+      ['Why Samsung', ['keep', 'keep'], ['keep', 'keep'], [['keep', 2]]],
+      ['제품 스펙', ['auto'], ['auto'], [['auto', 1]]],
+      ['요구사항 갭 · R3 · R4', [], ['add', 'add'], [['add', 2]]],
+      ['견적 · 일정', ['drop', 'drop', 'drop'], [], [['drop', 3]]]
+    ];
+    const cols = 'grid-template-columns: 150px 96px 34px minmax(0, 1fr) 34px 96px; gap: 0 10px;';
+    const sq = (k, left) => ({
+      style: 'width: 14px; height: 10px; border-radius: 2px; box-sizing: border-box; flex-shrink: 0;' + (left
+        ? (k === 'drop' ? ' border: 1px dashed #b8bec8; background: #ffffff;' : ' background: #c3c8d1;')
+        : (k === 'rew' ? ' border: 1.5px solid #121417; background: #ffffff;' : k === 'auto' ? ' background: #b9c3ec;' : ' background: ' + V[k][1] + ';'))
+    });
+    const rows = M.map(([name, left, right, chips], i) => {
+      const isDrop = right.length === 0;
+      const isAdd = left.length === 0;
+      const main = chips[0][0];
+      const lineColor = isDrop ? '#e2e5ea' : V[main][1];
+      return {
+        name,
+        left: left.map((k) => sq(k, true)),
+        right: right.map((k) => sq(k, false)),
+        origLabel: isAdd ? '—' : left.length + '장',
+        newLabel: isDrop ? '0장' : right.length + '장',
+        chips: chips.map(([k, n]) => ({ label: V[k][0], n, style: 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 3px; white-space: nowrap; flex-shrink: 0;' + V[k][2] })),
+        arrowColor: isDrop ? '#c3c8d1' : lineColor,
+        lineL: 'flex-grow: 1; height: 1px; min-width: 8px; background: ' + (isAdd ? 'transparent' : lineColor) + ';' + (isDrop ? ' border-top: 1px dashed #c3c8d1; height: 0;' : ''),
+        lineR: 'flex-grow: 1; height: 1px; min-width: 8px; background: ' + (isDrop ? 'transparent' : lineColor) + ';' + (isAdd ? ' border-top: 1px dashed #0b6e4f; height: 0; background: transparent;' : ''),
+        nameStyle: 'font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (isDrop ? ' color: #8a91a0; text-decoration: line-through;' : isAdd ? ' color: #0b6e4f;' : ' color: #121417;'),
+        newLabelStyle: 'font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; white-space: nowrap;' + (isDrop ? ' color: #c3c8d1;' : isAdd ? ' color: #0b6e4f;' : ' color: #1428a0;'),
+        rowStyle: 'display: grid; ' + cols + ' align-items: center; height: 22px;' + (isAdd ? ' background: #f3faf6; border-radius: 6px; margin: 0 -6px; padding: 0 6px;' : '')
+      };
+    });
+    const legend = ['keep', 'upd', 'rew', 'add', 'drop', 'auto'].map((k) => ({
+      label: V[k][0], style: 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 5px; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' + V[k][2]
+    }));
+    const mapHeadStyle = 'display: grid; ' + cols + ' align-items: center; height: 40px; padding: 0 14px; box-sizing: border-box; background: #fbfbfc; border-bottom: 1px solid #e2e5ea; flex-shrink: 0;';
+
+    // 검토 필요 6곳 중 4곳 (시트 순)
+    const RV = [
+      ['10', '카운터 메뉴보드 ', 'QM55B → QM55C', ' 치환 확인', '단종 치환'],
+      ['12', 'MagicINFO 9 ', '가격 정책', ' · 라이선스 단위가 8과 달라요', '정책'],
+      ['02', '시장 규모 · 성장 ', '2026 조사 반영', ' · 2025.11 수치 교체', '수치'],
+      ['03', '매장 수 ', '320', ' 전 시트 반영 · 원본 280', '값 전파']
+    ];
+    const reviews = RV.map(([no, pre, mark, post, tag], i) => ({
+      no, pre, mark, post, tag,
+      tagStyle: 'height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; border: 1px solid #e2e5ea; color: #3d4452; font-size: 10.5px; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;',
+      style: 'height: 30px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #f0f2f5;'
+    }));
+
+    // 원본에 남긴 흔적
+    const T = [
+      ["새 제안서 각 시트 노트에 '원본 p.N 기반 · 갱신' 기록", '시트 17장 · 되돌리기 가능', 'M5 12l5 5L20 7', ' color: #1428a0; background: #eaeefb;'],
+      ["버전 이력에 '2025 제안서 v4에서 파생' 표시", '새 제안서 v1 · 파생 관계가 목록에도 보여요', 'M5 12l5 5L20 7', ' color: #1428a0; background: #eaeefb;'],
+      ['원본 제안서는 바뀌지 않음', 'A 커피 2025 v4 · 2025.11.20 제출본 그대로', 'M12 11v6M9 14h6M6 6h12v15H6z', ' color: #596170; background: #f0f2f5;']
+    ];
+    const traces = T.map(([title, sub, icon, s]) => ({
+      title, sub, icon,
+      iconStyle: 'width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; border-radius: 50%; display: flex; align-items: center; justify-content: center;' + s
+    }));
+
+    const tally = SUM.map(([k, n]) => ({ label: V[k][0], n: n + '장', style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + V[k][2].replace(' text-decoration: line-through;', '') }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6,
+      summary, rows, legend, mapHeadStyle, reviews, traces, tally
+    };
+  }
+}
+</script>
+</body>
+</html>

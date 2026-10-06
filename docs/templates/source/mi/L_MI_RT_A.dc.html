@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-RT-A 리테일 · 브랜드 플래그십 · 시장 · 트렌드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">D 리테일의 시장은 ‘파는 매장’에서 ‘경험하는 매장’으로 갑니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">국내 오프라인 리테일 시장 규모와 체험형 · 플래그십 매장 비중, 그리고 이 흐름이 D 리테일에 주는 시사점</div>
+
+  <!-- 시장 규모 차트 (8열) — 막대 높이는 예시 기하, 라벨은 자리표시자 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 760px; height: 264px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 176px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">국내 오프라인 리테일 시장 규모</span><span style="font-size: 11.5px; color: #8a91a0">단위: 조 원 · 출처: [조사 기관]</span></div>
+  <div style="position: absolute; right: 480px; top: 178px; height: 16px; display: flex; align-items: center; gap: 14px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #d5d9e0"></span>일반 매장</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>체험형 · 플래그십 매장</span>
+  </div>
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="4">
+    <div style="{{g.style}}"></div>
+  </sc-for>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+    <div style="{{b.gray}}"></div>
+    <div style="{{b.blue}}"></div>
+    <span style="{{b.valStyle}}">{{b.val}}</span>
+    <span style="{{b.yearStyle}}">{{b.year}}</span>
+    <span style="{{b.shareStyle}}">{{b.share}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 88px; top: 390px; width: 72px; height: 16px; font-size: 11px; font-weight: 700; line-height: 16px; color: #596170; white-space: nowrap">체험형 비중</div>
+  <div style="position: absolute; left: 88px; top: 366px; width: 72px; height: 16px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">연도</div>
+
+  <!-- 핵심 수치 (4열) -->
+  <sc-for list="{{tiles}}" as="t" hint-placeholder-count="3">
+    <div style="{{t.box}}">
+      <span style="{{t.labStyle}}">{{t.label}}</span>
+      <span style="{{t.bigStyle}}">{{t.big}}</span>
+      <span style="{{t.noteStyle}}">{{t.note}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 848px; top: 408px; width: 368px; height: 16px; font-size: 11px; line-height: 16px; color: #8a91a0; text-align: right; white-space: nowrap">수치는 예시 · 조사 / 실측 후 반영</div>
+
+  <!-- 시장을 움직이는 네 가지 흐름 → 그래서 D 리테일에게 -->
+  <div style="position: absolute; left: 64px; top: 444px; width: 1152px; height: 20px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap">
+    <span style="font-size: 14px; font-weight: 800">시장을 움직이는 네 가지 흐름</span>
+    <span style="font-size: 11.5px; color: #8a91a0">흐름마다 아래 파란 칸 — 그래서 D 리테일에게</span>
+  </div>
+  <sc-for list="{{trends}}" as="d" hint-placeholder-count="4">
+    <div style="{{d.box}}">
+      <div style="position: absolute; left: 0px; top: 0px; width: 270px; height: 2px; background: #121417"></div>
+      <div style="position: absolute; left: 0px; top: 12px; width: 24px; height: 24px">
+        <sc-if value="{{d.iTouch}}" hint-placeholder-val="{{true}}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5a2 2 0 0 1 4 0v6 M13 10a2 2 0 0 1 4 0v2 M17 12a2 2 0 0 1 4 0v3a7 7 0 0 1-7 7h-1.5a7 7 0 0 1-5.6-2.8L4.3 15.4a2 2 0 0 1 3.2-2.4L9 15"/></svg>
+        </sc-if>
+        <sc-if value="{{d.iScreen}}" hint-placeholder-val="{{false}}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4 M10 7.5l4.5 2.5-4.5 2.5z"/></svg>
+        </sc-if>
+        <sc-if value="{{d.iCycle}}" hint-placeholder-val="{{false}}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.4-5.7 M20 4v5h-5"/></svg>
+        </sc-if>
+        <sc-if value="{{d.iLayers}}" hint-placeholder-val="{{false}}">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z M3 13l9 5 9-5"/></svg>
+        </sc-if>
+      </div>
+      <span style="position: absolute; right: 0px; top: 14px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0">{{d.n}}</span>
+      <span style="position: absolute; left: 0px; top: 44px; width: 270px; font-size: 16px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; white-space: nowrap">{{d.t}}</span>
+      <span style="position: absolute; left: 0px; top: 70px; width: 266px; height: 36px; font-size: 12.5px; line-height: 18px; color: #596170">{{d.d}}</span>
+      <div style="position: absolute; left: 0px; top: 114px; width: 270px; height: 60px; box-sizing: border-box; border-radius: 10px; background: #eaeefb">
+        <span style="position: absolute; left: 12px; top: 8px; font-size: 11px; font-weight: 800; line-height: 14px; color: #1428a0; white-space: nowrap">그래서 D 리테일에게</span>
+        <span style="position: absolute; left: 12px; top: 24px; width: 246px; height: 34px; font-size: 12.5px; font-weight: 700; line-height: 17px; color: #121417">{{d.so}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 리테일 체인 · 플래그십 매장 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 4</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const A = 'position: absolute; ';
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+
+    // 1) 시장 규모 막대 — 높이는 예시 기하(성장 · 비중 확대 모양), 값은 모두 자리표시자
+    const BASE = 358;
+    const grid = [218, 264, 310].map((y) => ({ style: A + box(150, y, 650, 1) + 'background: #e2e5ea;' }))
+      .concat([{ style: A + box(150, BASE, 650, 1) + 'background: #b8bec8;' }]);
+    const YEARS = ['2021', '2022', '2023', '2024', '2025', '2026E'];
+    const TOT = [92, 100, 108, 118, 128, 140];
+    const SHARE = [0.12, 0.15, 0.19, 0.23, 0.28, 0.34];
+    const bars = YEARS.map((year, i) => {
+      const c = 203 + i * 106, last = i === YEARS.length - 1;
+      const t = TOT[i], b = Math.round(t * SHARE[i]), g = t - b - 2;
+      const col = last ? BLUE : '#596170';
+      return {
+        year, val: '[000]', share: '[00]%',
+        gray: A + box(c - 26, BASE - g, 52, g) + 'background: #d5d9e0;',
+        blue: A + box(c - 26, BASE - t, 52, b) + 'background: ' + BLUE + '; border-radius: 4px 4px 0 0;',
+        valStyle: A + box(c - 34, BASE - t - 20, 68, 16) + 'text-align: center; font-family: Manrope, sans-serif; font-size: ' + (last ? 13 : 12) + 'px; font-weight: ' + (last ? 800 : 700) + '; line-height: 16px; color: ' + col + ';',
+        yearStyle: A + box(c - 34, 366, 68, 16) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: ' + (last ? 800 : 600) + '; line-height: 16px; color: ' + col + ';',
+        shareStyle: A + box(c - 34, 390, 68, 16) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 12px; font-weight: ' + (last ? 800 : 700) + '; line-height: 16px; color: ' + BLUE + ';'
+      };
+    });
+
+    // 2) 핵심 수치 3칸 — 셋째 칸(체험형 비중)이 제목의 근거라 파랑으로 강조
+    const T = [
+      ['국내 오프라인 리테일 시장 · 2026E', '[000]조 원', '전년 대비 [0.0]%', false],
+      ['체험형 · 플래그십 매장 연평균 성장', '[00.0]%', '전체 시장 [0.0]%', false],
+      ['체험형 · 플래그십 매장 비중', '[00]% → [00]%', '2021 → 2026E', true]
+    ];
+    const tiles = T.map(([label, big, note, hi], i) => ({
+      label, big, note,
+      box: A + box(848, 160 + i * 84, 368, 74) + 'box-sizing: border-box; border-radius: 14px; ' + (hi ? 'background: ' + BLUE + ';' : 'background: #ffffff; border: 1px solid #e2e5ea;'),
+      labStyle: A + 'left: 18px; top: 12px; height: 16px; font-size: 12px; font-weight: 700; line-height: 16px; white-space: nowrap; color: ' + (hi ? '#dfe6ff' : '#596170') + ';',
+      bigStyle: A + 'left: 18px; top: 31px; height: 32px; font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; line-height: 32px; letter-spacing: -0.02em; white-space: nowrap; color: ' + (hi ? '#ffffff' : BLUE) + ';',
+      noteStyle: A + 'right: 18px; top: 42px; height: 16px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 11.5px; font-weight: 600; line-height: 16px; white-space: nowrap; color: ' + (hi ? '#dfe6ff' : '#8a91a0') + ';'
+    }));
+
+    // 3) 시장을 움직이는 흐름 4가지 — 업종에서 반복되는 요구(브랜드 경험 · 옥외 내구성 · 콘텐츠 운영 · 인테리어 조화 · 저전력)
+    const D = [
+      ['touch', '매장은 ‘경험하는 곳’으로', '구매는 온라인으로 옮겨 가고, 매장은 브랜드를 체험 · 공유하는 무대가 됩니다',
+        '플래그십 성과를 매출과 함께 체류 · 체험 참여로 관리해야 합니다'],
+      ['screen', '매장 외관이 곧 광고 매체', '파사드 · 쇼윈도 화면이 유동인구에게 영업시간 밖까지 브랜드를 알립니다',
+        '햇빛 · 비바람 · 심야에도 보이는 외부 화면이 첫 투자처입니다'],
+      ['cycle', '콘텐츠 교체 주기 단축', '시즌 · 월별 프로모션과 신제품 · 클래스 안내가 늘어 인쇄물로는 속도를 못 맞춥니다',
+        '본사가 전 매장 화면을 원격으로 한 번에 바꾸는 체계가 필요합니다'],
+      ['layers', '설비도 인테리어의 일부로', '화면 · 공조 · 음향이 공간 디자인과 하나가 되고, 저전력 · 친환경도 평가받습니다',
+        '설계 단계부터 화면 · 공조 · 음향을 브랜드 톤에 맞춰 계획합니다']
+    ];
+    const trends = D.map(([ic, t, d, so], i) => ({
+      n: '0' + (i + 1), t, d, so,
+      iTouch: ic === 'touch', iScreen: ic === 'screen', iCycle: ic === 'cycle', iLayers: ic === 'layers',
+      box: A + box(64 + i * 294, 474, 270, 174)
+    }));
+
+    return { grid, bars, tiles, trends };
+  }
+}
+</script>
+</body>
+</html>

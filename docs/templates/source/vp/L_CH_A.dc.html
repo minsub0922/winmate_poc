@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CH-A 과제 3 + 영향</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">A 커피가 지금 겪는 세 가지 문제</div>
+
+  <!-- 과제 카드 3 : 위는 문제, 아래는 그 문제가 치르게 하는 비용 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{items}}" as="c" hint-placeholder-count="3">
+      <div style="height: 512px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 32px 28px 30px 28px; display: flex; flex-direction: column">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #b8bec8">{{c.no}}</span>
+          <span style="height: 26px; padding: 0 11px; box-sizing: border-box; border-radius: 999px; border: 1px solid #d5d9e0; background: #ffffff; font-size: 12px; font-weight: 700; color: #596170; display: flex; align-items: center">{{c.kind}}</span>
+        </div>
+        <span style="margin-top: 22px; font-size: 21px; font-weight: 800; line-height: 1.4; letter-spacing: -0.02em">{{c.title}}</span>
+        <span style="margin-top: 12px; font-size: 15px; line-height: 1.65; color: #596170">{{c.desc}}</span>
+        <div style="margin-top: 18px; border-radius: 10px; background: #ffffff; padding: 12px 14px; display: flex; gap: 10px; align-items: flex-start">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; line-height: 1.5; color: #3d4452">{{c.voice}}</span><span style="font-size: 11.5px; color: #8a91a0">{{c.who}}</span></div>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="border-top: 1px solid #d5d9e0; padding-top: 22px; display: flex; flex-direction: column">
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M6 14l6 6 6-6"/></svg>영향</div>
+          <div style="margin-top: 10px; display: flex; align-items: baseline; gap: 6px">
+            <span style="font-size: 15px; font-weight: 700; color: #3d4452">{{c.pre}}</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #121417">{{c.n}}</span>
+            <span style="font-size: 17px; font-weight: 700; color: #121417">{{c.unit}}</span>
+          </div>
+          <span style="margin-top: 6px; font-size: 13px; color: #596170">{{c.what}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 10</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 문제(위) + 그 문제의 비용(아래). 비용은 손실이므로 파랑이 아닌 잉크로 표시.
+    const C = [
+      ['비용', '메뉴가 바뀔 때마다 새로 찍는 인쇄물', '신메뉴 · 가격 변경마다 320개 매장의 메뉴판과 POP를 다시 인쇄해 배송합니다.', '연', '[00]', '억 원', '인쇄 · 배송비'],
+      ['인력', '영업 전후로 메뉴판을 갈아 끼우는 매장', '점장과 직원이 메뉴판 · 가격표를 직접 떼고 붙이느라 준비 시간이 줄어듭니다.', '매장당 월', '[00]', '시간', '메뉴 교체에 드는 시간'],
+      ['품질', '매장마다 어긋나는 가격 표기', '교체 시점이 매장마다 달라 가격 · 품절 표기가 틀리고, 고객 문의로 이어집니다.', '월', '[00]', '건', '가격 표기 오류']
+    ];
+    // 현장 근거 (인터뷰 · 기록) — 실제 코멘트는 자료 연결 시 채움
+    const V = [['[본사 담당자 코멘트]', '본사 구매팀 인터뷰'], ['[점장 코멘트]', '매장 점장 인터뷰'], ['[고객 문의 사례]', '고객 문의 기록']];
+    return { items: C.map(([kind, title, desc, pre, n, unit, what], i) => ({ no: String(i + 1).padStart(2, '0'), kind, title, desc, pre, n, unit, what, voice: V[i][0], who: V[i][1] })) };
+  }
+}
+</script>
+</body>
+</html>

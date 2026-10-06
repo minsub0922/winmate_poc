@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>LYN-S LYNK Cloud 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · LYNK Cloud</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>LYNK Cloud · 호스피탈리티 TV 플랫폼</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">체크인부터 체크아웃까지, 객실 TV가 하는 일</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">투숙객 한 명의 여정 · 로비와 객실에서 LYNK Cloud가 움직이는 다섯 순간</div>
+
+  <!-- 공간 띠: 로비 → 객실 → 로비 -->
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="3">
+    <div style="{{z.style}}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{z.color}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{z.icon}}"/></svg>
+      <span style="font-size: 12.5px; font-weight: 800; color: {{z.color}}; white-space: nowrap">{{z.t}}</span>
+      <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{z.sub}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 여정 연결선 -->
+  <div style="position: absolute; left: 171px; top: 221px; width: 704px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 875px; top: 221px; width: 234px; height: 0px; border-top: 2px dashed #1428a0"></div>
+  <div style="position: absolute; left: 958px; top: 211px; width: 68px; height: 22px; box-sizing: border-box; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11px; font-weight: 700; color: #596170; display: flex; align-items: center; justify-content: center">다음 날</div>
+  <sc-for list="{{marks}}" as="k" hint-placeholder-count="5">
+    <div style="{{k.style}}">{{k.no}}</div>
+  </sc-for>
+
+  <!-- 다섯 순간 -->
+  <div style="position: absolute; left: 64px; top: 254px; width: 1152px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px">
+    <sc-for list="{{moments}}" as="m" hint-placeholder-count="5">
+      <div style="height: 334px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 12px; display: flex; flex-direction: column; overflow: hidden">
+        <div style="height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between">
+          <div style="display: flex; align-items: baseline; gap: 6px">
+            <span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; color: #1428a0; letter-spacing: -0.02em">{{m.time}}</span>
+            <sc-if value="{{m.next}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; font-weight: 700; color: #596170">다음 날</span></sc-if>
+          </div>
+          <span style="{{m.chip}}">{{m.space}}</span>
+        </div>
+        <span style="margin-top: 6px; flex-shrink: 0; font-size: 16px; font-weight: 800; line-height: 1.4; white-space: nowrap">{{m.title}}</span>
+        <div style="margin-top: 8px; position: relative; width: 100%; height: 124px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #dfe3ea">
+          <img src="{{m.img}}" alt="{{m.alt}}" style="position: absolute; {{m.imgBox}} object-fit: cover; object-position: {{m.pos}}">
+          <span style="{{m.tagStyle}}">{{m.tag}}</span>
+        </div>
+        <div style="margin-top: 8px; height: 18px; flex-shrink: 0; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452; white-space: nowrap; overflow: hidden">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 5h18v12H3z M8 21h8"/></svg>
+          <span style="color: #8a91a0">TV</span><span style="font-weight: 700">{{m.ui}}</span>
+        </div>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e2e5ea; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 800; color: #1428a0">LYNK Cloud</span>
+          <span style="font-size: 13px; line-height: 1.5; color: #3d4452">{{m.does}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 가치 -->
+  <div style="position: absolute; left: 64px; top: 600px; width: 1152px; height: 48px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 20px; display: flex; align-items: center; gap: 18px">
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 800; display: flex; align-items: center">가치</span>
+    <sc-for list="{{values}}" as="v" hint-placeholder-count="3">
+      <span style="width: 1px; height: 18px; background: #b8c3ee"></span>
+      <span style="display: flex; align-items: baseline; gap: 6px; white-space: nowrap"><span style="font-size: 14px; font-weight: 700">{{v.k}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 800; color: #1428a0">{{v.v}}</span></span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12px; color: #596170">유사 사례 기준 · 수치는 예시</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 호텔 · 객실 TV 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 5열 격자: 열 폭 214.4 · 간격 20 · 열 i 시작 = 64 + 234.4 i
+    const colL = (i) => 64 + 234.4 * i;
+    const colW = 214.4;
+    const px = (n) => (Math.round(n * 10) / 10) + 'px; ';
+
+    const LOBBY = 'M3 21h18 M5 21V7l7-4 7 4v14 M10 21v-5h4v5';
+    const ROOM = 'M3 18v-7h18v7 M3 14h18 M7 11V8h5v3 M3 18v2 M21 18v2';
+    const zone = (from, to, t, sub, room) => ({
+      t, sub, icon: room ? ROOM : LOBBY, color: room ? '#1428a0' : '#3d4452',
+      style: 'position: absolute; left: ' + px(colL(from)) + 'top: 160px; width: ' + px(colL(to) + colW - colL(from)) + 'height: 32px; box-sizing: border-box; border-radius: 10px; background: ' + (room ? '#eaeefb' : '#f5f6f8') + '; padding: 0 12px; display: flex; align-items: center; gap: 8px; overflow: hidden;'
+    });
+    const zones = [
+      zone(0, 0, '로비', '프런트', false),
+      zone(1, 3, '객실 [0000]호', '투숙 중 · 객실 TV', true),
+      zone(4, 4, '로비', '프런트', false)
+    ];
+
+    const marks = [0, 1, 2, 3, 4].map((i) => ({
+      no: i + 1,
+      style: 'position: absolute; left: ' + px(colL(i) + colW / 2 - 22) + 'top: 200px; width: 36px; height: 36px; box-sizing: content-box; border: 4px solid #ffffff; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    const chip = (room) => 'height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; ' + (room ? 'background: #eaeefb; color: #1428a0;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #3d4452;');
+
+    // 사진 상자 190.4 × 124 · 확대 크롭은 이미지 크기 · 위치를 직접 지정 (상자 밖은 잘림)
+    const BW = 190.4, BH = 124;
+    const fill = 'left: 0px; top: 0px; width: ' + px(BW) + 'height: ' + px(BH);
+    const zoom = (l, t, w, h) => 'left: ' + px(l) + 'top: ' + px(t) + 'width: ' + px(w) + 'height: ' + px(h);
+    const tagStyle = (ink) => 'position: absolute; left: 6px; top: 6px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + (ink ? 'background: #121417; color: #ffffff;' : 'background: #ffffff; color: #3d4452;');
+    const SPACE = '예시 사진 · 고객 공간으로 교체';
+    const IMG = {
+      admin: '/_blob/6682f7d3868ea35e6813529c821e528f',
+      roomTv: '/_blob/aacd84c283769708d45ecc09c7ebebd3',
+      welcome: '/_blob/667d4cf6bf7e78c221a288c0dc6b6e89',
+      inspire: '/_blob/1ae5d61b0c2464e6f42afb2c1bcea4ab',
+      lobby: '/_blob/70c2af7dd8001ce4a8db53f71003ae34'
+    };
+    const M = [
+      { time: '15:00', next: false, space: '로비', room: false, title: '체크인',
+        img: IMG.admin, alt: '프런트 직원이 LYNK Cloud 관리 화면으로 객실 TV를 관리하는 장면', imgBox: fill, pos: '50% 35%', tag: SPACE, ink: false,
+        ui: '웰컴 화면 준비 중', does: 'PMS 체크인 이벤트를 받아 투숙객 이름 · 언어를 객실 TV에 반영' },
+      { time: '15:20', next: false, space: '객실', room: true, title: '객실 입장',
+        img: IMG.roomTv, alt: '객실 벽걸이 TV의 개인화 웰컴 화면', imgBox: zoom(-24, -82, 480, 324.4), pos: '50% 50%', tag: SPACE, ink: false,
+        ui: '환영합니다, [투숙객] 님', does: '이름으로 맞이하는 웰컴 화면과 투숙객 맞춤 프로모션을 표시' },
+      { time: '19:00', next: false, space: '객실', room: true, title: '룸서비스 · 예약',
+        img: IMG.welcome, alt: '호텔 TV 홈 화면의 안내 · 게스트 서비스 · 인룸 다이닝 메뉴', imgBox: zoom(-134.6, -50.5, 336.6, 190), pos: '50% 50%', tag: '화면 예시', ink: true,
+        ui: '룸서비스 · 레스토랑', does: 'TV로 받은 주문 · 예약 요청을 F&B · 컨시어지로 전달' },
+      { time: '22:00', next: false, space: '객실', room: true, title: 'OTT 로그인',
+        img: IMG.inspire, alt: '도입사례 인스파이어 리조트의 객실 TV 홈 메뉴와 리모컨', imgBox: fill, pos: '50% 50%', tag: '도입사례 · 인스파이어 리조트', ink: true,
+        ui: '내 계정으로 스트리밍', does: '투숙객이 본인 계정으로 스트리밍 앱에 로그인' },
+      { time: '11:00', next: true, space: '로비', room: false, title: '체크아웃',
+        img: IMG.lobby, alt: '호텔 프론트데스크와 로비', imgBox: fill, pos: '50% 100%', tag: SPACE, ink: false,
+        ui: '이용해 주셔서 감사합니다', does: 'PMS 체크아웃과 함께 로그인 정보 자동 삭제 · 다음 투숙객 대기' }
+    ];
+    const moments = M.map((m) => ({
+      time: m.time, next: m.next, space: m.space, title: m.title, ui: m.ui, does: m.does, chip: chip(m.room),
+      img: m.img, alt: m.alt, imgBox: m.imgBox, pos: m.pos, tag: m.tag, tagStyle: tagStyle(m.ink)
+    }));
+
+    const values = [
+      { k: '부가 매출', v: '[00]% ↑' },
+      { k: '개인정보', v: '자동 삭제' },
+      { k: '프런트 문의', v: '[00]% ↓' }
+    ];
+    return { zones, marks, moments, values };
+  }
+}
+</script>
+</body>
+</html>

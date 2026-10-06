@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-O 구성 3안</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 객실 (스탠다드)</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">객실 한 실, 세 가지 구성 — 예산에 맞춰 고르세요</div>
+
+  <!-- 3안: 제품 행은 세 열이 같은 순서(TV · 콘텐츠 · 공조 · 태블릿 · 냉장고)로 정렬 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{tiers}}" as="t" hint-placeholder-count="3">
+      <div style="{{t.box}}">
+        <div style="display: flex; align-items: center; gap: 10px; height: 30px">
+          <span style="font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: {{t.nameColor}}">{{t.name}}</span>
+          <sc-if value="{{t.rec}}" hint-placeholder-val="{{false}}">
+            <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">추천</span>
+          </sc-if>
+          <span style="flex-grow: 1"></span>
+          <span style="font-size: 12px; color: #596170">상대 비용</span>
+          <div style="display: flex; gap: 4px">
+            <sc-for list="{{t.cost}}" as="c" hint-placeholder-count="3">
+              <span style="{{c}}"></span>
+            </sc-for>
+          </div>
+        </div>
+        <span style="margin-top: 6px; font-size: 14px; color: #3d4452">{{t.desc}}</span>
+        <div style="margin-top: 14px; height: 1px; flex-shrink: 0; background: #e2e5ea"></div>
+        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 4px">
+          <sc-for list="{{t.rows}}" as="r" hint-placeholder-count="5">
+            <div style="display: flex; align-items: center; gap: 8px; height: 32px">
+              <span style="{{r.markStyle}}">{{r.mark}}</span>
+              <div style="width: 48px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><div style="{{r.g}}"><div style="{{r.gi}}"></div></div></div>
+              <span style="{{r.nameStyle}}">{{r.name}}</span>
+              <span style="{{r.subStyle}}">{{r.sub}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="{{t.gainBox}}">
+          <span style="{{t.gainLabel}}">투숙객이 얻는 것</span>
+          <sc-for list="{{t.guest}}" as="l" hint-placeholder-count="2">
+            <span style="font-size: 13.5px; line-height: 1.45">{{l}}</span>
+          </sc-for>
+          <span style="{{t.gainLabel2}}">호텔이 얻는 것</span>
+          <sc-for list="{{t.hotel}}" as="l" hint-placeholder-count="1">
+            <span style="font-size: 13.5px; line-height: 1.45">{{l}}</span>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 객실 수 · 범례 -->
+  <div style="position: absolute; left: 64px; top: 608px; width: 1152px; height: 40px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 22px">
+    <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 13px; font-weight: 800">스탠다드 객실</span><span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">× 300</span><span style="font-size: 13px; font-weight: 700; color: #1428a0">실</span></span>
+    <span style="width: 1px; height: 18px; background: #d5d9e0"></span>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #3d4452"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">+</span>새로 추가</span>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #3d4452"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">↑</span>크기 업그레이드</span>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #3d4452"><span style="width: 12px; height: 12px; border-radius: 3px; background: #b8bec8"></span>회색은 왼쪽 안과 동일</span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12.5px; color: #596170">금액은 견적서에서 제시</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 객실 · 공용부 리뉴얼 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 제품 자리표시 (객실 TV는 화면 크기에 비례한 폭, 비화면 제품은 밝은 박스)
+    const scr = (w) => 'width: ' + w + 'px; height: ' + Math.round(w * 0.5625) + 'px; box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 2px solid #121417';
+    const light = 'box-sizing: border-box; background: #eef0f3; border: 1px solid #b8bec8; display: flex; align-items: center; ';
+    const G = {
+      tv43: [scr(30), 'display: none'],
+      tv55: [scr(38), 'display: none'],
+      tv65: [scr(46), 'display: none'],
+      oneway: [light + 'justify-content: center; width: 44px; height: 14px; border-radius: 3px', 'width: 30px; height: 2px; border-radius: 1px; background: #b8bec8'],
+      tab: [light + 'justify-content: center; width: 38px; height: 26px; border-radius: 4px', 'width: 30px; height: 18px; border-radius: 2px; background: #1f232a'],
+      fridge: [light + 'justify-content: flex-end; padding-right: 3px; width: 22px; height: 28px; border-radius: 3px', 'width: 2px; height: 9px; border-radius: 1px; background: #b8bec8'],
+      none: ['display: none', 'display: none']
+    };
+    // state: base(기본 포함) · up(크기 업그레이드) · new(새로 추가) · same(왼쪽 안과 동일) · none(미포함)
+    const row = (state, g, name, sub, chip) => {
+      const on = state !== 'none';
+      const strong = state === 'base' || state === 'up' || state === 'new';
+      const gs = G[on ? g : 'none'];
+      let nameStyle = 'font-size: 14px; white-space: nowrap; ' + (!on ? 'color: #b8bec8' : strong ? 'font-weight: 700; color: #121417' : 'font-weight: 500; color: #596170');
+      if (on && chip) {
+        nameStyle = 'height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; display: flex; align-items: center; white-space: nowrap; ' +
+          (state === 'same' ? 'background: #f5f6f8; color: #596170' : 'background: #eaeefb; color: #1428a0; font-weight: 700');
+      }
+      return {
+        mark: state === 'new' ? '+' : state === 'up' ? '↑' : '',
+        markStyle: 'width: 14px; flex-shrink: 0; text-align: center; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0',
+        g: gs[0] + (state === 'same' ? '; opacity: 0.45' : ''),
+        gi: gs[1],
+        name: on ? name : '—',
+        nameStyle,
+        sub: on ? sub : '',
+        subStyle: 'font-size: 12px; white-space: nowrap; color: ' + (on ? '#596170' : '#b8bec8')
+      };
+    };
+    const T = [
+      { name: '기본', rec: false, cost: 1, desc: 'TV만 바꾸는 최소 구성',
+        rows: [row('base', 'tv43', '호텔 TV 43"', '[모델명]'), row('none'), row('none'), row('none'), row('none')],
+        guest: ['밝고 선명한 새 TV', '익숙한 리모컨 · 채널 그대로'],
+        hotel: ['가장 적은 비용으로 노후 TV 교체'] },
+      { name: '권장', rec: true, cost: 2, desc: 'TV · 콘텐츠 · 냉방을 함께 바꿉니다',
+        rows: [row('up', 'tv55', '호텔 TV 55"', '[모델명]'), row('new', 'none', 'LYNK Cloud', '객실 TV 콘텐츠', true), row('new', 'oneway', 'WindFree 1Way 카세트', '객실 천장'), row('none'), row('none')],
+        guest: ['웰컴 화면 · 호텔 안내를 TV로', '몸에 바람이 직접 닿지 않는 냉방'],
+        hotel: ['TV 화면 · 안내를 원격으로 한 번에 변경'] },
+      { name: '확장', rec: false, cost: 3, desc: '객실 전체를 한 번에 업그레이드',
+        rows: [row('up', 'tv65', '호텔 TV 65"', '[모델명]'), row('same', 'none', 'LYNK Cloud', '객실 TV 콘텐츠', true), row('same', 'oneway', 'WindFree 1Way 카세트', '객실 천장'), row('new', 'tab', '객실 컨트롤 태블릿', '침대 옆'), row('new', 'fridge', '객실 냉장고', '[모델명]')],
+        guest: ['침대에서 태블릿으로 냉방 · TV 조작', '객실 냉장고까지 갖춘 상위 객실'],
+        hotel: ['상위 객실 상품으로 객실 단가 ↑'] }
+    ];
+    const sqOn = 'width: 12px; height: 12px; border-radius: 3px; background: #121417';
+    const sqOff = 'width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #d5d9e0';
+    const tiers = T.map((t) => ({
+      name: t.name, rec: t.rec, desc: t.desc, rows: t.rows, guest: t.guest, hotel: t.hotel,
+      nameColor: t.rec ? '#1428a0' : '#121417',
+      box: 'position: relative; height: 456px; box-sizing: border-box; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; ' +
+        (t.rec ? 'border: 2px solid #1428a0; padding: 19px 21px' : 'border: 1px solid #e2e5ea; padding: 20px 22px'),
+      cost: [1, 2, 3].map((i) => (i <= t.cost ? sqOn : sqOff)),
+      gainBox: 'border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 2px; background: ' + (t.rec ? '#eaeefb' : '#f5f6f8'),
+      gainLabel: 'font-size: 12px; font-weight: 700; color: ' + (t.rec ? '#1428a0' : '#596170'),
+      gainLabel2: 'margin-top: 6px; font-size: 12px; font-weight: 700; color: ' + (t.rec ? '#1428a0' : '#596170')
+    }));
+    return { tiers };
+  }
+}
+</script>
+</body>
+</html>

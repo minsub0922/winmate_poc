@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 결과</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="A 커피 메뉴보드 경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="경쟁사 분석" title="A 커피 메뉴보드 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">결과</span>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">경쟁사 4곳, 한눈에</h1>
+        </div>
+        <span style="font-size: 14px; color: #596170">경쟁사마다 포지셔닝 한 줄과 삼성 대비 우위 · 비슷 · 열위를 세었어요. 누르면 상세로 가요.</span>
+      </div>
+
+      <!-- 보기 세그먼트: 한눈에(선택) · 비교표 · 삼성 강점 -->
+      <div role="tablist" aria-label="결과 보기" style="display: flex; gap: 6px; flex-shrink: 0">
+        <sc-for list="{{views}}" as="v" hint-placeholder-count="3">
+          <button role="tab" aria-selected="{{v.on}}" style="{{v.style}}">{{v.label}}</button>
+        </sc-for>
+      </div>
+
+      <!-- 경쟁사 행 4개 · 행 전체가 상세 링크 -->
+      <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden">
+        <sc-for list="{{comps}}" as="c" hint-placeholder-count="4">
+          <a href="CA4D.dc.html" style="{{c.row}}">
+            <span style="width: 30px; height: 30px; border-radius: 8px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{c.letter}}</span>
+            <div style="width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+              <span style="font-size: 13.5px; font-weight: 600; color: #121417; white-space: nowrap">{{c.name}}</span>
+              <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.kind}}</span>
+            </div>
+            <span style="flex-grow: 1; min-width: 0; font-size: 13px; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.pos}}</span>
+            <div style="display: flex; gap: 4px; flex-shrink: 0">
+              <span style="{{chipUp}}">우위 {{c.up}}</span>
+              <span style="{{chipEq}}">비슷 {{c.eq}}</span>
+              <span style="{{chipDn}}">열위 {{c.dn}}</span>
+            </div>
+            <span style="width: 40px; flex-shrink: 0; text-align: right; font-size: 11.5px; color: #8a91a0; white-space: nowrap">출처 {{c.src}}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg>
+          </a>
+        </sc-for>
+      </div>
+
+      <!-- 삼성 강점 3 · 주의할 점 2 -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex-shrink: 0">
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <div style="height: 20px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700">삼성 강점<span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">3</span></div>
+          <sc-for list="{{strengths}}" as="s" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 1.5; min-width: 0">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#0b6e4f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+              <span style="font-weight: 600; white-space: nowrap; flex-shrink: 0">{{s.name}}</span>
+              <span style="color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.note}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+          <div style="height: 20px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700">주의할 점<span style="font-family: Manrope, sans-serif; font-weight: 800; color: #8a3b00">2</span></div>
+          <sc-for list="{{cautions}}" as="w" hint-placeholder-count="2">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 1.5; min-width: 0">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: #8a3b00; flex-shrink: 0"></span>
+              <span style="font-weight: 600; white-space: nowrap; flex-shrink: 0">{{w.name}}</span>
+              <span style="color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{w.note}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 10px; flex-shrink: 0">
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">출처 16 · 공개 자료 12 · 사내 사례 DB 4 · [수치는 확인 후 확정]</span>
+        <span style="flex-grow: 1"></span>
+        <a href="CA3.dc.html" style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7 M20 4v7h-7"/></svg>다시 분석</a>
+        <a href="CA5.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">저장 · 보내기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+
+    // 보기 세그먼트: 한눈에만 구현 · 나머지는 상태 표시만
+    const views = [['한눈에', true], ['비교표', false], ['삼성 강점', false]].map(([label, on]) => ({
+      label, on,
+      style: 'height: 36px; padding: 0 14px; border-radius: 10px; font-size: 13px; display: flex; align-items: center; white-space: nowrap;' + (on ? ' border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;')
+    }));
+
+    // 경쟁사 4곳: 실명 대신 글자 + 유형 · [포지셔닝 한 줄, 우위, 비슷, 열위, 출처 수]
+    const C = [
+      ['A', '국내 대형 가전 · 사이니지', '자체 CMS 기반 풀 라인업 · 500매장 이상은 서버 추가', 3, 2, 1, 5],
+      ['B', '글로벌 사이니지 전문', '글로벌 레퍼런스 · CMS 는 외부 연동', 4, 1, 1, 4],
+      ['C', '클라우드 CMS 소프트웨어', '소프트웨어만 · 하드웨어는 타사 조합', 2, 3, 1, 3],
+      ['D', '키오스크 · 메뉴보드 통합 벤더', '외식 특화 설치 · 운영 패키지 · 수도권 강세', 3, 1, 2, 4]
+    ];
+    const comps = C.map(([letter, kind, pos, up, eq, dn, src], i) => ({
+      letter, kind, pos, up, eq, dn, src, name: '경쟁사 ' + letter,
+      row: 'display: flex; align-items: center; gap: 10px; height: 64px; box-sizing: border-box; padding: 0 18px 0 20px; color: #121417;' + (i > 0 ? ' border-top: 1px solid #f0f2f5;' : '')
+    }));
+    const chip = 'height: 22px; padding: 0 7px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+
+    const strengths = [
+      ['서버 없는 통합 관리', 'MagicINFO · 별도 서버 없이 전 매장 관리'],
+      ['에너지 자동화', '밝기 · 전원 스케줄로 전기료 절감'],
+      ['배포 신뢰성', '미수신 재전송 · 800매장 사례']
+    ].map(([name, note]) => ({ name, note }));
+    const cautions = [
+      ['경쟁사 D', '수도권 설치 파트너망 · 설치 속도에서 앞설 수 있어요'],
+      ['경쟁사 C', '소프트웨어 단가 · 하드웨어 없이 가격만 비교되면 불리해요']
+    ].map(([name, note]) => ({ name, note }));
+
+    return {
+      steps, cur: 4, views, comps, strengths, cautions,
+      chipUp: chip + ' background: #e6f4ee; color: #0b6e4f;',
+      chipEq: chip + ' background: #f0f2f5; color: #596170;',
+      chipDn: chip + ' background: #fdf0e6; color: #8a3b00;'
+    };
+  }
+}
+</script>
+</body>
+</html>

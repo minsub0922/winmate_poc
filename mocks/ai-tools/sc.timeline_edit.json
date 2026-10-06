@@ -1,0 +1,19 @@
+{
+  "responses": [
+    {"when": {"contains": "#mock:llm-down"}, "error": {"status": 503, "code": "UPSTREAM_UNAVAILABLE", "message": "mock LLM 장애"}},
+    {
+      "when": {"contains": ["편집 요청: 손님 레인 18:00에 퇴근길 픽업 장면 추가", "점장 장면은 한 문장으로 짧게"]},
+      "json": {"ops": [
+        {"op": "add_beat", "time": "18:00", "slot_label": "저녁 퇴근길", "role": "손님", "text": "퇴근길 모바일 주문 픽업", "place": "픽업대"},
+        {"op": "shorten_role", "role": "점장"}
+      ]}
+    },
+    {
+      "when": {"contains": ["편집 요청: 손님 레인 18:00에 퇴근길 픽업 장면 추가"]},
+      "json": {"ops": [
+        {"op": "add_beat", "time": "18:00", "slot_label": "저녁 퇴근길", "role": "손님", "text": "퇴근길 모바일 주문 픽업", "place": "픽업대"}
+      ]}
+    },
+    {"json": {"ops": []}}
+  ]
+}

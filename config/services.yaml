@@ -1,0 +1,139 @@
+# Winmate 서비스 레지스트리 — 포트·소유 경로·의존 계약의 단일 원천
+#
+# - 포트는 5000번대만 쓴다. 바꿀 때는 여기만 고친다(게이트웨이·pm2·테스트가 모두 이 파일을 읽는다).
+# - 서비스끼리는 반드시 게이트웨이(/api/<name>/...)를 거쳐 OpenAPI 계약(contracts/<name>.json)으로만 통신한다.
+#   다른 서비스의 포트로 직접 붙거나 코드를 import 하지 않는다.
+# - consumes: 이 서비스가 호출하는 다른 서비스. 이 목록 밖 서비스 호출은 공통 클라이언트가 거부한다.
+# - owns: 이 서비스 개발 세션이 고칠 수 있는 경로(그 밖은 읽기만).
+# - worker: true 면 Redis 큐 소비 워커 프로세스를 함께 띄운다.
+
+infra:
+  redis:
+    port: 5379
+  web_dev:
+    port: 5001        # Vite 개발 서버(개발 때만). 운영은 게이트웨이가 빌드 결과를 서빙
+
+services:
+  gateway:
+    port: 5000
+    kind: edge
+    title: API 게이트웨이 — 라우팅 · 인증 · 계약 문서 집계 · 웹 정적 파일
+    owns: [services/gateway/**]
+    consumes: [workspace, birdseye]   # birdseye: 휴대폰 업로드 토큰 확인(로그인 없는 경로)
+
+  ai-tools:
+    port: 5010
+    title: AI Tools — LLM · I2T · T2I · 웹 검색 · 웹 수집 · 임베딩 (외부 모델 호출의 유일한 통로)
+    owns: [services/ai-tools/**, mocks/ai-tools/README.md]
+    consumes: [files]
+
+  kb:
+    port: 5020
+    title: 지식 DB — 제품 · 솔루션 · 업종 · 공간 · 사례 · 메시지 · 이미지 질의 (winmate-kb)
+    owns: [services/kb/**]
+    consumes: []
+
+  files:
+    port: 5030
+    title: 파일 — 업로드 · 저장 · 문서 파싱(PPTX·PDF·DOCX·XLSX·TXT·메일·HEIC) · 미리보기
+    owns: [services/files/**]
+    consumes: []
+
+  jobs:
+    port: 5040
+    title: 잡 — Redis 큐 잡 상태 · 진행 이벤트(SSE) · 취소 · 입력 · 예약 실행 · 완료 알림
+    owns: [services/jobs/**]
+    consumes: []
+
+  workspace:
+    port: 5050
+    title: 워크스페이스 — 사용자 · 프로젝트 · 작업물 색인(최근 작업·사이드바 이력) · 코멘트 · 검토/승인 · 공유 링크
+    owns: [services/workspace/**, web/src/shell/**, web/src/ui/**, web/src/App.tsx, web/src/main.tsx, web/e2e/shell/**, web/playwright.config.ts]
+    consumes: []
+
+  export:
+    port: 5060
+    worker: true
+    title: 내보내기 — PPTX · XLSX · DOCX · PDF · ZIP 생성, 시트 템플릿 카탈로그
+    owns: [services/export/**, docs/templates/**]
+    consumes: [files, kb]
+
+  requirements:
+    port: 5101
+    worker: true
+    feature: RQ
+    title: 고객 요구사항 — 입력 폼 · 파일로 채우기 · 심층 작성 · 고객 질문 · 정의서 버전
+    owns: [services/requirements/**, web/src/features/requirements/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export]
+
+  storyboard:
+    port: 5102
+    worker: true
+    feature: SB
+    title: 전략 수립 Storyboard — 기획 질문 · 5단 목차 · 요구사항 추적 · 버전 비교 · 일정
+    owns: [services/storyboard/**, web/src/features/storyboard/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements]
+
+  mi:
+    port: 5103
+    worker: true
+    feature: MI
+    title: Market Intelligence — 업종 판별 · 4개 분석 영역 · 출처 검증 · 부분 재분석 · 보고서
+    owns: [services/mi/**, web/src/features/mi/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements, storyboard]
+
+  competitor:
+    port: 5104
+    worker: true
+    feature: CA
+    title: 경쟁사 분석 — 경쟁사 찾기 · 6개 비교 기준 · 신뢰도 · 익명화 · 30일 재확인
+    owns: [services/competitor/**, web/src/features/competitor/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements, storyboard, mi]
+
+  vp:
+    port: 5105
+    worker: true
+    feature: VP
+    title: Value Proposition — 재료 수집 · 메시지 · 레이아웃 · 이미지 슬롯 · 수치
+    owns: [services/vp/**, web/src/features/vp/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements, storyboard, mi]
+
+  spec:
+    port: 5106
+    worker: true
+    feature: SP
+    title: Spec 시트 — 조건으로 모델 찾기 · 고객 스펙 대응표 · 단종·불일치 경고 · 단위 변환
+    owns: [services/spec/**, web/src/features/spec/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements]
+
+  image:
+    port: 5107
+    worker: true
+    feature: IMG
+    title: 이미지 생성 — 유형 · 상세 조건 · 참조 이미지 · 현장 합성 · 부분 수정 · 변형 · 업스케일
+    owns: [services/image/**, web/src/features/image/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export]
+
+  birdseye:
+    port: 5108
+    worker: true
+    feature: BE
+    title: 공간 조감도 — 공간 입력 · 도면 인식 · 제품 배치 · 가구 추천 · 배치 검증 · 3D 조감도
+    owns: [services/birdseye/**, web/src/features/birdseye/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, image]
+
+  scenario:
+    port: 5109
+    worker: true
+    feature: SC
+    title: 공간 시나리오 — 업종 템플릿 · 장면 작성 · 장면별 솔루션 · 장면 이미지 · 내보내기
+    owns: [services/scenario/**, web/src/features/scenario/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, image, birdseye, storyboard]
+
+  proposal:
+    port: 5110
+    worker: true
+    feature: PR
+    title: B2B 제안서 — 시작 방식 · 섹션 작성 · 템플릿 · 딸깍 · 검토/승인 · 버전 · 기존 제안서 활용
+    owns: [services/proposal/**, web/src/features/proposal/**]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements, storyboard, mi, competitor, vp, spec, image, birdseye, scenario]

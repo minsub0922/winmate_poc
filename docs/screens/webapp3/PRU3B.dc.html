@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>기존 제안서 · 활용 계획 · 논리 흐름만 차용</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="새 제안서" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <!-- 안내문 + 활용 방식 전환 -->
+      <div style="width: 1100px; display: flex; align-items: flex-start; gap: 12px; flex-shrink: 0">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="font-size: 14.5px; line-height: 1.55; padding-top: 3px; flex-grow: 1; min-width: 0">분석 결과 활용 방식으로 <span style="font-weight: 600">논리 흐름만 차용</span>을 추천해요 — 다른 고객(B 베이커리) 제안서라 내용은 쓰지 않고 설득 구조만 가져옵니다. 원본의 흐름 8단계를 이번 요구사항 5건에 맞춰 시트 구성으로 바꿨어요. 다르게 하려면 바꿔 주세요.</div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; padding-top: 2px">
+          <div role="radiogroup" aria-label="활용 방식" style="display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: #f0f2f5">
+            <sc-for list="{{modes}}" as="md" hint-placeholder-count="2">
+              <button role="radio" aria-checked="{{md.on}}" style="{{md.style}}">{{md.label}}</button>
+            </sc-for>
+          </div>
+          <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>추천 · 다른 고객</span>
+        </div>
+      </div>
+
+      <!-- 3열 매핑 보드 -->
+      <div style="width: 1100px; height: 492px; margin-top: 14px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 220px 28px minmax(0, 1fr) 260px; flex-shrink: 0">
+        <!-- 열 1: 원본 흐름 -->
+        <div style="display: flex; flex-direction: column; border-right: 1px solid #f0f2f5; min-width: 0">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0">
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">원본 흐름</span>
+            <span style="font-size: 10.5px; color: #8a91a0; white-space: nowrap">B 베이커리 · 24장 · 외부 파일</span>
+          </div>
+          <div style="padding: 8px 10px 8px 14px; display: flex; flex-direction: column; gap: 6px">
+            <sc-for list="{{src}}" as="s" hint-placeholder-count="10">
+              <div style="{{s.style}}">
+                <div style="display: flex; align-items: center; gap: 6px; min-width: 0">
+                  <sc-if value="{{s.hasDot}}" hint-placeholder-val="{{true}}"><span style="{{s.dotStyle}}"></span></sc-if>
+                  <sc-if value="{{s.dashed}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0b6e4f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"/></svg></sc-if>
+                  <span style="{{s.nameStyle}}">{{s.name}}</span>
+                </div>
+                <span style="{{s.subStyle}}">{{s.sub}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 열 1↔2 화살표 -->
+        <div style="display: flex; flex-direction: column; min-width: 0">
+          <div style="height: 40px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; flex-shrink: 0"></div>
+          <div style="padding: 8px 0; display: flex; flex-direction: column; gap: 6px; align-items: center">
+            <sc-for list="{{src}}" as="s" hint-placeholder-count="10">
+              <div style="{{s.arrowBox}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{s.arrowColor}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="{{s.arrowStyle}}"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 열 2: 이번 제안서 시트 구성 -->
+        <div style="display: flex; flex-direction: column; border-right: 1px solid #f0f2f5; min-width: 0">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+            <div style="display: flex; flex-direction: column; justify-content: center; min-width: 0">
+              <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">이번 제안서 시트 구성</span>
+              <span style="font-size: 10.5px; color: #8a91a0; white-space: nowrap">표준 · A 커피 프랜차이즈 · 전국 매장 디지털 메뉴보드 전환</span>
+            </div>
+            <div style="display: flex; gap: 4px; flex-shrink: 0">
+              <sc-for list="{{legend}}" as="lg" hint-placeholder-count="3">
+                <span style="{{lg.style}}">{{lg.label}}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding: 8px 12px 8px 10px; display: flex; flex-direction: column; gap: 6px">
+            <sc-for list="{{dst}}" as="d" hint-placeholder-count="10">
+              <div style="{{d.style}}">
+                <span style="{{d.kindStyle}}">{{d.kind}}</span>
+                <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                  <span style="{{d.nameStyle}}">{{d.name}}</span>
+                  <span style="font-size: 10.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.note}}</span>
+                </div>
+                <div style="display: flex; gap: 3px; flex-shrink: 0">
+                  <sc-for list="{{d.reqs}}" as="q" hint-placeholder-count="2">
+                    <span style="height: 16px; box-sizing: border-box; padding: 0 5px; border-radius: 4px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{q}}</span>
+                  </sc-for>
+                </div>
+                <span style="{{d.nStyle}}">{{d.n}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 열 3: 가져오는 것 / 안 가져오는 것 -->
+        <div style="display: flex; flex-direction: column; min-width: 0; background: #fbfbfc">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; display: flex; flex-direction: column; justify-content: center; flex-shrink: 0">
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">가져오는 것 / 안 가져오는 것</span>
+            <span style="font-size: 10.5px; color: #8a91a0; white-space: nowrap">흐름 차용 규칙 · 고정</span>
+          </div>
+          <div style="padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
+            <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+              <div style="display: flex; flex-direction: column; gap: 4px">
+                <div style="display: flex; align-items: center; gap: 6px; height: 20px">
+                  <span style="{{g.titleStyle}}">{{g.title}}</span>
+                  <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #8a91a0">{{g.n}}</span>
+                </div>
+                <sc-for list="{{g.items}}" as="it" hint-placeholder-count="6">
+                  <div style="display: flex; align-items: flex-start; gap: 6px; min-height: 20px">
+                    <span style="{{g.iconStyle}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{g.icon}}"/></svg></span>
+                    <span style="{{g.itemStyle}}">{{it.label}} <span style="color: #8a91a0; font-weight: 400">{{it.sub}}</span></span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+            <div style="margin-top: auto; padding-top: 8px; border-top: 1px solid #e2e5ea; font-size: 10.5px; line-height: 1.5; color: #8a91a0">안 가져오는 항목은 섹션 작성의 '원본 대조' 보기에서도 숨겨져요. 역할 태그와 구조만 '흐름 가이드'로 보여요.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 12px 40px 22px 40px">
+      <div style="width: 1100px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">시트 구성 초안 <span style="color: #596170; font-weight: 500">· {{secCount}}섹션 · {{sheetCount}}시트 · 원본 내용 0줄 사용 · 1 / 6</span></div>
+          <span style="flex-grow: 1"></span>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{tally}}" as="ty" hint-placeholder-count="4">
+              <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">확정하면 시트 구성(3단계)이 이 초안으로 채워지고, 섹션 작성에서는 원본 역할만 '흐름 가이드'로 보여요.</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="PRU2.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">이전</a>
+            <a href="PR3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">시트 구성에서 다듬기</a>
+            <a href="PRU4B.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>확정 · 섹션 작성 시작</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 활용 방식 세그먼트 (B 선택)
+    const modes = [['기반으로 개선 · 수정', false], ['논리 흐름만 차용', true]].map(([label, on]) => ({
+      label, on,
+      style: 'height: 28px; padding: 0 12px; border: none; border-radius: 7px; font-size: 12.5px; white-space: nowrap;' + (on ? ' background: #ffffff; color: #1428a0; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12);' : ' background: transparent; color: #596170; font-weight: 500;')
+    }));
+
+    // 원본 단계 색 (PRU2 · PRU2F 와 동일)
+    const COLOR = {
+      '문제 제기': '#121417', '시장 변화': '#1428a0', '고객 과제': '#8a3b00', '가치 제안': '#0b6e4f',
+      '솔루션 구성': '#5b3fd1', '도입 사례': '#0e7490', '제품 스펙': '#596170', '견적 · 일정': '#b42318'
+    };
+    const dot = (c) => 'width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: ' + c + ';';
+
+    // 매핑 행 10개: [원본 단계, 원본 장수, 원본 쪽 범위, 종류(flow · new · drop), 새 시트 이름, 메모, 요구사항, 새 장수]
+    const MAP = [
+      ['문제 제기', 1, 'p.2', 'flow', '표지 · 제안 배경 1장', '신규 작성 · 이번 프로젝트 배경으로', [], 2],
+      ['시장 변화', 3, 'p.3–4', 'flow', 'Market Intelligence 3장', '시장 규모 · 성장 / 고객사 비즈니스 / 경쟁 환경 — 수치는 MI 작업으로 새로 조사', [], 3],
+      ['고객 과제', 3, 'p.5–6', 'flow', "Value Props 안 '과제' 1장", 'R1 · R2 · R3에서 추출 · 점주 인터뷰 대신 요구사항이 근거', ['R1', 'R2', 'R3'], 1],
+      ['가치 제안', 4, 'p.7–10', 'flow', 'Value Props 3장', '흐름 유지 · Key Message는 A 커피 톤(본사 통제 · 교체 주기)으로', ['R1', 'R2'], 3],
+      ['솔루션 구성', 5, 'p.11–15', 'flow', '솔루션 제안 3장 + 공간별 제품 4장', 'MagicINFO 전용 소개 · 구성도 · 공간 시나리오 / 공간 맵 · 카운터 · 대기 · 픽업', ['R1', 'R5'], 7],
+      ['도입 사례', 3, 'p.16–18', 'flow', '유관 사례 2장', '외식 · 카페 사례로 교체 · B 베이커리 사례 사용 안 함', [], 2],
+      ['제품 스펙', 2, 'p.19–20', 'flow', '제품 스펙 1장', 'Spec 시트 작업으로 생성 · QM55C · OM46C', [], 1],
+      ['견적 · 일정', 3, 'p.21–24', 'drop', '제외', '비복제 · 가격 · 견적 · 일정은 가져오지 않아요', [], 0],
+      ['Why Samsung', 0, '원본에 없음', 'new', 'Why Samsung 2장', '경쟁 비교 · R5 POS 연동 신뢰 근거', ['R5'], 2],
+      ['단계 도입', 0, '원본에 없음', 'new', '단계 도입 로드맵 1장', 'R4 320개 매장 · 권역별 3단계', ['R4'], 1]
+    ];
+    const KIND = {
+      flow: ['흐름', ' color: #1428a0; background: #eaeefb;'],
+      new: ['신규', ' color: #0b6e4f; background: #e6f4ee;'],
+      drop: ['제외', ' color: #596170; background: #f0f2f5;']
+    };
+    const ROW_H = 38;
+    const src = MAP.map(([name, n, range, kind]) => {
+      const dashed = kind === 'new';
+      const drop = kind === 'drop';
+      return {
+        name, dashed, hasDot: !dashed,
+        sub: dashed ? '원본에 없음 → 추가 제안' : (n + '장 · ' + range),
+        dotStyle: dot(COLOR[name] || '#8a91a0'),
+        nameStyle: 'font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (drop ? ' color: #8a91a0; text-decoration: line-through;' : dashed ? ' color: #0b6e4f;' : ' color: #121417;'),
+        subStyle: 'font-size: 10.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (dashed ? ' color: #0b6e4f;' : ' color: #8a91a0;'),
+        style: 'height: ' + ROW_H + 'px; box-sizing: border-box; padding: 0 10px; border-radius: 9px; display: flex; flex-direction: column; justify-content: center; gap: 1px; min-width: 0;' + (dashed ? ' border: 1px dashed #0b6e4f; background: #ffffff;' : drop ? ' border: 1px solid #e2e5ea; background: #f0f2f5;' : ' border: 1px solid #e2e5ea; background: #f5f7fd;'),
+        arrowBox: 'height: ' + ROW_H + 'px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;',
+        arrowColor: drop ? '#c3c8d1' : dashed ? '#0b6e4f' : '#1428a0',
+        arrowStyle: drop ? 'opacity: 0.6;' : dashed ? 'opacity: 0.9;' : ''
+      };
+    });
+    const dst = MAP.map(([name, n0, range, kind, sheet, note, reqs, n]) => {
+      const drop = kind === 'drop';
+      const isNew = kind === 'new';
+      return {
+        kind: KIND[kind][0], name: sheet, note, reqs, n: drop ? '0장' : n + '장',
+        kindStyle: 'width: 32px; height: 20px; box-sizing: border-box; border-radius: 6px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; white-space: nowrap;' + KIND[kind][1],
+        nameStyle: 'font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (drop ? ' color: #8a91a0; text-decoration: line-through;' : ' color: #121417;'),
+        nStyle: 'font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; white-space: nowrap; flex-shrink: 0; width: 26px; text-align: right;' + (drop ? ' color: #8a91a0;' : isNew ? ' color: #0b6e4f;' : ' color: #1428a0;'),
+        style: 'height: ' + ROW_H + 'px; box-sizing: border-box; padding: 0 10px 0 8px; border-radius: 9px; display: flex; align-items: center; gap: 8px; min-width: 0;' + (isNew ? ' border: 1px dashed #0b6e4f; background: #f3faf6;' : drop ? ' border: 1px solid #e2e5ea; background: #fbfbfc;' : ' border: 1px solid #e2e5ea; background: #ffffff;')
+      };
+    });
+    const legend = [['흐름', KIND.flow[1]], ['신규', KIND.new[1]], ['제외', KIND.drop[1]]].map(([label, s]) => ({
+      label, style: 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 5px; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' + s
+    }));
+
+    // 가져오는 것 / 안 가져오는 것
+    const G = [
+      ['가져오는 것', 'M5 12l5 5L20 7', ' color: #1428a0; background: #eaeefb;', ' color: #1428a0;', [
+        ['단계 순서', '8단계 → 8섹션'], ['시트 역할', '24장 역할 태그'], ['주장 → 근거 구조', '11개 연결'], ['템플릿 유형', '매핑 성공 21장'], ['톤', '운영 효율 중심']
+      ]],
+      ['안 가져오는 것', 'M6 6l12 12M18 6L6 18', ' color: #596170; background: #f0f2f5;', ' color: #8a91a0;', [
+        ['고객 정보', 'B 베이커리 · 180개 매장'], ['매장 사진 9장', '사용 불가'], ['수치', '시장 · 효과 수치 7건'], ['견적 · 일정', '비복제 3장'], ['B 베이커리 사례', '도입 사례 3장'], ['출처 미상 이미지 8개', '분류 보류']
+      ]]
+    ];
+    const groups = G.map(([title, icon, iconS, titleColor, items]) => ({
+      title, icon, n: items.length,
+      items: items.map(([label, sub]) => ({ label, sub })),
+      titleStyle: 'font-size: 11.5px; font-weight: 700; white-space: nowrap;' + titleColor,
+      iconStyle: 'width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; border-radius: 50%; display: flex; align-items: center; justify-content: center;' + iconS,
+      itemStyle: 'font-size: 11.5px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;' + (title === '가져오는 것' ? ' color: #121417; font-weight: 600;' : ' color: #596170; font-weight: 500; text-decoration: line-through;')
+    }));
+
+    // 집계: 8섹션 · 22시트 · 신규 3장 · 제외 3장
+    const sheetCount = MAP.reduce((a, r) => a + r[7], 0);
+    const newCount = MAP.filter((r) => r[3] === 'new').reduce((a, r) => a + r[7], 0);
+    const dropCount = MAP.filter((r) => r[3] === 'drop').reduce((a, r) => a + r[1], 0);
+    const flowCount = MAP.filter((r) => r[3] === 'flow').reduce((a, r) => a + r[7], 0);
+    const tally = [['흐름 차용', flowCount, KIND.flow[1]], ['신규', newCount, KIND.new[1]], ['제외', dropCount, KIND.drop[1]]]
+      .map(([label, c, s]) => ({ label, n: c + '장', style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + s }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+      modes, src, dst, legend, groups, tally, secCount: 8, sheetCount
+    };
+  }
+}
+</script>
+</body>
+</html>

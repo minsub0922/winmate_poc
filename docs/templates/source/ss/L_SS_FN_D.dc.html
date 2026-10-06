@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-FN-D 금융 · 공간 시나리오 · 본점 대강당</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">본점 대강당 · 운영 모드</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">T 은행 대강당, 장비 교체 없이 교육장에서 주주총회장으로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">② 본점 대강당 — 같은 LED · 비디오월 · 공조에서, 평소와 행사 날 무엇이 바뀌는지 세 가지 축으로 비교</div>
+
+  <!-- 두 모드 카드 -->
+  <sc-for list="{{modes}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.box}}"></div>
+    <div style="{{m.headStyle}}"><span style="{{m.tagStyle}}">{{m.tag}}</span><span style="font-size: 17px; font-weight: 800; letter-spacing: -0.01em">{{m.name}}</span></div>
+    <div style="{{m.chipStyle}}">{{m.chip}}</div>
+    <div style="{{m.stageBox}}"></div>
+    <div style="{{m.capStyle}}">무대 입면 · 예시</div>
+    <sc-for list="{{m.rows}}" as="r" hint-placeholder-count="3">
+      <div style="{{r.rule}}"></div>
+      <div style="{{r.labStyle}}">{{r.lab}}</div>
+      <div style="{{r.mainStyle}}">{{r.main}}</div>
+      <div style="{{r.subStyle}}">{{r.sub}}</div>
+    </sc-for>
+    <div style="{{m.kpiBox}}"></div>
+    <div style="{{m.kpiLab}}">{{m.kl}}</div>
+    <div style="{{m.kpiVal}}">{{m.kv}}</div>
+  </sc-for>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="60">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+
+  <!-- 가운데 전환 축 -->
+  <div style="position: absolute; left: 639px; top: 160px; width: 2px; height: 36px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 614px; top: 200px; width: 52px; height: 52px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h14"></path><path d="M15 4l4 4-4 4"></path><path d="M20 16H6"></path><path d="M9 12l-4 4 4 4"></path></svg>
+  </div>
+  <div style="position: absolute; left: 554px; top: 258px; width: 172px; height: 14px; font-size: 10.5px; font-weight: 700; line-height: 14px; color: #8a91a0; text-align: center; white-space: nowrap">전환 방식</div>
+  <div style="position: absolute; left: 554px; top: 273px; width: 172px; height: 18px; font-size: 13px; font-weight: 800; line-height: 18px; text-align: center; white-space: nowrap">저장된 모드 · 스케줄</div>
+  <sc-for list="{{axisChips}}" as="c" hint-placeholder-count="2">
+    <div style="{{c.style}}">{{c.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 639px; top: 352px; width: 2px; height: 192px; background: #d5d9e0"></div>
+  <sc-for list="{{swaps}}" as="w" hint-placeholder-count="3">
+    <div style="{{w.style}}">↔</div>
+  </sc-for>
+  <div style="position: absolute; left: 584px; top: 556px; width: 112px; height: 24px; box-sizing: border-box; border-radius: 999px; border: 1px dashed #b8bec8; font-size: 11px; font-weight: 700; color: #596170; display: flex; align-items: center; justify-content: center; white-space: nowrap">장비 추가 없음</div>
+
+  <!-- 하단 띠 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; border-radius: 10px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 612px; height: 38px; display: flex; align-items: center; gap: 12px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">기기는 그대로, 모드만 바꿉니다</span>
+    <span style="width: 1px; height: 14px; background: #d5d9e0"></span>
+    <span style="font-size: 12.5px; color: #3d4452">화면은 MagicINFO, 냉난방 · 조명은 SmartThings Pro가 나눠 맡아 같은 행사 일정에 맞춰 움직입니다</span>
+  </div>
+  <div style="position: absolute; right: 82px; top: 624px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const B = '#1428a0';
+    const NW = 'white-space: nowrap; ';
+    const RY = [352, 414, 476], RH = 62;
+
+    const M = [
+      { tag: '모드 A', name: '평소 · 교육 · 회의', chip: '평일 · 직원 교육 · 임원 회의', hot: false,
+        rows: [
+          ['화면', 'LED를 발표 자료 · 화상 연결로 나눠 쓰기', '양측 비디오월에 같은 자료 — 뒷좌석도 또렷하게'],
+          ['공기 · 설비', '앞쪽 구역만 냉난방 · 조명', '교육이 끝나는 시각에 맞춰 자동으로 꺼짐'],
+          ['사람 · 기기', '담당 직원 한 명, 노트북만 연결', '저장해 둔 교육 레이아웃을 불러오면 준비 끝']
+        ], kl: '교육 · 회의 준비', kv: '[00]분 → [0]분' },
+      { tag: '모드 B', name: '행사 · 주주총회', chip: '연 [0]회 · 외부 참석자 [000]명', hot: true,
+        rows: [
+          ['화면', 'LED 전면을 행사 타이틀 · 안건 화면으로', '비디오월은 발언자 클로즈업 · 자막 · 안내'],
+          ['공기 · 설비', '입장 전부터 전 좌석 냉난방 · 조명', '만석에도 쾌적, 행사 뒤엔 평소 스케줄로'],
+          ['사람 · 기기', '안내는 화면이, 진행 인력은 응대에', '로비 사이니지도 같은 행사 화면 — 현수막 출력 없이']
+        ], kl: '행사 세팅 기간', kv: '[0]일 → [0]시간' }
+    ];
+    const modes = M.map((m, i) => {
+      const x = i ? 750 : 64, w = 466;
+      return {
+        tag: m.tag, name: m.name, chip: m.chip, kl: m.kl, kv: m.kv,
+        box: box(x, 156, w, 444) + 'box-sizing: border-box; border-radius: 14px; background: #ffffff; border: ' + (m.hot ? '1.5px solid ' + B : '1px solid #d5d9e0') + ';',
+        headStyle: box(x + 16, 168, 260, 24) + 'display: flex; align-items: center; gap: 8px; ' + NW,
+        tagStyle: 'height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 6px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; ' + (m.hot ? 'background: ' + B + '; color: #ffffff;' : 'background: #121417; color: #ffffff;'),
+        chipStyle: A + 'right: ' + px(1280 - (x + w - 16)) + 'top: 169px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11px; font-weight: 700; display: flex; align-items: center; ' + NW,
+        stageBox: box(x + 12, 202, w - 24, 140) + 'border-radius: 10px; background: #f5f6f8;',
+        capStyle: box(x + 22, 210, 100, 14) + 'font-size: 10px; line-height: 14px; color: #8a91a0; ' + NW,
+        rows: m.rows.map(([lab, main, sub], j) => ({
+          lab, main, sub,
+          rule: box(x + 16, RY[j], w - 32, 1) + 'background: #e2e5ea;',
+          labStyle: box(x + 16, RY[j] + 13, 72, 16) + 'font-size: 11px; font-weight: 700; line-height: 16px; color: #8a91a0; ' + NW,
+          mainStyle: box(x + 92, RY[j] + 10, w - 108, 20) + 'font-size: 13.5px; font-weight: 800; line-height: 20px; ' + NW,
+          subStyle: box(x + 92, RY[j] + 32, w - 108, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + NW
+        })),
+        kpiBox: box(x + 10, 548, w - 20, 40) + 'border-radius: 10px; background: ' + (m.hot ? B : '#eaeefb') + ';',
+        kpiLab: box(x + 24, 559, 200, 18) + 'font-size: 12px; font-weight: 700; line-height: 18px; color: ' + (m.hot ? '#c8d3ff' : '#596170') + '; ' + NW,
+        kpiVal: box(x + w - 214, 553, 190, 28) + "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800; line-height: 28px; letter-spacing: -0.01em; text-align: right; color: " + (m.hot ? '#ffffff' : B) + '; ' + NW
+      };
+    });
+
+    // 무대 입면 그림 (모드별 화면 · 조명 · 좌석)
+    const shapes = [];
+    const sh = (x, y, w, h, css, t) => shapes.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const DARK = 'background: #1f232a;';
+    M.forEach((m, i) => {
+      const x0 = (i ? 750 : 64) + 12, y0 = 202;
+      const ev = m.hot;
+      // 천장 조명
+      for (let k = 0; k < 5; k++) {
+        const lit = ev || (k > 0 && k < 4);
+        sh(x0 + 141 + k * 36, y0 + 12, 16, 4, 'border-radius: 2px; background: ' + (lit ? '#6f82d6' : '#d5d9e0') + ';');
+      }
+      // 메인 LED
+      sh(x0 + 111, y0 + 24, 220, 76, DARK + ' box-sizing: border-box; border: 3px solid #121417; border-radius: 3px;');
+      if (!ev) {
+        sh(x0 + 122, y0 + 34, 60, 6, 'border-radius: 2px; background: #6f82d6;');
+        [0, 1, 2].forEach((r) => sh(x0 + 122, y0 + 48 + r * 10, 110 - r * 22, 4, 'border-radius: 2px; background: #8a91a0;'));
+        [0, 1, 2, 3].forEach((c) => sh(x0 + 190 + c * 10, y0 + 82 - c * 6 - 8, 6, 8 + c * 6, 'background: #c8d3ff;'));
+        sh(x0 + 238, y0 + 30, 1, 64, 'background: #596170;');
+        sh(x0 + 270, y0 + 42, 26, 26, 'border-radius: 50%; background: #8a91a0;');
+        sh(x0 + 258, y0 + 72, 50, 20, 'border-radius: 25px 25px 4px 4px; background: #8a91a0;');
+      } else {
+        sh(x0 + 114, y0 + 40, 214, 22, 'font-size: 13px; font-weight: 800; line-height: 22px; color: #ffffff; text-align: center; ' + NW, '정기 주주총회');
+        sh(x0 + 114, y0 + 64, 214, 14, "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 10px; font-weight: 700; line-height: 14px; color: #c8d3ff; text-align: center; " + NW, '[0000]. [00]. [00]');
+        sh(x0 + 186, y0 + 84, 70, 3, 'border-radius: 2px; background: #6f82d6;');
+      }
+      // 양측 비디오월 2×2
+      [x0 + 30, x0 + 354].forEach((wx, side) => {
+        for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) sh(wx + c * 30, y0 + 34 + r * 20, 28, 18, DARK);
+        if (!ev) {
+          [0, 1].forEach((r) => sh(wx + 6, y0 + 40 + r * 20, 46 - r * 14, 4, 'border-radius: 2px; background: #8a91a0;'));
+        } else if (side === 0) {
+          sh(wx + 21, y0 + 38, 16, 16, 'border-radius: 50%; background: #8a91a0;');
+          sh(wx + 13, y0 + 56, 32, 14, 'border-radius: 14px 14px 2px 2px; background: #8a91a0;');
+        } else {
+          for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) {
+            sh(wx + c * 30 + 4, y0 + 41 + r * 20, 4, 4, 'border-radius: 1px; background: ' + (r + c ? '#8a91a0' : '#6f82d6') + ';');
+            sh(wx + c * 30 + 11, y0 + 41 + r * 20, 13, 4, 'border-radius: 2px; background: ' + (r + c ? '#8a91a0' : '#c8d3ff') + ';');
+          }
+        }
+      });
+      // 무대 · 연단 / 의장석
+      sh(x0 + 20, y0 + 108, 402, 5, 'border-radius: 2px; background: #b8bec8;');
+      if (!ev) sh(x0 + 340, y0 + 84, 16, 24, 'border-radius: 2px; background: #8a91a0;');
+      else sh(x0 + 170, y0 + 92, 102, 16, 'border-radius: 2px; background: #8a91a0;');
+      // 좌석
+      for (let r = 0; r < 2; r++) {
+        for (let k = 0; k < 13; k++) {
+          const on = ev || (r === 0 && k > 2 && k < 10);
+          sh(x0 + 30 + k * 30, y0 + 118 + r * 11, 22, 7, 'border-radius: 3px; background: ' + (on ? '#6f82d6' : '#d5d9e0') + ';');
+        }
+      }
+    });
+
+    const axisChips = ['MagicINFO', 'SmartThings Pro'].map((t, i) => ({
+      t, style: box(574, 298 + i * 26, 132, 22) + 'border-radius: 999px; background: #eaeefb; color: ' + B + '; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + NW
+    }));
+    const swaps = RY.map((y) => ({
+      style: box(618, y + 20, 44, 22) + 'box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; color: ' + B + '; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' + NW
+    }));
+
+    return { modes, shapes, axisChips, swaps };
+  }
+}
+</script>
+</body>
+</html>

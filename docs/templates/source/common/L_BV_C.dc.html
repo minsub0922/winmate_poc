@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BV-C 전경 + 한 장 요약</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">제안 후 매장 — 한 장으로 보기</div>
+
+  <!-- 전경 8열 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 760px; height: 512px; border-radius: 16px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">3D 조감도 전경</div>
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="3">
+    <span style="{{t.style}}"><span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span>{{t.label}}</span>
+  </sc-for>
+  <span style="position: absolute; left: 84px; top: 604px; height: 26px; padding: 0 10px; border-radius: 999px; background: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">표준 매장 기준 · 조감 45°</span>
+
+  <!-- 한 장 요약 4열 -->
+  <div style="position: absolute; left: 848px; top: 136px; width: 368px; height: 512px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 26px 28px; display: flex; flex-direction: column">
+    <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+      <div style="{{s.rowStyle}}">
+        <div style="display: flex; align-items: baseline; gap: 6px">
+          <sc-for list="{{s.parts}}" as="p" hint-placeholder-count="2">
+            <span style="font-family: Manrope, sans-serif; font-size: 40px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0">{{p.n}}</span>
+            <span style="font-size: 17px; font-weight: 800; color: #1428a0">{{p.u}}</span>
+            <span style="font-size: 17px; font-weight: 800; color: #b8c3ee; padding: 0 2px">{{p.sep}}</span>
+          </sc-for>
+        </div>
+        <span style="font-size: 13.5px; color: #596170">{{s.label}}</span>
+      </div>
+    </sc-for>
+    <div style="flex-grow: 1"></div>
+    <div style="border-top: 1px solid #d5d9e0; padding-top: 18px; display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em">핵심 변화</span>
+      <sc-for list="{{changes}}" as="c" hint-placeholder-count="3">
+        <div style="display: flex; gap: 10px; align-items: flex-start"><span style="width: 6px; height: 6px; margin-top: 8px; flex-shrink: 0; border-radius: 50%; background: #1428a0"></span><span style="font-size: 14px; line-height: 1.55; color: #3d4452">{{c}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 조감도 위 공간 라벨 (샘플 위치) — 요약 패널의 "3 공간"과 짝
+    const tag = (x, y) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; height: 28px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,0.94); display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #121417';
+    const tags = [
+      { label: '매장 외부', style: tag(112, 196) },
+      { label: '매장 카운터', style: tag(400, 292) },
+      { label: '픽업대', style: tag(640, 454) }
+    ];
+    const S = [
+      { parts: [['3', '공간']], label: '매장 외부 · 카운터 · 픽업대' },
+      { parts: [['5', '종'], ['8', '대']], label: '매장당 · QM55C 외 4종' },
+      { parts: [['2', '솔루션']], label: 'MagicINFO · SmartThings Pro' }
+    ];
+    const stats = S.map((s, i) => ({
+      label: s.label,
+      rowStyle: 'display: flex; flex-direction: column; gap: 8px; ' + (i === 0 ? 'padding: 2px 0 16px 0' : 'padding: 16px 0; border-top: 1px solid #e2e5ea'),
+      parts: s.parts.map(([n, u], j) => ({ n, u, sep: j < s.parts.length - 1 ? '·' : '' }))
+    }));
+    const changes = [
+      '메뉴 · 가격을 본사에서 한 번에 변경',
+      '매장 밖에서도 보이는 메뉴 · 대기 안내',
+      '픽업 호출 · 전력 관리까지 한 화면에서'
+    ];
+    return { tags, stats, changes };
+  }
+}
+</script>
+</body>
+</html>

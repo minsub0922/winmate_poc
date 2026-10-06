@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>DEX-S Samsung DeX 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Samsung DeX</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Samsung DeX · 모바일 데스크톱</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">영업 사원의 하루, 기기는 하나</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">F 보험 영업 사원의 하루 네 곳 · 장소마다 연결하는 화면만 바뀌고 휴대폰은 그대로</div>
+
+  <!-- 하루 타임라인 -->
+  <div style="position: absolute; left: 64px; top: 181px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; color: #596170">하루</div>
+  <div style="position: absolute; left: 100px; top: 189px; width: 1108px; height: 2px; background: #b8c3ee"></div>
+  <div style="position: absolute; left: 1208px; top: 185px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #b8c3ee"></div>
+  <sc-for list="{{nodes}}" as="n" hint-placeholder-count="4">
+    <div style="{{n.dot}}"></div>
+    <span style="{{n.label}}">{{n.time}}</span>
+  </sc-for>
+  <!-- 이동 구간마다 같은 휴대폰 -->
+  <sc-for list="{{carry}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.s}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z M11 18h2"/></svg></div>
+  </sc-for>
+
+  <!-- 공간 카드 4개 -->
+  <div style="position: absolute; left: 64px; top: 222px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{spaces}}" as="s" hint-placeholder-count="4">
+      <div style="height: 340px; box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; background: #ffffff; padding: 12px; display: flex; flex-direction: column">
+        <div style="position: relative; height: 150px; flex-shrink: 0; border-radius: 10px; overflow: hidden; background: {{s.bg}}">
+          <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; left: {{s.imgL}}; top: 0px; width: {{s.imgW}}; height: 150px; object-fit: {{s.fit}}; object-position: {{s.pos}}; border-radius: 10px; mix-blend-mode: {{s.blend}}">
+          <sc-if value="{{s.ex}}" hint-placeholder-val="{{true}}">
+            <span style="position: absolute; left: 8px; top: 8px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; color: #596170; font-size: 10px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</span>
+          </sc-if>
+          <span style="position: absolute; left: 8px; bottom: 8px; height: 26px; padding: 0 10px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.place}}</span>
+          <span style="position: absolute; right: 8px; bottom: 9px; height: 24px; padding: 0 9px; border-radius: 999px; background: #ffffff; color: {{s.linkColor}}; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.link}}</span>
+        </div>
+        <div style="padding: 14px 6px 4px; display: flex; flex-direction: column; flex-grow: 1">
+          <span style="font-size: 16px; font-weight: 800; line-height: 1.45">{{s.act}}</span>
+          <div style="flex-grow: 1"></div>
+          <span style="font-size: 11.5px; color: #8a91a0">연결한 것</span>
+          <div style="margin-top: 6px; display: flex; gap: 5px">
+            <sc-for list="{{s.setup}}" as="u" hint-placeholder-count="3">
+              <span style="{{u.chip}}"><span style="{{u.dot}}"></span>{{u.t}}</span>
+            </sc-for>
+          </div>
+          <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="font-size: 11.5px; color: #8a91a0">업무</span><span style="font-size: 12.5px; color: #3d4452">{{s.work}}</span></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 가치 바 -->
+  <div style="position: absolute; left: 64px; top: 582px; width: 1152px; height: 66px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 0 28px; display: flex; align-items: center; gap: 22px">
+    <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0; white-space: nowrap">이 하루의 가치</span>
+    <sc-for list="{{values}}" as="v" hint-placeholder-count="3">
+      <div style="display: flex; align-items: center; gap: 8px; padding-left: 22px; border-left: 1px solid #b8c3ee; white-space: nowrap">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{v.icon}}"/></svg>
+        <span style="font-size: 16px; font-weight: 800">{{v.t}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>F 보험 영업조직 · 모바일 업무 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    // 카드 중심 x (3열 카드 · gutter 24)
+    const xs = [199, 493, 787, 1081];
+    const times = ['09:30', '12:00', '15:00', '20:00'];
+
+    const nodes = xs.map((x, i) => ({
+      time: times[i],
+      dot: A + 'left: ' + px(x - 9) + 'top: 181px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 4px solid #eaeefb',
+      label: A + 'left: ' + px(x + 16) + 'top: 175px; font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0'
+    }));
+    const carry = [0, 1, 2].map((i) => {
+      const x = (xs[i] + xs[i + 1]) / 2;
+      return { s: A + 'left: ' + px(x - 15) + 'top: 175px; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #b8c3ee; display: flex; align-items: center; justify-content: center' };
+    });
+
+    // 연결 상태 칩: on = 파랑, off = 점선 회색
+    const chip = (t, on) => ({
+      t,
+      chip: 'height: 26px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; ' +
+        (on ? 'background: #eaeefb; color: #1428a0;' : 'background: #ffffff; border: 1px dashed #d5d9e0; color: #b8bec8;'),
+      dot: 'width: 6px; height: 6px; border-radius: 50%; background: ' + (on ? '#1428a0' : '#d5d9e0')
+    });
+    // 공간 사진 (카드 안쪽 폭 244 · 높이 150): 장면 사진은 cover, 제품 컷은 흰 배경을 multiply로 녹여 contain
+    const photo = (src, alt, pos) => ({ src, alt, pos, fit: 'cover', bg: '#dfe3ea', blend: 'normal', imgL: '0px', imgW: '244px', ex: true });
+    const product = (src, alt) => ({ src, alt, pos: '50% 50%', fit: 'contain', bg: '#f5f6f8', blend: 'multiply', imgL: '72px', imgW: '100px', ex: false });
+    const spaces = [
+      Object.assign(photo('/_blob/92b3b2eb11d84a41c0861675aec307bb', '고객 앞에서 화면 속 차트를 손가락으로 가리키며 설명하는 장면', '50% 40%'), {
+        place: '고객 미팅', link: '무선 DeX', linkColor: '#1428a0',
+        act: '고객사 TV에 무선 연결해 설계안 공유',
+        setup: [chip('휴대폰', true), chip('TV', true), chip('키보드', false)], work: '업무 앱' }),
+      Object.assign(product('/_blob/4af0d48d891be9a7ff27c471ef581e7e', '갤럭시 엑스커버7 프로 전면'), {
+        place: '이동 중', link: '연결 없음', linkColor: '#8a91a0',
+        act: '휴대폰으로 메일 확인 · 결재 처리',
+        setup: [chip('휴대폰', true), chip('모니터', false), chip('키보드', false)], work: '메일 · 결재' }),
+      Object.assign(photo('/_blob/539149fcc2d0198569bd56614bd362ab', '사무실 테이블에서 태블릿 · 휴대폰 · 자료로 협업하는 팀 탑뷰', '50% 40%'), {
+        place: '지점 핫데스크', link: '유선 · USB-C', linkColor: '#1428a0',
+        act: '공용 모니터에 꽂아 보고서 작성',
+        setup: [chip('휴대폰', true), chip('모니터', true), chip('키보드', true)], work: 'VDI · 웹 업무 시스템' }),
+      Object.assign(photo('/_blob/1ffba96d1cdf896ef565bd9e9931bd96', '손에 든 휴대폰과 벽면 화면에 띄운 DeX 문서', '50% 45%'), {
+        place: '재택', link: '유선 · 무선', linkColor: '#1428a0',
+        act: '집 모니터 · TV에 연결해 마무리',
+        setup: [chip('휴대폰', true), chip('모니터 · TV', true), chip('키보드', true)], work: 'VDI · 업무 앱' })
+    ];
+
+    const values = [
+      { t: '노트북 없이 현장 업무', icon: 'M5 12l5 5L20 7' },
+      { t: '분실 시 원격 잠금 (Knox)', icon: 'M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z M9 12l2 2 4-4' },
+      { t: 'IT 정책으로 관리', icon: 'M3 4h18v12H3z M8 20h8 M12 16v4' }
+    ];
+    return { nodes, carry, spaces, values };
+  }
+}
+</script>
+</body>
+</html>

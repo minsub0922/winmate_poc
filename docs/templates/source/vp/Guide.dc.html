@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Winmate 캔버스 안내</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; box-sizing: border-box; padding: 56px 64px; display: flex; flex-direction: column; gap: 22px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">WINMATE · DESIGN CANVASES</span>
+    <span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Winmate 디자인은 캔버스 8개로 나뉘어 있습니다</span>
+    <span style="font-size: 15px; color: #596170">캔버스 하나에 담을 수 있는 화면 양에 한도가 있어 묶음별로 나눴습니다 · 다른 캔버스로 가는 링크는 새 탭에서 열립니다</span>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+      <a href="{{r.href}}" style="{{r.style}}">
+        <span style="{{r.badge}}">{{r.k}}</span>
+        <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+          <span style="font-size: 16px; font-weight: 700; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.t}}</span>
+          <span style="font-size: 13px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.d}}</span>
+          <span style="font-size: 12px; font-weight: 700; color: #1428a0">{{r.cta}}</span>
+        </span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const R = [
+      { k: 'A', t: 'Winmate 웹앱 ① 홈 · 요구사항 · Storyboard · MI · VP · Spec', d: '웹앱 ① 홈 · 고객 요구사항 · Storyboard · MI · Value Proposition · Spec 시트', href: 'https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk', me: false },
+      { k: 'G', t: 'Winmate 웹앱 ③ B2B 제안서', d: '웹앱 ③ B2B 제안서 생성 — 시작 · 섹션 작성 · DnD · 딸깍 · 템플릿 · 생성 후', href: 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe', me: false },
+      { k: 'B', t: 'Winmate 웹앱 ② 이미지 · 조감도 · 시나리오', d: '웹앱 ② 이미지 생성 · 공간 조감도 · 공간 시나리오', href: 'https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX', me: false },
+      { k: 'C', t: 'Winmate PPT · 공통 레이아웃 · 솔루션 전용 · 분석', d: 'PPT 공통 레이아웃 · 솔루션별 전용 템플릿 · 도입사례 분석', href: 'https://claude.ai/artifact/GFCVoigDttt2414bvFWDvv', me: false },
+      { k: 'D', t: 'Winmate PPT · 01 MI (업종별)', d: 'PPT 01 MI — 업종 16개 × 3장 + 범용', href: 'https://claude.ai/artifact/XnbECsMCvmCsHTsJtfeQUV', me: false },
+      { k: 'E', t: 'Winmate PPT · 02 Value Props (업종별)', d: 'PPT 02 Value Props — 범용 (업종별 제작 중)', href: 'https://claude.ai/artifact/V6bPV1WJhKFyJeHEYjmnhv', me: true },
+      { k: 'F', t: 'Winmate PPT · 03 공간별 가치 제공 시나리오 (업종별)', d: 'PPT 03 공간 시나리오 — 업종 9개 × 3장 + 범용', href: 'https://claude.ai/artifact/7DyZ4i11yq9sjnBP2ztEtr', me: false },
+      { k: 'H', t: 'Winmate PPT · 04 공간별 제품 소개', d: 'PPT 04 공간별 제품 — 공간 맵 · 공간 제품 소개 · 구성 · 수량 46장', href: 'https://claude.ai/artifact/9mD73MY9hcPFPAavohfA7B', me: false }
+    ];
+    const rows = R.map((r) => ({ ...r,
+      cta: r.me ? '지금 보고 있는 캔버스' : '열기 →',
+      style: 'display: flex; align-items: center; gap: 16px; box-sizing: border-box; height: 100px; padding: 0 22px; border-radius: 14px; ' + (r.me ? 'border: 2px solid #1428a0; background: #eaeefb;' : 'border: 1px solid #e2e5ea; background: #ffffff;'),
+      badge: 'width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; ' + (r.me ? 'background: #1428a0; color: #ffffff;' : 'background: #f5f6f8; color: #1428a0;')
+    }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

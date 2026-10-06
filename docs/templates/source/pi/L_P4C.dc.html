@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P4-C 제품 4개 · 스펙 중심</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 플래그십 로비</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">네 제품의 핵심 수치</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">제품마다 이 공간에서 가장 중요한 수치 3개</div>
+
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{items}}" as="p" hint-placeholder-count="4">
+      <div style="height: 232px; box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; padding: 20px; display: flex; gap: 20px">
+        <div style="width: 170px; flex-shrink: 0; border-radius: 12px; background: #f5f6f8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+          <div style="width: 130px; height: 73px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417"></div>
+          <span style="font-size: 13px; font-weight: 800">{{p.model}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; flex-grow: 1; min-width: 0">
+          <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 18px; font-weight: 800">{{p.name}}</span><span style="font-size: 12.5px; color: #596170">{{p.loc}}</span></div>
+          <div style="flex-grow: 1"></div>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; border-top: 1px solid #e2e5ea; padding-top: 14px">
+            <sc-for list="{{p.kpis}}" as="k" hint-placeholder-count="3">
+              <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 24px; font-weight: 800; color: #1428a0; white-space: nowrap">{{k.v}}</span><span style="font-size: 11.5px; color: #596170">{{k.l}}</span></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 17</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const k = (...a) => a.map(([v, l]) => ({ v, l }));
+    return { items: [
+      { model: 'OH55C', name: 'Outdoor Signage', loc: '창면 · 도로측 ×3', kpis: k(['3,000', 'nit 밝기'], ['IP56', '방진 · 방수'], ['24/7', '연속 운영']) },
+      { model: 'QMC 세로', name: 'Smart Signage 세로형', loc: '중앙 기둥 ×2', kpis: k(['500', 'nit 밝기'], ['4K', 'UHD'], ['[0.0]', 'mm 베젤']) },
+      { model: 'WA75D', name: 'Flip Pro', loc: '측벽 ×1', kpis: k(['75"', '화면 크기'], ['20', '포인트 터치'], ['[0]ms', '필기 지연']) },
+      { model: 'IAB', name: 'The Wall All-in-One', loc: '후면 벽 ×1', kpis: k(['146"', '화면 크기'], ['[000]', 'nit 밝기'], ['Micro', 'LED']) }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

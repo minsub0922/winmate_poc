@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P2-B 제품 2개 · 공간·설치 중심</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — A 쇼윈도 · 외부</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">쇼윈도와 외부, 두 자리에 이렇게 놓입니다</div>
+
+  <div style="position: absolute; left: 64px; top: 128px; width: 1152px; height: 290px; border-radius: 16px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #8a91a0">공간 설치 컷 — 매장 전면 (조감도 · 현장 합성)</div>
+  <span style="position: absolute; left: 300px; top: 220px; width: 36px; height: 36px; border-radius: 50%; background: #1428a0; color: #ffffff; border: 3px solid #ffffff; box-sizing: border-box; font-family: Manrope, sans-serif; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>
+  <span style="position: absolute; left: 860px; top: 290px; width: 36px; height: 36px; border-radius: 50%; background: #1428a0; color: #ffffff; border: 3px solid #ffffff; box-sizing: border-box; font-family: Manrope, sans-serif; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+
+  <div style="position: absolute; left: 64px; top: 438px; width: 1152px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{items}}" as="p" hint-placeholder-count="2">
+      <div style="height: 210px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 20px; display: flex; gap: 20px">
+        <div style="width: 180px; flex-shrink: 0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center"><div style="width: 140px; height: 79px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417"></div></div>
+        <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+          <div style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 24px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.no}}</span><span style="font-size: 13px; font-weight: 700; color: #1428a0">{{p.loc}}</span></div>
+          <span style="font-size: 20px; font-weight: 800">{{p.name}}</span>
+          <span style="font-size: 13.5px; color: #596170">{{p.spec}}</span>
+          <div style="flex-grow: 1"></div>
+          <span style="font-size: 14px"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{p.qty}}</span> <span style="color: #596170">{{p.role}}</span></span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { items: [
+      { no: 1, loc: '쇼윈도 안쪽', name: 'Transparent OLED', spec: '55" · 투명 디스플레이', qty: '×1', role: '/ 매장 · 신메뉴 쇼케이스' },
+      { no: 2, loc: '매장 외벽 · 입구 옆', name: 'Outdoor Signage OH55C', spec: '55" · 3,000nit · IP56', qty: '×2', role: '/ 매장 · 외부 메뉴 · 대기 안내' }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

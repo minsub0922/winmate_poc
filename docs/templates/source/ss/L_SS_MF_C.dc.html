@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-MF-C 제조 · 물류 · 현장 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">L 제조의 하루 — 현장이 알리면 관제실이 바로 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">역할별 스윔레인 — 새벽 예냉부터 야간 절전까지, 시간 · 공간 · 삼성이 하는 일 · 결과 (시간은 예시)</div>
+
+  <!-- 시간축 헤더 -->
+  <div style="position: absolute; left: 64px; top: 161px; width: 168px; height: 18px; display: flex; align-items: baseline; gap: 7px; white-space: nowrap"><span style="font-size: 12px; font-weight: 800">역할 · 주 공간</span><span style="font-size: 10.5px; color: #8a91a0">번호 = 공간 맵</span></div>
+  <sc-for list="{{ticks}}" as="t" hint-placeholder-count="10">
+    <div style="{{t.labelStyle}}">{{t.label}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 244px; top: 163px; font-size: 10px; color: #8a91a0; white-space: nowrap">새벽</div>
+  <div style="position: absolute; left: 1140px; top: 163px; font-size: 10px; color: #8a91a0; white-space: nowrap">야간</div>
+
+  <!-- 레인 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="5">
+    <div style="{{l.bg}}"></div>
+    <div style="{{l.badge}}">{{l.k}}</div>
+    <div style="{{l.nameStyle}}">{{l.name}}</div>
+    <div style="{{l.subStyle}}">{{l.sub}}</div>
+    <div style="{{l.kindStyle}}">{{l.kind}}</div>
+  </sc-for>
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="9">
+    <div style="{{g.style}}"></div>
+  </sc-for>
+
+  <!-- 레인 간 전달 (현장 → 관제실) -->
+  <sc-for list="{{handoffs}}" as="h" hint-placeholder-count="2">
+    <div style="{{h.line}}"></div>
+    <div style="{{h.head}}"></div>
+    <div style="{{h.labelStyle}}">{{h.label}}</div>
+  </sc-for>
+
+  <!-- 카드: 시간 · 공간 → 삼성이 하는 일 → 결과 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="17">
+    <div style="{{c.frame}}"></div>
+    <div style="{{c.headStyle}}">
+      <span style="{{c.timeStyle}}">{{c.time}}</span>
+      <span style="display: flex; align-items: center; gap: 2px">
+        <sc-for list="{{c.nums}}" as="u" hint-placeholder-count="1">
+          <span style="{{u.style}}">{{u.n}}</span>
+        </sc-for>
+      </span>
+      <span style="font-size: 10px; color: #596170">{{c.space}}</span>
+    </div>
+    <div style="{{c.actStyle}}">{{c.act}}</div>
+    <div style="{{c.outStyle}}">{{c.out}}</div>
+    <sc-if value="{{c.mot}}" hint-placeholder-val="{{false}}">
+      <div style="{{c.motStyle}}">결정적 순간</div>
+    </sc-if>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 공장 · 현장 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const r1 = (v) => Math.round(v * 10) / 10;
+
+    // 시간축: 05시 = x 240, 24시 = x 1216 (시간은 예시)
+    const X0 = 240, X1 = 1216, H0 = 5, H1 = 24;
+    const X = (h) => r1(X0 + (h - H0) * (X1 - X0) / (H1 - H0));
+    const CW = 136, CH = 76, LH = 86;
+    const GT = 184, GB = 638;
+
+    const ticks = [6, 8, 10, 12, 14, 16, 18, 20, 22].map((h) => ({
+      label: (h < 10 ? '0' : '') + h,
+      labelStyle: A + box(r1(X(h) - 14), 162, 28, 16) + 'font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; line-height: 16px; text-align: center; color: #596170;'
+    }));
+    ticks.push({ label: '24', labelStyle: A + box(1188, 162, 28, 16) + 'font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; line-height: 16px; text-align: right; color: #596170;' });
+    const grid = [6, 8, 10, 12, 14, 16, 18, 20, 22].map((h) => ({ style: A + box(X(h), GT, 1, GB - GT) + 'background: #d5d9e0;' }));
+
+    // 레인 — 현장 사용자(A · B · C) / 운영 · 관제(D) / 삼성 시스템 · 케어(S). A–D는 MI 페이지의 사용자 그룹과 같음
+    const LN = [
+      ['A', '생산 라인 작업자', '③ 브리핑룸 · ① 생산 라인', '현장 사용자', 'user', 186],
+      ['B', '야외 · 고위험 작업자', '④ 야외 작업장 · 설비 구역', '현장 사용자', 'user', 276],
+      ['C', '물류 · 출하 담당', '⑤ 창고 · 야드 · 배송 차량', '현장 사용자', 'user', 366],
+      ['D', '설비 · 안전 관리자', '⑥ 통합 관제실', '운영 · 관제', 'op', 462],
+      ['S', '삼성 시스템 · 케어', 'DMS · SmartThings Pro · 케어 서비스', '자동 · 서비스', 'sys', 552]
+    ];
+    const laneY = {};
+    const lanes = LN.map(([k, name, sub, kind, type, y]) => {
+      laneY[k] = y;
+      const badgeBg = type === 'user' ? 'background: #d5d9e0; color: #121417;' : (type === 'op' ? 'background: #121417; color: #ffffff;' : 'background: #1428a0; color: #ffffff;');
+      return {
+        k, name, sub, kind,
+        bg: A + box(64, y, 1152, LH) + 'border-radius: 12px; background: ' + (type === 'user' ? '#f5f6f8' : '#eaeefb') + ';',
+        badge: A + box(76, y + 10, 24, 24) + 'border-radius: 50%; ' + badgeBg + ' font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        nameStyle: A + box(108, y + 10, 126, 20) + 'font-size: 12.5px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        subStyle: A + box(108, y + 32, 120, 28) + 'font-size: 10px; line-height: 14px; color: #596170;',
+        kindStyle: A + 'left: 108px; top: ' + px(y + 62) + 'height: 16px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; '
+          + (type === 'user' ? 'background: #ffffff; border: 1px solid #d5d9e0; color: #596170;' : 'background: #ffffff; color: #1428a0;')
+      };
+    });
+
+    // 카드 [레인, 시각(시), 표시 시간, 공간 번호, 공간, 삼성이 하는 일, 결과, 종류]  종류: '' 기본 · mot 결정적 순간 · out L 제조 절차
+    const CD = [
+      ['A', 6.5, '06:30', [3], '브리핑룸', '공용 탭을 켜면 업무 앱만 · 절차 확인', '→ 단말 준비 [0]분', ''],
+      ['A', 9.5, '09:30', [1], '생산 라인', '작업 지시 확인, 점검표는 S펜으로 입력', '→ 재입력 0 · 누락 ↓', ''],
+      ['A', 18, '18:00', [1], '생산 라인', '교대 · 인계는 L 제조 절차로 진행', '→ 제안 범위 밖', 'out'],
+      ['B', 7.5, '07:30', [4], '야외 작업장', '워치 착용 후 작업 구역 진입 · 위치 공유', '→ 관제실이 위치 파악', ''],
+      ['B', 10 + 40 / 60, '10:40', [4], '설비 구역', '넘어짐 · 심박 이상 감지 → 구조 신호 발신', '→ 골든타임 확보', 'mot'],
+      ['B', 14, '14:00', [4], '야외 작업장', '온열 위험 감지 → 워치 경고 · 관리자 통화', '→ 위험 즉시 인지', ''],
+      ['C', 15, '15:00', [5], '출하장', '기밀 · 고가 출하품에 스마트태그2 결합', '→ 출하부터 위치 기록', ''],
+      ['C', 17 + 50 / 60, '17:50', [5], '물류 사무실', '고객사 문의에 실시간 위치로 바로 안내', '→ 문의 응대 [00]분 ↓', ''],
+      ['C', 20 + 40 / 60, '20:40', [5], '배송 차량', '운행 종료 — 차량 탭이 기록 자동 전송', '→ 수작업 추출 0', ''],
+      ['D', 7 + 50 / 60, '07:50', [6], '관제실', '라인 온 · 습도, 작업자 위치를 한 화면에', '→ 순회 점검 ↓', ''],
+      ['D', 10.75, '10:45', [6], '관제실', 'SOS 위치 확인 → 가까운 인원 출동 지시', '→ 현장 도착 [0]분', ''],
+      ['D', 14 + 10 / 60, '14:10', [6], '관제실', '온열 경고 인원 휴식 지시 · 휴게실 냉방', '→ 온열 질환 예방', ''],
+      ['D', 18.5, '18:30', [6], '관제실', '일일 리포트 — 에너지 · 안전 · 점검 현황', '→ KPI 매일 추적', ''],
+      ['S', 5.5, '05:30', [1, 2], '라인 공조', 'DMS 스케줄로 가동 전 라인 예냉 · 예열', '→ 첫 로트부터 규격', ''],
+      ['S', 12, '12:00', [6], '비가동 구역', '비가동 구역은 AI 절약 모드로 자동 전환', '→ 에너지비 [00]% ↓', ''],
+      ['S', 16, '16:00', [1], '공조 설비', '공조 이상 알림 → 케어 서비스 긴급출동', '→ 라인 영향 최소화', ''],
+      ['S', 21, '21:00', [], '전 사업장', '야간 루틴 — 24시간 라인만 남기고 절전', '→ 야간 전력 ↓', '']
+    ];
+    const cards = CD.map(([lane, h, time, nums, space, act, out, kind]) => {
+      const x = Math.round(X(h));
+      const y = laneY[lane] + 5;
+      const gray = kind === 'out', mot = kind === 'mot';
+      const frame = gray ? 'background: #ffffff; border: 1px dashed #b8bec8;' : (mot ? 'background: #ffffff; border: 1.5px solid #1428a0;' : 'background: #ffffff; border: 1px solid #d5d9e0;');
+      return {
+        time, space, act, out, mot,
+        nums: nums.map((n) => ({
+          n,
+          style: 'width: 13px; height: 13px; border-radius: 50%; background: ' + (gray ? '#b8bec8' : '#1428a0') + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 8.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+        })),
+        frame: A + box(x, y, CW, CH) + 'box-sizing: border-box; border-radius: 10px; ' + frame,
+        headStyle: A + box(x + 9, y + 6, CW - 18, 16) + 'display: flex; align-items: center; gap: 5px; white-space: nowrap;',
+        timeStyle: 'font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: ' + (gray ? '#8a91a0' : '#1428a0') + ';',
+        actStyle: A + box(x + 9, y + 25, CW - 18, 30) + 'font-size: 11.5px; font-weight: 600; line-height: 15px; color: ' + (gray ? '#8a91a0' : '#121417') + ';',
+        outStyle: A + box(x + 9, y + 57, CW - 18, 15) + 'font-size: 11px; font-weight: 800; line-height: 15px; white-space: nowrap; color: ' + (gray ? '#8a91a0' : '#1428a0') + ';',
+        motStyle: A + box(x + CW - 70, y - 9, 62, 17) + 'border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; white-space: nowrap;'
+      };
+    });
+
+    // 레인 간 전달: B 카드 아래 → D 카드 위 (C 레인을 가로지름)
+    const HO = [[10 + 40 / 60, '구조 신호 · 위치'], [14, '온열 경고']];
+    const handoffs = HO.map(([h, label]) => {
+      const x = Math.round(X(h)) + 16;
+      const top = laneY.B + 5 + CH, bottom = laneY.D + 5;
+      const lw = label.length > 6 ? 88 : 56;
+      return {
+        label,
+        line: A + box(x - 1, top, 2, bottom - top - 7) + 'background: #1428a0;',
+        head: A + 'left: ' + px(x - 5) + 'top: ' + px(bottom - 8) + 'width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #1428a0;',
+        labelStyle: A + box(x - 6 - lw, 400, lw, 18) + 'border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; white-space: nowrap;'
+      };
+    });
+
+    return { ticks, grid, lanes, cards, handoffs };
+  }
+}
+</script>
+</body>
+</html>

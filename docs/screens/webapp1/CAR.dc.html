@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 에이전트 라우팅 규칙</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 26px 40px 24px 40px; display: flex; flex-direction: column; gap: 14px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+
+  <!-- 제목 · 범례 -->
+  <div style="height: 70px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">ROUTING · COMPETITOR ANALYSIS</span>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">경쟁사 찾기 — 스스로 정하는 것, 묻는 것</h1>
+      <p style="margin: 0; font-size: 13.5px; color: #596170; white-space: nowrap">네 단계마다 입력 신호를 읽고 갈 길을 정해요. 맨 아래 두 경우만 사람에게 묻습니다.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0">
+      <div style="display: flex; gap: 8px">
+        <a href="UC_CA.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">유스케이스 맵</a>
+        <a href="CA0.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap">작업 목록<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <sc-for list="{{legend}}" as="l" hint-placeholder-count="4">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap"><span style="{{l.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{l.mIcon}}"/></svg>{{l.mText}}</span>{{l.desc}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- ① ~ ④ 단계 -->
+  <div style="height: 316px; flex-shrink: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{stages}}" as="s" hint-placeholder-count="4">
+      <div style="box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 12px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+        <div style="display: flex; align-items: center; gap: 8px; height: 22px">
+          <span style="width: 22px; height: 22px; border-radius: 6px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{s.no}}</span>
+          <span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">{{s.title}}</span>
+          <span style="flex-grow: 1"></span>
+          <sc-if value="{{s.arrow}}" hint-placeholder-val="{{true}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </sc-if>
+        </div>
+        <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px">{{s.sub}}</span>
+        <sc-for list="{{s.rules}}" as="r" hint-placeholder-count="5">
+          <div style="box-sizing: border-box; height: 42px; border-radius: 9px; background: #ffffff; padding: 0 10px; display: flex; align-items: center; gap: 8px; min-width: 0">
+            <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+              <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.c}}</span>
+              <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">→ {{r.o}}</span>
+            </div>
+            <span style="{{r.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- ⑤ 찾는 순서 — 신호가 많을수록 좁아져요 -->
+  <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; border-radius: 14px; border: 1.5px solid #1428a0; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; align-items: center; gap: 8px; height: 26px">
+      <span style="width: 22px; height: 22px; border-radius: 6px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">5</span>
+      <span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">찾는 순서 — 신호가 많을수록 좁아져요</span>
+      <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">신호가 더해질수록 후보는 줄고 근거는 정확해져요 · 못 읽은 신호는 결과에 칩으로 남겨요</span>
+      <span style="flex-grow: 1"></span>
+      <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #e6f4ee; color: #0b6e4f; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>A 커피 시나리오 — 4개 모두 읽음 → 후보 6 · 추천 4</span>
+    </div>
+    <div style="flex-grow: 1; min-height: 0; display: flex; align-items: stretch; gap: 0">
+      <sc-for list="{{steps}}" as="t" hint-placeholder-count="4">
+        <div style="flex-grow: 1; flex-basis: 0; min-width: 0; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 8px; height: 24px">
+            <span style="{{t.chipStyle}}">{{t.signal}}</span>
+            <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.how}}</span>
+          </div>
+          <div style="display: flex; align-items: baseline; gap: 6px; white-space: nowrap">
+            <span style="font-size: 12px; color: #596170">후보</span>
+            <span style="font-family: Manrope, sans-serif; font-weight: 800; font-size: 22px; letter-spacing: -0.02em; color: #121417">{{t.n}}</span>
+            <span style="font-size: 12px; color: #596170">곳</span>
+            <span style="{{t.tagStyle}}">{{t.tag}}</span>
+          </div>
+          <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">→ {{t.o}}</span>
+          <span style="font-size: 12px; color: #596170; line-height: 1.5; overflow: hidden">{{t.desc}}</span>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: auto">
+            <div style="{{t.barStyle}}"></div>
+            <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">{{t.barText}}</span>
+          </div>
+        </div>
+        <sc-if value="{{t.arrow}}" hint-placeholder-val="{{true}}">
+          <div style="width: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #8a91a0">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </div>
+        </sc-if>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 사람에게 묻는 두 경우 -->
+  <div style="height: 50px; flex-shrink: 0; box-sizing: border-box; border-radius: 12px; background: #121417; color: #ffffff; padding: 0 16px; display: flex; align-items: center; gap: 14px; min-width: 0">
+    <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0">사람에게 묻는 두 경우</span>
+    <span style="width: 1px; height: 18px; background: #3d4452; flex-shrink: 0"></span>
+    <sc-for list="{{asks}}" as="a" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+        <span style="width: 18px; height: 18px; border-radius: 50%; background: #ffffff; color: #121417; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{a.n}}</span>
+        <span style="font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{a.t}}</span>
+        <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #3d4452; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{a.where}}</span>
+      </div>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11.5px; color: #c5cbd6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">답이 없으면 업종 기준 · 익명 표기로 진행해요</span>
+    <a href="CA2Q.dc.html" style="font-size: 12px; font-weight: 600; color: #9db4ff; white-space: nowrap; flex-shrink: 0">묻는 화면 보기</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z'],
+      ask: ['선택 필요', 'background: #121417; color: #ffffff;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 14h2v2h-2zm1-10a4 4 0 0 1 4 4c0 2-3 2.5-3 4h-2c0-2.5 3-3 3-4a2 2 0 0 0-4 0H8a4 4 0 0 1 4-4z'],
+      pin: ['고정', 'background: #f0f2f5; color: #3d4452;', 'M9 2h6l-1 6 3 3v2h-4v7l-1 2-1-2v-7H7v-2l3-3z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; ';
+    const md = (k) => ({ mText: MODE[k][0], mIcon: MODE[k][2], mStyle: CHIP + MODE[k][1] });
+    const rule = ([c, o, m]) => ({ c, o, ...md(m) });
+
+    const legend = [['auto', '진행'], ['check', '진행 + 결과에 표시'], ['ask', '답 받고 진행'], ['pin', '사람이 정함']].map(([m, desc]) => ({ desc, ...md(m) }));
+
+    const S = [
+      ['1', '입력 판별', '무엇으로 시작했나 — 정의서 · 자유 양식 · 첨부 · MI 작업', [
+        ['요구사항 정의서 연결', '고객사 · 업종 · 장소 · 제품 상속', 'auto'],
+        ['자유 양식 한 문단', "4가지 읽기 · 읽힌 것 칩으로", 'auto'],
+        ['RFP · 회의록 첨부', '경쟁사 언급 · 평가 기준 추출', 'auto'],
+        ['MI 작업에서 넘어옴', '그 작업의 경쟁사 후보 상속', 'auto'],
+        ['업종 · 제품만 있음', "찾되 '업종 기준' 칩", 'check']]],
+      ['2', '빈 정보', '고객사 · 업종 · 장소 · 제품 중 비어 있는 것', [
+        ['고객사 · 장소 둘 다 없음', '한 번 묻기 (CA2Q · 건너뛰기 가능)', 'ask'],
+        ['장소만 없음', "전국 기준 · 결과에 '지역 미반영' 칩", 'check'],
+        ['제품 없음', '업종 사례 상위 제품군으로', 'auto'],
+        ['업종 못 읽음', 'MI 업종 판별 규칙 재사용', 'auto'],
+        ['고객사만 있음', '공개 자료에서 업종 · 장소 추정 · 칩', 'check']]],
+      ['3', '후보 선정', '신뢰 점수 · 유저가 넣고 뺀 것 · 개수', [
+        ['신뢰 0.70 이상', '추천 · 켜 둠', 'auto'],
+        ['0.50 ~ 0.69', "'확인 필요' 로 꺼 둠", 'check'],
+        ['0.50 미만', '제외 제안 · 목록엔 남김', 'auto'],
+        ['유저가 넣거나 뺀 곳', '재분석해도 유지', 'pin'],
+        ['후보 7곳 넘음', "상위 6 + '더 보기'", 'auto']]],
+      ['4', '분석 · 내보내기', '기준 · 수치 · 출처 · 익명 · 갱신', [
+        ['비교 기준', '요구사항 3 + 업종 사례 1 + 기본 2', 'auto'],
+        ['경쟁사 수치 못 찾음', '[확인 필요] · 추정 금지', 'auto'],
+        ['출처끼리 20% 이상 차이', '둘 다 표시', 'check'],
+        ['고객 제출물에 실명', '묻기', 'ask'],
+        ['분석 30일 경과 · 경쟁사 신제품', '업데이트 권유', 'auto']]]
+    ];
+    const stages = S.map(([no, title, sub, rules], i) => ({ no, title, sub, rules: rules.map(rule), arrow: i < S.length - 1 }));
+
+    // 찾는 순서: [신호 칩, 어디서, 후보 수, 꼬리표, 좁히는 방법, 한 줄 설명, 넓이 %]
+    const T = [
+      ['업종만', '업종 사례 23건', '8~12', '넓음', '업종 사례 빈도 상위', '같은 업종 도입사례에서 자주 비교된 곳을 모두 올려요. 후보가 넓어 확인할 곳이 많아요.', 100],
+      ['+ 제품', '제품군 겹침', '5~8', '좁힘', '제품군 겹침으로 좁힘', "55\" 사이니지 · 콘텐츠 배포처럼 제품군이 겹치는 곳만 남겨요. 하드웨어 없는 곳은 '일부 겹침'으로 표시해요.", 65],
+      ['+ 장소', '지역 설치 · 레퍼런스', '4~6', '지역 반영', '지역 설치 파트너 · 레퍼런스', '수도권처럼 장소가 정해지면 그 지역 설치 파트너망과 레퍼런스가 있는 곳을 앞에 둬요.', 42],
+      ['+ 고객사', '지난 제안 · 입찰', '3~5', '가장 정확', '그 고객의 지난 제안 · 입찰 경쟁', '그 고객사에 제안했거나 입찰에서 맞붙은 곳을 사내 사례 DB에서 찾아요. 근거가 가장 정확해요.', 28]
+    ];
+    const SIG = 'height: 24px; padding: 0 9px; border-radius: 999px; box-sizing: border-box; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap; flex-shrink: 0; ';
+    const TAG = 'height: 20px; padding: 0 7px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap; flex-shrink: 0; margin-left: 4px; ';
+    const steps = T.map(([signal, how, n, tag, o, desc, w], i) => ({
+      signal, how, n, tag, o, desc,
+      chipStyle: SIG + (i === 0 ? 'background: #ffffff; color: #121417; border: 1px solid #121417;' : 'background: #1428a0; color: #ffffff;'),
+      tagStyle: TAG + (i === T.length - 1 ? 'background: #e6f4ee; color: #0b6e4f;' : i === 0 ? 'background: #fdf0e6; color: #8a3b00;' : 'background: #eaeefb; color: #1428a0;'),
+      barStyle: 'height: 6px; border-radius: 999px; background: ' + (i === T.length - 1 ? '#0b6e4f' : '#1428a0') + '; width: ' + w + '%; flex-shrink: 0;',
+      barText: '후보 폭 ' + w + '%',
+      arrow: i < T.length - 1
+    }));
+
+    const asks = [
+      ['고객사 · 장소가 모두 없고 업종이 두 갈래', 'CA2Q'],
+      ['경쟁사 실명을 고객 제출물에 넣을 때', 'CA5']
+    ].map(([t, where], i) => ({ n: i + 1, t, where }));
+
+    return { legend, stages, steps, asks };
+  }
+}
+</script>
+</body>
+</html>

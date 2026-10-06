@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SM-C 동선 스트립</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 매장 동선</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">손님이 지나가는 순서대로 — 다섯 공간, 매장당 여덟 대</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">입구에서 픽업대까지 · 공간마다 맡는 역할</div>
+
+  <!-- 동선 선: 1번 노드 중심(179) → 5번 노드 중심(1101), y 404 -->
+  <div style="position: absolute; left: 179px; top: 403px; width: 922px; height: 2px; background: #b8c3ee"></div>
+  <!-- 노드 사이 화살촉 (중간점 294 · 525 · 755 · 986) -->
+  <svg style="position: absolute; left: 287px; top: 397px" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5l4.5 4.5L5 11.5"/></svg>
+  <svg style="position: absolute; left: 518px; top: 397px" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5l4.5 4.5L5 11.5"/></svg>
+  <svg style="position: absolute; left: 748px; top: 397px" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5l4.5 4.5L5 11.5"/></svg>
+  <svg style="position: absolute; left: 979px; top: 397px" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5l4.5 4.5L5 11.5"/></svg>
+
+  <!-- 다섯 노드: 사진(160–336) · 공간명(346–372) · 번호 원(372–436, 중심 404) · 행동 · 화면 역할 · 제품 칩(526–552) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+    <sc-for list="{{nodes}}" as="n" hint-placeholder-count="5">
+      <div style="display: flex; flex-direction: column; align-items: center; padding: 0 12px; text-align: center">
+        <div style="align-self: stretch; height: 176px; border-radius: 12px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">{{n.photo}}</div>
+        <div style="height: 26px; margin-top: 10px; font-size: 18px; font-weight: 800; line-height: 26px; white-space: nowrap">{{n.name}}</div>
+        <div style="height: 64px; display: flex; align-items: center; justify-content: center"><span style="width: 44px; height: 44px; box-sizing: border-box; border-radius: 50%; border: 4px solid #ffffff; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{n.no}}</span></div>
+        <div style="height: 24px; margin-top: 6px; font-size: 17px; font-weight: 800; line-height: 24px; white-space: nowrap">{{n.act}}</div>
+        <div style="height: 42px; margin-top: 6px; font-size: 14px; line-height: 21px; color: #596170">{{n.role}}</div>
+        <div style="height: 26px; margin-top: 12px; display: flex; justify-content: center; gap: 6px">
+          <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{n.chip}}</span>
+          <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; display: flex; align-items: center; white-space: nowrap">{{n.kind}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 하단: 기준 캡션 + 전체 물량 요약 -->
+  <div style="position: absolute; left: 64px; top: 604px; font-size: 12px; color: #596170">표준 매장 1곳 기준 · 화살표는 손님 동선 · 수치는 예시</div>
+  <div style="position: absolute; right: 64px; top: 584px; height: 56px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 22px; display: flex; align-items: center; gap: 8px">
+    <span style="font-size: 13px; color: #3d4452">매장당</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800">{{per}}</span><span style="font-size: 14px; font-weight: 700">대</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 700; color: #6f82d6">×</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800">{{stores}}</span><span style="font-size: 14px; font-weight: 700">개 매장</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 700; color: #6f82d6">=</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">{{total}}</span><span style="font-size: 15px; font-weight: 800; color: #1428a0">대</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const STORES = 320;
+    // [공간, 손님 행동, 그 자리 화면의 역할, 모델, 매장당 대수, 제품 구분]
+    const N = [
+      ['매장 외부', '거리에서 멈춰 선다', '외부 메뉴와 대기 시간을 보여 발길을 잡는다', 'OH55C', 2, '옥외 55"'],
+      ['입구 대기열', '줄 서서 메뉴를 고른다', '줄 선 채로 메뉴를 보고 키오스크로 주문', 'KM24C', 1, '키오스크 24"'],
+      ['카운터', '보고 바로 주문한다', '3연 메뉴보드 — 3m 거리에서도 한눈에', 'QM55C', 3, '메뉴보드 55"'],
+      ['대기 공간', '앉아서 음료를 기다린다', '신메뉴 · 프로모션으로 추가 주문 유도', 'QM65C', 1, '사이니지 65"'],
+      ['픽업대', '내 번호를 찾아간다', '주문 번호를 띄워 부르지 않아도 찾는다', 'QM43C', 1, '호출 43"']
+    ];
+    const nodes = N.map(([name, act, role, model, q, kind], i) => ({
+      no: String(i + 1),
+      name, act, role, kind,
+      photo: '공간 사진 · ' + name,
+      chip: model + ' ×' + q
+    }));
+    const per = N.reduce((a, n) => a + n[4], 0);
+    return { nodes, per: String(per), stores: fmt(STORES), total: fmt(per * STORES) };
+  }
+}
+</script>
+</body>
+</html>

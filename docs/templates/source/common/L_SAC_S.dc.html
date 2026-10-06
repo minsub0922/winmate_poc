@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SAC-S 시스템에어컨 제어 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SAC 제어 시스템</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SAC 제어 · 시스템에어컨 제어 시스템</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">입주사는 쓰는 만큼, 관리실은 한 화면에서</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">G 빌딩 4층 예시 · 호실마다 유선리모컨, 관리실의 DMS 2.5가 스케줄 · 제한 · 피크 · 분배를 맡습니다</div>
+
+  <!-- 층 평면 (좌 7열) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 662px; height: 260px; border-radius: 16px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 80px; top: 170px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">G 빌딩 4층 평면 (예시)</div>
+  <div style="position: absolute; right: 570px; top: 170px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 2px; border: 1.5px solid #1428a0; display: flex; align-items: center; justify-content: center"><span style="width: 4px; height: 4px; background: #1428a0"></span></span>실내기</span>
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 12px; box-sizing: border-box; border-radius: 2px; border: 1.5px solid #121417"></span>유선리모컨</span>
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 14px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 8.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>시나리오 단계</span>
+  </div>
+  <div style="position: absolute; left: 92px; top: 294px; font-size: 11.5px; font-weight: 700; color: #8a91a0; white-space: nowrap">공용 복도</div>
+
+  <!-- 호실 -->
+  <sc-for list="{{rooms}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.style}}">
+      <div style="position: absolute; left: 12px; top: 8px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap">
+        <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: {{r.ink}}">{{r.no}}</span>
+        <span style="font-size: 11.5px; color: #596170">{{r.sub}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 코어 · EPS -->
+  <div style="position: absolute; left: 404px; top: 318px; width: 136px; height: 86px; box-sizing: border-box; border-radius: 10px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 416px; top: 326px; font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap">코어 · EPS</div>
+  <div style="position: absolute; left: 416px; top: 352px; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 2px solid #121417; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div>
+  <div style="position: absolute; left: 444px; top: 348px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 11px; font-weight: 700; line-height: 15px">전력량계 · SIM</span><span style="font-size: 11px; line-height: 15px; color: #596170">전력감시 중계기</span></div>
+
+  <!-- 관리실: DMS 2.5 실물 -->
+  <div style="position: absolute; left: 548px; top: 318px; width: 162px; height: 86px; box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1.5px solid #121417"></div>
+  <div style="position: absolute; left: 560px; top: 326px; font-size: 13px; font-weight: 800; white-space: nowrap">관리실</div>
+  <div style="position: absolute; left: 560px; top: 350px; width: 40px; height: 44px; border-radius: 7px; overflow: hidden; background: #f2f3f5">
+    <img src="/_blob/c4f218ab65683afc48e0812d2719437f" alt="관리실 DMS 2.5 본체" style="position: absolute; left: 1px; top: 1px; width: 38px; height: 42px; object-fit: contain">
+  </div>
+  <div style="position: absolute; left: 608px; top: 354px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; line-height: 18px; color: #1428a0">DMS 2.5</span><span style="font-size: 11px; line-height: 16px; color: #596170">터치제어기</span></div>
+
+  <!-- 실내기 · 유선리모컨 · 단계 번호 -->
+  <sc-for list="{{units}}" as="u" hint-placeholder-count="9">
+    <div style="{{u.style}}"><div style="{{u.inner}}"></div></div>
+  </sc-for>
+  <sc-for list="{{remotes}}" as="m" hint-placeholder-count="4">
+    <div style="{{m.style}}"><div style="{{m.screen}}"></div></div>
+  </sc-for>
+  <sc-for list="{{planMarks}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.style}}">{{k.n}}</div>
+  </sc-for>
+
+  <!-- 공간 사진: 입주 호실 -->
+  <img src="/_blob/86286d6e335fdcae510acec434fcff25" alt="오픈 천장 사무실의 360 카세트 실내기" style="position: absolute; left: 64px; top: 432px; width: 266px; height: 216px; object-fit: cover; object-position: 100% 40%; border-radius: 14px">
+  <div style="position: absolute; left: 74px; top: 442px; height: 24px; padding: 0 9px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>입주 호실 · 천장형 <span style="font-family: Manrope, sans-serif">360</span> 카세트</div>
+  <div style="position: absolute; left: 74px; top: 620px; height: 18px; padding: 0 7px; border-radius: 999px; background: rgba(18,20,23,0.72); color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+
+  <!-- 호실별 전력량 분배 (예시 형상) -->
+  <div style="position: absolute; left: 346px; top: 432px; width: 380px; height: 216px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 360px; top: 446px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</div>
+  <div style="position: absolute; left: 390px; top: 446px; font-size: 13.5px; font-weight: 800; line-height: 22px; white-space: nowrap">호실별 전력량 분배 · 이번 달</div>
+  <div style="position: absolute; right: 568px; top: 448px; font-size: 11.5px; line-height: 18px; color: #596170; white-space: nowrap">DMS 2.5 → 엑셀 저장</div>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="4">
+    <div style="{{b.labelStyle}}">{{b.no}}</div>
+    <div style="{{b.track}}"></div>
+    <div style="{{b.fill}}"></div>
+    <div style="{{b.valueStyle}}">{{b.value}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 360px; top: 604px; width: 352px; display: flex; flex-direction: column; font-size: 11.5px; line-height: 17px; color: #8a91a0; white-space: nowrap"><span>수치는 예시 · 실내기별 전력량 분배는 DMS 옵션</span><span>SIM 중계기 · 전력량계 기준으로 호실에 나눔</span></div>
+
+  <!-- 시간 순서 (우 5열) -->
+  <div style="position: absolute; left: 763px; top: 203px; width: 2px; height: 400px; background: #d5d9e0"></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.dot}}">{{s.no}}</div>
+    <div style="{{s.card}}">
+      <span style="position: absolute; left: 16px; top: 13px; width: 52px; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; line-height: 22px; color: #1428a0; white-space: nowrap">{{s.time}}</span>
+      <span style="position: absolute; left: 76px; top: 13px; font-size: 14px; font-weight: 800; line-height: 22px; white-space: nowrap">{{s.title}}</span>
+      <span style="position: absolute; left: 76px; top: 38px; width: 256px; font-size: 12px; line-height: 17px; color: #596170">{{s.desc}}</span>
+      <div style="{{s.well}}">
+        <sc-for list="{{s.thumbs}}" as="th" hint-placeholder-count="1">
+          <div style="{{th.wrap}}">
+            <img src="{{th.src}}" alt="{{th.alt}}" style="position: absolute; object-fit: contain; {{th.st}}">
+          </div>
+        </sc-for>
+      </div>
+      <span style="position: absolute; right: 12px; top: 66px; width: 68px; font-size: 9.5px; font-weight: 700; line-height: 13px; color: #3d4452; text-align: center; white-space: nowrap">{{s.cap}}</span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>G 임대형 오피스 빌딩 · 냉난방 제어 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const marker = (x, y, d, n) => ({ n, style: A + box(x, y, d, d) + 'border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: ' + (d > 22 ? 12 : 11) + 'px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+
+    // ---- 평면: 입주 호실 (x, y, w, h, 입주 여부, 실내기 위치 비율) ----
+    const R = [
+      ['401', '입주사 A', 80, 202, 212, 86, true, [0.4, 0.74]],
+      ['402', '입주사 B', 300, 202, 204, 86, true, [0.4, 0.74]],
+      ['403', '공실 · OFF', 512, 202, 198, 86, false, [0.4, 0.74]],
+      ['404', '입주사 C', 80, 318, 316, 86, true, [0.34, 0.6, 0.86]]
+    ];
+    const rooms = R.map(([no, sub, x, y, w, h, on]) => ({
+      no, sub,
+      ink: on ? '#121417' : '#8a91a0',
+      style: A + box(x, y, w, h) + 'border-radius: 10px; ' + (on ? 'background: #ffffff; border: 1px solid #d5d9e0;' : 'background: #f5f6f8; border: 1.5px dashed #b8bec8;')
+    }));
+    const units = [];
+    const remotes = [];
+    R.forEach(([, , x, y, w, h, on, fr]) => {
+      const c = on ? '#1428a0' : '#b8bec8';
+      fr.forEach((f) => units.push({
+        style: A + box(Math.round(x + w * f - 13), y + 40, 26, 26) + 'border-radius: 4px; background: ' + (on ? '#eaeefb' : '#ffffff') + '; border: 2px solid ' + c + '; display: flex; align-items: center; justify-content: center;',
+        inner: 'width: 8px; height: 8px; border-radius: 1px; background: ' + c + ';'
+      }));
+      remotes.push({
+        style: A + box(x + 14, y + h - 30, 13, 19) + 'border-radius: 3px; background: #ffffff; border: 1.5px solid ' + (on ? '#121417' : '#b8bec8') + '; display: flex; justify-content: center; padding-top: 3px;',
+        screen: 'width: 5px; height: 5px; background: ' + (on ? '#1428a0' : '#d5d9e0') + ';'
+      });
+    });
+    // 단계 번호: ① 관리실 DMS · ② 402 리모컨 · ③ 코어 전력감시 · ④ 401 리모컨
+    const planMarks = [marker(676, 326, 24, 1), marker(332, 254, 24, 2), marker(510, 326, 24, 3), marker(112, 254, 24, 4)];
+
+    // ---- 호실별 분배 막대 (예시 형상): 트랙 x 400 · 폭 190 ----
+    const B = [['401', 130, true], ['402', 95, true], ['403', 8, false], ['404', 165, true]];
+    const bars = B.map(([no, w, on], i) => {
+      const t = 482 + i * 28;
+      return {
+        no,
+        value: on ? '분배 [000] kWh' : '공실 · [0] kWh',
+        labelStyle: A + box(360, t, 36, 20) + 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; line-height: 20px; color: ' + (on ? '#121417' : '#8a91a0') + ';',
+        track: A + box(400, t + 5, 190, 10) + 'border-radius: 3px; background: #ffffff;',
+        fill: A + box(400, t + 5, w, 10) + 'border-radius: 3px; background: ' + (on ? '#1428a0' : '#b8bec8') + ';',
+        valueStyle: A + box(600, t, 112, 20) + 'font-size: 12px; font-weight: 700; line-height: 20px; white-space: nowrap; color: ' + (on ? '#1428a0' : '#8a91a0') + ';'
+      };
+    });
+
+    // ---- 단계 카드 썸네일 (실물 사진 · 카탈로그 구성도 일부) ----
+    const IMG = {
+      dms: '/_blob/c4f218ab65683afc48e0812d2719437f',
+      remote: '/_blob/99bb1b59cc337f7f8d2eed6fed537a92',
+      diagram: '/_blob/b6df9d6d807a946ad08e1b15baf079e3'
+    };
+    const pic = (src, alt, x, y, w, h) => ({ src, alt, wrap: A + box(x, y, w, h) + 'overflow: hidden;', st: box(0, 0, w, h) });
+    const crop = (alt, sx, sy, sw, sh, h, x, y) => {
+      const s = h / sh, w = Math.round(sw * s), r = (n) => Math.round(n * 10) / 10;
+      return { src: IMG.diagram, alt, wrap: A + box(x, y, w, h) + 'overflow: hidden;', st: box(r(-sx * s), r(-sy * s), r(1100 * s), r(690 * s)) };
+    };
+    const S = [
+      ['08:00', '스케줄 운전 · 입주 호실만 ON', 'DMS 주간 스케줄로 입주 호실만 운전 · 공실 403은 OFF 유지', 'DMS 2.5', '#f2f3f5', [pic(IMG.dms, 'DMS 2.5 본체', 12, 2, 44, 48)]],
+      ['10:00', '입주사 온도 조정', '유선리모컨에서 희망온도 상 · 하한 [00]~[00]℃ 안에서만 조정', '유선리모컨', '#ffffff', [pic(IMG.remote, '통합 유선리모컨 AWR-WE13N', 12, 2, 45, 48)]],
+      ['14:00', '피크 근접 → 피크 전력 제어', '전력감시 중계기가 목표 [000] kW 대비 피크를 판단해 제어 (옵션)', '전력감시 중계기', '#f2f3f5', [crop('카탈로그 구성도의 전력감시 중계기', 484, 402, 68, 88, 48, 16, 2)]],
+      ['19:00', '사용 없음 → 자동 운전 정지', '설정 [00]분 동안 사용이 없으면 실내기 자동 운전 정지', '유선리모컨', '#ffffff', [pic(IMG.remote, '통합 유선리모컨 AWR-WE13N', 12, 2, 45, 48)]],
+      ['월말', '호실별 전력량 분배', '실내기별 사용 전력량 분배 → 엑셀 저장 · 관리비 정산 자료 (DMS 옵션)', 'SIM · 전력량계', '#f2f3f5', [crop('카탈로그 구성도의 SIM 중계기', 82, 402, 58, 72, 42, 6, 5), crop('카탈로그 구성도의 전력량계', 101, 549, 33, 71, 42, 44, 5)]]
+    ];
+    const steps = S.map(([time, title, desc, cap, wellBg, thumbs], i) => {
+      const top = 160 + i * 98;
+      return {
+        no: i + 1, time, title, desc, cap, thumbs,
+        dot: A + box(750, top + 30, 28, 28) + 'border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        card: A + box(792, top, 424, 88) + 'border-radius: 12px; background: ' + (i === 4 ? '#eaeefb' : '#f5f6f8') + ';',
+        well: 'position: absolute; right: 12px; top: 10px; width: 68px; height: 52px; border-radius: 8px; overflow: hidden; background: ' + wellBg + ';'
+      };
+    });
+
+    return { rooms, units, remotes, planMarks, bars, steps };
+  }
+}
+</script>
+</body>
+</html>

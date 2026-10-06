@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-U·S 매장 실사 위 질문 핀 → 제품 · 솔루션 → 핵심 가치</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS · 현장 질문</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1150px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장 곳곳에서 나오는 질문, 그 자리에서 답합니다</div>
+
+  <!-- 매장 실사 + 질문 핀 -->
+  <div style="position: absolute; left: 64px; top: 128px; width: 600px; height: 512px; border-radius: 16px; overflow: hidden">
+    <dc-import name="Photo" pid="case.mcd.counter" w="600" h="512" radius="16" hint-size="600px,512px"></dc-import>
+    <sc-for list="{{pins}}" as="p" hint-placeholder-count="3">
+      <span style="{{p.style}}">Q{{p.no}}</span>
+    </sc-for>
+    <span style="position: absolute; left: 14px; bottom: 14px; height: 24px; padding: 0 10px; border-radius: 999px; background: rgba(18,20,23,0.74); color: #ffffff; font-size: 11px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">유사 사례 매장 · 맥도날드 코리아 고양삼송 DT — A 커피 매장 사진이 있으면 교체</span>
+  </div>
+
+  <!-- 질문 → 답 -->
+  <div style="position: absolute; left: 696px; top: 128px; width: 520px; display: flex; flex-direction: column; gap: 14px">
+    <sc-for list="{{items}}" as="r" hint-placeholder-count="3">
+      <div style="height: 160px; box-sizing: border-box; border-top: 1px solid #e2e5ea; padding-top: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; gap: 10px; align-items: flex-start">
+          <span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">Q{{r.no}}</span>
+          <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-size: 11.5px; font-weight: 700; color: #596170">{{r.who}} · {{r.where}}</span>
+            <span style="font-size: 16px; font-weight: 800; line-height: 1.45">“{{r.q}}”</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px; align-items: center; padding-left: 40px">
+          <dc-import name="Photo" pid="{{r.pid}}" w="96" h="70" bg="soft" radius="10" hint-size="96px,70px"></dc-import>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="display: flex; align-items: baseline; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{r.prod}}</span><span style="font-size: 12px; color: #596170">{{r.type}}</span></span>
+            <span style="font-size: 15px; font-weight: 800; color: #1428a0; line-height: 1.4">{{r.value}}</span>
+            <div style="display: flex; gap: 6px">
+              <sc-for list="{{r.kw}}" as="k" hint-placeholder-count="2">
+                <span style="height: 24px; padding: 0 9px; border-radius: 7px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">#{{k.t}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 질문은 본사 · 매장 인터뷰에서 · 사진은 삼성 공식 이미지</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 매장 사진(1440×810)을 600×512에 cover로 — 가로 910으로 늘어나 양옆 155px씩 잘림
+    const SW = 910, OX = 155, SH = 512;
+    // [핀 x, y 비율, 누가, 어디서, 질문, 실사, 제품, 종류, 가치, 키워드]
+    const R = [
+      [0.80, 0.33, '본사 운영팀', '카운터 메뉴판', '신메뉴가 나올 때마다 메뉴판을 다시 뽑아야 하나요?', 'qm55c.persp', 'QM55C', '+ MagicINFO', '본사가 바꾸면 전 매장이 같은 날 바뀝니다', ['인쇄 · 배송 0', '원격 배포']],
+      [0.70, 0.66, '점장', '주문 카운터', '점심 피크에 주문 줄이 너무 길어요', 'km24c.persp', 'KM24C', '셀프 주문 키오스크', '주문은 나눠 받고, 카운터는 음료에 집중', ['셀프 주문', '대기 단축']],
+      [0.25, 0.64, '가맹점주', '창가 좌석', '여름만 되면 전기요금이 부담돼요', 'ui.stp.energy', 'SmartThings Pro', '에너지 관리', '영업시간에만, 필요한 만큼 냉방', ['스케줄 운전', '사용량 확인']]
+    ];
+    const pins = R.map(([fx, fy], i) => ({
+      no: i + 1,
+      style: 'position: absolute; left: ' + Math.round(fx * SW - OX - 20) + 'px; top: ' + Math.round(fy * SH - 20) + 'px; width: 40px; height: 40px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 3px 10px rgba(18,20,23,0.35); color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+    const items = R.map(([fx, fy, who, where, q, pid, prod, type, value, kw], i) => ({ no: i + 1, who, where, q, pid, prod, type, value, kw: kw.map((t) => ({ t })) }));
+    return { pins, items };
+  }
+}
+</script>
+</body>
+</html>

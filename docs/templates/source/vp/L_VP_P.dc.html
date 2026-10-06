@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-P 솔루션 실제 화면 + 주석</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">메뉴와 전력, 두 화면으로 본사가 전 매장을 운영합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170">실제 솔루션 화면 · 번호는 A 커피 본사 운영팀이 쓰게 될 기능</div>
+
+  <sc-for list="{{panels}}" as="s" hint-placeholder-count="2">
+    <div style="{{s.box}}">
+      <div style="height: 26px; display: flex; align-items: center; gap: 10px">
+        <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.tag}}</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; white-space: nowrap">{{s.product}}</span>
+        <span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{s.what}}</span>
+      </div>
+      <div style="{{s.shot}}">
+        <dc-import name="Photo" pid="{{s.pid}}" w="{{s.w}}" h="315" fit="cover" hint-size="564px,315px"></dc-import>
+        <sc-for list="{{s.pins}}" as="p" hint-placeholder-count="3">
+          <span style="{{p.style}}">{{p.n}}</span>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-direction: column">
+        <sc-for list="{{s.notes}}" as="n" hint-placeholder-count="3">
+          <div style="height: 30px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #eef0f3">
+            <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{n.n}}</span>
+            <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap">{{n.k}}</span>
+            <span style="font-size: 12.5px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.v}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 화면은 samsung.com 공개 솔루션 화면 · 실제 데이터 아님</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 9</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const H = 315;
+    const pin = (n, fx, fy, w) => ({ n, style: 'position: absolute; left: ' + Math.round(fx * w - 14) + 'px; top: ' + Math.round(fy * H - 14) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 2px 8px rgba(18,20,23,0.35); color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+    // [태그, 제품, 무엇, 실사 화면, 화면 너비(원본 비율), 핀 [x, y 비율], 주석]
+    const S = [
+      ['메뉴 · 콘텐츠', 'Samsung VXT CMS', '메뉴판 편집 화면', 'ui.cms', 564,
+        [[0.08, 0.80], [0.50, 0.45], [0.88, 0.50]],
+        [['QSR 템플릿', '업종 메뉴판 틀을 골라 시작 — 디자이너 없이'], ['메뉴 · 가격 · 사진 칸', '바꿀 칸만 고치면 전 매장 같은 화면'], ['가로 · 세로 전환', '카운터 가로판 · 입구 세로판을 한 파일로']]],
+      ['매장 전력', 'SmartThings Pro', '에너지 대시보드', 'ui.stp.energy', 516,
+        [[0.66, 0.14], [0.12, 0.82], [0.76, 0.86]],
+        [['이번 달 누적 · 예상', '매장별 사용량과 목표 대비를 한눈에'], ['절감 기능 상태', 'AI 에너지 모드 · 비효율 감지가 켜져 있는지'], ['지난달과 비교', '월 추이로 절감 효과를 매달 확인']]]
+    ];
+    const panels = S.map(([tag, product, what, pid, w, P, N], i) => ({
+      tag, product, what, pid, w,
+      box: 'position: absolute; left: ' + (64 + i * 588) + 'px; top: 150px; width: 564px; display: flex; flex-direction: column; gap: 12px;',
+      shot: 'position: relative; width: ' + w + 'px; height: ' + H + 'px; align-self: center; border-radius: 12px; overflow: hidden; border: 1px solid #e2e5ea; background: #f5f6f8;',
+      pins: P.map(([fx, fy], k) => pin(k + 1, fx, fy, w)),
+      notes: N.map(([k, v], j) => ({ n: j + 1, k, v }))
+    }));
+    return { panels };
+  }
+}
+</script>
+</body>
+</html>

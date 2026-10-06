@@ -1,0 +1,62 @@
+ 
+ 사이드바 컴포넌트 
+ W 
+ winmate 
+ 새 작업 
+ 작업 내역 
+ {{g.name}} 
+ {{g.count}} 
+ {{it.title}} 
+ 최 
+ 최민섭 
+ Samsung Research · AX그룹 
+class Component extends DCLogic {
+ renderVals() {
+ const group = this.props.group ?? '';
+ const current = this.props.current ?? '';
+ const GROUPS = [
+ { key: 'requirements', name: '고객 요구사항', href: 'RQ0.dc.html', icon: 'M9 4h6v3H9z M7 5.5H5V21h14V5.5h-2 M8.5 12h7 M8.5 16h5',
+ items: ['E 자산운용 용산 AI Ready 오피스', 'F 시행사 동탄 시니어 복합단지', 'G 공사 판교 스타트업 단지'] },
+ { key: 'storyboard', name: '전략 수립 Storyboard', href: 'SB1.dc.html', icon: 'M4 5h16v14H4z M4 11h16 M10 11v8',
+ items: ['E 자산운용 용산 오피스 제안 기획', 'A 커피 프랜차이즈 매장 리뉴얼', 'B 병원 로비 안내 시스템', 'C 물류센터 스마트 오피스'] },
+ { key: 'image', name: '이미지 생성', href: 'https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX', icon: 'M4 5h16v14H4z M9 10.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M20 15l-5-5-8 8',
+ items: ['카페 매장 메뉴보드 시안', '로비 배경 이미지', '병원 대기실 시나리오 컷'] },
+ { key: 'birdseye', name: '공간 조감도 생성', href: 'https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX', icon: 'M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z M12 12l8-4.5 M12 12v9 M12 12L4 7.5',
+ items: ['강남 플래그십 1층 로비', 'B 병원 외래 대기실', 'C 물류센터 관제실'] },
+ { key: 'scenario', name: '공간 시나리오 생성', href: 'https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX', icon: 'M4 6h16v12H4z M10 9l5 3-5 3V9z',
+ items: ['A 커피 매장 하루 시나리오', 'B 병원 외래 동선 시나리오'] },
+ { key: 'market', name: 'Market Intelligence', href: 'MI1.dc.html', icon: 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2',
+ items: ['A 커피 프랜차이즈 시장·경쟁사 분석', 'B 병원 환자 동선 분석', 'C 물류센터 경쟁사 벤치마크'] },
+ { key: 'competitor', name: '경쟁사 분석', href: 'CA1.dc.html', icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z M12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z M21 3l-4 4',
+ items: ['A 커피 메뉴보드 경쟁사 분석', 'B 병원 안내 사이니지 경쟁사', 'C 물류센터 관제 디스플레이 경쟁사'] },
+ { key: 'value', name: 'Value Proposition', href: 'VP1.dc.html', icon: 'M6 4h12l3 5-9 11L3 9l3-5z M3 9h18 M9.5 9L12 20l2.5-11',
+ items: ['A 커피 메뉴보드 가치 제안', 'B 병원 이해관계자별 가치', 'C 물류센터 현장 효과 정리'] },
+ { key: 'spec', name: 'Spec 시트 생성', href: 'SP1.dc.html', icon: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7',
+ items: ['QMC vs QBC 55" 비교', 'The Wall IAB 146" 스펙', 'Flip Pro WA75D 스펙'] },
+ { key: 'proposal', name: 'B2B 제안서 생성', href: 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe', icon: 'M3 4h18v12H3z M8 20h8 M12 16v4 M7 12l3-3 2 2 4-4',
+ items: ['A 커피 프랜차이즈 메뉴보드 제안', 'B 병원 안내 시스템 제안'] }
+ ];
+ // 그룹 이름 → 그 기능의 작업 목록, 작업 항목 → 그 작업이 지금 있는 화면
+ const LIST = {'requirements': 'RQ0', 'storyboard': 'SB0', 'image': 'IMG0', 'birdseye': 'BE0', 'scenario': 'SC0', 'market': 'MI0', 'competitor': 'CA0', 'value': 'VP0', 'spec': 'SP0', 'proposal': 'PR0'};
+ const ITEM = {"E 자산운용 용산 AI Ready 오피스": "RQ6", "F 시행사 동탄 시니어 복합단지": "RQ3B", "G 공사 판교 스타트업 단지": "RQ2", "E 자산운용 용산 오피스 제안 기획": "SB3", "A 커피 프랜차이즈 매장 리뉴얼": "SB4", "B 병원 로비 안내 시스템": "SB1", "C 물류센터 스마트 오피스": "SB1Q", "카페 매장 메뉴보드 시안": "IMG3", "로비 배경 이미지": "IMG3G", "병원 대기실 시나리오 컷": "IMG3X", "강남 플래그십 1층 로비": "BE5", "B 병원 외래 대기실": "BE4", "C 물류센터 관제실": "BE1P", "A 커피 매장 하루 시나리오": "SC4", "B 병원 외래 동선 시나리오": "SC3", "A 커피 프랜차이즈 시장·경쟁사 분석": "MI3", "B 병원 환자 동선 분석": "MI3V", "C 물류센터 경쟁사 벤치마크": "MI2C", "A 커피 메뉴보드 경쟁사 분석": "CA4", "B 병원 안내 사이니지 경쟁사": "CA2", "C 물류센터 관제 디스플레이 경쟁사": "CA4D", "A 커피 메뉴보드 가치 제안": "VP3", "B 병원 이해관계자별 가치": "VP3L", "C 물류센터 현장 효과 정리": "VP3N","QMC vs QBC 55\" 비교": "SP3", "The Wall IAB 146\" 스펙": "SP3G", "Flip Pro WA75D 스펙": "SP1R", "A 커피 프랜차이즈 메뉴보드 제안": "PR7", "B 병원 안내 시스템 제안": "PR3"};
+ // 다른 캔버스에 있는 화면은 그 캔버스를 새 탭으로 엽니다
+ const EXT = {"BE0.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "BE1P.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "BE4.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "BE5.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "IMG0.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "IMG3.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "IMG3G.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "IMG3X.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "PR0.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "PR3.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "PR7.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "SC0.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "SC3.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "SC4.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX"};
+ const ext = (f) => EXT[f] || f;
+ const rowBase = '';
+ const itemBase = '';
+ const groups = GROUPS.map((g) => {
+ const expanded = g.key === group;
+ return {
+ name: g.name, icon: g.icon, count: g.items.length, expanded, listHref: ext(LIST[g.key] + '.dc.html'),
+ iconColor: expanded ? '' : '',
+ chev: expanded ? 'M6 9l6 6 6-6' : 'M9 6l6 6-6 6',
+ rowStyle: rowBase + (expanded ? '' : ' font-weight: 400;'),
+ items: g.items.map((t) => ({
+ title: t, href: ext((ITEM[t] || g.href.replace('.dc.html', '')) + '.dc.html'),
+ style: itemBase + (t === current ? '' : '')
+ }))
+ };
+ });
+ return { groups };
+ }
+}

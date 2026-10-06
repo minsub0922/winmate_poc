@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>GN-A 배치 시안 3안</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간 시안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">같은 대회의실, 세 가지 구성 — 권장은 B안</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">J 금융 본사 18층 대회의실 · 실측 기반 생성 시안 · 같은 시점에서 구성만 바꿔 비교</div>
+
+  <!-- 3안 카드: 같은 시점 렌더 + 구성 + 좋은 점 / 고려할 점 + 예산 수준 -->
+  <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+    <div style="{{o.card}}">
+      <div style="position: absolute; left: 8px; top: 8px; width: 352px; height: 290px">
+        <dc-import name="Img" kind="aerial" origin="gen" hint="{{o.hint}}" w="352" h="290" radius="10" credit="bl" hint-size="352px,290px"></dc-import>
+      </div>
+
+      <div style="position: absolute; left: 20px; top: 314px; width: 328px; height: 26px; display: flex; align-items: center; justify-content: space-between">
+        <span style="display: flex; align-items: center; gap: 8px">
+          <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; color: #1428a0; line-height: 1">{{o.letter}}</span>
+          <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em">{{o.name}}</span>
+        </span>
+        <span style="display: flex; align-items: center; gap: 8px">
+          <span style="font-size: 12px; font-weight: 700; color: #8a91a0">예산</span>
+          <span style="display: flex; gap: 3px">
+            <sc-for list="{{o.bars}}" as="b" hint-placeholder-count="3">
+              <span style="{{b}}"></span>
+            </sc-for>
+          </span>
+          <span style="width: 28px; font-size: 12.5px; font-weight: 700; color: #121417">{{o.level}}</span>
+        </span>
+      </div>
+
+      <div style="position: absolute; left: 20px; top: 350px; width: 328px; height: 24px; display: flex; align-items: center; gap: 6px">
+        <sc-for list="{{o.chips}}" as="c" hint-placeholder-count="2">
+          <span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c}}</span>
+        </sc-for>
+      </div>
+
+      <div style="position: absolute; left: 20px; top: 388px; width: 328px; height: 1px; background: #e2e5ea"></div>
+
+      <div style="position: absolute; left: 20px; top: 402px; width: 328px; display: flex; gap: 10px">
+        <span style="width: 58px; flex-shrink: 0; font-size: 12px; font-weight: 700; line-height: 20px; color: #1428a0">좋은 점</span>
+        <span style="font-size: 13.5px; line-height: 20px; color: #3d4452; word-break: keep-all">{{o.pro}}</span>
+      </div>
+      <div style="position: absolute; left: 20px; top: 452px; width: 328px; display: flex; gap: 10px">
+        <span style="width: 58px; flex-shrink: 0; font-size: 12px; font-weight: 700; line-height: 20px; color: #8a91a0">고려할 점</span>
+        <span style="font-size: 13.5px; line-height: 20px; color: #3d4452; word-break: keep-all">{{o.con}}</span>
+      </div>
+
+      <div style="{{o.frame}}"></div>
+      <sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; right: 18px; top: 18px; height: 28px; padding: 0 12px 0 9px; box-sizing: border-box; border-radius: 999px; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>권장</span>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>J 금융 · 회의 공간 제안 · 시안은 실측 도면과 제품 치수로 생성한 AI 이미지 · 실제와 다를 수 있음</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 같은 공간 · 같은 시점의 생성 렌더 3안. rec = 권장안(테두리 2px Blue + 권장 배지), budget = 상대 예산 1~3칸
+    const O = [
+      ['A', '기본', '뒤쪽 좌석에서 본 대회의실 · 전면 중앙 85형 전자칠판 1대 · 긴 테이블',
+        ['전자칠판 Flip Pro 85형 ×1', '회의 카메라 ×1'],
+        '공사 없이 바로 설치 · 이동형이라 다른 회의실과 함께 사용', '뒷좌석에서는 화면 글씨가 작게 보임', 1, '낮음', false],
+      ['B', '권장', '같은 시점 · 전면 벽을 채운 LED 월 · 화면 위 회의 카메라 · 화상회의 중',
+        ['LED 월 [000]형 ×1', '회의 카메라 ×1'],
+        '[N]석 어디서나 같은 크기로 보이고 원격 참석자도 실물 크기로', '전면 벽 하중 · 전원 증설 [확인 필요]', 2, '중간', true],
+      ['C', '확장', '같은 시점 · 전면 LED 월 + 테이블 매립 좌석별 모니터 · 천장 카메라 2대',
+        ['LED 월 [000]형', '좌석 모니터 [N]대', '카메라 ×2'],
+        '좌석마다 자료를 바로 보고 이사회 · 대외 행사까지 대응', '테이블 교체 포함 · 공사 기간 [N]주 추가', 3, '높음', false]
+    ];
+    const opts = O.map(([letter, name, hint, chips, pro, con, budget, level, rec], i) => ({
+      letter, name, hint, chips, pro, con, level, rec,
+      card: 'position: absolute; left: ' + (64 + i * 392) + 'px; top: 150px; width: 368px; height: 498px; border-radius: 16px; overflow: hidden; background: #ffffff',
+      frame: 'position: absolute; left: 0px; top: 0px; width: 368px; height: 498px; box-sizing: border-box; border-radius: 16px; pointer-events: none; ' + (rec ? 'border: 2px solid #1428a0' : 'border: 1px solid #e2e5ea'),
+      bars: [1, 2, 3].map(n => 'display: block; width: 20px; height: 8px; border-radius: 2px; background: ' + (n <= budget ? '#1428a0' : '#e2e5ea'))
+    }));
+    return { opts };
+  }
+}
+</script>
+</body>
+</html>

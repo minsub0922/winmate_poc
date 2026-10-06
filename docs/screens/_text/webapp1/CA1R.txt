@@ -1,0 +1,42 @@
+ 
+ 경쟁사 분석 · 넣기 · 고객 요구사항에서 
+ 넣기 · 고객 요구사항에서 
+ 어떤 고객의 경쟁사를 찾을까요? 
+ 고객 요구사항 정의서를 고르거나, 자유 양식으로 적어 주세요. 
+ 자유 양식 
+ 고객 요구사항에서 
+ 정의서 고르기 · 저장된 정의서 {{docCount}}건 
+ 요구사항 목록 
+ {{d.name}} 
+ · {{d.n}} 
+ {{d.date}} 
+ 정의서에서 채운 것 
+ {{c.k}} · {{c.v}} 
+ {{foundCount}} 
+ 정의서에 없는 항목은 비어 있음으로 표시돼요 · 아래에 덧붙여도 돼요 
+ 덧붙일 내용 
+ 고객사 · 업종 · 장소 · 제품까지 알려 주면 경쟁사를 훨씬 잘 찾아요. 업종만 있어도 찾긴 하지만 후보가 넓어져요. 
+ 뒤로 
+ 경쟁사 찾기 
+class Component extends DCLogic {
+ renderVals() {
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ // 입력 방식 세그먼트: 선택 = 흰 배경 + 삼성 블루 테두리
+ const tabBase = '';
+ const tabOn = tabBase + '';
+ const tabOff = tabBase + '';
+ // 저장된 요구사항 정의서: 고른 것은 라디오 채움 + 아주 연파랑 배경
+ const D = [['A 커피 프랜차이즈 매장 리뉴얼', '요구사항 5건', '2026.09.28', true], ['E 자산운용 용산 AI Ready 오피스', '요구사항 7건', '2026.09.30', false], ['B 병원 로비 안내 시스템', '요구사항 4건', '2026.09.12', false]];
+ const docs = D.map(([name, n, date, on], i) => ({
+ name, n, date, on,
+ row: '' + (on ? '' : '') + (i > 0 ? '' : ''),
+ radio: '' + (on ? '' : '')
+ }));
+ // 정의서에서 채운 4가지: 있는 것은 '찾음', 없는 것은 점선 '비어 있음'
+ const chip = (found) => '' + (found ? '' : '');
+ const C = [['고객사', 'A 커피 프랜차이즈', true], ['업종', '외식 · 카페', true], ['장소', '수도권 직영점', true], ['제품', '55" 사이니지 + 배포 솔루션', true]];
+ const chips = C.map(([k, v, found]) => ({ k, v: found ? v : '비어 있음', found, style: chip(found) }));
+ const n = chips.filter((c) => c.found).length;
+ return { steps, cur: 1, tabOn, tabOff, docs, docCount: docs.length, chips, foundCount: n + ' / ' + chips.length };
+ }
+}

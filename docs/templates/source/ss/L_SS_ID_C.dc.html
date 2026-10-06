@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-ID-C 인테리어 · 가구 · 빌트인 파트너 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">I 키친 쇼룸의 하루 — 손님은 오래 머물고 운영은 가벼워집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">방문 고객 · B2B 파트너와 상담 디자이너 · 운영팀의 같은 하루 — 시간대 · 공간마다 삼성이 하는 일 (시간은 예시)</div>
+
+  <!-- 시간 머리줄 -->
+  <span style="position: absolute; left: 64px; top: 166px; height: 16px; font-size: 11px; font-weight: 700; line-height: 16px; color: #8a91a0; white-space: nowrap">역할 · 시간대</span>
+  <div style="position: absolute; left: 188px; top: 194px; width: 1024px; height: 1px; background: #b8bec8"></div>
+  <sc-for list="{{cols}}" as="t" hint-placeholder-count="5">
+    <div style="{{t.head}}"><span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{t.time}}</span><span style="font-size: 11.5px; font-weight: 700; color: #596170">{{t.phase}}</span></div>
+    <div style="{{t.tick}}"></div>
+  </sc-for>
+
+  <!-- 레인: 이용자 2 · 운영 2 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.band}}"></div>
+    <div style="{{l.track}}"></div>
+    <span style="{{l.groupStyle}}">{{l.group}}</span>
+    <span style="{{l.nameStyle}}">{{l.name}}</span>
+    <span style="{{l.subStyle}}">{{l.sub}}</span>
+  </sc-for>
+
+  <!-- 역할 사이 연결 (같은 시간대에 함께 움직이는 순간) -->
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.style}}"></div>
+  </sc-for>
+
+  <!-- 칸: 공간 · 삼성이 하는 일 · 결과 -->
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="9">
+    <div style="{{c.box}}">
+      <span style="position: absolute; left: 9px; top: 8px; height: 17px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f5f6f8; border: 1px solid #d5d9e0; color: #3d4452; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c.space}}</span>
+      <div style="position: absolute; left: 9px; top: 30px; width: 178px; height: 32px; font-size: 11.5px; line-height: 16px; color: #3d4452; word-break: keep-all"><span style="font-weight: 800; color: #1428a0">{{c.tech}}</span>{{c.rest}}</div>
+      <span style="position: absolute; left: 9px; top: 65px; height: 16px; font-family: 'Noto Sans KR', sans-serif; font-size: 11.5px; font-weight: 800; line-height: 16px; color: #1428a0; white-space: nowrap">{{c.out}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 그리고 입주 후 -->
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 44px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 16px; display: flex; align-items: center; gap: 12px; white-space: nowrap">
+    <span style="height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">그리고 입주 후</span>
+    <span style="font-size: 13px; font-weight: 700; color: #1428a0">쇼룸에서 체험한 모드가 고객 집의 하루가 됩니다 — 귀가 · 영화 · 취침 · 외출 모드, 필터 교체 알림, AI 절약 모드 (SmartThings)</span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11px; color: #8a91a0">시간 · 수치는 예시 · 실측 후 반영</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>I 키친 · 인테리어 브랜드 쇼룸 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+
+    // 열 — x 188 + 207c (폭 196) · 레인 — y 204 + 98i (높이 94)
+    const CX = (c) => 188 + c * 207;
+    const LY = (i) => 204 + i * 98;
+
+    const cols = [
+      ['09:30', '오픈 준비'], ['11:00', '체험 · 시연'], ['14:00', 'B2B 미팅 · 한산한 시간'], ['16:00', '주말 피크 · 결정'], ['20:00', '마감 이후']
+    ].map(([time, phase], c) => ({
+      time, phase,
+      head: 'position: absolute; left: ' + px(CX(c)) + 'top: 162px; height: 24px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap;',
+      tick: box(CX(c), 191, 7, 7) + 'border-radius: 50%; background: ' + BLUE + ';'
+    }));
+
+    const L = [
+      ['이용자', '방문 고객', '리모델링 · 오더메이드 고객', true],
+      ['이용자', 'B2B · 파트너', '시행 · 시공사 · 인테리어 디자이너', true],
+      ['운영', '상담 디자이너', 'I 키친 쇼룸 상담', false],
+      ['운영', '쇼룸 운영 · 본사', '시설 · 마케팅', false]
+    ];
+    const lanes = L.map(([group, name, sub, user], i) => {
+      const y = LY(i);
+      return {
+        group, name, sub,
+        band: box(64, y, 1152, 94) + 'box-sizing: border-box; border-radius: 12px; ' + (user ? 'background: #ffffff; border: 1px solid #e2e5ea;' : 'background: #f5f6f8;'),
+        track: box(188, y + 47, 1024, 1) + 'border-top: 1px dashed #d5d9e0;',
+        groupStyle: 'position: absolute; left: 76px; top: ' + px(y + 12) + 'height: 17px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; ' + (user ? 'background: #eaeefb; color: ' + BLUE + ';' : 'background: #121417; color: #ffffff;'),
+        nameStyle: 'position: absolute; left: 76px; top: ' + px(y + 34) + 'height: 18px; font-size: 13px; font-weight: 800; line-height: 18px; white-space: nowrap;',
+        subStyle: box(76, y + 55, 100, 30) + 'font-size: 10.5px; line-height: 14px; color: #8a91a0; word-break: keep-all;'
+      };
+    });
+
+    // 칸 — [레인, 열, 공간, 삼성(굵게), 나머지, 결과]
+    const C = [
+      [3, 0, '전 층', 'SmartThings 루틴', '으로 조명 · 공조 · 전시 가전을 일괄 ON', '오픈 준비 [00]분 → [0]분'],
+      [2, 1, '키친 존', 'SmartThings', '로 인덕션 · 후드 · 큐커를 함께 다루며 조리 시연', '시연 참여 [00]%'],
+      [0, 1, '거실 · 침실 존', '귀가 · 영화 · 취침 모드', '로 입주 후의 하루를 미리 체험', '스마트홈 옵션 선택 [00]%'],
+      [1, 2, '쇼룸 전체 · 모델하우스', '빌트인 결합 패키지', '를 단지 사양으로 검토 — 키친핏 · 맞춤 패널', '특판 결합 수주 [00]건'],
+      [3, 2, '빈 전시 구역', '360 인감지 센서', '가 사람 없는 구역을 절전 운전', '냉난방 에너지 [00]% ↓'],
+      [0, 3, '전 층 관람 동선', '360 전방향 기류 · PM1.0', '로 붐비는 오후에도 쾌적한 관람', '체류 시간 [00]분 ↑'],
+      [1, 3, '상담 라운지', '규격 · 시공 조건이 명확한 빌트인', '으로 디자이너가 도면 확정', '도면 수정 [0]회 ↓'],
+      [2, 3, '상담 라운지', '맞춤 패널 · 빌트인 모델', ' 확정, 설치 조건은 그 자리에서 안내', '상담 전환율 [00]%'],
+      [3, 4, '전 층', 'SmartThings 마감 루틴', '으로 일괄 OFF · 필터 · 공기질 확인', '야간 대기 전력 [00]% ↓']
+    ];
+    const cells = C.map(([lane, col, space, tech, rest, out]) => ({
+      space, tech, rest, out,
+      box: box(CX(col), LY(lane) + 4, 196, 86) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid ' + (lane < 2 ? '#b8c3ee' : '#d5d9e0') + ';'
+    }));
+
+    // 연결 — 11:00 시연 → 체험 (L2 → L0, 위쪽 화살촉) · 16:00 상담 라운지에서 세 역할이 만남
+    const vline = (x, y1, y2) => ({ style: box(x, y1, 2, y2 - y1) + 'background: ' + BLUE + ';' });
+    const up = (x, y) => ({ style: 'position: absolute; left: ' + px(x - 4) + 'top: ' + px(y) + 'width: 0px; height: 0px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + BLUE + ';' });
+    const x1 = CX(1) + 98, x3 = CX(3) + 98;
+    const links = [
+      vline(x1, LY(0) + 90 + 7, LY(2) + 4), up(x1, LY(0) + 90),
+      vline(x3, LY(0) + 90, LY(1) + 4), vline(x3, LY(1) + 90, LY(2) + 4)
+    ];
+
+    return { cols, lanes, links, cells };
+  }
+}
+</script>
+</body>
+</html>

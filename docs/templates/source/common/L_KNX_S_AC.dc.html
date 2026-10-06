@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>KNX-S-AC Knox Suite 공간 시나리오 · 학원</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Knox Suite</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Knox Suite · 모바일 기기 관리 · 보안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">지점이 늘어도 출결 태블릿은 본사가 한 번에</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">H 학원 <span style="font-family: Manrope, sans-serif; font-weight: 700">[00]</span>개 지점 · 입구 출결 태블릿 <span style="font-family: Manrope, sans-serif; font-weight: 700">[000]</span>대 — 한 지점의 하루: 입구 · 인포데스크 → 교실 → 교무실</div>
+
+  <!-- 공간 사진 띠: 입구 → 인포데스크 → 교실 → (수업 없는 시간) → 교무실 -->
+  <sc-for list="{{photos}}" as="p" hint-placeholder-count="4">
+    <img src="{{p.src}}" alt="{{p.alt}}" style="{{p.img}} object-fit: cover; object-position: {{p.pos}}; border-radius: 12px">
+    <div style="{{p.chip}}">{{p.space}}</div>
+    <div style="{{p.note}}">예시 사진 · 고객 공간으로 교체</div>
+  </sc-for>
+
+  <!-- 수업 없는 시간 (밤) -->
+  <div style="position: absolute; left: 766px; top: 160px; width: 216px; height: 150px; box-sizing: border-box; border-radius: 12px; background: #121417; color: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; gap: 3px">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9db4ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    <span style="margin-top: 4px; font-size: 16px; font-weight: 800">수업 없는 시간</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; color: #b8bec8">23:00 – 다음 날 [13:00]</span>
+    <span style="font-size: 12px; color: #b8bec8">전 지점 태블릿 · 동시에</span>
+    <div style="margin-top: 6px; display: flex; gap: 8px">
+      <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
+        <div style="width: 34px; height: 24px; box-sizing: border-box; border-radius: 4px; border: 2px solid #3d4452; background: #1f232a; padding: 0 4px; display: flex; align-items: center"><span style="{{t.bar}}"></span></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 하루 축 -->
+  <div style="position: absolute; left: 64px; top: 329px; width: 1152px; height: 2px; background: #d5d9e0"></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.dot}}">{{s.n}}</div>
+    <div style="{{s.box}}">
+      <div style="height: 24px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{s.time}}</span><span style="font-size: 12px; font-weight: 700; color: #596170">{{s.when}}</span></div>
+      <span style="font-size: 15px; font-weight: 800; line-height: 1.4">{{s.title}}</span>
+      <span style="font-size: 12.5px; line-height: 1.55; color: #596170">{{s.desc}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px">
+        <sc-for list="{{s.mods}}" as="m" hint-placeholder-count="1">
+          <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{m}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 본사 허브 -->
+  <div style="position: absolute; left: 64px; top: 552px; width: 300px; height: 96px; box-sizing: border-box; border-radius: 14px; background: #1428a0; color: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; gap: 0">
+    <span style="width: 168px; height: 28px; border-radius: 6px; background: #f0f1f3"></span>
+    <span style="margin-top: 7px; font-size: 15px; font-weight: 800; white-space: nowrap">H 학원 본사 IT · 콘솔 하나</span>
+    <span style="font-size: 12px; color: #c8d3ff; white-space: nowrap">전 지점 <span style="font-family: Manrope, sans-serif; font-weight: 700">[00]</span>곳 · <span style="font-family: Manrope, sans-serif; font-weight: 700">[000]</span>대 같은 구성으로</span>
+  </div>
+  <img src="/_blob/59bbd4ce085f2c58346de014d06e5481" alt="Samsung Knox 로고" style="position: absolute; left: 88px; top: 570px; width: 152px; height: 20px; object-fit: contain">
+  <div style="position: absolute; left: 364px; top: 599px; width: 8px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 372px; top: 595px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #1428a0"></div>
+
+  <!-- Knox Configure (카탈로그) -->
+  <div style="position: absolute; left: 380px; top: 552px; width: 470px; height: 96px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 390px; top: 562px; width: 176px; height: 76px; box-sizing: border-box; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; overflow: hidden">
+    <img src="/_blob/714cac99a72b849463ce00114d56887d" alt="카탈로그 Knox Configure S/W 리브랜딩 기능 — 부팅 · 배경 화면 변경" style="position: absolute; left: -176px; top: -55px; width: 715px; height: 218px; object-fit: cover">
+  </div>
+  <div style="position: absolute; left: 580px; top: 562px; width: 258px; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em; color: #596170">카탈로그 · Knox Configure</span>
+    <span style="font-size: 13.5px; font-weight: 800; color: #1428a0; white-space: nowrap">대량 자동 설정 · 리브랜딩 · Kiosk</span>
+    <span style="font-size: 12px; line-height: 1.45; color: #3d4452">삼성 단말을 특정 목적에 맞도록 원격으로 설정하는 클라우드 솔루션</span>
+  </div>
+
+  <!-- 학원 과제 → 답 -->
+  <div style="position: absolute; left: 866px; top: 552px; width: 350px; height: 96px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 13px 18px; display: flex; flex-direction: column; gap: 3px">
+    <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.02em; color: #596170">학원 카탈로그가 말하는 과제</span>
+    <span style="font-size: 12.5px; line-height: 1.45; color: #121417; white-space: nowrap">학원 운영 효율화 · 프랜차이즈 맞춤 디바이스</span>
+    <span style="margin-top: 2px; font-size: 14px; font-weight: 800; color: #1428a0; white-space: nowrap">→ 지점이 늘어도 본사 콘솔 하나로</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 학원 체인 · 학원 태블릿 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 5열: 입구 · 인포데스크 · 교실 · (수업 없는 시간) · 교무실 — 사진 y 160–310
+    const COLS = [[64, 222], [298, 222], [532, 222], [766, 216], [994, 222]];
+
+    // 사진 (밤 열 제외) — cover 배율 ≤ 0.63, 원본보다 작게 표시
+    const P = [
+      [0, '/_blob/f89a574d90d608e60d69e5116140ffe8', '학원 입구 인포데스크와 천장 무풍 시스템에어컨', '입구 / 인포데스크', '50% 50%'],
+      [1, '/_blob/849690e18704dfaca851e255e44291ee', '학생이 인포데스크 갤럭시 탭 출결 키패드에 번호를 입력하는 모습', '인포데스크 · 출결 태블릿', '50% 85%'],
+      [2, '/_blob/63585062805dbaad5afe600b39c4e854', '전자칠판과 공기청정기가 있는 학원 교실', '교실', '50% 50%'],
+      [4, '/_blob/1e3ea1c41b7093b3b76827ed95f2aa69', '노트북과 복합기가 있는 학원 교무실', '교무실', '95% 50%']
+    ];
+    const photos = P.map(([c, src, alt, space, pos]) => {
+      const [x, w] = COLS[c];
+      return {
+        src, alt, space,
+        img: A + box(x, 160, w, 150), pos,
+        chip: A + 'left: ' + px(x + 8) + 'top: 168px; height: 22px; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;',
+        note: A + box(x + 8, 282, 158, 20) + 'border-radius: 999px; background: #ffffff; color: #596170; font-size: 10px; display: flex; align-items: center; justify-content: center; white-space: nowrap;'
+      };
+    });
+
+    // 밤 열의 태블릿 업데이트 진행 막대 (모양만)
+    const tabs = [70, 100, 45, 85].map((p) => ({ bar: 'width: ' + p + '%; height: 4px; border-radius: 2px; background: #6f82d6;' }));
+
+    // 하루 축 위 5단계 — 번호 중심 = 열 중심, 축 y 330 · 설명 352–544
+    const S = [
+      ['D-day', '지점 개원 · 첫 전원', '전원만 켜면 자동 등록 · 학원 브랜드 화면', '지점은 상자를 열어 켜기만 — 부팅 · 배경 화면은 H 학원 맞춤 (리브랜딩)', ['Knox Mobile Enrollment', 'Knox Configure']],
+      ['15:50', '등원', '출결 앱만 열리는 전용 모드', '학생은 번호만 입력 — 출결 체크 · 알림문자는 출결 App (별도 구매 솔루션)', ['Knox Configure · Kiosk']],
+      ['17:00', '수업 중', '학생 정보 보호', '인포데스크가 비는 수업 시간에도 출결 기록 · 학생 번호는 본사 보안 정책으로 보호', ['Knox Platform for Enterprise']],
+      ['23:00', '수업 종료 후', '수업 없는 시간에 OS 업데이트', '본사가 정한 버전 · 시간으로 전 지점 동시에 — 등원 시간엔 업데이트 화면 없음', ['Knox E-FOTA']],
+      ['고장 시', '다음 날 · 언제든', '교무실에서 요청, 본사가 원격 지원', '태블릿이 멈추면 본사 IT가 실시간 원격으로 해결 — 지점 출장 없이', ['Knox Remote Support']]
+    ];
+    const steps = S.map(([time, when, title, desc, mods], i) => {
+      const [x, w] = COLS[i];
+      const cx = x + w / 2;
+      return {
+        n: i + 1, time, when, title, desc, mods,
+        dot: A + box(cx - 14, 316, 28, 28) + 'box-sizing: border-box; border-radius: 50%; background: ' + (i === 3 ? '#121417' : '#1428a0') + '; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        box: A + box(x, 352, w, 190) + 'box-sizing: border-box; padding: 0 4px; display: flex; flex-direction: column; gap: 5px;'
+      };
+    });
+
+    return { photos, tabs, steps };
+  }
+}
+</script>
+</body>
+</html>

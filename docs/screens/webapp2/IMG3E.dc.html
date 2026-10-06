@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>이미지 생성 · 부분 수정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="image" current="카페 매장 메뉴보드 시안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="이미지 생성" title="카페 매장 메뉴보드 시안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 24px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 12px 16px; font-size: 14.5px; line-height: 1.65"><span style="font-weight: 600">부분 수정</span> · 시안 1에서 가운데 메뉴보드 화면만 바꾸고 싶어요</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">바꿀 곳을 사각형이나 브러시로 지정하고 영역마다 지시문을 적어 주세요. 선택한 영역 밖은 그대로 둡니다. 영역 1을 먼저 고쳤으니 가운데 손잡이를 끌어 전/후를 비교해 보세요.</div>
+
+            <div style="width: 760px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+              <!-- 도구 막대 -->
+              <div style="height: 46px; box-sizing: border-box; flex-shrink: 0; padding: 0 12px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <div role="group" aria-label="영역 선택 도구" style="display: flex; gap: 2px; padding: 3px; border-radius: 9px; background: #f0f2f5">
+                  <sc-for list="{{tools}}" as="t" hint-placeholder-count="4">
+                    <button aria-pressed="{{t.on}}" style="{{t.style}}">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"/></svg>
+                      <span style="white-space: nowrap">{{t.label}}</span>
+                    </button>
+                  </sc-for>
+                </div>
+                <span style="width: 1px; height: 20px; background: #e2e5ea; margin: 0 2px"></span>
+                <div style="display: flex; align-items: center; gap: 7px">
+                  <span style="font-size: 12px; color: #596170">크기</span>
+                  <button aria-label="작게" style="width: 20px; height: 20px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><span style="width: 6px; height: 6px; border-radius: 50%; background: #b8bec8"></span></button>
+                  <button aria-label="보통" aria-pressed="true" style="width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #1428a0; background: #ffffff; box-sizing: border-box; display: flex; align-items: center; justify-content: center; padding: 0"><span style="width: 9px; height: 9px; border-radius: 50%; background: #1428a0"></span></button>
+                  <button aria-label="크게" style="width: 20px; height: 20px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; padding: 0"><span style="width: 13px; height: 13px; border-radius: 50%; background: #b8bec8"></span></button>
+                </div>
+                <span style="flex-grow: 1"></span>
+                <button aria-label="실행 취소" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 0 1 0 10h-3"/></svg></button>
+                <button aria-label="다시 실행" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #8a91a0; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H9a5 5 0 0 0 0 10h3"/></svg></button>
+                <div role="group" aria-label="보기" style="display: flex; gap: 2px; padding: 3px; border-radius: 9px; background: #f0f2f5; margin-left: 4px">
+                  <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: none; background: transparent; color: #3d4452; font-size: 12.5px; font-weight: 500">편집</button>
+                  <button aria-pressed="true" style="height: 28px; padding: 0 10px; border-radius: 7px; border: none; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 600; box-shadow: 0 1px 2px rgba(18,20,23,0.12)">전/후 비교</button>
+                </div>
+              </div>
+
+              <div style="display: flex; min-height: 0">
+                <!-- 캔버스 -->
+                <div style="width: 520px; flex-shrink: 0; box-sizing: border-box; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+                  <div style="position: relative; width: 496px; height: 279px; border-radius: 8px; overflow: hidden; background: #d9dde5">
+                    <img src="/_blob/47e4d92f573bbbec3f574b1876ea339d" alt="시안 1 — 카페 카운터 위에 걸린 3연 메뉴보드" style="position: absolute; left: 0; top: 0; width: 496px; height: 279px; object-fit: cover; display: block">
+                    <!-- 후: 영역 1 수정 결과(손잡이 오른쪽만 보임) -->
+                    <div style="position: absolute; left: 249px; top: 86px; width: 81px; height: 93px; box-sizing: border-box; background: linear-gradient(160deg, #eaeefb 0%, #ffffff 100%); display: flex; align-items: flex-end; gap: 6px; padding: 0 8px 12px 8px">
+                      <span style="width: 18px; height: 42px; border-radius: 4px 4px 8px 8px; background: rgba(20,40,160,0.22)"></span>
+                      <span style="width: 18px; height: 50px; border-radius: 4px 4px 8px 8px; background: rgba(20,40,160,0.34)"></span>
+                      <span style="width: 18px; height: 42px; border-radius: 4px 4px 8px 8px; background: rgba(20,40,160,0.22)"></span>
+                    </div>
+                    <div style="position: absolute; left: 158px; top: 83px; width: 174px; height: 98px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 3px; box-shadow: 0 0 0 1px rgba(255,255,255,0.7)"></div>
+                    <span style="position: absolute; left: 148px; top: 73px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; border: 2px solid #ffffff; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>
+                    <div style="position: absolute; left: 408px; top: 224px; width: 76px; height: 42px; box-sizing: border-box; border: 2px dashed #ffffff; border-radius: 3px; box-shadow: 0 0 0 1px rgba(18,20,23,0.45)"></div>
+                    <span style="position: absolute; left: 398px; top: 214px; width: 20px; height: 20px; border-radius: 50%; background: #ffffff; color: #1428a0; border: 1.5px solid #1428a0; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+                    <!-- 전/후 손잡이 -->
+                    <div style="position: absolute; left: 247px; top: 0; width: 2px; height: 279px; background: #ffffff; box-shadow: 0 0 0 1px rgba(18,20,23,0.18)"></div>
+                    <button aria-label="전/후 비교 손잡이" style="position: absolute; left: 234px; top: 126px; width: 28px; height: 28px; border-radius: 50%; border: none; background: #ffffff; color: #1428a0; box-shadow: 0 2px 8px rgba(18,20,23,0.28); display: flex; align-items: center; justify-content: center; padding: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5"/><path d="M15 7l5 5-5 5"/></svg></button>
+                    <span style="position: absolute; left: 10px; top: 10px; font-size: 11px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.72); border-radius: 4px; padding: 2px 8px">전 · 원본</span>
+                    <span style="position: absolute; right: 10px; top: 10px; font-size: 11px; font-weight: 600; color: #ffffff; background: #1428a0; border-radius: 4px; padding: 2px 8px">후 · 수정 1</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <span style="font-size: 12px; color: #596170; flex-shrink: 0">수정 기록</span>
+                    <button style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px 0 3px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 12px">
+                      <img src="/_blob/47e4d92f573bbbec3f574b1876ea339d" alt="원본 썸네일" style="width: 48px; height: 28px; border-radius: 5px; object-fit: cover; display: block">
+                      <span>원본</span>
+                    </button>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+                    <button aria-pressed="true" style="display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 8px 0 3px; border-radius: 8px; border: 1.5px solid #1428a0; background: #f5f7fd; color: #1428a0; font-size: 12px; font-weight: 600">
+                      <img src="/_blob/47e4d92f573bbbec3f574b1876ea339d" alt="수정 1 썸네일" style="width: 48px; height: 28px; border-radius: 5px; object-fit: cover; display: block">
+                      <span>수정 1 · 영역 1</span>
+                    </button>
+                    <span style="flex-grow: 1"></span>
+                    <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">영역 밖 픽셀은 원본 유지</span>
+                  </div>
+                </div>
+
+                <!-- 수정 영역 목록 -->
+                <div style="width: 238px; flex-shrink: 0; box-sizing: border-box; border-left: 1px solid #e2e5ea; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+                  <div style="display: flex; align-items: center; justify-content: space-between; height: 18px">
+                    <span style="font-size: 12.5px; font-weight: 600">수정 영역 <span style="color: #596170; font-weight: 500">· 2</span></span>
+                    <button style="height: 22px; padding: 0 4px; border: none; background: transparent; color: #596170; font-size: 11.5px">모두 지우기</button>
+                  </div>
+
+                  <div style="box-sizing: border-box; border: 1px solid #1428a0; background: #f5f7fd; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 7px">
+                    <div style="display: flex; align-items: center; gap: 7px">
+                      <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>
+                      <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">가운데 메뉴보드 화면</span>
+                    </div>
+                    <div style="font-size: 12.5px; line-height: 1.5; color: #121417; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 8px; padding: 6px 8px">계절 음료 사진 3장으로 바꾸고 글자는 빼줘</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between">
+                      <span style="display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600; color: #1428a0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>적용됨 · 비교 중</span>
+                      <button style="height: 24px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600">되돌리기</button>
+                    </div>
+                  </div>
+
+                  <div style="box-sizing: border-box; border: 1px solid #e2e5ea; background: #ffffff; border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 7px">
+                    <div style="display: flex; align-items: center; gap: 7px">
+                      <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; border: 1.5px solid #1428a0; box-sizing: border-box; color: #1428a0; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+                      <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">오른쪽 카운터 소품</span>
+                    </div>
+                    <div style="font-size: 12.5px; line-height: 1.5; color: #121417; background: #f5f6f8; border: 1px solid #e2e5ea; border-radius: 8px; padding: 6px 8px">원두 보관통 지우기</div>
+                    <div style="display: flex; align-items: center; justify-content: space-between">
+                      <span style="display: flex; align-items: center; gap: 5px; font-size: 12px; color: #596170"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>대기 · 적용 전</span>
+                      <button style="height: 24px; padding: 0 10px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 600">적용</button>
+                    </div>
+                  </div>
+
+                  <button style="height: 32px; flex-shrink: 0; border-radius: 8px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 12.5px; display: flex; align-items: center; justify-content: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>영역 추가</button>
+
+                  <div style="border-top: 1px solid #e2e5ea; padding-top: 10px; display: flex; flex-direction: column; gap: 4px">
+                    <div style="display: flex; align-items: center; justify-content: space-between">
+                      <span style="font-size: 12.5px; font-weight: 600">제품 외형 고정</span>
+                      <span role="switch" aria-checked="true" aria-label="제품 외형 고정" style="width: 32px; height: 18px; border-radius: 999px; background: #1428a0; position: relative; display: block"><span style="position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #ffffff"></span></span>
+                    </div>
+                    <span style="font-size: 12px; color: #596170; line-height: 1.5">QM55C 외형 · 비율은 바뀌지 않아요</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">영역 1 지시문 <span style="color: #596170; font-weight: 500">· 부분 수정</span></div>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{quick}}" as="q" hint-placeholder-count="4">
+              <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">{{q}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">선택한 영역 수정 지시</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="fix" placeholder="영역을 어떻게 바꿀까요? (예: 시즌 메뉴 사진 넣기)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="IMG3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; box-sizing: border-box; white-space: nowrap">결과로 돌아가기</a>
+          <a href="IMG4.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>저장하고 내보내기</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = 'display: flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px; border-radius: 7px; border: none; font-size: 12.5px;';
+    const TOOLS = [
+      ['사각형', 'M4 7V4h3 M10 4h4 M17 4h3v3 M20 10v4 M20 17v3h-3 M14 20h-4 M7 20H4v-3 M4 14v-4', true],
+      ['브러시', 'M18 3l3 3-10 10-4 1 1-4L18 3z M4 21h7', false],
+      ['객체 선택', 'M4 20L14 10 M15 3v3 M15 14v3 M8 9h3 M19 9h3 M17.5 6.5l2-2 M17.5 11.5l2 2', false],
+      ['지우개', 'M20 20H9l-5-5 9-9 7 7-5 5 M9 20l3-3', false]
+    ];
+    const tools = TOOLS.map(([label, icon, on]) => ({
+      label, icon, on,
+      style: base + (on ? ' background: #ffffff; color: #1428a0; font-weight: 600; box-shadow: 0 1px 2px rgba(18,20,23,0.12);' : ' background: transparent; color: #3d4452; font-weight: 500;')
+    }));
+    return {
+      steps: ['이미지 유형', '상세 조건', '생성 결과'], cur: 3,
+      tools,
+      quick: ['글자 지우기', '사람 지우기', '제품 화면에 콘텐츠 넣기', '주변과 밝기 맞추기']
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CP-C 점유율 + 추이</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">상위 세 공급사가 시장의 [00]%를 차지합니다</div>
+
+  <!-- 100% 누적 막대 (6열) -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 564px; height: 512px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 92px; top: 172px; display: flex; gap: 18px">
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="4">
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #3d4452"><span style="width: 12px; height: 12px; border-radius: 3px; background: {{l.color}}"></span>{{l.name}}</span>
+    </sc-for>
+  </div>
+
+  <svg style="position: absolute; left: 148px; top: 232px" width="452" height="232" viewBox="0 0 452 232" fill="none"><path d="{{links}}" stroke="#8a91a0" stroke-width="1" stroke-dasharray="3 3"></path></svg>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="3">
+    <div style="{{b.row}}">
+      <span style="{{b.yearStyle}}">{{b.year}}</span>
+      <div style="width: 452px; height: 48px; display: flex; border-radius: 6px; overflow: hidden">
+        <sc-for list="{{b.segs}}" as="g" hint-placeholder-count="4">
+          <div style="{{g.style}}">{{g.label}}</div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 상위 3사 괄호 (2025) -->
+  <div style="position: absolute; left: 148px; top: 468px; width: 2px; height: 10px; background: #1428a0"></div>
+  <div style="{{bracketTick}}"></div>
+  <div style="{{bracketLine}}"></div>
+  <div style="{{bracketLabel}}">
+    <span style="font-size: 13px; font-weight: 800; color: #1428a0">2025 상위 3사 합계</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[00]%</span>
+  </div>
+  <div style="position: absolute; left: 92px; top: 612px; font-size: 11.5px; color: #8a91a0">비율은 예시 · 데이터 연결 시 자동 반영 · 출처: [조사 기관, 연도]</div>
+
+  <!-- 공급사 표 (6열) -->
+  <div style="position: absolute; left: 652px; top: 136px; width: 564px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 148px 104px 104px minmax(0, 1fr); column-gap: 12px; align-items: center; height: 40px; padding: 0 12px; border-bottom: 1px solid #b8bec8; font-size: 12.5px; font-weight: 700; color: #8a91a0">
+      <span>공급사</span><span>2025 점유율</span><span>3년 변화</span><span>주력 분야</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+      <div style="{{r.row}}">
+        <div style="display: flex; align-items: center; gap: 10px"><span style="{{r.swatch}}"></span><span style="{{r.nameStyle}}">{{r.name}}</span></div>
+        <span style="{{r.shareStyle}}">[00]%</span>
+        <span style="{{r.deltaStyle}}">{{r.delta}}</span>
+        <span style="{{r.focusStyle}}">{{r.focus}}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 664px; top: 612px; font-size: 11.5px; color: #8a91a0">3년 변화 · 2023 대비 2025 점유율 차이 (%p)</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const NAMES = ['공급사 A', '공급사 B', '공급사 C', '기타'];
+    const COLORS = ['#1428a0', '#6f82d6', '#b8c3ee', '#e2e5ea'];
+    const ON = ['#ffffff', '#ffffff', '#121417', '#3d4452'];
+    // 예시 점유율(%) — 막대 모양만 결정, 라벨은 자리표시자
+    const Y = [['2023', [30, 22, 14, 34]], ['2024', [33, 22, 15, 30]], ['2025', [36, 21, 16, 27]]];
+    const BW = 452, BH = 48, GAP = 44, TOP = 232;
+
+    const bars = Y.map(([year, w], i) => ({
+      year,
+      row: 'position: absolute; left: 92px; top: ' + (TOP + i * (BH + GAP)) + 'px; width: 508px; height: 48px; display: flex; align-items: center; gap: 8px',
+      yearStyle: 'width: 48px; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: ' + (i === Y.length - 1 ? '#121417' : '#8a91a0'),
+      segs: w.map((v, k) => ({
+        label: v >= 12 ? '[00]%' : '',
+        style: 'width: ' + v + '%; height: 48px; box-sizing: border-box;' + (k < w.length - 1 ? ' border-right: 2px solid #f5f6f8;' : '') + ' background: ' + COLORS[k] + '; color: ' + ON[k] + '; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800'
+      }))
+    }));
+
+    // 연도 간 경계선 연결 (A · A+B · 상위 3사 누적)
+    const cum = Y.map(([, w]) => [w[0], w[0] + w[1], w[0] + w[1] + w[2]]);
+    let links = '';
+    for (let i = 0; i < Y.length - 1; i++) {
+      for (let k = 0; k < 3; k++) {
+        const x1 = cum[i][k] * BW / 100, y1 = i * (BH + GAP) + BH;
+        const x2 = cum[i + 1][k] * BW / 100, y2 = (i + 1) * (BH + GAP);
+        links += 'M' + x1.toFixed(1) + ' ' + y1 + ' L' + x2.toFixed(1) + ' ' + y2 + ' ';
+      }
+    }
+
+    // 2025 상위 3사 괄호
+    const top3 = cum[Y.length - 1][2] * BW / 100;
+    const bracketLine = 'position: absolute; left: 148px; top: 476px; width: ' + top3.toFixed(1) + 'px; height: 2px; background: #1428a0';
+    const bracketTick = 'position: absolute; left: ' + (148 + top3 - 2).toFixed(1) + 'px; top: 468px; width: 2px; height: 10px; background: #1428a0';
+    const bracketLabel = 'position: absolute; left: 148px; top: 488px; width: ' + top3.toFixed(1) + 'px; height: 40px; display: flex; align-items: center; justify-content: center; gap: 10px';
+
+    const legend = NAMES.map((name, k) => ({ name, color: COLORS[k] }));
+
+    const R = [
+      { name: '공급사 A', c: 0, delta: '▲ [0.0]p', up: true, focus: '메뉴보드 · CMS 통합' },
+      { name: '공급사 B', c: 1, delta: '▼ [0.0]p', up: false, focus: '보급형 디스플레이' },
+      { name: '공급사 C', c: 2, delta: '▲ [0.0]p', up: true, focus: '키오스크 · POS 연계' },
+      { name: '상위 3사 합계', c: -1, delta: '▲ [0.0]p', up: true, focus: '상위 3사 집중 심화' },
+      { name: '기타', c: 3, delta: '▼ [0.0]p', up: false, focus: '중소 · 수입 브랜드' }
+    ];
+    const rows = R.map((r) => {
+      const sum = r.c < 0;
+      return {
+        name: r.name, delta: r.delta, focus: r.focus,
+        row: 'display: grid; grid-template-columns: 148px 104px 104px minmax(0, 1fr); column-gap: 12px; align-items: center; height: 84px; box-sizing: border-box; padding: 0 12px;' + (sum ? ' background: #eaeefb; border-radius: 10px' : ' border-bottom: 1px solid #e2e5ea'),
+        swatch: sum
+          ? 'width: 12px; height: 12px; flex-shrink: 0; box-sizing: border-box; border-radius: 3px; border: 2px solid #1428a0'
+          : 'width: 12px; height: 12px; flex-shrink: 0; border-radius: 3px; background: ' + COLORS[r.c],
+        nameStyle: 'font-size: 15px; font-weight: 800; color: ' + (sum ? '#1428a0' : '#121417'),
+        shareStyle: 'font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: ' + (sum ? '#1428a0' : '#121417'),
+        deltaStyle: 'font-family: Manrope, sans-serif; font-size: 14px; font-weight: 700; color: ' + (sum ? '#1428a0' : (r.up ? '#121417' : '#8a91a0')),
+        focusStyle: sum ? 'font-size: 13.5px; font-weight: 700; color: #1428a0' : 'font-size: 13.5px; line-height: 1.5; color: #3d4452'
+      };
+    });
+
+    return { bars, links, legend, rows, bracketLine, bracketTick, bracketLabel };
+  }
+}
+</script>
+</body>
+</html>

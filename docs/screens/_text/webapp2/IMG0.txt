@@ -1,0 +1,114 @@
+ 
+ 이미지 생성 · 작업 목록 · 갤러리 
+ 이미지 생성 
+ 내 작업 6 개 · 생성 이미지 38 장 · 결과를 다시 고치거나 제안서에 바로 넣을 수 있어요 
+ 현장 사진에 제품 합성 
+ 참조 이미지로 시작 
+ 새 이미지 만들기 
+ 작업 목록 
+ 6 
+ 최근 수정순 
+ 작업 검색 
+ {{w.title}} 
+ {{w.time}} 
+ {{w.meta}} 
+ {{w.status}} 
+ 다른 기능에서 요청한 이미지 
+ 2 
+ {{r.title}} 
+ {{r.from}} 
+ 만들기 
+ 내 생성 이미지 38 
+ 사내 자산 48 
+ 이미지 검색 
+ {{t.label}} 
+ {{d}} 
+ 최근 생성순 
+ 생성 중 3 / 4 
+ 진행 보기 
+ 제안서 사용 중 
+ 부분 수정 
+ 변형 
+ 내보내기 
+ {{g.title}} 
+ {{g.meta}} 
+ 2 장 선택됨 
+ 선택 해제 
+ 다운로드 
+ 변형 만들기 
+ 제안서에 넣기 
+class Component extends DCLogic {
+ renderVals() {
+ const IMG = {
+ order: '/_blob/07237b62990f629d9c6de161a76cd37b',
+ wallMenu: '/_blob/3f65720978593494d614d4dc48ac83f7',
+ cafe: '/_blob/32ff0c99abf13faa018e854421553cc7',
+ lobby: '/_blob/b161b65da8ee88741abfa319a4a5d779',
+ wallLobby: '/_blob/70c2af7dd8001ce4a8db53f71003ae34',
+ bed: '/_blob/163209012133742f0eb627be280c1fa7',
+ ware: '/_blob/fd7152aca97436229470b5ac6ced1ffe',
+ board: '/_blob/df8dcc261014c7a63fc870a1890e779c'
+ };
+ // 상태 배지: 파랑(진행 · 사용 중) / 잉크(확인 필요) / 회색(완료)
+ const pill = '';
+ const ST = {
+ use: pill + '',
+ run: pill + '',
+ check: pill + '',
+ done: pill + ''
+ };
+ const ICON = {
+ check: 'M5 12l5 5L20 7',
+ clock: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 7v5l3 2',
+ info: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 11v5 M12 8h.01',
+ edit: 'M4 20h4L19 9l-4-4L4 16v4z',
+ down: 'M12 4v12 M6 10l6 6 6-6 M4 20h16'
+ };
+ const W = [
+ ['카페 매장 메뉴보드 시안', 'A 커피 프랜차이즈 · 공간 · 4장', '방금', 'IMG3.dc.html', IMG.order, '카운터 상단 3연 메뉴보드 장면', '50% 40%', '제안서 사용 중', 'use', 'check'],
+ ['로비 배경 이미지', 'B 병원 · 배경 · 변형 4장', '5분 전', 'IMG3G.dc.html', '', '', '50% 50%', '생성 중 3 / 4', 'run', 'clock'],
+ ['병원 대기실 시나리오 컷', 'B 병원 · 시나리오 · 2장', '20분 전', 'IMG3X.dc.html', IMG.bed, '병상 옆 태블릿을 쓰는 환자 장면', '50% 30%', '1장 생성 불가 · 대안 보기', 'check', 'info'],
+ ['A 커피 카운터 벽면 합성', 'A 커피 프랜차이즈 · 현장 사진 합성', '어제', 'IMG2P.dc.html', IMG.cafe, '카페 매장 흰 벽면 현장 사진', '45% 40%', '제품 위치 지정 중', 'done', 'edit'],
+ ['물류센터 현장 시나리오 컷', 'C 물류센터 · 시나리오 · 4장', '3일 전', 'IMG3.dc.html', IMG.ware, '창고 선반 앞에서 스마트폰으로 재고를 확인하는 장면', '50% 30%', '완료', 'done', 'check'],
+ ['강의동 협업 공간', 'D 대학 · 공간 · 4장', '지난주', 'IMG4.dc.html', IMG.board, '대형 전자칠판이 걸린 협업 공간', '50% 40%', 'PPTX로 내보냄', 'done', 'down']
+ ];
+ const works = W.map(([title, meta, time, href, src, alt, pos, status, st, ic]) => ({
+ title, meta, time, href, src, alt, pos, status,
+ hasImg: !!src, noImg: !src,
+ stStyle: ST[st], stIcon: ICON[ic]
+ }));
+ const requests = [
+ { title: '장면 2 · 점심 피크 주문', from: '공간 시나리오 · A 커피 매장 하루', href: 'IMG1.dc.html', icon: 'M4 6h16v12H4z M10 9l5 3-5 3V9z' },
+ { title: '표지 배경 이미지', from: 'B2B 제안서 · B 병원 안내 시스템 제안', href: 'IMG1.dc.html', icon: 'M3 4h18v12H3z M8 20h8 M12 16v4' }
+ ];
+ const chip = '';
+ const types = ['전체', '공간', '배경', '시나리오', '제품 합성'].map((label, i) => ({
+ label,
+ style: chip + (i === 0 ? '' : '')
+ }));
+ const drops = ['고객사 전체', '비율', '제안서 사용'];
+ const G = [
+ ['메뉴보드 시안 1', 'A 커피 · 공간 · 16:9', IMG.order, '카운터 상단 3연 메뉴보드 장면', '50% 40%', 'sel', true],
+ ['메뉴보드 시안 2', 'A 커피 · 공간 · 16:9', IMG.wallMenu, '카페 벽면 메뉴보드와 테이블 장면', '50% 40%', 'sel', false],
+ ['좌석 공간 시안', 'A 커피 · 공간 · 16:9', IMG.cafe, '우드톤 카페 좌석 공간과 천장형 에어컨', '50% 45%', 'hover', false],
+ ['로비 배경 v1', 'B 병원 · 배경 · 16:9', IMG.lobby, '수직정원이 있는 로비 배경', '50% 50%', '', false],
+ ['로비 배경 v2', 'B 병원 · 배경 · 16:9', IMG.wallLobby, '로비 벽면 대형 LED 사이니지 장면', '50% 50%', '', false],
+ ['로비 배경 v3', 'B 병원 · 배경 · 생성 중', '', '', '50% 50%', 'gen', false],
+ ['병상 안내 컷', 'B 병원 · 시나리오 · 4:3', IMG.bed, '병상 옆 태블릿을 쓰는 환자 장면', '50% 30%', '', false],
+ ['창고 재고 확인 컷', 'C 물류센터 · 시나리오 · 1:1', IMG.ware, '창고 선반 앞 재고 확인 장면', '50% 30%', '', false],
+ ['강의실 전자칠판 컷', 'D 대학 · 공간 · 16:9', IMG.board, '대형 전자칠판이 걸린 강의실', '50% 40%', '', false]
+ ];
+ const gallery = G.map(([title, meta, src, alt, pos, st, badge]) => {
+ const sel = st === 'sel', gen = st === 'gen';
+ return {
+ title, meta, src, alt, pos, gen,
+ hasImg: !!src, hover: st === 'hover', hasBadge: badge, canCheck: !gen,
+ href: gen ? 'IMG3G.dc.html' : 'IMG3.dc.html',
+ frameStyle: '' + (gen ? '' : '') + ';' + (sel ? '' : gen ? '' : ''),
+ checkStyle: '' + (sel ? '' : ''),
+ checkPath: sel ? 'M5 12l5 5L20 7' : ''
+ };
+ });
+ return { works, requests, types, drops, gallery };
+ }
+}

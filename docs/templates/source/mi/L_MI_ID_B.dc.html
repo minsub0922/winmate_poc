@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-ID-B 인테리어 · 가구 · 빌트인 파트너 · 고객 비즈니스 · 운영 과제</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">I 키친의 매출은 쇼룸에서 정해지고 시공 · 입주에서 지켜집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">쇼룸 방문부터 입주 후 관리까지 다섯 단계 — 단계별 KPI, 현장의 운영 과제, 그리고 삼성이 함께 풀 수 있는 지점</div>
+
+  <!-- A. 매출 구조 — 고객 채널 → I 키친 → 매출 구성 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; height: 54px; border-radius: 14px; background: #f5f6f8"></div>
+  <span style="position: absolute; left: 84px; top: 167px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">I 키친의 매출 구조</span>
+  <span style="position: absolute; left: 84px; top: 189px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">매출 구성은 예시 · I 키친 데이터로 반영</span>
+  <sc-for list="{{channels}}" as="c" hint-placeholder-count="2">
+    <span style="{{c.chip}}">{{c.tag}}</span>
+    <span style="{{c.textStyle}}">{{c.text}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 532px; top: 186px; width: 34px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 564px; top: 182px; width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1428a0"></div>
+  <span style="position: absolute; left: 578px; top: 175px; width: 84px; height: 24px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; white-space: nowrap">I 키친</span>
+  <div style="position: absolute; left: 670px; top: 186px; width: 34px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 702px; top: 182px; width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1428a0"></div>
+  <sc-for list="{{mix}}" as="m" hint-placeholder-count="3">
+    <div style="{{m.bar}}"></div>
+    <div style="{{m.labelStyle}}"><span style="{{m.nameStyle}}">{{m.name}}</span><span style="{{m.valStyle}}">[00]%</span></div>
+  </sc-for>
+
+  <!-- B. 다섯 단계 · KPI -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.box}}">
+      <span style="position: absolute; left: 12px; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+      <span style="position: absolute; left: 42px; top: 12px; font-size: 15px; font-weight: 800; line-height: 22px; white-space: nowrap">{{s.name}}</span>
+      <span style="position: absolute; left: 12px; top: 39px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">{{s.what}}</span>
+      <span style="position: absolute; left: 12px; top: 65px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">KPI · {{s.kpi}}</span>
+      <span style="position: absolute; right: 12px; top: 62px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 800; line-height: 20px; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap">{{s.kpiv}}</span>
+    </div>
+    <sc-if value="{{s.hasNext}}" hint-placeholder-val="{{true}}">
+      <div style="{{s.next}}"></div>
+    </sc-if>
+    <div style="{{s.pin}}"></div>
+  </sc-for>
+
+  <!-- C. 단계에 꽂힌 운영 과제 — 삼성 대응 / I 키친 몫 -->
+  <sc-for list="{{issues}}" as="q" hint-placeholder-count="10">
+    <div style="{{q.marker}}"></div>
+    <div style="{{q.textBox}}">
+      <span style="font-size: 13.5px; font-weight: 800; line-height: 18px; word-break: keep-all">{{q.title}}</span>
+      <span style="font-size: 11.5px; line-height: 16px; color: #596170; word-break: keep-all">{{q.detail}}</span>
+    </div>
+    <div style="{{q.respBox}}">
+      <span style="{{q.respTagStyle}}">{{q.respTag}}</span>
+      <span style="{{q.respStyle}}">{{q.resp}}</span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 630px; height: 16px; display: flex; align-items: center; gap: 18px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #1428a0"></span>삼성이 함께 해결하는 과제</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; border: 2px solid #8a91a0; background: #ffffff"></span>I 키친 몫 · 삼성은 규격 · 조건 지원</span>
+    <span style="color: #8a91a0">KPI 값은 I 키친 데이터로 반영</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>I 키친 · 인테리어 브랜드 쇼룸 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+
+    // A. 고객 채널 (x 316) + 매출 구성 막대 (x 728–1196, 폭은 예시 지오메트리)
+    const channels = [['B2C', '리모델링 · 오더메이드 고객'], ['B2B', '시행사 · 시공사 특판 수주']].map(([tag, text], i) => ({
+      tag, text,
+      chip: box(316, 166 + i * 23, 38, 18) + 'box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #b8c3ee; color: ' + BLUE + '; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+      textStyle: 'position: absolute; left: 362px; top: ' + px(166 + i * 23) + 'height: 18px; font-size: 12.5px; font-weight: 600; line-height: 18px; color: #3d4452; white-space: nowrap;'
+    }));
+    const MIX = [['가구 · 주방가구', 210, '#d5d9e0', false], ['시공 · 설치', 120, '#b8c3ee', false], ['가전 결합', 134, BLUE, true]];
+    let mx = 728;
+    const mix = MIX.map(([name, w, c, focus]) => {
+      const x = mx; mx += w + 2;
+      return {
+        name,
+        bar: box(x, 170, w, 12) + 'border-radius: 3px; background: ' + c + ';',
+        labelStyle: box(x, 188, w, 16) + 'display: flex; align-items: center; gap: 5px; white-space: nowrap;',
+        nameStyle: 'font-size: 11.5px; font-weight: ' + (focus ? '800' : '600') + '; line-height: 16px; color: ' + (focus ? BLUE : '#3d4452') + ';',
+        valStyle: 'font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 16px; color: ' + (focus ? BLUE : '#596170') + ';'
+      };
+    });
+
+    // B. 단계 — x 64 + 235i, 폭 212, y 228–318
+    const SX = (i) => 64 + i * 235;
+    const S = [
+      ['집객 · 방문', '쇼룸에서 실제 집처럼 체험', '월 방문객', '[0,000]명'],
+      ['체험 · 상담', '취향 상담 · B2B 수주 제안', '상담 전환율', '[00]%'],
+      ['설계 · 견적', '가구장 + 빌트인 조합 확정', '가전 결합률', '[00]%'],
+      ['시공 · 설치', '패널 맞춤 · 전기 · 덕트 공사', '시공 리드타임', '[00]일'],
+      ['입주 · 사후관리', '입주 후 관리 · 재추천', '입주 만족도', '[00]점']
+    ];
+    const stages = S.map(([name, what, kpi, kpiv], i) => ({
+      no: i + 1, name, what, kpi, kpiv,
+      hasNext: i < S.length - 1,
+      box: box(SX(i), 228, 212, 90) + 'box-sizing: border-box; border-radius: 12px; background: #f5f6f8;',
+      next: i === S.length - 1 ? 'display: none;' : 'position: absolute; left: ' + px(SX(i) + 220) + 'top: 266px; width: 0px; height: 0px; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 8px solid ' + BLUE + ';',
+      pin: box(SX(i) + 10, 318, 2, 172) + 'background: #d5d9e0;'
+    }));
+
+    // C. 과제 — 단계당 2개, y 334 + 146j. sam: 삼성 대응 / false: I 키친 몫
+    const Q = [
+      [0, '가구만으로는 쇼룸이 차별화되지 않는다', '실제 집처럼 살아 있는 공간 연출이 집객력을 가릅니다', true, "빌트인 · TV · 스마트홈 모드로 '사는 집' 그대로 연출"],
+      [0, '넓은 전시장, 종일 드나드는 방문객', '사각지대 없는 쾌적함, 빈 시간 냉난방 낭비가 함께 문제입니다', true, '시스템에어컨 360 인감지 · PM1.0 센서로 쾌적 · 절감'],
+      [1, '가전은 따로 사러 가야 한다', '조합 결정이 쪼개지며 계약이 매장 밖으로 빠져나갑니다', true, '빌트인 · 리빙가전 결합 라인업을 한 자리에서 제안'],
+      [1, '취향을 눈으로 확인하기 어렵다', '컬러 · 소재 조합을 직접 보고 고르고 싶어 합니다', true, '비스포크 컬러 · 소재 패널로 조합을 실물로 시연'],
+      [2, '가구장 규격에 딱 맞아야 한다', '깊이 · 이격 · 띄움자재로 조리대와 라인이 흐트러지기 쉽습니다', true, '키친핏 · 슬림핏 직렬설치, 가구장 맞춤 패널 규격'],
+      [2, '도어 패널은 우리가 만든다', '가구장과 같은 톤 · 소재로 패널을 직접 제작해 마감합니다', false, 'I 키친이 패널 제작 · 삼성은 패널 규격 공유'],
+      [3, '전기 · 덕트 공사가 일정을 잡는다', '인덕션 직결식 전기공사, 환기 덕트 연계 시공이 먼저입니다', false, 'I 키친 시공 · 삼성은 설치 조건 사전 공유'],
+      [3, '현장 마감 품질이 곧 브랜드다', '돌출 · 단차 없이 가구와 선이 맞아야 완성입니다', true, '돌출 없는 일체형 빌트인 · 공간 따라 도어 방향 변경'],
+      [4, '입주 후 관리가 번거롭다', '필터 교체 · 공기질 관리 부담이 만족도를 깎습니다', true, 'SmartThings 필터 알림 · AI 쾌적으로 관리 부담 감소'],
+      [4, '에너지 · 부재 중 관리 걱정', 'AI 가전 에너지 관리와 원격 제어를 기대합니다', true, 'SmartThings AI 절약 모드 · 부재 중 원격 제어']
+    ];
+    const seen = {};
+    const issues = Q.map(([st, title, detail, sam, resp]) => {
+      const j = seen[st] || 0; seen[st] = j + 1;
+      const x = SX(st);
+      const top = 334 + j * 146;
+      return {
+        title, detail, resp,
+        respTag: sam ? '삼성 대응' : 'I 키친 몫',
+        marker: box(x + 3, top + 2, 16, 16) + 'box-sizing: border-box; border-radius: 50%; ' + (sam ? 'background: ' + BLUE + '; border: 3px solid #ffffff; box-shadow: 0 0 0 1.5px ' + BLUE + ';' : 'background: #ffffff; border: 2px solid #8a91a0;'),
+        textBox: box(x + 28, top, 184, 72) + 'display: flex; flex-direction: column; gap: 3px;',
+        respBox: box(x + 28, top + 76, 184, 60) + 'box-sizing: border-box; border-radius: 10px; ' + (sam ? 'background: #eaeefb;' : 'background: #ffffff; border: 1px dashed #b8bec8;'),
+        respTagStyle: 'position: absolute; left: 10px; top: 7px; font-size: 10.5px; font-weight: 800; line-height: 14px; white-space: nowrap; color: ' + (sam ? BLUE : '#8a91a0') + ';',
+        respStyle: 'position: absolute; left: 10px; top: 23px; width: 164px; font-size: 12px; font-weight: 700; line-height: 16px; word-break: keep-all; color: ' + (sam ? BLUE : '#3d4452') + ';'
+      };
+    });
+
+    return { channels, mix, stages, issues };
+  }
+}
+</script>
+</body>
+</html>

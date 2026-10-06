@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 분석 중</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="A 커피 메뉴보드 경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="경쟁사 분석" title="A 커피 메뉴보드 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px">
+        <div style="width: 56px; height: 56px; border-radius: 16px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.02em">4곳을 분석하는 중</h1>
+          <span style="font-size: 14px; color: #596170">약 2분 · 끝나면 결과로 넘어가요</span>
+        </div>
+        <div style="width: 560px; height: 8px; border-radius: 4px; background: #e2e5ea; overflow: hidden"><div style="width: 35%; height: 8px; background: #1428a0; border-radius: 4px"></div></div>
+
+        <div style="width: 560px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 14px 14px 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 8px; height: 22px">
+            <span style="font-size: 13px; font-weight: 700; white-space: nowrap">비교 기준 6</span>
+            <span style="font-size: 12px; color: #596170; white-space: nowrap">요구사항에서 3 · 업종 사례에서 1 · 기본 2</span>
+            <span style="height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 3px; white-space: nowrap"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>자동</span>
+            <span style="flex-grow: 1"></span>
+            <a href="CA3C.dc.html" style="font-size: 12.5px; font-weight: 600; color: #1428a0; white-space: nowrap">바꾸기</a>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{crit}}" as="k" hint-placeholder-count="6">
+              <span style="{{k.style}}">{{k.name}}<span style="{{k.srcStyle}}">{{k.src}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="width: 560px; display: flex; flex-direction: column; gap: 6px">
+          <sc-for list="{{jobs}}" as="j" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 10px; height: 40px; box-sizing: border-box; padding: 0 14px; border-radius: 10px; background: #ffffff; border: 1px solid #e2e5ea">
+              <span style="{{j.dot}}">
+                <sc-if value="{{j.done}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if>
+                <sc-if value="{{j.run}}" hint-placeholder-val="{{false}}"><span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span></sc-if>
+              </span>
+              <span style="{{j.text}}">{{j.t}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 16px">
+          <a href="CA4.dc.html" style="font-size: 13px; font-weight: 600; color: #596170">지금까지 결과 보기</a>
+          <button style="height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="#596170"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>중지</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+
+    // 비교 기준 6 — 자동 제안 · 출처별 색 (요구 / 업종 사례 / 기본)
+    const chip = 'height: 30px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap;';
+    const SRC = {
+      '요구': [' background: #eaeefb; color: #1428a0; border: 1px solid #eaeefb;', ' color: #1428a0;'],
+      '업종 사례': [' background: #f0f2f5; color: #121417; border: 1px solid #f0f2f5;', ' color: #596170;'],
+      '기본': [' background: #ffffff; color: #121417; border: 1px solid #e2e5ea;', ' color: #596170;']
+    };
+    const crit = [['본사 일괄 배포', '요구'], ['매장별 가격 차등', '요구'], ['전기료', '요구'], ['디자인 조화', '업종 사례'], ['가격대', '기본'], ['레퍼런스 · AS', '기본']]
+      .map(([name, src]) => ({ name, src, style: chip + SRC[src][0], srcStyle: 'font-size: 10.5px; font-weight: 600;' + SRC[src][1] }));
+
+    // 경쟁사별 진행 — done / run / wait
+    const dot = (s) => 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-sizing: border-box;'
+      + (s === 'done' ? ' background: #1428a0;' : s === 'run' ? ' border: 2px dashed #1428a0;' : ' border: 2px solid #c9d0e6;');
+    const jobs = [
+      ['경쟁사 A — 제품 · 솔루션 · 레퍼런스 완료, 가격대 찾는 중', 'run'],
+      ['경쟁사 B — 완료', 'done'],
+      ['경쟁사 C — 대기', 'wait'],
+      ['경쟁사 D — 대기', 'wait']
+    ].map(([t, s]) => ({
+      t, done: s === 'done', run: s === 'run', dot: dot(s),
+      text: 'font-size: 13.5px; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (s === 'wait' ? ' color: #8a91a0;' : ' color: #121417;')
+    }));
+    return { steps, cur: 3, crit, jobs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 분석 설계 자동 제안</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="A 커피 프랜차이즈 시장·경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="A 커피 프랜차이즈 시장·경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.6">요구사항과 연결된 자료를 읽고 분석 설계를 정했어요. 바꾸고 싶은 것만 고르세요 — 나머지는 이대로 진행합니다.</div>
+
+          <!-- 에이전트가 정한 설계 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+            <div style="height: 46px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 3v6a6 6 0 0 0 6 6h6 M14 11l4 4-4 4 M6 21v-4"/></svg>
+              <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">에이전트가 정한 분석 설계</span>
+              <span style="flex-grow: 1"></span>
+              <sc-for list="{{tally}}" as="t" hint-placeholder-count="3">
+                <span style="{{t.style}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{t.icon}}"/></svg>{{t.label}} {{t.n}}</span>
+              </sc-for>
+            </div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+              <div style="display: grid; grid-template-columns: 76px 206px minmax(0, 1fr) 84px 40px; column-gap: 10px; align-items: center; height: 36px; padding: 0 16px; border-top: 1px solid #f0f2f5">
+                <span style="font-size: 12px; font-weight: 600; color: #596170; white-space: nowrap">{{r.k}}</span>
+                <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.v}}</span>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.why}}</span>
+                <span style="{{r.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span>
+                <a href="{{r.href}}" style="font-size: 12px; font-weight: 600; text-align: right; white-space: nowrap">바꾸기</a>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- 결과가 들어갈 시트 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 16px 14px 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: center; justify-content: space-between; height: 18px">
+              <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">결과가 들어갈 시트 <span style="color: #596170; font-weight: 500">· 표준 제안서 MI 섹션 · 업종 레이아웃 먼저</span></span>
+              <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">분석이 끝나면 데이터 모양을 보고 한 번 더 골라요</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+              <sc-for list="{{sheets}}" as="s" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 10px; box-sizing: border-box; padding: 8px; border-radius: 10px; background: #f5f6f8; min-width: 0">
+                  <div style="width: 120px; height: 68px; flex-shrink: 0"><dc-import name="Thumb" kind="{{s.kind}}" n="{{s.n}}" hint-size="120px,68px"></dc-import></div>
+                  <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.sheet}}</span>
+                    <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #121417; white-space: nowrap">{{s.code}}</span>
+                    <span style="{{s.noteStyle}}">{{s.note}}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">분석 설계 <span style="color: #596170; font-weight: 500">· 2 / 3 · 바꿀 것만 고르세요</span></div>
+          <div style="display: flex; gap: 6px">
+            <a href="MI2.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">범위 직접 고르기</a>
+            <a href="MI2C.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">경쟁사 · 비교 기준</a>
+            <a href="MIR.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">판단 규칙</a>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="memo" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">설계에 덧붙일 말</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="memo" placeholder="설계에 덧붙일 말 (예: 경쟁사는 클라우드 CMS 업체 위주로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="MI1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">이전</a>
+          <a href="MI3G.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>분석 시작 (약 3분)</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 판단 모드: 자동(에이전트가 정하고 진행) · 확인 권장(진행하되 결과에 표시) · 선택 필요(답을 받아야 진행) · 고정(사람이 정함)
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z'],
+      ask: ['선택 필요', 'background: #121417; color: #ffffff;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 14h2v2h-2zm1-10a4 4 0 0 1 4 4c0 2-3 2.5-3 4h-2c0-2.5 3-3 3-4a2 2 0 0 0-4 0H8a4 4 0 0 1 4-4z'],
+      pin: ['고정', 'background: #f0f2f5; color: #3d4452;', 'M9 2h6l-1 6 3 3v2h-4v7l-1 2-1-2v-7H7v-2l3-3z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; justify-self: start; ';
+    const md = (k) => ({ mText: MODE[k][0], mIcon: MODE[k][2], mStyle: CHIP + MODE[k][1] });
+
+    // 결정: [항목, 정한 값, 근거, 모드, 바꾸는 화면]
+    const R = [
+      ['업종', '외식 · 카페 (FB) · 0.94', '프랜차이즈 · 가맹점 · 메뉴보드 단서 일치', 'auto', 'MI1Q.dc.html'],
+      ['쓰임', '표준 MI 섹션 · 3시트', "표준 제안서 'A 커피 메뉴보드'에 연결됨", 'auto', 'MI4.dc.html'],
+      ['분석 범위', '시장 · 고객사 · 사용자 · 경쟁', "요구에 '경쟁사 대비' · '주문 대기' 있음", 'auto', 'MI2.dc.html'],
+      ['경쟁사', '경쟁사 A · B · C', '지정 없음 → 외식 사례 빈도 상위 3', 'check', 'MI2C.dc.html'],
+      ['경쟁사 표기', '익명 (경쟁사 A · B · C)', '고객에게 내는 제안서라 기본값 익명', 'auto', 'MI2C.dc.html'],
+      ['사내 자료', '도입사례 23건 · 단가표 제외', '대외비 수치는 고객 제출물에 넣지 않음', 'auto', 'MI3S.dc.html'],
+      ['깊이', '약 3분 · 출처 30곳 내외', '3시트 분량 조사량 · 대규모 MI면 2배', 'auto', 'MI2.dc.html']
+    ];
+    const rows = R.map(([k, v, why, m, href]) => ({ k, v, why, href, ...md(m) }));
+    const count = (m) => R.filter((r) => r[3] === m).length;
+    const tally = [['auto', count('auto')], ['check', count('check')], ['ask', count('ask')]].map(([m, n]) => ({
+      label: MODE[m][0], n, icon: MODE[m][2], style: CHIP + MODE[m][1] + (n === 0 ? ' opacity: 0.45;' : '')
+    }));
+
+    // 업종 레이아웃이 있는 시트는 업종판, 경쟁은 업종 틀에 없어 범용
+    const S = [
+      ['시장 · 트렌드', 'MI-FB-A', 'barline', '업종 레이아웃', true],
+      ['고객 비즈니스', 'MI-FB-B', 'process', '업종 레이아웃', true],
+      ['경쟁 환경', 'CP-A', 'table', '범용 · 3사 × 5기준', false]
+    ];
+    const sheets = S.map(([sheet, code, kind, note, ind]) => ({
+      sheet, code, kind, n: 3, note,
+      noteStyle: 'font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: ' + (ind ? '#1428a0' : '#596170') + ';'
+    }));
+    return { steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 2, rows, tally, sheets };
+  }
+}
+</script>
+</body>
+</html>

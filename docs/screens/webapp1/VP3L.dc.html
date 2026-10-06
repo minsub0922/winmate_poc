@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition — 레이아웃 바꾸기 · 데이터 적합도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="B 병원 이해관계자별 가치" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="B 병원 이해관계자별 가치" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{done}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.6"><span style="font-weight: 600">'가치 기둥 3개로'</span> — 가능해요. 다만 지금의 이해관계자형(VP-H)은 RFP 평가위원 4명의 KPI를 각자 쓰는 제품과 함께 따로 보여 줘요. 이렇게 할 수 있어요.</div>
+
+          <!-- 선택지 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 6px; display: flex; flex-direction: column; gap: 4px">
+            <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+              <label style="{{o.box}}">
+                <input type="radio" name="how" checked="{{o.on}}" style="accent-color: #1428a0; margin: 0; flex-shrink: 0">
+                <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0; width: 14px; flex-shrink: 0">{{o.k}}</span>
+                <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">{{o.t}}</span>
+                <sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 10.5px; font-weight: 700; color: #ffffff; background: #1428a0; border-radius: 999px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0">추천</span>
+                </sc-if>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0; text-align: right">{{o.d}}</span>
+              </label>
+            </sc-for>
+          </div>
+
+          <!-- 후보 · 적합도 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: center; justify-content: space-between; height: 18px">
+              <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">가치 제안 · 고를 수 있는 레이아웃 <span style="color: #596170; font-weight: 500">· 제품 이미지판 6 + 이미지 없이 1 + 업종판 1</span></span>
+              <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap">기둥 수
+                <span style="display: inline-flex; border: 1px solid #e2e5ea; border-radius: 8px; overflow: hidden">
+                  <sc-for list="{{pill}}" as="p" hint-placeholder-count="3">
+                    <button aria-pressed="{{p.on}}" style="{{p.style}}">{{p.n}}</button>
+                  </sc-for>
+                </span>
+              </span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+              <sc-for list="{{tpls}}" as="t" hint-placeholder-count="8">
+                <div style="{{t.box}}">
+                  <div style="{{t.thumbBox}}"><dc-import name="Thumb" kind="{{t.kind}}" n="{{t.n}}" hint-size="120px,68px"></dc-import></div>
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 4px; width: 100%; min-width: 0">
+                    <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; white-space: nowrap">{{t.code}}</span>
+                    <span style="{{t.fitStyle}}">{{t.fit}}</span>
+                  </div>
+                  <span style="font-size: 11px; color: #596170; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.why}}</span>
+                </div>
+              </sc-for>
+            </div>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #121417; height: 20px">
+              <input type="checkbox" style="accent-color: #1428a0; margin: 0">이 시트 고정 — 재료가 바뀌어도 다시 고르지 않아요
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">레이아웃 바꾸기 <span style="color: #596170; font-weight: 500">· 가치 제안 · 고객 과제 CH-B · 기대 효과 EF-C는 그대로</span></div>
+          <a href="VPR.dc.html" style="font-size: 12.5px; font-weight: 600; white-space: nowrap">적합도 매기는 법</a>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">레이아웃 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="덧붙일 말 (예: 요약 한 장은 원장님 관점으로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="VP3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">취소</a>
+          <a href="VP3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>A로 바꾸기</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const O = [
+      ['A', '둘 다 — 기둥 3 요약 + 이해관계자별', '요약으로 먼저 말하고 역할별로 증명 · 시트 +1 · 적합도 94%', true],
+      ['B', '기둥 3 + 제품으로 바꾸기', '역할별 KPI는 발표자 노트로 옮겨요 · 적합도 88%', false],
+      ['C', '그대로 VP-H', '평가위원 4명과 1:1로 맞아요 · 적합도 94%', false]
+    ];
+    const opts = O.map(([k, t, d, rec]) => ({
+      k, t, d, rec, on: rec,
+      box: 'display: flex; align-items: center; gap: 10px; box-sizing: border-box; height: 42px; padding: 0 12px; border-radius: 10px; cursor: pointer;' + (rec ? ' background: #f5f7fd; border: 1.5px solid #1428a0;' : ' background: #ffffff; border: 1px solid transparent;')
+    }));
+    const pill = [2, 3, 4].map((n) => ({
+      n, on: n === 3,
+      style: 'width: 32px; height: 26px; border: none; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800;' + (n === 3 ? ' background: #1428a0; color: #ffffff;' : ' background: #ffffff; color: #3d4452;')
+    }));
+    // 후보: [코드, 썸네일, n, 적합도(-1 = 고를 수 없음), 이유, 상태]
+    const T = [
+      ['VP-H', 'hub', 3, 94, '결재자 4 · 각자 쓰는 제품 — 지금', 'cur'],
+      ['VP-F·3', 'cards3img', 3, 88, 'Key Message 3 · 기둥마다 제품', 'req'],
+      ['VP-M', 'matrix', 3, 74, '제품 5 × 가치 4 — 역할은 빠짐', ''],
+      ['VP-F·4', 'cards3img', 4, 69, '하나는 MI 강점에서 채워야', ''],
+      ['VP-E', 'chain', 3, 64, '과제 4 · 제품 3 — 짝이 안 맞음', ''],
+      ['VP-G', 'imagePanel', 3, 55, '메시지 하나로 좁혀야 함', ''],
+      ['VP-D', 'persona', 3, 94, '이미지 없이 — 지금과 같은 구성', ''],
+      ['VP-MD-B', 'hub', 3, -1, '업종판 제작 중 · 출시 알림 켜짐', 'no']
+    ];
+    const tpls = T.map(([code, kind, n, fit, why, st]) => ({
+      code, kind, n, why,
+      fit: fit < 0 ? '준비 중' : fit + '%',
+      box: 'display: flex; flex-direction: column; align-items: center; gap: 5px; box-sizing: border-box; padding: 8px; border-radius: 10px; min-width: 0;' + (st === 'cur' ? ' border: 1.5px solid #1428a0; background: #ffffff;' : st === 'req' ? ' border: 1.5px dashed #1428a0; background: #f5f7fd;' : st === 'no' ? ' border: 1px dashed #d5d9e0; background: #fbfbfc;' : ' border: 1px solid #e2e5ea; background: #ffffff;'),
+      thumbBox: 'width: 120px; height: 68px;' + (st === 'no' ? ' opacity: 0.45;' : ''),
+      fitStyle: 'font-size: 11.5px; white-space: nowrap; ' + (fit < 0 ? 'color: #8a91a0; font-weight: 600;' : 'font-family: Manrope, sans-serif; font-weight: 800; color: ' + (fit >= 85 ? '#1428a0' : '#596170') + ';')
+    }));
+    return { steps: ['재료', '가치 구조', '결과'], cur: 3, done: true, opts, pill, tpls };
+  }
+}
+</script>
+</body>
+</html>

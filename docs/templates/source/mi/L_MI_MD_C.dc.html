@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-MD-C 의료 · 요양 · 케어 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">W 요양병원의 신뢰는 병상 곁의 작은 순간에서 만들어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">환자 · 보호자 · 간호 인력이 입원부터 퇴원까지 겪는 순간과, 삼성이 개입할 수 있는 지점</div>
+
+  <!-- 페르소나 4 -->
+  <sc-for list="{{personas}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.card}}">
+      <div style="position: absolute; left: 14px; top: 14px; width: 36px; height: 36px; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{p.icon}}"></path></svg>
+      </div>
+      <div style="position: absolute; left: 60px; top: 12px; font-size: 15px; font-weight: 800; line-height: 20px; white-space: nowrap">{{p.name}}</div>
+      <div style="position: absolute; left: 60px; top: 35px; width: 120px; font-size: 11.5px; line-height: 15px; color: #596170; white-space: nowrap">{{p.sub}}</div>
+      <div style="position: absolute; right: 14px; top: 9px; text-align: right; font-size: 10px; line-height: 12px; color: #8a91a0; white-space: nowrap">{{p.shareLabel}}</div>
+      <div style="position: absolute; right: 14px; top: 22px; text-align: right; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap">{{p.share}}</div>
+      <div style="position: absolute; left: 14px; top: 58px; width: 242px; height: 1px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 14px; top: 65px; width: 242px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0; margin-right: 6px">바라는 것</span>{{p.want}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 여정: 범례 -->
+  <div style="position: absolute; left: 64px; top: 270px; width: 104px; display: flex; flex-direction: column; gap: 4px; font-size: 11px; line-height: 14px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #1428a0"></span>삼성 개입 지점</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 7px; height: 7px; border-radius: 50%; background: #121417"></span>불편 · 과제</span>
+  </div>
+
+  <!-- 여정: 단계 머리 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.head}}">
+      <div style="position: absolute; left: 10px; top: 4px; display: flex; align-items: baseline; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: {{s.noC}}">{{s.no}}</span><span style="font-size: 13px; font-weight: 800; line-height: 18px; color: {{s.nameC}}">{{s.name}}</span></div>
+      <div style="position: absolute; left: 10px; top: 23px; font-size: 11px; line-height: 13px; white-space: nowrap; color: {{s.placeC}}; font-weight: {{s.placeW}}">{{s.place}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 여정: 체감 곡선 (표본) -->
+  <div style="position: absolute; left: 64px; top: 316px; font-size: 12.5px; font-weight: 800; line-height: 17px; white-space: nowrap">체감 곡선</div>
+  <div style="position: absolute; left: 64px; top: 337px; display: flex; flex-direction: column; gap: 2px; font-size: 11px; line-height: 13px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 2px; background: #8a91a0"></span>지금</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 3px; background: #1428a0"></span>삼성 적용 후</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 369px; font-size: 10px; line-height: 12px; color: #8a91a0; white-space: nowrap">아래일수록 불편 · 예시</div>
+  <sc-for list="{{motBands}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 178px; top: 348px; width: 1036px; height: 0; border-top: 1px dashed #d5d9e0"></div>
+  <svg style="position: absolute; left: 178px; top: 316px; width: 1036px; height: 64px" width="1036" height="64" viewBox="0 0 1036 64" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <polyline points="{{curveNow}}" stroke="#8a91a0" stroke-width="2"></polyline>
+    <polyline points="{{curveAfter}}" stroke="#1428a0" stroke-width="2.5"></polyline>
+  </svg>
+  <sc-for list="{{dots}}" as="d" hint-placeholder-count="12">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+
+  <!-- 여정: 이해관계자 레인 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="3">
+    <div style="{{l.labPos}}">
+      <div style="font-size: 12.5px; font-weight: 800; line-height: 17px">{{l.name}}</div>
+      <div style="font-size: 11px; line-height: 14px; color: #8a91a0">{{l.sub}}</div>
+    </div>
+    <sc-for list="{{l.cells}}" as="c" hint-placeholder-count="6">
+      <div style="{{c.box}}">
+        <sc-if value="{{c.has}}" hint-placeholder-val="{{true}}">
+          <span style="position: absolute; left: 10px; top: 12px; width: 6px; height: 6px; border-radius: 50%; background: {{c.dot}}"></span>
+        </sc-if>
+        <div style="position: absolute; left: 22px; top: 7px; width: 136px; font-size: 12px; line-height: 17px; color: {{c.color}}">{{c.text}}</div>
+      </div>
+    </sc-for>
+  </sc-for>
+  <sc-for list="{{ticks}}" as="t" hint-placeholder-count="5">
+    <div style="{{t.style}}"></div>
+  </sc-for>
+
+  <!-- 여정: 삼성이 개입하는 순간 -->
+  <div style="position: absolute; left: 64px; top: 556px; width: 104px; font-size: 12.5px; font-weight: 800; line-height: 17px; color: #1428a0">삼성이 개입하는 순간</div>
+  <sc-for list="{{acts}}" as="a" hint-placeholder-count="6">
+    <div style="{{a.box}}">
+      <div style="position: absolute; left: 12px; top: 10px; width: 144px; font-size: 12px; font-weight: 800; line-height: 17px; white-space: nowrap; color: {{a.nameC}}">{{a.name}}</div>
+      <div style="position: absolute; left: 12px; top: 32px; width: 144px; font-size: 11.5px; line-height: 16px; color: #3d4452">{{a.effect}}</div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 요양병원 · 케어 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 페르소나 — 비중 · 규모는 자리표시자
+    const ICON = {
+      bed: 'M3 19V8 M3 15h18v4 M21 15v-2a3 3 0 0 0-3-3h-7v5 M5 11a2 2 0 1 0 4 0a2 2 0 1 0-4 0',
+      pulse: 'M3 12h4l2-5 4 10 2-5h6',
+      family: 'M6 7a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6 M14.5 9a2.5 2.5 0 1 0 5 0a2.5 2.5 0 1 0-5 0 M16 14c2.8 0 5 2.2 5 5',
+      nurse: 'M7 4h10a2 2 0 0 1 2 2v13a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z M9 4V3h6v1 M12 9v6 M9 12h6'
+    };
+    const P = [
+      ['bed', '장기 요양 환자', '시니어 · 장기 재원', '입원 환자 중', '[00]%', '직바람 없는 쾌적 · 숙면 · 안전'],
+      ['pulse', '재활 회복 환자', '병실 ↔ 재활센터', '입원 환자 중', '[00]%', '누운 채 TV · 정보, 빠른 호출'],
+      ['family', '보호자 · 가족', '병원 선택 · 결정자', '면회 · 상담', '주 [0]회', '안심되는 환경 · 투명한 소통'],
+      ['nurse', '간호 · 요양 인력', '24시간 교대 근무', '병동 인력', '[000]명', '순회 · 호출 · 서류 부담 경감']
+    ];
+    const personas = P.map(([ic, name, sub, shareLabel, share, want], i) => ({
+      icon: ICON[ic], name, sub, shareLabel, share, want,
+      card: A + box(64 + i * 294, 160, 270, 92) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+
+    // 여정 6단계 — 결정적 순간: 01 · 04
+    const X0 = 178, SW = 166, SP = 174;
+    const sx = (i) => X0 + i * SP;
+    const ST = [
+      ['01', '입원 상담 · 결정', '상담실 · 로비', true],
+      ['02', '첫 주 적응', '병실', false],
+      ['03', '치료 · 재활 · 식사', '재활센터 · 식당 · 프로그램실', false],
+      ['04', '병실의 밤', '병실 · 복도', true],
+      ['05', '면회 · 상담', '로비 · 상담실 · 휴게실', false],
+      ['06', '퇴원 · 재입원 · 소개', '원무 · 상담실', false]
+    ];
+    const stages = ST.map(([no, name, place, mot], i) => ({
+      no, name,
+      place: mot ? '결정적 순간 · ' + place : place,
+      noC: mot ? '#b8c3ee' : '#1428a0', nameC: mot ? '#ffffff' : '#121417',
+      placeC: mot ? '#ffffff' : '#596170', placeW: mot ? 700 : 400,
+      head: A + box(sx(i), 268, SW, 40) + 'border-radius: 8px; background: ' + (mot ? '#1428a0' : '#f5f6f8') + ';'
+    }));
+    const motBands = ST.map((s, i) => [s, i]).filter(([s]) => s[3]).map(([s, i]) => ({
+      style: A + box(sx(i), 316, SW, 64) + 'border-radius: 8px; background: #eaeefb;'
+    }));
+
+    // 체감 곡선 — 표본 형태 (0 = 좋음, 1 = 불편)
+    const NOW = [0.45, 0.80, 0.50, 0.88, 0.55, 0.40];
+    const AFTER = [0.30, 0.42, 0.28, 0.30, 0.26, 0.12];
+    const cy = (v) => Math.round(6 + v * 52);
+    const cx = (i) => i * SP + SW / 2;
+    const curveNow = NOW.map((v, i) => cx(i) + ',' + cy(v)).join(' ');
+    const curveAfter = AFTER.map((v, i) => cx(i) + ',' + cy(v)).join(' ');
+    const dots = [];
+    NOW.forEach((v, i) => dots.push({ style: A + box(X0 + cx(i) - 4, 316 + cy(v) - 4, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #8a91a0;' }));
+    AFTER.forEach((v, i) => dots.push({ style: A + box(X0 + cx(i) - 4.5, 316 + cy(v) - 4.5, 9, 9) + 'border-radius: 50%; background: #1428a0;' }));
+
+    // 레인 — [텍스트, 삼성 개입 여부]
+    const S = 'S', N = 'N', E = 'E';
+    const L = [
+      ['환자', '장기 요양 · 재활', [
+        ['오래 지낼 곳인지 낯설고 불안하다', N],
+        ['호출 · 병상 사용법이 낯설다', S],
+        ['누운 자세로 TV · 정보 이용이 어렵다', S],
+        ['찬바람 · 건조 · 소음에 잠을 설친다', S],
+        ['가족과 보내는 시간이 하루의 낙', N],
+        ['집 또는 장기 재원을 결정한다', N]]],
+      ['보호자', '가족 · 결정자', [
+        ['병실 공기 · 온도 · 청결을 직접 보고 결정한다', S],
+        ['잘 적응하고 있는지 궁금하다', N],
+        ['—', E],
+        ['밤사이 별일 없었는지 걱정한다', N],
+        ['상태 · 치료 계획 설명을 듣고 싶다', S],
+        ['만족하면 재입원 · 지인에게 소개', N]]],
+      ['간호 · 요양 인력', '병동 · 교대 근무', [
+        ['입원 서류 · 동의서 작성을 안내한다', S],
+        ['환자별 적정 온도 · 상태를 파악한다', S],
+        ['호출 · 서류 신청 응대로 동선이 는다', S],
+        ['야간 순회 · 작은 위험에도 즉시 대응', S],
+        ['보호자 문의 응대가 반복된다', N],
+        ['퇴원 서류 · 인계를 정리한다', N]]]
+    ];
+    const LY = [388, 442, 496], LH = 48;
+    const lanes = L.map(([name, sub, cells], r) => ({
+      name, sub,
+      labPos: A + box(64, LY[r] + 7, 104, 34),
+      cells: cells.map(([text, k], i) => ({
+        text,
+        has: k !== E,
+        dot: k === S ? '#1428a0' : '#121417',
+        color: k === E ? '#b8bec8' : '#121417',
+        box: A + box(sx(i), LY[r], SW, LH) + 'border-radius: 8px; background: #f5f6f8;'
+      }))
+    }));
+
+    // 삼성이 개입하는 순간 (01–05) + 06 성과
+    const AC = [
+      ['무풍 · 공기질 · 전자서명', '보이는 쾌적, 종이 없는 입원 절차', false],
+      ['병상 태블릿 · 병실별 온도', '누운 채 호출 · 안내, 환자별 온도', false],
+      ['병상 태블릿 · 개별 공조', '병상에서 신청, 식당 · 재활센터는 따로 운전', false],
+      ['무풍 · SmartThings 감지', '숙면 환경, 순회 없이 이상 알림', false],
+      ['디스플레이 · 사이니지', '설명은 화면으로, 안내는 사이니지로', false],
+      ['W 요양병원 성과', '보호자 만족 [00]점 · 소개 입원 [00]%', true]
+    ];
+    const acts = AC.map(([name, effect, outcome], i) => ({
+      name, effect,
+      nameC: outcome ? '#121417' : '#1428a0',
+      box: A + box(sx(i), 552, SW, 88) + 'box-sizing: border-box; border-radius: 10px; ' + (outcome ? 'background: #ffffff; border: 1px dashed #b8bec8;' : 'background: #eaeefb;')
+    }));
+    const ticks = [0, 1, 2, 3, 4].map((i) => ({
+      style: A + box(sx(i) + SW / 2 - 1, 544, 2, 8) + 'background: #1428a0;'
+    }));
+
+    return { personas, stages, motBands, curveNow, curveAfter, dots, lanes, acts, ticks };
+  }
+}
+</script>
+</body>
+</html>

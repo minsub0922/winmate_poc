@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 비교 기준 바꾸기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="A 커피 메뉴보드 경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="경쟁사 분석" title="A 커피 메뉴보드 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">필요할 때</span>
+        <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">무엇을 기준으로 비교할까요?</h1>
+        <span style="font-size: 14px; color: #596170">요구사항에서 뽑은 기준이 위에 있어요. 끄거나 더할 수 있고, 순서는 중요도예요.</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
+        <div role="group" aria-label="비교 기준 6" style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden">
+          <sc-for list="{{crit}}" as="k" hint-placeholder-count="6">
+            <div style="{{k.row}}">
+              <svg width="12" height="14" viewBox="0 0 12 14" fill="#b8bec8" aria-hidden="true"><circle cx="3" cy="3" r="1.4"/><circle cx="9" cy="3" r="1.4"/><circle cx="3" cy="7" r="1.4"/><circle cx="9" cy="7" r="1.4"/><circle cx="3" cy="11" r="1.4"/><circle cx="9" cy="11" r="1.4"/></svg>
+              <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                <span style="{{k.name}}">{{k.label}}</span>
+                <span style="{{k.srcStyle}}">{{k.src}}</span>
+              </div>
+              <div role="group" aria-label="{{k.groupLabel}}" style="display: flex; gap: 3px">
+                <sc-for list="{{k.blocks}}" as="b" hint-placeholder-count="5">
+                  <button aria-label="{{b.label}}" onClick="{{b.set}}" style="{{b.style}}"></button>
+                </sc-for>
+              </div>
+              <span style="{{k.num}}">{{k.w}}</span>
+              <button role="switch" aria-checked="{{k.on}}" aria-label="{{k.switchLabel}}" onClick="{{k.toggle}}" style="{{k.sw}}"><span style="{{k.knob}}"></span></button>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 8px">
+          <button style="height: 34px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; background: #ffffff; color: #596170; font-size: 12.5px; display: flex; align-items: center; gap: 6px; padding: 0 12px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>기준 직접 추가</button>
+          <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; margin-left: 6px">추천</span>
+          <sc-for list="{{sugg}}" as="g" hint-placeholder-count="2">
+            <button style="height: 30px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="color: #1428a0; font-weight: 700">+</span>{{g.name}}<span style="font-size: 11px; font-weight: 500; color: #596170">{{g.n}}</span></button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+        <a href="CA3.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>뒤로</a>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 12.5px; color: #596170; white-space: nowrap">켜진 기준 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{onCount}}</span> / 6</span>
+        <a href="CA3.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">이 기준으로 분석<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+
+    // 기준: 이름 · 출처 · 중요도(1–5) — 요구사항에서 뽑은 것이 위
+    const K = [
+      ['본사 일괄 배포', '요구', 5],
+      ['매장별 가격 차등', '요구', 4],
+      ['전기료', '요구', 4],
+      ['디자인 조화', '업종 사례 23건', 3],
+      ['가격대', '기본', 3],
+      ['레퍼런스 · AS', '기본', 2]
+    ];
+    const w = Array.isArray(st.w) ? st.w : K.map((k) => k[2]);
+    const on = Array.isArray(st.on) ? st.on : K.map(() => true);
+    const srcBase = 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 5px; font-size: 10.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const srcColor = (src) => src === '요구' ? ' background: #eaeefb; color: #1428a0;' : src === '기본' ? ' background: #ffffff; color: #596170; border: 1px solid #e2e5ea;' : ' background: #f0f2f5; color: #596170;';
+    const crit = K.map(([label, src], i) => {
+      const isOn = !!on[i];
+      return {
+        label, src, w: w[i], on: isOn,
+        groupLabel: label + ' 중요도 ' + w[i] + ' / 5',
+        switchLabel: label + (isOn ? ' 끄기' : ' 켜기'),
+        toggle: () => { const n = on.slice(); n[i] = !n[i]; this.setState({ on: n }); },
+        row: 'display: grid; grid-template-columns: 14px minmax(0, 1fr) 82px 16px 36px; gap: 12px; align-items: center; height: 48px; box-sizing: border-box; padding: 0 18px;' + (i > 0 ? ' border-top: 1px solid #f0f2f5;' : ''),
+        name: 'font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (isOn ? ' color: #121417;' : ' color: #8a91a0;'),
+        srcStyle: srcBase + (isOn ? srcColor(src) : ' background: #f0f2f5; color: #8a91a0;'),
+        num: 'font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; text-align: right;' + (isOn ? ' color: #121417;' : ' color: #8a91a0;'),
+        blocks: [1, 2, 3, 4, 5].map((lv) => ({
+          label: label + ' 중요도 ' + lv,
+          set: () => { const nw = w.slice(); nw[i] = lv; this.setState({ w: nw }); },
+          style: 'width: 13px; height: 10px; padding: 0; border: none; border-radius: 3px; cursor: pointer;' + (lv <= w[i] ? (isOn ? ' background: #1428a0;' : ' background: #c9ced6;') : ' background: #e2e5ea;')
+        })),
+        sw: 'width: 36px; height: 22px; border-radius: 999px; border: none; position: relative; padding: 0; flex-shrink: 0; cursor: pointer;' + (isOn ? ' background: #1428a0;' : ' background: #c9ced6;'),
+        knob: 'position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff;' + (isOn ? ' right: 3px;' : ' left: 3px;')
+      };
+    });
+    const sugg = [['설치 속도', '업종 사례 12건'], ['콘텐츠 제작 지원', '업종 사례 8건']].map(([name, n]) => ({ name, n }));
+    const onCount = on.filter(Boolean).length;
+    return { steps, cur: 3, crit, sugg, onCount };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BV-D 시점 투어 · 평면도 + 렌더 4</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">로비부터 라운지까지, 네 시점으로 미리 걷기</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">B 비즈니스 호텔 1층 · 평면도 번호 = 렌더 시점</div>
+
+  <!-- 평면도 4열 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 368px; height: 450px">
+    <div style="position: absolute; left: 0px; top: 0px; width: 368px; height: 450px; box-sizing: border-box; border: 1.5px solid #121417; border-radius: 2px"></div>
+    <!-- 구역 -->
+    <sc-for list="{{zones}}" as="z" hint-placeholder-count="4">
+      <div style="{{z.box}}"><span style="{{z.lab}}">{{z.name}}</span></div>
+    </sc-for>
+    <span style="position: absolute; left: 140px; top: 196px; width: 88px; text-align: center; font-size: 12px; font-weight: 600; color: #8a91a0">로비</span>
+    <!-- 고정 요소: 엘리베이터 · 프런트 데스크 · 라운지 테이블 -->
+    <div style="position: absolute; left: 14px; top: 46px; width: 22px; height: 34px; box-sizing: border-box; border: 1px solid #8a91a0; background: #ffffff"></div>
+    <div style="position: absolute; left: 14px; top: 140px; width: 22px; height: 34px; box-sizing: border-box; border: 1px solid #8a91a0; background: #ffffff"></div>
+    <div style="position: absolute; left: 104px; top: 228px; width: 8px; height: 80px; border-radius: 2px; background: #3d4452"></div>
+    <div style="position: absolute; left: 286px; top: 70px; width: 20px; height: 20px; border-radius: 50%; background: #e2e5ea"></div>
+    <div style="position: absolute; left: 318px; top: 128px; width: 20px; height: 20px; border-radius: 50%; background: #e2e5ea"></div>
+    <div style="position: absolute; left: 282px; top: 186px; width: 20px; height: 20px; border-radius: 50%; background: #e2e5ea"></div>
+    <!-- 제안 제품 위치 -->
+    <sc-for list="{{fixtures}}" as="f" hint-placeholder-count="6">
+      <div style="{{f}}"></div>
+    </sc-for>
+    <span style="position: absolute; left: 140px; top: 24px; width: 88px; text-align: center; font-size: 10.5px; font-weight: 700; color: #1428a0">LED 월</span>
+    <!-- 출입문 -->
+    <div style="position: absolute; left: 160px; top: 446px; width: 48px; height: 5px; background: #ffffff"></div>
+    <div style="position: absolute; left: 160px; top: 446px; width: 2px; height: 4px; background: #121417"></div>
+    <div style="position: absolute; left: 206px; top: 446px; width: 2px; height: 4px; background: #121417"></div>
+    <!-- 시점 마커 -->
+    <sc-for list="{{cams}}" as="c" hint-placeholder-count="4">
+      <div style="{{c.cone}}"></div>
+      <span style="{{c.dot}}">{{c.no}}</span>
+    </sc-for>
+    <!-- 방위 -->
+    <div style="position: absolute; left: 322px; top: 400px; width: 30px; height: 36px; display: flex; flex-direction: column; align-items: center; gap: 1px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V4 M6 10l6-6 6 6"/></svg>
+      <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #596170; line-height: 1">N</span>
+    </div>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 616px; width: 368px; height: 22px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #1428a0"></span>시점</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 0px; height: 0px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 11px solid rgba(20,40,160,0.35)"></span>보는 방향</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 6px; border-radius: 1px; background: #6f82d6"></span>제안 제품</span>
+    <span style="margin-left: auto; font-size: 11px; color: #8a91a0">단순화 평면 · 축척 없음</span>
+  </div>
+
+  <!-- 렌더 8열: 2 × 2 -->
+  <div style="position: absolute; left: 456px; top: 150px; width: 760px; display: grid; grid-template-columns: repeat(2, 368px); column-gap: 24px; row-gap: 18px">
+    <sc-for list="{{renders}}" as="r" hint-placeholder-count="4">
+      <div style="width: 368px; height: 236px; display: flex; flex-direction: column; gap: 10px">
+        <div style="position: relative; width: 368px; height: 200px; flex-shrink: 0">
+          <dc-import name="Img" kind="aerial" origin="gen" hint="{{r.hint}}" w="368" h="200" radius="12" credit="bl" hint-size="368px,200px"></dc-import>
+          <span style="position: absolute; left: 12px; top: 12px; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span>
+        </div>
+        <div style="height: 26px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 15px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{r.name}}</span>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{r.chips}}" as="p" hint-placeholder-count="2">
+              <span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p}}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 공용부 디스플레이 제안 · 렌더는 공간 조감도 생성 결과 · AI 생성 시안 · 실제와 다를 수 있음</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 평면도 좌표는 평면 박스(368 × 450) 기준. 구역 = [이름, x, y, w, h, 라벨 위치(tl | bc)]
+    const Z = [
+      ['엘리베이터홀', 14, 14, 112, 172, 'tl'],
+      ['라운지', 244, 14, 110, 264, 'tl'],
+      ['프런트', 14, 202, 112, 124, 'tl'],
+      ['입구', 140, 372, 88, 64, 'bc']
+    ];
+    const zones = Z.map(([name, x, y, w, h, lp]) => ({
+      name,
+      box: 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; background: #f5f6f8; border-radius: 2px;',
+      lab: lp === 'bc'
+        ? 'position: absolute; left: 0px; bottom: 6px; width: ' + w + 'px; text-align: center; font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap;'
+        : 'position: absolute; left: 8px; top: 7px; font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap;'
+    }));
+    // 제안 제품 위치 (평면 기호) — [x, y, w, h, 원형 여부]
+    const F = [
+      [140, 14, 88, 6, 0],    // 로비 정면 LED 월
+      [124, 236, 9, 9, 0],    // 체크인 키오스크 1
+      [124, 290, 9, 9, 0],    // 체크인 키오스크 2
+      [348, 96, 6, 54, 0],    // 라운지 벽면 사이니지
+      [306, 222, 14, 14, 1],  // 천장 카세트
+      [14, 92, 6, 36, 0]      // 엘리베이터홀 층 안내 사이니지 (문 사이 벽)
+    ];
+    const fixtures = F.map(([x, y, w, h, round], i) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; ' + (round ? 'border-radius: 50%; border: 3px solid #6f82d6; background: #ffffff;' : 'border-radius: 1px; background: ' + (i === 0 ? '#1428a0' : '#6f82d6') + ';'));
+    // 시점 = [번호, x, y, 방향(도, 0 = 위 · 시계 방향), 시야 길이, 반폭]
+    const CAM = [
+      [1, 184, 392, 0, 92, 36],
+      [2, 172, 264, -90, 54, 26],
+      [3, 262, 260, 45, 92, 34],
+      [4, 100, 110, -90, 58, 30]
+    ];
+    const cams = CAM.map(([no, x, y, deg, len, hw]) => ({
+      no,
+      cone: 'position: absolute; left: ' + (x - hw) + 'px; top: ' + (y - len) + 'px; width: 0px; height: 0px; border-left: ' + hw + 'px solid transparent; border-right: ' + hw + 'px solid transparent; border-top: ' + len + 'px solid rgba(20,40,160,0.18); transform-origin: 50% 100%; transform: rotate(' + deg + 'deg);',
+      dot: 'position: absolute; left: ' + (x - 14) + 'px; top: ' + (y - 14) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 0 0 1px rgba(20,40,160,0.25); color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+    // 렌더 = [이름, 생성 지시(hint), 보이는 제품]
+    const R = [
+      ['입구에서 본 로비', '입구에서 본 로비 · 정면 LED 월 · 웰컴 사이니지 · 눈높이 시점', ['LED 월', '웰컴 사이니지']],
+      ['프런트 데스크', '로비에서 본 프런트 데스크 · 체크인 키오스크 2대 · 데스크 뒤 벽', ['체크인 키오스크 ×2']],
+      ['라운지', '라운지 입구에서 본 좌석 · 벽면 사이니지 · 천장 카세트', ['벽면 사이니지', '시스템에어컨']],
+      ['엘리베이터홀', '엘리베이터홀 · 문 사이 벽에 층 안내 세로 사이니지', ['층 안내 사이니지']]
+    ];
+    const renders = R.map(([name, hint, chips], i) => ({ no: i + 1, name, hint, chips }));
+    return { zones, fixtures, cams, renders };
+  }
+}
+</script>
+</body>
+</html>

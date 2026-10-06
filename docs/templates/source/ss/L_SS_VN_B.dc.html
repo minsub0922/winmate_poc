@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-VN-B 공연장 · 경기장 · 영화관 · 대표 공간 장면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">B 볼파크의 빅보드는 컨트롤룸 한 자리에서 경기 흐름을 따라갑니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">대표 공간 ① 빅보드 · 리본보드 + ② 컨트롤룸 · 기록실 — 경기일 하루를 네 장면으로: 순간 → 솔루션 → 제품 → 가치</div>
+
+  <!-- 행 라벨 -->
+  <div style="position: absolute; left: 64px; top: 200px; width: 72px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; line-height: 17px; font-weight: 800; color: #596170">빅보드</span><span style="font-size: 10.5px; line-height: 15px; color: #8a91a0">화면 구성</span><span style="font-size: 10.5px; line-height: 15px; color: #8a91a0">예시</span></div>
+  <div style="position: absolute; left: 64px; top: 330px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">순간</div>
+  <div style="position: absolute; left: 64px; top: 398px; width: 72px; display: flex; flex-direction: column; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0; white-space: nowrap"><span>솔루션이</span><span>하는 일</span></div>
+  <div style="position: absolute; left: 64px; top: 471px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">제품</div>
+  <div style="position: absolute; left: 64px; top: 536px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">가치</div>
+
+  <!-- 빅보드 화면 그림 -->
+  <sc-for list="{{art}}" as="a" hint-placeholder-count="40">
+    <div style="{{a.style}}">{{a.t}}</div>
+  </sc-for>
+
+  <!-- 네 장면 -->
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.head}}"><span style="font-family: Manrope, sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{s.title}}</span></div>
+    <div style="{{s.ctxS}}">{{s.ctx}}</div>
+    <div style="{{s.solBox}}">
+      <div style="position: absolute; left: 12px; top: 10px; font-size: 12.5px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{s.sol}}</div>
+      <div style="position: absolute; left: 12px; top: 32px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d1}}</div>
+      <div style="position: absolute; left: 12px; top: 49px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d2}}</div>
+    </div>
+    <div style="{{s.prodBox}}">
+      <svg style="position: absolute; left: 12px; top: 12px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+      <div style="position: absolute; left: 36px; top: 10px; font-size: 12.5px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{s.prod}}</div>
+    </div>
+    <div style="{{s.valBox}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-size: 12.5px; line-height: 18px; font-weight: 600; color: #121417; white-space: nowrap">{{s.val}}</div>
+      <div style="position: absolute; left: 12px; top: 33px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.kpi}}</div>
+      <div style="position: absolute; left: 12px; top: 48px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{s.kv}}</div>
+    </div>
+  </sc-for>
+
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="3">
+    <div style="{{a.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- 표준 구성 -->
+  <div style="position: absolute; left: 64px; top: 594px; width: 1152px; height: 54px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 601px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">빅보드 · 컨트롤룸 표준 구성</div>
+  <div style="position: absolute; left: 80px; top: 623px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">시즌 경기일 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">[00]</span>회 · 연속 운영 기준</div>
+  <div style="position: absolute; left: 290px; top: 604px; width: 1px; height: 34px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 306px; top: 601px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="5">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 306px; top: 626px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0">운영</span><span>MagicINFO (전 화면 편성 · 원격 관리 · 장애 알림) · 케어 · 유지관리 서비스 (정기 점검 · 전담 엔지니어)</span></div>
+  <div style="position: absolute; right: 80px; top: 627px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">시간 · 수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 볼파크 · 경기장 경험 · 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+    const X0 = 148, STEP = 270, W = 258;
+
+    const S = [
+      { time: '16:30', title: '개장 전 리허설 · 화면 점검', ctx: '경기 3시간 전 · 컨트롤룸 · 외야',
+        sol: 'MagicINFO 원격 관리 · 장애 알림', d1: '빅보드 · 리본 · 컨코스 화면 상태를', d2: '컨트롤룸 한 화면에서 점검 · 리허설',
+        prod: 'LED 빅보드 · 컨트롤룸 모니터',
+        val: '관중이 들어오기 전에 이상을 찾습니다', kpi: '개장 전 화면 점검', kv: '[00]분 → [00]분' },
+      { time: '19:10', title: '이닝 교대 · 응원 · 광고', ctx: '3회말 종료 · 공수 교대 시간',
+        sol: 'MagicINFO 편성 스케줄', d1: '응원 · 이벤트 · 스폰서 광고를 이닝별', d2: '편성표대로 빅보드 · 리본에 동시 송출',
+        prod: '리본보드 · 하만 프로 오디오',
+        val: '교대 시간이 응원 · 광고 시간이 됩니다', kpi: '스폰서 광고 노출', kv: '[00]% ↑' },
+      { time: '20:05', title: '득점 순간 · 리플레이', ctx: '7회 역전 적시타 · 관중 전체',
+        sol: 'MagicINFO 데이터 연동 콘텐츠', d1: '기록실 스코어 · 선수 기록이 화면에', d2: '바로 반영, 리플레이는 바로 이어서',
+        prod: '기록실 올인원 PC · LED 빅보드',
+        val: '외야석까지 같은 순간을 함께 봅니다', kpi: '득점 → 화면 반영', kv: '[0]초' },
+      { time: '21:40', title: '경기 후 · 퇴장 안내', ctx: '경기 종료 · 관중 동시 퇴장',
+        sol: 'MagicINFO 안내 편성 · 일괄 송출', d1: '게이트별 혼잡 · 셔틀 · 대중교통 안내', d2: '빅보드부터 광장 화면까지 한 번에',
+        prod: 'LED 빅보드 · 실외용 사이니지',
+        val: '한꺼번에 몰리는 퇴장을 나눠 안내합니다', kpi: '구장 밖까지 퇴장', kv: '[00]분 → [00]분' }
+    ];
+
+    const scenes = S.map((s, i) => {
+      const x = X0 + i * STEP;
+      return Object.assign({}, s, {
+        n: i + 1,
+        badge: box(x, 326, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        head: box(x + 34, 324, W - 34, 22) + 'display: flex; align-items: center; gap: 8px; ' + T,
+        ctxS: box(x + 34, 348, W - 34, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + T,
+        solBox: box(x, 378, W, 74) + 'border-radius: 10px; background: #eaeefb;',
+        prodBox: box(x, 460, W, 40) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;',
+        valBox: box(x, 508, W, 74) + 'border-radius: 10px; background: #f5f6f8;'
+      });
+    });
+
+    // 빅보드 화면 그림 — 패널 y 160–316, 보드 안쪽(bx, 178, 202, 84)
+    const art = [];
+    const add = (x, y, w, h, css, t) => art.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const seg = (x, y, w, h, bg, ink, t, fs) => add(x, y, w, h, 'border-radius: 2px; background: ' + bg + '; color: ' + ink + '; font-size: ' + (fs || 11) + 'px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' + T, t);
+    const RIB = ['#6f82d6', '#eaeefb', '#1428a0', '#6f82d6'];
+    S.forEach((s, i) => {
+      const x = X0 + i * STEP, bx = x + 28, by = 178;
+      add(x, 160, W, 156, 'border-radius: 12px; background: #f5f6f8;');
+      add(x + 24, 174, 210, 92, 'border-radius: 3px; background: #121417;');
+      add(x + 74, 266, 6, 12, 'background: #b8bec8;');
+      add(x + 178, 266, 6, 12, 'background: #b8bec8;');
+      add(x + 24, 278, 210, 9, 'border-radius: 2px; background: ' + RIB[i] + ';');
+      art.push({ style: A + 'left: ' + px(x + 24) + 'top: 293px; font-size: 10px; line-height: 14px; color: #8a91a0; ' + T, t: i === 1 ? '아래 리본보드 · 광고 롤링' : '아래 리본보드' });
+      art.push({ style: A + 'right: ' + px(1280 - x - 234) + 'top: 293px; font-size: 10px; line-height: 14px; font-weight: 700; color: #596170; ' + T, t: ['모듈 점검', '응원 + 광고 분할', '전체 화면 리플레이', '안내 전환'][i] });
+      if (i === 0) {
+        for (let r = 0; r < 2; r++) for (let c = 0; c < 6; c++) add(bx + c * 34, by + r * 29, 32, 27, 'border-radius: 2px; background: ' + (r === 1 && c === 4 ? '#6f82d6' : '#1428a0') + ';');
+        add(bx + 4 * 34 - 2, by + 27, 36, 31, 'box-sizing: border-box; border-radius: 3px; border: 2px solid #ffffff;');
+        seg(bx, by + 60, 202, 24, '#121417', '#ffffff', '테스트 패턴 · 밝기 · 색 확인', 10.5);
+      } else if (i === 1) {
+        seg(bx, by, 132, 84, '#1428a0', '#ffffff', '응원 · 이벤트', 12);
+        seg(bx + 136, by, 66, 84, '#eaeefb', '#1428a0', '스폰서', 11);
+      } else if (i === 2) {
+        seg(bx, by, 202, 60, '#1428a0', '#ffffff', '리플레이 · 하이라이트', 12.5);
+        seg(bx, by + 64, 202, 20, '#121417', '#ffffff', 'HOME [0] : [0] AWAY · 7회말', 10);
+      } else {
+        seg(bx, by, 100, 84, '#1428a0', '#ffffff', '게이트별 혼잡', 11.5);
+        seg(bx + 104, by, 98, 84, '#eaeefb', '#1428a0', '셔틀 · 지하철', 11.5);
+      }
+    });
+
+    const arrows = [0, 1, 2].map((i) => ({
+      style: box(X0 + i * STEP + W + 6 - 12, 226, 24, 24) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    const kit = ['LED 빅보드 1', '리본보드 [0]면', '컨트롤룸 사이니지 · 모니터', '기록실 올인원 PC', '하만 프로 오디오'].map((t) => ({ t }));
+
+    return { scenes, art, arrows, kit };
+  }
+}
+</script>
+</body>
+</html>

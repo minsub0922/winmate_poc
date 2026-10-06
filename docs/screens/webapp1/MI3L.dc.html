@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 레이아웃 바꾸기 · 데이터 적합도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="A 커피 프랜차이즈 시장·경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="A 커피 프랜차이즈 시장·경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{done}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 14px; line-height: 1.5">경쟁 환경은 포지셔닝 맵으로 바꿔줘</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.6">포지셔닝 맵(CP-B)은 공급사마다 두 축의 값이 필요하고, 빈자리를 보이려면 5곳 이상이 좋아요. 지금은 3곳이라 이렇게 할 수 있어요.</div>
+
+            <!-- 선택지 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 6px; display: flex; flex-direction: column; gap: 4px">
+              <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+                <label style="{{o.box}}">
+                  <input type="radio" name="how" checked="{{o.on}}" style="accent-color: #1428a0; margin: 0; flex-shrink: 0">
+                  <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0; width: 14px; flex-shrink: 0">{{o.k}}</span>
+                  <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">{{o.t}}</span>
+                  <sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}">
+                    <span style="font-size: 10.5px; font-weight: 700; color: #ffffff; background: #1428a0; border-radius: 999px; padding: 2px 7px; white-space: nowrap; flex-shrink: 0">추천</span>
+                  </sc-if>
+                  <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0; text-align: right">{{o.d}}</span>
+                </label>
+              </sc-for>
+            </div>
+
+            <!-- 레이아웃 후보 · 데이터 적합도 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 14px 12px 14px; display: flex; flex-direction: column; gap: 10px">
+              <div style="display: flex; align-items: center; justify-content: space-between; height: 18px">
+                <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">경쟁 환경 · 고를 수 있는 레이아웃 <span style="color: #596170; font-weight: 500">· 업종 틀엔 경쟁 장이 없어 범용 3종</span></span>
+                <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">필요한 데이터가 있는지로 적합도를 매겨요</span>
+              </div>
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+                <sc-for list="{{tpls}}" as="t" hint-placeholder-count="3">
+                  <div style="{{t.box}}">
+                    <div style="display: flex; align-items: flex-start; gap: 10px">
+                      <div style="{{t.thumbBox}}"><dc-import name="Thumb" kind="{{t.kind}}" n="{{t.n}}" hint-size="120px,68px"></dc-import></div>
+                      <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                        <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; white-space: nowrap">{{t.code}}</span>
+                        <span style="font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.name}}</span>
+                        <span style="{{t.tagStyle}}">{{t.tag}}</span>
+                      </div>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 3px">
+                      <sc-for list="{{t.needs}}" as="n" hint-placeholder-count="2">
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; height: 18px; min-width: 0">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{{n.color}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{n.icon}}"/></svg>
+                          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #3d4452">{{n.t}}</span>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px">
+                      <div style="flex-grow: 1; height: 5px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="{{t.fitBar}}"></div></div>
+                      <span style="{{t.fitStyle}}">{{t.fit}}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #121417; height: 22px">
+                <input type="checkbox" style="accent-color: #1428a0; margin: 0">이 시트 고정 — 데이터가 바뀌어도 다시 고르지 않아요
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">레이아웃 바꾸기 <span style="color: #596170; font-weight: 500">· 경쟁 환경 · 나머지 시트는 그대로</span></div>
+          <div style="display: flex; gap: 6px">
+            <a href="MI3P.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">시장 · 트렌드 8종 보기</a>
+            <a href="MI3P.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">고객 비즈니스 5종 보기</a>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">레이아웃 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="축 지정 (예: 가로는 가격대, 세로는 관리 편의)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="MI3P.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">취소</a>
+          <a href="MI3G.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>A로 진행 (약 40초)</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const O = [
+      ['A', '공급사 3곳 더 찾아 6곳으로 → CP-B', '사례 DB · 공개 자료에서 메뉴보드 공급사 추가 · 적합도 58% → 85%', true],
+      ['B', '3곳 그대로 CP-B', '구도는 보이지만 빈자리 메시지는 약해요 · 적합도 58%', false],
+      ['C', '비교표 CP-A 유지', '요구 기준 5개 비교는 그대로 · 적합도 96%', false]
+    ];
+    const opts = O.map(([k, t, d, rec]) => ({
+      k, t, d, rec, on: rec,
+      box: 'display: flex; align-items: center; gap: 10px; box-sizing: border-box; height: 42px; padding: 0 12px; border-radius: 10px; cursor: pointer;' + (rec ? ' background: #f5f7fd; border: 1.5px solid #1428a0;' : ' background: #ffffff; border: 1px solid transparent;')
+    }));
+    const OK = 'M5 12l5 5L20 7';
+    const NO = 'M6 6l12 12M18 6L6 18';
+    const need = (t, ok) => ({ t, icon: ok ? OK : NO, color: ok ? '#1428a0' : '#121417' });
+    // 후보: [코드, 이름, 썸네일, 태그, 필요한 데이터, 적합도(-1 = 고를 수 없음), 상태]
+    const T = [
+      ['CP-A', '비교표', 'table', '사용 중', [need('공급사 2~5곳 · 3곳 있음', true), need('비교 기준 · 요구 5개', true)], 96, 'cur'],
+      ['CP-B', '포지셔닝 맵', 'scatter', '요청', [need('두 축 수치 · 가격대 · 관리 기능', true), need('공급사 5곳 이상 · 지금 3곳', false)], 58, 'req'],
+      ['CP-C', '점유율 + 추이', 'stack', '고를 수 없음', [need('점유율 데이터 · 없음', false), need('연도별 추이 · 없음', false)], -1, 'no']
+    ];
+    const tpls = T.map(([code, name, kind, tag, needs, fit, st]) => ({
+      code, name, kind, tag, needs, n: 3,
+      fit: fit < 0 ? '점유율 자료가 있으면 열려요' : '적합 ' + fit + '%',
+      box: 'display: flex; flex-direction: column; gap: 8px; box-sizing: border-box; padding: 10px; border-radius: 12px; min-width: 0;' + (st === 'cur' ? ' border: 1.5px solid #1428a0; background: #ffffff;' : st === 'req' ? ' border: 1.5px dashed #1428a0; background: #f5f7fd;' : ' border: 1px solid #e2e5ea; background: #fbfbfc;'),
+      thumbBox: 'width: 120px; height: 68px; flex-shrink: 0;' + (st === 'no' ? ' opacity: 0.45;' : ''),
+      tagStyle: 'align-self: flex-start; font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 2px 7px; white-space: nowrap;' + (st === 'cur' ? ' background: #1428a0; color: #ffffff;' : st === 'req' ? ' background: #eaeefb; color: #1428a0;' : ' background: #f0f2f5; color: #596170;'),
+      fitBar: 'width: ' + Math.max(fit, 0) + '%; height: 5px; border-radius: 999px; background: ' + (fit >= 85 ? '#1428a0' : '#8a91a0') + ';',
+      fitStyle: 'font-size: 11.5px; white-space: nowrap; ' + (fit < 0 ? 'color: #8a91a0;' : 'font-weight: 700; color: #121417;')
+    }));
+    return { steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 3, done: true, opts, tpls };
+  }
+}
+</script>
+</body>
+</html>

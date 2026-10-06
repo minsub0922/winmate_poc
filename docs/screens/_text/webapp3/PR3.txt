@@ -1,0 +1,91 @@
+ 
+ B2B 제안서 3/6 — 시트 구성 
+ W 
+ {{typeName}}에 넣을 시트를 고르세요. 시트마다 말하는 역할이 정해져 있고, 요구사항과 연결된 자료를 보고 필요한 시트를 미리 골라 두었어요. 템플릿은 섹션 작성 때 내용에 맞춰 고릅니다. 
+ 시트 구성 · {{typeName}} · 섹션 {{secCount}} · 시트 {{sheetTotal}} · 3 / 6 
+ 유형 바꾸기 
+ 섹션 넣을 시트 사용 
+ {{r.no}} 
+ {{r.name}} 
+ {{r.tag}} 
+ {{c.name}} {{c.rep}} 
+ + {{r.more}} 
+ 필수 
+ {{t.name}} 
+ 추천 
+ “{{t.msg}}” 
+ {{t.meta}} 
+ 시트 수는 따로 정하지 않아요. 공간 · 사례처럼 반복되는 시트는 연결된 항목 수만큼 생깁니다. 
+ 이전 
+ 섹션 작성 시작 
+class Component extends DCLogic {
+ renderVals() {
+ const type = this.props.type ?? 'standard';
+ // 시트 유형: [이름, 무엇을 말하나, 템플릿 수] — 'PPT 레이아웃 템플릿' 페이지와 같은 코드
+ const STN = {
+ MS: ['시장 규모 · 성장', '이 시장은 크고, 커지고 있다', 5], TR: ['산업 트렌드', '업계가 이렇게 바뀐다', 3],
+ CB: ['고객사 비즈니스', '고객을 제대로 이해했다', 4], US: ['사용자 분석', '고객의 손님과 직원을 안다', 3],
+ CP: ['경쟁 환경', '시장 판도는 이렇다', 3], IM: ['MI 시사점', '그래서 이번 제안은', 2],
+ CH: ['고객 과제', '지금 이런 문제가 있다', 3], VP: ['가치 제안', '우리는 이런 가치를 준다', 4], EF: ['기대 효과', '도입하면 이만큼 좋아진다', 3],
+ BV: ['공간 전경', '완성된 공간을 미리 본다', 3], ZP: ['존별 포인트', '공간마다 무엇이 달라지나', 3],
+ SM: ['공간 맵', '어디에 무엇을', 2], PI: ['공간 제품 소개', '이 공간에는 이 제품', 20], BM: ['구성 · 수량', '무엇을 몇 대', 2],
+ SA: ['통합 구성도', '여러 솔루션이 어떻게 이어지나', 3], OP: ['통합 운영 시나리오', '솔루션들이 함께 어떻게 쓰이나', 3], SF: ['솔루션 상세', '이 솔루션은 무엇을 하나', 2],
+ VM: ['공간 × 솔루션 맵', '공간마다 어떤 솔루션이', 4], SS: ['공간 시나리오', '이 공간에서 이렇게 가치가 생긴다', 3],
+ CD: ['사례 상세', '비슷한 고객이 이렇게 성공했다', 3], CL: ['사례 모음', '이미 여러 곳에서 검증됐다', 3],
+ CM: ['경쟁 비교', '경쟁사보다 낫다', 3], ST: ['삼성 강점', '삼성이어야 하는 이유', 3], SV: ['지원 체계', '도입 후에도 책임진다', 2],
+ SC: ['스펙 비교', '제품별 사양 차이', 2], SD: ['제품 상세', '한 제품의 모든 것', 2],
+ // 솔루션: 솔루션마다 전용 시트 3장 (소개 · 구성도 · 공간 시나리오)
+ MGI: ['MagicINFO', '설치형 사이니지 CMS', 0], VXT: ['Samsung VXT', '클라우드 사이니지 CMS', 0],
+ STP: ['SmartThings Pro', '여러 사업장 IoT · 에너지', 0], KNX: ['Knox Suite', '업무용 갤럭시 관리 · 보안', 0],
+ CCH: ['삼성 콜드체인', '냉장 · 냉동 + 에어컨 통합 관리', 0], HVC: ['삼성 통합공조', '개별 + 중앙공조 + b.IoT', 0],
+ SAC: ['SAC 제어 시스템', '시스템에어컨 제어 · 전력량 분배', 0]
+ };
+ const SOLCODES = ['MGI', 'VXT', 'STP', 'BIT', 'LYN', 'KNX', 'KCP', 'DEX', 'CCH', 'HVC', 'SAC'];
+ // 섹션: [이름, 선택 섹션, 시트: [코드, 상태(1 넣음 · 2 추천만 · 0 안 넣음), 반복 수, 자료]]
+ const SECS = {
+ mi: ['Market Intelligence', [['MS', 1, 1, 'MI 작업에서'], ['CB', 1, 1, 'MI 작업에서'], ['CP', 1, 1, 'MI 작업에서'], ['TR', 0, 1, '새로 조사'], ['US', 0, 1, '새로 조사'], ['IM', 2, 1, 'MI 내용을 요약']]],
+ bigMi: ['대규모 MI', [['MS', 1, 1, 'MI 작업 2건'], ['TR', 1, 1, 'MI 작업 2건'], ['CB', 1, 1, 'MI 작업에서'], ['US', 1, 1, '인터뷰 자료'], ['CP', 1, 1, 'MI 작업에서'], ['IM', 2, 1, 'MI 내용을 요약']]],
+ vp: ['Value Props', [['CH', 1, 1, 'Storyboard에서'], ['VP', 1, 1, 'Storyboard에서'], ['EF', 2, 1, '유사 사례로 추정']]],
+ birdseye: ['조감도', [['BV', 1, 1, '조감도 작업에서'], ['ZP', 1, 1, '조감도 작업에서']]],
+ spaceProducts: ['공간별 제품', [['SM', 1, 1, '조감도 배치안'], ['PI', 1, 3, '공간마다 1장 · 배치안 3곳'], ['BM', 0, 1, '제품 목록으로 계산']]],
+ solution: ['솔루션 제안', [['MGI', 1, 3, '연결된 솔루션'], ['STP', 1, 3, '연결된 솔루션'], ['SA', 1, 1, '솔루션이 2개 이상일 때'], ['KNX', 2, 3, '요구사항에 매장 태블릿'], ['VXT', 0, 3, '솔루션 탐색에서 추가'], ['OP', 0, 1, '시나리오 작업에서']]],
+ cases: ['유관 사례', [['CD', 1, 2, '사례마다 1장 · 추천 2건'], ['CL', 0, 1, '사례 검색']]],
+ why: ['Why Samsung', [['CM', 1, 1, 'MI 경쟁사 분석'], ['ST', 1, 1, 'MI 경쟁사 분석'], ['SV', 2, 1, '서비스 표준 자료']]],
+ spec: ['제품 스펙', [['SC', 1, 1, 'Spec 시트 작업'], ['SD', 1, 1, '주력 제품마다 1장']]],
+ spaceScenario: ['공간별 가치 제공 시나리오', [['VM', 1, 1, '시나리오 · 조감도'], ['SS', 1, 3, '공간마다 1장 · 3곳']]]
+ };
+ const TYPES = {
+ standard: { name: '표준 제안서', first: 'PRS1.dc.html', open: 0, secs: [['mi', 1], ['vp', 0], ['birdseye', 0], ['spaceProducts', 0], ['solution', 1], ['cases', 0], ['why', 0], ['spec', 0]] },
+ quickwin: { name: '퀵윈(제품) 제안서', first: 'PRQ1.dc.html', open: 1, secs: [['vp', 0], ['spaceProducts', 0], ['solution', 1], ['cases', 0], ['spec', 0]] },
+ solution: { name: 'Solution형 제안서', first: 'PRX1.dc.html', open: 2, secs: [['bigMi', 0], ['vp', 1], ['spaceScenario', 0], ['cases', 0], ['why', 0]] }
+ };
+ const T = TYPES[type] || TYPES.standard;
+ const openIdx = Number(this.props.open ?? -1) >= 0 ? Number(this.props.open) : T.open;
+ let sheetTotal = 0;
+ const rows = T.secs.map(([key, opt], i) => {
+ const [name, sheets] = SECS[key];
+ const on = sheets.filter((s) => s[1] === 1);
+ sheetTotal += on.reduce((a, s) => a + s[2], 0);
+ const open = i === openIdx;
+ return {
+ no: String(i + 1).padStart(2, '0'), name, open, opt: !!opt, req: !opt,
+ tag: opt ? '선택' : '필수', switchLabel: name + ' 섹션 사용',
+ tagStyle: '' + (opt ? '' : ''),
+ chevStyle: 'flex-shrink: 0;' + (open ? ' transform: rotate(90deg);' : ''),
+ chips: on.map(([code, , rep]) => ({ name: STN[code][0], rep: '×' + rep, hasRep: rep > 1 })),
+ more: sheets.length - on.length, hasMore: sheets.length - on.length > 0,
+ types: sheets.map(([code, st, rep, src]) => ({
+ name: SOLCODES.includes(code) ? STN[code][0] : STN[code][0] + (rep > 1 ? ' ×' + rep : ''), msg: STN[code][1], src, on: st === 1, rec: st === 2,
+ meta: SOLCODES.includes(code) ? '전용 3장 · 소개 · 구성도 · 공간 시나리오 · ' + src : '템플릿 ' + STN[code][2] + '종 · ' + src,
+ cardStyle: '' + (st === 1 ? '' : st === 2 ? '' : ''),
+ boxStyle: '' + (st === 1 ? '' : '')
+ })),
+ rowStyle: '' + (open ? '' : '')
+ };
+ });
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 3,
+ typeName: T.name, rows, secCount: rows.length, sheetTotal, firstHref: T.first
+ };
+ }
+}

@@ -1,0 +1,84 @@
+ 
+ Value Proposition — 이미지 칸 채우기 (공식 실사 자동 매칭) 
+ W 
+ 이미지 칸 5개를 채웠어요. 공식 실사 4 · 일러스트 1이고, 확인할 것은 2개예요. 
+ 이미지 칸 · 5 
+ 칸마다 가치를 만드는 제품 · 솔루션 → 공식 실사부터 찾아 넣음 
+ 고르는 순서 
+ 일러스트 
+ {{r.code}} 
+ {{r.slot}} 
+ {{r.tier}} 
+ {{r.why}} 
+ {{r.mText}} 
+ 기둥 1 · 본사에서 한 번에 운영 — 바꿀 수 있는 후보 
+ 모두 MagicINFO가 만드는 가치에 맞는 이미지 
+ 일러스트 · cms 
+ {{a.name}} 
+ {{a.tier}} 
+ 사진 올리기 
+ 고객 매장 사진은 공간 칸에 자동 배치 
+ 이미지 · 5칸 · 공식 실사 4 
+ {{a.code}} {{a.t}} 
+ 이미지 요청 
+ 결과로 
+ 제안서 Value Props로 
+class Component extends DCLogic {
+ renderVals() {
+ const MODE = {
+ auto: ['자동', '', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+ check: ['확인 권장', '', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+ };
+ const CHIP = '';
+ // 이미지 출처 5단계 — 이 순서로 찾음
+ const TIER = {
+ customer: ['고객 현장 사진', ''],
+ cut: ['공식 제품 컷', ''],
+ case: ['설치 사례', ''],
+ ui: ['솔루션 화면', ''],
+ illust: ['일러스트', '']
+ };
+ // 이 캔버스에 올린 삼성 공식 이미지 (samsung.com 제품 · 솔루션 페이지, 공식 성공 사례)
+ const IMG = {
+ miOverview: '/_blob/606db2e1f2fc6fd5c166bb8808e32619',
+ qm55c: '/_blob/5afb0878e0cff2a74179b159aebc9757',
+ stpEnergy: '/_blob/b54ae6561ecae5340db8e521236affe9',
+ mcdDt: '/_blob/5bb3edd320842cf781647186bce0004c',
+ mcdMenu: '/_blob/695072c09938dbf697dc8a8915606baf',
+ cms: '/_blob/88901010ebc9ad4d029427f491102902'
+ };
+ const img = (key, fit) => ({ src: key ? IMG[key] : '', hasImg: !!key, noImg: !key, imgStyle: 'display: block; width: 100%; height: 100%; object-fit: ' + (fit || 'cover') + ';' });
+ // [시트 · 칸 코드, 칸, 이미지, 맞춤, 출처, 이유, 모드]
+ const S = [
+ ['VP-F·3 · 기둥 1', '본사에서 한 번에 운영', 'miOverview', 'cover', 'ui', 'MagicINFO가 만드는 가치 · 공개 화면이라 "실제 데이터 아님" 표시', 'auto'],
+ ['VP-F·3 · 기둥 2', '승인은 본사, 반영은 몇 분', 'qm55c', 'contain', 'cut', '제안 모델 QM55C와 같은 모델의 공식 컷', 'auto'],
+ ['VP-F·3 · 기둥 3', '저전력 자동 운영', 'stpEnergy', 'contain', 'ui', 'SmartThings Pro 에너지 화면 · "실제 데이터 아님" 표시', 'auto'],
+ ['CH-A · 과제 1', '인쇄 · 배송 · 교체 비용', '', '', 'illust', '고객 매장 사진 없음 → 일러스트 · 사진 요청 초안 준비, 받으면 자동 교체', 'check'],
+ ['추가 제안 · VP-Q', '같은 문제를 먼저 푼 곳', 'mcdDt', 'cover', 'case', '같은 QSR 업종 · 다른 고객사 브랜드 노출 → 외부 제출 전 인용 확인', 'check']
+ ];
+ const slots = S.map(([code, slot, key, fit, tier, why, m], i) => ({
+ code, slot, why, alt: slot,
+ ...img(key, fit),
+ tier: TIER[tier][0],
+ tierStyle: CHIP + '' + TIER[tier][1],
+ mText: MODE[m][0], mIcon: MODE[m][2], mStyle: CHIP + MODE[m][1],
+ row: '' + (i === 0 ? '' : '')
+ }));
+ const A = [
+ ['miOverview', 'cover', 'MagicINFO 개요 화면', '솔루션 화면 · 지금', true],
+ ['cms', 'cover', 'VXT CMS 메뉴 편집', '솔루션 화면', false],
+ ['mcdMenu', 'cover', '사례 · 카운터 메뉴보드', '설치 사례 · 확인 권장', false],
+ ['', '', 'MagicINFO 일러스트', '일러스트', false]
+ ];
+ const alts = A.map(([key, fit, name, tier, on]) => ({
+ name, tier, alt: name, ...img(key, fit),
+ box: '' + (on ? '' : '')
+ }));
+ const acts = [
+ ['VP-N', '실사 히어로로', '설치 사례 사진을 왼쪽에 크게 · 가치 3개는 오른쪽', 'VP3L.dc.html'],
+ ['VP-Q', '레퍼런스 1장 추가', '맥도날드 코리아 DT 사례 · 외부 제출 전 인용 확인', 'VP3L.dc.html'],
+ ['Prod', '일러스트로 통일', '실사를 모두 빼고 같은 톤의 일러스트로', 'VP3.dc.html']
+ ].map(([code, t, tip, href]) => ({ code, t, tip, href }));
+ return { steps: ['재료', '가치 구조', '결과'], cur: 3, done: true, slots, alts, acts };
+ }
+}

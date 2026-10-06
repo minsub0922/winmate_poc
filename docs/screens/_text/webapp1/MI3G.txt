@@ -1,0 +1,62 @@
+ 
+ Market Intelligence · 분석 진행 중 
+ 분석 시작 · 4개 영역 · 경쟁사 A · B · C · 비교 기준 5개 
+ W 
+ 분석하고 있어요. 공개 자료와 사내 사례 DB를 찾아 읽고, 영역별로 정리한 뒤 결과를 씁니다. 이 화면을 떠나도 계속 진행되고, 끝나면 알려 드릴게요. 
+ 시장 · 경쟁사 분석 중 
+ 4개 영역 · 경쟁사 3 
+ {{pct}}% · 약 1분 30초 남음 
+ {{s.no}} {{s.name}} 
+ {{s.note}} 
+ 영역별 진행 
+ {{r.name}} 
+ {{r.note}} 
+ {{r.st}} 
+ 확인한 출처 
+ {{srcTotal}} 곳 
+ 사용 {{srcUsed}} · 확인 중 {{srcChecking}} 제외 {{srcOut}} (오래됨 · 중복) 
+ {{o.kind}} 
+ {{o.name}} 
+ {{o.st}} 
+ 출처 전체 보기 
+ 먼저 끝난 영역부터 볼 수 있어요 · 시장조사 · 고객사 · 비즈니스 
+ 정리된 내용 미리 보기 
+ 분석 진행 중 · 3 / 3 · 다른 작업을 해도 돼요, 끝나면 알려 드릴게요 
+ 진행 방향 메모 
+ 목록으로 
+ 중지 
+class Component extends DCLogic {
+ renderVals() {
+ const pct = 58;
+ // 단계: 검색 → 정리 → 작성
+ const S = [
+ ['1', '검색', '출처 31곳 확인 · 완료', 'done'],
+ ['2', '정리', '영역 2 / 4 정리됨', 'run'],
+ ['3', '작성', '결과 · 비교표 · 삼성 강점', 'wait']
+ ];
+ const stages = S.map(([no, name, note, s], i) => ({
+ no, name, note, isDone: s === 'done', isRun: s === 'run', isWait: s === 'wait', notLast: i ({
+ name, note, st: ST[s], isDone: s === 'done', isRun: s === 'run', isWait: s === 'wait',
+ rowStyle: '' + (s === 'run' ? '' : ''),
+ stStyle: '' + (s === 'run' ? '' : s === 'done' ? '' : '')
+ }));
+ // 최근 확인한 출처: 종류 · 이름 · 상태
+ const O = [
+ ['사내', '외식 · 카페 도입사례 23건 (사례 DB)', '사용'],
+ ['공개', 'A 커피 사업보고서 [연도]', '사용'],
+ ['공개', '경쟁사 A 제품 페이지 · CMS 사양', '확인 중'],
+ ['공개', '업계 기사 (2019)', '제외 · 오래됨']
+ ];
+ const sources = O.map(([kind, name, st]) => ({
+ kind, name, st,
+ kindStyle: '' + (kind === '사내' ? '' : ''),
+ stStyle: '' + (st === '사용' ? '' : st === '확인 중' ? '' : '')
+ }));
+ return {
+ steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 3,
+ pct, stages, areas, sources,
+ srcTotal: 31, srcUsed: 18, srcChecking: 9, srcOut: 4,
+ barStyle: 'width: ' + pct + ''
+ };
+ }
+}

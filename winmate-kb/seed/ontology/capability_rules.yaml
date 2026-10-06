@@ -1,0 +1,87 @@
+# Capability · 룰 시드 — 전부 status: draft (T4_expert 로 승인되기 전에는 실행되지 않음)
+# 스펙 속성 키(attr)는 M5 에서 spec_attr_def 가 승인된 뒤 실제 키로 맞춘다.
+# 임계값은 사실이 아니라 영업·기술 전문가가 정할 기준이므로 모두 빈칸이다.
+
+capabilities:
+  - {code: sunlight_readable, name_ko: 직사광 가독성, desc_ko: 직사광·밝은 창가에서 화면 판독 가능}
+  - {code: weatherproof, name_ko: 방수·방진, desc_ko: 옥외 설치 환경 견딤}
+  - {code: wide_temp_operation, name_ko: 넓은 동작 온도, desc_ko: 혹서·혹한 환경 동작}
+  - {code: continuous_operation, name_ko: 상시 구동, desc_ko: 장시간·24시간 구동 설계}
+  - {code: touch_interactive, name_ko: 터치 상호작용}
+  - {code: bezel_less_tiling, name_ko: 이음매 최소 타일링, desc_ko: 비디오월·LED 연결}
+  - {code: remote_content_mgmt, name_ko: 원격 콘텐츠 관리, desc_ko: CMS 연동}
+  - {code: low_power_static, name_ko: 저전력 정지 화면, desc_ko: E-Paper 등}
+  - {code: large_space_cooling, name_ko: 대공간 냉난방}
+  - {code: draft_free_cooling, name_ko: 직바람 없는 냉방}
+  - {code: building_integration, name_ko: 빌딩 통합 제어 연동}
+  - {code: residential_quiet, name_ko: 주거 저소음}
+  - {code: hospitality_tv_mgmt, name_ko: 객실 TV 통합 관리}
+  - {code: rugged_mobile, name_ko: 현장용 내구 모바일}
+  - {code: device_security_mgmt, name_ko: 기기 보안·관리}
+
+rules:
+  - id: rule_sunlight_readable_signage
+    capability: sunlight_readable
+    category: signage
+    expression: "brightness_nit >= {{min_nit}}"
+    params: {min_nit: "<<FILL: 직사광 가독성 기준 휘도(nit)>>"}
+    explanation_ko: 직사광 노출 공간에 쓰려면 기준 휘도 이상
+    status: draft
+  - id: rule_weatherproof_signage
+    capability: weatherproof
+    category: signage
+    expression: "ip_rating in {{allowed_ip}}"
+    params: {allowed_ip: "<<FILL: 허용 IP 등급 목록, 예) [IP56, IP65]>>"}
+    status: draft
+  - id: rule_wide_temp_signage
+    capability: wide_temp_operation
+    category: signage
+    expression: "op_temp_min_c <= {{t_min}} and op_temp_max_c >= {{t_max}}"
+    params: {t_min: "<<FILL>>", t_max: "<<FILL>>"}
+    status: draft
+  - id: rule_continuous_signage
+    capability: continuous_operation
+    category: signage
+    expression: "operation_hours == '24/7'"
+    params: {}
+    status: draft
+  - id: rule_touch_signage
+    capability: touch_interactive
+    category: signage
+    expression: "touch == true"
+    params: {}
+    status: draft
+  - id: rule_remote_content_signage
+    capability: remote_content_mgmt
+    category: signage
+    expression: "compatible_solutions has 'vxt' or compatible_solutions has 'magicinfo'"
+    params: {}
+    status: draft
+  - id: rule_large_space_cooling
+    capability: large_space_cooling
+    category: hvac_system_ac
+    expression: "cooling_capacity_kw >= {{min_kw}}"
+    params: {min_kw: "<<FILL>>"}
+    status: draft
+  - id: rule_draft_free_cooling
+    capability: draft_free_cooling
+    category: hvac_system_ac
+    expression: "features has 'windfree'"
+    params: {}
+    status: draft
+
+requires:   # 공간·UseCase → Capability (draft, 전문가 승인 필요)
+  - {space: outdoor_facade, capability: sunlight_readable, strength: hard}
+  - {space: outdoor_facade, capability: weatherproof, strength: hard}
+  - {space: outdoor_facade, capability: wide_temp_operation, strength: soft}
+  - {space: storefront_window, capability: sunlight_readable, strength: hard}
+  - {space: drive_thru, capability: weatherproof, strength: hard}
+  - {space: drive_thru, capability: sunlight_readable, strength: hard}
+  - {space: menu_board_zone, capability: continuous_operation, strength: soft}
+  - {space: menu_board_zone, capability: remote_content_mgmt, strength: soft}
+  - {space: meeting_room, capability: touch_interactive, strength: soft}
+  - {space: classroom, capability: touch_interactive, strength: soft}
+  - {space: guest_room, capability: hospitality_tv_mgmt, strength: soft}
+  - {space: lobby, capability: remote_content_mgmt, strength: soft}
+  - {space: factory_floor, capability: rugged_mobile, strength: soft}
+  - {space: residential_bedroom, capability: residential_quiet, strength: soft}

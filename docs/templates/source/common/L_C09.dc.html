@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>C09 표지 E · 제품 누끼 히어로</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <!-- 오른쪽: 제품 히어로 (누끼 + 무대 원 + 바닥 그림자) -->
+  <div style="position: absolute; left: 688px; top: 76px; width: 540px; height: 540px; border-radius: 50%; background: #ffffff"></div>
+  <div style="position: absolute; left: 818px; top: 642px; width: 280px; height: 22px; border-radius: 50%; background: rgba(18,20,23,0.08)"></div>
+  <div style="position: absolute; left: 768px; top: 36px; width: 380px; height: 640px">
+    <dc-import name="Img" pid="km24c.persp" w="380" h="640" bg="none" fit="contain" credit="tr" hint-size="380px,640px"></dc-import>
+  </div>
+
+  <!-- 왼쪽: 표지 문구 -->
+  <div style="position: absolute; left: 64px; top: 64px; width: 88px; height: 26px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8a91a0; background: #ffffff">고객사 로고</div>
+  <div style="position: absolute; left: 64px; top: 168px; width: 32px; height: 4px; background: #1428a0"></div>
+  <div style="position: absolute; left: 64px; top: 188px; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: #1428a0">B2B PROPOSAL</div>
+  <div style="position: absolute; left: 64px; top: 218px; width: 600px; font-size: 48px; font-weight: 800; line-height: 1.22; letter-spacing: -0.03em; white-space: nowrap">카운터 줄을 절반으로,<br>셀프 주문 키오스크</div>
+  <div style="position: absolute; left: 64px; top: 346px; width: 600px; font-size: 18px; line-height: 1.5; color: #596170">D 베이커리 카페 42개 매장 셀프 주문 키오스크 도입 제안</div>
+  <div style="position: absolute; left: 64px; top: 392px; height: 30px; padding: 0 14px 0 6px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; white-space: nowrap">
+    <span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">제안 모델</span>
+    <span>Samsung Kiosk <span style="font-family: Manrope, sans-serif; font-weight: 800">KM24C</span> · 24형</span>
+  </div>
+
+  <!-- 핵심 3수치 -->
+  <div style="position: absolute; left: 64px; top: 466px; width: 600px; height: 1px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 64px; top: 486px; width: 600px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+      <div style="{{k.st}}">
+        <span style="font-family: Manrope, sans-serif; font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{k.n}}</span>
+        <span style="font-size: 13px; font-weight: 700; line-height: 1.4; color: #121417; white-space: nowrap">{{k.l}}</span>
+        <span style="font-size: 11.5px; line-height: 1.4; color: #8a91a0; white-space: nowrap">{{k.d}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 하단: 부서 · 날짜 · 제안사 로고 -->
+  <div style="position: absolute; left: 64px; top: 620px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #596170">
+    <span style="font-weight: 700; color: #121417">[제안 부서명]</span>
+    <span style="font-family: Manrope, sans-serif">2026. 10</span>
+  </div>
+  <div style="position: absolute; left: 554px; top: 630px; width: 110px; height: 30px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8a91a0; background: #ffffff">제안사 로고</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 핵심 3수치 — 확정 전에는 자리표시 그대로
+    const K = [
+      ['[00]%', '주문 대기 단축', '피크 시간 · 도입 전 대비'],
+      ['[N]분', '매장당 설치', '카운터 거치 기준'],
+      ['[00]%', '인건비 재배치', '주문 → 제조 · 픽업']
+    ];
+    const base = 'display: flex; flex-direction: column; gap: 7px; box-sizing: border-box;';
+    return {
+      kpis: K.map(([n, l, d], i) => ({
+        n, l, d,
+        st: base + (i === 0 ? ' padding-right: 20px;' : ' padding: 0 20px; border-left: 1px solid #d5d9e0;')
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

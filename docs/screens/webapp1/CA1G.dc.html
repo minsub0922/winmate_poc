@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 찾는 중</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="경쟁사 분석" title="새 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px">
+        <div style="width: 56px; height: 56px; border-radius: 16px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px">
+          <h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.02em">경쟁사를 찾는 중</h1>
+          <span style="font-size: 14px; color: #596170">약 30초 · 끝나면 후보 확인으로 넘어가요</span>
+        </div>
+        <div style="width: 520px; height: 8px; border-radius: 4px; background: #e2e5ea; overflow: hidden"><div style="width: 70%; height: 8px; background: #1428a0; border-radius: 4px"></div></div>
+        <div style="width: 520px; display: flex; flex-direction: column; gap: 6px">
+          <sc-for list="{{jobs}}" as="j" hint-placeholder-count="4">
+            <div style="display: flex; align-items: center; gap: 10px; height: 40px; box-sizing: border-box; padding: 0 14px; border-radius: 10px; background: #ffffff; border: 1px solid #e2e5ea">
+              <span style="{{j.dot}}">
+                <sc-if value="{{j.done}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if>
+                <sc-if value="{{j.active}}" hint-placeholder-val="{{false}}"><span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span></sc-if>
+              </span>
+              <span style="{{j.text}}">{{j.t}}</span>
+              <span style="{{j.tag}}">{{j.state}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <a href="CA2.dc.html" style="font-size: 13px; font-weight: 600; color: #596170">지금까지 찾은 후보 보기</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+    // 작업 줄 상태: done(완료 · 채운 원) / active(진행 중 · 점 테두리) / wait(대기 · 연한 테두리)
+    const dot = (s) => 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; display: flex; align-items: center; justify-content: center;' + (s === 'done' ? ' background: #1428a0;' : s === 'active' ? ' border: 2px dotted #1428a0;' : ' border: 2px solid #c9d0e6;');
+    const text = (s) => 'font-size: 13.5px; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (s === 'active' ? ' font-weight: 600; color: #121417;' : s === 'done' ? ' color: #121417;' : ' color: #8a91a0;');
+    const tag = (s) => 'font-size: 11.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0;' + (s === 'active' ? ' color: #1428a0;' : ' color: #8a91a0;');
+    const LABEL = { done: '완료', active: '진행 중', wait: '대기' };
+    const jobs = [['입력 읽기 — 고객사 · 업종 · 장소 · 제품', 'done'], ['같은 업종 도입사례 23건에서 자주 비교된 곳', 'done'], ['수도권 · 55" 사이니지 공개 자료 검색', 'active'], ['후보 정리 · 근거 붙이기', 'wait']]
+      .map(([t, s]) => ({ t, state: LABEL[s], done: s === 'done', active: s === 'active', dot: dot(s), text: text(s), tag: tag(s) }));
+    return { steps, cur: 1, jobs };
+  }
+}
+</script>
+</body>
+</html>

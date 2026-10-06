@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>STP-S-OF SmartThings Pro 공간 시나리오 · 오피스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SmartThings Pro</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SmartThings Pro · 비즈니스 IoT</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">출근부터 퇴근까지, 오피스 기기는 알아서 켜지고 꺼집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">입구/로비 → 회의공간 → 업무공간 → 휴게 — SmartThings 자동화 루틴을 STP 루틴 · 로직 에디터로 운영하고, 월말엔 에너지 리포트</div>
+
+  <!-- 공간 사진 4장 (가운데로 모이는 2×2 모자이크) -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="4">
+    <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; object-fit: cover; border-radius: 14px; {{s.photo}}">
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="position: absolute; {{s.notePos}} height: 18px; padding: 0 6px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+
+    <!-- 바깥쪽 설명 패널 -->
+    <div style="position: absolute; {{s.panel}} width: 294px; height: 236px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8">
+      <div style="position: absolute; left: 18px; top: 18px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+        <span style="font-size: 15px; font-weight: 800">{{s.name}}</span>
+      </div>
+      <sc-for list="{{s.steps}}" as="t" hint-placeholder-count="1">
+        <div style="position: absolute; left: 18px; {{t.rowTop}} display: flex; align-items: baseline; gap: 8px; white-space: nowrap">
+          <span style="font-family: Manrope, sans-serif; font-size: {{t.timeSize}}; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{t.time}}</span>
+          <span style="font-size: {{t.titleSize}}; font-weight: 800">{{t.title}}</span>
+        </div>
+        <div style="position: absolute; left: 18px; {{t.descBox}} font-size: 12.5px; line-height: 1.55; color: #3d4452">{{t.desc}}</div>
+      </sc-for>
+      <sc-if value="{{s.hasThumb}}" hint-placeholder-val="{{false}}">
+        <div style="position: absolute; left: 212px; top: 18px; width: 64px; height: 100px; box-sizing: border-box; border: 3px solid #121417; border-radius: 10px; overflow: hidden; background: #ffffff">
+          <img src="/_blob/480e3097ff51f6ca5afe88d496b381a5" alt="SmartThings AI 절약 모드 앱 화면 (에너지 사용량 그래프)" style="position: absolute; left: -26px; top: 0px; width: 84px; height: 94px; object-fit: cover">
+        </div>
+      </sc-if>
+      <div style="position: absolute; left: 18px; top: 178px; width: 258px; height: 1px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 18px; top: 188px; width: 258px; display: flex; align-items: flex-start; gap: 8px">
+        <span style="{{s.tagStyle}}">{{s.tag}}</span>
+        <span style="font-size: 12px; line-height: 1.5; color: #596170">{{s.note}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 가운데 허브 — SmartThings Pro (로고 없음, 이름 표기) -->
+  <div style="position: absolute; left: 528px; top: 336px; width: 224px; height: 136px; box-sizing: border-box; border-radius: 16px; border: 2px solid #1428a0; background: #ffffff">
+    <div style="position: absolute; left: 10px; top: 9px; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span><span style="font-size: 13.5px; font-weight: 800; color: #1428a0">SmartThings Pro</span></div>
+    <div style="position: absolute; left: 10px; top: 34px; width: 100px; height: 79px; overflow: hidden">
+      <img src="/_blob/37eb6322b0acde024eb630ba187e8fa1" alt="SmartThings Pro 대시보드 모니터 화면" style="position: absolute; left: -101px; top: -3px; width: 302px; height: 136px; object-fit: cover">
+    </div>
+    <div style="position: absolute; left: 118px; top: 36px; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span><span style="font-size: 13px; font-weight: 800; color: #1428a0">월말</span></div>
+    <div style="position: absolute; left: 118px; top: 60px; font-size: 13px; font-weight: 800; white-space: nowrap">에너지 리포트</div>
+    <div style="position: absolute; left: 118px; top: 80px; width: 96px; font-size: 11px; line-height: 1.45; color: #596170">에너지원별 사용량 · 비용 리포트</div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 2×2: 사진은 안쪽(가운데 허브 쪽), 설명 패널은 바깥쪽. 행 y 160–396 / 412–648
+    // 열: 좌 패널 64–358 · 좌 사진 370–628 | 우 사진 652–910 · 우 패널 922–1216
+    const PH = 236, PW = 258;
+    const cell = (col, row) => ({
+      photoX: col === 0 ? 370 : 652,
+      panelX: col === 0 ? 64 : 922,
+      y: row === 0 ? 160 : 412
+    });
+    const badgeStyle = (x, y) => A + box(x, y, 28, 28) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
+
+    // 단계 행 배치 (패널 안 좌표)
+    const one = (time, title, desc, descW) => [{ time, title, desc, timeSize: '22px', titleSize: '15px', rowTop: 'top: 52px;', descBox: 'top: 90px; width: ' + px(descW) }];
+
+    const S = [
+      {
+        n: 1, name: '입구 / 로비', col: 0, row: 0,
+        src: '/_blob/a14414799350aa67c39b1ce639897726', alt: '오피스 로비 — 천장형 무풍 시스템에어컨 4Way와 유리 회의실 (예시 사진)', op: '50% 50%',
+        steps: one('08:30', '출근 루틴 · 프리쿨링', '날씨 데이터로 출근 전에 미리 냉방하고, 로비 조명 · 사이니지는 스케줄대로 켭니다', 258),
+        tag: 'STP', note: '날씨 기반 프리쿨링 · 스케줄 루틴 (모바일 · 웹에서 원격 제어)',
+        badge: [380, 170], notePos: [378, 370]
+      },
+      {
+        n: 2, name: '회의공간', col: 1, row: 0,
+        src: '/_blob/e625d71cc8d0865bc5e709f4dcecd518', alt: '회의공간 — 벽걸이 전자칠판으로 발표하는 회의 (예시 사진)', op: '50% 30%',
+        steps: [
+          { time: '10:00', title: '‘발표모드’ 버튼 하나', desc: '조명 · 시스템에어컨 · 공기청정기 · 디스플레이 전원을 한 번에 ON', timeSize: '18px', titleSize: '14px', rowTop: 'top: 48px;', descBox: 'top: 74px; width: 258px;' },
+          { time: '11:00', title: '회의 끝 · 움직임 없음', desc: '움직임이 없으면 전원이 자동으로 꺼집니다', timeSize: '18px', titleSize: '14px', rowTop: 'top: 118px;', descBox: 'top: 144px; width: 258px;' }
+        ],
+        tag: '고민', note: '회의 준비시간을 아낄 수 있을까요?',
+        badge: [874, 170], notePos: [660, 168]
+      },
+      {
+        n: 3, name: '업무공간', col: 0, row: 1,
+        src: '/_blob/df8dcc261014c7a63fc870a1890e779c', alt: '업무공간 — 대형 전자칠판 디스플레이와 노트북 (예시 사진)', op: '50% 50%',
+        steps: one('14:00', 'AI 절약 모드', '오후 피크 시간, AI가 공조 컴프레서 · 온도를 최적화해 전력 사용을 줄입니다', 180),
+        tag: '화면', note: '오른쪽 위 — SmartThings ‘AI 절약 모드’ 화면 예시',
+        badge: [380, 610], notePos: [477, 622], thumb: true
+      },
+      {
+        n: 4, name: '휴게공간', col: 1, row: 1,
+        src: '/_blob/c9edb7683ec3833d8319b6e53b8555fe', alt: '휴게공간 — 오피스 팬트리 · 라운지 (예시 사진)', op: '40% 50%',
+        steps: one('19:00', '퇴근 루틴 · 일괄 OFF', '남은 조명 · 에어컨 · 스마트 플러그를 한 번에 끄고, 미소등 기기는 모바일 · 웹에서 확인', 258),
+        tag: '고민', note: '직원들이 기기를 다 끄지 않고 퇴근해서 에너지가 낭비돼요',
+        badge: [874, 610], notePos: [660, 622]
+      }
+    ];
+
+    const spaces = S.map((s) => {
+      const c = cell(s.col, s.row);
+      return {
+        n: s.n, name: s.name, src: s.src, alt: s.alt, steps: s.steps, tag: s.tag, note: s.note,
+        hasThumb: !!s.thumb,
+        photo: box(c.photoX, c.y, PW, PH) + 'object-position: ' + s.op + ';',
+        panel: 'left: ' + px(c.panelX) + 'top: ' + px(c.y),
+        badge: badgeStyle(s.badge[0], s.badge[1]),
+        notePos: 'left: ' + px(s.notePos[0]) + 'top: ' + px(s.notePos[1]),
+        tagStyle: 'flex-shrink: 0; height: 20px; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; ' + (s.tag === 'STP' ? 'background: #1428a0; color: #ffffff;' : (s.tag === '고민' ? 'background: #ffffff; color: #3d4452; border: 1px solid #d5d9e0;' : 'background: #e2e5ea; color: #3d4452;'))
+      };
+    });
+
+    return { spaces };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Spec 시트 · 시트 편집</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="spec" current="QMC vs QBC 55&quot; 비교" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Spec 시트 생성" title="QMC vs QBC 55&quot; 비교" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">편집 모드예요. 행을 끌어 순서를 바꾸고, 오른쪽 아이콘으로 숨기기 · 강조 · 메모를 달 수 있어요. 숨긴 행은 내보낼 때 빠지고, 메모는 각주나 내부 메모로 남길 수 있어요.</div>
+
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <!-- 편집 도구 -->
+              <div style="height: 46px; box-sizing: border-box; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                  <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; flex-shrink: 0; white-space: nowrap"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>편집 중</span>
+                  <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Smart Signage 55" 비교 — QM55C vs QB55C</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 2px; flex-shrink: 0">
+                  <button aria-label="실행 취소" style="width: 28px; height: 28px; border-radius: 7px; border: none; background: transparent; color: #3d4452; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></button>
+                  <button aria-label="다시 실행" style="width: 28px; height: 28px; border-radius: 7px; border: none; background: transparent; color: #b8bec8; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg></button>
+                  <span style="width: 1px; height: 18px; background: #e2e5ea; margin: 0 8px"></span>
+                  <button role="switch" aria-checked="true" style="height: 28px; padding: 0 6px; border: none; background: transparent; color: #121417; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 7px; white-space: nowrap">
+                    <span>숨긴 행 보기 <span style="font-family: Manrope, sans-serif; color: #596170">1</span></span>
+                    <span style="position: relative; width: 30px; height: 18px; border-radius: 999px; background: #1428a0; display: block"><span style="position: absolute; top: 2px; left: 14px; width: 14px; height: 14px; border-radius: 50%; background: #ffffff; display: block"></span></span>
+                  </button>
+                  <button style="height: 28px; padding: 0 9px; margin-left: 4px; border-radius: 7px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4L3 8l4 4M3 8h14M17 12l4 4-4 4M21 16H7"/></svg>열 순서 바꾸기</button>
+                </div>
+              </div>
+
+              <!-- 열 머리 -->
+              <div style="height: 32px; display: flex; align-items: center; background: #f5f6f8; font-size: 12px; font-weight: 600; color: #596170">
+                <span style="width: 28px; flex-shrink: 0"></span>
+                <span style="width: 184px; flex-shrink: 0">항목</span>
+                <span style="flex: 1 1 0; min-width: 0; padding: 0 12px; color: #121417; font-weight: 700">QM55C</span>
+                <span style="flex: 1 1 0; min-width: 0; padding: 0 12px; color: #121417; font-weight: 700">QB55C</span>
+                <span style="width: 124px; flex-shrink: 0; padding-right: 12px; box-sizing: border-box; text-align: right; font-size: 11px">숨김 · 강조 · 메모</span>
+              </div>
+
+              <!-- 행 -->
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+                <div style="{{r.rowStyle}}">
+                  <span style="width: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; cursor: grab" aria-label="끌어서 순서 바꾸기">
+                    <svg width="9" height="13" viewBox="0 0 10 14" fill="{{r.grip}}"><circle cx="2.5" cy="2.5" r="1.3"/><circle cx="7.5" cy="2.5" r="1.3"/><circle cx="2.5" cy="7" r="1.3"/><circle cx="7.5" cy="7" r="1.3"/><circle cx="2.5" cy="11.5" r="1.3"/><circle cx="7.5" cy="11.5" r="1.3"/></svg>
+                  </span>
+                  <span style="width: 184px; flex-shrink: 0; min-width: 0; display: flex; align-items: center; gap: 5px">
+                    <span style="{{r.kStyle}}">{{r.k}}</span>
+                    <sc-for list="{{r.tags}}" as="tg" hint-placeholder-count="1">
+                      <span style="{{tg.style}}">{{tg.t}}</span>
+                    </sc-for>
+                  </span>
+                  <span style="{{r.aStyle}}">{{r.a}}</span>
+                  <span style="{{r.bStyle}}">{{r.b}}</span>
+                  <span style="width: 124px; flex-shrink: 0; box-sizing: border-box; padding-right: 10px; display: flex; align-items: center; justify-content: flex-end; gap: 4px">
+                    <button aria-label="{{r.eyeLabel}}" style="{{r.eyeBtn}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.eyePath}}"/></svg></button>
+                    <button aria-label="강조" style="{{r.hlBtn}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="{{r.hlFill}}" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9L12 3z"/></svg></button>
+                    <button aria-label="메모" style="{{r.memoBtn}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h14v11l-5 5H5z M14 20v-5h5 M8.5 9h7 M8.5 12.5h4"/></svg></button>
+                  </span>
+                </div>
+                <sc-if value="{{r.memoOpen}}" hint-placeholder-val="{{false}}">
+                  <div style="height: 84px; box-sizing: border-box; padding: 6px 12px 12px 40px; display: flex; gap: 12px; background: #f5f7fd; box-shadow: inset 2px 0 0 #1428a0, inset -2px 0 0 #1428a0, inset 0 -2px 0 #1428a0">
+                    <label for="memo" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">밝기 · 명암비 메모</label>
+                    <textarea id="memo" style="flex-grow: 1; min-width: 0; height: 66px; box-sizing: border-box; resize: none; border: 1px solid #c9d1ee; border-radius: 8px; background: #ffffff; padding: 7px 10px; font-size: 12.5px; line-height: 1.55; color: #121417; outline: none">창가 매장은 오후 직사광이 들어 QM55C 권장 — 고객 미팅에서 언급</textarea>
+                    <div style="width: 176px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px">
+                      <button role="radio" aria-checked="true" style="height: 20px; padding: 0; border: none; background: transparent; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: 4px solid #1428a0; background: #ffffff; display: block; flex-shrink: 0"></span>시트에 각주로 표시</button>
+                      <button role="radio" aria-checked="false" style="height: 20px; padding: 0; border: none; background: transparent; color: #3d4452; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8; background: #ffffff; display: block; flex-shrink: 0"></span>내부 메모만 (내보내지 않음)</button>
+                      <div style="display: flex; gap: 6px; padding-top: 2px">
+                        <button style="height: 24px; padding: 0 9px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #596170; font-size: 11.5px; font-weight: 600">삭제</button>
+                        <button style="height: 24px; padding: 0 10px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 600">메모 저장</button>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+              </sc-for>
+
+              <!-- 행 추가 -->
+              <div style="height: 44px; box-sizing: border-box; padding: 0 12px 0 16px; display: flex; align-items: center; gap: 6px; border-top: 1px solid #e2e5ea; background: #fbfbfc">
+                <button style="height: 28px; padding: 0 8px 0 4px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>항목 추가</button>
+                <span style="font-size: 11.5px; color: #8a91a0; margin-right: 2px">빠진 항목</span>
+                <button style="height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">입출력 단자</button>
+                <button style="height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">베젤</button>
+                <button style="height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">인증</button>
+                <button style="height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">액세서리</button>
+                <span style="flex-grow: 1"></span>
+                <span style="font-size: 11.5px; color: #596170; white-space: nowrap">보이는 행 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">7</span> / 8</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">시트 편집 <span style="color: #596170; font-weight: 500">· 변경 5건 — 이동 1 · 강조 1 · 메모 1 · 숨김 1 · 추가 1</span></div>
+          <div style="display: flex; gap: 6px">
+            <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">변경 내역</button>
+            <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">모두 되돌리기</button>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">말로 고치기</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="fix" placeholder="말로 고치기 (예: 소비전력 행을 맨 아래로, 보증도 강조)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="SP3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">취소</a>
+          <a href="SP3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>편집 완료</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 편집 중인 시트 행 — win: 우위 셀(a · b) · pending: [확정 필요] 칸 · hl: 행 강조 · moved: 이동 표시 · sel: 선택(메모 열림) · memo: 메모 있음 · hidden: 숨김 · added: 새로 추가
+    const R = [
+      { k: '화면 크기 · 해상도', a: '55" · 3840×2160', b: '55" · 3840×2160' },
+      { k: '운영 시간', a: '[00]/7', b: '[00]/7', win: 'a', hl: true, moved: '↑ 2칸' },
+      { k: '밝기 · 명암비', a: '[000] nit · [0000]:1', b: '[000] nit · [0000]:1', win: 'a', sel: true, memo: true },
+      { k: '소비전력 (일반 · 최대)', a: '[000] W · [000] W', b: '[확정 필요]', pending: 'b' },
+      { k: '내장 플레이어 · OS', a: 'Tizen [0.0]', b: 'Tizen [0.0]', hidden: true },
+      { k: 'MagicINFO 호환', a: '지원', b: '지원' },
+      { k: '보증', a: '[0]년', b: '[0]년' },
+      { k: '크기 (W×H×D)', a: '[0000]×[000]×[00] mm', b: '[0000]×[000]×[00] mm', added: true }
+    ];
+    const EYE = 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z';
+    const EYE_OFF = 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z M4 4l16 16';
+    const tag = (t, kind) => ({
+      t,
+      style: 'height: 18px; padding: 0 6px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap;' + ({
+        hl: ' background: #1428a0; color: #ffffff;',
+        moved: ' border: 1px solid #1428a0; color: #1428a0; background: #ffffff; box-sizing: border-box;',
+        hidden: ' background: #e2e5ea; color: #596170;',
+        added: ' background: #eaeefb; color: #1428a0;'
+      })[kind]
+    });
+    const iconBtn = (on) => 'width: 28px; height: 28px; border-radius: 7px; border: none; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #eaeefb; color: #1428a0;' : ' background: transparent; color: #b8bec8;');
+    const cell = (win, hidden, pending) => 'flex: 1 1 0; min-width: 0; height: 100%; box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' +
+      (hidden ? ' color: #8a91a0;' : win ? ' background: #eaeefb; color: #1428a0; font-weight: 600;' : pending ? ' color: #1428a0; font-weight: 600;' : ' color: #121417;');
+    const rows = R.map((r) => {
+      const tags = [];
+      if (r.hl) tags.push(tag('강조', 'hl'));
+      if (r.moved) tags.push(tag(r.moved, 'moved'));
+      if (r.hidden) tags.push(tag('숨김', 'hidden'));
+      if (r.added) tags.push(tag('추가됨', 'added'));
+      let rowStyle = 'height: 36px; display: flex; align-items: center; font-size: 12.5px; border-top: 1px solid #e2e5ea;';
+      if (r.sel) rowStyle += ' background: #f5f7fd; box-shadow: inset 2px 0 0 #1428a0, inset -2px 0 0 #1428a0, inset 0 2px 0 #1428a0;';
+      else if (r.hl) rowStyle += ' background: #f5f7fd; box-shadow: inset 3px 0 0 #1428a0;';
+      else if (r.hidden) rowStyle += ' background: #fafbfc;';
+      return {
+        k: r.k, a: r.a, b: r.b, tags,
+        memoOpen: !!r.sel,
+        rowStyle,
+        grip: r.moved || r.sel ? '#1428a0' : '#b8bec8',
+        kStyle: 'min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (r.hidden ? ' color: #8a91a0;' : ' color: #121417;') + (r.hl || r.sel ? ' font-weight: 600;' : ''),
+        aStyle: cell(r.win === 'a', r.hidden, r.pending === 'a'),
+        bStyle: cell(r.win === 'b', r.hidden, r.pending === 'b'),
+        eyeLabel: r.hidden ? '다시 보이기' : '숨기기',
+        eyePath: r.hidden ? EYE_OFF : EYE,
+        eyeBtn: iconBtn(!!r.hidden),
+        hlBtn: iconBtn(!!r.hl),
+        hlFill: r.hl ? '#1428a0' : 'none',
+        memoBtn: iconBtn(!!r.memo)
+      };
+    });
+    return { steps: ['제품 입력', '항목 · 형식', '시트 생성'], cur: 3, rows };
+  }
+}
+</script>
+</body>
+</html>

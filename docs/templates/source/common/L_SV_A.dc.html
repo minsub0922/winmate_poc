@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SV-A 도입 로드맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">계약부터 전 매장 오픈까지 [00]주</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 560px; font-size: 15px; color: #596170">단계별 일정과 책임 주체 · 일정은 계약일 기준 예시</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 116px; display: flex; align-items: center; gap: 16px; font-size: 12.5px; color: #3d4452">
+    <sc-for list="{{owners}}" as="o" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="{{o.sw}}"></span>{{o.name}}</span>
+    </sc-for>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 9px; height: 9px; background: #121417; transform: rotate(45deg)"></span>마일스톤</span>
+  </div>
+
+  <!-- 주 헤더 -->
+  <div style="position: absolute; left: 64px; top: 166px; font-size: 13px; color: #596170">단계 · 책임</div>
+  <div style="position: absolute; left: 304px; top: 164px; width: 912px; display: grid; grid-template-columns: repeat(16, minmax(0, 1fr))">
+    <sc-for list="{{weeks}}" as="w" hint-placeholder-count="16">
+      <span style="{{w.st}}">{{w.label}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 주 눈금선 -->
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="17">
+    <div style="{{g}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 189px; width: 1152px; height: 2px; background: #121417"></div>
+
+  <!-- 마일스톤 기준선 -->
+  <sc-for list="{{miles}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.line}}"></div>
+  </sc-for>
+
+  <!-- 단계 행 -->
+  <div style="position: absolute; left: 64px; top: 191px; width: 1152px; display: flex; flex-direction: column">
+    <sc-for list="{{phases}}" as="p" hint-placeholder-count="5">
+      <div style="position: relative; height: 72px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea">
+        <div style="position: absolute; left: 0; top: 0; width: 232px; height: 71px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px">
+          <span style="font-size: 15.5px; font-weight: 700">{{p.name}}</span>
+          <span style="height: 22px; padding: 0 9px 0 7px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; gap: 6px"><span style="{{p.sw}}"></span>{{p.owner}}</span>
+        </div>
+        <div style="{{p.bar}}">{{p.note}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 마일스톤 행 -->
+  <div style="position: absolute; left: 64px; top: 572px; font-size: 13px; font-weight: 800; color: #596170">마일스톤</div>
+  <sc-for list="{{miles}}" as="m" hint-placeholder-count="2">
+    <div>
+      <div style="{{m.dia}}"></div>
+      <div style="{{m.lab}}">{{m.name}} <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #8a91a0">{{m.wk}}</span></div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 25</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 타임라인: x 304–1216, 16주 × 57px · 행 5개 × 72 (y 191–551)
+    const X0 = 304, WK = 57, NW = 16, ROW_TOP = 191, ROWS_H = 72 * 5;
+    const OWN = {
+      '삼성': { color: '#1428a0', text: '#ffffff', legend: '삼성 주도' },
+      '공동': { color: '#6f82d6', text: '#ffffff', legend: '공동' },
+      'A 커피': { color: '#b8c3ee', text: '#121417', legend: 'A 커피 주도' }
+    };
+    const sw = (o) => 'width: 10px; height: 10px; border-radius: 3px; background: ' + OWN[o].color;
+    // [단계, 책임, 시작 주, 기간(주), 막대 메모] — 일정은 예시
+    const P = [
+      ['현장 실사 · 설계', '삼성', 1, 3, '실측 · 설치 설계'],
+      ['시범 매장 10곳', '공동', 4, 3, '설치 · 운영 검증'],
+      ['1차 확산 150곳', '삼성', 7, 4, '직영 · 수도권 우선'],
+      ['2차 확산 160곳', '삼성', 11, 4, '가맹 · 지방 매장'],
+      ['안정화 · 운영 이관', 'A 커피', 15, 2, '교육 · 이관']
+    ];
+    // [이름, 해당 주 종료 시점]
+    const M = [['시범 오픈', 6], ['전 매장 오픈', 14]];
+    const mx = (w) => X0 + WK * w;
+    return {
+      owners: Object.keys(OWN).map((k) => ({ name: OWN[k].legend, sw: sw(k) })),
+      weeks: Array.from({ length: NW }, (_, i) => {
+        const hit = M.some((m) => m[1] === i + 1);
+        return {
+          label: 'W' + (i + 1),
+          st: 'text-align: center; font-family: Manrope, sans-serif; font-size: 12px; font-weight: ' + (hit ? '800; color: #1428a0' : '700; color: #8a91a0')
+        };
+      }),
+      grid: Array.from({ length: NW + 1 }, (_, k) =>
+        'position: absolute; left: ' + (k === NW ? mx(k) - 1 : mx(k)) + 'px; top: 191px; width: 1px; height: ' + ROWS_H + 'px; background: ' + (k % 4 === 0 ? '#d5d9e0' : '#eef0f3')
+      ),
+      phases: P.map(([name, owner, s, len, note]) => ({
+        name, owner, note, sw: sw(owner),
+        bar: 'position: absolute; left: ' + (240 + (s - 1) * WK + 3) + 'px; top: 20px; width: ' + (len * WK - 6) + 'px; height: 32px; box-sizing: border-box; border-radius: 6px; background: ' + OWN[owner].color + '; color: ' + OWN[owner].text + '; padding: 0 12px; display: flex; align-items: center; font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden'
+      })),
+      miles: M.map(([name, w]) => ({
+        name, wk: 'W' + w,
+        line: 'position: absolute; left: ' + (mx(w) - 1) + 'px; top: ' + ROW_TOP + 'px; width: 0; height: ' + (ROWS_H + 18) + 'px; border-left: 1.5px dashed #8a91a0',
+        dia: 'position: absolute; left: ' + (mx(w) - 7) + 'px; top: 573px; width: 14px; height: 14px; background: #121417; transform: rotate(45deg)',
+        lab: 'position: absolute; left: ' + (mx(w) - 80) + 'px; top: 596px; width: 160px; text-align: center; font-size: 13px; font-weight: 800; color: #121417'
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-MF-D 제조 · 물류 · 현장 · 공간 시나리오 · 창고 · 물류 야드 · 배송</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">창고 · 물류 야드 · 배송 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">입고부터 인수 서명까지, L 제조 물류가 종이 없이 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">⑤ 창고 · 물류 야드 · 배송 차량 — 박스 하나가 지나는 다섯 지점마다 갤럭시 단말이 스캔 · 확인 · 서명을 맡습니다</div>
+
+  <!-- 왼쪽: 창고동 · 야드 평면 + 번호 동선 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 662px; height: 444px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 168px; height: 18px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">L 제조 창고동 · 물류 야드</span><span style="font-size: 11px; color: #8a91a0">배치는 예시 · 실제 도면으로 교체</span></div>
+  <div style="position: absolute; left: 486px; top: 169px; width: 220px; height: 16px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; font-size: 10.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 0; border-top: 2px dashed #1428a0"></span>박스 동선</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 10px; box-sizing: border-box; border-radius: 999px; border: 1px solid #b8bec8; background: #ffffff"></span>쓰는 기기</span>
+  </div>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+
+  <!-- 오른쪽: 번호 순서 리스트 -->
+  <div style="position: absolute; left: 750px; top: 158px; width: 466px; height: 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: #8a91a0; white-space: nowrap"><span>지점 · 그 순간 · 솔루션과 기기</span><span>가치</span></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.line}}"></div>
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.nameStyle}}">{{s.name}}</div>
+    <div style="{{s.momStyle}}">{{s.mom}}</div>
+    <div style="{{s.rowStyle}}"><span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{s.sol}}</span><span style="font-size: 12px; color: #596170">{{s.dev}}</span></div>
+    <div style="{{s.klStyle}}">{{s.kl}}</div>
+    <div style="{{s.kvStyle}}">{{s.kv}}</div>
+    <div style="{{s.sep}}"></div>
+  </sc-for>
+
+  <!-- 하단 띠: 동선 전체 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; border-radius: 10px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 612px; height: 38px; display: flex; align-items: center; gap: 12px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">동선 전체</span>
+    <sc-for list="{{totals}}" as="t" hint-placeholder-count="3">
+      <span style="width: 1px; height: 14px; background: #d5d9e0"></span>
+      <span style="font-size: 12px; color: #3d4452">{{t.l}}</span>
+      <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{t.v}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; right: 82px; top: 624px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 공장 · 현장 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const B = '#1428a0';
+    const NW = 'white-space: nowrap; ';
+    const shapes = [];
+    const sh = (x, y, w, h, css, t) => shapes.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const at = (x, y, css, t) => shapes.push({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + css, t: t || '' });
+    const cap = (x, y, t, css) => at(x, y, 'font-size: 10.5px; line-height: 14px; font-weight: 700; color: #596170; ' + NW + (css || ''), t);
+    const MID = 'display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; ' + NW;
+
+    // 건물(창고동) · 야외(물류 야드)
+    sh(84, 196, 622, 266, 'box-sizing: border-box; border: 1.5px solid #b8bec8; border-radius: 8px; background: #ffffff;');
+    sh(84, 476, 622, 108, 'box-sizing: border-box; border: 1.5px dashed #8a91a0; border-radius: 10px;');
+    cap(96, 205, '창고동', 'font-size: 11px; font-weight: 800; color: #3d4452;');
+    cap(258, 486, '물류 야드 · 출하장', 'font-size: 11px; font-weight: 800; color: #3d4452;');
+
+    // 랙 A · B (통로 = 동선)
+    [226, 318].forEach((y, k) => {
+      for (let i = 0; i < 7; i++) sh(250 + i * 40, y, 36, 30, 'border-radius: 3px; background: #dfe3ea;');
+      cap(250, k ? 353 : 207, k ? '랙 B · 자재' : '랙 A · 완제품', 'font-weight: 500;');
+    });
+    // 입고 도크 · 팔레트
+    sh(96, 366, 150, 86, 'box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 6px;');
+    cap(104, 372, '입고 도크');
+    [104, 128, 198, 222].forEach((x) => sh(x, 428, 20, 16, 'border-radius: 2px; background: #e2e5ea;'));
+    // 물류 사무실 · 검수대 · 도크 문
+    sh(560, 206, 134, 56, 'box-sizing: border-box; border: 1px solid #d5d9e0; border-radius: 6px; background: #f8f9fb; color: #596170; ' + MID, '물류 사무실');
+    sh(626, 382, 68, 44, 'border-radius: 6px; background: #e2e5ea; color: #3d4452; ' + MID, '검수대');
+    [140, 574].forEach((x) => sh(x, 457, 52, 8, 'border-radius: 2px; background: #8a91a0;'));
+    // 출고 대기 팔레트
+    sh(380, 392, 128, 56, 'box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 6px;');
+    [390, 418, 446, 474].forEach((x) => sh(x, 420, 22, 16, 'border-radius: 2px; background: #e2e5ea;'));
+    cap(390, 399, '출고 대기');
+    // 야적 팔레트
+    [258, 282, 306, 330].forEach((x) => sh(x, 512, 20, 16, 'border-radius: 2px; background: #e2e5ea;'));
+    cap(258, 534, '야적 · 반품 대기', 'font-weight: 500;');
+    // 차량 (짐칸 + 운전석)
+    const truck = (x, label) => {
+      sh(x, 500, 64, 34, 'border-radius: 4px; background: #d5d9e0;');
+      sh(x + 64, 508, 18, 26, 'border-radius: 3px 7px 3px 3px; background: #b8bec8;');
+      cap(x, 542, label);
+    };
+    truck(126, '입고 차량');
+    truck(620, '배송 차량');
+
+    // 동선: 점선 + 화살촉
+    const seg = (x1, y1, x2, y2) => (y1 === y2
+      ? sh(Math.min(x1, x2), y1 - 1, Math.abs(x2 - x1), 0, 'border-top: 2px dashed ' + B + ';')
+      : sh(x1 - 1, Math.min(y1, y2), 0, Math.abs(y2 - y1), 'border-left: 2px dashed ' + B + ';'));
+    seg(166, 288, 166, 500);
+    seg(166, 288, 600, 288);
+    seg(600, 288, 600, 511);
+    const T5 = '5px solid transparent; ';
+    const tri = (x, y, d) => at(x - 5, y - 5, 'width: 0; height: 0; ' + (d === 'r'
+      ? 'border-top: ' + T5 + 'border-bottom: ' + T5 + 'border-left: 9px solid ' + B + ';'
+      : 'border-left: ' + T5 + 'border-right: ' + T5 + (d === 'u' ? 'border-bottom: 9px solid ' : 'border-top: 9px solid ') + B + ';'));
+    tri(166, 482, 'u'); tri(166, 346, 'u');
+    tri(232, 288, 'r'); tri(388, 288, 'r'); tri(540, 288, 'r');
+    tri(600, 346, 'd'); tri(600, 482, 'd');
+
+    // 기기 마커
+    const dev = (x, y, t) => at(x, y, 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; font-size: 10px; font-weight: 700; color: #3d4452; display: flex; align-items: center; ' + NW, t);
+    dev(186, 403, 'XCover');
+    dev(320, 261, 'XCover');
+    dev(490, 261, 'XCover');
+    dev(524, 395, '탭 액티브');
+    dev(524, 515, '탭 액티브');
+
+    // 번호 배지
+    const BADGE = 'box-sizing: border-box; border-radius: 50%; border: 2px solid #ffffff; background: ' + B + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
+    [[166, 412], [300, 288], [470, 288], [600, 404], [600, 524]].forEach(([x, y], i) => sh(x - 13, y - 13, 26, 26, BADGE, String(i + 1)));
+
+    // 오른쪽 순서 리스트
+    const S = [
+      ['입고 도크 · 스캔', '하차한 박스 라벨을 그 자리에서 찍어 입고 등록', 'Knox Capture', '갤럭시 XCover · 기존 물류 앱 입력란에 바로', '입고 등록', '[0]분 ↓'],
+      ['랙 보관 · 적치', '박스와 랙 위치 라벨을 연속으로 찍어 적치 기록', 'Knox Capture', '갤럭시 XCover · 연속 스캔, 전용 스캐너 없이', '적치 위치 오류', '[00]% ↓'],
+      ['피킹', '장갑 낀 손으로 피킹 목록 확인 · 꺼낸 박스 대조', '현장 업무 앱 · Knox Configure', '갤럭시 XCover · 업무 앱만 여는 전용 모드', '오피킹', '[0]건 ↓'],
+      ['출고 검수', '박스 바코드와 송장을 한 번에 찍어 출고 대조', 'Knox Capture', '갤럭시 탭 액티브 · 검수대 거치 · 동시 스캔', '검수 시간', '[0]분 → [0]분'],
+      ['배송 차량 · 전자서명', '도착지에서 인수자가 S펜으로 서명, 바로 전송', '현장 업무 앱 · Knox 보안', '갤럭시 탭 액티브 · S펜 · 분실 시 원격 잠금', '종이 인수증', '[000]장 → 0']
+    ];
+    const P = 84;
+    const steps = S.map(([name, mom, sol, dev2, kl, kv], i) => {
+      const y = 182 + i * P;
+      return {
+        n: i + 1, name, mom, sol, dev: dev2, kl, kv,
+        badge: box(750, y, 26, 26) + BADGE,
+        line: i < 4 ? box(762, y + 28, 2, P - 30) + 'background: #d5d9e0;' : 'display: none;',
+        nameStyle: box(788, y + 2, 300, 22) + 'font-size: 14.5px; font-weight: 800; line-height: 22px; ' + NW,
+        momStyle: box(788, y + 26, 316, 18) + 'font-size: 12.5px; line-height: 18px; color: #3d4452; ' + NW,
+        rowStyle: box(788, y + 49, 428, 20) + 'display: flex; align-items: center; gap: 7px; ' + NW,
+        klStyle: box(1096, y + 3, 120, 14) + 'font-size: 10.5px; line-height: 14px; color: #8a91a0; text-align: right; ' + NW,
+        kvStyle: box(1076, y + 19, 140, 20) + "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 800; line-height: 20px; color: " + B + '; text-align: right; ' + NW,
+        sep: i < 4 ? box(788, y + P - 9, 428, 1) + 'background: #e2e5ea;' : 'display: none;'
+      };
+    });
+
+    const totals = [
+      { l: '입고 → 출고 리드타임', v: '[00]% ↓' },
+      { l: '재입력 · 전표 정리', v: '[0]시간 → 0' },
+      { l: '전용 스캐너', v: '[00]대 → 0' }
+    ];
+
+    return { shapes, steps, totals };
+  }
+}
+</script>
+</body>
+</html>

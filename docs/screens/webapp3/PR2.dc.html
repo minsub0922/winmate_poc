@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 2/6 — 제안서 유형</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" one-click-open="{{oneClickOpen}}" plan-confirmed="{{planConfirmed}}" plan-rows="{{planRows}}" plan-summary="남은 5단계 · 약 19시트" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 28px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 22px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6"><span style="font-weight: 600">A 커피 프랜차이즈</span> · 전국 매장 디지털 메뉴보드 전환 · 리테일/F&amp;B · 320개 매장</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="font-size: 14.5px; line-height: 1.65; padding-top: 3px">어떤 형태의 제안서로 만들까요? 유형마다 섹션 구성이 다르고, 점선으로 표시된 섹션과 섹션마다 넣을 시트는 다음 단계에서 고릅니다. 요구사항에 공간 구성과 원격 관리 솔루션이 함께 있어 <span style="font-weight: 600">표준 제안서</span>를 추천합니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; font-size: 13px; font-weight: 600">제안서 유형 <span style="color: #596170; font-weight: 500">· 하나 선택 · 2 / 6</span></div>
+        <div style="padding: 12px 18px 0 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: stretch">
+          <sc-for list="{{types}}" as="t" hint-placeholder-count="3">
+            <a href="{{t.href}}" style="{{t.cardStyle}}">
+              <div style="display: flex; align-items: center; justify-content: space-between; width: 100%">
+                <span style="font-size: 15px; font-weight: 700; color: #121417">{{t.name}}</span>
+                <sc-if value="{{t.rec}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 11px; font-weight: 700; color: #ffffff; background: #1428a0; border-radius: 999px; padding: 2px 8px">추천</span>
+                </sc-if>
+              </div>
+              <div style="font-size: 12.5px; color: #596170; line-height: 1.5; min-height: 38px">{{t.desc}}</div>
+              <div style="display: flex; flex-direction: column; gap: 4px; width: 100%">
+                <sc-for list="{{t.secs}}" as="s" hint-placeholder-count="6">
+                  <div style="{{s.style}}">
+                    <span style="width: 14px; color: #8a91a0; font-size: 10.5px">{{s.no}}</span>
+                    <span style="flex-grow: 1">{{s.label}}</span>
+                    <sc-if value="{{s.opt}}" hint-placeholder-val="{{false}}"><span style="font-size: 10.5px; color: #596170">선택</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="flex-grow: 1"></div>
+              <div style="font-size: 12px; color: #596170; padding-top: 4px; border-top: 1px solid #eef0f3; width: 100%">섹션 {{t.count}} · 넣을 시트는 다음 단계에서 골라요</div>
+            </a>
+          </sc-for>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+          <span style="font-size: 12.5px; color: #596170">유형은 섹션 작성 중에도 바꿀 수 있고, 이미 작성한 섹션은 유지됩니다.</span>
+          <div style="display: flex; gap: 8px">
+            <a href="PR1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+            <a href="PR3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+              <span>다음: 시트 구성</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"oneClickOpen":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const T = [
+      { name: '표준 제안서', desc: '시장 분석부터 공간·제품·솔루션·스펙까지 전 과정을 담는 기본형', sheets: 19, href: 'PR3.dc.html', rec: true,
+        secs: [['MI', 1], ['Value Props', 0], ['조감도', 0], ['공간별 제품', 0], ['솔루션 제안', 1], ['유관 사례', 0], ['Why Samsung', 0], ['제품 스펙', 0]] },
+      { name: '퀵윈(제품) 제안서', desc: '제품 중심으로 빠르게 결정을 끌어내는 간결형', sheets: 12, href: 'PR3Quick.dc.html', rec: false,
+        secs: [['Value Props', 0], ['공간별 제품', 0], ['솔루션 제안', 1], ['유관 사례', 0], ['제품 스펙', 0]] },
+      { name: 'Solution형 제안서', desc: '대규모 MI와 공간별 가치 제공 시나리오로 설득하는 솔루션 중심형', sheets: 15, href: 'PR3Solution.dc.html', rec: false,
+        secs: [['대규모 MI', 0], ['Value Props', 1], ['공간별 가치 제공 시나리오', 0], ['유관 사례', 0], ['Why Samsung', 0]] }
+    ];
+    const types = T.map((t) => ({
+      name: t.name, desc: t.desc, sheets: t.sheets, href: t.href, rec: t.rec, count: t.secs.length,
+      cardStyle: 'display: flex; flex-direction: column; align-items: flex-start; gap: 10px; box-sizing: border-box; padding: 14px; border-radius: 12px; color: #121417;' + (t.rec ? ' border: 1.5px solid #1428a0; background: #f5f7fd;' : ' border: 1px solid #e2e5ea; background: #ffffff;'),
+      secs: t.secs.map(([label, opt], i) => ({
+        no: i + 1, label, opt: !!opt,
+        style: 'display: flex; align-items: center; gap: 6px; height: 24px; padding: 0 8px; border-radius: 6px; box-sizing: border-box; font-size: 12px;' + (opt ? ' border: 1px dashed #b8bec8; background: #ffffff; color: #596170;' : ' border: 1px solid transparent; background: ' + (t.rec ? '#eaeefb' : '#f0f2f5') + '; color: #121417; font-weight: 500;')
+      }))
+    }));
+    // 딸깍을 유형 선택 전에 누르면: 유형부터 추론
+    const planRows = [
+      { label: '제안서 유형', note: '표준 제안서 (요구사항 기반 추천)' },
+      { label: '시트 구성', note: '8섹션 · 요구사항 기반 추천 시트' },
+      { label: '섹션 작성', note: '연결된 작업 5건 + 추론 · 시트마다 템플릿 자동 추천' },
+      { label: '디자인 템플릿', note: '삼성 B2B 표준 (기본값)' },
+      { label: 'PPTX 생성', note: '표지 · 목차 포함' }
+    ];
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 2, types,
+      oneClickOpen: !!this.props.oneClickOpen, planConfirmed: ['고객 · 프로젝트'], planRows
+    };
+  }
+}
+</script>
+</body>
+</html>

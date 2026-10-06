@@ -1,0 +1,49 @@
+ 
+ 이미지 생성 · 생성 중 
+ W 
+ 4장을 만들고 있어요. 제품 외형과 비율을 먼저 맞춘 뒤 장면을 그립니다. 완료되면 알려드릴 테니 다른 작업을 하셔도 됩니다. 
+ {{st.label}} 
+ QM55C ×3 · KM24C · 참조 2장 반영 
+ 시안 1 · 완료 
+ 렌더링 중 80% 
+ 시안 2 
+ 장면 구성 중 35% 
+ 시안 3 
+ 이 장 취소 
+ 대기 중 
+ 시안 2가 끝나면 시작해요 
+ 시안 4 
+ 생성 중 · 1 / 4 완료 · 3 / 3 
+ 완료되면 알림 
+ 약 1분 남음 
+ 내 대기열 2 건 
+ 이 작업이 끝나면 순서대로 이어서 생성돼요 
+ {{q.num}} 
+ {{q.title}} 
+ {{q.meta}} 
+ {{q.note}} 
+ {{q.state}} 
+ 취소 
+ 전체 취소 · 조건 수정 
+ 목록에서 기다리기 
+ 완료된 1장 먼저 보기 
+class Component extends DCLogic {
+ renderVals() {
+ const S = [['제품 외형 맞춤', 'done'], ['장면 구성', 'done'], ['렌더링 2 / 4', 'now'], ['품질 확인', 'todo']];
+ const stages = S.map(([label, st], i) => ({
+ label, notFirst: i > 0,
+ lineStyle: '' + (st === 'todo' ? '' : '') + ';',
+ dotStyle: '' + (st === 'done' ? '' : st === 'now' ? '' : ''),
+ icon: st === 'done' ? 'M5 12l5 5L20 7' : st === 'now' ? 'M12 7v5l3 2' : '',
+ iconColor: st === 'done' ? '' : '',
+ textStyle: '' + (st === 'now' ? '' : st === 'done' ? '' : '')
+ }));
+ const queue = [
+ { num: 1, title: '로비 배경 이미지', meta: 'B 병원 · 변형 4장', hasNote: false, note: '', state: '다음 차례',
+ stateStyle: '' },
+ { num: 2, title: '병원 대기실 시나리오 컷', meta: 'B 병원 · 2장', hasNote: true, note: '1장은 생성 불가 · 안내 보기', state: '2번째',
+ stateStyle: '' }
+ ];
+ return { steps: ['이미지 유형', '상세 조건', '생성 결과'], cur: 3, stages, queue };
+ }
+}

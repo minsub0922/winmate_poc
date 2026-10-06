@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-FN-C 금융 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">T 은행 영업점의 하루 — 본점이 준비하고, 창구는 종이 없이 마감합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">고객 · 창구 직원 · 영업점 공간 · 본점의 하루를 한 시간축에 — 칸마다 시간 · 공간 · 삼성이 하는 일 · 결과</div>
+
+  <!-- 영업시간 음영 + 시간 눈금 -->
+  <div style="position: absolute; left: 270px; top: 206px; width: 490px; height: 400px; background: #f5f6f8"></div>
+  <sc-for list="{{hours}}" as="h" hint-placeholder-count="11">
+    <div style="{{h.labelStyle}}">{{h.label}}</div>
+    <div style="{{h.tickStyle}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 200px; top: 186px; width: 700px; height: 1px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 270px; top: 189px; width: 490px; height: 4px; border-radius: 2px; background: #b8c3ee"></div>
+  <div style="position: absolute; left: 768px; top: 184px; width: 100px; height: 14px; font-size: 10.5px; font-weight: 700; line-height: 14px; color: #596170; white-space: nowrap">영업시간 · 예시</div>
+  <div style="position: absolute; left: 64px; top: 162px; width: 124px; height: 16px; font-size: 11.5px; font-weight: 700; line-height: 16px; color: #8a91a0; white-space: nowrap">역할 · 시간 →</div>
+
+  <!-- 레인 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.ruleStyle}}"></div>
+    <div style="{{l.tagStyle}}">{{l.tag}}</div>
+    <div style="{{l.nameStyle}}">{{l.name}}</div>
+    <div style="{{l.subStyle}}">{{l.sub}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 606px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+
+  <!-- 하루의 장면 -->
+  <sc-for list="{{events}}" as="e" hint-placeholder-count="11">
+    <div style="{{e.box}}"></div>
+    <div style="{{e.headStyle}}"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{e.time}}</span><span style="font-size: 10.5px; font-weight: 500; color: #596170">{{e.space}}</span></div>
+    <div style="{{e.actStyle}}">{{e.act}}</div>
+    <div style="{{e.chipStyle}}">{{e.chip}}</div>
+    <div style="{{e.outStyle}}">{{e.out}}</div>
+  </sc-for>
+
+  <!-- 레인 사이 연결: 콘텐츠 · 서식 · 방문 -->
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.lineStyle}}"></div>
+    <div style="{{k.headStyle}}"></div>
+  </sc-for>
+
+  <!-- 하루가 끝나면 -->
+  <div style="position: absolute; left: 1068px; top: 160px; width: 148px; height: 20px; font-size: 13px; font-weight: 800; line-height: 20px; color: #1428a0; white-space: nowrap">하루가 끝나면</div>
+  <div style="position: absolute; left: 1068px; top: 182px; width: 148px; height: 16px; font-size: 10.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">[ ] 는 실측 후 반영</div>
+  <sc-for list="{{results}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.box}}"></div>
+    <sc-for list="{{r.rows}}" as="w" hint-placeholder-count="2">
+      <div style="{{w.labelStyle}}">{{w.label}}</div>
+      <div style="{{w.valStyle}}">{{w.val}}</div>
+    </sc-for>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 616px; width: 1152px; height: 16px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">시간은 예시 · [ ] 수치는 T 은행 실측 후 반영 · 세로 화살표 = 콘텐츠 · 서식 · 고객이 다음 역할로 넘어가는 지점</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+    const X = (t) => Math.round(200 + (t - 8) * 70);     // 08:00 → 200, 18:00 → 900
+    const LANE = (i) => 206 + i * 100;                   // 레인 상단
+    const BW = 150, BH = 84;
+
+    // 시간 눈금
+    const hours = [];
+    for (let h = 8; h <= 18; h++) {
+      const x = X(h);
+      hours.push({
+        label: (h < 10 ? '0' : '') + h + ':00',
+        labelStyle: box(x - 20, 162, 40, 16) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; line-height: 16px; color: ' + (h >= 9 && h <= 16 ? '#3d4452' : '#8a91a0') + ';',
+        tickStyle: box(x, 180, 1, 6) + 'background: #b8bec8;'
+      });
+    }
+
+    // 레인 — 사용자 / 운영 / 공간 / 본점
+    const LN = [
+      ['사용자', '고객', '내점 · 방문', '#121417'],
+      ['운영', '창구 · 상담 직원', '창구 · 방문 상담', BLUE],
+      ['공간', '영업점 공간', '화면 · 공조 · 자동 운영', BLUE],
+      ['본점', '본점', '마케팅 · IT 정보보호', BLUE]
+    ];
+    const lanes = LN.map(([tag, name, sub, color], i) => {
+      const y = LANE(i);
+      return {
+        tag, name, sub,
+        ruleStyle: box(64, y, 1152, 1) + 'background: #e2e5ea;',
+        tagStyle: 'position: absolute; left: 64px; top: ' + px(y + 14) + 'height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: ' + color + '; color: #ffffff; font-size: 10px; font-weight: 800; display: flex; align-items: center; white-space: nowrap;',
+        nameStyle: box(64, y + 38, 124, 20) + 'font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        subStyle: box(64, y + 60, 124, 16) + 'font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap;'
+      };
+    });
+
+    // 장면 — [레인, 시각(시간 단위), 표시 시각, 공간, 하는 일, 삼성, 결과]
+    const EV = [
+      [0, 10 + 10 / 60, '10:10', '창구 대기 공간', '대기 중 서식 미리작성', '갤럭시 탭 · 미리작성', '기다림이 작성 시간으로'],
+      [0, 14 + 20 / 60, '14:20', '고객 사업장', '방문 상담 받고 가입', '갤럭시 탭 + Knox', '다시 내점할 필요 없음'],
+      [1, 10 + 40 / 60, '10:40', '영업점 창구', '불러온 서식으로 상담', '전자서식 · S펜 서명', '출력 · 스캔 없이 처리'],
+      [1, 14, '14:00', '고객 사업장', '현장 방문 · 가입 처리', 'Knox 업무 영역', '분실해도 데이터 보호'],
+      [1, 16.5, '16:30', '영업점 창구', '출력 · 스캔 없는 마감', '전자서식 · 전자문서', '서류 정리 · 보관 단축'],
+      [2, 8 + 40 / 60, '08:40', '객장 · 대기 공간', '개점 전 객장 화면 ON', 'MagicINFO 스케줄', '무풍 공조도 스케줄로 함께'],
+      [2, 13, '13:00', '객장 · 대기 공간', '신상품 화면으로 전환', 'MagicINFO', '현수막 · 인쇄물 교체 없음'],
+      [2, 17.5, '17:30', '객장 · 창구', '화면 · 공조 자동 OFF', '스케줄 운전', '켜 둔 채 퇴근하는 일 없음'],
+      [3, 8, '08:00', '본점 마케팅', '오늘 콘텐츠 예약', 'MagicINFO', '[000]곳 동시 적용'],
+      [3, 12.5, '12:30', '본점 마케팅', '신상품 콘텐츠 배포', 'MagicINFO', '지점 작업 없이 전환'],
+      [3, 18, '18:00', '본점 IT · 보안', '태블릿 정책 일괄 적용', 'Knox', '지점 방문 없이 전 단말']
+    ];
+    const events = EV.map(([lane, t, time, space, act, chip, out]) => {
+      const x = X(t), y = LANE(lane) + 8;
+      return {
+        time, space, act, chip, out,
+        box: box(x, y, BW, BH) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid ' + (lane === 0 ? '#8a91a0' : '#d5d9e0') + ';',
+        headStyle: box(x + 10, y + 7, 132, 18) + 'display: flex; align-items: baseline; gap: 6px; white-space: nowrap;',
+        actStyle: box(x + 10, y + 26, 132, 18) + 'font-size: 12.5px; font-weight: 800; line-height: 18px; white-space: nowrap;',
+        chipStyle: 'position: absolute; left: ' + px(x + 10) + 'top: ' + px(y + 46) + 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: ' + BLUE + '; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;',
+        outStyle: box(x + 10, y + 66, 132, 14) + 'font-size: 11px; line-height: 14px; color: #596170; white-space: nowrap;'
+      };
+    });
+
+    // 레인 사이 연결 — 본점 → 공간 (위로), 고객 → 직원 (아래로), 직원 → 고객 (위로)
+    const up = (x, yTop, yBot) => ({
+      lineStyle: box(x - 1, yTop + 6, 2, yBot - yTop - 6) + 'background: ' + BLUE + ';',
+      headStyle: 'position: absolute; left: ' + px(x - 5) + 'top: ' + px(yTop) + 'width: 0px; height: 0px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 6px solid ' + BLUE + ';'
+    });
+    const down = (x, yTop, yBot) => ({
+      lineStyle: box(x - 1, yTop, 2, yBot - yTop - 6) + 'background: ' + BLUE + ';',
+      headStyle: 'position: absolute; left: ' + px(x - 5) + 'top: ' + px(yBot - 6) + 'width: 0px; height: 0px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 6px solid ' + BLUE + ';'
+    });
+    const bot = (lane) => LANE(lane) + 8 + BH;   // 블록 아래
+    const top = (lane) => LANE(lane) + 8;        // 블록 위
+    const links = [
+      up(298, bot(2), top(3)),     // 08:00 콘텐츠 예약 → 08:40 화면 ON
+      up(607, bot(2), top(3)),     // 12:30 배포 → 13:00 화면 전환
+      down(444, bot(0), top(1)),   // 미리작성 서식 → 창구 상담
+      up(706, bot(0), top(1))      // 직원 방문 → 고객 사업장 가입
+    ];
+
+    // 하루가 끝나면 — 레인별 결과 (자리 표시)
+    const RS = [
+      [['평균 대기', '[00]분 ↓'], ['현장 가입', '[000]건 / 월']],
+      [['건당 처리', '[00]분 ↓'], ['출력 · 스캔', '[000]장 ↓']],
+      [['홍보물 · 인쇄', '[000]만 원 ↓'], ['화면 · 공조 전력', '[00]% ↓']],
+      [['동시 반영 지점', '[000]곳'], ['단말 보안 사고', '[0]건']]
+    ];
+    const results = RS.map((rows, i) => {
+      const y = LANE(i) + 8;
+      return {
+        box: box(1068, y, 148, BH) + 'border-radius: 10px; background: #eaeefb;',
+        rows: rows.map(([label, val], j) => ({
+          label, val,
+          labelStyle: box(1080, y + 8 + j * 38, 128, 14) + 'font-size: 11px; line-height: 14px; color: #3d4452; white-space: nowrap;',
+          valStyle: box(1080, y + 22 + j * 38, 128, 20) + "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; line-height: 20px; color: " + BLUE + '; white-space: nowrap;'
+        }))
+      };
+    });
+
+    return { hours, lanes, events, links, results };
+  }
+}
+</script>
+</body>
+</html>

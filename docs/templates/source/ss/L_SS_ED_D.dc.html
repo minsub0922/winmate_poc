@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-ED-D 교육 · 캠퍼스 · 공간 시나리오 · 중앙도서관 · 라운지</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">중앙도서관 · 라운지 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">입구에서 열람석 · 출력까지, 도서관 안에서 헤매지 않습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">⑤ 중앙도서관 · 라운지 — 학생이 지나가는 다섯 지점마다 화면 · 공조 · 출력이 먼저 준비되어 있습니다</div>
+
+  <!-- 평면도 (7열) -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 662px; height: 444px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 168px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 13.5px; font-weight: 800; line-height: 20px">E 대학교 중앙도서관 · 1층</span><span style="font-size: 11px; color: #8a91a0">배치는 예시</span></div>
+  <div style="position: absolute; right: 574px; top: 170px; height: 16px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>삼성 기기</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; border: 2px solid #1428a0; background: #eaeefb"></span>시스템에어컨 360</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 0px; border-top: 2px dashed #1428a0"></span>동선</span>
+  </div>
+  <div style="position: absolute; left: 84px; top: 198px; width: 622px; height: 376px; border-radius: 4px; background: #3d4452"></div>
+  <div style="position: absolute; left: 88px; top: 202px; width: 614px; height: 368px; background: #ffffff"></div>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="30">
+    <div style="{{s.style}}"></div>
+  </sc-for>
+  <sc-for list="{{labels}}" as="l" hint-placeholder-count="8">
+    <span style="{{l.style}}">{{l.t}}</span>
+  </sc-for>
+  <sc-for list="{{path}}" as="p" hint-placeholder-count="10">
+    <div style="{{p.style}}"></div>
+  </sc-for>
+  <sc-for list="{{pins}}" as="b" hint-placeholder-count="5">
+    <span style="{{b.style}}">{{b.n}}</span>
+  </sc-for>
+  <span style="position: absolute; left: 150px; top: 578px; width: 60px; height: 15px; text-align: center; font-size: 10.5px; font-weight: 800; line-height: 15px; color: #1428a0; white-space: nowrap">입구</span>
+
+  <!-- 순서 리스트 (5열) -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.line}}"></div>
+    <span style="{{s.badge}}">{{s.n}}</span>
+    <div style="{{s.card}}">
+      <span style="position: absolute; left: 14px; top: 10px; height: 20px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">{{s.name}}</span>
+      <span style="position: absolute; right: 12px; top: 10px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #eaeefb; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-size: 10.5px; font-weight: 700; color: #3d4452">{{s.kl}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">{{s.kv}}</span></span>
+      <span style="position: absolute; left: 14px; top: 34px; height: 17px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.moment}}</span>
+      <div style="position: absolute; left: 14px; top: 56px; height: 20px; display: flex; align-items: center; gap: 7px; white-space: nowrap">
+        <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{s.sol}}</span>
+        <span style="font-size: 11.5px; font-weight: 600; color: #121417">{{s.dev}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 하단 띠 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #1428a0; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800; color: #ffffff">동선 전체</span>
+    <span style="width: 1px; height: 14px; background: #6f82d6"></span>
+    <sc-for list="{{totals}}" as="t" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 12px; color: #c8d3ff">{{t.k}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 800; color: #ffffff">{{t.v}}</span></span>
+    </sc-for>
+    <span style="margin-left: auto; font-size: 11px; color: #c8d3ff">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 스마트 교육 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+    const rect = (x, y, w, h, c, r) => ({ style: box(x, y, w, h) + 'border-radius: ' + px(r || 0) + 'background: ' + c + ';' });
+    const ring = (cx, cy) => ({ style: box(cx - 11, cy - 11, 22, 22) + 'box-sizing: border-box; border-radius: 50%; border: 2px solid ' + BLUE + '; background: #eaeefb;' });
+
+    // 평면 — 벽 · 칸막이 · 열람석 · 기기 (안쪽 x 88–702 · y 202–570)
+    const G = '#e2e5ea', W = '#ffffff', D = '#3d4452';
+    const shapes = [
+      rect(88, 392, 614, 4, D), rect(428, 392, 44, 4, W), rect(598, 392, 44, 4, W), // 칸막이 · 문
+      rect(528, 396, 4, 174, D), rect(150, 570, 60, 4, W),                         // 출력 코너 벽 · 입구
+      // 열람석 (위 2줄 · 아래 2줄, 가운데 통로 y 266–318)
+      rect(108, 228, 300, 14, G, 3), rect(108, 252, 300, 14, G, 3), rect(490, 228, 196, 14, G, 3), rect(490, 252, 196, 14, G, 3),
+      rect(108, 322, 300, 14, G, 3), rect(108, 346, 300, 14, G, 3), rect(490, 322, 106, 14, G, 3), rect(490, 346, 106, 14, G, 3),
+      rect(644, 322, 42, 14, G, 3), rect(644, 346, 42, 14, G, 3),
+      ring(260, 292), ring(670, 292), ring(360, 428),
+      // 로비 — 벤치 · 게이트 · 비디오월 · 사이니지
+      rect(96, 436, 16, 84, G, 3), rect(156, 506, 12, 18, '#b8bec8', 2), rect(192, 506, 12, 18, '#b8bec8', 2),
+      rect(120, 398, 130, 6, BLUE, 1), rect(218, 498, 8, 30, BLUE, 1),
+      // 검색대 (올인원 PC) · 키오스크
+      rect(330, 504, 100, 14, G, 3), rect(340, 492, 18, 10, BLUE, 1), rect(371, 492, 18, 10, BLUE, 1), rect(402, 492, 18, 10, BLUE, 1),
+      rect(476, 482, 14, 30, BLUE, 2),
+      // 출력 코너 — 복합기 · 결제기
+      rect(552, 500, 40, 30, BLUE, 2), rect(648, 500, 40, 30, BLUE, 2), rect(596, 508, 8, 12, '#6f82d6', 1)
+    ];
+    const lab = (t, x, y, c, w) => ({ t, style: 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'height: 14px; font-size: 10.5px; font-weight: ' + (w || 700) + '; line-height: 14px; white-space: nowrap; color: ' + c + ';' });
+    const labels = [
+      lab('열람실 · [000]석', 98, 207, '#121417', 800), lab('로비', 98, 550, '#121417', 800), lab('출력 코너', 540, 404, '#121417', 800),
+      lab('비디오월', 124, 408, BLUE), lab('게이트 · 사이니지', 230, 530, '#596170', 600),
+      lab('검색대 · 올인원 PC', 330, 524, BLUE), lab('키오스크', 466, 518, BLUE), lab('디지털 복합기', 584, 536, BLUE)
+    ];
+
+    // 번호 동선 — 점 (cx, cy), 점선 구간, 화살촉
+    const P = [[180, 552], [180, 452], [450, 452], [450, 292], [620, 466]];
+    const hs = (x1, x2, y) => ({ style: box(x1, y - 1, x2 - x1, 0) + 'border-top: 2px dashed ' + BLUE + ';' });
+    const vs = (x, y1, y2) => ({ style: box(x - 1, y1, 0, y2 - y1) + 'border-left: 2px dashed ' + BLUE + ';' });
+    const tri = (x, y, dir) => {
+      const t = 'position: absolute; width: 0px; height: 0px; ';
+      if (dir === 'up') return { style: t + 'left: ' + px(x - 5) + 'top: ' + px(y) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid ' + BLUE + ';' };
+      if (dir === 'down') return { style: t + 'left: ' + px(x - 5) + 'top: ' + px(y - 8) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid ' + BLUE + ';' };
+      return { style: t + 'left: ' + px(x - 8) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + BLUE + ';' };
+    };
+    const path = [
+      vs(180, 452, 552), hs(180, 450, 452), vs(450, 292, 452), hs(450, 620, 292), vs(620, 292, 466),
+      tri(180, 467, 'up'), tri(435, 452, 'right'), tri(450, 307, 'up'), tri(620, 451, 'down')
+    ];
+    const pin = 'border-radius: 50%; background: ' + BLUE + '; border: 2px solid #ffffff; box-sizing: border-box; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
+    const pins = P.map(([cx, cy], i) => ({ n: i + 1, style: box(cx - 13, cy - 13, 26, 26) + pin }));
+
+    // 순서 리스트 — [지점, 그 순간, 솔루션, 기기, 가치 라벨, 가치]
+    const S = [
+      ['출입 · 게이트', '게이트 옆 화면에 오늘 개관 시간 · 시험기간 연장 안내', 'MagicINFO', '스마트 사이니지 (QM 시리즈)', '운영 문의', '[00]% ↓'],
+      ['로비 비디오월', '열람실별 빈 좌석 · 혼잡도를 보고 덜 붐비는 층으로', 'MagicINFO', '비디오월 · 좌석 데이터 연동', '열람실 쏠림', '[00]% ↓'],
+      ['검색대 · 키오스크', '올인원 PC로 자료 위치를 찾고, 키오스크로 전자신문', 'MagicINFO', '올인원 PC 검색대 · 키오스크 KM24C', '데스크 문의', '[00]% ↓'],
+      ['열람석', '몇 시간을 앉아 있어도 자리마다 고른 온도 · 공기질', 'b.IoT', '시스템에어컨 360 · 공기청정기 · 재실 센서', '열람실 에너지', '[00]% ↓'],
+      ['출력 코너', '열람석에서 보낸 파일을 카드 태그 한 번에 출력 · 장당 결제', '무인 과금 솔루션', '디지털 복합기 · 카드 · NFC 결제기', '출력 대기', '[0]분 ↓']
+    ];
+    const steps = S.map(([name, moment, sol, dev, kl, kv], i) => {
+      const y = 156 + i * 90;
+      return {
+        n: i + 1, name, moment, sol, dev, kl, kv,
+        badge: box(750, y + 6, 28, 28) + pin + 'font-size: 13px;',
+        line: box(763, y + 34, 2, i < 4 ? 62 : 0) + 'background: #b8c3ee;',
+        card: box(790, y, 426, 84) + 'border-radius: 10px; background: #f8f9fb; border: 1px solid #e2e5ea; box-sizing: border-box;'
+      };
+    });
+
+    const totals = [['입장 → 착석', '[0]분 → [0]분'], ['화면 · 복합기 점검 순회', '[00]회 ↓'], ['도서관 냉난방 에너지', '[00]% ↓']].map(([k, v]) => ({ k, v }));
+
+    return { shapes, labels, path, pins, steps, totals };
+  }
+}
+</script>
+</body>
+</html>

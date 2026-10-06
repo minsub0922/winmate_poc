@@ -1,0 +1,38 @@
+ 
+ 경쟁사 분석 · 저장 · 보내기 
+ 저장 완료 
+ 저장했어요. 어디에 쓸까요? 
+ 결과는 작업 목록과 사이드바에 남아요. 보낼 곳을 고르면 그 자리에 맞게 바뀌어 들어가요. 
+ Market Intelligence 작업에 합치기 
+ A 커피 프랜차이즈 시장·경쟁사 분석의 경쟁사 영역으로 
+ 제안서 Why Samsung · 경쟁 비교 시트로 
+ {{prsSub}} 
+ Storyboard 비교 기준으로 
+ 기획 질의 3 / 3 비교 기준에 채우기 
+ 리포트 저장 
+ PDF · 사내용 · 실명 표기 — 고객에게는 보내지 않아요 
+ 고객 제출물엔 익명으로 표기 
+ — {{anonText}} 
+ 실명은 이 작업 안에서만 보여요 
+ 작업 목록 
+ 홈으로 
+class Component extends DCLogic {
+ renderVals() {
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ const st = this.state || {};
+ const anon = st.anon !== false;
+ // 보낼 곳 카드: 링크 3 + 버튼 1 (리포트 저장) · 같은 모양
+ const card = '';
+ return {
+ steps, cur: 4, anon,
+ card,
+ cardBtn: card + ' cursor: pointer; font-family: inherit;',
+ iconBox: '',
+ prsSub: anon ? '익명 표기 (경쟁사 A · B · C · D) 로 Why Samsung 비교 시트에 들어가요' : '실명 표기 · 보낼 때 한 번 더 물어요',
+ anonText: anon ? '경쟁사 A · B · C · D' : '실명 표기 · 고객 제출물에 넣을 땐 한 번 더 물어요',
+ anonCtl: { on: anon, toggle: () => this.setState({ anon: !anon }) },
+ switchStyle: '' + (anon ? '' : ''),
+ knobStyle: '' + (anon ? '' : '')
+ };
+ }
+}

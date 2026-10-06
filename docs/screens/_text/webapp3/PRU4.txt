@@ -1,0 +1,95 @@
+ 
+ 섹션 작성 · 원본 대조 · 공간별 제품 
+ 표준 4 / 8 
+ 공간별 제품 
+ 시트 3장 · 유지 2 · 갱신 1 
+ 원본 · A 커피 2025 p.9–11 
+ {{vw.label}} 
+ 원본 시트 
+ p.10 카운터 메뉴보드 · 2025 v4 
+ 읽기 전용 
+ p.10 
+ cards3img · 이미지 카드 3 
+ 카운터 메뉴보드 QM55B 2대 · 바닥형 OM46 
+ {{sl.mark}} 
+ {{sl.text}} 
+ 원본 이미지 3개 · 삼성 공식 2(재사용) · 매장 사진 1(2025 촬영 · 재사용 가능)
+ 새 시트 
+ 10 카운터 메뉴보드 · 편집 중 
+ 요구사항 R3 · R1 반영 
+ 시트 제목 · 원본 대비 모델명 갱신 · 유저가 고침 
+ 되돌리기 
+ 본문 불릿 · 줄마다 원본 대비 표시 
+ {{nl.aria}} 
+ {{nl.badge}} 
+ 줄 추가 · 원본 줄 끌어오기 
+ 시트 노트 · 원본 p.10 기반 · 갱신 — 이미지 3개는 원본에서 그대로 가져옴
+ 이 섹션의 시트 
+ 3장 · 원본 p.9–11 
+ {{sh.page}} 
+ {{sh.name}} 
+ {{sh.badge}} 
+ 원본 대조 작성 · 바뀐 줄 {{changed}} · 유저가 고친 줄 {{edited}} · 4 / 6 
+ {{ty.label}} {{ty.n}} 
+ 원본과 다른 곳은 시트에 '원본 대비' 노트가 남아요 · 되돌리기 가능 
+ 이전 섹션 
+ 원본 줄 전부 가져오기 
+ 다음 섹션 
+class Component extends DCLogic {
+ renderVals() {
+ // 보기 전환 (원본 대조 선택)
+ const views = [['원본 대조', true], ['새 시트만', false], ['흐름 가이드', false]].map(([label, on]) => ({
+ label, on,
+ style: '' + (on ? '' : '')
+ }));
+ // 판정 색 (SPEC)
+ const J = {
+ keep: ['유지', '', ''],
+ upd: ['갱신', '', ''],
+ add: ['신규', '', ''],
+ drop: ['제외', '', '']
+ };
+ const badge = (k) => '' + J[k][2];
+ // 원본 줄: [텍스트, 변경 마커]
+ const SRC = [
+ ['QM55B 55형 메뉴보드 2대 · 카운터 상단 가로 배치', 'upd'],
+ ['바닥형 스탠드 1대 · 입구 프로모션 안내', 'keep'],
+ ['2025 가을 프로모션 · 월 1회 본사 교체', 'drop']
+ ];
+ const srcLines = SRC.map(([text, k]) => ({
+ text, mark: J[k][0],
+ markStyle: '' + J[k][2],
+ textStyle: '' + (k === 'drop' ? '' : k === 'upd' ? '' : '')
+ }));
+ // 새 시트 줄: [텍스트, 배지 라벨, 판정, 신규 여부]
+ const NEW = [
+ ['QM55C 55형 메뉴보드 2대 · 카운터 상단 가로 배치', '갱신 · 모델', 'upd'],
+ ['바닥형 스탠드 1대 · 입구 프로모션 안내', '유지', 'keep'],
+ ['매장별 가격 차등 — 본사 템플릿 + 매장 변수', '신규 · R3 매장별 가격', 'add']
+ ];
+ const newLines = NEW.map(([text, label, k], i) => ({
+ id: 'line-' + (i + 1), aria: '불릿 ' + (i + 1), text, badge: label, badgeStyle: badge(k),
+ rowStyle: '' + (k === 'add' ? '' : k === 'upd' ? '' : '')
+ }));
+ // 가운데 연결 아이콘: 줄별 (갱신 화살표 · 유지 화살표 · 제외 ×)
+ const links = [
+ { color: '', path: 'M5 12h14M13 6l6 6-6 6' },
+ { color: '', path: 'M5 12h14M13 6l6 6-6 6' },
+ { color: '', path: 'M6 6l12 12M18 6L6 18' }
+ ];
+ // 이 섹션의 시트 3장: [쪽, kind, 이름, 판정, 선택]
+ const SH = [['p.9', 'zones', '공간 맵', 'keep', false], ['p.10', 'cards3img', '카운터 메뉴보드', 'upd', true], ['p.11', 'image2kpi', '대기 공간', 'keep', false]];
+ const sheets = SH.map(([page, kind, name, k, on]) => ({
+ page, kind, name, on, badge: J[k][0], badgeStyle: badge(k),
+ cardStyle: '' + (on ? '' : '')
+ }));
+ const tally = [['갱신', 1, 'upd'], ['유지', 1, 'keep'], ['신규', 1, 'add'], ['제외', 1, 'drop']].map(([label, n, k]) => ({
+ label, n: n + '줄',
+ style: '' + J[k][2]
+ }));
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 4,
+ views, srcLines, newLines, links, sheets, tally, changed: 3, edited: 1
+ };
+ }
+}

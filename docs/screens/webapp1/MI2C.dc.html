@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 경쟁사 · 비교 기준 설정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="A 커피 프랜차이즈 시장·경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="A 커피 프랜차이즈 시장·경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 24px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 18px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 12px 16px; font-size: 14.5px; line-height: 1.65">경쟁사는 두세 곳, 본사 통합 관리와 전기료를 가장 중요하게 봐 주세요.</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="font-size: 14.5px; line-height: 1.65; padding-top: 3px">비교할 경쟁사와 기준을 정리했어요. 가중치가 높은 기준부터 비교표에 놓고, 삼성 강점도 그 순서로 뽑습니다. 제안서와 내보내기에는 경쟁사를 익명으로 표기해요.</div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">경쟁사 · 비교 기준 <span style="color: #596170; font-weight: 500">· 경쟁사 분석 → 삼성 강점 · 2 / 3</span></div>
+          <a href="MI2.dc.html" style="height: 28px; padding: 0 10px; border-radius: 6px; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">분석 범위로</a>
+        </div>
+
+        <div style="padding: 12px 18px 0 18px; display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 18px">
+          <!-- 경쟁사 -->
+          <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+            <div style="height: 20px; display: flex; align-items: center; justify-content: space-between">
+              <span style="font-size: 12.5px; font-weight: 700">비교할 경쟁사 <span style="color: #596170; font-weight: 500">· {{compCount}}곳</span></span>
+              <span style="font-size: 11.5px; color: #8a91a0">자동 추천 2 · 직접 추가 1</span>
+            </div>
+            <sc-for list="{{comps}}" as="c" hint-placeholder-count="3">
+              <div style="height: 54px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; display: flex; align-items: center; gap: 10px; padding: 0 8px 0 10px">
+                <span style="width: 30px; height: 30px; border-radius: 8px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{c.letter}}</span>
+                <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+                  <div style="display: flex; align-items: center; gap: 6px">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap">{{c.label}}</span>
+                    <span style="{{c.tagStyle}}">{{c.tag}}</span>
+                  </div>
+                  <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.desc}}</span>
+                </div>
+                <button aria-label="{{c.removeLabel}}" style="width: 26px; height: 26px; border-radius: 6px; border: none; background: transparent; color: #8a91a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              </div>
+            </sc-for>
+            <div style="height: 38px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 10px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              <label for="comp" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">경쟁사 추가</label>
+              <input id="comp" placeholder="경쟁사 추가 (회사명 · 제품명)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+            </div>
+            <div style="margin-top: 2px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; gap: 10px">
+                <button role="switch" aria-checked="{{anon}}" aria-label="제안서에 익명으로 표기" onClick="{{anonCtl.toggle}}" style="{{switchStyle}}"><span style="{{knobStyle}}"></span></button>
+                <span style="font-size: 13px; font-weight: 600">제안서에 익명으로 표기</span>
+              </div>
+              <span style="font-size: 11.5px; line-height: 1.5; color: #596170">분석에는 실명을 쓰고, 제안서 · PDF · 공유 링크에는 아래 표기로 바꿔요. 경쟁사 로고와 제품 사진은 넣지 않아요.</span>
+              <div role="radiogroup" aria-label="익명 표기 방식" style="display: flex; gap: 6px">
+                <sc-for list="{{naming}}" as="n" hint-placeholder-count="2">
+                  <button role="radio" aria-checked="{{n.on}}" onClick="{{n.pick}}" style="{{n.style}}">{{n.label}}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <!-- 비교 기준 · 가중치 -->
+          <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+            <div style="height: 20px; display: flex; align-items: center; justify-content: space-between">
+              <span style="font-size: 12.5px; font-weight: 700">비교 기준 · 가중치</span>
+              <span style="font-size: 11.5px; color: #596170">끌어서 순서 변경 · 합계 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">100%</span></span>
+            </div>
+            <div style="display: flex; flex-direction: column; border-top: 1px solid #eef0f3">
+              <sc-for list="{{crit}}" as="k" hint-placeholder-count="5">
+                <div style="display: grid; grid-template-columns: 14px minmax(0, 1fr) 82px 38px; gap: 10px; align-items: center; height: 44px; border-bottom: 1px solid #eef0f3">
+                  <svg width="12" height="14" viewBox="0 0 12 14" fill="#b8bec8" aria-hidden="true"><circle cx="3" cy="3" r="1.4"/><circle cx="9" cy="3" r="1.4"/><circle cx="3" cy="7" r="1.4"/><circle cx="9" cy="7" r="1.4"/><circle cx="3" cy="11" r="1.4"/><circle cx="9" cy="11" r="1.4"/></svg>
+                  <div style="display: flex; align-items: center; gap: 7px; min-width: 0">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{k.name}}</span>
+                    <span style="{{k.srcStyle}}">{{k.src}}</span>
+                  </div>
+                  <div role="group" aria-label="{{k.groupLabel}}" style="display: flex; gap: 3px">
+                    <sc-for list="{{k.blocks}}" as="b" hint-placeholder-count="5">
+                      <button aria-label="{{b.label}}" onClick="{{b.set}}" style="{{b.style}}"></button>
+                    </sc-for>
+                  </div>
+                  <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; text-align: right; color: #121417">{{k.pct}}%</span>
+                </div>
+              </sc-for>
+            </div>
+            <button style="height: 34px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; background: #ffffff; color: #596170; font-size: 12.5px; display: flex; align-items: center; gap: 6px; padding: 0 10px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>기준 직접 추가</button>
+            <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+              <span style="font-size: 11.5px; color: #596170">외식 · 카페 도입사례 23건에서 많이 요구된 기준</span>
+              <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                <sc-for list="{{sugg}}" as="g" hint-placeholder-count="2">
+                  <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; display: flex; align-items: center; gap: 5px"><span style="color: #1428a0; font-weight: 700">+</span>{{g.name}}<span style="font-family: Manrope, sans-serif; font-weight: 700; color: #596170; font-size: 11px">{{g.n}}</span></button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding: 14px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170">가중치는 비교표 순서와 강점 도출에만 써요. 경쟁사 수치는 공개 자료로만 채우고, 못 찾으면 [확인 필요]로 남깁니다.</span>
+          <div style="display: flex; gap: 8px; flex-shrink: 0">
+            <a href="MI2.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+            <a href="MI3G.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+              <span>분석 시작 (약 3분)</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const anon = st.anon !== false;
+    const nameMode = st.nameMode || 'letter';
+
+    // 경쟁사: 실명은 분석에만 쓰고 화면 · 제안서에는 익명 표기
+    const C = [
+      ['A', '국내 대형 가전 · 사이니지', '메뉴보드급 사이니지 · 자체 CMS', '자동 추천'],
+      ['B', '글로벌 사이니지 전문', '사이니지 · 3rd-party CMS 연동', '자동 추천'],
+      ['C', '클라우드 CMS 소프트웨어', '매장 콘텐츠 배포 · 스케줄 관리', '직접 추가']
+    ];
+    const comps = C.map(([letter, kind, desc, tag]) => ({
+      letter,
+      label: !anon ? '[실명] · 사내용' : nameMode === 'type' ? kind : '경쟁사 ' + letter,
+      desc: (nameMode === 'type' && anon ? '' : kind + ' · ') + desc,
+      tag,
+      removeLabel: '경쟁사 ' + letter + ' 빼기',
+      tagStyle: 'height: 18px; padding: 0 6px; border-radius: 5px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (tag === '자동 추천' ? ' background: #eaeefb; color: #1428a0;' : ' background: #f0f2f5; color: #596170;')
+    }));
+    const naming = [['letter', '경쟁사 A · B · C'], ['type', '유형으로 표기']].map(([k, label]) => ({
+      label, on: nameMode === k,
+      pick: () => this.setState({ nameMode: k }),
+      style: 'height: 28px; padding: 0 10px; border-radius: 999px; font-size: 12px; white-space: nowrap;' + (nameMode === k && anon ? ' border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-weight: 600;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: ' + (anon ? '#121417' : '#9aa1ad') + '; font-weight: 500;')
+    }));
+
+    // 비교 기준: 이름 · 출처 · 가중치(1–5) → 비율
+    const K = [
+      ['본사 원격 통합 관리', '요구사항', 5],
+      ['저전력 · 전기료 절감', '요구사항', 4],
+      ['프로모션 교체 속도', '요구사항', 3],
+      ['디자인 조화', '업종 사례 18건', 2],
+      ['유지보수 · AS', '직접 추가', 1]
+    ];
+    const w = Array.isArray(st.w) ? st.w : K.map((k) => k[2]);
+    const sum = w.reduce((s, x) => s + x, 0) || 1;
+    let acc = 0;
+    const crit = K.map(([name, src], i) => {
+      const pct = i === K.length - 1 ? 100 - acc : Math.round((w[i] / sum) * 100);
+      acc += pct;
+      return {
+        name, src, pct,
+        groupLabel: name + ' 가중치 ' + w[i] + ' / 5',
+        srcStyle: 'height: 18px; padding: 0 6px; border-radius: 5px; font-size: 10.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (src === '요구사항' ? ' background: #eaeefb; color: #1428a0;' : ' background: #f0f2f5; color: #596170;'),
+        blocks: [1, 2, 3, 4, 5].map((lv) => ({
+          label: name + ' 가중치 ' + lv,
+          set: () => { const nw = w.slice(); nw[i] = lv; this.setState({ w: nw }); },
+          style: 'width: 13px; height: 10px; padding: 0; border: none; border-radius: 3px;' + (lv <= w[i] ? ' background: #1428a0;' : ' background: #e2e5ea;')
+        }))
+      };
+    });
+    const sugg = [['고객 경험', '17건'], ['쾌적 · 공기질', '10건']].map(([name, n]) => ({ name, n }));
+    return {
+      steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 2,
+      comps, compCount: comps.length, naming, crit, sugg, anon,
+      anonCtl: { on: anon, toggle: () => this.setState({ anon: !anon }) },
+      switchStyle: 'width: 36px; height: 22px; border-radius: 999px; border: none; position: relative; padding: 0; flex-shrink: 0;' + (anon ? ' background: #1428a0;' : ' background: #c9ced6;'),
+      knobStyle: 'position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff;' + (anon ? ' right: 3px;' : ' left: 3px;')
+    };
+  }
+}
+</script>
+</body>
+</html>

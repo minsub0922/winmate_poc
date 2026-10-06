@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-HT-B 호텔 · 리조트 · 대표 공간 장면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">N 호텔의 객실은 체크인부터 퇴실 후 정리까지 손님에 맞춰 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">투숙객이 가장 오래 머무는 대표 공간 ② 객실 — 한 번의 숙박을 네 장면으로: 순간 → 솔루션 → 제품 → 가치</div>
+
+  <!-- 행 라벨 -->
+  <div style="position: absolute; left: 64px; top: 226px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">장면</div>
+  <div style="position: absolute; left: 64px; top: 330px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">순간</div>
+  <div style="position: absolute; left: 64px; top: 398px; width: 72px; display: flex; flex-direction: column; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0; white-space: nowrap"><span>솔루션이</span><span>하는 일</span></div>
+  <div style="position: absolute; left: 64px; top: 471px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">제품</div>
+  <div style="position: absolute; left: 64px; top: 536px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">가치</div>
+
+  <!-- 네 장면 -->
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; {{s.imgPos}} width: 258px; height: 156px; object-fit: cover; object-position: {{s.op}}; border-radius: 12px">
+    <div style="{{s.chip}}">{{s.chipT}}</div>
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.head}}"><span style="font-family: Manrope, sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{s.title}}</span></div>
+    <div style="{{s.ctxS}}">{{s.ctx}}</div>
+    <div style="{{s.solBox}}">
+      <div style="position: absolute; left: 12px; top: 10px; font-size: 12.5px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{s.sol}}</div>
+      <div style="position: absolute; left: 12px; top: 32px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d1}}</div>
+      <div style="position: absolute; left: 12px; top: 49px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d2}}</div>
+    </div>
+    <div style="{{s.prodBox}}">
+      <svg style="position: absolute; left: 12px; top: 12px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+      <div style="position: absolute; left: 36px; top: 10px; font-size: 12.5px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{s.prod}}</div>
+    </div>
+    <div style="{{s.valBox}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-size: 12.5px; line-height: 18px; font-weight: 600; color: #121417; white-space: nowrap">{{s.val}}</div>
+      <div style="position: absolute; left: 12px; top: 33px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.kpi}}</div>
+      <div style="position: absolute; left: 12px; top: 48px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{s.kv}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 장면 사이 화살표 -->
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="3">
+    <div style="{{a.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- 객실 1실 표준 구성 -->
+  <div style="position: absolute; left: 64px; top: 594px; width: 1152px; height: 54px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 601px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">객실 1실 표준 구성</div>
+  <div style="position: absolute; left: 80px; top: 623px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">× N 호텔 객실 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">[000]</span>실 · 같은 구성으로 확장</div>
+  <div style="position: absolute; left: 300px; top: 604px; width: 1px; height: 34px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 316px; top: 601px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="5">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 316px; top: 626px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0">운영</span><span>LYNK Cloud (PMS 연동) · SmartThings Pro (객실 루틴 · 에너지) · Knox Suite (하우스키핑 탭)</span></div>
+  <div style="position: absolute; right: 80px; top: 603px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치 · 시간은 예시</div>
+  <div style="position: absolute; right: 80px; top: 618px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>N 호텔 · 투숙 경험 · 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 장면 열: x 148 + i*270, 폭 258
+    const X0 = 148, STEP = 270, W = 258;
+    const CH = '예시 사진 · 고객 공간으로 교체';
+    const S = [
+      { time: '15:10', title: '문을 열면 내 이름', ctx: '체크인 직후 · 처음 들어서는 객실',
+        sol: 'LYNK Cloud · SmartThings Pro', d1: 'PMS 정보로 이름 · 언어 맞춤 웰컴 화면,', d2: '들어서면 재실 루틴으로 냉방 · 조명 ON',
+        prod: '호텔 TV · 무풍 시스템에어컨',
+        val: '처음 몇 분의 인상이 달라집니다', kpi: '부대시설 · 프로모션 이용', kv: '[00]% ↑',
+        src: '/_blob/aacd84c283769708d45ecc09c7ebebd3', alt: '객실 호텔 TV 웰컴 화면 (예시 사진)', op: '50% 45%' },
+      { time: '22:30', title: '버튼 하나로 휴식 모드', ctx: '밤 · 객실에서 쉬는 투숙객',
+        sol: 'SmartThings Pro · LYNK Cloud', d1: '휴식 모드에 조명은 낮추고 바람은 무풍,', d2: '내 폰 영상을 객실 TV로 캐스팅',
+        prod: '무풍 에어컨 · 조명 · 호텔 TV',
+        val: '프런트에 전화할 일이 줄어듭니다', kpi: '객실 불편 · 요청 콜', kv: '[00]% ↓',
+        src: '/_blob/025a0a090d09a9c62536b558c29698c3', alt: '호텔 객실 침대 옆 (예시 사진)', op: '50% 50%' },
+      { time: '10:40', title: '퇴실과 함께 기록 삭제', ctx: '다음 날 아침 · 체크아웃',
+        sol: 'LYNK Cloud · PMS 연동', d1: '체크아웃 처리되면 캐스팅 · 연결 기록', d2: '초기화, 화면은 기본 안내로 복귀',
+        prod: '호텔 TV · 프런트 관리 화면',
+        val: '다음 손님에게 깨끗한 객실 TV', kpi: '객실 TV 수동 초기화', kv: '[0]분 → 자동',
+        src: '/_blob/6682f7d3868ea35e6813529c821e528f', alt: '프런트 직원이 객실 TV 관리 화면을 사용 (예시 사진)', op: '50% 40%' },
+      { time: '12:30', title: '빈 객실은 스스로 절전', ctx: '공실 · 하우스키핑 · 시설팀',
+        sol: 'SmartThings Pro · Knox Suite', d1: '재실 센서로 공실 감지 → 냉난방 · 조명', d2: '절전, 청소 상태는 하우스키핑 탭에',
+        prod: '재실 · 열림 센서 · 갤럭시 탭',
+        val: '빈 방 에너지와 정비 순서를 한눈에', kpi: '공실 객실 냉난방 · 조명', kv: '[00]% 절감',
+        src: '/_blob/11573ada5b0ddf0663de21373794907a', alt: '천장 에어컨과 객실 TV · 객실 대시보드 (예시 사진)', op: '50% 40%' }
+    ];
+
+    const scenes = S.map((s, i) => {
+      const x = X0 + i * STEP;
+      return {
+        n: i + 1, time: s.time, title: s.title, ctx: s.ctx, sol: s.sol, d1: s.d1, d2: s.d2, prod: s.prod,
+        val: s.val, kpi: s.kpi, kv: s.kv, src: s.src, alt: s.alt, op: s.op, chipT: CH,
+        imgPos: 'left: ' + px(x) + 'top: 160px;',
+        chip: A + 'left: ' + px(x + 8) + 'top: 292px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; ' + T,
+        badge: box(x, 326, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        head: box(x + 34, 324, W - 34, 22) + 'display: flex; align-items: center; gap: 8px; ' + T,
+        ctxS: box(x + 34, 348, W - 34, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + T,
+        solBox: box(x, 378, W, 74) + 'border-radius: 10px; background: #eaeefb;',
+        prodBox: box(x, 460, W, 40) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;',
+        valBox: box(x, 508, W, 74) + 'border-radius: 10px; background: #f5f6f8;'
+      };
+    });
+
+    const arrows = [0, 1, 2].map((i) => ({
+      style: box(X0 + i * STEP + W + 6 - 12, 226, 24, 24) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    const kit = ['호텔 TV 1', '무풍 시스템에어컨 1', '조명 · 스마트 플러그', '재실 · 열림 센서', '객실 TV 관리 · PMS 연동'].map((t) => ({ t }));
+
+    return { scenes, arrows, kit };
+  }
+}
+</script>
+</body>
+</html>

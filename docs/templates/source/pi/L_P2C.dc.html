@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P2-C 제품 2개 · 스펙 비교</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — B 카운터</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">QM55C와 QB55C, 카운터에는 무엇이 맞을까</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">파란 값이 이 공간에 유리한 쪽입니다</div>
+
+  <!-- 좌 제품 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 270px; height: 488px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">추천</span>
+    <div style="width: 200px; height: 113px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 4px solid #121417; margin-top: 30px"></div>
+    <div style="width: 80px; height: 4px; border-radius: 2px; background: #c8d3f4"></div>
+    <span style="font-size: 22px; font-weight: 800; padding-top: 24px">QM55C</span>
+    <span style="font-size: 13px; color: #596170">Smart Signage · 55"</span>
+  </div>
+  <!-- 우 제품 -->
+  <div style="position: absolute; left: 946px; top: 160px; width: 270px; height: 488px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12px; display: flex; align-items: center">대안</span>
+    <div style="width: 200px; height: 113px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 4px solid #121417; margin-top: 30px"></div>
+    <div style="width: 80px; height: 4px; border-radius: 2px; background: #dfe3ea"></div>
+    <span style="font-size: 22px; font-weight: 800; padding-top: 24px">QB55C</span>
+    <span style="font-size: 13px; color: #596170">Smart Signage · 55"</span>
+  </div>
+
+  <!-- 가운데 비교 -->
+  <div style="position: absolute; left: 358px; top: 160px; width: 564px; display: flex; flex-direction: column">
+    <div style="display: flex; justify-content: center; padding-bottom: 12px"><span style="width: 48px; height: 48px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center">VS</span></div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+      <div style="display: grid; grid-template-columns: 1fr 140px 1fr; align-items: center; height: 70px; border-bottom: 1px solid #e2e5ea">
+        <span style="{{r.aStyle}}">{{r.a}}</span>
+        <span style="text-align: center; font-size: 13px; color: #596170">{{r.k}}</span>
+        <span style="{{r.bStyle}}">{{r.b}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [항목, A값, B값, 유리한 쪽 a|b|=]
+    const R = [['밝기', '500 nit', '350 nit', 'a'], ['운영 시간', '24/7', '16/7', 'a'], ['해상도', '4K UHD', '4K UHD', '='], ['소비전력', '[000] W', '[000] W', 'b'], ['내장 플레이어', 'Tizen', 'Tizen', '='], ['가격대', '[₩]', '[₩]', 'b']];
+    const st = (win) => 'font-size: 17px; font-weight: 700; font-family: Manrope, \'Noto Sans KR\', sans-serif;' + (win ? ' color: #1428a0;' : ' color: #121417;');
+    return { rows: R.map(([k, a, b, w]) => ({ k, a, b, aStyle: st(w === 'a') + ' text-align: left;', bStyle: st(w === 'b') + ' text-align: right;' })) };
+  }
+}
+</script>
+</body>
+</html>

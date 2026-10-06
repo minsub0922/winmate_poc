@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-G 설치 방식 옵션</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 회의실 · 교육장</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">같은 Flip Pro, 방마다 다르게 답니다 — 세 가지 설치 방식</div>
+
+  <!-- 제품 스트립 -->
+  <div style="position: absolute; left: 64px; top: 124px; width: 1152px; height: 52px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 14px">
+    <div style="width: 64px; height: 36px; flex-shrink: 0; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417"></div>
+    <span style="font-size: 17px; font-weight: 800">Flip Pro WM75</span>
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12px; display: flex; align-items: center"><span style="font-family: Manrope, sans-serif; font-weight: 700; padding-right: 4px">75"</span>· 터치 · 필기</span>
+    <span style="width: 1px; height: 22px; background: #d5d9e0"></span>
+    <span style="font-size: 14px; color: #596170">제품은 정해졌습니다 — 남은 결정은 방마다 어떻게 세울지</span>
+  </div>
+
+  <!-- 옵션 카드 3 -->
+  <div style="position: absolute; left: 64px; top: 192px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{options}}" as="o" hint-placeholder-count="3">
+      <div style="{{o.box}}">
+        <div style="height: 150px; flex-shrink: 0; border-radius: 10px; background: #f5f6f8"></div>
+        <div style="margin-top: 12px; height: 26px; display: flex; align-items: center; gap: 8px">
+          <span style="{{o.nameStyle}}">{{o.name}}</span>
+          <sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}">
+            <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">추천 · 소회의실</span>
+          </sc-if>
+        </div>
+        <div style="margin-top: 8px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 12.5px; font-weight: 700; color: #1428a0">이럴 때</span><span style="font-size: 14px">{{o.when}}</span></div>
+        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+          <sc-for list="{{o.pros}}" as="p" hint-placeholder-count="2">
+            <div style="display: flex; align-items: center; gap: 8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg><span style="font-size: 14px">{{p}}</span></div>
+          </sc-for>
+        </div>
+        <div style="margin-top: 10px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 12.5px; font-weight: 700; color: #596170">고려할 점</span><span style="font-size: 13.5px; color: #596170">{{o.con}}</span></div>
+        <div style="flex-grow: 1"></div>
+        <div style="border-top: 1px solid #e2e5ea; padding-top: 10px; height: 28px; display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 13px; color: #596170">적용</span>
+          <span style="font-size: 14px; font-weight: 700">{{o.room}} <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; color: #1428a0">{{o.n}}</span>{{o.unit}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 설치 방식 도면 (정면 · 측면) — 카드 위에 겹쳐 그림 -->
+  <sc-for list="{{parts}}" as="d" hint-placeholder-count="40">
+    <div style="{{d}}"></div>
+  </sc-for>
+  <sc-for list="{{labels}}" as="l" hint-placeholder-count="6">
+    <div style="{{l.style}}">{{l.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 664px; top: 309px; width: 40px; height: 16px"><svg width="40" height="16" viewBox="0 0 40 16" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h32M9 3L4 8l5 5M31 3l5 5-5 5"/></svg></div>
+
+  <!-- 방 유형 → 설치 방식 -->
+  <div style="position: absolute; left: 64px; top: 596px; width: 1152px; height: 52px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 20px; display: flex; align-items: center; gap: 10px">
+    <span style="font-size: 14px; font-weight: 800; padding-right: 6px">방 유형별 설치</span>
+    <sc-for list="{{maps}}" as="m" hint-placeholder-count="3">
+      <span style="height: 26px; padding: 0 12px; border-radius: 999px; background: #ffffff; font-size: 12px; display: flex; align-items: center; gap: 6px"><span>{{m.room}}</span><span style="font-family: Manrope, sans-serif; font-weight: 700">{{m.n}}</span><span style="color: #1428a0; font-weight: 700">→ {{m.opt}}</span></span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 14px; font-weight: 700">Flip Pro 합계 <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">[00]</span>대</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const O = [
+      { name: '벽 고정', rec: true, when: '한 방에 늘 두고 쓰는 소회의실', pros: ['바닥을 차지하지 않아 좁은 방에 맞음', '케이블은 벽 속으로 — 깔끔한 마감'], con: '설치 후 위치 변경 어려움', room: '소회의실', n: '[00]', unit: '실' },
+      { name: '롤링 스탠드', rec: false, when: '교육장 여러 곳을 오가며 쓸 때', pros: ['한 대를 여러 방이 나눠 씀', '벽 공사 없이 바로 사용'], con: '바닥 공간 · 이동 동선 필요', room: '교육장', n: '[0]', unit: '실' },
+      { name: '이젤형', rec: false, when: '라운지에서 필요할 때만 세울 때', pros: ['가구처럼 놓여 라운지 분위기에 어울림', '필요한 날만 꺼내 세우는 가벼운 운용'], con: '바퀴 없음 — 들어서 옮김', room: '라운지', n: '[0]', unit: '곳' }
+    ];
+    const options = O.map((o) => Object.assign({}, o, {
+      box: 'height: 388px; box-sizing: border-box; border-radius: 16px; background: #ffffff; display: flex; flex-direction: column; ' +
+        (o.rec ? 'border: 2px solid #1428a0; padding: 15px' : 'border: 1px solid #e2e5ea; padding: 16px'),
+      nameStyle: 'font-size: 20px; font-weight: 800; color: ' + (o.rec ? '#1428a0' : '#121417')
+    }));
+
+    // 도면: 카드 안쪽 판(334 × 150)의 원점 bx, by 기준으로 배치
+    const BX = [81, 473, 865], BY = 209;
+    const box = (x, y, w, h, more) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; ' + (more || '');
+    const ink = 'background: #121417', metal = 'background: #596170', dark = 'background: #1f232a';
+    const screen = (x, y) => box(x, y, 128, 72, 'box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417');
+    const leg = (x, y, h, deg, w) => box(x, y, w || 2, h, 'background: #596170; transform-origin: 50% 0; transform: rotate(' + deg + 'deg)');
+    const parts = [];
+    const labels = [];
+    BX.forEach((bx, i) => {
+      const by = BY;
+      parts.push(box(bx + 240, by + 14, 0, 116, 'border-left: 1px dashed #d5d9e0'));
+      labels.push({ t: '정면', style: box(bx + 12, by + 132, 40, 16, 'line-height: 16px; font-size: 12px; color: #596170') });
+      labels.push({ t: '측면', style: box(bx + 252, by + 132, 40, 16, 'line-height: 16px; font-size: 12px; color: #596170') });
+      if (i === 0) {
+        // 벽 고정: 정면 = 벽면 + 화면, 측면 = 벽 · 브래킷 · 화면
+        parts.push(box(bx + 28, by + 10, 184, 118, 'box-sizing: border-box; background: #ffffff; border: 1px solid #d5d9e0; border-bottom: 0'));
+        parts.push(screen(bx + 56, by + 26));
+        parts.push(box(bx + 304, by + 10, 10, 118, 'background: #e2e5ea'));
+        parts.push(box(bx + 300, by + 10, 4, 118, ink));
+        parts.push(box(bx + 292, by + 40, 8, 36, metal));
+        parts.push(box(bx + 286, by + 26, 6, 72, dark));
+      } else if (i === 1) {
+        // 롤링 스탠드: 기둥 2 + 하부 바 + 바퀴 2
+        parts.push(screen(bx + 56, by + 18));
+        parts.push(box(bx + 92, by + 90, 6, 24, metal));
+        parts.push(box(bx + 142, by + 90, 6, 24, metal));
+        parts.push(box(bx + 70, by + 112, 100, 6, 'border-radius: 2px; ' + metal));
+        parts.push(box(bx + 72, by + 118, 10, 10, 'border-radius: 50%; ' + ink));
+        parts.push(box(bx + 158, by + 118, 10, 10, 'border-radius: 50%; ' + ink));
+        parts.push(box(bx + 288, by + 22, 5, 92, metal));
+        parts.push(box(bx + 282, by + 18, 6, 72, dark));
+        parts.push(box(bx + 264, by + 112, 56, 6, 'border-radius: 2px; ' + metal));
+        parts.push(box(bx + 264, by + 118, 10, 10, 'border-radius: 50%; ' + ink));
+        parts.push(box(bx + 310, by + 118, 10, 10, 'border-radius: 50%; ' + ink));
+      } else {
+        // 이젤형: A 프레임 다리 + 받침 선반
+        parts.push(leg(bx + 119, by + 8, 130, 22.6));
+        parts.push(leg(bx + 119, by + 8, 130, -22.6));
+        parts.push(screen(bx + 56, by + 24));
+        parts.push(box(bx + 50, by + 96, 140, 5, 'border-radius: 2px; ' + metal));
+        parts.push(leg(bx + 289, by + 12, 118, 11.7));
+        parts.push(leg(bx + 289, by + 12, 118, -11.7));
+        parts.push(box(bx + 274, by + 90, 32, 2, metal));
+        parts.push(leg(bx + 280, by + 24, 72, 11.7, 6).replace('background: #596170', 'background: #1f232a'));
+        parts.push(box(bx + 262, by + 95, 14, 4, 'border-radius: 1px; ' + metal));
+      }
+      parts.push(box(bx + 12, by + 128, 216, 2, ink));
+      parts.push(box(bx + 252, by + 128, 72, 2, ink));
+    });
+    const maps = [
+      { room: '소회의실', n: '[00]실', opt: '벽 고정' },
+      { room: '교육장', n: '[0]실', opt: '롤링 스탠드' },
+      { room: '라운지', n: '[0]곳', opt: '이젤형' }
+    ];
+    return { options, parts, labels, maps };
+  }
+}
+</script>
+</body>
+</html>

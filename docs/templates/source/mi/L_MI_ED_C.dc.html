@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-ED-C 교육 · 캠퍼스 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">E 대학교 학생의 하루, 불편은 수업 사이사이에 쌓입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">캠퍼스 구성원 세그먼트와 학생의 하루 — 체감이 떨어지는 순간과 삼성이 개입하는 지점</div>
+
+  <!-- ============ 왼쪽: 구성원 세그먼트 (3열) ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">캠퍼스 구성원</span><span style="font-size: 11.5px; color: #8a91a0">구성원 <span style="font-family: Manrope, sans-serif; font-weight: 700">[00,000]</span>명 중 비중</span></div>
+  <sc-for list="{{personas}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.style}}">
+      <div style="position: absolute; left: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center">
+        <sc-if value="{{p.i1}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5z"></path><path d="M6 11v5c2 2 10 2 12 0v-5"></path></svg></sc-if>
+        <sc-if value="{{p.i2}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c3 3 3 15 0 18c-3-3-3-15 0-18z"></path></svg></sc-if>
+        <sc-if value="{{p.i3}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"></rect><path d="M12 16v4"></path><path d="M8 20h8"></path></svg></sc-if>
+        <sc-if value="{{p.i4}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path><path d="M4.9 4.9l2.1 2.1"></path><path d="M17 17l2.1 2.1"></path><path d="M4.9 19.1l2.1-2.1"></path><path d="M17 7l2.1-2.1"></path></svg></sc-if>
+      </div>
+      <div style="position: absolute; left: 52px; top: 17px; font-size: 15px; font-weight: 800; line-height: 20px; white-space: nowrap">{{p.name}}</div>
+      <div style="position: absolute; right: 14px; top: 12px; font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; line-height: 30px; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{p.share}}</div>
+      <div style="position: absolute; left: 14px; top: 50px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{p.d1}}</div>
+      <div style="position: absolute; left: 14px; top: 67px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{p.d2}}</div>
+      <div style="position: absolute; left: 14px; top: 86px; height: 12px; display: flex; align-items: center; gap: 3px; white-space: nowrap">
+        <span style="margin-right: 4px; font-size: 10px; color: #8a91a0">주로 만나는 순간</span>
+        <sc-for list="{{p.map}}" as="m" hint-placeholder-count="6">
+          <span style="{{m.style}}">{{m.n}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 630px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">비중은 예시 · E 대학교 학사 데이터로 채움</div>
+
+  <!-- ============ 오른쪽: 학생의 하루 여정 (9열) ============ -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.style}}">
+      <span style="position: absolute; left: 10px; top: 6px; width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 34px; top: 5px; font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap">{{s.name}}</div>
+      <div style="position: absolute; left: 10px; top: 26px; font-size: 11px; line-height: 14px; color: #596170; white-space: nowrap">{{s.space}}</div>
+    </div>
+  </sc-for>
+  <sc-for list="{{seps}}" as="v" hint-placeholder-count="15">
+    <div style="{{v.style}}"></div>
+  </sc-for>
+
+  <!-- 행 1 · 체감 곡선 -->
+  <div style="position: absolute; left: 358px; top: 212px; width: 858px; height: 16px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap">
+    <span style="font-size: 11px; font-weight: 800; color: #8a91a0">학생 체감</span>
+    <span style="display: flex; align-items: center; gap: 12px; font-size: 11px; color: #3d4452"><span style="display: flex; align-items: center; gap: 5px"><span style="width: 16px; height: 2px; background: #8a91a0"></span>지금</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 16px; height: 0px; border-top: 2px dashed #1428a0"></span>삼성 도입 후</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; border: 2px solid #121417"></span>결정적 순간</span><span style="color: #8a91a0">체감 곡선은 예시 · 구성원 설문 후 반영</span></span>
+  </div>
+  <div style="position: absolute; left: 394px; top: 242px; width: 822px; height: 1px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 394px; top: 314px; width: 822px; height: 1px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 360px; top: 235px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">좋음</div>
+  <div style="position: absolute; left: 360px; top: 307px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">불편</div>
+  <svg width="858" height="88" viewBox="0 0 858 88" style="position: absolute; left: 358px; top: 234px" fill="none">
+    <path d="M71.5 52.6 C95.3 51.2 166.8 40.0 214.5 44.0 C262.2 48.0 309.8 77.4 357.5 76.4 C405.2 75.4 452.8 41.5 500.5 38.2 C548.2 35.0 595.8 53.4 643.5 57.0 C691.2 60.6 762.7 59.4 786.5 59.8" stroke="#8a91a0" stroke-width="2"></path>
+    <path d="M71.5 21.0 C95.3 20.6 166.8 17.4 214.5 18.8 C262.2 20.2 309.8 30.0 357.5 29.6 C405.2 29.2 452.8 17.2 500.5 16.6 C548.2 16.0 595.8 25.0 643.5 26.0 C691.2 27.0 762.7 23.0 786.5 22.4" stroke="#1428a0" stroke-width="2" stroke-dasharray="6 4"></path>
+  </svg>
+  <sc-for list="{{dots}}" as="d" hint-placeholder-count="15">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+
+  <!-- 행 2 · 학생 불편 / 행 3 · 교수 · 운영팀 / 행 4 · 삼성 개입 -->
+  <div style="position: absolute; left: 358px; top: 328px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">학생 · 이용자가 겪는 불편</div>
+  <div style="position: absolute; left: 358px; top: 388px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">같은 순간, 교수 · 운영팀은</div>
+  <div style="position: absolute; left: 358px; top: 446px; width: 858px; height: 14px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap">
+    <span style="font-size: 11px; font-weight: 800; color: #1428a0">삼성이 개입하는 지점</span>
+    <span style="display: flex; align-items: center; gap: 10px; font-size: 11px; color: #3d4452"><span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 10px; box-sizing: border-box; border-radius: 3px; border: 1px solid #b8bec8; background: #ffffff"></span>제품</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 10px; border-radius: 3px; background: #1428a0"></span>솔루션 · 서비스</span></span>
+  </div>
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.p1}}">{{c.pain1}}</div>
+    <div style="{{c.p2}}">{{c.pain2}}</div>
+    <div style="{{c.s1}}">{{c.staff1}}</div>
+    <div style="{{c.s2}}">{{c.staff2}}</div>
+    <sc-for list="{{c.chips}}" as="k" hint-placeholder-count="3">
+      <div style="{{k.style}}">{{k.t}}</div>
+    </sc-for>
+  </sc-for>
+
+  <!-- 결정적 순간 밴드 -->
+  <div style="position: absolute; left: 358px; top: 568px; width: 858px; height: 80px; border-radius: 14px; background: #1428a0"></div>
+  <div style="position: absolute; left: 380px; top: 584px; font-size: 15px; font-weight: 800; line-height: 20px; color: #ffffff; white-space: nowrap">결정적 순간</div>
+  <div style="position: absolute; left: 380px; top: 610px; font-size: 12px; line-height: 16px; color: #c8d3ff; white-space: nowrap">학생이 캠퍼스를 평가하는 세 순간</div>
+  <sc-for list="{{mots}}" as="m" hint-placeholder-count="3">
+    <div style="{{m.line}}"></div>
+    <div style="{{m.head}}"><span style="width: 20px; height: 20px; border-radius: 50%; background: #ffffff; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{m.n}}</span><span style="font-size: 13.5px; font-weight: 800; color: #ffffff">{{m.t}}</span></div>
+    <div style="{{m.desc}}">{{m.d}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 스마트 교육 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const X0 = 358, SW = 143;
+    const MOT = [1, 3, 6];
+
+    // 구성원 세그먼트 — 비중은 자리표시자, 주로 만나는 순간 = 오른쪽 여정 단계 번호
+    const P = [
+      ['학부 재학생', '[00]%', '강의 · 실습 · 출력 · 도서관을', '하루에 오가는 가장 큰 사용자층', [1, 2, 3, 4]],
+      ['외국인 유학생', '[0]%', '다국어 안내 · 해외카드 결제,', '기숙사 생활이 곧 첫 캠퍼스 경험', [3, 4, 6]],
+      ['교수 · 강사', '[0]%', '수업 시작 몇 분 안에 기기 연결 ·', '자료 공유가 끝나야 하는 사람', [1, 2, 5]],
+      ['교직원 · 운영팀', '[0]%', '시설 · 정보화 · 생협 — 장애 ·', '민원 · 에너지를 뒤에서 맡는 사람', [2, 3, 5, 6]]
+    ];
+    const personas = P.map(([name, share, d1, d2, on], i) => ({
+      name, share, d1, d2,
+      i1: i === 0, i2: i === 1, i3: i === 2, i4: i === 3,
+      style: A + box(64, 186 + i * 110, 270, 102) + 'border-radius: 12px; background: #f5f6f8;',
+      map: [1, 2, 3, 4, 5, 6].map((n) => {
+        const hit = on.indexOf(n) >= 0;
+        return {
+          n,
+          style: 'width: 14px; height: 12px; border-radius: 3px; font-family: Manrope, sans-serif; font-size: 8.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' +
+            (hit ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; color: #b8bec8;')
+        };
+      })
+    }));
+
+    // 학생의 하루 — 단계 · 공간
+    const S = [
+      ['강의', '대형 강의실'],
+      ['모둠 · 실습', '모둠실 · 전산실'],
+      ['쉬는 시간 출력', '학생회관 · 출력 거점'],
+      ['자율 학습', '중앙도서관 · 라운지'],
+      ['시험 · 평가', '강의실 · 고사장'],
+      ['기숙사 · 생활', '기숙사 · 휴게 공간']
+    ];
+    const stages = S.map(([name, space], i) => {
+      const mot = MOT.indexOf(i + 1) >= 0;
+      return {
+        n: i + 1, name, space,
+        style: A + box(X0 + i * SW + 2, 160, SW - 4, 44) + 'box-sizing: border-box; border-radius: 10px; background: #f5f6f8; ' + (mot ? 'border: 1.5px solid #121417;' : '')
+      };
+    });
+    const seps = [];
+    [1, 2, 3, 4, 5].forEach((i) => {
+      [[344, 36], [404, 36], [464, 78]].forEach(([y, h]) => {
+        seps.push({ style: A + box(X0 + i * SW, y, 1, h) + 'background: #eef0f3;' });
+      });
+    });
+
+    // 체감 곡선 점 — SVG 곡선과 같은 좌표 (y = 242 + v × 72)
+    const NOW = [0.62, 0.5, 0.95, 0.42, 0.68, 0.72];
+    const AFT = [0.18, 0.15, 0.3, 0.12, 0.25, 0.2];
+    const dots = [];
+    NOW.forEach((v, i) => {
+      const cx = X0 + SW / 2 + i * SW;
+      const yn = 242 + v * 72, ya = 242 + AFT[i] * 72;
+      dots.push({ style: A + box(cx - 5, yn - 5, 10, 10) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #8a91a0;' });
+      dots.push({ style: A + box(cx - 4, ya - 4, 8, 8) + 'border-radius: 50%; background: #1428a0;' });
+      if (MOT.indexOf(i + 1) >= 0) {
+        dots.push({ style: A + box(cx - 10, yn - 10, 20, 20) + 'box-sizing: border-box; border-radius: 50%; border: 2px solid #121417;' });
+      }
+    });
+
+    // 단계별 셀 — 불편 · 교수/운영팀 · 삼성 개입 (k: 1 = 솔루션 · 서비스, 0 = 제품)
+    const CELL = [
+      ['뒷자리는 자료가 작고', '자리마다 덥고 춥다', '교수: 기기 연결 · 화면', '띄우다 수업이 늦어짐', [['Flip Pro 전자칠판', 0], ['시스템에어컨 360', 0], ['SmartThings Pro', 1]]],
+      ['모둠 자료 공유가 늦고', '공용 PC 오류가 잦다', '정보화팀: 수업 중', 'PC 장애 호출 대응', [['갤럭시 탭', 0], ['데스크탑 PC', 0], ['백업 · 복원', 1]]],
+      ['줄 서서 카드 충전,', '해외카드는 결제 불가', '생협: 용지 · 고장 ·', '잔액 민원 처리', [['디지털 복합기', 0], ['무인 과금', 1], ['원격 모니터링', 1]]],
+      ['빈 좌석 · 공지를', '찾아 돌아다닌다', '직원: 공지문을 출력해', '붙이고 다시 바꾼다', [['사이니지 · 키오스크', 0], ['컬러 이페이퍼', 0], ['공기청정기', 0]]],
+      ['마킹 실수 걱정,', '작은 글씨가 부담', '교직원: 시험지 인쇄 ·', '채점 · 보안 업무', [['갤럭시 탭', 0], ['Knox', 1], ['온라인 시험 앱', 1]]],
+      ['공용 공간 공기와', '에어컨 위생이 걱정', '시설팀: 천장형 에어컨', '세척 · 민원 대응', [['시스템에어컨', 0], ['케어 서비스 · 세척', 1], ['SmartThings Pro', 1]]]
+    ];
+    const txt = (x, y, color) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: 127px; font-size: 12px; line-height: 16px; white-space: nowrap; color: ' + color + ';';
+    const cells = CELL.map(([pain1, pain2, staff1, staff2, chips], i) => {
+      const x = X0 + i * SW + 8;
+      return {
+        pain1, pain2, staff1, staff2,
+        p1: txt(x, 346, '#121417'), p2: txt(x, 362, '#121417'),
+        s1: txt(x, 406, '#596170'), s2: txt(x, 422, '#596170'),
+        chips: chips.map(([t, k], j) => ({
+          t,
+          style: A + 'left: ' + px(x) + 'top: ' + px(466 + j * 26) + 'height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; display: flex; align-items: center; white-space: nowrap; ' +
+            (k ? 'background: #1428a0; color: #ffffff; font-weight: 700;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #121417; font-weight: 600;')
+        }))
+      };
+    });
+
+    // 결정적 순간 3개
+    const M = [['1', '수업 시작', '기기가 한 번에 연결되는가'], ['3', '쉬는 시간', '줄 없이 출력 · 결제되는가'], ['6', '기숙사의 밤', '공기가 쾌적하고 깨끗한가']];
+    const mots = M.map(([n, t, d], j) => {
+      const x = 590 + j * 206;
+      return {
+        n, t, d,
+        line: A + box(x - 14, 582, 1, 52) + 'background: #3b4fb8;',
+        head: A + 'left: ' + px(x) + 'top: ' + px(584) + 'height: 20px; display: flex; align-items: center; gap: 7px; white-space: nowrap;',
+        desc: A + box(x, 610, 190, 16) + 'font-size: 12px; line-height: 16px; color: #dfe6ff; white-space: nowrap;'
+      };
+    });
+
+    return { personas, stages, seps, dots, cells, mots };
+  }
+}
+</script>
+</body>
+</html>

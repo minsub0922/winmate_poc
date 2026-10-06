@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>HVC-S 삼성 통합공조 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · 삼성 통합공조</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>삼성 통합공조 · 개별 + 중앙 + b.IoT</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">건물마다 다른 운전 시간, 한 화면에서</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">E 대학교 캠퍼스 예시 · 중앙공조 건물과 개별공조 건물의 하루 운전을 b.IoT 한 화면에서 함께 봅니다</div>
+
+  <!-- 좌 5열: 캠퍼스 배치도 (건물마다 공간 · 설비 사진) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 466px; height: 440px; border-radius: 16px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 80px; top: 172px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">캠퍼스 배치도 (예시)</div>
+  <div style="position: absolute; left: 64px; top: 428px; width: 466px; height: 12px; background: #ffffff"></div>
+  <!-- 냉수 배관: 기계실 → 강의동 · 대강당 -->
+  <sc-for list="{{pipes}}" as="pp" hint-placeholder-count="2">
+    <div style="{{pp}}"></div>
+  </sc-for>
+  <!-- 건물 -->
+  <sc-for list="{{blds}}" as="b" hint-placeholder-count="5">
+    <div style="{{b.style}}">
+      <img src="{{b.src}}" alt="{{b.alt}}" style="position: absolute; object-fit: cover; {{b.imgStyle}}">
+      <span style="{{b.chipStyle}}">{{b.chip}}</span>
+      <sc-if value="{{b.hasTag}}" hint-placeholder-val="{{true}}">
+        <span style="{{b.tagStyle}}">{{b.tag}}</span>
+      </sc-if>
+      <div style="{{b.nameStyle}}">
+        <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{b.n}}</span>
+        <span style="font-size: 14px; font-weight: 800">{{b.name}}</span>
+      </div>
+      <span style="{{b.subStyle}}">{{b.sub}}</span>
+    </div>
+  </sc-for>
+  <!-- 옥상 DVM 실외기 -->
+  <sc-for list="{{roofs}}" as="rf" hint-placeholder-count="4">
+    <div style="{{rf}}"></div>
+  </sc-for>
+  <!-- 배치도 범례 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 466px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; background: #eaeefb; border: 1.5px solid #1428a0"></span>중앙공조</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; background: #ffffff; border: 1.5px solid #6f82d6"></span>개별공조</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 10px; box-sizing: border-box; border-radius: 2px; background: #ffffff; border: 1.5px solid #6f82d6"></span>DVM 실외기</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 3px; background: #1428a0"></span>냉수</span>
+    <span style="margin-left: auto; color: #8a91a0">번호 = 오른쪽 시간표</span>
+  </div>
+
+  <!-- 우 7열: 운전 시간 간트 -->
+  <div style="position: absolute; left: 554px; top: 164px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">건물별 하루 운전 시간</span><span style="font-size: 12px; color: #8a91a0">평일 예시 · b.IoT 한 화면</span></div>
+  <div style="position: absolute; right: 64px; top: 166px; display: flex; align-items: center; gap: 12px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 16px; height: 10px; border-radius: 3px; background: #1428a0"></span>중앙공조</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 16px; height: 10px; border-radius: 3px; background: #6f82d6"></span>개별공조</span>
+  </div>
+  <sc-for list="{{ticks}}" as="k" hint-placeholder-count="7">
+    <div style="{{k.style}}">{{k.t}}</div>
+  </sc-for>
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="12">
+    <div style="{{g}}"></div>
+  </sc-for>
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.labelStyle}}">
+      <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.n}}</span>
+      <div style="display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 13.5px; font-weight: 800; line-height: 19px">{{r.name}}</span><span style="font-size: 11px; line-height: 15px; color: #596170">{{r.sub}}</span></div>
+    </div>
+    <sc-for list="{{r.bars}}" as="bar" hint-placeholder-count="1">
+      <div style="{{bar.style}}">{{bar.t}}</div>
+    </sc-for>
+  </sc-for>
+  <!-- 이벤트 시각 -->
+  <sc-for list="{{marks}}" as="mk" hint-placeholder-count="2">
+    <div style="{{mk.line}}"></div>
+    <div style="{{mk.tag}}">{{mk.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 554px; top: 418px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">시간은 예시 · 수치는 데이터 연결 시 자동 반영</div>
+
+  <!-- 이벤트 노트 -->
+  <sc-for list="{{events}}" as="e" hint-placeholder-count="3">
+    <div style="{{e.style}}">
+      <div style="height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{e.time}}</span>
+        <div style="display: flex; gap: 3px">
+          <sc-for list="{{e.marks}}" as="m" hint-placeholder-count="2">
+            <span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{m}}</span>
+          </sc-for>
+        </div>
+      </div>
+      <span style="font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">{{e.t}}</span>
+      <div style="display: flex; flex-direction: column; white-space: nowrap">
+        <span style="font-size: 12px; line-height: 17px; color: #3d4452">{{e.d1}}</span>
+        <span style="font-size: 12px; line-height: 17px; color: #8a91a0">{{e.d2}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 레퍼런스 · 카탈로그: 경희대학교 -->
+  <img src="/_blob/98e424dcf523ac01b41d110c6f3b99f9" alt="레퍼런스 경희대학교 본관" style="position: absolute; left: 554px; top: 572px; width: 176px; height: 76px; object-fit: cover; object-position: 50% 67%; border-radius: 10px">
+  <div style="position: absolute; left: 744px; top: 572px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; border: 1px solid #e2e5ea; background: #f5f6f8; font-size: 11px; font-weight: 700; color: #596170; display: flex; align-items: center; white-space: nowrap">레퍼런스 · 카탈로그 수록</div>
+  <div style="position: absolute; left: 744px; top: 598px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 15px; font-weight: 800; line-height: 21px">경희대학교</span><span style="font-size: 13px; color: #3d4452">캠퍼스 BEMS</span></div>
+  <div style="position: absolute; left: 744px; top: 624px; font-size: 12px; line-height: 17px; color: #8a91a0; white-space: nowrap">E 대학교와 같은 캠퍼스형 통합공조 사례 · 사진은 카탈로그 레퍼런스</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 통합공조 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0', TINT = '#6f82d6';
+    const NUMF = "font-family: Manrope, 'Noto Sans KR', sans-serif; ";
+
+    // ---- 배치도: c = 중앙공조 · i = 개별공조 · p = 기계실 ----
+    const KIND = {
+      c: 'background: #eaeefb; border: 1.5px solid ' + BLUE + ';',
+      i: 'background: #ffffff; border: 1.5px solid ' + TINT + ';',
+      p: 'background: #ffffff; border: 1.5px solid #121417;'
+    };
+    const EX = '예시 사진 · 고객 공간으로 교체';
+    const P = {
+      classroom: ['/_blob/63585062805dbaad5afe600b39c4e854', '강의실 예시 사진', '50% 50%'],
+      ahu: ['/_blob/0b4922f74b77869bfecff63806cd9ed9', '대강당용 공조기 AHU 설비 사진', '50% 55%'],
+      roof: ['/_blob/50ee444e07304cbe3e2349c1796696e5', '옥상에 모듈 조합 설치된 DVM Chiller', '50% 50%'],
+      lab: ['/_blob/df8dcc261014c7a63fc870a1890e779c', '연구실 예시 사진', '50% 45%'],
+      dorm: ['/_blob/0fa24d57bb4bc44b93a8edfadbf6e512', '기숙사 방 예시 사진', '50% 85%']
+    };
+    // [번호, 이름, 설명, 종류, x, y, w, h, 시간 태그, 사진, 사진 높이, 사진 칩]
+    const B = [
+      [1, '강의동', '중앙공조 · FCU', 'c', 84, 206, 204, 136, '08–18', P.classroom, 72, EX],
+      [2, '대강당', '중앙공조 · AHU', 'c', 308, 206, 202, 124, '13–16 행사', P.ahu, 64, '설비 사진 · 공조기 AHU'],
+      [5, '기계실 · 옥상', '냉동기 · DVM Chiller', 'p', 196, 362, 220, 56, '', P.roof, 0, '설비 사진'],
+      [3, '연구동', '개별공조 · DVM', 'i', 84, 452, 204, 136, '08–24', P.lab, 68, EX],
+      [4, '기숙사', '개별공조 · DVM', 'i', 308, 452, 202, 136, '18–24 · 06–09', P.dorm, 68, EX]
+    ];
+    const chipBase = 'position: absolute; height: 16px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; background: #ffffff; color: #596170; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ';
+    const blds = B.map(([n, name, sub, kind, x, y, w, h, tag, ph, phH, chip]) => {
+      const iw = w - 3, ih = h - 3;            // 테두리 안쪽
+      const side = phH === 0;                  // 기계실: 사진 왼쪽
+      return {
+        n, name, sub, tag, chip,
+        src: ph[0], alt: ph[1],
+        hasTag: !!tag,
+        style: A + box(x, y, w, h) + 'border-radius: 10px; overflow: hidden; ' + KIND[kind],
+        imgStyle: (side ? box(0, 0, 84, ih) : box(0, 0, iw, phH)) + 'object-position: ' + ph[2] + ';',
+        chipStyle: chipBase + (side ? 'left: 4px; top: ' + px(ih - 20) : 'left: 6px; top: ' + px(phH - 21)),
+        tagStyle: 'position: absolute; right: 6px; top: 6px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: ' + (kind === 'c' ? BLUE : TINT) + '; color: #ffffff; ' + NUMF + 'font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;',
+        nameStyle: 'position: absolute; ' + (side ? 'left: 94px; top: 6px; ' : 'left: 10px; top: ' + px(phH + 8)) + 'height: 22px; display: flex; align-items: center; gap: 6px; white-space: nowrap;',
+        subStyle: 'position: absolute; ' + (side ? 'left: 94px; top: 31px; ' : 'left: 10px; top: ' + px(phH + 33)) + 'font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap;'
+      };
+    });
+    // 기계실(y 362) → 강의동 하단(y 342) · 대강당 하단(y 330)
+    const pipes = [
+      A + box(260, 342, 3, 20) + 'background: ' + BLUE + ';',
+      A + box(358, 330, 3, 32) + 'background: ' + BLUE + ';'
+    ];
+    // 연구동 · 기숙사 옥상 DVM 실외기 (이름 줄 오른쪽)
+    const roofs = [[232, 530], [256, 530], [454, 530], [478, 530]].map(([x, y]) => A + box(x, y, 18, 12) + 'border-radius: 2px; background: #ffffff; border: 1.5px solid ' + TINT + ';');
+
+    // ---- 간트: 06–24시 → x 716–1196 (폭 480) ----
+    const X0 = 716, W = 480;
+    const tx = (h) => Math.round(X0 + (h - 6) * W / 18);
+    const T = [6, 9, 12, 15, 18, 21, 24];
+    const ticks = T.map((h) => ({
+      t: (h < 10 ? '0' : '') + h,
+      style: 'position: absolute; left: ' + px(tx(h) - 20) + 'top: 194px; width: 40px; text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 600; line-height: 16px; color: #596170;'
+    }));
+    const RH = 48;
+    const rowT = [216, 264, 312, 360];
+    const GB = rowT[3] + RH;                   // 간트 밑선 408
+    const grid = [];
+    T.forEach((h) => grid.push(A + box(tx(h), 216, 1, GB - 216) + 'background: #e2e5ea;'));
+    rowT.forEach((y) => grid.push(A + box(554, y, 662, 1) + 'background: #e2e5ea;'));
+    grid.push(A + box(554, GB, 662, 1) + 'background: #b8bec8;');
+
+    const bar = (h1, h2, c, t) => ({ h1, h2, c, t });
+    const R = [
+      [1, '강의동', '중앙 · FCU', [bar(8, 18, BLUE, '08–18')]],
+      [2, '대강당', '중앙 · AHU', [bar(13, 16, BLUE, '13–16 행사')]],
+      [3, '연구동', '개별 · DVM', [bar(8, 24, TINT, '08–24')]],
+      [4, '기숙사', '개별 · DVM', [bar(6, 9, TINT, '06–09'), bar(18, 24, TINT, '18–24')]]
+    ];
+    const rows = R.map(([n, name, sub, bars], i) => ({
+      n, name, sub,
+      labelStyle: A + box(554, rowT[i] + 4, 150, 40) + 'display: flex; align-items: center; gap: 8px;',
+      bars: bars.map((b) => ({
+        t: b.t,
+        style: A + box(tx(b.h1), rowT[i] + 13, tx(b.h2) - tx(b.h1), 22) + 'border-radius: 6px; background: ' + b.c + '; color: #ffffff; padding: 0 8px; display: flex; align-items: center; ' + NUMF + 'font-size: 11.5px; font-weight: 700; white-space: nowrap; overflow: hidden;'
+      }))
+    }));
+    // 이벤트 시각: 18:00 · 22:00
+    const marks = [[18, '18:00'], [22, '22:00']].map(([h, t]) => ({
+      t,
+      line: A + box(tx(h) - 1, 210, 0, GB - 210 + 6) + 'border-left: 1.5px dashed #121417;',
+      tag: A + box(tx(h) - 22, GB + 6, 44, 20) + 'border-radius: 999px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // ---- 이벤트 노트 ----
+    const E = [
+      ['18:00', [1, 2], '강의동 · 대강당 종료', '→ 열원 부하 감소', '냉동기 · DVM Chiller'],
+      ['22:00', [3], '연구동만 개별공조 운전', '공간마다 따로 — DVM', '중앙 열원 없이 운전'],
+      ['월말', [1, 2, 3, 4], '건물별 원격검침 리포트', 'b.IoT Energy · 에너지 관리', '건물별 [000] kWh']
+    ];
+    const events = E.map(([time, marks, t, d1, d2], i) => ({
+      time, marks, t, d1, d2,
+      style: A + box(554 + i * 225, 448, 212, 110) + 'border-radius: 12px; background: #f5f6f8; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px;'
+    }));
+
+    return { blds, pipes, roofs, ticks, grid, rows, marks, events };
+  }
+}
+</script>
+</body>
+</html>

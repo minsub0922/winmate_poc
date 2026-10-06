@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-B 솔루션 → 제품 → 가치</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장 카운터 — 무엇이, 무엇으로, 어떤 가치를</div>
+
+  <!-- 공간 이미지 (4열) -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 368px; height: 512px; border-radius: 16px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">
+    매장 카운터 이미지
+    <span style="position: absolute; left: 18px; bottom: 18px; height: 28px; padding: 0 12px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center">매장 카운터</span>
+  </div>
+
+  <!-- 열 헤더: 솔루션 → 제품 → 가치 -->
+  <div style="position: absolute; left: 456px; top: 136px; display: flex; align-items: baseline; gap: 8px"><span style="font-size: 14px; font-weight: 800">솔루션</span><span style="font-size: 12.5px; color: #8a91a0">무엇이</span></div>
+  <div style="position: absolute; left: 688px; top: 138px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg></div>
+  <div style="position: absolute; left: 736px; top: 136px; display: flex; align-items: baseline; gap: 8px"><span style="font-size: 14px; font-weight: 800">제품</span><span style="font-size: 12.5px; color: #8a91a0">무엇으로</span></div>
+  <div style="position: absolute; left: 968px; top: 138px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg></div>
+  <div style="position: absolute; left: 1016px; top: 136px; display: flex; align-items: baseline; gap: 8px"><span style="font-size: 14px; font-weight: 800; color: #1428a0">가치</span><span style="font-size: 12.5px; color: #8a91a0">어떤 가치를</span></div>
+
+  <!-- 연결선 (팬아웃 / 팬인) -->
+  <sc-for list="{{links}}" as="l" hint-placeholder-count="10">
+    <div style="{{l.style}}"></div>
+  </sc-for>
+
+  <!-- 솔루션 -->
+  <sc-for list="{{solutions}}" as="s" hint-placeholder-count="2">
+    <div style="position: absolute; left: 456px; {{s.pos}} width: 200px; height: 168px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; padding: 18px; display: flex; flex-direction: column; gap: 10px">
+      <span style="width: 36px; height: 36px; border-radius: 10px; background: {{s.fill}}; color: #ffffff; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.letter}}</span>
+      <span style="font-size: 17px; font-weight: 800; white-space: nowrap">{{s.name}}</span>
+      <span style="font-size: 13px; line-height: 1.5; color: #596170">{{s.desc}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 제품 -->
+  <sc-for list="{{products}}" as="p" hint-placeholder-count="3">
+    <div style="position: absolute; left: 736px; {{p.pos}} width: 200px; height: 128px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 10px 14px; display: flex; flex-direction: column; gap: 2px">
+      <div style="height: 56px; flex-shrink: 0; margin-bottom: 8px; border-radius: 8px; background: #ffffff; display: flex; align-items: center; justify-content: center"><div style="{{p.screen}}"></div></div>
+      <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800">{{p.name}}</span>
+      <span style="font-size: 12px; color: #596170">{{p.role}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 가치 -->
+  <sc-for list="{{values}}" as="v" hint-placeholder-count="2">
+    <div style="position: absolute; left: 1016px; {{v.pos}} width: 200px; height: 168px; box-sizing: border-box; border-radius: 14px; background: #1428a0; color: #ffffff; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 6px">
+      <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.04em; color: #c8d3ff">{{v.no}}</span>
+      <span style="font-size: 17px; font-weight: 800; line-height: 1.4">{{v.title}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; flex-direction: column"><span style="font-size: 12.5px; color: #c8d3ff">{{v.metricLabel}}</span><span style="font-family: Manrope, sans-serif; font-size: 24px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em">{{v.metric}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- 연결 끝점 -->
+  <sc-for list="{{dots}}" as="d" hint-placeholder-count="10">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+
+  <!-- 선 범례 / 출처 -->
+  <div style="position: absolute; left: 456px; top: 602px; display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; color: #8a91a0">
+    <div style="display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 2px; background: #6f82d6"></span><span>MagicINFO 연결</span></div>
+    <div style="display: flex; align-items: center; gap: 8px"><span style="width: 20px; height: 0; border-top: 2px dashed #596170"></span><span>SmartThings Pro 연결</span></div>
+  </div>
+  <div style="position: absolute; left: 1016px; top: 602px; width: 200px; font-size: 11.5px; line-height: 1.5; color: #8a91a0">유사 사례 기준 · 수치는 예시</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    // 열 x: 솔루션 456–656 · 제품 736–936 · 가치 1016–1216
+    const solTop = [190, 420], prodTop = [172, 344, 516], valTop = [190, 420];
+    const MI = [656, solTop[0] + 84], ST = [656, solTop[1] + 84];
+    const PL = prodTop.map((t) => [736, t + 64]);
+    const PR = prodTop.map((t) => [936, t + 64]);
+    const V1 = [1016, valTop[0] + 84], V2 = [1016, valTop[1] + 84];
+
+    // 두 점을 잇는 2px 선 (회전한 div)
+    const line = (a, b, css) => {
+      const dx = b[0] - a[0], dy = b[1] - a[1];
+      const len = Math.round(Math.sqrt(dx * dx + dy * dy));
+      const deg = (Math.atan2(dy, dx) * 180 / Math.PI).toFixed(2);
+      return { style: 'position: absolute; left: ' + px(a[0]) + 'top: ' + px(a[1] - 1) + 'width: ' + px(len) + 'height: 0; border-top: ' + css + '; transform-origin: 0 1px; transform: rotate(' + deg + 'deg);' };
+    };
+    const BLUE = '2px solid #6f82d6', INK = '2px dashed #596170', GRAY = '2px solid #b8bec8';
+    const links = [
+      line(MI, PL[0], BLUE), line(MI, PL[1], BLUE), line(MI, PL[2], BLUE),
+      line(ST, PL[0], INK), line(ST, PL[2], INK),
+      line(PR[0], V1, GRAY), line(PR[1], V1, GRAY), line(PR[2], V1, GRAY),
+      line(PR[0], V2, GRAY), line(PR[2], V2, GRAY)
+    ];
+    const dot = (p, fill, size) => ({ style: 'position: absolute; left: ' + px(p[0] - size / 2) + 'top: ' + px(p[1] - size / 2) + 'width: ' + px(size) + 'height: ' + px(size) + 'box-sizing: border-box; border-radius: 50%; background: ' + fill + '; border: 2px solid #ffffff;' });
+    const dots = [dot(MI, '#1428a0', 12), dot(ST, '#121417', 12)]
+      .concat(PL.map((p) => dot(p, '#b8bec8', 10)), PR.map((p) => dot(p, '#b8bec8', 10)))
+      .concat([dot(V1, '#1428a0', 12), dot(V2, '#1428a0', 12)]);
+
+    const scr = (w, h) => 'width: ' + px(w) + 'height: ' + px(h) + 'box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417;';
+    const solutions = [
+      { letter: 'M', name: 'MagicINFO', desc: '메뉴 · 가격 · 품절을 시간대에 맞춰 표시', fill: '#1428a0', pos: 'top: ' + px(solTop[0]) },
+      { letter: 'S', name: 'SmartThings Pro', desc: '영업시간에 맞춰 화면 · 조명 전원 관리', fill: '#121417', pos: 'top: ' + px(solTop[1]) }
+    ];
+    const products = [
+      ['QM55C ×3', '카운터 메뉴보드', scr(80, 45)],
+      ['KM24C', '셀프 주문 키오스크', scr(28, 50)],
+      ['QM43C', '픽업 번호 호출', scr(64, 36)]
+    ].map(([name, role, screen], i) => ({ name, role, screen, pos: 'top: ' + px(prodTop[i]) }));
+    const values = [
+      { no: '가치 01', title: '기다림이 짧아지는 카운터', metricLabel: '주문 대기', metric: '[00]% ↓', pos: 'top: ' + px(valTop[0]) },
+      { no: '가치 02', title: '쓰는 만큼만 켜지는 매장', metricLabel: '영업 외 전력', metric: '[00]% ↓', pos: 'top: ' + px(valTop[1]) }
+    ];
+    return { links, dots, solutions, products, values };
+  }
+}
+</script>
+</body>
+</html>

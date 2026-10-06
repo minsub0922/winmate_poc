@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-O 제품 라인업 실사 — 공식 제품 컷 + 가치 + 스펙</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">A 커피 매장에 들어가는 네 가지 제품</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170">제품마다 맡는 가치 하나 · 그 가치를 받쳐 주는 스펙 · 제품 이미지는 samsung.com 공식 이미지</div>
+
+  <div style="position: absolute; left: 64px; top: 156px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+    <sc-for list="{{items}}" as="p" hint-placeholder-count="4">
+      <div style="height: 424px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; overflow: hidden; display: flex; flex-direction: column">
+        <div style="position: relative; height: 210px; display: flex; align-items: center; justify-content: center">
+          <dc-import name="Photo" pid="{{p.pid}}" w="276" h="210" hint-size="276px,210px"></dc-import>
+          <span style="position: absolute; left: 14px; top: 14px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p.role}}</span>
+        </div>
+        <div style="flex-grow: 1; background: #ffffff; margin: 0 8px 8px 8px; border-radius: 12px; padding: 16px 16px 14px 16px; display: flex; flex-direction: column; gap: 8px">
+          <span style="font-family: Manrope, sans-serif; font-size: 21px; font-weight: 800; letter-spacing: -0.01em">{{p.model}}</span>
+          <span style="font-size: 16px; font-weight: 800; line-height: 1.4; color: #1428a0">{{p.value}}</span>
+          <span style="font-size: 12.5px; line-height: 1.5; color: #3d4452">{{p.desc}}</span>
+          <span style="flex-grow: 1"></span>
+          <div style="display: flex; flex-wrap: wrap; gap: 5px">
+            <sc-for list="{{p.specs}}" as="s" hint-placeholder-count="3">
+              <span style="height: 22px; padding: 0 8px; border-radius: 6px; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{s.t}}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 묶는 소프트웨어 -->
+  <div style="position: absolute; left: 64px; top: 596px; width: 1152px; height: 52px; box-sizing: border-box; border-radius: 12px; background: #121417; color: #ffffff; padding: 0 18px; display: flex; align-items: center; gap: 14px">
+    <span style="font-size: 13px; font-weight: 800; color: #9db4ff; white-space: nowrap">네 제품을 묶는 소프트웨어</span>
+    <span style="font-size: 13px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800">MagicINFO</span> — 메뉴 콘텐츠 · 기기를 본사에서 원격 관리</span>
+    <span style="width: 1px; height: 18px; background: #3d4452"></span>
+    <span style="font-size: 13px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800">SmartThings Pro</span> — 매장 전력 · 냉난방 스케줄</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 제품 이미지 samsung.com · 스펙은 제안 모델 기준</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [실사 컷, 역할, 모델, 가치, 설명, 스펙]
+    const P = [
+      ['qm55c.persp', '카운터 메뉴보드 × 3', 'QM55C', '신메뉴를 몇 분 만에 전 매장에', '본사가 바꾸면 매장 메뉴판이 같은 날 바뀝니다', ['55형 4K UHD', '500nit', '24/7 운영']],
+      ['km24c.persp', '셀프 주문', 'KM24C', '피크 주문을 나눠 받기', '주문과 결제를 키오스크가 맡아 카운터 줄이 짧아집니다', ['24형 FHD 터치', 'Windows', '결제 모듈']],
+      ['oh55a.persp', '드라이브스루 · 매장 앞', 'OH55A-S', '밖에서도 선명한 첫 메뉴판', '한낮 햇빛 아래서도 읽히고 비 · 먼지에도 버팁니다', ['55형', '3,500nit', 'IP5X']],
+      ['ac360', '매장 냉난방', '360 카세트', '오래 앉아도 고른 바람', '천장 가운데서 사방으로 고르게 — 좌석 어디서나 비슷하게', ['360° 원형 토출', '천장형']]
+    ];
+    const items = P.map(([pid, role, model, value, desc, specs]) => ({ pid, role, model, value, desc, specs: specs.map((t) => ({ t })) }));
+    return { items };
+  }
+}
+</script>
+</body>
+</html>

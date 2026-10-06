@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>요구사항 · 고객 답변 붙여넣기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+input::placeholder,textarea::placeholder{color:#a3a9b5}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="requirements" current="E 자산운용 용산 AI Ready 오피스" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="고객 요구사항" title="E 자산운용 용산 AI Ready 오피스" popover="none" hint-size="1180px,64px"></dc-import>
+
+    <section style="position: relative; width: 1180px; height: 836px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">답변을 붙여 넣어 주세요</h1>
+        <span style="flex-grow: 1"></span>
+        <a href="RQ6.dc.html" style="display: flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 600; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>정의서 v1</a>
+      </div>
+      </div>
+
+      <div style="box-sizing: border-box; flex-shrink: 0; background: #ffffff; border: 1.5px solid #1428a0; border-radius: 18px; box-shadow: 0 10px 32px rgba(20,40,160,0.10); display: flex; flex-direction: column">
+        <div style="padding: 16px 18px 0 18px; font-size: 14px; line-height: 1.7; color: #121417; height: 212px; overflow: hidden; white-space: pre-line" aria-label="붙여 넣은 고객 답변">{{mail}}</div>
+        <div style="padding: 10px 18px 0 18px; display: flex; gap: 8px">
+          <sc-for list="{{atts}}" as="a" hint-placeholder-count="1">
+            <span style="height: 32px; box-sizing: border-box; padding: 0 10px 0 8px; border-radius: 8px; border: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 7px; font-size: 13px; white-space: nowrap"><span style="height: 18px; padding: 0 5px; border-radius: 4px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center">PDF</span>{{a}}</span>
+          </sc-for>
+        </div>
+        <div style="padding: 12px 14px 12px 18px; margin-top: 10px; border-top: 1px solid #f0f2f5; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <button style="height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4 M7 9l5-5 5 5 M4 15v5h16v-5"/></svg>파일 첨부</button>
+          <a href="RQ7B.dc.html" style="height: 46px; padding: 0 22px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">바뀌는 곳 찾기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mail = ['안녕하세요, E 자산운용 공간컨텐츠실입니다.', '', '1. 업무환경 플랫폼은 입주사 앱, 공용 공간 예약, 방문객 안내를 생각하고 있습니다.', '2. 비교용으로 성수 오피스 에너지 사용량 자료를 첨부합니다.', '3. 제안 발표에는 대표이사님과 투자심의위원 2명이 참석합니다.', '', '감사합니다.'].join('\n');
+    return { yes: true, mail, atts: ['성수오피스_에너지사용량_2025.pdf'] };
+  }
+}
+</script>
+</body>
+</html>

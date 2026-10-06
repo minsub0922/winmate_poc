@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RT-E 리테일 · 브랜드 플래그십 · 공간 시나리오 · VIP 라운지</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">VIP 라운지 · 이용자별</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">VIP 라운지, 고객 · 쇼퍼 · 매니저가 저마다 다른 편안함을 얻습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">⑥ VIP 라운지 — 같은 공간에서 VIP 고객 · 퍼스널 쇼퍼 · 라운지 매니저 세 사람이 얻는 것</div>
+
+  <!-- 위 띠: 공간 사진 자리 + 공간 개요 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 368px; height: 140px; border-radius: 14px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0; white-space: nowrap">VIP 라운지 사진</div>
+  <div style="position: absolute; left: 76px; top: 168px; height: 22px; box-sizing: border-box; padding: 0 9px 0 3px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">6</span><span style="font-size: 11.5px; font-weight: 800">VIP 라운지</span></div>
+
+  <div style="position: absolute; left: 456px; top: 156px; width: 760px; height: 140px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 476px; top: 170px; height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="font-size: 18px; line-height: 24px; font-weight: 800; letter-spacing: -0.02em">VIP 라운지</span><span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; color: #596170; font-size: 11px; display: flex; align-items: center"><span style="font-family: Manrope, sans-serif; font-weight: 800">[0]F</span>&nbsp;· 예약제 · 좌석 [00]석</span></div>
+  <div style="position: absolute; left: 476px; top: 200px; font-size: 13px; line-height: 19px; color: #3d4452; white-space: nowrap">오래 앉아 대화가 오가는 곳 — 화면보다 공기 · 소리 · 인테리어와의 조화가 먼저 보이는 공간</div>
+  <div style="position: absolute; left: 476px; top: 232px; width: 56px; font-size: 11px; line-height: 20px; font-weight: 800; color: #8a91a0; white-space: nowrap">솔루션</div>
+  <div style="position: absolute; left: 532px; top: 232px; height: 20px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{sols}}" as="c" hint-placeholder-count="3"><span style="height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span></sc-for>
+    <span style="margin-left: 6px; font-size: 11.5px; color: #596170">+ 케어 서비스 (정기 점검)</span>
+  </div>
+  <div style="position: absolute; left: 476px; top: 262px; width: 56px; font-size: 11px; line-height: 20px; font-weight: 800; color: #8a91a0; white-space: nowrap">제품</div>
+  <div style="position: absolute; left: 532px; top: 262px; height: 20px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{prods}}" as="c" hint-placeholder-count="5"><span style="height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; color: #121417; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span></sc-for>
+  </div>
+
+  <!-- 세 사람 카드 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.box}}">
+      <div style="{{c.ring}}">
+        <sc-if value="{{c.i1}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l3 5-9 11L3 9l3-5z"></path><path d="M3 9h18"></path></svg></sc-if>
+        <sc-if value="{{c.i2}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1 12H6L5 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></sc-if>
+        <sc-if value="{{c.i3}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg></sc-if>
+      </div>
+      <div style="position: absolute; left: 62px; top: 11px; height: 22px; display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{c.name}}</span><span style="{{c.tagS}}">{{c.group}}</span></div>
+      <div style="position: absolute; left: 62px; top: 34px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{c.sit}}</div>
+
+      <div style="position: absolute; left: 16px; top: 68px; font-size: 10.5px; line-height: 14px; font-weight: 800; color: #8a91a0; white-space: nowrap">이 공간에서</div>
+      <div style="position: absolute; left: 16px; top: 84px; font-size: 12.5px; line-height: 18px; color: #121417; white-space: nowrap">{{c.m1}}</div>
+      <div style="position: absolute; left: 16px; top: 102px; font-size: 12.5px; line-height: 18px; color: #121417; white-space: nowrap">{{c.m2}}</div>
+
+      <div style="position: absolute; left: 16px; top: 132px; font-size: 10.5px; line-height: 14px; font-weight: 800; color: #1428a0; white-space: nowrap">움직이는 것</div>
+      <div style="position: absolute; left: 16px; top: 148px; height: 20px; display: flex; align-items: center; gap: 5px; white-space: nowrap">
+        <sc-for list="{{c.sols}}" as="s" hint-placeholder-count="2"><span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{s.t}}</span></sc-for>
+      </div>
+      <div style="position: absolute; left: 16px; top: 172px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{c.does}}</div>
+
+      <div style="position: absolute; left: 16px; top: 200px; font-size: 10.5px; line-height: 14px; font-weight: 800; color: #8a91a0; white-space: nowrap">쓰는 기기</div>
+      <div style="position: absolute; left: 16px; top: 216px; display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 17px; font-weight: 700; color: #121417; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>{{c.dev}}</div>
+
+      <div style="position: absolute; left: 10px; top: 240px; width: 346px; height: 48px; border-radius: 10px; background: #eaeefb">
+        <div style="position: absolute; left: 12px; top: 8px; font-size: 12.5px; line-height: 18px; font-weight: 800; color: #121417; white-space: nowrap">{{c.val}}</div>
+        <div style="position: absolute; left: 12px; top: 27px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{c.kl}}</div>
+        <div style="position: absolute; right: 12px; top: 14px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{c.kv}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 행 구분선 -->
+  <sc-for list="{{rules}}" as="r" hint-placeholder-count="9">
+    <div style="{{r.style}}"></div>
+  </sc-for>
+
+  <!-- 하단 띠 -->
+  <div style="position: absolute; left: 64px; top: 616px; width: 1152px; height: 34px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">세 사람 · 하나의 구성</span>
+    <span style="width: 1px; height: 16px; background: #d5d9e0"></span>
+    <span style="font-size: 12px; color: #3d4452">예약 시각에 맞춘 공조 스케줄 · 쇼퍼 탭 관리 · 라운지 화면 편성을 한 구성으로 — 에어드레서 · 에어컨은 케어 서비스가 정기 점검</span>
+    <span style="margin-left: auto; font-size: 11px; color: #8a91a0">수치는 예시</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 백화점 · 플래그십 점포 공간 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    const sols = ['SAC 제어 시스템', 'Knox Suite', 'MagicINFO'].map((t) => ({ t }));
+    const prods = ['에어드레서', '무풍 시스템에어컨', '공기청정기', '갤럭시 탭 S', '스마트 사이니지 QM43C'].map((t) => ({ t }));
+
+    // 세 카드 (각 4열) — y 310–606
+    const CX = [64, 456, 848], CY = 310, CW = 368, CH = 298;
+    const C = [
+      { name: 'VIP 고객', group: '이용', sit: '오후 프라이빗 상담 · 오래 머묾',
+        m1: '외투를 맡기고 티타임 상담을 하는 동안', m2: '먼지 · 냄새를 털어낸 외투를 돌려받음',
+        sols: ['SAC 제어 시스템'], does: '무풍 · 저소음 운전으로 대화가 편한 공기',
+        dev: '에어드레서 · 무풍 · 공기청정기',
+        val: '외투까지 챙겨 주는 라운지', kl: 'VIP 라운지 재방문', kv: '[00]% ↑' },
+      { name: '퍼스널 쇼퍼', group: '운영', sit: 'VIP 응대 · 상품 · 일정 상담',
+        m1: '자리를 뜨지 않고 재고 · 신상품을 보여 주고', m2: '다음 피팅 · 방문 일정까지 그 자리에서',
+        sols: ['Knox Suite'], does: '업무 앱만 열리는 탭, 분실 시 원격 잠금',
+        dev: '갤럭시 탭 S · 라운지 사이니지',
+        val: '상담이 끊기지 않고 구매로', kl: '상담 → 구매 전환', kv: '[00]% ↑' },
+      { name: '라운지 매니저', group: '운영', sit: '예약 · 공조 · 화면 관리',
+        m1: '예약 전에 온도 · 공기를 맞춰 두고,', m2: '라운지 화면은 VIP 행사 영상으로 바꿈',
+        sols: ['SAC 제어 시스템', 'MagicINFO'], does: '예약 시각 스케줄 가동 · 화면 원격 편성',
+        dev: 'DMS · 스마트 사이니지 · 관리용 탭',
+        val: '혼자서도 라운지 전체를 챙깁니다', kl: '라운지 준비 시간', kv: '[0]분 → [0]분' }
+    ];
+    const cards = C.map((c, i) => {
+      const user = c.group === '이용';
+      return {
+        name: c.name, group: c.group, sit: c.sit, m1: c.m1, m2: c.m2, does: c.does, dev: c.dev, val: c.val, kl: c.kl, kv: c.kv,
+        sols: c.sols.map((t) => ({ t })),
+        i1: i === 0, i2: i === 1, i3: i === 2,
+        box: box(CX[i], CY, CW, CH) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid ' + (user ? '#b8c3ee' : '#e2e5ea') + '; background: #ffffff;',
+        ring: box(14, 12, 38, 38) + 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid ' + (i === 2 ? '#121417' : '#1428a0') + '; background: ' + (i === 2 ? '#f5f6f8' : '#eaeefb') + '; display: flex; align-items: center; justify-content: center;',
+        tagS: 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; ' +
+          (user ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #3d4452;')
+      };
+    });
+
+    // 카드 안 행 구분선 (세 카드 같은 높이)
+    const rules = [];
+    CX.forEach((x) => [60, 126, 194].forEach((dy) => rules.push({ style: box(x + 16, CY + dy, CW - 32, 1) + 'background: #eef0f3;' })));
+
+    return { sols, prods, cards, rules };
+  }
+}
+</script>
+</body>
+</html>

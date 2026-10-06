@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BM-B 매장 유형별 구성</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장 크기에 따라 세 가지 구성으로</div>
+
+  <!-- 유형별 3열: 평면 폭 = 매장 크기, 제품 행은 세 열이 같은 순서로 정렬 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{types}}" as="c" hint-placeholder-count="3">
+      <div style="{{c.box}}">
+        <sc-if value="{{c.top}}" hint-placeholder-val="{{false}}">
+          <span style="position: absolute; right: 18px; top: 18px; height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">가장 많음</span>
+        </sc-if>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 18px; font-weight: 800; color: {{c.nameColor}}">{{c.name}}</span>
+          <span style="font-size: 13px; color: #596170; font-family: Manrope, 'Noto Sans KR', sans-serif">{{c.sub}}</span>
+        </div>
+        <div style="height: 120px; margin-top: 14px; flex-shrink: 0; display: flex; justify-content: center">
+          <div style="{{c.floor}}">평면 예시</div>
+        </div>
+        <div style="margin-top: 14px; display: flex; flex-direction: column">
+          <sc-for list="{{c.rows}}" as="r" hint-placeholder-count="5">
+            <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 40px; column-gap: 10px; align-items: center; height: 24px">
+              <span style="{{r.modelStyle}}">{{r.model}}</span>
+              <div style="display: flex; align-items: center; gap: 3px">
+                <sc-for list="{{r.pips}}" as="u" hint-placeholder-count="2">
+                  <span style="{{u}}"></span>
+                </sc-for>
+              </div>
+              <span style="{{r.qtyStyle}}">{{r.qty}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="border-top: 1px solid #e2e5ea; padding-top: 12px; display: flex; flex-direction: column; gap: 4px">
+          <div style="display: flex; align-items: baseline; gap: 6px">
+            <span style="font-size: 13px; color: #596170">매장당</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0">{{c.per}}</span>
+            <span style="font-size: 15px; font-weight: 800; color: #1428a0">대</span>
+          </div>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 600; color: #596170">× {{c.stores}}개 매장 = {{c.total}}대</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 전체 합계 -->
+  <div style="position: absolute; left: 64px; top: 596px; width: 1152px; height: 52px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 22px; display: flex; align-items: center; gap: 14px">
+    <span style="font-size: 14px; font-weight: 800; padding-right: 8px">320개 매장 전체</span>
+    <sc-for list="{{segs}}" as="s" hint-placeholder-count="3">
+      <span style="display: flex; align-items: baseline; gap: 5px"><span style="font-size: 13px; color: #3d4452">{{s.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">{{s.n}}</span><span style="font-size: 13px; color: #3d4452">대</span></span>
+      <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 700; color: #6f82d6">{{s.op}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 700; color: #6f82d6">=</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[0,000]</span><span style="font-size: 15px; font-weight: 800; color: #1428a0">대</span></span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = [['OH55C', 'land'], ['KM24C', 'port'], ['QM55C', 'land'], ['QM65C', 'land'], ['QM43C', 'land']];
+    const pip = {
+      land: 'width: 14px; height: 9px; border-radius: 1.5px; background: #1f232a',
+      port: 'width: 7px; height: 12px; border-radius: 1.5px; background: #1f232a'
+    };
+    // [이름, 부가 정보, 매장 수, 총 대수, 평면 폭(px, 매장 크기 비례), 제품별 매장당 대수, 강조]
+    const T = [
+      ['소형 · 테이크아웃', '[000]개 매장 · [00]평 이하', '[000]', '[0,000]', 176, [0, 1, 2, 0, 1], false],
+      ['표준', '[000]개 매장 · [00]평 내외', '[000]', '[0,000]', 250, [2, 1, 3, 1, 1], true],
+      ['대형 · 플래그십', '[00]개 매장 · [00]평 이상', '[00]', '[000]', 322, [2, 2, 4, 2, 2], false]
+    ];
+    const types = T.map(([name, sub, stores, total, fw, q, top]) => ({
+      name, sub, stores, total, top,
+      nameColor: top ? '#1428a0' : '#121417',
+      box: 'position: relative; height: 444px; box-sizing: border-box; border-radius: 16px; display: flex; flex-direction: column; background: #ffffff; ' +
+        (top ? 'border: 2px solid #1428a0; padding: 19px 21px' : 'border: 1px solid #e2e5ea; padding: 20px 22px'),
+      floor: 'width: ' + fw + 'px; height: 120px; border-radius: 10px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 12.5px; color: #8a91a0',
+      per: String(q.reduce((a, b) => a + b, 0)),
+      rows: P.map(([model, kind], j) => ({
+        model,
+        modelStyle: 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: ' + (q[j] ? '#121417' : '#b8bec8'),
+        pips: Array.from({ length: q[j] }, () => pip[kind]),
+        qty: q[j] ? '× ' + q[j] : '—',
+        qtyStyle: 'text-align: right; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: ' + (q[j] ? '#121417' : '#b8bec8')
+      }))
+    }));
+    const segs = T.map(([name, , , total], i) => ({
+      label: name.split(' · ')[0],
+      n: total,
+      op: i < T.length - 1 ? '+' : ''
+    }));
+    return { types, segs };
+  }
+}
+</script>
+</body>
+</html>

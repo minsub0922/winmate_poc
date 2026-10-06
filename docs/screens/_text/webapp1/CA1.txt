@@ -1,0 +1,31 @@
+ 
+ 경쟁사 분석 · 넣기 
+ 넣기 · 자유 양식 
+ 어떤 고객의 경쟁사를 찾을까요? 
+ 고객 요구사항 정의서를 고르거나, 아래에 자유롭게 적어 주세요. 
+ 자유 양식 
+ 고객 요구사항에서 
+ 고객 · 사업 설명 
+ A 커피 프랜차이즈가 전국 320개 매장의 메뉴보드를 디지털로 바꾸려고 해요. 수도권 직영점부터 시작하고, 55인치 사이니지와 본사에서 콘텐츠를 일괄 배포하는 솔루션이 필요해요. 
+ 파일 올리기 
+ RFP · 회의록을 올리면 경쟁사 언급과 평가 기준도 읽어요 
+ 경쟁사 찾기 
+ 입력에서 읽은 것 
+ {{c.k}} · {{c.v}} 
+ {{foundCount}} 
+ 고객사 · 업종 · 장소 · 제품까지 알려 주면 경쟁사를 훨씬 잘 찾아요. 업종만 있어도 찾긴 하지만 후보가 넓어져요. 
+class Component extends DCLogic {
+ renderVals() {
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ // 입력 방식 세그먼트: 선택 = 흰 배경 + 삼성 블루 테두리
+ const tabBase = '';
+ const tabOn = tabBase + '';
+ const tabOff = tabBase + '';
+ // 입력에서 읽은 4가지: 읽힌 것은 '찾음', 안 읽힌 것은 점선 '비어 있음'
+ const chip = (found) => '' + (found ? '' : '');
+ const C = [['고객사', 'A 커피 프랜차이즈', true], ['업종', '외식 · 카페', true], ['장소', '수도권 직영점', true], ['제품', '55" 사이니지 + 배포 솔루션', true]];
+ const chips = C.map(([k, v, found]) => ({ k, v: found ? v : '비어 있음', found, style: chip(found) }));
+ const n = chips.filter((c) => c.found).length;
+ return { steps, cur: 1, tabOn, tabOff, chips, foundCount: n + ' / ' + chips.length };
+ }
+}

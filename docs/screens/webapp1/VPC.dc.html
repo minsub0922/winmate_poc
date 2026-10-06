@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition · 라우팅 시나리오 12</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 26px 40px 22px 40px; display: flex; flex-direction: column; gap: 14px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+
+  <div style="height: 70px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">SCENARIOS · VALUE PROPOSITION</span>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">같은 기능, 재료가 달라지면 구조와 레이아웃이 이렇게 달라집니다</h1>
+      <p style="margin: 0; font-size: 13.5px; color: #596170; white-space: nowrap">라우팅 규칙을 12개 케이스에 적용한 결과 · 흰 칩은 범용, 파란 칩은 업종판, 회색 칩은 고정한 시트 · 장면 코드를 누르면 그 화면으로 갑니다</p>
+    </div>
+    <div style="display: flex; gap: 8px; flex-shrink: 0">
+      <a href="VPR.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">라우팅 규칙</a>
+      <a href="VP0.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">VP 작업 목록</a>
+    </div>
+  </div>
+
+  <div style="flex-shrink: 0; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+    <div style="{{headStyle}}">
+      <span>#</span><span>케이스 · 재료</span><span>업종 · 업종판</span><span>메시지 구조</span><span>결과 레이아웃</span><span>사람에게 물은 것</span><span>장면</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+      <div style="{{r.rowStyle}}">
+        <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #8a91a0">{{r.no}}</span>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+          <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.input}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.ind}}</span>
+          <span style="{{r.pubStyle}}">{{r.pub}}</span>
+        </div>
+        <span style="font-size: 12px; color: #3d4452; line-height: 1.4; max-height: 34px; overflow: hidden">{{r.shape}}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; align-content: center; min-width: 0; max-height: 46px; overflow: hidden">
+          <sc-for list="{{r.codes}}" as="c" hint-placeholder-count="3">
+            <span style="{{c.style}}">{{c.t}}</span>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; min-width: 0">
+          <sc-if value="{{r.hasAsk}}" hint-placeholder-val="{{false}}">
+            <span style="{{r.aStyle}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.aIcon}}"/></svg>{{r.aText}}</span>
+          </sc-if>
+          <span style="{{r.askStyle}}">{{r.ask}}</span>
+        </div>
+        <a href="{{r.href}}" style="height: 26px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; border: 1px solid #e2e5ea; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; justify-self: start; white-space: nowrap">{{r.screen}}</a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+      <div style="box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 10px 14px; display: flex; align-items: center; gap: 12px; min-width: 0">
+        <span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; color: #1428a0; flex-shrink: 0">{{s.n}}</span>
+        <span style="font-size: 12px; color: #3d4452; line-height: 1.45">{{s.t}}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MODE = {
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z'],
+      ask: ['선택 필요', 'background: #121417; color: #ffffff;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 14h2v2h-2zm1-10a4 4 0 0 1 4 4c0 2-3 2.5-3 4h-2c0-2.5 3-3 3-4a2 2 0 0 0-4 0H8a4 4 0 0 1 4-4z'],
+      pin: ['고정', 'background: #f0f2f5; color: #3d4452;', 'M9 2h6l-1 6 3 3v2h-4v7l-1 2-1-2v-7H7v-2l3-3z']
+    };
+    const CHIP = 'height: 20px; padding: 0 7px; border-radius: 999px; box-sizing: border-box; font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; ';
+    const cols = 'display: grid; grid-template-columns: 26px 220px 168px 150px minmax(0, 1fr) 200px 64px; column-gap: 12px; align-items: center; padding: 0 16px;';
+
+    // # = 업종판, * = 고정, 코드가 아닌 말은 회색
+    const code = (raw) => {
+      const ind = raw.startsWith('#');
+      const pin = raw.startsWith('*');
+      const t = ind || pin ? raw.slice(1) : raw;
+      const isCode = /^[A-Z]{2}-/.test(t);
+      return {
+        t: pin ? t + ' 고정' : t,
+        style: 'height: 22px; box-sizing: border-box; padding: 0 7px; border-radius: 6px; font-size: 11px; display: inline-flex; align-items: center; white-space: nowrap; ' +
+          (ind ? 'background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-weight: 800;' : pin ? 'background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-weight: 800;' : isCode ? 'background: #ffffff; border: 1px solid #d5d9e0; color: #121417; font-family: Manrope, sans-serif; font-weight: 800;' : 'background: #f5f6f8; color: #596170; font-weight: 600;')
+      };
+    };
+    // [케이스, 재료, 업종, 업종판, 메시지 구조, 레이아웃, 물은 것, 모드('' = 묻지 않음), 장면]
+    const R = [
+      ['A 커피 프랜차이즈 메뉴보드', 'Storyboard KM 3 · MI v2', '외식 · 카페 (MI 상속)', '업종판 제작 중 → 범용', '과제 → 가치 → 효과', ['CH-A', 'VP-F·3', 'EF-A'], '없음', '', 'VP3'],
+      ['B 병원 안내 시스템', 'RFP · 평가위원 4 · MI', '의료 · 요양 (MI 상속)', '범용', '이해관계자형', ['CH-B', 'VP-H', 'EF-C'], '없음 · 이후 요약 1장 요청', '', 'VP3L'],
+      ['C 물류센터 현장 단말', 'MI · 유관 사례 2', '제조 · 물류', '범용', '과제 ↔ 제품 1:1', ['CH-C', 'VP-E', 'EF-A'], '오출고율을 어떻게 채울지', 'ask', 'VP3N'],
+      ['D 리테일 플래그십 퀵윈', 'Storyboard KM 1 · 퀵윈 연결', '리테일 · 플래그십', '범용', '한 문장 + 제품 사진', ['VP-G'], '없음 · 퀵윈이라 1장', '', 'VP4'],
+      ['E 대학교 Solution형', '대규모 MI · RFP 경제성 20점', '교육 · 캠퍼스', '범용', '이해관계자 + 투자 회수', ['고객 과제 생략', 'VP-H', 'EF-B'], '투자비 → 견적 v2로 계산', 'check', 'VP3G'],
+      ['T 은행 지점 리뉴얼', 'RFP 경제성 30점 · 견적 첨부', '금융', '범용', '리뉴얼 전 → 후 · 투자 회수', ['CH-A', 'VP-L', 'EF-B'], '없음', '', 'VP3'],
+      ['B 호텔 객실 TV', 'Storyboard KM 5', '호텔 · 리조트', '범용', '제품 1대 · 기능 → 가치', ['VP-I', 'EF-C'], 'Key Message 5 → 4로 묶음', 'check', 'VP2'],
+      ['C 빌딩 회의실 교체', '한 줄 메모', '오피스 0.90', '범용', '과제 추론 → 가치', ['CH-A 추론', 'VP-F·3', 'EF-C 추정'], '결재자 · 기본값 있음', 'check', 'VP1Q'],
+      ['N 체인 무인 매장', "Storyboard '매출' · MI '인건비'", '생활 편의 · 무인 매장', '범용', '방향 두 갈래', ['답에 따라 VP-F·2 또는 ·3'], '첫 메시지 방향', 'ask', 'VP1Q'],
+      ['P 테마파크 미디어', 'MI · 유관 사례 0', '테마파크 · 전시', '범용', '공간 · 관람 동선 → 가치', ['CH-B', 'VP-K', 'EF-C 업종 평균'], '고객 데이터 요청 초안', 'check', 'VP3N'],
+      ['K 베이커리 (A 커피 복제)', '이전 가치 제안 복제', '외식 · 카페 유지', '범용', '상속 · 고객명만 교체', ['*CH-A', '*VP-F·3', 'EF-D 다시 고름'], '없음 · 고정 2는 그대로', 'pin', 'VP0'],
+      ['A 커피 · 업종판 출시 후', '1번과 같은 재료', '외식 · 카페', '업종판 준비됨 → 교체 제안', '과제 → 가치 → 효과', ['#VP-FB-A', '#VP-FB-B', '#VP-FB-C'], '업종판으로 바꿀지', 'check', 'VP3']
+    ];
+    const rows = R.map(([name, input, ind, pub, shape, codes, ask, am, screen], i) => ({
+      no: i + 1, name, input, ind, pub, shape, ask, screen,
+      href: screen + '.dc.html',
+      codes: codes.map(code),
+      pubStyle: 'font-size: 11px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (pub.indexOf('준비됨') >= 0 ? 'color: #1428a0;' : 'color: #8a91a0;'),
+      hasAsk: am.length > 0,
+      aText: am ? MODE[am][0] : '', aIcon: am ? MODE[am][2] : '', aStyle: am ? CHIP + MODE[am][1] : '',
+      askStyle: 'font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (am ? 'color: #121417;' : 'color: #8a91a0;'),
+      rowStyle: cols + ' height: 52px; border-top: 1px solid #eef0f3;' + (am === 'ask' ? ' background: #fbfbfc;' : '')
+    }));
+    const noAsk = R.filter((r) => r[7] === '' || r[7] === 'pin').length;
+    const asked = R.filter((r) => r[7] === 'ask').length;
+    const uniq = {};
+    R.forEach((r) => r[5].forEach((c) => { const t = c.replace(/^[#*]/, '').split(' ')[0]; if (/^[A-Z]{2}-/.test(t)) uniq[t] = 1; }));
+    const stats = [
+      [noAsk + '/12', '사람에게 묻지 않고 끝난 케이스 — 고정한 시트를 그대로 둔 복제 포함'],
+      [asked + '/12', "'선택 필요'로 멈춘 케이스 — 방향 두 갈래 · 채울 수 없는 수치"],
+      [Object.keys(uniq).length + '종', '12개 케이스에서 쓰인 레이아웃 — 같은 재료 틀, 다른 결과'],
+      ['0/16', 'Value Props 업종판 준비 수 · 출시되면 12번처럼 교체 제안']
+    ].map(([n, t]) => ({ n, t }));
+    return { headStyle: cols + ' height: 34px; background: #f5f6f8; font-size: 11.5px; font-weight: 600; color: #596170;', rows, stats };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-N 기존 장비 → 교체 매핑</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 강의동</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">지금 쓰는 장비를 이렇게 바꿉니다 — 강의동 네 가지 교체</div>
+
+  <!-- 헤더 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; height: 40px; box-sizing: border-box; display: grid; grid-template-columns: 136px 384px 48px 304px 280px; align-items: end; padding-bottom: 10px; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+    <span style="padding-left: 4px">위치 · 수량</span>
+    <span style="padding-left: 16px">지금</span>
+    <span></span>
+    <span style="padding-left: 16px; color: #1428a0">도입 후</span>
+    <span style="padding-left: 20px">바뀌는 점</span>
+  </div>
+
+  <!-- 4 행 -->
+  <div style="position: absolute; left: 64px; top: 186px; width: 1152px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div style="display: grid; grid-template-columns: 136px 384px 48px 304px 280px; height: 92px">
+        <div style="display: flex; flex-direction: column; justify-content: center; gap: 4px; padding-left: 4px">
+          <span style="font-size: 15px; font-weight: 800">{{r.loc}}</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800">{{r.qty}}</span>
+        </div>
+        <div style="height: 92px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 16px; display: flex; align-items: center; gap: 14px">
+          <div style="width: 64px; height: 56px; flex-shrink: 0; border-radius: 8px; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.oldIcon}}"/></svg></div>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-size: 15.5px; font-weight: 800">{{r.old}}</span>
+            <span style="font-size: 13px; line-height: 1.45; color: #596170">{{r.oldNote}}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center">
+          <div style="width: 20px; height: 2px; background: #1428a0"></div>
+          <svg width="10" height="12" viewBox="0 0 10 12" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: -3px"><path d="M2 1l6 5-6 5"/></svg>
+        </div>
+        <div style="height: 92px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 16px; display: flex; align-items: center; gap: 14px">
+          <div style="width: 64px; height: 56px; flex-shrink: 0; border-radius: 8px; background: #ffffff; display: flex; align-items: center; justify-content: center"><div style="{{r.newShape}}"><div style="{{r.newInner}}"></div></div></div>
+          <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-size: 15.5px; font-weight: 800; color: #1428a0">{{r.next}}</span>
+            <span style="font-size: 13px; color: #596170">{{r.nextNote}}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding-left: 20px">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+          <span style="font-size: 14.5px; line-height: 1.5">{{r.gain}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 요약 바 -->
+  <div style="position: absolute; left: 64px; top: 600px; width: 1152px; height: 48px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 16px">
+    <span style="font-size: 14px; font-weight: 800">교체 합계</span>
+    <span style="display: flex; align-items: baseline; gap: 2px; color: #1428a0"><span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800">[000]</span><span style="font-size: 14px; font-weight: 700">대</span></span>
+    <span style="width: 1px; height: 18px; background: #d5d9e0"></span>
+    <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; box-sizing: border-box; font-size: 12px; display: flex; align-items: center">기존 장비 철거 · 반출 포함</span>
+    <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; box-sizing: border-box; font-size: 12px; display: flex; align-items: center">방학 기간 시공</span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12px; color: #596170">연식 · 수량은 현장 조사 후 확정</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 · 스마트 캠퍼스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 지금 — 회색 선 아이콘
+    const I = {
+      projector: 'M3 9h18v8H3zM13 13a2 2 0 1 0 4 0a2 2 0 1 0-4 0M6 17v2M18 17v2M6 13h4',
+      board: 'M3 4h18v12H3zM12 16v4M8 20h8M7 9l3-2 2 3 3-3',
+      paper: 'M4 4h16v16H4zM8 8h3v4H8zM13 8h3M13 11h3M8 15h8',
+      ac: 'M2 4h20M5 4v6h14V4M8 7h8M8 14l-1 3M12 14v3M16 14l1 3'
+    };
+    // 도입 후 — 제품 플레이스홀더
+    const scr = (w, h, b) => 'width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: ' + b + 'px solid #121417';
+    const cassette = 'width: 40px; height: 40px; box-sizing: border-box; border-radius: 6px; background: #eef0f3; border: 2px solid #b8bec8; display: flex; align-items: center; justify-content: center';
+    const cassetteIn = 'width: 18px; height: 18px; box-sizing: border-box; border-radius: 3px; border: 2px solid #b8bec8';
+    const none = 'display: none';
+    const rows = [
+      { loc: '강의실', qty: '[00]실', oldIcon: I.projector, old: '빔프로젝터 + 스크린', oldNote: '[0000]년 설치 · 램프 교체 연 [0]회', next: '대형 디스플레이 86"', nextNote: '[모델명] · 강의실 전면', newShape: scr(56, 32, 3), newInner: none, gain: '불 켜고도 선명 · 램프 교체 없음' },
+      { loc: '강의실', qty: '[00]실', oldIcon: I.board, old: '화이트보드', oldNote: '판서 기록 안 남음', next: 'Flip Pro WM75', nextNote: '75" · 터치 · 필기', newShape: scr(52, 30, 3), newInner: none, gain: '판서를 파일로 저장 · 바로 공유' },
+      { loc: '복도 · 로비', qty: '[00]곳', oldIcon: I.paper, old: '종이 게시판', oldNote: '매주 교체', next: 'Smart Signage QM55C', nextNote: '55" · 원격 콘텐츠 배포', newShape: scr(48, 27, 3), newInner: none, gain: '휴강 · 공지를 즉시 원격 변경' },
+      { loc: '강의실 천장', qty: '[00]실', oldIcon: I.ac, old: '천장형 에어컨', oldNote: '[00]년 사용 · 정속형', next: '4Way 카세트 + DVM S2', nextNote: '시스템에어컨 · 인버터', newShape: cassette, newInner: cassetteIn, gain: '실별 개별 제어 · 인버터로 전력 ↓' }
+    ];
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

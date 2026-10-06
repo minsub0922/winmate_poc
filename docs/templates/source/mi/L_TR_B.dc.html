@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>TR-B 트렌드 3 → 고객 시사점</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">세 가지 흐름, A 커피에게는 이런 의미입니다</div>
+
+  <!-- 3열 × (트렌드 카드 ↓ 시사점 카드) -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{trends}}" as="t" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; align-items: stretch">
+        <!-- 트렌드 -->
+        <div style="height: 252px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 26px 28px 20px 28px; display: flex; flex-direction: column">
+          <span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0">{{t.no}}</span>
+          <span style="margin-top: 14px; font-size: 20px; font-weight: 800; line-height: 1.35">{{t.name}}</span>
+          <span style="margin-top: 6px; font-size: 13.5px; line-height: 1.55; color: #596170">{{t.desc}}</span>
+          <div style="flex-grow: 1"></div>
+          <sc-for list="{{t.evidence}}" as="e" hint-placeholder-count="2">
+            <div style="height: 36px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between">
+              <span style="font-size: 13px; color: #3d4452">{{e.k}}</span>
+              <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">{{e.v}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <!-- 연결 화살표 -->
+        <div style="height: 48px; display: flex; align-items: center; justify-content: center">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15"/><path d="M6 13l6 6 6-6"/></svg>
+        </div>
+        <!-- A 커피에게 -->
+        <div style="height: 204px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 24px 28px 22px 28px; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">A 커피에게</span>
+          <span style="font-size: 16px; font-weight: 700; line-height: 1.55">{{t.impl}}</span>
+          <div style="flex-grow: 1"></div>
+          <div style="display: flex"><span style="height: 28px; padding: 0 12px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>{{t.answer}}</span></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 7</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { trends: [
+      { no: '01', name: '주문은 화면으로', desc: '카운터 대면 주문이 키오스크 · 모바일로 옮겨 가고 있습니다.',
+        evidence: [ { k: '키오스크 주문 비중', v: '[00]%' }, { k: '셀프 주문 도입 매장 (3년)', v: '[0.0]배' } ],
+        impl: '카운터 메뉴보드와 키오스크가 같은 메뉴를 같은 순간에 보여 줘야 주문이 빨라집니다.', answer: 'QM55C 메뉴보드 · KM24C 키오스크' },
+      { no: '02', name: '메뉴는 시간대별로 바뀐다', desc: '아침 · 점심 · 오후 메뉴를 나눠 보여 주는 매장이 늘고 있습니다.',
+        evidence: [ { k: '시간대 메뉴 운영 브랜드', v: '[00]%' }, { k: '연간 신메뉴 출시', v: '[00]회' } ],
+        impl: '시간표대로 메뉴가 자동 전환되면 매장에서 메뉴판을 바꿀 일이 사라집니다.', answer: 'MagicINFO 스케줄 배포' },
+      { no: '03', name: '매장 운영은 본사에서 원격으로', desc: '메뉴 · 가격 · 기기 상태를 본사가 직접 관리하는 구조로 바뀝니다.',
+        evidence: [ { k: '원격 관리 도입 체인', v: '[00]%' }, { k: '매장 방문 점검 감소', v: '[00]%' } ],
+        impl: '320개 매장의 화면 상태와 가격 표기를 본사 한 곳에서 확인할 수 있어야 합니다.', answer: 'MagicINFO 원격 관리' }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

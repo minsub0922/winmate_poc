@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CB-B 전략 목표 → 과제 트리</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">A 커피의 목표는 '운영 효율', 풀어야 할 과제는 셋입니다</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 140px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #596170">경영 목표</div>
+  <div style="position: absolute; left: 368px; top: 140px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #596170">전략 방향</div>
+  <div style="position: absolute; left: 732px; top: 140px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #596170">실행 과제</div>
+  <div style="position: absolute; right: 64px; top: 138px; display: flex; align-items: baseline; gap: 6px; font-size: 12.5px; color: #596170">이번 제안이 맡는 과제 <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">3 / 5</span></div>
+
+  <!-- 연결선 (목표 → 버스 → 전략, 전략 → 버스 → 과제) -->
+  <sc-for list="{{lines}}" as="l" hint-placeholder-count="12">
+    <div style="{{l}}"></div>
+  </sc-for>
+
+  <!-- 1열: 경영 목표 -->
+  <div style="position: absolute; left: 64px; top: 207px; width: 240px; height: 415px; box-sizing: border-box; border-radius: 16px; background: #121417; color: #ffffff; padding: 28px; display: flex; flex-direction: column; justify-content: center; gap: 10px">
+    <span style="font-size: 14px; font-weight: 700; color: #b8bec8"><span style="font-family: Manrope, sans-serif">2026</span> 경영 목표</span>
+    <span style="font-size: 22px; font-weight: 800; line-height: 1.35">매장 운영 효율</span>
+    <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 44px; font-weight: 800; line-height: 1; letter-spacing: -0.02em">[00]%</span><span style="font-size: 18px; font-weight: 700">개선</span></div>
+    <span style="margin-top: 14px; font-size: 11.5px; line-height: 1.5; color: #8a91a0">출처 · A 커피 [경영 계획 · 인터뷰]</span>
+  </div>
+
+  <!-- 2열: 전략 방향 -->
+  <sc-for list="{{strategies}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.style}}">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #1428a0">{{s.no}}</span>
+      <span style="font-size: 16.5px; font-weight: 800">{{s.name}}</span>
+      <span style="font-size: 13px; color: #596170">{{s.desc}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 3열: 실행 과제 -->
+  <sc-for list="{{tasks}}" as="t" hint-placeholder-count="5">
+    <div style="{{t.style}}">
+      <div style="display: flex; flex-direction: column; gap: 3px">
+        <span style="font-size: 15px; font-weight: 700">{{t.name}}</span>
+        <span style="font-size: 12.5px; color: {{t.subColor}}">{{t.sub}}</span>
+      </div>
+      <sc-if value="{{t.ours}}" hint-placeholder-val="{{false}}">
+        <span style="height: 24px; padding: 0 10px; flex-shrink: 0; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">이번 제안</span>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 9</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 열 x: 목표 64–304 · 버스 336 · 전략 368–668 · 버스 700 · 과제 732–1216
+    const S = [
+      { name: '메뉴 · 가격 운영 표준화', desc: '320개 매장 같은 메뉴 · 같은 가격', top: 207, tasks: [0, 1] },
+      { name: '매장 인력 부담 축소', desc: '주문 · 안내 업무를 화면으로', top: 385, tasks: [2, 3] },
+      { name: '매장 에너지 비용 절감', desc: '영업시간 밖 전력 낭비 차단', top: 522, tasks: [4] }
+    ];
+    const T = [
+      { name: '전 매장 메뉴보드 디지털 전환', sub: 'QM55C · MagicINFO', top: 180, ours: true },
+      { name: '가맹점 가격 정책 가이드 개정', sub: '본사 가맹 운영팀', top: 262, ours: false },
+      { name: '키오스크 · 픽업 호출 도입', sub: 'KM24C · QM43C', top: 358, ours: true },
+      { name: '매장 직원 교육 프로그램 개편', sub: '본사 교육팀', top: 440, ours: false },
+      { name: '영업시간 연동 화면 · 전력 스케줄', sub: 'SmartThings Pro · MagicINFO', top: 536, ours: true }
+    ];
+    const SH = 100, TH = 72, line = 'position: absolute; background: #b8bec8;';
+    const h = (x1, x2, y) => line + ' left: ' + x1 + 'px; top: ' + (y - 1) + 'px; width: ' + (x2 - x1) + 'px; height: 2px;';
+    const v = (x, y1, y2) => line + ' left: ' + (x - 1) + 'px; top: ' + (y1 - 1) + 'px; width: 2px; height: ' + (y2 - y1 + 2) + 'px;';
+    const sc = S.map((s) => s.top + SH / 2);
+    const tc = T.map((t) => t.top + TH / 2);
+    const goalY = Math.round((sc[0] + sc[sc.length - 1]) / 2);
+    const lines = [h(304, 336, goalY), v(336, sc[0], sc[sc.length - 1])];
+    sc.forEach((y) => lines.push(h(336, 368, y)));
+    S.forEach((s, i) => {
+      const ys = s.tasks.map((k) => tc[k]);
+      if (ys.length === 1) { lines.push(h(668, 732, ys[0])); return; }
+      lines.push(h(668, 700, sc[i]));
+      lines.push(v(700, ys[0], ys[ys.length - 1]));
+      ys.forEach((y) => lines.push(h(700, 732, y)));
+    });
+    const strategies = S.map((s, i) => ({
+      no: '0' + (i + 1), name: s.name, desc: s.desc,
+      style: 'position: absolute; left: 368px; top: ' + s.top + 'px; width: 300px; height: ' + SH + 'px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 22px; display: flex; flex-direction: column; justify-content: center; gap: 4px;'
+    }));
+    const tasks = T.map((t) => ({
+      name: t.name, sub: t.sub, ours: t.ours, subColor: t.ours ? '#1428a0' : '#8a91a0',
+      style: 'position: absolute; left: 732px; top: ' + t.top + 'px; width: 484px; height: ' + TH + 'px; box-sizing: border-box; border-radius: 12px; background: #ffffff; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; ' + (t.ours ? 'border: 2px solid #1428a0;' : 'border: 1px solid #e2e5ea;')
+    }));
+    return { lines, strategies, tasks };
+  }
+}
+</script>
+</body>
+</html>

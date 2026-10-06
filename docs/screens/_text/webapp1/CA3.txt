@@ -1,0 +1,40 @@
+ 
+ 경쟁사 분석 · 분석 중 
+ W 
+ 4곳을 분석하는 중 
+ 약 2분 · 끝나면 결과로 넘어가요 
+ 비교 기준 6 
+ 요구사항에서 3 · 업종 사례에서 1 · 기본 2 
+ 자동 
+ 바꾸기 
+ {{k.name}} {{k.src}} 
+ {{j.t}} 
+ 지금까지 결과 보기 
+ 중지 
+class Component extends DCLogic {
+ renderVals() {
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ // 비교 기준 6 — 자동 제안 · 출처별 색 (요구 / 업종 사례 / 기본)
+ const chip = '';
+ const SRC = {
+ '요구': ['', ''],
+ '업종 사례': ['', ''],
+ '기본': ['', '']
+ };
+ const crit = [['본사 일괄 배포', '요구'], ['매장별 가격 차등', '요구'], ['전기료', '요구'], ['디자인 조화', '업종 사례'], ['가격대', '기본'], ['레퍼런스 · AS', '기본']]
+ .map(([name, src]) => ({ name, src, style: chip + SRC[src][0], srcStyle: '' + SRC[src][1] }));
+ // 경쟁사별 진행 — done / run / wait
+ const dot = (s) => ''
+ + (s === 'done' ? '' : s === 'run' ? '' : '');
+ const jobs = [
+ ['경쟁사 A — 제품 · 솔루션 · 레퍼런스 완료, 가격대 찾는 중', 'run'],
+ ['경쟁사 B — 완료', 'done'],
+ ['경쟁사 C — 대기', 'wait'],
+ ['경쟁사 D — 대기', 'wait']
+ ].map(([t, s]) => ({
+ t, done: s === 'done', run: s === 'run', dot: dot(s),
+ text: '' + (s === 'wait' ? '' : '')
+ }));
+ return { steps, cur: 3, crit, jobs };
+ }
+}

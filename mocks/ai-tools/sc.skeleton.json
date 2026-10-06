@@ -1,0 +1,43 @@
+{
+  "responses": [
+    {"when": {"contains": "#mock:llm-down"}, "error": {"status": 503, "code": "UPSTREAM_UNAVAILABLE", "message": "mock LLM 장애"}},
+    {
+      "when": {"contains": ["요청 종류: 업종 골격", "업종: 외식 · 카페 프랜차이즈", "프리셋: 매장 하루"]},
+      "json": {
+        "times": ["07:00", "11:30", "14:00", "21:00"],
+        "beats": [
+          {"slot": 0, "role": "점장", "text": "아침 메뉴로 켜진 메뉴보드 확인", "place": "주문 카운터"},
+          {"slot": 1, "role": "손님", "text": "키오스크로 점심 메뉴 주문", "place": "주문 카운터"},
+          {"slot": 1, "role": "점장", "text": "주문 몰리는 시간 메뉴판 확인", "place": "주방"},
+          {"slot": 2, "role": "본사 담당자", "text": "오후 프로모션 콘텐츠 배포", "place": "본사 사무실"},
+          {"slot": 3, "role": "점장", "text": "화면 끄고 마감 정리", "place": "홀 테이블"}
+        ],
+        "personas": [
+          {"role": "점장", "intro": "매장 운영 책임자 · 오픈과 마감 담당", "wants": ["바쁜 시간 손 덜기", "표기 실수 없애기"], "pains": ["메뉴판 수작업 교체", "공지 늦게 받음"]},
+          {"role": "손님", "intro": "빠르게 주문하고 싶은 직장인", "wants": ["줄 서는 시간 줄이기"], "pains": ["긴 주문 줄"]},
+          {"role": "본사 담당자", "intro": "가맹점 프로모션 · 콘텐츠 운영", "wants": ["한 번에 배포"], "pains": ["매장별 반영 확인 어려움"]}
+        ],
+        "suggested_roles": ["바리스타", "배달 라이더"]
+      }
+    },
+    {
+      "when": {"contains": ["요청 종류: 조감도 골격", "시나리오 축: 방문객 동선"]},
+      "json": {
+        "times": [],
+        "beats": [
+          {"slot": 0, "role": "방문객", "text": "거리에서 쇼윈도 화면을 보고 멈춤", "place": ""},
+          {"slot": 1, "role": "방문객", "text": "입장하자 미디어월 영상에 시선 집중", "place": ""},
+          {"slot": 2, "role": "매장 스태프", "text": "체험 존에서 제품 기능을 시연", "place": ""},
+          {"slot": 2, "role": "방문객", "text": "직접 만져 보며 설명 듣기", "place": ""},
+          {"slot": 3, "role": "매장 스태프", "text": "라운지에서 상담 · 구매 안내", "place": ""}
+        ],
+        "personas": [
+          {"role": "방문객", "intro": "브랜드 신제품이 궁금한 방문객", "wants": ["직접 체험"], "pains": ["설명 기다림"]},
+          {"role": "매장 스태프", "intro": "체험 · 상담 담당", "wants": ["시연 준비 빠르게"], "pains": ["콘텐츠 교체 수작업"]}
+        ],
+        "suggested_roles": ["본사 VMD"]
+      }
+    },
+    {"json": {"times": [], "beats": [], "personas": [], "suggested_roles": []}}
+  ]
+}

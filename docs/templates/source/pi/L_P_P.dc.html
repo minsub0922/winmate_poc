@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-P 사용자별 접점</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 영업점</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">같은 영업점, 세 사람이 다르게 씁니다</div>
+
+  <!-- 공간 스트립: 구역마다 누가 머무는지 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; height: 40px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center">
+    <span style="width: 120px; flex-shrink: 0; box-sizing: border-box; padding-left: 16px; font-size: 12.5px; font-weight: 700; color: #596170">영업점 공간</span>
+    <sc-for list="{{zones}}" as="z" hint-placeholder-count="4">
+      <div style="{{z.style}}">
+        <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap">{{z.name}}</span>
+        <sc-for list="{{z.who}}" as="w" hint-placeholder-count="2">
+          <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 12px; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{w}}</span>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 사람별 세로 열 -->
+  <div style="position: absolute; left: 64px; top: 192px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+      <div style="height: 456px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 22px; display: flex; flex-direction: column">
+        <div style="display: flex; align-items: center; gap: 14px; height: 52px">
+          <div style="width: 52px; height: 52px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px">
+            <span style="width: 14px; height: 14px; border-radius: 50%; background: #1428a0"></span>
+            <span style="width: 26px; height: 12px; border-radius: 13px 13px 4px 4px; background: #1428a0"></span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-size: 20px; font-weight: 800; letter-spacing: -0.02em">{{p.name}}</span>
+            <span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{p.sub}}</span>
+          </div>
+        </div>
+        <span style="margin-top: 16px; font-size: 12px; font-weight: 700; color: #596170">지금</span>
+        <span style="margin-top: 4px; font-size: 16px; font-weight: 700; line-height: 1.45; color: #121417">{{p.moment}}</span>
+        <span style="margin-top: 18px; font-size: 12px; font-weight: 700; color: #596170">닿는 제품</span>
+        <div style="margin-top: 8px; display: flex; flex-direction: column; gap: 6px">
+          <sc-for list="{{p.items}}" as="it" hint-placeholder-count="3">
+            <div style="height: 50px; box-sizing: border-box; border-radius: 10px; background: #ffffff; padding: 0 12px; display: flex; align-items: center; gap: 12px">
+              <div style="width: 48px; height: 36px; flex-shrink: 0; border-radius: 6px; background: #f5f6f8; display: flex; align-items: center; justify-content: center">
+                <sc-if value="{{it.dev}}" hint-placeholder-val="{{true}}">
+                  <div style="{{it.g}}">
+                    <sc-for list="{{it.kids}}" as="k" hint-placeholder-count="1">
+                      <span style="{{k}}"></span>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{it.cloud}}" hint-placeholder-val="{{false}}">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 8.5a4 4 0 0 1-.5 9.5"/><path d="M12 12v8"/><path d="M9 15l3-3 3 3"/></svg>
+                </sc-if>
+                <sc-if value="{{it.shield}}" hint-placeholder-val="{{false}}">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg>
+                </sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1">
+                <span style="font-size: 14px; font-weight: 700; white-space: nowrap">{{it.name}}</span>
+                <sc-if value="{{it.dev}}" hint-placeholder-val="{{true}}">
+                  <span style="font-size: 12px; color: #596170; white-space: nowrap">{{it.sub}}</span>
+                </sc-if>
+                <sc-if value="{{it.sol}}" hint-placeholder-val="{{false}}">
+                  <span style="align-self: flex-start; height: 22px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center">{{it.sub}}</span>
+                </sc-if>
+              </div>
+              <span style="flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{it.qty}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="border-radius: 10px; background: #eaeefb; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 12px; font-weight: 700; color: #1428a0">얻는 것</span>
+          <span style="font-size: 14.5px; font-weight: 700; color: #121417; white-space: nowrap">{{p.gain}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 전환 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dark = (w, h) => 'width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 2px solid #121417';
+    const GL = {
+      sign: { g: dark(42, 24), kids: [] },
+      kiosk: { g: dark(16, 30), kids: [] },
+      tablet: { g: 'width: 40px; height: 28px; box-sizing: border-box; border-radius: 4px; background: #eef0f3; border: 1px solid #b8bec8; display: flex; align-items: center; justify-content: center', kids: ['width: 32px; height: 20px; border-radius: 2px; background: #1f232a'] },
+      dual: { g: 'display: flex; align-items: center; gap: 3px', kids: [dark(20, 14), dark(20, 14)] }
+    };
+    const dev = (kind, name, sub, qty) => ({ dev: true, cloud: false, shield: false, sol: false, g: GL[kind].g, kids: GL[kind].kids, name, sub, qty });
+    const sol = (icon, name, chip) => ({ dev: false, cloud: icon === 'cloud', shield: icon === 'shield', sol: true, g: '', kids: [], name, sub: chip, qty: '' });
+
+    const people = [
+      { name: '방문 고객', sub: '객장 → 창구 · 상담실 · 하루 [000]명', moment: '“번호표를 뽑고 [0]분 기다린다”',
+        items: [dev('sign', '대기 안내 사이니지', 'Smart Signage QM55C', '×2'), dev('kiosk', '번호표 키오스크', 'Kiosk KM24C', '×1'), dev('tablet', '상담 태블릿', 'Galaxy Tab S 시리즈', '×[0]')],
+        gain: '기다리는 동안 내 순서 · 상품을 본다' },
+      { name: '창구 직원', sub: '창구 [0]석 · 상담실 [0]실', moment: '“고객 한 명에 종이 서식 [0]장”',
+        items: [dev('dual', '듀얼 모니터', 'ViewFinity · 창구당 2대', '×[00]'), dev('tablet', '전자서식 태블릿', 'Galaxy Tab S 시리즈', '×[00]')],
+        gain: '종이 없이 화면 두 개로 바로 처리' },
+      { name: '지점장 · 본점 운영', sub: '지점 사무실 · 본점 운영팀', moment: '“공지 하나 바꾸려 지점마다 연락한다”',
+        items: [sol('cloud', '지점 화면 콘텐츠 원격 배포', 'MagicINFO'), sol('shield', '태블릿 원격 잠금 · 업데이트', 'Knox Suite')],
+        gain: '지점에 가지 않고 전 지점을 한 번에' }
+    ];
+
+    const Z = [['객장', ['고객']], ['창구', ['고객', '직원']], ['상담실', ['고객', '직원']], ['본점', ['지점장 · 본점']]];
+    const zones = Z.map(([name, who], i) => ({
+      name, who,
+      style: 'flex: 1 1 0; min-width: 0; height: 40px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 8px; border-left: 1px ' + (i === 3 ? 'dashed #b8bec8' : 'solid #d5d9e0')
+    }));
+    return { zones, people };
+  }
+}
+</script>
+</body>
+</html>

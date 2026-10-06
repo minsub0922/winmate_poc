@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>UX-C 시간대별 장면 4</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · 사용 장면</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">같은 로비, 하루 네 번 다른 얼굴</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 640px; font-size: 15px; color: #596170; white-space: nowrap">F 사옥 1층 로비 · 사이니지 콘텐츠와 공조 · 조명이 시간표대로</div>
+
+  <div style="position: absolute; right: 64px; top: 113px; display: flex; align-items: center; gap: 16px; font-size: 12px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>사이니지 화면</span>
+    <span style="display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>공조 · 조명 (SmartThings Pro)</span>
+  </div>
+
+  <!-- 시간 축 06–24시 -->
+  <div style="position: absolute; left: 64px; top: 174px; width: 1152px; height: 8px; border-radius: 4px; background: #eef0f3"></div>
+  <sc-for list="{{ticks}}" as="t" hint-placeholder-count="10">
+    <div style="{{t.line}}"></div>
+    <span style="{{t.label}}">{{t.txt}}</span>
+  </sc-for>
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.stem}}"></div>
+    <span style="{{s.dot}}"></span>
+    <span style="{{s.mark}}">{{s.time}}</span>
+  </sc-for>
+
+  <!-- 4장면 -->
+  <div style="position: absolute; left: 64px; top: 222px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; min-width: 0">
+        <div style="width: 270px; height: 296px"><dc-import name="Img" kind="insitu" origin="gen" hint="{{s.hint}}" bg="{{s.bg}}" w="270" h="296" radius="12" credit="bl" hint-size="270px,296px"></dc-import></div>
+        <div style="margin-top: 14px; display: flex; align-items: baseline; gap: 10px">
+          <span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{s.time}}</span>
+          <span style="font-size: 15px; font-weight: 800">{{s.name}}</span>
+        </div>
+        <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 6px">
+          <span style="align-self: flex-start; height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z"/><path d="M8 20h8"/><path d="M12 16v4"/></svg>{{s.screen}}</span>
+          <span style="align-self: flex-start; height: 24px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; box-sizing: border-box; color: #3d4452; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg>{{s.env}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>F 사옥 로비 사이니지 · 공조 제안 · 장면 이미지는 AI 생성 시안 · 실제와 다를 수 있음 · 공조 · 조명 제어 SmartThings Pro</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 10</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 시간 축: 06시 → 24시를 x 64 ~ 1216 에 매핑
+    const X0 = 64, W = 1152, H0 = 6, H1 = 24;
+    const xAt = (h) => X0 + (h - H0) / (H1 - H0) * W;
+    const ticks = [];
+    for (let h = 6; h <= 24; h += 2) {
+      const x = xAt(h);
+      const lx = Math.min(Math.max(x - 14, X0), X0 + W - 28);
+      ticks.push({
+        txt: String(h).padStart(2, '0'),
+        line: 'position: absolute; left: ' + (x - 0.5) + 'px; top: 186px; width: 1px; height: 5px; background: #b8bec8',
+        label: 'position: absolute; left: ' + lx + 'px; top: 194px; width: 28px; text-align: ' + (h === 6 ? 'left' : (h === 24 ? 'right' : 'center')) + '; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0'
+      });
+    }
+    // [시각, 시(소수), 장면, 화면 콘텐츠, 공조 · 조명 상태, 장면 이미지 힌트(공간 + 제품 · AI 생성 시안)]
+    const S = [
+      ['08:00', 8, '출근 시간', '오늘 일정 · 방문객 환영', '공조 예열 완료 · 조명 100%', '출근 시간 로비 · 사이니지에 오늘 일정 · 사람 많음 · 아침 햇빛'],
+      ['12:00', 12, '점심', '사내 식당 메뉴 · 혼잡도', '외기 도입 · 조명 80%', '점심 로비 · 사이니지에 사내 식당 메뉴 화면 · 이동하는 직원들'],
+      ['18:00', 18, '퇴근 시간', '교통 정보 · 셔틀 시간', '공조 절전 · 조명 낮춤', '퇴근 시간 로비 · 사이니지에 교통 정보 · 조명 낮춤 · 노을빛'],
+      ['22:00', 22, '야간', '화면 꺼짐 · 예약 절전', '공조 정지 · 보안등만', '야간 로비 · 사이니지 꺼짐 · 보안등만 켜진 어두운 로비 · 사람 없음']
+    ];
+    const scenes = S.map(([time, h, name, screen, env, hint], i) => {
+      const x = xAt(h);
+      return {
+        time, name, screen, env, hint,
+        bg: i === S.length - 1 ? 'dark' : 'none',
+        stem: 'position: absolute; left: ' + (x - 0.5) + 'px; top: 162px; width: 1px; height: 10px; background: #1428a0',
+        dot: 'position: absolute; left: ' + (x - 9) + 'px; top: 169px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 0 0 1px #1428a0',
+        mark: 'position: absolute; left: ' + (x - 30) + 'px; top: 144px; width: 60px; text-align: center; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0'
+      };
+    });
+    return { ticks, scenes };
+  }
+}
+</script>
+</body>
+</html>

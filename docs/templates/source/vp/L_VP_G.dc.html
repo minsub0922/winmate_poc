@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-G 한 문장 + 제품 히어로</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+
+  <!-- 왼쪽: 한 문장 + 근거 3 -->
+  <div style="position: absolute; left: 64px; top: 104px; width: 590px; font-size: 40px; font-weight: 800; line-height: 1.32; letter-spacing: -0.03em">320개 매장의 메뉴를<br><span style="color: #1428a0">본사 한 곳에서, 몇 분 만에</span><br>바꿀 수 있게 합니다.</div>
+  <div style="position: absolute; left: 64px; top: 330px; width: 580px; display: flex; flex-direction: column">
+    <sc-for list="{{proofs}}" as="p" hint-placeholder-count="3">
+      <div style="{{p.style}}">
+        <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0; width: 28px; flex-shrink: 0">{{p.no}}</span>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex-grow: 1">
+          <span style="font-size: 17px; font-weight: 800">{{p.t}}</span>
+          <span style="font-size: 13.5px; line-height: 1.55; color: #596170">{{p.d}}</span>
+        </div>
+        <span style="font-size: 12px; font-weight: 700; color: #3d4452; white-space: nowrap; flex-shrink: 0">{{p.by}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 오른쪽: 대표 제품 히어로 + 함께 쓰는 제품 -->
+  <div style="position: absolute; left: 676px; top: 104px; width: 540px; height: 340px; border-radius: 16px; background: #f5f6f8; overflow: hidden; display: flex; align-items: center; justify-content: center">
+    <dc-import name="Prod" kind="menuboard3" w="510" h="340" hint-size="510px,340px"></dc-import>
+  </div>
+  <div style="position: absolute; left: 692px; top: 120px; height: 22px; padding: 0 9px; border-radius: 999px; background: #ffffff; color: #596170; font-size: 11px; font-weight: 600; display: flex; align-items: center">예시 이미지 · 카탈로그로 교체</div>
+  <div style="position: absolute; left: 692px; top: 400px; height: 30px; padding: 0 12px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #9db4ff"></span>Smart Signage QM55C × 3 · MagicINFO</div>
+
+  <div style="position: absolute; left: 676px; top: 460px; width: 540px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{subs}}" as="s" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+        <dc-import name="Prod" kind="{{s.kind}}" w="172" h="112" bg="soft" zoom="{{s.zoom}}" hint-size="172px,112px"></dc-import>
+        <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap">{{s.name}}</span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.role}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 제품 이미지는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const P = [
+      ['원격 통합 관리', '한 번의 승인으로 전 매장 배포, 적용 현황을 실시간으로 확인', 'MagicINFO'],
+      ['저전력 운영', '자동 밝기 · 전원 스케줄로 영업시간에만, 필요한 만큼만', 'SmartThings Pro'],
+      ['단계적 도입', '50개 매장 파일럿 후 전국 확대 — 리스크는 작게', '도입 로드맵']
+    ];
+    const proofs = P.map(([t, d, by], i) => ({
+      no: String(i + 1).padStart(2, '0'), t, d, by,
+      style: 'display: flex; align-items: flex-start; gap: 12px; box-sizing: border-box; height: 106px; padding-top: 16px; border-top: ' + (i === 0 ? '3px solid #1428a0' : '1px solid #d5d9e0') + ';'
+    }));
+    const subs = [
+      ['kiosk', true, 'Kiosk KM24C', '피크 시간 셀프 주문'],
+      ['outdoor', true, 'OH55C', '드라이브스루 · 매장 앞'],
+      ['pickup', true, 'QM43C', '픽업 번호 호출']
+    ].map(([kind, zoom, name, role]) => ({ kind, zoom, name, role }));
+    return { proofs, subs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Spec 시트 · 유스케이스 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 28px 40px; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+
+  <!-- 제목 · 범례 -->
+  <div style="height: 64px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1428a0">
+        <span style="width: 20px; height: 20px; border-radius: 6px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center">W</span>
+        <span>Winmate · 화면 12개</span>
+      </div>
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">Spec 시트 생성 — 유스케이스 맵</h1>
+      <p style="margin: 0; font-size: 13px; color: #596170; white-space: nowrap">들어오는 길부터 결과 활용까지 모든 화면입니다. 칸을 누르면 그 화면으로 이동합니다.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0">
+      <div style="display: flex; gap: 8px">
+        <a href="Main.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">홈</a>
+        <a href="SP0.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px">작업 목록 SP0 열기<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170">
+        <sc-for list="{{legend}}" as="l" hint-placeholder-count="5">
+          <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="{{l.swatch}}">{{l.label}}</span><span>{{l.desc}}</span></span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- 흐름 -->
+  <div style="flex-grow: 1; min-height: 0; display: flex; align-items: flex-start; overflow: hidden">
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="5">
+      <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px">
+        <div style="height: 50px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; padding: 0 2px 8px 2px; border-bottom: 2px solid #121417">
+          <div style="display: flex; align-items: baseline; gap: 8px">
+            <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{c.no}}</span>
+            <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{c.title}}</span>
+          </div>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.sub}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{c.nodes}}" as="n" hint-placeholder-count="5">
+            <sc-if value="{{n.isLabel}}" hint-placeholder-val="{{false}}">
+              <div style="height: 20px; display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; color: #596170">
+                <span style="white-space: nowrap">{{n.label}}</span>
+                <span style="flex-grow: 1; height: 1px; background: #e2e5ea"></span>
+              </div>
+            </sc-if>
+            <sc-if value="{{n.isNode}}" hint-placeholder-val="{{true}}">
+              <a href="{{n.href}}" style="{{n.style}}">
+                <div style="display: flex; align-items: baseline; gap: 7px; min-width: 0">
+                  <span style="{{n.codeStyle}}">{{n.code}}</span>
+                  <span style="font-size: 13px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.name}}</span>
+                </div>
+                <div style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.desc}}</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0">
+                  <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.next}}</span>
+                  <span style="{{n.tagStyle}}">{{n.tag}}</span>
+                </div>
+              </a>
+            </sc-if>
+          </sc-for>
+        </div>
+      </div>
+      <sc-if value="{{c.arrow}}" hint-placeholder-val="{{true}}">
+        <div style="width: 30px; height: 50px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #8a91a0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+      </sc-if>
+    </sc-for>
+  </div>
+
+  <!-- 기본 흐름 -->
+  <div style="height: 52px; flex-shrink: 0; box-sizing: border-box; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1.5px solid #1428a0">
+    <span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">기본 흐름</span>
+    <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+      <sc-for list="{{happy}}" as="h" hint-placeholder-count="5">
+        <a href="{{h.href}}" style="display: flex; align-items: baseline; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; background: #eaeefb; color: #121417; white-space: nowrap; align-items: center">
+          <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">{{h.code}}</span>
+          <span style="font-size: 12.5px; font-weight: 600">{{h.name}}</span>
+        </a>
+        <sc-if value="{{h.arrow}}" hint-placeholder-val="{{true}}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </sc-if>
+      </sc-for>
+    </div>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12px; color: #596170; white-space: nowrap">Spec 화면 12개 · 기본 흐름 3 · 새 화면 8 · 기존 보조 1</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 다른 캔버스에 있는 화면은 그 캔버스를 새 탭으로 엽니다
+    const EXT = {"BE2.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "PRQ5.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "PRS8.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "SC3.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX"};
+    const ext = (f) => EXT[f] || f;
+    const KIND = {
+      base: { tag: '기본 흐름', box: 'background: #ffffff; border: 1.5px solid #1428a0;', code: '#1428a0', tagStyle: 'background: #1428a0; color: #ffffff;' },
+      new: { tag: '새 화면', box: 'background: #ffffff; border: 1px solid #e2e5ea; box-shadow: 0 1px 2px rgba(18,20,23,0.04);', code: '#1428a0', tagStyle: 'background: #eaeefb; color: #1428a0;' },
+      exist: { tag: '기존', box: 'background: #ffffff; border: 1px solid #e2e5ea;', code: '#121417', tagStyle: 'background: #f0f2f5; color: #596170;' },
+      ref: { tag: '다시 열기', box: 'background: #f5f6f8; border: 1px solid #e2e5ea;', code: '#3d4452', tagStyle: 'background: #ffffff; color: #596170; border: 1px solid #e2e5ea;' },
+      other: { tag: '다른 기능', box: 'background: #f5f6f8; border: 1px dashed #8a91a0;', code: '#3d4452', tagStyle: 'background: #ffffff; color: #3d4452; border: 1px dashed #8a91a0;' },
+      shared: { tag: '공통', box: 'background: #f5f6f8; border: 1px dashed #8a91a0;', code: '#3d4452', tagStyle: 'background: #ffffff; color: #3d4452; border: 1px dashed #8a91a0;' }
+    };
+    const node = (kind, code, name, desc, next, href) => ({
+      isNode: true, isLabel: false, label: '',
+      code, name, desc, next, href: ext(href || (code + '.dc.html')),
+      tag: KIND[kind].tag,
+      style: 'height: 76px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: 9px 12px; border-radius: 10px; color: #121417; min-width: 0; ' + KIND[kind].box,
+      codeStyle: 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; flex-shrink: 0; color: ' + KIND[kind].code + ';',
+      tagStyle: 'height: 18px; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; box-sizing: border-box; ' + KIND[kind].tagStyle
+    });
+    const label = (t) => ({ isNode: false, isLabel: true, label: t, code: '', name: '', desc: '', next: '', href: '', tag: '', style: '', codeStyle: '', tagStyle: '' });
+
+    const COLS = [
+      ['01', '들어오는 길', '어디서 Spec 시트를 시작하나', [
+        node('shared', 'Main', "홈 'Spec 시트 생성'", '홈 카드에서 새 작업 시작', '→ SP1'),
+        node('new', 'SP0', '작업 목록', '최근 작업 · 상태 · 이어하기', '→ SP1 · SP1C · SP1R · SP3'),
+        node('shared', 'Sidebar', '사이드바 작업 내역', '저장된 시트를 바로 열기', '→ SP3', 'SP3.dc.html'),
+        node('other', 'PRS8', "제안서 '제품 스펙'에서", '섹션에서 Spec 작업 열기 · 새로', '→ SP1 · SP3')
+      ]],
+      ['02', '입력 방식', '제품과 형식을 어떻게 정하나', [
+        label('1 · 제품 입력'),
+        node('base', 'SP1', '모델명 입력', '모델명 → 카탈로그 스펙', '→ SP2'),
+        node('exist', 'SP1Product', '제품 탐색에서 고르기', '시리즈 폴더에서 여러 크기', '→ SP2'),
+        node('new', 'SP1C', '조건으로 모델 찾기', '크기 · 밝기 · 용도 · 설치 → 후보', '→ SP2'),
+        node('new', 'SP1R', '고객 요구 스펙 업로드', '규격서 → 요구사항 대응표', '→ SP2 · SP1C'),
+        label('2 · 항목 · 형식'),
+        node('base', 'SP2', '항목 · 형식', '스펙 항목 · 비교표 / 개별', '→ SP3G · SP2L'),
+        node('new', 'SP2L', '출력 형식 · 언어 · 단위', 'Excel · PDF · PPT, 영문, inch', '→ SP3G')
+      ]],
+      ['03', '진행 · 확인 상태', '기다림 · 빈 값 · 경고', [
+        node('new', 'SP3G', '생성 중 · 값 확인 필요', '진행 단계 · 빈 값 채우기', '→ SP3'),
+        node('base', 'SP3', '시트 생성 결과', '비교표 · 우위 항목 · 출처', '→ SP3E · SP4'),
+        node('new', 'SP3W', '단종 · 대체 · 값 불일치', '카탈로그 변경 · 대체 모델 제안', '→ SP3 · SP1C')
+      ]],
+      ['04', '편집 · 버전', '고치고 다시 만들기', [
+        node('new', 'SP3E', '시트 편집', '행 숨김 · 강조 · 순서 · 메모', '→ SP4'),
+        node('ref', 'SP3', '대화형 수정 요청', '말로 고치기 · 행 추가', '→ SP3E'),
+        node('ref', 'SP2L', '다른 언어 · 단위 버전', '같은 시트를 영문 · inch로', '→ SP3G'),
+        node('ref', 'SP0', '복제해서 새 버전', '다른 고객용으로 재사용', '→ SP1')
+      ]],
+      ['05', '결과 활용', '내보내기 · 다른 기능 · 제안서', [
+        node('new', 'SP4', '내보내기 · 제안서로', "파일 저장 · '제품 스펙'으로 보내기", '→ PRS8 · PRQ5'),
+        node('other', 'PRS8', "표준 제안서 '제품 스펙'", '스펙 비교 · 제품 상세 시트', '제안서 섹션'),
+        node('other', 'PRQ5', "퀵윈 제안서 '제품 스펙'", '퀵윈 제안서의 스펙 섹션', '제안서 섹션'),
+        node('other', 'BE2', "조감도 '배치될 제품'", '고른 모델을 그대로 배치', '조감도 생성'),
+        node('other', 'SC3', "시나리오 '솔루션 · 제품'", '장면별 제품으로 사용', '시나리오 생성')
+      ]]
+    ];
+    const cols = COLS.map(([no, title, sub, nodes], i) => ({ no, title, sub, nodes, arrow: i < COLS.length - 1 }));
+
+    const pill = 'height: 18px; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; display: flex; align-items: center; box-sizing: border-box; ';
+    const legend = [
+      ['base', '이미 있는 단계 화면'],
+      ['new', '이번에 추가'],
+      ['exist', '기존 보조 화면'],
+      ['ref', '앞 화면을 다시 씀'],
+      ['other', '다른 기능 화면']
+    ].map(([k, desc]) => ({ label: KIND[k].tag, desc, swatch: pill + KIND[k].tagStyle }));
+
+    const HAPPY = [['Main', '홈'], ['SP1', '모델명 입력'], ['SP2', '항목 · 형식'], ['SP3', '시트 생성'], ['PRS8', "제안서 '제품 스펙'"]];
+    const happy = HAPPY.map(([code, name], i) => ({ code, name, href: ext(code + '.dc.html'), arrow: i < HAPPY.length - 1 }));
+
+    return { legend, cols, happy };
+  }
+}
+</script>
+</body>
+</html>

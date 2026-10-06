@@ -1,0 +1,49 @@
+# PlacementRule 시드 — 전부 status: draft, 계수·기준값은 빈칸
+# kind: size | quantity | capacity | position | warning
+
+placement_rules:
+  - id: pr_signage_size_by_distance
+    kind: size
+    space: "*"
+    category: signage
+    expression: "diagonal_inch_min = viewing_distance_m * {{inch_per_m_min}}; diagonal_inch_max = viewing_distance_m * {{inch_per_m_max}}"
+    params: {inch_per_m_min: "<<FILL>>", inch_per_m_max: "<<FILL>>"}
+    explanation_ko: 시청거리로 권장 화면 크기 범위 산정
+    status: draft
+  - id: pr_hvac_capacity_by_area
+    kind: capacity
+    space: "*"
+    category: hvac_system_ac
+    expression: "required_kw = area_m2 * {{kw_per_m2}} * {{usage_factor}}"
+    params: {kw_per_m2: "<<FILL: 용도별 단위면적당 부하>>", usage_factor: "<<FILL>>"}
+    explanation_ko: 면적과 용도로 필요 냉방 용량 산정
+    status: draft
+  - id: pr_menuboard_qty_by_counter
+    kind: quantity
+    space: menu_board_zone
+    category: signage
+    expression: "qty = ceil(counter_width_m / {{panel_width_m}})"
+    params: {panel_width_m: "<<FILL>>"}
+    status: draft
+  - id: pr_warn_viewing_angle
+    kind: warning
+    space: "*"
+    category: signage
+    expression: "abs(viewer_angle_deg) > {{max_angle_deg}}"
+    params: {max_angle_deg: "<<FILL>>"}
+    explanation_ko: 주 동선에서 보는 각도가 기준을 넘으면 경고
+    status: draft
+  - id: pr_warn_power_distance
+    kind: warning
+    space: "*"
+    category: "*"
+    expression: "distance_to_power_m > {{max_m}}"
+    params: {max_m: "<<FILL>>"}
+    status: draft
+  - id: pr_warn_mount_height
+    kind: warning
+    space: "*"
+    category: signage
+    expression: "bottom_edge_height_m < {{min_m}} or bottom_edge_height_m > {{max_m}}"
+    params: {min_m: "<<FILL>>", max_m: "<<FILL>>"}
+    status: draft

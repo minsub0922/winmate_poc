@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-ED-A 교육 · 캠퍼스 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">E 대학교 일곱 공간, 공간마다 맞춘 구성을 한 화면으로 운영합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">캠퍼스 배치는 예시 — 공간마다 놓을 삼성 제품 · 솔루션과 그 공간의 가치, 아래는 제품 ↔ 솔루션 전체 구성</div>
+
+  <!-- ============ 지도 머리 + 범례 ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">E 대학교 캠퍼스 · 공간 배치</span><span style="font-size: 11.5px; color: #8a91a0">배치는 예시 · 캠퍼스 도면으로 교체</span></div>
+  <div style="position: absolute; left: 616px; top: 160px; width: 600px; height: 20px; display: flex; align-items: center; justify-content: flex-end; gap: 14px; white-space: nowrap; font-size: 11.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 12px; border-radius: 999px; background: #1428a0"></span>솔루션 · 서비스</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 12px; border-radius: 3px; background: #eaeefb; border: 1px solid #b8c3ee; box-sizing: border-box"></span>공간의 가치</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 20px; height: 0px; border-top: 2px dashed #1428a0"></span>통합 관리망</span>
+  </div>
+
+  <!-- ============ 캠퍼스 지도 ============ -->
+  <div style="position: absolute; left: 64px; top: 186px; width: 1152px; height: 316px; border-radius: 16px; background: #e9ecf0"></div>
+  <!-- 도로 -->
+  <div style="position: absolute; left: 64px; top: 334px; width: 946px; height: 18px; background: #f8f9fb"></div>
+  <div style="position: absolute; left: 368px; top: 186px; width: 14px; height: 316px; background: #f8f9fb"></div>
+  <div style="position: absolute; left: 680px; top: 186px; width: 14px; height: 316px; background: #f8f9fb"></div>
+  <div style="position: absolute; left: 991px; top: 186px; width: 14px; height: 316px; background: #f8f9fb"></div>
+  <div style="position: absolute; left: 72px; top: 334px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">정문</div>
+  <!-- 통합 관리망 -->
+  <div style="position: absolute; left: 118px; top: 342px; width: 892px; height: 0px; border-top: 2px dashed #1428a0"></div>
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="6">
+    <div style="{{k.stub}}"></div>
+    <div style="{{k.dot}}"></div>
+  </sc-for>
+
+  <!-- 공간 (건물) -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.style}}">
+      <span style="position: absolute; left: 12px; top: 11px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 42px; top: 11px; font-size: 15px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; white-space: nowrap">{{s.name}}</div>
+      <div style="position: absolute; right: 12px; top: 13px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; display: flex; align-items: center; white-space: nowrap">{{s.where}}</div>
+      <div style="position: absolute; left: 12px; top: 42px; width: 266px; font-size: 12px; line-height: 17px; letter-spacing: -0.01em; color: #3d4452; white-space: nowrap">{{s.prods}}</div>
+      <div style="position: absolute; left: 12px; top: 66px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+        <sc-for list="{{s.sols}}" as="c" hint-placeholder-count="2">
+          <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 8px; top: 94px; width: 270px; height: 28px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{s.value}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 본관 · 운영실 (허브) -->
+  <div style="position: absolute; left: 1010px; top: 198px; width: 194px; height: 290px; border-radius: 12px; background: #1428a0">
+    <span style="position: absolute; left: 12px; top: 12px; width: 22px; height: 22px; border-radius: 50%; background: #ffffff; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">7</span>
+    <div style="position: absolute; left: 42px; top: 12px; font-size: 15px; font-weight: 800; line-height: 22px; color: #ffffff; white-space: nowrap">본관 · 운영실</div>
+    <div style="position: absolute; left: 12px; top: 40px; font-size: 11.5px; line-height: 16px; color: #c8d3ff; white-space: nowrap">시설팀 · 정보화팀 · 생협</div>
+    <div style="position: absolute; left: 12px; top: 64px; width: 170px; height: 96px; border-radius: 8px; overflow: hidden; background: #ffffff">
+      <img src="/_blob/5a4ac42a10af63328d12de232610e2d7" alt="b.IoT 통합 모니터링 대시보드 화면 — 카탈로그" style="position: absolute; left: -4px; top: -6px; width: 342px; height: 160px; object-fit: cover">
+    </div>
+    <div style="position: absolute; left: 12px; top: 164px; font-size: 10px; line-height: 14px; color: #c8d3ff; white-space: nowrap">통합 대시보드 · 카탈로그 화면</div>
+    <div style="position: absolute; left: 12px; top: 184px; font-size: 12px; line-height: 17px; color: #ffffff; white-space: nowrap">대시보드 PC · 갤럭시 탭</div>
+    <div style="position: absolute; left: 12px; top: 206px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">SmartThings Pro</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">b.IoT</span>
+    </div>
+    <div style="position: absolute; left: 12px; top: 230px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">복합기 관리</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">Knox</span>
+    </div>
+    <div style="position: absolute; left: 8px; top: 258px; width: 178px; height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 8px; background: #3b4fb8; color: #ffffff; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">캠퍼스 전체를 한 화면에</div>
+  </div>
+
+  <!-- ============ 전체 구성 — 솔루션 ↔ 제품 ↔ 공간 ============ -->
+  <div style="position: absolute; left: 64px; top: 520px; font-size: 15px; font-weight: 800; line-height: 20px; white-space: nowrap">전체 구성</div>
+  <div style="position: absolute; left: 64px; top: 544px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">솔루션 ↔ 제품 ↔ 공간</div>
+  <div style="position: absolute; left: 64px; top: 568px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">번호는 위 지도의 공간,</div>
+  <div style="position: absolute; left: 64px; top: 583px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">수량은 실사 후 확정</div>
+  <div style="position: absolute; left: 64px; top: 622px; height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-size: 11px; color: #596170">전체</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">[000]대</span></div>
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+    <div style="{{g.style}}">
+      <div style="position: absolute; left: 12px; top: 11px; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">{{g.sol}}</div>
+      <div style="position: absolute; left: 12px; top: 31px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{g.role}}</div>
+      <div style="position: absolute; left: 12px; top: 53px; width: 166px; height: 1px; background: #eef0f3"></div>
+      <div style="position: absolute; left: 12px; top: 60px; font-size: 12px; line-height: 17px; color: #121417; white-space: nowrap">{{g.p1}}</div>
+      <div style="position: absolute; left: 12px; top: 77px; font-size: 12px; line-height: 17px; color: #121417; white-space: nowrap">{{g.p2}}</div>
+      <div style="position: absolute; left: 12px; top: 102px; height: 18px; display: flex; align-items: center; gap: 4px; white-space: nowrap">
+        <sc-for list="{{g.at}}" as="a" hint-placeholder-count="4">
+          <span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{a.n}}</span>
+        </sc-for>
+        <sc-if value="{{g.all}}" hint-placeholder-val="{{false}}">
+          <span style="height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">전 공간 공통 · 1–7</span>
+        </sc-if>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 스마트 교육 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 캠퍼스 배치 — 3열 × 2행 건물 (폭 286 · 높이 130), 가운데 도로(y 334–352)에 통합 관리망
+    const COLX = [76, 388, 700], ROWY = [198, 358], BW = 286, BH = 130;
+    const S = [
+      [1, '대형 강의실', '강의동 · [0]실', 'LED 사이니지 · Flip Pro · 360 에어컨 · 좌석 PC', ['SmartThings Pro'], '뒷자리까지 선명하게, 자리마다 고른 냉방'],
+      [2, '미래교실 · 모둠실', '강의동 · [0]실', '갤럭시 탭 · 무빙스타일 · 공기청정기 · 이페이퍼', ['SmartThings Pro', 'Knox'], '수업 형태별 원터치 세팅 · 실시간 공유'],
+      [3, '공용 전산실 · 고사장', '실습동 · [0]실', '데스크탑 PC · 갤럭시 탭 · 태블릿 보관 · 충전함', ['백업 · 복원', 'Knox · 시험 앱'], '오류 PC는 바로 복구, 종이 없는 시험'],
+      [4, '학생회관 · 출력 거점', '곳곳 · [00]대', '디지털 복합기 (흑백 · 컬러) · 카드 · NFC 결제기', ['무인 과금', '원격 모니터링'], '카드 충전 없이 24시간 무인 출력'],
+      [5, '중앙도서관 · 라운지', '로비 · 열람실', '비디오월 · 키오스크 · 올인원 PC 검색대', ['MagicINFO'], '빈 좌석 · 다국어 공지를 한눈에'],
+      [6, '기숙사 · 생활관', '[0]개 동', '시스템에어컨 · 공기청정기 · 에어드레서 · 복합기', ['케어 · 종합세척', 'SmartThings Pro'], '공용 공간의 공기 · 위생을 깨끗하게']
+    ];
+    const spaces = S.map(([n, name, where, prods, sols, value], i) => ({
+      n, name, where, prods, value,
+      sols: sols.map((t) => ({ t })),
+      style: A + box(COLX[i % 3], ROWY[Math.floor(i / 3)], BW, BH) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #d5d9e0; background: #ffffff;'
+    }));
+
+    // 건물 → 통합 관리망 연결 (도로 중앙선 y 343)
+    const links = S.map((s, i) => {
+      const cx = COLX[i % 3] + BW / 2;
+      const top = i < 3;
+      return {
+        stub: A + box(cx - 1, top ? 328 : 343, 2, 15) + 'background: #1428a0;',
+        dot: A + box(cx - 4, 339, 8, 8) + 'border-radius: 50%; background: #ffffff; border: 2px solid #1428a0; box-sizing: border-box;'
+      };
+    });
+
+    // 전체 구성 — 솔루션 · 서비스 ↔ 연결 제품 ↔ 공간 번호
+    const G = [
+      ['SmartThings Pro · b.IoT', '공간 · 에너지 자동 제어', '시스템에어컨 · 공기청정기', '에어모니터 · 블라인드 · 센서', [1, 2, 6, 7]],
+      ['무인 과금 · 출력 관리', '카드 결제 · 원격 모니터링', '디지털 복합기', '흑백 · 컬러 · 대량 출력', [4, 6, 7]],
+      ['Knox · 백업 복원', '태블릿 · PC 관리와 보안', '갤럭시 탭 · 데스크탑 PC', '보관 · 충전함 · 올인원 PC', [2, 3, 5, 7]],
+      ['MagicINFO', '공지 · 좌석 현황 콘텐츠', '비디오월 · 사이니지 키오스크', '좌석 · 공지 데이터 연동', [5]],
+      ['케어 · 유지관리 서비스', '세척 · 상주 엔지니어 · 장기 관리', '시스템에어컨 · 복합기', '태블릿 · 보관함', null]
+    ];
+    const groups = G.map(([sol, role, p1, p2, at], i) => ({
+      sol, role, p1, p2,
+      all: at === null,
+      at: (at || []).map((n) => ({ n })),
+      style: A + box(208 + i * 204, 518, 192, 130) + 'box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+
+    return { spaces, links, groups };
+  }
+}
+</script>
+</body>
+</html>

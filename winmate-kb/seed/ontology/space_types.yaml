@@ -1,0 +1,110 @@
+# 공간 유형 시드 (VLM 닫힌 어휘의 원천) — status: draft
+# 출처: US 호텔 업종 페이지의 고객 여정 구분, KR 업종 하위 구분, Winmate 공간 시나리오 템플릿에서 쓰던 공간들.
+# 수집 후 업종 페이지·카탈로그에서 관측된 공간으로 보강하고 사람이 승인한다.
+
+vocab_version: 1
+
+space_types:
+  # 공통 외부·동선
+  - {code: outdoor_facade, name_ko: 외벽·옥외, default_attrs: {exposure: outdoor}}
+  - {code: storefront_window, name_ko: 쇼윈도·창가, default_attrs: {exposure: semi_outdoor}}
+  - {code: entrance, name_ko: 입구}
+  - {code: lobby, name_ko: 로비}
+  - {code: front_desk, name_ko: 프런트·리셉션}
+  - {code: corridor_wayfinding, name_ko: 복도·길안내}
+  - {code: elevator_hall, name_ko: 엘리베이터 홀}
+  - {code: waiting_area, name_ko: 대기 공간}
+  - {code: parking, name_ko: 주차장}
+  - {code: back_of_house, name_ko: 백오피스·직원 공간}
+  - {code: control_room, name_ko: 관제실·통제실}
+  - {code: server_room, name_ko: 서버실·기계실}
+  # 숙박
+  - {code: guest_room, name_ko: 객실}
+  - {code: casino_floor, name_ko: 카지노·스포츠북}
+  - {code: banquet_hall, name_ko: 연회장}
+  # 외식·리테일
+  - {code: dining_hall, name_ko: 홀·식사 공간}
+  - {code: order_counter, name_ko: 주문·계산 카운터}
+  - {code: menu_board_zone, name_ko: 메뉴보드 존}
+  - {code: drive_thru, name_ko: 드라이브스루}
+  - {code: pickup_zone, name_ko: 픽업 존}
+  - {code: commercial_kitchen, name_ko: 주방}
+  - {code: sales_floor, name_ko: 매장 플로어}
+  - {code: shelf_aisle, name_ko: 진열대·통로}
+  - {code: fitting_room, name_ko: 피팅룸}
+  - {code: unmanned_store, name_ko: 무인 매장}
+  # 오피스
+  - {code: meeting_room, name_ko: 회의실}
+  - {code: open_office, name_ko: 오픈 오피스}
+  - {code: executive_office, name_ko: 임원실}
+  - {code: pantry_lounge, name_ko: 탕비실·라운지}
+  # 교육
+  - {code: classroom, name_ko: 교실·강의실}
+  - {code: lecture_hall, name_ko: 대강당}
+  - {code: library, name_ko: 도서관}
+  # 의료
+  - {code: hospital_reception, name_ko: 병원 접수·수납}
+  - {code: patient_room, name_ko: 병실}
+  - {code: nurse_station, name_ko: 간호사 스테이션}
+  - {code: exam_room, name_ko: 진료실}
+  - {code: pharmacy, name_ko: 약국}
+  # 산업·물류
+  - {code: factory_floor, name_ko: 생산 현장}
+  - {code: warehouse, name_ko: 물류 창고}
+  - {code: cold_storage, name_ko: 냉장·냉동 창고}
+  # 금융·공공
+  - {code: bank_branch, name_ko: 은행 영업점}
+  - {code: atm_area, name_ko: ATM 존}
+  - {code: civil_service_counter, name_ko: 민원 창구}
+  # 교통·공연·레저
+  - {code: transit_concourse, name_ko: 역사·공항 대합실}
+  - {code: stadium_arena, name_ko: 경기장·공연장}
+  - {code: cinema, name_ko: 영화관}
+  - {code: theme_park_attraction, name_ko: 테마파크 어트랙션·대기열}
+  - {code: exhibition_showroom, name_ko: 전시장·쇼룸}
+  # 주거
+  - {code: residential_living, name_ko: 주거 거실}
+  - {code: residential_kitchen, name_ko: 주거 주방}
+  - {code: residential_bedroom, name_ko: 주거 침실}
+  - {code: apartment_common, name_ko: 공동주택 커뮤니티·공용부}
+  - {code: model_house, name_ko: 모델하우스}
+  - {code: other, name_ko: 기타}
+
+space_attr_defs:
+  - {key: exposure, name_ko: 실내외, dtype: enum, enum_values: [indoor, outdoor, semi_outdoor]}
+  - {key: sunlight, name_ko: 직사광 노출, dtype: enum, enum_values: [none, partial, direct]}
+  - {key: viewing_distance_m, name_ko: 시청거리, dtype: num, unit: m}
+  - {key: area_m2, name_ko: 면적, dtype: num, unit: m2}
+  - {key: ceiling_height_m, name_ko: 층고, dtype: num, unit: m}
+  - {key: foot_traffic, name_ko: 유동량, dtype: enum, enum_values: [low, mid, high]}
+  - {key: temp_range_c, name_ko: 온도 범위, dtype: range, unit: degC}
+  - {key: humidity, name_ko: 습도, dtype: enum, enum_values: [normal, high]}
+  - {key: access, name_ko: 공용/전용, dtype: enum, enum_values: [public, staff, private]}
+  - {key: operating_hours, name_ko: 운영 시간, dtype: enum, enum_values: [business_hours, extended, h24]}
+  - {key: power_points, name_ko: 전원 위치, dtype: text}
+
+heading_map:   # 페이지 섹션 헤딩 → 공간 후보 (맥락 메타용, draft)
+  en:
+    Outdoors: [outdoor_facade]
+    Outdoor signage: [outdoor_facade]
+    Entrance: [entrance, lobby]
+    Lobby: [lobby]
+    Wayfinding: [corridor_wayfinding]
+    Gaming: [casino_floor]
+    Casino & sportsbook: [casino_floor]
+    Accommodation: [guest_room]
+    Dining: [dining_hall]
+    Tableside: [dining_hall]
+    Front- and back-of-house: [order_counter, back_of_house]
+    Operations: [back_of_house]
+    Guest services: [front_desk]
+  ko:
+    로비: [lobby]
+    객실: [guest_room]
+    외관: [outdoor_facade]
+    입구: [entrance]
+    회의실: [meeting_room]
+    교실: [classroom]
+    병실: [patient_room]
+    주방: [commercial_kitchen, residential_kitchen]
+    매장: [sales_floor]

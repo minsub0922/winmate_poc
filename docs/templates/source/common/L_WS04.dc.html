@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>WS04 강점 + 증거 수치</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">말이 아니라 숫자로 증명합니다</div>
+
+  <div style="position: absolute; left: 64px; top: 136px; width: 662px; display: flex; flex-direction: column">
+    <sc-for list="{{items}}" as="w" hint-placeholder-count="3">
+      <div style="height: 170px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; padding: 22px 0; display: flex; gap: 22px">
+        <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0; width: 30px; flex-shrink: 0; padding-top: 4px">{{w.no}}</span>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 22px; font-weight: 800; line-height: 1.4">{{w.title}}</span>
+          <span style="font-size: 15px; line-height: 1.65; color: #3d4452">{{w.desc}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 750px; top: 136px; width: 466px; height: 512px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 30px 32px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.06em; color: #9db4ff">PROOF</span>
+    <sc-for list="{{proofs}}" as="p" hint-placeholder-count="3">
+      <div style="height: 128px; box-sizing: border-box; border-bottom: 1px solid rgba(255,255,255,0.18); display: flex; flex-direction: column; justify-content: center; gap: 4px">
+        <span style="font-family: Manrope, sans-serif; font-size: 48px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">{{p.n}}</span>
+        <span style="font-size: 14px; color: #dfe6ff">{{p.l}}</span>
+      </div>
+    </sc-for>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 11.5px; color: #9db4ff">출처 · [자료명, 연도]</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 24</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      items: [
+        { no: '01', title: '상업용 디스플레이 시장 선도', desc: '[00]년 연속 글로벌 사이니지 시장 점유율 1위 — 매장 환경에 맞춘 라인업과 품질.' },
+        { no: '02', title: '하드웨어와 솔루션을 함께', desc: 'MagicINFO · SmartThings Pro로 화면 · 에너지 · 기기를 한 체계에서 운영합니다.' },
+        { no: '03', title: '구축 이후가 더 든든한 서비스', desc: '전국 직영 서비스망과 원격 모니터링으로 장애를 먼저 발견하고 대응합니다.' }
+      ],
+      proofs: [
+        { n: '[00]년', l: '글로벌 사이니지 점유율 1위' },
+        { n: '[00]만+', l: '전 세계 설치 디스플레이' },
+        { n: '[00]시간', l: '평균 현장 대응 시간' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

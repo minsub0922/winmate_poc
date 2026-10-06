@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-3·1 세 공간 · 한 솔루션 — 흐름형 (테마파크 동선 × MagicINFO)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 3곳 · 솔루션 1개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">Y 테마파크의 하루 동선, MagicINFO 하나가 세 공간의 화면을 이어 갑니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">세 공간에 한 솔루션 — 입구에서 대기열, 기념품 숍까지 같은 서버 · 다른 콘텐츠</div>
+
+  <!-- 솔루션 띠 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; height: 56px; border-radius: 12px; background: #1428a0">
+    <div style="position: absolute; left: 24px; top: 7px; font-size: 19px; line-height: 24px; font-weight: 800; color: #ffffff; white-space: nowrap">MagicINFO</div>
+    <div style="position: absolute; left: 24px; top: 31px; font-size: 11px; line-height: 16px; color: #c8d3ff; white-space: nowrap">구축형 사이니지 CMS</div>
+    <div style="position: absolute; left: 172px; top: 14px; width: 1px; height: 28px; background: #4a5cc0"></div>
+    <div style="position: absolute; left: 196px; top: 17px; font-size: 15px; line-height: 22px; color: #ffffff; white-space: nowrap"><span style="font-weight: 800">한 서버에서</span><span> 세 공간 편성 · 원격 관리 · 대기시간 데이터 연동</span></div>
+    <div style="position: absolute; right: 16px; top: 15px; height: 26px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+      <span style="height: 26px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 800; display: flex; align-items: center">서버 1</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#c8d3ff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      <span style="height: 26px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; border: 1px solid #c8d3ff; color: #ffffff; font-size: 12px; font-weight: 800; display: flex; align-items: center">공간 3곳 화면</span>
+    </div>
+  </div>
+
+  <!-- 띠 → 패널 연결선 -->
+  <sc-for list="{{links}}" as="l" hint-placeholder-count="3">
+    <div style="{{l.line}}"></div>
+    <div style="{{l.dot}}"></div>
+  </sc-for>
+
+  <!-- 3 패널 -->
+  <sc-for list="{{panels}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.style}}">
+      <span style="position: absolute; left: 16px; top: 16px; width: 28px; height: 28px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.n}}</span>
+      <div style="position: absolute; left: 54px; top: 16px; font-size: 17px; line-height: 28px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{p.name}}</div>
+      <div style="position: absolute; right: 16px; top: 19px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p.when}}</div>
+      <div style="position: absolute; left: 16px; top: 56px; width: 336px; height: 120px; border-radius: 10px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0; white-space: nowrap">{{p.ph}}</div>
+      <div style="position: absolute; left: 16px; top: 190px; height: 16px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 16px; font-weight: 800; color: #1428a0; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg><span>화면에 뜨는 것</span></div>
+      <div style="position: absolute; left: 16px; top: 212px; font-size: 13.5px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{p.l1}}</div>
+      <div style="position: absolute; left: 16px; top: 232px; font-size: 13px; line-height: 20px; color: #3d4452; white-space: nowrap">{{p.l2}}</div>
+      <div style="position: absolute; left: 16px; top: 262px; height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; border: 1px solid #d5d9e0; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p.prod}}</div>
+      <div style="position: absolute; left: 16px; top: 296px; width: 336px; height: 46px; border-radius: 10px; background: #f5f6f8">
+        <div style="position: absolute; left: 14px; top: 14px; font-size: 11px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">가치</div>
+        <div style="position: absolute; left: 46px; top: 14px; font-size: 13px; line-height: 18px; font-weight: 700; color: #121417; white-space: nowrap">{{p.kl}}</div>
+        <div style="position: absolute; right: 14px; top: 10px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 21px; line-height: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{p.kv}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 패널 사이 화살표 -->
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.style}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+  </sc-for>
+
+  <!-- 동선 전체 가치 -->
+  <div style="position: absolute; left: 64px; top: 606px; width: 1152px; height: 46px; border-radius: 12px; background: #f5f6f8">
+    <div style="position: absolute; left: 20px; top: 12px; height: 22px; display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 800; color: #1428a0; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="18" r="2"></circle><circle cx="19" cy="6" r="2"></circle><path d="M7 18h7a3 3 0 0 0 0-6h-4a3 3 0 0 1 0-6h7"></path></svg><span>동선 전체</span></div>
+    <div style="position: absolute; left: 122px; top: 14px; width: 1px; height: 18px; background: #d5d9e0"></div>
+    <div style="position: absolute; left: 140px; top: 11px; font-size: 15px; line-height: 24px; font-weight: 800; color: #121417; white-space: nowrap">콘텐츠 교체는 사무실에서 한 번, 세 공간 동시에</div>
+    <div style="position: absolute; right: 18px; top: 15px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>Y 테마파크 · 파크 사이니지 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 패널: 4열씩 (x 64 · 456 · 848, 폭 368), y 238–594
+    const X = [64, 456, 848], W = 368, PT = 238, PH = 356, BAND = 216;
+    const P = [
+      { name: '입구 광장', when: '입장 직후', ph: '입구 광장 사진',
+        l1: '오늘의 공연 · 퍼레이드 시간', l2: '존별 혼잡도를 한눈에',
+        prod: '옥외 사이니지 OH55C ×[0]', kl: '입장 후 길 찾기 문의', kv: '[00]% ↓' },
+      { name: '어트랙션 대기열', when: '탑승 전', ph: '어트랙션 대기열 사진',
+        l1: '예상 대기 시간 · 안전 안내', l2: '기다리는 동안 캐릭터 영상',
+        prod: 'LED 사이니지', kl: '체감 대기', kv: '[00]% ↓' },
+      { name: '기념품 숍', when: '퇴장 전', ph: '기념품 숍 사진',
+        l1: '방금 탄 어트랙션의 굿즈', l2: '한정판 남은 재고까지',
+        prod: '스마트 사이니지 QM 시리즈', kl: '객단가', kv: '[00]% ↑' }
+    ];
+    const panels = P.map((p, i) => Object.assign({ n: i + 1 }, p, {
+      style: box(X[i], PT, W, PH) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+
+    const links = X.map((x) => {
+      const cx = x + W / 2;
+      return {
+        line: box(cx - 1, BAND, 2, PT - BAND) + 'background: #1428a0;',
+        dot: box(cx - 5, PT - 5, 10, 10) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff;'
+      };
+    });
+
+    // 패널 사이 굵은 화살표 (거터 가운데, 사진 높이)
+    const arrows = [0, 1].map((i) => ({
+      style: box(X[i] + W + 12 - 18, PT + 56 + 60 - 18, 36, 36) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    return { panels, links, arrows };
+  }
+}
+</script>
+</body>
+</html>

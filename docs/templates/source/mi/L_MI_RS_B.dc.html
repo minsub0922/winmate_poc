@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-RS-B 주거 분양 · 주택 · 고객 비즈니스 · 운영 과제</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">R 건설의 수익은 분양에서, 평판은 입주 후에 만들어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">상품기획 → 분양 → 옵션 계약 → 시공 · 입주 → 거주 · AS — 단계별 KPI와 운영 과제, 삼성이 대응하는 지점</div>
+
+  <!-- A. 사업 흐름 레일 — 단계 · 담당 · KPI(라벨 + 플레이스홀더) -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.box}}">
+      <span style="position: absolute; left: 14px; top: 14px; width: 22px; height: 22px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <span style="position: absolute; left: 44px; top: 12px; font-size: 15.5px; line-height: 26px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{s.name}}</span>
+      <span style="position: absolute; left: 14px; top: 42px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">{{s.sub}}</span>
+      <sc-for list="{{s.kpis}}" as="k" hint-placeholder-count="2">
+        <div style="{{k.box}}">
+          <span style="{{k.labelStyle}}">{{k.l}}</span>
+          <span style="position: absolute; right: 10px; top: 4px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 18px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap">{{k.v}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+  <sc-for list="{{chevrons}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.style}}"></div>
+  </sc-for>
+
+  <!-- 평판 순환: 거주 · AS → 다음 분양 -->
+  <div style="position: absolute; left: 1107px; top: 276px; width: 2px; height: 23px; background: #121417"></div>
+  <div style="position: absolute; left: 171px; top: 297px; width: 938px; height: 2px; background: #121417"></div>
+  <div style="position: absolute; left: 171px; top: 284px; width: 2px; height: 15px; background: #121417"></div>
+  <div style="position: absolute; left: 166px; top: 277px; width: 0px; height: 0px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 8px solid #121417"></div>
+  <div style="position: absolute; left: 440px; top: 287px; width: 400px; height: 22px; display: flex; justify-content: center">
+    <span style="height: 22px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #ffffff; border: 1px solid #121417; font-size: 11.5px; font-weight: 700; color: #121417; display: flex; align-items: center; white-space: nowrap">입주 후 평판 · 입소문 → 다음 분양 단지의 청약 경쟁력</span>
+  </div>
+
+  <!-- B. 운영 과제 — 단계 아래에 핀 -->
+  <div style="position: absolute; left: 64px; top: 320px; height: 22px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 15px; line-height: 22px; font-weight: 800">운영 과제</span><span style="font-size: 12px; line-height: 22px; color: #596170">번호 = 위 사업 단계 · 단계마다 R 건설이 부딪히는 지점</span></div>
+  <div style="position: absolute; left: 816px; top: 322px; width: 400px; height: 18px; display: flex; justify-content: flex-end; align-items: center; gap: 16px; font-size: 11.5px; line-height: 18px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>삼성 대응</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #b8bec8"></span>R 건설 주도 · 삼성 협업</span>
+  </div>
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="10">
+    <div style="{{c.box}}">
+      <span style="position: absolute; left: 12px; top: 12px; font-size: 14px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{c.title}}</span>
+      <span style="position: absolute; right: 9px; top: 13px; width: 18px; height: 18px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.stage}}</span>
+      <span style="position: absolute; left: 12px; top: 37px; width: 192px; font-size: 12px; line-height: 17px; color: #3d4452">{{c.desc}}</span>
+      <div style="{{c.strip}}">
+        <span style="{{c.flagStyle}}">{{c.flag}}</span>
+        <span style="position: absolute; left: 10px; top: 19px; font-size: 12px; line-height: 17px; font-weight: 700; color: #121417; white-space: nowrap">{{c.act}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · 아파트 분양 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const colX = (i) => 64 + i * 234; // 5열 · 폭 216 · 간격 18
+
+    // A. 사업 흐름 — KPI 값은 모두 플레이스홀더. rev = 매출이 생기는 지표
+    const ST = [
+      ['상품기획 · 설계', '평면 · 마감 · 가전 사양 확정', [['세대당 사양 원가', '[000]만 원', false], ['기본 · 옵션 품목', '[00]종', false]]],
+      ['분양 · 모델하우스', '모델하우스 · 청약 · 계약', [['청약 경쟁률', '[00.0] 대 1', false], ['분양 매출', '[0,000]억 원', true]]],
+      ['옵션 계약', '유상 옵션 · 컬러 · 조합 선택', [['옵션 선택률', '[00]%', false], ['옵션 매출', '[00]억 원', true]]],
+      ['시공 · 입주', '빌트인 설치 · 사전점검 · 입주', [['입주 전 설치 완료', '[00]%', false], ['하자 접수', '[00]건', false]]],
+      ['거주 · AS', '입주민 생활 · 관리 · AS', [['입주민 만족도', '[0.0]점', false], ['AS 처리 기간', '[0.0]일', false]]]
+    ];
+    const stages = ST.map(([name, sub, K], i) => ({
+      n: i + 1, name, sub,
+      box: A + box(colX(i), 160, 216, 116) + 'box-sizing: border-box; border-radius: 14px; background: #f5f6f8;',
+      kpis: K.map(([l, v, rev], j) => ({
+        l, v,
+        box: A + box(8, 64 + j * 24, 200, 22) + 'box-sizing: border-box; border-radius: 6px; background: #ffffff;',
+        labelStyle: A + 'left: 8px; top: 3px; font-size: 11.5px; line-height: 16px; white-space: nowrap; ' + (rev ? 'font-weight: 800; color: #121417;' : 'color: #3d4452;')
+      }))
+    }));
+    const chevrons = [0, 1, 2, 3].map((i) => ({
+      style: A + 'left: ' + px(colX(i) + 216 + 5) + 'top: 210px; width: 0px; height: 0px; border-top: 8px solid transparent; border-bottom: 8px solid transparent; border-left: 8px solid #121417;'
+    }));
+
+    // B. 운영 과제 — 열 = 단계. sam = 삼성이 대응하는 과제
+    const C = [
+      [0, '가구장 · 천장 규격 맞춤', '가구장 깊이 · 낮은 천장고에 맞지 않으면 빌트인 라인과 인테리어가 깨집니다', '키친핏 · 슬림 매립형 실내기', true],
+      [0, '환기 · 냉난방 설계 반영', '청정환기 연동엔 전열교환기(ERV)가, 냉난방 부하는 설계 단계부터 반영돼야 합니다', '시스템에어컨 · 청정환기 설계', true],
+      [1, '비슷해진 단지 사이 차별점', '입지 · 평면이 비슷하면 방문객은 모델하우스 주방 · 거실에서 차이를 찾습니다', '빌트인 · 무풍 · 스마트홈 체험', true],
+      [1, '세분화된 수요자 취향', '가족 구성 · 연령에 따라 원하는 주방 구성과 컬러, 공간 쓰임이 모두 다릅니다', '모듈 조합 · 컬러 패널 라인업', true],
+      [2, '기본 · 유상 옵션의 경계', '무엇을 기본 제공하고 무엇을 유상 옵션으로 둘지 — 분양가와 선택률이 함께 움직입니다', '옵션 패키지 구성 제안', false],
+      [2, '입주 시점까지 열린 선택', '도어 컬러 · 패널을 입주 시점에 고르거나 바꾸면 발주 · 설치 일정이 흔들립니다', '교체형 도어 패널 · 컬러 선택', true],
+      [3, '가구와 빈틈없는 일체 시공', '아일랜드 인덕션, 가구 패널과의 라인 — 패널 무게로 인한 문 처짐까지 관리해야 합니다', '빌트인 시공 · 가구사 협업', true],
+      [3, '입주 전 설치 · 기기 연결', '입주 일정 안에 설치를 끝내고 Wi-Fi · 계정 연동까지 돼야 스마트홈이 동작합니다', 'SmartThings 통합 연결', true],
+      [4, '여름 전기요금 · 냉방 민원', '거실~주방까지 넓은 공간 냉방과 여름 전기요금 부담이 입주민 불만으로 이어집니다', '무풍 · AI 절약 모드', true],
+      [4, 'AS · 이사 대응 속도', '고장 · 하자 대응 속도와 이사 시 이전 설치가 단지 평판과 다음 분양에 남습니다', '전국 서비스망 · 홈케어 진단', true]
+    ];
+    const seen = {};
+    const cards = C.map(([col, title, desc, act, sam]) => {
+      const row = seen[col] ? 1 : 0;
+      seen[col] = true;
+      return {
+        title, desc, act, stage: col + 1,
+        flag: sam ? '삼성 대응' : 'R 건설 주도 · 삼성 협업',
+        box: A + box(colX(col), 352 + row * 150, 216, 140) + 'box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid ' + (sam ? '#d5d9e0' : '#e2e5ea') + ';',
+        strip: A + box(7, 91, 200, 40) + 'border-radius: 8px; background: ' + (sam ? '#eaeefb' : '#f5f6f8') + ';',
+        flagStyle: A + 'left: 10px; top: 4px; font-size: 10.5px; line-height: 14px; font-weight: 800; white-space: nowrap; color: ' + (sam ? '#1428a0' : '#596170') + ';'
+      };
+    });
+    return { stages, chevrons, cards };
+  }
+}
+</script>
+</body>
+</html>

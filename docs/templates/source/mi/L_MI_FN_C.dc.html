@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-FN-C 금융 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">T 은행 고객의 불편은 기다림과 서식, 두 순간에 몰려 있습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">내점 고객의 여정과 창구 직원의 일 — 감정이 꺾이는 순간마다 삼성이 개입할 수 있는 지점</div>
+
+  <!-- 고객 구성 (비중 자리 표시) -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 13.5px; font-weight: 800">T 은행 영업점의 고객</span><span style="font-size: 11.5px; color: #8a91a0">비중은 예시 · T 은행 고객 데이터로 반영</span></div>
+  <sc-for list="{{personas}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.barStyle}}"></div>
+    <div style="{{p.nameStyle}}"><span style="font-size: 14px; font-weight: 800">{{p.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{p.share}}</span></div>
+    <div style="{{p.needStyle}}">{{p.need}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 908px; top: 160px; width: 308px; height: 90px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 922px; top: 168px; width: 280px; height: 20px; font-size: 12.5px; font-weight: 800; line-height: 20px; white-space: nowrap">함께 움직이는 이해관계자</div>
+  <sc-for list="{{holders}}" as="h" hint-placeholder-count="3">
+    <div style="{{h.style}}"><span style="font-size: 12px; font-weight: 700; color: #3d4452">{{h.who}}</span><span style="{{h.valStyle}}">{{h.val}}</span></div>
+  </sc-for>
+
+  <!-- 여정 단계 머리 -->
+  <div style="position: absolute; left: 64px; top: 268px; width: 84px; height: 40px; display: flex; flex-direction: column; justify-content: center; gap: 1px"><span style="font-size: 12.5px; font-weight: 800; white-space: nowrap">여정 단계</span><span style="font-size: 11px; color: #8a91a0; white-space: nowrap">내점 고객 기준</span></div>
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.box}}"></div>
+    <div style="{{s.headStyle}}"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{s.no}}</span><span style="font-size: 13.5px; font-weight: 800">{{s.name}}</span></div>
+    <div style="{{s.subStyle}}">{{s.space}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 1043px; top: 268px; width: 0px; height: 328px; border-left: 1.5px dashed #b8bec8"></div>
+
+  <!-- 레인 이름 + 구분선 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="5">
+    <div style="{{l.style}}"><span style="font-size: 12.5px; font-weight: 800; white-space: nowrap; color: {{l.color}}">{{l.name}}</span><span style="font-size: 11px; line-height: 15px; color: #8a91a0">{{l.sub}}</span></div>
+    <div style="{{l.ruleStyle}}"></div>
+  </sc-for>
+
+  <!-- 고객 · 직원 레인 텍스트 -->
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="12">
+    <div style="{{c.style}}">{{c.text}}</div>
+  </sc-for>
+
+  <!-- 감정 곡선 (지금 기준) -->
+  <svg style="position: absolute; left: 160px; top: 368px; width: 1056px; height: 80px; overflow: visible" width="1056" height="80" viewBox="0 0 1056 80" fill="none">
+    <line x1="0" y1="40" x2="876" y2="40" stroke="#d5d9e0" stroke-width="1" stroke-dasharray="3 4"></line>
+    <polyline points="83,26 261,64 439,30 617,60 795,20" stroke="#3d4452" stroke-width="2" stroke-linejoin="round" fill="none"></polyline>
+    <line x1="896" y1="40" x2="1056" y2="40" stroke="#d5d9e0" stroke-width="1" stroke-dasharray="3 4"></line>
+  </svg>
+  <sc-for list="{{pains}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.style}}"><span style="width: 5px; height: 5px; border-radius: 50%; background: #ffffff"></span>{{p.text}}</div>
+  </sc-for>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="6">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+
+  <!-- 삼성 개입 카드 -->
+  <sc-for list="{{acts}}" as="a" hint-placeholder-count="6">
+    <div style="{{a.box}}"></div>
+    <sc-if value="{{a.on}}" hint-placeholder-val="{{true}}">
+      <div style="{{a.numStyle}}">{{a.n}}</div>
+    </sc-if>
+    <div style="{{a.prodStyle}}">{{a.prod}}</div>
+    <div style="{{a.effStyle}}">{{a.eff}}</div>
+  </sc-for>
+
+  <!-- 본점 · 보안: 전 단계 공통 -->
+  <div style="position: absolute; left: 160px; top: 604px; width: 1056px; height: 40px; border-radius: 10px; background: #1428a0"></div>
+  <svg style="position: absolute; left: 178px; top: 613px; width: 22px; height: 22px" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8.2-7 10-4-1.8-7-5.5-7-10V6l7-3z"></path><path d="M9 12l2 2 4-4"></path></svg>
+  <div style="position: absolute; left: 212px; top: 604px; width: 990px; height: 40px; display: flex; align-items: center; gap: 10px; white-space: nowrap"><span style="font-size: 13.5px; font-weight: 800; color: #ffffff">Knox</span><span style="font-size: 13px; color: #dfe6ff">모든 단계의 태블릿에서 개인정보 · 업무 데이터 보호, 유출 위험 기능 차단을 본점이 일괄 통제 — 내부 보안 규정 충족</span></div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+    const COLX = (i) => 160 + i * 178;   // 6열 · 폭 166 · 간격 12
+    const CW = 166;
+
+    // 고객 구성 — 비중 막대는 예시 기하, 값은 자리 표시
+    const PS = [
+      ['중장년 · 시니어 고객', '큰 글씨 · 쉬운 작성, 직원의 안내를 원함', 361, BLUE],
+      ['직장인 · 시간 제약 고객', '짧은 시간 안에 상담 · 가입을 끝내고 싶음', 262, '#6f82d6'],
+      ['방문이 어려운 고객', '집 · 사업장에서 가입하고 싶음', 197, '#b8c3ee']
+    ];
+    let px0 = 64;
+    const personas = PS.map(([name, need, w, color]) => {
+      const x = px0;
+      px0 += w;
+      return {
+        name, need, share: '[00]%',
+        barStyle: box(x, 188, w - 3, 10) + 'border-radius: 3px; background: ' + color + ';',
+        nameStyle: box(x, 206, w - 12, 20) + 'display: flex; align-items: center; gap: 6px; white-space: nowrap;',
+        needStyle: box(x, 228, w - 12, 18) + 'font-size: 12px; line-height: 18px; color: #596170; white-space: nowrap;'
+      };
+    });
+    const holders = [
+      ['창구 · 상담 직원', '[000]명', true],
+      ['본점 IT · 정보보호', '보안 규정 · 단말 승인', false],
+      ['본점 브랜드 · 마케팅', '객장 콘텐츠 · 홍보', false]
+    ].map(([who, val, num], i) => ({
+      who, val,
+      style: box(922, 192 + i * 19, 280, 18) + 'display: flex; justify-content: space-between; align-items: center; white-space: nowrap;',
+      valStyle: num ? "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 800; color: " + BLUE + ';' : 'font-size: 12px; color: #596170;'
+    }));
+
+    // 여정 단계 (6번째는 영업점 밖 — 다른 경로)
+    const SG = [
+      ['01', '도착 · 안내', '영업점 입구 · 객장'],
+      ['02', '번호표 · 대기', '창구 대기 공간'],
+      ['03', '창구 상담', '영업점 창구'],
+      ['04', '서식 · 서명', '영업점 창구'],
+      ['05', '가입 완료', '창구 → 귀가'],
+      ['06', '방문 상담 · 가입', '고객의 집 · 사업장']
+    ];
+    const stages = SG.map(([no, name, space], i) => {
+      const x = COLX(i);
+      const out = i === 5;
+      return {
+        no, name, space,
+        box: box(x, 268, CW, 40) + 'box-sizing: border-box; border-radius: 10px; ' + (out ? 'border: 1.5px dashed #b8bec8; background: #ffffff;' : 'background: #f5f6f8;'),
+        headStyle: box(x + 10, 271, CW - 20, 19) + 'display: flex; align-items: baseline; gap: 6px; white-space: nowrap;',
+        subStyle: box(x + 10, 290, CW - 20, 15) + 'font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap;'
+      };
+    });
+
+    // 레인
+    const LN = [
+      ['고객', '하는 일', 316, 312, '#121417'],
+      ['감정 곡선', '위 만족 · 아래 불편', 368, 364, '#121417'],
+      ['창구 직원', '하는 일', 456, 452, '#121417'],
+      ['삼성 개입', '제품 · 솔루션', 508, 504, BLUE],
+      ['본점 · 보안', '전 단계 공통', 604, 600, BLUE]
+    ];
+    const lanes = LN.map(([name, sub, y, ry, color]) => ({
+      name, sub, color,
+      style: box(64, y, 84, name === '감정 곡선' ? 60 : 40) + 'display: flex; flex-direction: column; gap: 2px;',
+      ruleStyle: box(64, ry, 1152, 1) + 'background: #e2e5ea;'
+    }));
+
+    const CUST = ['객장에서 오늘 볼 업무 · 상품을 확인', '번호표를 뽑고 [00]분 대기', '상품 설명을 듣고 가입을 결정', '서식 여러 장 작성 · 서명 반복', '통장 · 사본을 받고 귀가', '집 · 사업장에서 직원을 만나 상담'];
+    const STAFF = ['번호 호출 · 객장 안내', '대기 고객 문의 · 서식 안내', '상품 설명 — 상담보다 안내에 시간', '서류 출력 · 신분증 · 서명 확인', '서류 스캔 · 보관 · 마감', '서류를 들고 이동 — 분실 · 유출 부담'];
+    const cells = [];
+    CUST.forEach((text, i) => cells.push({ text, style: box(COLX(i) + 4, 316, CW - 8, 40) + 'display: flex; align-items: center; font-size: 12px; line-height: 17px; color: #121417;' }));
+    STAFF.forEach((text, i) => cells.push({ text, style: box(COLX(i) + 4, 456, CW - 8, 40) + 'display: flex; align-items: center; font-size: 12px; line-height: 17px; color: #3d4452;' }));
+
+    // 감정 곡선 점 (svg 좌표 → 슬라이드 좌표: +160, +368)
+    const EY = [26, 64, 30, 60, 20, 58];
+    const pt = (i) => [COLX(i) + CW / 2, 368 + EY[i]];
+    // 삼성 개입 지점 번호 (5단계는 개입 없음)
+    const MK = [[0, 1], [1, 2], [2, 3], [3, 4], [5, 5]];
+    const marks = MK.map(([i, n]) => {
+      const [cx, cy] = pt(i);
+      return { n, style: box(cx - 11, cy - 11, 22, 22) + 'box-sizing: border-box; border-radius: 50%; background: ' + BLUE + '; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;' };
+    });
+    const [c5x, c5y] = pt(4);
+    marks.push({ n: '', style: box(c5x - 5, c5y - 5, 10, 10) + 'border-radius: 50%; background: #8a91a0; border: 2px solid #ffffff; box-sizing: content-box;' });
+    // 불편 지점 (잉크 칩)
+    const pains = [[1, '할 일 없는 기다림'], [3, '종이 서식 · 서명 반복'], [5, '결국 다시 내점']].map(([i, text]) => ({
+      text,
+      style: 'position: absolute; left: ' + px(COLX(i) + 10) + 'top: 373px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap;'
+    }));
+
+    // 삼성 개입 카드
+    const AC = [
+      [1, '스마트 사이니지 · MagicINFO', '상품 · 공지를 본점이 전 지점에 동시 송출'],
+      [2, '갤럭시 탭 미리작성 · 무풍 에어컨', '대기 중 서식 미리 작성, 직바람 없는 대기'],
+      [3, '갤럭시 탭 상품 영상 안내', '복잡한 상품을 화면 · 영상으로 설명'],
+      [4, '갤럭시 탭 + S펜 전자서식', '종이 없이 작성 · 서명, 중장년도 쉬운 필기감'],
+      [0, '전자서식 효과가 이어짐', '출력 · 스캔 · 보관 작업 감소'],
+      [5, '갤럭시 탭 + Knox', '현장에서 가입 완료, 분실해도 데이터 보호']
+    ];
+    const acts = AC.map(([n, prod, eff], i) => {
+      const x = COLX(i);
+      const on = n > 0;
+      return {
+        n, prod, eff, on,
+        box: box(x, 510, CW, 84) + 'border-radius: 10px; background: ' + (on ? '#eaeefb' : '#f5f6f8') + ';',
+        numStyle: on ? box(x + 10, 519, 20, 20) + 'border-radius: 50%; background: ' + BLUE + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;' : '',
+        prodStyle: box(on ? x + 36 : x + 10, 518, on ? 122 : 146, 32) + 'font-size: 12.5px; font-weight: 800; line-height: 16px; color: ' + (on ? BLUE : '#596170') + ';',
+        effStyle: box(x + 10, 554, 146, 34) + 'font-size: 11.5px; line-height: 16px; color: #3d4452;'
+      };
+    });
+
+    return { personas, holders, stages, lanes, cells, pains, marks, acts };
+  }
+}
+</script>
+</body>
+</html>

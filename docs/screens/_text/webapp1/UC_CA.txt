@@ -1,0 +1,82 @@
+ 
+ 경쟁사 분석 · 유스케이스 맵 
+ W 
+ Winmate · 화면 12개 
+ 경쟁사 분석 — 유스케이스 맵 
+ 들어오는 길부터 결과 활용까지 모든 화면입니다. 칸을 누르면 그 화면으로 이동합니다. 
+ 홈 
+ 라우팅 규칙 
+ 작업 목록 CA0 열기 
+ {{l.label}} {{l.desc}} 
+ {{c.no}} 
+ {{c.title}} 
+ {{c.sub}} 
+ {{n.label}} 
+ {{n.code}} 
+ {{n.name}} 
+ {{n.desc}} 
+ {{n.next}} 
+ {{n.tag}} 
+ 기본 흐름 
+ {{h.code}} 
+ {{h.name}} 
+ 경쟁사 화면 12개 · 기본 흐름 5 · 새 화면 6 · 다른 기능 5 
+class Component extends DCLogic {
+ renderVals() {
+ // 다른 캔버스에 있는 화면은 그 캔버스를 새 탭으로 엽니다
+ const EXT = {"PRS7.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe"};
+ const ext = (f) => EXT[f] || f;
+ const KIND = {
+ base: { tag: '기본 흐름', box: '', code: '', tagStyle: '' },
+ new: { tag: '새 화면', box: '', code: '', tagStyle: '' },
+ exist: { tag: '기존', box: '', code: '', tagStyle: '' },
+ ref: { tag: '다시 열기', box: '', code: '', tagStyle: '' },
+ other: { tag: '다른 기능', box: '', code: '', tagStyle: '' },
+ shared: { tag: '공통', box: '', code: '', tagStyle: '' }
+ };
+ const node = (kind, code, name, desc, next, href) => ({
+ isNode: true, isLabel: false, label: '',
+ code, name, desc, next, href: ext(href || (code + '.dc.html')),
+ tag: KIND[kind].tag,
+ style: '' + KIND[kind].box,
+ codeStyle: '' + KIND[kind].code + ';',
+ tagStyle: '' + KIND[kind].tagStyle
+ });
+ const label = (t) => ({ isNode: false, isLabel: true, label: t, code: '', name: '', desc: '', next: '', href: '', tag: '', style: '', codeStyle: '', tagStyle: '' });
+ const COLS = [
+ ['01', '들어오는 길', '어디서 경쟁사 분석을 시작하나', [
+ node('shared', 'Main', "홈 '경쟁사 분석'", '홈 카드에서 새 분석 시작', '→ CA1'),
+ node('new', 'CA0', '작업 목록', '최근 분석 · 상태 · 업데이트 필요', '→ CA1 · CA2 · CA4'),
+ node('shared', 'Sidebar', '사이드바 작업 내역', '저장된 분석 결과를 바로 열기', '→ CA4', 'CA4.dc.html'),
+ node('other', 'MI2C', "MI '경쟁사 · 비교 기준'에서", 'MI 작업의 경쟁사 후보를 이어받기', '→ CA1 · CA2'),
+ node('other', 'RQ6', '요구사항 정의서에서', '정의서 → 고객사 · 업종 · 장소 · 제품', '→ CA1R')
+ ]],
+ ['02', '입력 방식', '고객 · 업종 · 장소 · 제품을 어떻게 받나', [
+ label('넣기'),
+ node('base', 'CA1', '자유 양식', '한 문단 → 4가지 읽기 · 읽힌 것 칩으로', '→ CA1G'),
+ node('new', 'CA1R', '고객 요구사항에서', '저장된 정의서를 고르면 4가지를 채움', '→ CA1G'),
+ node('new', 'CA2Q', '되묻기 · 고객사 · 장소', '모자랄 때 한 번만 · 건너뛰기 가능', '→ CA1G'),
+ label('기준'),
+ node('new', 'CA3C', '비교 기준 바꾸기', '요구 · 업종 사례 · 기본 기준 켜고 끄기', '→ CA3')
+ ]],
+ ['03', '진행 · 확인 상태', '기다림 · 후보 확인 · 분석 진행', [
+ node('new', 'CA1G', '찾는 중', '입력 읽기 · 업종 사례 · 공개 자료 · 정리', '→ CA2'),
+ node('base', 'CA2', '경쟁사 확인 · 6 후보', '추천 4곳은 켜 둠 · 넣고 빼기 · 익명 안내', '→ CA3'),
+ node('base', 'CA3', '분석 중 · 기준 자동', '비교 기준 6개 자동 · 경쟁사별 진행', '→ CA4')
+ ]],
+ ['04', '편집 · 결과 보기', '한눈에 · 상세 · 고쳐서 다시', [
+ node('base', 'CA4', '결과 · 한눈에', '한 줄 포지셔닝 · 우위 · 비슷 · 열위', '→ CA4D · CA5'),
+ node('new', 'CA4D', '경쟁사 상세', '제품 · 가격대 · 솔루션 · 동향 · 출처', '→ CA5'),
+ node('ref', 'CA2', '경쟁사 넣고 빼기', '직접 추가 · 뺀 곳은 재분석에도 유지', '→ CA3'),
+ node('ref', 'CA3C', '기준 바꿔 다시', '중요도 · 순서를 바꿔 다시 분석', '→ CA3')
+ ]],
+ ['05', '결과 활용', 'MI 작업 · 제안서 · Storyboard 로', [
+ node('new', 'CA5', '저장 · 보내기', 'MI · 제안서 · Storyboard · 리포트', '→ MI3 · PRS7 · SB1Q3'),
+ node('other', 'MI3', 'MI 경쟁사 → 삼성 강점', 'MI 작업의 경쟁사 영역으로 합치기', 'MI 작업'),
+ node('other', 'PRS7', "제안서 'Why Samsung'", '경쟁 비교 시트 · 익명 표기', '제안서 섹션'),
+ node('other', 'SB1Q3', 'Storyboard 비교 기준', '기획 질의 3/3 비교 기준에 채우기', 'Storyboard')
+ ]]
+ ];
+ const cols = COLS.map(([no, title, sub, nodes], i) => ({ no, title, sub, nodes, arrow: i ({ label: KIND[k].tag, desc, swatch: pill + KIND[k].tagStyle }));
+ const HAPPY = [['Main', '홈'], ['CA1', '넣기'], ['CA2', '경쟁사 확인'], ['CA3', '분석'], ['CA4', '결과'], ['CA5', '보내기']];
+ const happy = HAPPY.map(([code, name], i) => ({ code, name, href: ext(code + '.dc.html'), arrow: i 

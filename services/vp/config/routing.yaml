@@ -1,0 +1,260 @@
+# Value Proposition 라우팅 규칙 — 단일 원천(05-vp.md §3.3 · §4.3 · §10)
+# - VPR(`GET /v1/routing-rules`) 이 이 파일을 그대로 그린다.
+# - 플래너(winmate_vp.planner) · 업종 판별(winmate_vp.decide) · 커버리지 · 적합도가 같은 파일의 임계값을 읽는다.
+# - 문구는 보드 원문 그대로(`docs/screens/webapp1/VPR.dc.html`). (제안) 값은 05-vp.md §11 의 열린 질문 대상.
+
+thresholds:
+  industry_auto: 0.80          # 1위 확신 ≥ 0.80 → 자동
+  industry_min: 0.50           # 1위 < 0.50 → 범용
+  industry_ask_margin: 0.10    # 1 · 2위 차 < 0.10 → 한 번 묻기
+  direction_ask_margin: 0.10   # 방향 두 갈래 점수 차 < 0.10 → 한 번 묻기
+  stakeholders_min: 2          # 사용자가 확인한 결재자 2명 이상 → VP-H
+  decision_makers_min: 3       # 추론한 의사결정자 3명 이상 · KPI가 다름 → VP-H
+  numbers_min: 3               # EF-A 는 쓸 수 있는 전 → 후 수치 3개 이상
+  numbers_max: 2               # 1 ~ 2개 → EF-C
+  km_max: 4                    # KM 5개 이상 → 4로 묶기
+  products_matrix: 4           # 제안 제품 4개 이상 → VP-M
+  field_questions_min: 3       # 고객의 말이 질문 · 요구로 3개 이상 → VP-U
+  spaces_journey_min: 2        # 공간 · 손님 동선 2곳 이상 → VP-K
+  cost_challenges_min: 2       # 상위 과제 3개 중 2개 이상 비용 수치 → CH-A (제안 임계)
+  source_age_months: 24        # 24개월 지난 출처는 제외 · 대체(다시 찾음)
+  fit_highlight: 85            # 적합도 ≥ 85 파랑
+  fit_drop: 5                  # 레이아웃 바꿀 때 새 적합도 < 현재 − 5 → 레이아웃 요청(제안)
+  seconds_per_sheet: 20        # `{n}장 만들기 (약 {m}분)` — m = max(1, round(n × 20 / 60)) (제안)
+  list_days: 30                # VP0 기본 목록 범위 = 최근 30일 수정
+  coverage_full: 90            # 커버리지 ≥ 90 `충분`(진한 파랑)
+  coverage_mid: 50             # ≥ 50 `보통`, 미만 `부족` (제안 경계)
+
+legend:
+  - {mode: auto, desc: 진행}
+  - {mode: check, desc: 진행 + 결과에 표시}
+  - {mode: ask, desc: 답 받고 진행}
+  - {mode: pin, desc: 사람이 정함}
+
+stages:
+  - "no": 1
+    title: 재료 판별
+    sub: 과제 · 가치 · 근거 · 이해관계자 · 제품 5축으로
+    rules:
+      - {c: Storyboard 연결, o: Key Message → 가치 축 · 요구 → 과제 축, mode: auto}
+      - {c: MI 결과 연결, o: 과제 · 사용자 · 삼성 강점 · 수치, mode: auto}
+      - {c: RFP 첨부, o: 평가 기준 · 배점 · 결재 구조, mode: auto}
+      - {c: 유관 사례 · 견적 연결, o: 전 → 후 수치 · 제안 제품 → 공식 실사, mode: auto}
+      - {c: 한 줄 메모뿐, o: 사례 DB로 과제 추론 · 추론 표시, mode: check}
+  - "no": 2
+    title: 업종 · 업종판
+    sub: MI와 같은 판별기 · Value Props 업종판 준비 여부
+    rules:
+      - {c: 연결한 MI · Storyboard에 업종, o: 그대로 상속, mode: auto}
+      - {c: 연결된 업종이 없음, o: MI와 같은 기준으로 판별, mode: auto}
+      - {c: 1 · 2위 차이 0.10 미만, o: 한 번 묻기 (업종 칩), mode: ask}
+      - {c: 업종판 준비됨, o: VP-XX-A · B · C를 먼저, mode: auto}
+      - {c: 업종판 제작 중, o: 범용으로 · 출시 때 교체 제안, mode: auto}
+  - "no": 3
+    title: 메시지 구조
+    sub: 누구에게 · 무엇을 먼저 말하나
+    rules:
+      - {c: 고객이 과제를 직접 말함 (RFP · 회의록), o: 과제 → 가치 → 효과, mode: auto}
+      - {c: 결재자 1명 · 짧게 · 퀵윈, o: 한 문장 + 제품 사진 (VP-G), mode: auto}
+      - {c: 의사결정자 3명 이상 · KPI가 다름, o: 이해관계자 + 쓰는 제품 (VP-H), mode: auto}
+      - {c: 평가 기준에 경제성 배점, o: 기대 효과를 투자 회수로 (EF-B), mode: auto}
+      - {c: 방향 두 갈래 · 점수 차 0.10 미만, o: 한 번 묻기 · 답 없으면 둘 다, mode: ask}
+  - "no": 4
+    title: 시트 수
+    sub: 보낼 제안서 유형에 맞춰
+    rules:
+      - {c: 표준 제안서 연결, o: 고객 과제 + 가치 제안 (+ 기대 효과), mode: auto}
+      - {c: 퀵윈 제안서 연결, o: 가치 제안 1장 (VP-G), mode: auto}
+      - {c: Solution형 연결, o: 고객 과제 생략 — 대규모 MI가 말함, mode: auto}
+      - {c: 연결 없음, o: 3장 기본 · 보낼 때 줄이기, mode: auto}
+      - {c: 제안서에 이미 고정한 시트, o: 건드리지 않고 나머지만, mode: pin}
+
+band_title: 레이아웃 선택 — 시트마다
+band_sub: 고정한 시트는 건너뜀 → 업종판 → 재료 모양 → 메시지 · 이미지 칸은 공식 실사 → 일러스트 순 · 고른 이유를 시트에 한 줄로
+band_head: [시트, 업종판이 준비되면, 지금 (범용 35종 · 이미지판이 기본 · 공식 실사가 있으면 실사 중심판도 후보) — 재료 모양 → 템플릿]
+band:
+  - code: CH
+    name: 고객 과제
+    ind: VP-XX-A (과제 → 해법 → 효과)
+    rules: [[과제에 비용 수치, CH-A], [바라는 모습이 분명, CH-B], [같은 증상이 반복, CH-C], [대규모 MI가 과제를 말함, 생략]]
+  - code: VP
+    name: 가치 제안
+    ind: VP-XX-A · VP-XX-B
+    rules: [[과제 = 제품, VP-E], [KM 2 · 3 · 4, VP-F·n], [현장 질문 3, VP-U], [1개 · 경영진, VP-G], [결재자 여럿, VP-H], [KM 5개+, 4로 묶기], [이미지 없이, VP-A~D]]
+  - code: VP
+    name: 제품 · 장면
+    ind: VP-XX-B 장면판
+    rules: [[제품 1대의 기능, VP-I], [솔루션 화면, VP-J], [공간 · 손님 동선, VP-K], [기존 설비 교체, VP-L], [제품 4개 이상, VP-M]]
+  - code: VP
+    name: 실사 중심
+    ind: 같은 업종 사례 사진 우선
+    rules: [[같은 업종 사례, VP-N · Q], [제품 컷 4개 이상, VP-O], [솔루션 실제 화면, VP-P], [공식 연출 · 동선, VP-R], [고객 매장 사진, VP-S], [제품 1대 + 연출, VP-T]]
+  - code: EF
+    name: 기대 효과
+    ind: VP-XX-C
+    rules: [[전 → 후 3개 이상, EF-A], [제품마다 전 → 후, EF-D], [투자비 + 절감액, EF-B], [수치 1~2 + 체감, EF-C], [확인 화면까지, EF-E], [수치 없음, 업종 평균 범위]]
+
+packs_title: Value Props 업종판 준비 상태
+packs_sub: MI 업종판은 16개 모두 준비됨 · Value Props는 제작 중
+
+gaps_title: 결측 · 충돌 처리
+gaps_sub: 스스로 메우는 순서 · 고객 자료 → 유관 사례 → 업종 평균 범위 → 고객에게 요청
+gaps:
+  - {c: '근거 수치 [00]이 비어 있음', o: '사례 검색 → 업종 평균 범위 [추정] → 요청 초안', mode: auto}
+  - {c: EF-A에 쓸 수치가 3개 미만, o: EF-C(정량 + 정성)로 자동 전환, mode: auto}
+  - {c: 투자 회수가 필요한데 투자비가 없음, o: 견적 연결 요청 · 없으면 EF-A로, mode: check}
+  - {c: 제안 모델의 공식 실사가 없음, o: 같은 계열 실사 · 유사 모델 표시 → 없으면 일러스트, mode: check}
+
+asks_title: 사람에게 묻는 경우는 이 다섯뿐
+asks:
+  - 메시지 방향이 두 갈래 — 비용 vs 매출, 점수 차 0.10 미만
+  - 결재자를 모르고 RFP도 없을 때 (기본값을 두고 확인 권장)
+  - 투자 회수에 쓸 투자비(견적)가 없을 때
+  - 고객 내부 인터뷰 수치를 고객 제출물에 쓸 때
+  - Storyboard Key Message와 MI 과제가 부딪칠 때
+
+# 업종판 시트 역할 대응(§4.15.3 · §11 Q2) — 기본은 VPC 12번(CH → A · VP → B · EF → C)
+role_map: {CH: A, VP: B, EF: C}
+pack_roles:
+  A: {name: 과제 → 해법 → 효과, thumb: indVP, desc: 업종 핵심 과제마다 삼성 해법과 효과}
+  B: {name: 이해관계자별 가치, thumb: persona, desc: 업종의 결정권자 · 이용자별 가치}
+  C: {name: 기대 효과, thumb: hbars, desc: 업종 KPI 전 → 후 · 투자 효과}
+
+# 16 업종(보드 INDS 순서). name = SectionStep 이름(화면 표기), cell = VPR 칸 이름. 결재자 기본 목록은 (제안 — §11 Q7)
+industries:
+  - code: FB
+    name: 외식 · 카페
+    cell: 외식 · 카페
+    kr: [kr_fnb]
+    approvers: [대표, 운영본부장, 재무, 가맹점주 협의회]
+    approver_default: [운영본부장]
+  - code: RT
+    name: 리테일 · 플래그십
+    cell: 리테일
+    kr: [kr_retail]
+    approvers: [대표, 영업본부장, 마케팅 본부장, 재무]
+    approver_default: [영업본부장]
+  - code: SV
+    name: 생활 편의 · 무인 매장
+    cell: 생활 편의
+    kr: []
+    approvers: [대표, 운영본부장, 재무, 가맹점주 협의회]
+    approver_default: [운영본부장]
+  - code: HT
+    name: 호텔 · 리조트
+    cell: 호텔 · 리조트
+    kr: [kr_hotel]
+    approvers: [총지배인, 객실 본부장, 재무, 오너]
+    approver_default: [총지배인]
+  - code: TP
+    name: 테마파크 · 전시
+    cell: 테마파크
+    kr: []
+    approvers: [대표, 운영본부장, 콘텐츠 기획, 재무]
+    approver_default: [운영본부장]
+  - code: VN
+    name: 공연장 · 경기장
+    cell: 공연장 · 경기장
+    kr: []
+    approvers: [대표, 운영본부장, 마케팅, 재무]
+    approver_default: [운영본부장]
+  - code: AD
+    name: 옥외 광고
+    cell: 옥외 광고
+    kr: []
+    approvers: [대표, 매체 사업본부장, 광고주, 재무]
+    approver_default: [매체 사업본부장]
+  - code: OF
+    name: 오피스
+    cell: 오피스
+    kr: [kr_office, kr_small_office]
+    approvers: [대표, 총무 · 시설팀장, IT 팀장, 재무]
+    approver_default: [총무 · 시설팀장]
+  - code: RS
+    name: 주거 분양
+    cell: 주거 분양
+    kr: [kr_home, kr_officetel]
+    approvers: [시행사 대표, 분양 본부장, 설계 · 인테리어, 재무]
+    approver_default: [분양 본부장]
+  - code: ID
+    name: 인테리어 · 빌트인
+    cell: 인테리어
+    kr: []
+    approvers: [대표, 설계 팀장, 구매 팀장, 재무]
+    approver_default: [설계 팀장]
+  - code: ED
+    name: 교육 · 캠퍼스
+    cell: 교육
+    kr: [kr_school, kr_academy]
+    approvers: [총장 · 교장, 기획처장, 교수 · 교사, 학생]
+    approver_default: [기획처장]
+  - code: PB
+    name: 공공 · 교통
+    cell: 공공 · 교통
+    kr: [kr_public_agency, kr_military]
+    approvers: [기관장, 사업 담당 과장, 정보화 담당관, 예산 담당]
+    approver_default: [사업 담당 과장]
+  - code: MD
+    name: 의료 · 요양
+    cell: 의료 · 요양
+    kr: [kr_hospital, kr_clinic]
+    approvers: [병원장, 행정 부원장, 간호부장, 의료정보팀]
+    approver_default: [행정 부원장]
+  - code: MF
+    name: 제조 · 물류 · 현장
+    cell: 제조 · 물류
+    kr: [kr_manufacturing, kr_transport]
+    approvers: [공장장, 물류센터장, 생산 기술팀, 구매]
+    approver_default: [물류센터장]
+  - code: FN
+    name: 금융
+    cell: 금융
+    kr: [kr_finance]
+    approvers: [지점장, 채널 기획 본부장, IT 본부, 재무]
+    approver_default: [채널 기획 본부장]
+  - code: OE
+    name: 파트너 전용 단말
+    cell: 전용 단말
+    kr: []
+    approvers: [대표, 사업 본부장, 제품 기획, 구매]
+    approver_default: [사업 본부장]
+generic:
+  code: GEN
+  name: 범용
+  cell: 범용
+  approvers: [대표, 운영 책임자, 재무, 실무 담당]
+  approver_default: [운영 책임자]
+
+# 이해관계자 묶음(커버리지 · VP-H) — 결재 · 운영 · 이용자. 가중치(제안): 결재 40 · 운영 20 · 이용자 40
+stakeholder_groups:
+  approver:
+    label: 결재
+    weight: 40
+    words: [결재, 대표, 사장, 본부장, 임원, 경영진, CFO, CEO, 재무, 총장, 원장, 이사, 오너, 지점장, 기관장, 공장장, 총지배인, 센터장, 처장, 평가위원]
+  operator:
+    label: 운영
+    weight: 20
+    words: [점장, 운영, 직원, 매니저, 담당, 관리자, 팀, 실무, 간호, 교수, 교사, 시설, 기획, 엔지니어, 기술]
+  user:
+    label: 이용자
+    weight: 40
+    words: [손님, 고객, 학생, 환자, 투숙객, 관람객, 이용자, 방문객, 시민, 승객, 사용자, 입주자, 임차인, 가족]
+
+# 방향 점수 출처 가중치(§7.3 · 제안)
+direction_weights: {RFP: 1.0, RQ: 0.9, SB: 0.8, MI: 0.7, CS: 0.4, USER: 0.5, QT: 0.6}
+
+# 경제성 배점으로 보는 평가 기준 이름
+economic_words: [경제성, 가격, 비용, 투자, 예산, TCO, 운영비]
+
+# 방향 테마 낱말(LLM `vp.direction_tags.v1` 을 못 쓸 때의 결정적 대체 — 제안)
+direction_words:
+  gain:
+    label: 매출
+    words: [매출, 객단가, 판매, 구매, 수익, 성장, 유치, 방문, 체류, 전환, 재방문, 브랜드 경험, 고객 경험, 24시간]
+  cost:
+    label: 비용
+    words: [비용, 인건비, 전기료, 전력, 절감, 운영비, 유지비, 인쇄, 배송, 낭비, 부담, 손실, 효율, 점원 없는, 무인 운영]
+
+# 개발 · 시연용 — 생성 단계마다 쉬는 시간(초). 환경 변수 VP_PACE_S 가 우선. 실제 모델은 0.
+dev:
+  pace_s: 0

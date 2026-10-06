@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>KCP-S Knox Capture 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Knox Capture</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Knox Capture · 모바일 바코드 스캔</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">입고부터 진열, 계산대까지 한 대로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">D 리테일 매장 직원의 하루 동선 · 스캔 지점 4곳을 같은 갤럭시 한 대로</div>
+
+  <!-- 매장 평면 (예시) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; height: 160px; border-radius: 16px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 960px; top: 160px; width: 256px; height: 160px; border-radius: 0 16px 16px 0; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 359px; top: 160px; width: 2px; height: 36px; background: #b8bec8"></div>
+  <div style="position: absolute; left: 359px; top: 226px; width: 2px; height: 94px; background: #b8bec8"></div>
+
+  <!-- 창고 팔레트 · 선반 -->
+  <sc-for list="{{fixtures}}" as="f" hint-placeholder-count="14">
+    <div style="{{f.s}}"></div>
+  </sc-for>
+
+  <div style="position: absolute; left: 84px; top: 168px; font-size: 12.5px; font-weight: 800; color: #596170">창고 · 백룸</div>
+  <div style="position: absolute; left: 380px; top: 168px; font-size: 12.5px; font-weight: 800; color: #596170">매장 진열대</div>
+  <div style="position: absolute; left: 980px; top: 168px; font-size: 12.5px; font-weight: 800; color: #596170">카운터 · 픽업</div>
+  <div style="position: absolute; left: 1128px; top: 296px; font-size: 11px; color: #8a91a0">평면은 예시</div>
+  <div style="position: absolute; left: 64px; top: 198px; height: 24px; padding: 0 8px; border-radius: 0 6px 6px 0; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">입고</div>
+
+  <!-- 동선 (점선) -->
+  <svg style="position: absolute; left: 64px; top: 160px" width="1152" height="160" viewBox="0 0 1152 160" fill="none"><path d="M40 50 H616 Q636 50 636 70 V88 Q636 108 656 108 H997 Q1017 108 1017 88 V80" stroke="#1428a0" stroke-width="2" stroke-dasharray="6 6" stroke-linecap="round"/></svg>
+
+  <!-- 직원 1명 · 갤럭시 1대 (실제 제품 컷) -->
+  <div style="position: absolute; left: 724px; top: 212px; width: 200px; height: 44px; box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #e2e5ea; padding: 0 10px; display: flex; align-items: center; gap: 8px">
+    <img src="/_blob/4af0d48d891be9a7ff27c471ef581e7e" alt="갤럭시 엑스커버7 프로 전면" style="width: 18px; height: 36px; object-fit: contain; display: block; flex-shrink: 0">
+    <div style="display: flex; flex-direction: column; gap: 1px">
+      <span style="font-size: 12px; font-weight: 800; color: #1428a0; white-space: nowrap">직원 1명 · 갤럭시 1대</span>
+      <span style="font-size: 11px; color: #596170; white-space: nowrap">엑스커버7 프로 · 전용 스캐너 없음</span>
+    </div>
+  </div>
+
+  <!-- 스캔 지점 마커 -->
+  <sc-for list="{{stations}}" as="m" hint-placeholder-count="4">
+    <span style="{{m.marker}}">{{m.no}}</span>
+    <div style="{{m.tick}}"></div>
+  </sc-for>
+
+  <!-- 지점 카드 (공간 사진 + 스캔 내용) -->
+  <div style="position: absolute; left: 64px; top: 336px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{stations}}" as="s" hint-placeholder-count="4">
+      <div style="height: 312px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; overflow: hidden; display: flex; flex-direction: column">
+        <div style="position: relative; height: 116px; flex-shrink: 0; overflow: hidden; background: #dfe3ea">
+          <img src="{{s.img}}" alt="{{s.alt}}" style="position: absolute; object-fit: cover; {{s.imgBox}}">
+          <span style="position: absolute; left: 8px; bottom: 8px; height: 20px; padding: 0 7px; border-radius: 999px; background: #ffffff; font-size: 10.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{s.chip}}</span>
+        </div>
+        <div style="flex-grow: 1; padding: 12px 16px 14px; display: flex; flex-direction: column">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{s.time}}</span>
+            <div style="flex-grow: 1"></div>
+            <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; color: #596170; display: flex; align-items: center; white-space: nowrap">{{s.zone}}</span>
+          </div>
+          <span style="margin-top: 8px; font-size: 16.5px; font-weight: 800">{{s.t}}</span>
+          <span style="margin-top: 3px; font-size: 13px; line-height: 1.5; color: #596170">{{s.d}}</span>
+          <div style="flex-grow: 1"></div>
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; border-top: 1px solid #e2e5ea; padding-top: 10px">
+            <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+              <div style="display: flex; align-items: center; gap: 6px"><span style="width: 48px; flex-shrink: 0; font-size: 11px; color: #8a91a0">스캔 대상</span><span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5v14 M8 5v14 M12 5v14 M15 5v14 M20 5v14"/></svg>{{s.target}}</span></div>
+              <div style="display: flex; align-items: center; gap: 6px"><span style="width: 48px; flex-shrink: 0; font-size: 11px; color: #8a91a0">입력 앱</span><span style="font-size: 12.5px; color: #3d4452; white-space: nowrap">{{s.app}}</span></div>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end; flex-shrink: 0">
+              <span style="font-size: 11px; color: #8a91a0">절감</span>
+              <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 24px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: #1428a0">{{s.save}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 리테일 체인 · 매장 재고 관리 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const rect = (x, y, w, h, bg) => ({
+      s: 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h) + 'border-radius: 4px; background: ' + (bg || '#d5d9e0')
+    });
+    // 평면 집기 (y 160–320): 창고 랙 + 팔레트 2×2 두 묶음, 매장 곤돌라 3줄 + 벽면 선반, 카운터
+    const fixtures = [
+      rect(230, 172, 110, 12),
+      rect(96, 240, 30, 30), rect(130, 240, 30, 30), rect(96, 274, 30, 30), rect(130, 274, 30, 30),
+      rect(230, 240, 30, 30), rect(264, 240, 30, 30), rect(230, 274, 30, 30), rect(264, 274, 30, 30),
+      rect(470, 180, 450, 12), rect(420, 236, 260, 12), rect(420, 284, 260, 12), rect(740, 296, 200, 12),
+      rect(1010, 266, 170, 20, '#b8bec8')
+    ];
+
+    // 지점 사진: 실제 장면 사진 (카드 사진 영역 268×116 안에서 위치 지정)
+    const PH = {
+      stock: { img: '/_blob/fd7152aca97436229470b5ac6ced1ffe', alt: '창고 선반 앞에서 스마트폰으로 박스 재고를 확인하는 작업자',
+        box: 'left: 0; top: 0; width: 268px; height: 116px; object-position: 50% 60%', chip: '예시 사진 · 고객 공간으로 교체' },
+      shelf: { img: '/_blob/804c0d5b7fd3bcab6006eb4bc2ce108c', alt: '매장 진열대와 쇼케이스 일러스트',
+        box: 'left: -136px; top: -194px; width: 412px; height: 389px', chip: '예시 이미지 · 고객 공간으로 교체' },
+      scan: { img: '/_blob/62d2ee82dd744e8b8356ed6c27b94834', alt: 'Knox Capture 앱 화면으로 라벨 바코드를 스캔하는 갤럭시',
+        box: 'left: -60px; top: -60px; width: 329px; height: 325px', chip: '스캔 화면 예시 · Knox Capture' },
+      counter: { img: '/_blob/1fa2f2035cc98e6cf2753e26012c5886', alt: '매장 계산대에서 태블릿 POS로 고객을 응대하는 직원',
+        box: 'left: 0; top: 0; width: 268px; height: 116px; object-position: 50% 50%', chip: '예시 사진 · 고객 공간으로 교체' }
+    };
+
+    // 스캔 지점: 평면 위 좌표 (카드 중심 x와 일치)
+    const S = [
+      ['08:00', 199, 210, '창고 · 백룸', '입고 검수', '박스 라벨을 찍으면 입고 앱에 품목이 바로 입력됩니다', '박스 라벨', '[WMS · 입고 앱]', 'stock'],
+      ['10:30', 493, 210, '매장 진열대', '재고 조사', '진열대를 돌며 상품 바코드를 찍어 재고 앱에 기록합니다', '상품 바코드', '[재고 앱]', 'shelf'],
+      ['15:00', 787, 268, '매장 진열대', '가격표 확인', '선반 라벨을 찍어 판매가와 가격표가 맞는지 확인합니다', '선반 라벨', '[가격 조회 앱]', 'scan'],
+      ['18:00', 1081, 240, '카운터', '픽업 주문 확인', '고객이 보여준 주문 QR을 찍어 주문을 바로 조회합니다', '주문 QR', '[POS · 주문 앱]', 'counter']
+    ];
+    const stations = S.map(([time, x, y, zone, t, d, target, app, ph], i) => ({
+      no: String(i + 1), time, zone, t, d, target, app, save: '[0]분',
+      img: PH[ph].img, alt: PH[ph].alt, imgBox: PH[ph].box, chip: PH[ph].chip,
+      marker: 'position: absolute; left: ' + px(x - 16) + 'top: ' + px(y - 16) + 'width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center',
+      tick: 'position: absolute; left: ' + px(x - 1) + 'top: 320px; width: 2px; height: 16px; background: #b8c3ee'
+    }));
+
+    return { fixtures, stations };
+  }
+}
+</script>
+</body>
+</html>

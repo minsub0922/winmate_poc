@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>요건 커버리지 1 — 제안 콘텐츠</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM · 요건 커버리지 1 / 3</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">도입사례 198건 중, 지금 템플릿만으로 다 만들 수 있는 건 24%</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170">사례마다 수주에 필요했던 제안 콘텐츠를 뽑아 지금의 시트 유형과 대조 · 막대 길이 = 그 콘텐츠가 필요했던 사례 수</div>
+
+  <!-- 표 머리 -->
+  <div style="position: absolute; left: 64px; top: 158px; width: 760px; height: 18px; display: flex; align-items: center; font-size: 11px; font-weight: 700; color: #8a91a0">
+    <span style="width: 204px">제안 콘텐츠</span>
+    <span style="width: 368px">필요했던 사례 (198건 중)</span>
+    <span style="width: 52px">지금</span>
+    <span>지금 있는 시트</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 178px; width: 760px; height: 1px; background: #e2e5ea"></div>
+
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="20">
+    <div style="{{r.rowStyle}}">
+      <span style="width: 204px; flex-shrink: 0; font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+      <span style="width: 368px; flex-shrink: 0; display: flex; align-items: center; gap: 8px">
+        <span style="{{r.barStyle}}"></span>
+        <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap">{{r.n}} · {{r.pct}}%</span>
+      </span>
+      <span style="{{r.chipStyle}}">{{r.status}}</span>
+      <span style="flex-grow: 1; min-width: 0; font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.have}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 오른쪽: 요약 수치 -->
+  <div style="position: absolute; left: 856px; top: 158px; width: 360px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-family: Manrope, sans-serif; font-size: 60px; font-weight: 800; line-height: 1; color: #1428a0; letter-spacing: -0.02em">24%</span>
+      <span style="font-size: 13px; font-weight: 700">필요한 콘텐츠를 지금 템플릿이 모두 갖춘 사례</span>
+      <span style="font-size: 11.5px; color: #596170">47 / 197건 · 본문이 있는 사례 기준</span>
+    </div>
+    <div style="height: 1px; background: #e2e5ea"></div>
+    <div style="display: flex; gap: 20px">
+      <div style="display: flex; flex-direction: column; gap: 2px; width: 160px">
+        <span style="font-family: Manrope, sans-serif; font-size: 34px; font-weight: 800; line-height: 1.05; color: #121417">150<span style="font-size: 16px">건</span></span>
+        <span style="font-size: 11.5px; color: #3d4452; line-height: 1.45">'없음' 콘텐츠가 1종 이상 필요했던 사례</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 2px; width: 180px">
+        <span style="font-family: Manrope, sans-serif; font-size: 34px; font-weight: 800; line-height: 1.05; color: #121417">68%</span>
+        <span style="font-size: 11.5px; color: #3d4452; line-height: 1.45">사례당 평균 커버리지 (있음 1 · 일부 0.5 · 없음 0)</span>
+      </div>
+    </div>
+    <div style="height: 1px; background: #e2e5ea"></div>
+    <div style="display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; color: #3d4452">
+      <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 10px; border-radius: 2px; background: #1428a0"></span>있음 — 시트 유형 · 템플릿이 있음</span>
+      <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 10px; border-radius: 2px; background: #6f82d6"></span>일부 — 비슷한 시트는 있지만 이 요구엔 부족</span>
+      <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 10px; box-sizing: border-box; border-radius: 2px; border: 1.5px solid #121417; background: #ffffff"></span>없음 — 담을 시트 유형이 없음</span>
+    </div>
+    <div style="box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 12px; font-weight: 800">어떻게 쟀나</span>
+      <span style="font-size: 11.5px; line-height: 1.55; color: #3d4452">삼성 비즈니스 고객 도입사례 218건 중 본문이 있는 198건에서 고객 요구 · 제약 · 제안 내용을 뽑아 제안 콘텐츠 22종으로 분류하고, 지금의 시트 유형 29종과 맞춰 봤습니다. 사례 글은 결과 소개라 리스크 · 의사결정 요약은 드러나지 않아(0건) 표에서 뺐습니다.</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 682px; font-size: 11px; color: #8a91a0">출처: 삼성전자 비즈니스 고객 도입사례 (samsung.com/sec/business/insights/case-study) · 2026-10-01 수집 · 분류는 자동 추출, 사람 검토 전</div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">WINMATE · REQ 1</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [제안 콘텐츠, 필요했던 사례 수, 지금 상태(full · part · miss), 지금 있는 시트]
+    const D = [
+      ['고객 비즈니스 · 과제 이해', 185, 'full', 'CB · CH · US · IM'],
+      ['제품 상세 · 스펙', 136, 'part', 'PI · SC · SD — 화면 제품 중심'],
+      ['공간별 제품 배치', 116, 'full', 'BV · ZP · SM · BM'],
+      ['솔루션 구성도 · 연동 구조', 94, 'full', '솔루션별 구성도 11 · SA'],
+      ['공간 · 운영 시나리오', 90, 'full', '솔루션 · 업종별 32 · OP · SS · VM'],
+      ['디자인 · 인테리어 시뮬레이션', 68, 'part', 'BV-B · SS-C 전/후 비교만'],
+      ['용량 · 수량 산정 근거', 57, 'miss', 'BM-A 수량표만'],
+      ['설치 · 시공 계획', 56, 'miss', 'SD-B 치수 · 설치 정보만'],
+      ['기대 효과 · 투자 회수', 50, 'full', 'EF'],
+      ['기존 시스템 연동', 42, 'miss', 'SA는 삼성 솔루션끼리만'],
+      ['견적 · 예산 옵션 · 총비용', 36, 'part', 'EF-B 투자 회수만'],
+      ['유지보수 · 서비스 · SLA', 35, 'part', 'SV-B 1종'],
+      ['파일럿 · 단계적 확산', 29, 'part', 'SV-A 로드맵 1종'],
+      ['맞춤 개발 사양', 29, 'miss', '—'],
+      ['보안 · 규제 · 인증 대응', 27, 'miss', '솔루션 시트에 흩어져 있음'],
+      ['경쟁 비교 · 삼성 강점', 26, 'full', 'CM · ST'],
+      ['분양 · 입주민 가치 (건설사)', 16, 'miss', '—'],
+      ['유사 도입사례', 14, 'full', 'CD · CL'],
+      ['도입 일정', 11, 'full', 'SV-A'],
+      ['교육 · 운영 이관', 10, 'miss', '—']
+    ];
+    const TOTAL = 198, MAXN = 185, BARW = 288;
+    const LABEL = { full: '있음', part: '일부', miss: '없음' };
+    const rows = D.map(([name, n, st, have], i) => {
+      const w = Math.max(3, Math.round(BARW * n / MAXN));
+      const bar = st === 'full' ? 'background: #1428a0;' : st === 'part' ? 'background: #6f82d6;' : 'background: #ffffff; border: 1.5px solid #121417;';
+      const chip = st === 'full' ? 'background: #eaeefb; color: #1428a0;' : st === 'part' ? 'background: #f0f2fa; color: #3d4fb0;' : 'background: #121417; color: #ffffff;';
+      return {
+        name, n, pct: Math.round(100 * n / TOTAL), status: LABEL[st], have,
+        rowStyle: 'position: absolute; left: 64px; top: ' + (182 + i * 22) + 'px; width: 760px; height: 22px; display: flex; align-items: center;',
+        barStyle: 'display: block; flex-shrink: 0; box-sizing: border-box; height: 12px; border-radius: 3px; width: ' + w + 'px; ' + bar,
+        chipStyle: 'width: 40px; margin-right: 12px; flex-shrink: 0; height: 17px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' + chip
+      };
+    });
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

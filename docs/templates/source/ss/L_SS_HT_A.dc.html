@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-HT-A 호텔 · 리조트 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">N 호텔의 일곱 공간, 머무는 곳마다 다른 경험을 한 팀이 운영합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">옥상 설비부터 지하 관리실까지 — 층마다 놓는 제품 · 솔루션과 그 공간의 가치, 오른쪽은 전체 구성</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 162px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">N 호텔 단면 · 층 배치는 예시</div>
+  <div style="position: absolute; left: 270px; top: 162px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">공간 · 이용자 · 놓는 제품 · 솔루션 · 공간의 가치</div>
+  <div style="position: absolute; left: 968px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">전체 구성</span><span style="font-size: 11px; color: #596170">솔루션 ↔ 제품 ↔ 공간</span></div>
+
+  <!-- 건물 단면 -->
+  <sc-for list="{{bld}}" as="b" hint-placeholder-count="40">
+    <div style="{{b.style}}">{{b.t}}</div>
+  </sc-for>
+
+  <!-- 공간 카드 (2열) -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.style}}">
+      <span style="position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 42px; top: 10px; height: 22px; display: flex; align-items: center; gap: 7px; white-space: nowrap">
+        <span style="font-size: 15px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em">{{s.name}}</span>
+        <sc-if value="{{s.focus}}" hint-placeholder-val="{{false}}">
+          <span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">대표 공간</span>
+        </sc-if>
+      </div>
+      <div style="position: absolute; right: 12px; top: 12px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; display: flex; align-items: center; white-space: nowrap">{{s.who}}</div>
+      <div style="position: absolute; left: 12px; top: 38px; width: 311px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.prods}}</div>
+      <div style="position: absolute; left: 12px; top: 60px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+        <sc-for list="{{s.sols}}" as="c" hint-placeholder-count="2">
+          <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 8px; top: 84px; width: 319px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{s.value}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 7 관리실 · 기계실 (전 층을 잇는 운영) -->
+  <div style="position: absolute; left: 270px; top: 534px; width: 682px; height: 110px; box-sizing: border-box; border-radius: 10px; border: 1px solid #d5d9e0; background: #ffffff">
+    <span style="position: absolute; left: 12px; top: 10px; width: 22px; height: 22px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">7</span>
+    <div style="position: absolute; left: 42px; top: 10px; height: 22px; display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="font-size: 15px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em">관리실 · 기계실</span><span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; display: flex; align-items: center">시설팀</span></div>
+    <div style="position: absolute; left: 12px; top: 38px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">DMS · DVM S 실외기 (옥상) · DVM 칠러 · 관제 PC</div>
+    <div style="position: absolute; left: 12px; top: 60px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">b.IoT</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">SAC 제어 · DMS</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">케어 서비스</span>
+    </div>
+    <div style="position: absolute; left: 8px; top: 84px; width: 319px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">전 층 공조 · 전력 · 설비를 한 화면에서</div>
+    <div style="position: absolute; left: 346px; top: 12px; font-size: 11px; line-height: 15px; font-weight: 800; color: #596170; white-space: nowrap">한 팀이 보는 것</div>
+    <sc-for list="{{sees}}" as="v" hint-placeholder-count="3">
+      <div style="{{v.style}}"><span style="width: 5px; height: 5px; border-radius: 50%; background: #1428a0"></span><span>{{v.t}}</span><span style="font-size: 10.5px; color: #8a91a0">{{v.n}}</span></div>
+    </sc-for>
+    <div style="position: absolute; left: 532px; top: 10px; width: 140px; height: 88px; border-radius: 8px; overflow: hidden; background: #ffffff; border: 1px solid #e2e5ea; box-sizing: border-box">
+      <img src="/_blob/5a4ac42a10af63328d12de232610e2d7" alt="b.IoT 통합 모니터링 대시보드 (예시 화면)" style="position: absolute; left: -2px; top: -4px; width: 260px; height: 122px; object-fit: cover; object-position: 0% 0%">
+      <div style="position: absolute; left: 6px; top: 64px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 화면</div>
+    </div>
+  </div>
+
+  <!-- 층 ↔ 카드 연결 -->
+  <sc-for list="{{ties}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.line}}"></div>
+    <div style="{{k.dot}}"></div>
+  </sc-for>
+
+  <!-- 전체 구성 -->
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+    <div style="{{g.style}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">{{g.sol}}</div>
+      <div style="position: absolute; right: 10px; top: 9px; height: 18px; display: flex; gap: 3px">
+        <sc-for list="{{g.at}}" as="a" hint-placeholder-count="3">
+          <span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{a.n}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 12px; top: 31px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{g.role}}</div>
+      <div style="position: absolute; left: 12px; top: 50px; font-size: 12px; line-height: 17px; color: #121417; white-space: nowrap">{{g.prod}}</div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 968px; top: 600px; width: 248px; font-size: 11px; line-height: 15px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0">함께</span> 무인 결제 (파트너) 6 · 하만 프로 오디오 3</div>
+  <div style="position: absolute; left: 968px; top: 615px; width: 248px; font-size: 11px; line-height: 15px; color: #3d4452; white-space: nowrap">케어 서비스 — 전 공간 정기 점검 · 전담 엔지니어</div>
+  <div style="position: absolute; left: 968px; top: 632px; width: 248px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">번호는 왼쪽 공간 · 수량은 실사 후 확정</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>N 호텔 · 투숙 경험 · 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 카드 행 — 단면의 층 띠와 같은 높이 (행 높이 110 · 간격 6)
+    const RY = [186, 302, 418, 534], RH = 110;
+    const CX = [270, 617], CW = 335;
+
+    // 단면 — 외벽 x 122–254, 지면(GL) y 530
+    const WL = 122, WR = 254;
+    const B = [];
+    const r = (x, y, w, h, css, t) => B.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const lab = (x, y, t, css) => B.push({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10px; line-height: 14px; color: #596170; ' + T + (css || ''), t });
+    const code = (y, t) => B.push({ style: box(60, y, 56, 14) + 'text-align: right; font-family: Manrope, sans-serif; font-size: 10.5px; line-height: 14px; font-weight: 800; color: #596170; ' + T, t });
+    const badge = (x, y, n) => r(x, y, 16, 16, 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;', String(n));
+    const line = (x, y, w, c) => r(x, y, w, 1, 'background: ' + c + ';');
+
+    // 바탕: 객실층(대표) · 지하
+    r(WL + 1, 299, WR - WL - 1, 116, 'background: #eaeefb;');
+    r(WL + 1, 531, WR - WL - 1, 112, 'background: #f5f6f8;');
+    // 옥상 실외기
+    [138, 166, 194].forEach((x) => { r(x, 194, 24, 16, 'box-sizing: border-box; border-radius: 2px; border: 1px solid #b8bec8; background: #e9ecf0;'); r(x + 7, 197, 10, 10, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0;'); });
+    lab(224, 196, '실외기');
+    // 골조
+    r(WL - 4, 212, WR - WL + 8, 3, 'background: #121417;');
+    r(WL, 215, 1, 428, 'background: #b8bec8;');
+    r(WR, 215, 1, 428, 'background: #b8bec8;');
+    line(WL + 1, 299, WR - WL - 1, '#d5d9e0');
+    line(WL + 1, 415, WR - WL - 1, '#d5d9e0');
+    line(WL + 1, 338, WR - WL - 1, '#c8d3ff');
+    line(WL + 1, 376, WR - WL - 1, '#c8d3ff');
+    line(WL + 1, 473, WR - WL - 1, '#e2e5ea');
+    r(64, 530, 198, 2, 'background: #121417;');
+    r(WL - 4, 643, WR - WL + 8, 2, 'background: #121417;');
+    B.push({ style: A + 'left: 64px; top: 534px; font-family: Manrope, sans-serif; font-size: 9.5px; line-height: 12px; font-weight: 800; color: #121417; ' + T, t: 'GL' });
+    // 층 코드
+    code(195, 'RF'); code(250, '[00]F'); code(350, '[0]–[00]F'); code(437, '[0]F'); code(495, '1F'); code(580, 'B1–B[0]');
+    // 최상층: 4 레스토랑 · 5 피트니스 · 스파
+    lab(128, 219, '최상층');
+    badge(128, 254, 4);
+    r(148, 255, 14, 14, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0; background: #ffffff;');
+    r(166, 255, 14, 14, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0; background: #ffffff;');
+    r(148, 276, 32, 4, 'border-radius: 2px; background: #b8bec8;');
+    badge(192, 254, 5);
+    r(212, 257, 36, 12, 'border-radius: 3px; background: #c8d3ff;');
+    r(212, 276, 14, 4, 'border-radius: 2px; background: #8a91a0;');
+    // 객실층: 2 객실 · 6 코인 세탁실
+    lab(128, 303, '객실층');
+    const bed = (x, y) => { r(x, y, 18, 8, 'border-radius: 2px; background: #ffffff; border: 1px solid #6f82d6; box-sizing: border-box;'); r(x + 1, y + 1, 5, 6, 'border-radius: 1px; background: #6f82d6;'); };
+    [178, 204, 230].forEach((x) => bed(x, 326));
+    badge(128, 349, 2);
+    [152, 178, 204, 230].forEach((x) => bed(x, 364));
+    [152, 178].forEach((x) => bed(x, 403));
+    badge(204, 389, 6);
+    r(226, 387, 18, 22, 'box-sizing: border-box; border-radius: 3px; border: 1.5px solid #121417; background: #ffffff;');
+    r(230, 395, 10, 10, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417;');
+    // 연회층 · 로비층: 3 연회장 · 1 로비
+    lab(128, 419, '연회층');
+    badge(128, 446, 3);
+    [150, 172, 194].forEach((x) => r(x, 450, 14, 14, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0; background: #ffffff;'));
+    r(218, 440, 28, 7, 'border-radius: 2px; background: #1428a0;');
+    lab(128, 477, '로비층');
+    badge(128, 503, 1);
+    r(152, 512, 40, 9, 'border-radius: 2px; background: #d5d9e0;');
+    r(160, 504, 8, 6, 'border-radius: 1px; background: #3d4452;');
+    r(238, 484, 8, 40, 'border-radius: 2px; background: #1428a0;');
+    r(WL - 1, 506, 3, 24, 'background: #ffffff;');
+    // 지하: 7 관리실 · 기계실
+    lab(128, 536, '지하 · 기계실');
+    badge(128, 580, 7);
+    r(150, 576, 24, 15, 'border-radius: 2px; background: #121417;');
+    r(161, 591, 2, 6, 'background: #121417;');
+    r(184, 570, 42, 28, 'box-sizing: border-box; border-radius: 3px; border: 1.5px solid #8a91a0; background: #ffffff;');
+    r(190, 577, 13, 13, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0;');
+    r(207, 577, 13, 13, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0;');
+    r(232, 574, 12, 20, 'border-radius: 2px; background: #d5d9e0;');
+    const bld = B;
+
+    // 층 → 카드 연결
+    const ties = RY.map((y) => ({
+      line: box(WR + 1, y + RH / 2 - 1, 15, 2) + 'background: #b8c3ee;',
+      dot: box(WR + 11, y + RH / 2 - 4, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;'
+    }));
+
+    // 공간 카드 — [번호, 이름, 이용자, 제품, 솔루션, 가치, 행, 열]
+    const S = [
+      [4, '레스토랑 · 라운지', '투숙객 · 외부 고객', '벽면 메뉴 디스플레이 · 시스템에어컨 360', ['MagicINFO', 'SAC 제어'], '시간대별 메뉴 · 프로모션을 원격으로 교체', 0, 0],
+      [5, '피트니스 · 스파', '투숙객', '시스템에어컨 · 공기청정기 · 에어모니터', ['SAC 제어', '케어 서비스'], '운영시간에 맞춘 공기, 늘 쾌적한 운동 환경', 0, 1],
+      [2, '객실', '투숙객', '호텔 TV · 무풍 시스템에어컨 · 조명 · 재실 센서', ['LYNK Cloud', 'SmartThings Pro'], '이름으로 맞는 첫 화면, 빈 객실은 알아서 절전', 1, 0],
+      [6, '투숙객 코인 세탁실', '장기 · 가족 투숙객', '상업용 세탁기 · 건조기 · 에어드레서', ['무인 결제 (파트너)', '케어 서비스'], '직원 없이 카드 · 간편결제로 셀프 세탁', 1, 1],
+      [1, '로비 · 리셉션', '투숙객 · 방문객', '스마트 LED 사이니지 · 스마트 사이니지 · 갤럭시 탭', ['MagicINFO', 'Knox Suite'], '첫인상 · 길 안내는 화면이, 체크인은 짧게', 2, 0],
+      [3, '연회장 · 회의실', '행사 손님 · 주최사', '스마트 사이니지 · 하만 프로 오디오 · 시스템에어컨', ['MagicINFO', 'SAC 제어'], '행사장 안내는 자동, 뒷자리까지 또렷한 소리', 2, 1]
+    ];
+    const spaces = S.map(([n, name, who, prods, sols, value, row, col]) => ({
+      n, name, who, prods, value, focus: n === 2,
+      sols: sols.map((t) => ({ t })),
+      style: box(CX[col], RY[row], CW, RH) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: ' + (n === 2 ? '2px solid #1428a0;' : '1px solid #d5d9e0;')
+    }));
+
+    // 7 카드 안 — 한 팀이 보는 것
+    const sees = [['객실층 공실 절전 · 재실 상태', '2'], ['연회 · 레스토랑 공조 스케줄', '3 · 4'], ['설비 이상 알림 → 점검 출동', '전 층']].map(([t, n], i) => ({
+      t, n, style: A + 'left: 346px; top: ' + px(34 + i * 22) + 'height: 18px; display: flex; align-items: center; gap: 7px; font-size: 12px; color: #121417; ' + T
+    }));
+
+    // 전체 구성 — 솔루션 ↔ 연결 제품 ↔ 공간 번호
+    const G = [
+      ['LYNK Cloud', '객실 TV 웰컴 · 안내 · 캐스팅', '호텔 TV · PMS 연동', [2]],
+      ['MagicINFO', '로비 · 연회 · 레스토랑 화면 편성', '스마트 LED · 스마트 사이니지', [1, 3, 4]],
+      ['SmartThings Pro', '객실 냉난방 · 조명 · 재실 루틴', '무풍 에어컨 · 조명 · 재실 센서', [2]],
+      ['SAC 제어 · b.IoT', '공용부 공조 스케줄 · 설비 관제', 'DVM S · DMS · DVM 칠러', [3, 4, 5, 7]],
+      ['Knox Suite', '프런트 · 하우스키핑 태블릿 관리', '갤럭시 탭 · 지정 앱 키오스크 모드', [1, 2]]
+    ];
+    const groups = G.map(([sol, role, prod, at], i) => ({
+      sol, role, prod, at: at.map((n) => ({ n })),
+      style: box(968, 186 + i * 82, 248, 76) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+
+    return { bld, ties, spaces, sees, groups };
+  }
+}
+</script>
+</body>
+</html>

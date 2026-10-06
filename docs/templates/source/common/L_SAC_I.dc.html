@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SAC-I 시스템에어컨 제어 소개</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SAC 제어 시스템</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SAC 제어 · 시스템에어컨 제어 시스템</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">리모컨 하나에서 빌딩 자동제어까지, 규모에 맞춰 올립니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">SAC 제어 시스템 — 개별제어부터 BMS 연동 · 적산전력분배까지, 건물에 필요한 단계만 골라 쌓습니다</div>
+
+  <!-- 히어로: 실제 설치 장면 (좌 4열) -->
+  <img src="/_blob/32ff0c99abf13faa018e854421553cc7" alt="매장 벽면 터치제어기와 천장 360 카세트 실내기" style="position: absolute; left: 64px; top: 160px; width: 368px; height: 384px; object-fit: cover; object-position: 0% 50%; border-radius: 16px">
+  <div style="position: absolute; left: 66px; top: 322px; width: 114px; height: 78px; box-sizing: border-box; border-radius: 8px; border: 2px solid #1428a0"></div>
+  <div style="position: absolute; left: 66px; top: 406px; height: 24px; padding: 0 9px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #121417; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>터치제어기 <span style="font-family: Manrope, sans-serif; color: #1428a0">ACM-A300BN</span></div>
+  <div style="position: absolute; right: 856px; top: 220px; height: 24px; padding: 0 9px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #121417; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #121417"></span><span style="font-family: Manrope, sans-serif">360</span> 카세트 실내기</div>
+  <div style="position: absolute; left: 76px; top: 474px; width: 344px; height: 58px; box-sizing: border-box; border-radius: 10px; background: #ffffff; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: nowrap">
+    <span style="font-size: 14px; font-weight: 800; line-height: 20px">벽면 터치제어기 하나로 실내기 <span style="font-family: Manrope, sans-serif; color: #1428a0">128</span>대까지</span>
+    <span style="font-size: 11px; line-height: 15px; color: #8a91a0">카탈로그 이미지 · 레스토랑 설치 예</span>
+  </div>
+
+  <!-- 계단 위 여백: 읽는 법 · 범례 -->
+  <div style="position: absolute; left: 456px; top: 164px; height: 22px; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <div style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 7px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8 M15 7h6v6"/></svg></div>
+      <span style="font-size: 15px; font-weight: 800">관리 범위가 넓어질수록 한 단계씩</span>
+    </div>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #596170"><span style="width: 20px; height: 13px; box-sizing: border-box; border-radius: 3px; background: #eaeefb; border: 1.5px dashed #1428a0"></span>G 빌딩 추천</span>
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #596170"><span style="width: 20px; height: 13px; border-radius: 3px; background: #f5f6f8; border: 1px solid #e2e5ea"></span>필요 시 선택</span>
+  </div>
+  <div style="position: absolute; left: 456px; top: 192px; font-size: 12px; line-height: 18px; color: #596170; white-space: nowrap">단계 번호 = 카탈로그 제어 레벨 · 02 중계기는 아래 기반 띠</div>
+
+  <!-- 계단: 제어 레벨 5단, 단마다 실제 제품 -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.block}}">
+      <sc-if value="{{s.rec}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; right: 10px; top: -12px; height: 22px; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">G 빌딩 추천</span>
+      </sc-if>
+      <div style="{{s.well}}">
+        <sc-for list="{{s.imgs}}" as="im" hint-placeholder-count="2">
+          <img src="{{im.src}}" alt="{{im.alt}}" style="position: absolute; object-fit: contain; {{im.st}}">
+        </sc-for>
+        <sc-for list="{{s.tags}}" as="tg" hint-placeholder-count="1">
+          <span style="{{tg.st}}">{{tg.t}}</span>
+        </sc-for>
+        <sc-if value="{{s.bms}}" hint-placeholder-val="{{false}}">
+          <div style="position: absolute; left: 12px; top: 12px; width: 40px; height: 40px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V4h10v17 M14 9h6v12 M2 21h20 M8 8h2 M8 12h2 M8 16h2"/></svg></div>
+          <div style="position: absolute; left: 60px; top: 13px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; font-weight: 800; line-height: 18px">기존 BMS</span><span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; line-height: 15px; color: #1428a0">BACnet IP</span><span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; line-height: 15px; color: #596170">Modbus RTU</span></div>
+        </sc-if>
+      </div>
+      <div style="position: absolute; left: 10px; top: 82px; height: 22px; display: flex; align-items: baseline; gap: 6px; white-space: nowrap">
+        <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{s.no}}</span>
+        <span style="font-size: 15.5px; font-weight: 800; line-height: 1.4">{{s.name}}</span>
+      </div>
+      <span style="position: absolute; left: 10px; top: 108px; height: 20px; box-sizing: border-box; padding: 0 6px; border-radius: 6px; background: #ffffff; border: 1px solid #d5d9e0; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #121417; display: flex; align-items: center; white-space: nowrap">{{s.code}}</span>
+      <div style="position: absolute; left: 10px; top: 134px; width: 124px; display: flex; flex-direction: column; font-size: 11px; line-height: 17px; color: #3d4452; white-space: nowrap">
+        <sc-for list="{{s.caps}}" as="c" hint-placeholder-count="2">
+          <span>{{c}}</span>
+        </sc-for>
+      </div>
+      <div style="{{s.chipBox}}">
+        <sc-for list="{{s.chips}}" as="c" hint-placeholder-count="2">
+          <span style="height: 22px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 10.5px; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{c}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 10px; bottom: 10px; height: 34px; display: flex; align-items: baseline; gap: 4px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 34px; color: #1428a0">{{s.n}}</span><span style="font-size: 12.5px; font-weight: 800; color: #1428a0">{{s.unit}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- 기반: 02 중계 -->
+  <div style="position: absolute; left: 456px; top: 508px; width: 760px; height: 30px; box-sizing: border-box; border-radius: 8px; background: #ffffff; border: 1px solid #d5d9e0; padding: 0 12px; display: flex; align-items: center; gap: 9px; font-size: 12px; white-space: nowrap; overflow: hidden">
+    <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">02</span>
+    <span style="font-weight: 800">중계 · 기반</span>
+    <span style="width: 1px; height: 14px; background: #d5d9e0"></span>
+    <span style="color: #3d4452">통신 호환 (구 · 신) · FCU (최대 16대) · ERV · 접점 (외부 ON/OFF) · 전력감시 (피크 판단)</span>
+    <span style="flex-grow: 1"></span>
+    <span style="color: #8a91a0">현장 조건에 따라 추가</span>
+  </div>
+
+  <!-- 우리 건물은 어느 단계? -->
+  <div style="position: absolute; left: 64px; top: 556px; width: 150px; height: 92px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+    <span style="font-size: 18px; font-weight: 800; line-height: 1.35">우리 건물은</span>
+    <span style="font-size: 18px; font-weight: 800; line-height: 1.35">어느 단계?</span>
+    <span style="font-size: 11.5px; color: #8a91a0; margin-top: 2px">규모 · 연동 조건별 추천</span>
+  </div>
+  <sc-for list="{{fits}}" as="f" hint-placeholder-count="4">
+    <div style="{{f.style}}">
+      <div style="display: flex; align-items: center; gap: 8px; height: 20px">
+        <div style="width: 38px; height: 18px; flex-shrink: 0; display: flex; align-items: flex-end; gap: 2px">
+          <sc-for list="{{f.bars}}" as="b" hint-placeholder-count="5">
+            <span style="{{b}}"></span>
+          </sc-for>
+        </div>
+        <span style="font-size: 14px; font-weight: 800; white-space: nowrap">{{f.k}}</span>
+        <sc-if value="{{f.g}}" hint-placeholder-val="{{false}}">
+          <span style="margin-left: auto; height: 20px; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">G 빌딩</span>
+        </sc-if>
+      </div>
+      <span style="font-size: 13px; font-weight: 700; line-height: 20px; white-space: nowrap; color: {{f.color}}">→ {{f.v}}</span>
+      <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; line-height: 16px; color: #8a91a0">{{f.lv}}</span>
+      <sc-if value="{{f.hasImg}}" hint-placeholder-val="{{false}}">
+        <img src="{{f.src}}" alt="{{f.alt}}" style="position: absolute; object-fit: contain; mix-blend-mode: multiply; {{f.imgSt}}">
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>G 임대형 오피스 빌딩 · 냉난방 제어 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 19</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const IMG = {
+      remoteInt: '/_blob/99bb1b59cc337f7f8d2eed6fed537a92',
+      remoteColor: '/_blob/f84b59b33788816c9afc2505236a5ce4',
+      touch: '/_blob/56e937b702b293adaa073b70c2937a50',
+      onoff: '/_blob/760a1087c670c4364c202a1415aa46ed',
+      dms: '/_blob/c4f218ab65683afc48e0812d2719437f',
+      link: '/_blob/5750215a6f546f3b2d1f1ef4e0ee1dbe',
+      wifi: '/_blob/da713bd5673882f831a4af6e5c6e83d1',
+      diagram: '/_blob/b6df9d6d807a946ad08e1b15baf079e3'
+    };
+    // 카탈로그 구성도에서 에너지 미터 부분만 (원본 x 48–190, y 546–622) → 64px 높이
+    const ms = 64 / 76;
+    const meterCrop = { src: IMG.diagram, alt: '카탈로그 구성도의 에너지 미터 (전력 · 가스 · 수도)', st: box(Math.round(2 - 48 * ms), Math.round(-546 * ms), Math.round(1100 * ms), Math.round(690 * ms)) };
+
+    // 계단: x 456 + 154k (폭 144 · 간격 10), 바닥선 y 500, 높이는 단계마다 26씩 상승
+    const X0 = 456, W = 144, GAP = 10, BASE = 500;
+    const H = [208, 234, 260, 286, 312];
+    const tag = (t, x, y) => ({ t, st: 'position: absolute; ' + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 9.5px; line-height: 12px; color: #596170; white-space: nowrap;' });
+    const S = [
+      { no: '01', name: '개별제어', code: 'AWR-WE13N · WG00N', caps: ['실내기 + ERV · 스케줄'], chips: [], n: '16', unit: '대 그룹', rec: false, wellBg: '#ffffff', bms: false,
+        imgs: [
+          { src: IMG.remoteInt, alt: '통합 유선리모컨 AWR-WE13N', st: box(8, 4, 53, 56) },
+          { src: IMG.remoteColor, alt: '컬러 유선리모컨 AWR-WG00N', st: box(64, 4, 54, 56) }
+        ], tags: [] },
+      { no: '03', name: '중앙제어', code: 'ACM-A300BN', caps: ['터치 · On/Off 제어기', '존 50 · 스케줄 50'], chips: [], n: '128', unit: '대 · 실내기', rec: false, wellBg: '#ffffff', bms: false,
+        imgs: [
+          { src: IMG.touch, alt: '터치제어기 ACM-A300BN', st: box(4, 5, 80, 54) },
+          { src: IMG.onoff, alt: 'On/Off 제어기 ACM-A202DN', st: box(88, 12, 32, 23) }
+        ], tags: [tag('On/Off', 89, 39)] },
+      { no: '04', name: '통합관리', code: 'AIM-D01AN', caps: ['DMS 2.5 · 웹 원격 제어', '스케줄 · 존 · 사용 제한'], chips: ['분배 · 피크 제어 (옵션)'], n: '256', unit: '대 · 실내기', rec: true, wellBg: '#f2f3f5', bms: false,
+        imgs: [
+          { src: IMG.dms, alt: 'DMS 2.5 AIM-D01AN 본체', st: box(10, 4, 52, 56) },
+          { src: IMG.link, alt: '링크 컨트롤러 AIM-B30N', st: box(72, 8, 40, 31) + 'mix-blend-mode: multiply;' }
+        ], tags: [tag('링크 컨트롤러', 63, 44)] },
+      { no: '05', name: '자동제어 연동', code: 'AIM-B17BN', caps: ['BACnet 게이트웨이', '→ BMS · DMS 기능 포함'], chips: ['모드버스 중계기 · RTU', '실외기용 · 실내기용'], n: 'BMS', unit: '연동', rec: false, wellBg: '#ffffff', bms: true,
+        imgs: [], tags: [] },
+      { no: '06', name: '적산전력분배', code: 'SIM · PIM 중계기', caps: ['SIM — 전력량계 8대', 'PIM — 가스 · 수도 8대'], chips: ['DMS 1대당 SIM 8대', '전력량 분배기 · 2대', '분배 결과 엑셀 저장'], n: '8', unit: '대 · 계량기', rec: true, wellBg: '#f2f3f5', bms: false,
+        imgs: [meterCrop], tags: [] }
+    ];
+    const steps = S.map((s, i) => Object.assign({}, s, {
+      block: 'position: absolute; box-sizing: border-box; ' + box(X0 + i * (W + GAP), BASE - H[i], W, H[i]) + 'border-radius: 14px 14px 0 0; ' + (s.rec ? 'background: #eaeefb; border: 2px dashed #1428a0;' : 'background: #f5f6f8;'),
+      well: 'position: absolute; box-sizing: border-box; left: 8px; top: 8px; width: 124px; height: 64px; border-radius: 9px; overflow: hidden; background: ' + s.wellBg + ';' + (s.bms ? ' border: 1px dashed #d5d9e0;' : ''),
+      chipBox: 'position: absolute; left: 10px; top: ' + px(134 + s.caps.length * 17 + 6) + 'display: flex; flex-direction: column; align-items: flex-start; gap: 4px;'
+    }));
+
+    // 우리 건물은 어느 단계? — 미니 계단 (켜진 칸 = 해당 레벨)
+    const BH = [6, 9, 12, 15, 18];
+    const bars = (on) => BH.map((h, i) => 'width: 6px; height: ' + px(h) + 'border-radius: 1px; background: ' + (on.indexOf(i) >= 0 ? '#1428a0' : '#d5d9e0') + ';');
+    const F = [
+      ['소형 매장', '유선리모컨 + Wi-Fi Kit', '레벨 01 + 03', [0, 1], false, { src: IMG.wifi, alt: 'Wi-Fi Kit', st: 'right: 12px; top: 10px; width: 34px; height: 24px;' }],
+      ['한 층 ~ 한 동', '터치제어기', '레벨 03', [1], false, { src: IMG.touch, alt: '터치제어기 ACM-A300BN', st: 'right: 12px; top: 10px; width: 38px; height: 26px;' }],
+      ['여러 층 · 임대', 'DMS 2.5 + 전력 분배', '레벨 04 + 06', [2, 4], true, null],
+      ['기존 BMS 있음', 'BACnet 게이트웨이', '레벨 05', [3], false, null]
+    ];
+    const fits = F.map(([k, v, lv, on, g, im], i) => ({
+      k, v, lv, g,
+      bars: bars(on),
+      color: g ? '#1428a0' : '#121417',
+      hasImg: !!im,
+      src: im ? im.src : '',
+      alt: im ? im.alt : '',
+      imgSt: im ? im.st : '',
+      style: 'position: absolute; box-sizing: border-box; ' + box(226 + i * 250, 556, 238, 92) + 'border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; ' + (g ? 'background: #eaeefb; border: 1.5px dashed #1428a0;' : 'background: #f5f6f8;')
+    }));
+
+    return { steps, fits };
+  }
+}
+</script>
+</body>
+</html>

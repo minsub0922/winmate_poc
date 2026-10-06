@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-H 커버리지 평면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 병동 한 층</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">병상 위로 바람이 직접 닿지 않게 — 병동 한 층을 WindFree로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">6개 병실 · 30병상 — 천장 속 실내기 위치와 바람이 닿는 범위</div>
+
+  <!-- 평면 판 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 780px; height: 488px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 172px; font-size: 12px; font-weight: 700; color: #596170">천장 평면도 · 병동 한 층</div>
+  <div style="position: absolute; left: 86px; top: 196px; width: 736px; height: 364px; box-sizing: border-box; border: 4px solid #121417; background: #ffffff"></div>
+
+  <!-- 벽 · 문 · 창 -->
+  <sc-for list="{{walls}}" as="w" hint-placeholder-count="40">
+    <div style="{{w}}"></div>
+  </sc-for>
+
+  <!-- 가구: 침상(회색 = 머리 쪽) · 간호사실 카운터 · 라운지 소파 · 계단 -->
+  <sc-for list="{{furniture}}" as="f" hint-placeholder-count="40">
+    <div style="{{f}}"></div>
+  </sc-for>
+
+  <!-- 직접 기류 범위 -->
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="13">
+    <div style="{{z}}"></div>
+  </sc-for>
+
+  <!-- 실내기 (천장 매립) -->
+  <sc-for list="{{units}}" as="u" hint-placeholder-count="13">
+    <div style="{{u.box}}"><span style="{{u.inner}}"></span></div>
+  </sc-for>
+
+  <!-- 실 이름 -->
+  <sc-for list="{{rooms}}" as="r" hint-placeholder-count="6">
+    <div style="{{r.style}}"><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{r.no}}</span> · {{r.beds}}인</div>
+  </sc-for>
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+    <div style="{{t.style}}">{{t.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 760px; top: 455px; width: 44px; height: 44px; box-sizing: border-box; border: 2px solid #596170; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #596170">EV</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 88px; top: 578px; width: 732px; display: flex; align-items: center; gap: 24px; font-size: 13px">
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 16px; height: 16px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 3px; background: #ffffff; display: flex; align-items: center; justify-content: center"><span style="width: 6px; height: 6px; border-radius: 1px; background: #1428a0"></span></span><span>WindFree 4Way 카세트 · 병실 · 라운지 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">×{{n4}}</span></span></span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 8px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 2px; background: #ffffff"></span><span>1Way 카세트 · 복도 · 간호사실 · 처치실 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">×{{n1}}</span></span></span>
+  </div>
+  <div style="position: absolute; left: 88px; top: 606px; width: 732px; display: flex; align-items: center; gap: 24px; font-size: 12.5px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 16px; height: 16px; box-sizing: border-box; border: 1px dashed #6f82d6; border-radius: 50%; background: rgba(20,40,160,0.07)"></span>직접 기류 범위 — 침상 머리는 바깥</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 12px; box-sizing: border-box; border: 1px solid #8a91a0; border-radius: 2px; background: #ffffff; display: flex; align-items: center; padding-left: 2px"><span style="width: 4px; height: 8px; border-radius: 1px; background: #d5d9e0"></span></span>침상 (회색 = 머리 쪽)</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 8px; box-sizing: border-box; border: 2px solid #121417; background: #ffffff"></span>창</span>
+  </div>
+
+  <!-- 오른쪽: 세 가지 포인트 · 층 합계 -->
+  <div style="position: absolute; left: 868px; top: 160px; width: 348px; display: flex; flex-direction: column">
+    <div style="display: flex; gap: 14px; padding: 4px 0 16px; border-bottom: 1px solid #e2e5ea">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10a3 3 0 1 0-3-3M3 12h15a3 3 0 1 1-3 3M3 16h7"/></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 800">무풍 모드</span><span style="font-size: 14px; color: #596170">침상 쪽 직접 기류 없음</span></div>
+    </div>
+    <div style="display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid #e2e5ea">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 800">병실마다 개별 제어</span><span style="font-size: 14px; color: #596170">간호사실에서 일괄 관리</span></div>
+    </div>
+    <div style="display: flex; gap: 14px; padding: 16px 0; border-bottom: 1px solid #e2e5ea">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 17px; font-weight: 800">야간 저소음 <span style="font-family: Manrope, sans-serif">[00]</span>dB</span><span style="font-size: 14px; color: #596170">환자가 잠든 시간에도 조용하게</span></div>
+    </div>
+    <div style="margin-top: 24px; border-radius: 12px; background: #eaeefb; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 13px; font-weight: 700; color: #1428a0">병동 한 층 실내기</span>
+      <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0">{{total}}</span><span style="font-size: 18px; font-weight: 800; color: #1428a0">대</span></div>
+      <span style="font-size: 14px">4Way 카세트 <span style="font-family: Manrope, sans-serif; font-weight: 800">{{n4}}</span> · 1Way 카세트 <span style="font-family: Manrope, sans-serif; font-weight: 800">{{n1}}</span></span>
+      <span style="font-size: 13px; color: #596170">실외기 DVM S2 <span style="font-family: Manrope, sans-serif">[0]</span>대 별도</span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 868px; top: 626px; font-size: 12px; color: #596170">배치 · 수량은 부하 계산 전 예시</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 요양병원 · 병동 환경 개선 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const box = (x, y, w, h, more) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; ' + (more || '');
+    const ink = 'background: #121417';
+    const arcUp = (x) => box(x, 352, 26, 26, 'box-sizing: border-box; border-top: 1px dashed #8a91a0; border-right: 1px dashed #8a91a0; border-top-right-radius: 26px');
+    const arcDown = (x) => box(x, 439, 26, 26, 'box-sizing: border-box; border-bottom: 1px dashed #8a91a0; border-right: 1px dashed #8a91a0; border-bottom-right-radius: 26px');
+    const mask = (x, y, w) => box(x, y, w, 4, 'background: #ffffff');
+
+    // 실내 폭 x 90–818 · 병실 y 200–378 · 복도 y 379–437 · 지원 공간 y 439–556
+    const BEDS = [6, 4, 6, 4, 6, 4];
+    const R = BEDS.map((beds, k) => ({ beds, x0: 90 + Math.round(k * 728 / 6), x1: 90 + Math.round((k + 1) * 728 / 6) }));
+
+    const walls = [box(661, 439, 157, 117, 'background: #e2e5ea')];
+    R.slice(1).forEach((r) => walls.push(box(r.x0 - 1, 200, 2, 178, ink)));
+    walls.push(box(90, 377, 728, 2, ink));
+    walls.push(box(90, 437, 728, 2, ink));
+    [300, 520, 660].forEach((x) => walls.push(box(x - 1, 439, 2, 117, ink)));
+    R.forEach((r) => {
+      walls.push(mask(r.x0 + 10, 376, 26));
+      walls.push(box(r.x0 + 10, 352, 1, 26, 'background: #596170'));
+      walls.push(arcUp(r.x0 + 10));
+      walls.push(box(Math.round((r.x0 + r.x1) / 2) - 35, 194, 70, 8, 'box-sizing: border-box; border: 2px solid #121417; background: #ffffff'));
+    });
+    walls.push(mask(104, 436, 186));
+    [480, 530, 690].forEach((x) => {
+      walls.push(mask(x, 436, 26));
+      walls.push(box(x, 439, 1, 26, 'background: #596170'));
+      walls.push(arcDown(x));
+    });
+    walls.push(box(350, 554, 120, 8, 'box-sizing: border-box; border: 2px solid #121417; background: #ffffff'));
+
+    const furniture = [];
+    const bedBox = 'box-sizing: border-box; background: #ffffff; border: 1px solid #8a91a0; border-radius: 3px';
+    const pillow = 'border-radius: 2px; background: #d5d9e0';
+    R.forEach((r) => {
+      const ys = r.beds === 6 ? [230, 260, 290] : [242, 278];
+      ys.forEach((y) => {
+        furniture.push(box(r.x0 + 6, y, 40, 20, bedBox));
+        furniture.push(box(r.x0 + 8, y + 3, 6, 14, pillow));
+        furniture.push(box(r.x1 - 46, y, 40, 20, bedBox));
+        furniture.push(box(r.x1 - 14, y + 3, 6, 14, pillow));
+      });
+    });
+    furniture.push(box(108, 444, 178, 12, 'box-sizing: border-box; background: #eef0f3; border: 1px solid #8a91a0; border-radius: 2px'));
+    furniture.push(box(144, 464, 12, 12, 'border-radius: 50%; background: #d5d9e0'));
+    furniture.push(box(234, 464, 12, 12, 'border-radius: 50%; background: #d5d9e0'));
+    furniture.push(box(312, 462, 18, 60, 'box-sizing: border-box; background: #eef0f3; border: 1px solid #b8bec8; border-radius: 4px'));
+    furniture.push(box(672, 469, 74, 54, 'box-sizing: border-box; border: 1px solid #8a91a0'));
+    for (let i = 1; i < 9; i++) furniture.push(box(672 + i * 8, 470, 1, 52, 'background: #b8bec8'));
+
+    // 실내기: [종류, 중심 x, 중심 y, 범위 폭, 범위 높이]
+    // 병실 범위 지름 76 — 테두리가 침상 발치에 걸리고, 머리(회색)는 범위 밖
+    const U = R.map((r) => ['4way', Math.round((r.x0 + r.x1) / 2), 270, 76, 76])
+      .concat([['4way', 410, 495, 68, 68]])
+      .concat([216, 388, 560, 732].map((x) => ['1way', x, 408, 110, 30]))
+      .concat([['1way', 195, 506, 120, 30], ['1way', 590, 490, 90, 30]]);
+    const zones = U.map(([, x, y, w, h]) => box(x - w / 2, y - h / 2, w, h, 'box-sizing: border-box; border-radius: 50%; border: 1px dashed #6f82d6; background: rgba(20,40,160,0.07)'));
+    const units = U.map(([k, x, y]) => k === '4way'
+      ? { box: box(x - 9, y - 9, 18, 18, 'box-sizing: border-box; border: 2px solid #1428a0; border-radius: 3px; background: #ffffff; display: flex; align-items: center; justify-content: center'), inner: 'width: 6px; height: 6px; border-radius: 1px; background: #1428a0' }
+      : { box: box(x - 14, y - 4, 28, 8, 'box-sizing: border-box; border: 2px solid #1428a0; border-radius: 2px; background: #ffffff'), inner: 'display: none' });
+    const n4 = U.filter((u) => u[0] === '4way').length;
+    const n1 = U.length - n4;
+
+    const label = 'font-size: 12px; color: #596170; white-space: nowrap';
+    const rooms = R.map((r, k) => ({ no: String(501 + k), beds: r.beds, style: box(r.x0 + 44, 356, 74, 17, label) }));
+    const tags = [['복도', 98, 400], ['간호사실', 100, 532], ['라운지', 340, 532], ['처치 · 오물실', 532, 532], ['계단 · EV', 672, 532]]
+      .map(([t, x, y]) => ({ t, style: box(x, y, 90, 17, label) }));
+
+    return { walls, furniture, zones, units, rooms, tags, n4, n1, total: n4 + n1 };
+  }
+}
+</script>
+</body>
+</html>

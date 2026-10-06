@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 · 내보내기 옵션</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; position: relative; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <!-- 배경: PPTX 생성 결과 (v3) -->
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">검토 코멘트를 반영한 v3를 내보낼 준비가 됐어요. 형식과 언어, 마스터 템플릿을 고르면 파일로 만들어 드릴게요.</div>
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg></div>
+                <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+                  <div style="font-size: 13.5px; font-weight: 600">A커피_디지털메뉴보드_제안서_v3.pptx</div>
+                  <div style="font-size: 12px; color: #596170">시트 24 + 표지 · 목차 · 표준 제안서 8섹션 · 확정 필요 4</div>
+                </div>
+                <button style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600">PDF</button>
+                <button style="height: 34px; padding: 0 14px; border-radius: 8px; border: none; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600">PPTX 다운로드</button>
+              </div>
+              <div style="padding: 12px 16px; display: grid; grid-template-columns: repeat(5, 120px); gap: 12px">
+                <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="10">
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <dc-import name="Thumb" kind="{{t.kind}}" n="{{t.n}}" hint-size="120px,68px"></dc-import>
+                    <span style="font-size: 10.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.label}}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; font-size: 13px; font-weight: 600">PPTX 생성 <span style="color: #596170; font-weight: 500">· 6 / 6 · 완료</span></div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; padding: 0 12px; font-size: 14px; color: #8a91a0">수정 요청</div>
+          <a href="PR7C.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">팀에 공유</a>
+          <span style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">내보내기</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 내보내기 옵션 모달 -->
+  <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; z-index: 40; background: rgba(18,20,23,0.45); display: flex; align-items: center; justify-content: center">
+    <div role="dialog" aria-modal="true" aria-labelledby="xp-title" style="width: 800px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 24px 64px rgba(18,20,23,0.28); display: flex; flex-direction: column; overflow: hidden">
+      <div style="padding: 20px 24px 16px 24px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 12px">
+        <div style="width: 36px; height: 36px; border-radius: 10px; background: #eaeefb; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+          <div id="xp-title" style="font-size: 17px; font-weight: 700">내보내기</div>
+          <div style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">A커피_디지털메뉴보드_제안서 · v3 · 시트 24 + 표지 · 목차</div>
+        </div>
+        <a href="PR7.dc.html" aria-label="닫기" style="width: 34px; height: 34px; border-radius: 8px; color: #596170; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+      </div>
+
+      <div style="padding: 18px 24px; display: flex; flex-direction: column; gap: 18px">
+        <div style="display: grid; grid-template-columns: 368px 368px; gap: 16px">
+          <!-- 왼쪽: 형식 · 언어 · 마스터 템플릿 -->
+          <div style="display: flex; flex-direction: column; gap: 18px; min-width: 0">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; justify-content: space-between; height: 18px"><span style="font-size: 12.5px; font-weight: 600">형식</span><span style="font-size: 11.5px; color: #8a91a0">여러 개 고를 수 있어요</span></div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+                <sc-for list="{{formats}}" as="f" hint-placeholder-count="2">
+                  <button role="checkbox" aria-checked="{{f.on}}" style="{{f.cardStyle}}">
+                    <div style="display: flex; align-items: center; gap: 8px">
+                      <span style="{{f.boxStyle}}"><sc-if value="{{f.on}}" hint-placeholder-val="{{true}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></span>
+                      <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #121417">{{f.name}}</span>
+                    </div>
+                    <span style="font-size: 11.5px; line-height: 1.45; color: #596170; text-align: left">{{f.desc}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="font-size: 12.5px; font-weight: 600; height: 18px">언어</div>
+              <div role="radiogroup" aria-label="언어" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2px; padding: 3px; border-radius: 10px; background: #f0f2f5">
+                <sc-for list="{{langs}}" as="l" hint-placeholder-count="3">
+                  <button role="radio" aria-checked="{{l.on}}" style="{{l.style}}">{{l.label}}</button>
+                </sc-for>
+              </div>
+              <div style="font-size: 11.5px; line-height: 1.5; color: #596170">영문은 번역 후 넘치는 문장을 줄이고, [확정 필요] 표시는 [TBD]로 바꿔요.</div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="font-size: 12.5px; font-weight: 600; height: 18px">마스터 템플릿</div>
+              <button aria-label="마스터 템플릿 고르기" style="height: 42px; box-sizing: border-box; padding: 0 12px 0 8px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 10px; color: #121417">
+                <span style="position: relative; width: 40px; height: 24px; box-sizing: border-box; border-radius: 4px; border: 1px solid #e2e5ea; background: #ffffff; overflow: hidden; flex-shrink: 0"><span style="position: absolute; left: 0; top: 0; right: 0; height: 3px; background: #1428a0"></span><span style="position: absolute; left: 4px; top: 8px; width: 18px; height: 3px; background: #121417; border-radius: 1px"></span><span style="position: absolute; left: 4px; top: 14px; width: 30px; height: 6px; background: #eaeefb; border-radius: 1px"></span></span>
+                <span style="font-size: 13px; font-weight: 600; flex-grow: 1; text-align: left; white-space: nowrap">삼성 B2B 표준</span>
+                <span style="font-size: 11.5px; color: #596170; white-space: nowrap">16:9 · 현재 적용</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div style="display: flex; align-items: center; gap: 10px">
+                <button style="height: 32px; padding: 0 10px; border-radius: 8px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>고객사 템플릿 (.potx) 올리기</button>
+                <a href="PR6.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap">디자인 템플릿 다시 고르기</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 오른쪽: 범위 · 함께 넣기 · 확정 필요 -->
+          <div style="display: flex; flex-direction: column; gap: 18px; min-width: 0">
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="font-size: 12.5px; font-weight: 600; height: 18px">범위</div>
+              <div role="radiogroup" aria-label="범위" style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; overflow: hidden">
+                <sc-for list="{{scopes}}" as="s" hint-placeholder-count="3">
+                  <button role="radio" aria-checked="{{s.on}}" style="{{s.rowStyle}}">
+                    <span style="{{s.dotStyle}}"></span>
+                    <span style="font-size: 13px; font-weight: 600; color: #121417; white-space: nowrap">{{s.label}}</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.note}}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div style="font-size: 12.5px; font-weight: 600; height: 18px">함께 넣기</div>
+              <sc-for list="{{extras}}" as="e" hint-placeholder-count="3">
+                <label style="height: 28px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #121417"><input type="checkbox" checked="{{e.on}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1428a0">{{e.label}}<span style="font-size: 11.5px; color: #8a91a0">{{e.note}}</span></label>
+              </sc-for>
+              <div style="font-size: 11.5px; color: #8a91a0; padding-top: 2px">검토 코멘트와 '추론' 표시는 파일에 넣지 않아요.</div>
+            </div>
+
+            <div style="box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; gap: 8px">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+                <span style="font-size: 12.5px; font-weight: 600; flex-grow: 1">확정 필요 4곳이 남아 있어요</span>
+                <a href="PR7Q.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap">목록 보기</a>
+              </div>
+              <div role="radiogroup" aria-label="확정 필요 표시" style="display: flex; gap: 6px">
+                <button role="radio" aria-checked="true" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap">[확정 필요] 표시 남기기</button>
+                <button role="radio" aria-checked="false" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid transparent; background: transparent; color: #3d4452; font-size: 12px; font-weight: 500; white-space: nowrap">노트로 옮기고 숨기기</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 파일명 -->
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 6px; height: 26px">
+            <label for="xp-name" style="font-size: 12.5px; font-weight: 600; flex-grow: 1">파일명</label>
+            <span style="font-size: 11.5px; color: #8a91a0; margin-right: 2px">넣기</span>
+            <sc-for list="{{tokens}}" as="tk" hint-placeholder-count="4">
+              <button style="height: 26px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 600; white-space: nowrap">{{tk}}</button>
+            </sc-for>
+          </div>
+          <div style="height: 42px; box-sizing: border-box; border: 1.5px solid #1428a0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; padding: 0 12px; gap: 8px">
+            <input id="xp-name" value="A커피_디지털메뉴보드_제안서_v3" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">+ 언어 · 확장자 자동</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; height: 20px; min-width: 0">
+            <span style="font-size: 11.5px; color: #596170; white-space: nowrap; flex-shrink: 0">만들어질 파일 4개</span>
+            <sc-for list="{{files}}" as="fl" hint-placeholder-count="4">
+              <span style="height: 20px; padding: 0 6px; border-radius: 4px; background: #f5f6f8; color: #3d4452; font-size: 11px; display: flex; align-items: center; white-space: nowrap">{{fl}}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <label style="height: 22px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #121417"><input type="checkbox" checked="{{yes}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1428a0">팀 공유 폴더에도 저장<span style="font-size: 11.5px; color: #8a91a0">B2B 제안서 / A 커피 프랜차이즈</span></label>
+      </div>
+
+      <div style="padding: 14px 24px; border-top: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px">
+        <span style="font-size: 12.5px; color: #596170; flex-grow: 1">파일 4개 · 영문 변환을 포함해 약 1–2분</span>
+        <a href="PR7.dc.html" style="height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">취소</a>
+        <a href="PR0.dc.html" style="height: 42px; padding: 0 18px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg>내보내기</a>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 배경 결과 카드: 앞 10장
+    const thumbs = [['01 시장 규모', 'barline'], ['02 고객사 비즈니스', 'process'], ['03 경쟁 환경', 'table'], ['04 고객 과제', 'asis'], ['05 가치 제안', 'pillars'],
+      ['06 공간 전경', 'image'], ['07 존별 포인트', 'callouts'], ['08 공간 맵', 'zones'], ['09 카운터 · 메뉴보드', 'pB'], ['10 쇼윈도 · 외부', 'pA']]
+      .map(([label, kind], i) => ({ label, kind, n: i === 8 ? 3 : i === 9 ? 2 : 3 }));
+
+    const formats = [['PPTX', '편집 가능 · 마스터 유지', 1], ['PDF', '배포용 · 글꼴 포함', 1]].map(([name, desc, on]) => ({
+      name, desc, on: !!on,
+      cardStyle: 'display: flex; flex-direction: column; align-items: flex-start; gap: 6px; box-sizing: border-box; height: 64px; padding: 10px 12px; border-radius: 10px; background: #ffffff; text-align: left;' + (on ? ' border: 1.5px solid #1428a0;' : ' border: 1px solid #e2e5ea;'),
+      boxStyle: 'width: 16px; height: 16px; box-sizing: border-box; border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;' + (on ? ' background: #1428a0;' : ' border: 1.5px solid #b8bec8; background: #ffffff;')
+    }));
+
+    const langs = [['한국어', 0], ['영문', 0], ['한국어 + 영문', 1]].map(([label, on]) => ({
+      label, on: !!on,
+      style: 'height: 30px; border: none; border-radius: 8px; font-size: 12.5px; white-space: nowrap;' + (on ? ' background: #ffffff; color: #121417; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12);' : ' background: transparent; color: #596170; font-weight: 500;')
+    }));
+
+    const scopes = [['전체', '시트 24 + 표지 · 목차', 1], ['섹션 고르기', '8개 섹션 중', 0], ['시트 고르기', '예: 01–07, 21', 0]].map(([label, note, on], i) => ({
+      label, note, on: !!on,
+      rowStyle: 'width: 100%; height: 36px; box-sizing: border-box; padding: 0 12px; border: none; display: flex; align-items: center; gap: 10px; text-align: left;' + (i > 0 ? ' border-top: 1px solid #e2e5ea;' : '') + (on ? ' background: #f5f7fd;' : ' background: #ffffff;'),
+      dotStyle: 'width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; flex-shrink: 0;' + (on ? ' border: 5px solid #1428a0; background: #ffffff;' : ' border: 1.5px solid #b8bec8; background: #ffffff;')
+    }));
+
+    const extras = [['발표자 노트', '', 1], ['출처 · 근거 각주', '수치 아래 작게', 1], ['부록', '제품 상세 스펙', 0]].map(([label, note, on]) => ({ label, note, on: !!on }));
+
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6,
+      thumbs, formats, langs, scopes, extras, yes: true,
+      tokens: ['고객사', '제안명', '버전', '날짜'],
+      files: ['…_v3_KO.pptx', '…_v3_KO.pdf', '…_v3_EN.pptx', '…_v3_EN.pdf']
+    };
+  }
+}
+</script>
+</body>
+</html>

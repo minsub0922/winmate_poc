@@ -1,0 +1,251 @@
+# 시트 템플릿 · 필요 데이터(03-mi.md §7.8 · §10.5). 코드 · 이름 · 썸네일은 export 서비스 템플릿 카탈로그(GET /api/export/v1/templates)와 같다.
+# 업종 레이아웃 MI-XX-* 는 {code} · {short} 를 업종 값으로 채운다.
+#
+# requires: 하나라도 거짓이면 fit = -1(고를 수 없음). expr 는 아래 지표 이름 · 숫자 · 비교 · and/or/not · min/max 만 쓰는 식.
+# optional: fit = round(100 × Σ weight·score ÷ Σ weight) — score 는 0..1 식. optional 이 없으면 100.
+# label 의 {지표} 는 지금 값으로 채운다(MI3L 필요 데이터 ✓/✗ 줄).
+#
+# 지표(layout.metrics): size_years(값 있는 연도 수) · cagr(성장률 있음 0/1) · trends · trends_dated · implications · verified_ratio(0..1) ·
+#   metrics(시장 수치 지표 수) · target_share · segments_data · structure · ops_stages · strategy_doc · swot_internal · swot_external ·
+#   public_docs · user_types · journey_steps · composition · suppliers · criteria · two_axis · share_data · share_trend · tabs_done
+
+order:
+  MS: [MS-B, MS-A, MS-C, MS-D, MS-E]
+  TR: [TR-A, TR-B, TR-C]
+  CB: [CB-A, CB-B, CB-C, CB-D]
+  US: [US-A, US-B, US-C]
+  CP: [CP-A, CP-B, CP-C]
+  IM: [IM-A, IM-B]
+
+fallback:            # 고른 템플릿의 필수 데이터가 없을 때 다음 대체(§7.8 4번)
+  MS-B: MS-E
+  MS-A: MS-E
+  MS-C: MS-E
+  MS-D: MS-E
+  TR-A: TR-B
+  TR-C: TR-B
+  CB-B: CB-A
+  CB-C: CB-A
+  CB-D: CB-A
+  US-B: US-A
+  US-C: US-A
+  CP-B: CP-A
+  CP-C: CP-A
+
+sheet_names:
+  MS: "시장 규모 · 성장"
+  TR: "산업 트렌드"
+  CB: "고객 비즈니스"
+  US: "사용자 분석"
+  CP: "경쟁 환경"
+  IM: "MI 시사점"
+  MS+TR: "시장 · 트렌드"
+  US_industry: "사용자 여정"
+
+templates:
+  MI-XX-A:
+    name: "{short} · 시장 · 트렌드"
+    thumb: barline
+    role: MS
+    industry: A
+    requires:
+      - {label: "연도별 규모 3개년 이상 또는 규모 + 성장률 · {size_years}개년", expr: "size_years >= 3 or (size_years >= 1 and cagr >= 1)"}
+      - {label: "트렌드 2개 이상 · {trends}개", expr: "trends >= 2"}
+    optional:
+      - {label: "규모 6개년 · {size_years}개년", weight: 1, score: "min(1, size_years / 6)"}
+      - {label: "확인된 값 비율", weight: 1, score: "verified_ratio"}
+    unlock: "연도별 시장 규모와 트렌드가 있으면 열려요"
+  MI-XX-B:
+    name: "{short} · 고객 비즈니스 · 운영 과제"
+    thumb: process
+    role: CB
+    industry: B
+    requires:
+      - {label: "운영 구조 또는 운영 단계 과제 3개 이상 · {ops_stages}개", expr: "structure >= 1 or ops_stages >= 3"}
+    optional:
+      - {label: "운영 단계 6개 · {ops_stages}개", weight: 1, score: "min(1, ops_stages / 6)"}
+    unlock: "운영 구조나 운영 단계 과제가 있으면 열려요"
+  MI-XX-C:
+    name: "{short} · 사용자 여정"
+    thumb: journey
+    role: US
+    industry: C
+    requires:
+      - {label: "사용자 유형 2개 이상 · {user_types}개", expr: "user_types >= 2"}
+      - {label: "여정 단계 3개 이상 · {journey_steps}단계", expr: "journey_steps >= 3"}
+    optional:
+      - {label: "여정 5단계 · {journey_steps}단계", weight: 1, score: "min(1, journey_steps / 5)"}
+    unlock: "사용자 유형과 여정 단계가 있으면 열려요"
+
+  MS-A:
+    name: "핵심 수치 4"
+    thumb: kpi4
+    role: MS
+    requires:
+      - {label: "지표 3개 이상 · {metrics}개", expr: "metrics >= 3"}
+    optional:
+      - {label: "지표 4개 · {metrics}개", weight: 1, score: "min(1, metrics / 4)"}
+      - {label: "추이 없음(연도별 규모 3개년 미만)", weight: 1, score: "1 if size_years < 3 else 0.5"}
+    unlock: "시장 수치 지표가 3개 이상이면 열려요"
+  MS-B:
+    name: "성장 추이"
+    thumb: barline
+    role: MS
+    requires:
+      - {label: "연도별 규모 3개년 이상 · {size_years}개년", expr: "size_years >= 3"}
+    optional:
+      - {label: "규모 6개년 · {size_years}개년", weight: 1, score: "min(1, size_years / 6)"}
+      - {label: "확인된 값 비율", weight: 1, score: "verified_ratio"}
+    unlock: "연도별 시장 규모가 3개년 이상이면 열려요"
+  MS-C:
+    name: "TAM · SAM · SOM"
+    thumb: circles
+    role: MS
+    requires:
+      - {label: "전체 규모 · {size_years}개년", expr: "size_years >= 1"}
+      - {label: "노릴 몫(확장 목표)", expr: "target_share >= 1"}
+    optional:
+      - {label: "SAM", weight: 1, score: "min(1, target_share)"}
+    unlock: "고객의 확장 목표 · 노릴 몫 자료가 있으면 열려요"
+  MS-D:
+    name: "세그먼트 규모 × 성장률"
+    thumb: bubble
+    role: MS
+    requires:
+      - {label: "세그먼트 3개 이상(규모 · 성장률) · {segments_data}개", expr: "segments_data >= 3"}
+    unlock: "세그먼트별 규모 · 성장률 자료가 있으면 열려요"
+  MS-E:
+    name: "성장 동인 → 전망"
+    thumb: panel
+    role: MS
+    requires:
+      - {label: "성장 동인 2개 이상 · {trends}개", expr: "trends >= 2"}
+    optional:
+      - {label: "전망 수치(성장률)", weight: 1, score: "cagr"}
+      - {label: "수치 부족 · 동인 설득", weight: 1, score: "1 if size_years < 3 else 0"}
+    unlock: "성장 동인이 2개 이상이면 열려요"
+
+  TR-A:
+    name: "흐름 타임라인"
+    thumb: timeline
+    role: TR
+    requires:
+      - {label: "시점 있는 트렌드 3개 이상 · {trends_dated}개", expr: "trends_dated >= 3"}
+    unlock: "시점이 있는 트렌드가 3개 이상이면 열려요"
+  TR-B:
+    name: "트렌드 → 고객 시사점"
+    thumb: cards2tier
+    role: TR
+    requires:
+      - {label: "트렌드 1~3개 · {trends}개", expr: "trends >= 1 and trends <= 3"}
+      - {label: "고객 시사점 · {implications}개", expr: "implications >= 1"}
+    unlock: "트렌드 3개 이하와 고객 시사점이 있으면 열려요"
+  TR-C:
+    name: "영향도 × 시급성"
+    thumb: quad
+    role: TR
+    requires:
+      - {label: "트렌드 5개 이상 · {trends}개", expr: "trends >= 5"}
+    unlock: "트렌드가 5개 이상이면 열려요"
+
+  CB-A:
+    name: "한 줄 요약 + 3단"
+    thumb: summary3
+    role: CB
+    requires: []
+    optional:
+      - {label: "공개 자료 1건 이상 · {public_docs}건", weight: 1, score: "min(1, public_docs)"}
+      - {label: "공개 자료만(운영 단계 정보 적음)", weight: 1, score: "1 if ops_stages < 3 else 0.4"}
+    unlock: ""
+  CB-B:
+    name: "전략 목표 → 과제"
+    thumb: tree
+    role: CB
+    requires:
+      - {label: "전략 문서(IR · 전략 자료)", expr: "strategy_doc >= 1"}
+    unlock: "IR · 전략 문서가 있으면 열려요"
+  CB-C:
+    name: "운영 흐름 속 문제"
+    thumb: process
+    role: CB
+    requires:
+      - {label: "운영 단계 3개 이상 + 단계별 문제 · {ops_stages}개", expr: "ops_stages >= 3"}
+    optional:
+      - {label: "운영 단계 6개 · {ops_stages}개", weight: 1, score: "min(1, ops_stages / 6)"}
+    unlock: "운영 단계별 문제가 3개 이상이면 열려요"
+  CB-D:
+    name: "SWOT"
+    thumb: swot
+    role: CB
+    requires:
+      - {label: "내부 요인 2개 이상 · {swot_internal}개", expr: "swot_internal >= 2"}
+      - {label: "외부 요인 2개 이상 · {swot_external}개", expr: "swot_external >= 2"}
+    unlock: "내부 · 외부 요인이 각각 2개 이상이면 열려요"
+
+  US-A:
+    name: "페르소나 3"
+    thumb: persona
+    role: US
+    requires:
+      - {label: "사용자 유형 2개 이상 · {user_types}개", expr: "user_types >= 2"}
+    optional:
+      - {label: "페르소나 3개 · {user_types}개", weight: 1, score: "min(1, user_types / 3)"}
+    unlock: "사용자 유형이 2개 이상이면 열려요"
+  US-B:
+    name: "고객 여정 맵"
+    thumb: journey
+    role: US
+    requires:
+      - {label: "여정 단계 4개 이상 · {journey_steps}단계", expr: "journey_steps >= 4"}
+    unlock: "여정 단계가 4개 이상이면 열려요"
+  US-C:
+    name: "사용자 구성 + 니즈"
+    thumb: donut
+    role: US
+    requires:
+      - {label: "구성 비율 데이터 · {composition}개", expr: "composition >= 2"}
+    unlock: "사용자 구성 비율 자료가 있으면 열려요"
+
+  CP-A:
+    name: "비교표"
+    thumb: table
+    role: CP
+    requires:
+      - {label: "공급사 2~5곳 · {suppliers}곳 있음", expr: "suppliers >= 2"}
+      - {label: "비교 기준 · 요구 {criteria}개", expr: "criteria >= 2"}
+    optional:
+      - {label: "공급사 2~5곳 · {suppliers}곳 있음", weight: 1, score: "1 if suppliers >= 2 and suppliers <= 5 else 0.5"}
+      - {label: "비교 기준 3개 이상 · {criteria}개", weight: 1, score: "1 if criteria >= 3 else 0.5"}
+    unlock: "공급사 2곳 이상과 비교 기준이 있으면 열려요"
+  CP-B:
+    name: "포지셔닝 맵"
+    thumb: scatter
+    role: CP
+    requires:
+      - {label: "두 축 수치 · 공급사마다 · {two_axis}곳 있음", expr: "suppliers >= 1 and two_axis >= suppliers"}
+    optional:
+      - {label: "공급사 5곳 이상 · 지금 {suppliers}곳", weight: 1, score: "min(1, suppliers / 5)"}
+    unlock: "공급사마다 두 축 값이 있으면 열려요"
+  CP-C:
+    name: "점유율 + 추이"
+    thumb: stack
+    role: CP
+    requires:
+      - {label: "점유율 데이터 · {share_data}건", expr: "share_data >= 1"}
+      - {label: "연도별 추이 · {share_trend}개년", expr: "share_trend >= 2"}
+    unlock: "점유율 자료가 있으면 열려요"
+
+  IM-A:
+    name: "발견 → 시사점 → 방향"
+    thumb: funnel
+    role: IM
+    requires:
+      - {label: "탭 3개 이상 결과 · {tabs_done}개", expr: "tabs_done >= 3"}
+    unlock: "분석한 탭이 3개 이상이면 열려요"
+  IM-B:
+    name: "4분면 요약 + 결론"
+    thumb: quadCircle
+    role: IM
+    requires:
+      - {label: "탭 3개 이상 결과 · {tabs_done}개", expr: "tabs_done >= 3"}
+    unlock: "분석한 탭이 3개 이상이면 열려요"

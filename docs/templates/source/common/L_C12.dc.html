@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>C12 마무리 B · 도입 후 모습 (생성 시안)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <!-- 생성 시안 (보이는 영역 760 × 720 — 오른쪽은 흰 패널) -->
+  <div style="position: absolute; left: 0px; top: 0px; width: 760px; height: 720px">
+    <dc-import name="Img" kind="insitu" origin="gen" hint="A 커피 강남 플래그십 · 도입 후 저녁 매장 전경 · 메뉴보드와 창가 사이니지 점등" w="760" h="720" credit="tl" hint-size="760px,720px"></dc-import>
+  </div>
+  <!-- 이미지 위 장면 설명 (어두운 패널) -->
+  <div style="position: absolute; left: 32px; top: 600px; width: 440px; box-sizing: border-box; border-radius: 12px; background: rgba(18,20,23,0.78); padding: 14px 18px; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; color: #9db4ff">도입 후 모습 · 생성 시안</span>
+    <span style="font-size: 14px; font-weight: 700; color: #ffffff; white-space: nowrap">A 커피 강남 플래그십 · 저녁 매장 전경</span>
+  </div>
+
+  <!-- 오른쪽 흰 패널 -->
+  <div style="position: absolute; left: 760px; top: 0px; width: 520px; height: 720px; background: #ffffff"></div>
+  <div style="position: absolute; left: 816px; top: 64px; width: 32px; height: 4px; background: #1428a0"></div>
+  <div style="position: absolute; left: 816px; top: 84px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">함께 만들 모습</div>
+  <div style="position: absolute; left: 816px; top: 118px; width: 420px; font-size: 30px; font-weight: 700; line-height: 1.45; letter-spacing: -0.02em; white-space: nowrap">320개 매장이 같은 날,<br>같은 화면으로 바뀌는 모습을<br>함께 만들겠습니다.</div>
+  <div style="position: absolute; left: 816px; top: 266px; width: 400px; font-size: 14px; line-height: 1.6; color: #596170">시범 매장 설치부터 전국 확산까지,<br>같은 담당자가 끝까지 함께합니다.</div>
+
+  <!-- 담당자 블록 -->
+  <div style="position: absolute; left: 816px; top: 352px; width: 400px; display: flex; flex-direction: column">
+    <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #8a91a0; padding-bottom: 8px">담당자</span>
+    <sc-for list="{{contacts}}" as="c" hint-placeholder-count="4">
+      <div style="{{c.st}}">
+        <span style="width: 56px; font-size: 12.5px; color: #8a91a0; flex-shrink: 0">{{c.k}}</span>
+        <span style="{{c.vst}}">{{c.v}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 제안사 로고 · 고지 -->
+  <div style="position: absolute; left: 816px; top: 584px; width: 110px; height: 30px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8a91a0">제안사 로고</div>
+  <div style="position: absolute; left: 816px; top: 664px; width: 400px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 816px; top: 676px; width: 400px; font-size: 11px; line-height: 1.5; color: #8a91a0">왼쪽 이미지는 AI로 생성한 시안으로, 실제 시공 결과와 다를 수 있습니다.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 담당자 — 확정 전에는 [ ] 자리표시
+    const C = [
+      ['이름', '[담당자 이름]', false],
+      ['부서', '[제안 부서명]', false],
+      ['이메일', '[name]@samsung.com', true],
+      ['전화', '[010-0000-0000]', true]
+    ];
+    const row = 'display: flex; align-items: center; height: 40px; box-sizing: border-box; border-top: 1px solid #e2e5ea;';
+    const contacts = C.map(([k, v, mono], i) => ({
+      k, v,
+      st: row + (i === C.length - 1 ? ' border-bottom: 1px solid #e2e5ea;' : ''),
+      vst: 'font-size: 14px; font-weight: 700; color: #121417; white-space: nowrap;' + (mono ? ' font-family: Manrope, \'Noto Sans KR\', sans-serif;' : '')
+    }));
+    return { contacts };
+  }
+}
+</script>
+</body>
+</html>

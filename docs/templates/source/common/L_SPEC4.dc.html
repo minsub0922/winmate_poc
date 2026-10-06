@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SPEC4 제품 4개 비교</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">제안 제품 4종 사양 비교</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; display: flex; align-items: center; gap: 8px">제품 4종 · <span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span>제품 간 차이가 있는 항목</div>
+
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px">
+    <div style="display: grid; grid-template-columns: {{gc}}; height: 140px; border-bottom: 2px solid #121417">
+      <div style="display: flex; align-items: flex-end; padding: 0 0 14px 4px; font-size: 12.5px; font-weight: 700; color: #596170">사양</div>
+      <sc-for list="{{prods}}" as="p" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px; padding-bottom: 12px">
+          <div style="height: 56px; display: flex; align-items: flex-end; margin-bottom: 4px"><div style="{{p.screen}}"></div></div>
+          <span style="font-size: 16px; font-weight: 800">{{p.model}}</span>
+          <span style="font-size: 12px; color: #596170">{{p.cat}}</span>
+          <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">× {{p.qty}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+      <div style="display: grid; grid-template-columns: {{r.gc}}; height: 36px; align-items: center; border-bottom: 1px solid #e2e5ea; font-size: 13px">
+        <span style="padding-left: 4px; color: #596170; display: flex; align-items: center; gap: 8px"><span style="{{r.dot}}"></span>{{r.k}}</span>
+        <sc-for list="{{r.vals}}" as="v" hint-placeholder-count="4">
+          <span style="text-align: center; {{r.vs}}">{{v}}</span>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 26</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const N = 4;
+    const land = 'width: 88px; height: 50px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417;';
+    const port = 'width: 30px; height: 54px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417;';
+    const P = [
+      { screen: land, model: 'QM55C', cat: '스마트 사이니지', qty: '960' },
+      { screen: port, model: 'KM24C', cat: '키오스크', qty: '320' },
+      { screen: land, model: 'OH55C', cat: '옥외 사이니지', qty: '640' },
+      { screen: land, model: 'QM65C', cat: '스마트 사이니지', qty: '320' },
+      { screen: land, model: 'QM43C', cat: '스마트 사이니지', qty: '320' }
+    ].slice(0, N);
+    const R = [
+      ['화면 크기', '55"', '24"', '55"', '65"', '43"'],
+      ['해상도', 'UHD', 'FHD', 'FHD', 'UHD', 'UHD'],
+      ['밝기', '500 nit', '[000] nit', '3,000 nit', '500 nit', '500 nit'],
+      ['운영 시간', '24/7', '[00]/7', '24/7', '24/7', '24/7'],
+      ['터치', '—', '정전식', '—', '—', '—'],
+      ['방진 · 방수', '—', '—', 'IP56', '—', '—'],
+      ['OS · 관리', 'Tizen · MagicINFO', 'Tizen · MagicINFO', 'Tizen · MagicINFO', 'Tizen · MagicINFO', 'Tizen · MagicINFO'],
+      ['소비전력 (일반)', '[000] W', '[00] W', '[000] W', '[000] W', '[00] W'],
+      ['무게', '[00.0] kg', '[00.0] kg', '[00.0] kg', '[00.0] kg', '[00.0] kg']
+    ];
+    const gc = '200px repeat(' + N + ', minmax(0, 1fr))';
+    const rows = R.map(([k, ...all]) => {
+      const vals = all.slice(0, N);
+      const diff = new Set(vals).size > 1;
+      return {
+        k, vals, gc,
+        dot: diff ? 'width: 6px; height: 6px; border-radius: 50%; background: #1428a0' : 'width: 6px; height: 6px',
+        vs: diff ? 'font-weight: 700; color: #121417' : 'color: #596170'
+      };
+    });
+    return { gc, prods: P, rows };
+  }
+}
+</script>
+</body>
+</html>

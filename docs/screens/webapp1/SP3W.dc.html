@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Spec 시트 · 단종 · 값 불일치 경고</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="spec" current="QMC vs QBC 55&quot; 비교" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Spec 시트 생성" title="QMC vs QBC 55&quot; 비교" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <div style="height: 780px; display: flex">
+      <!-- 왼쪽: 시트 + 입력 -->
+      <div style="width: 780px; height: 780px; display: flex; flex-direction: column">
+        <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+          <div style="width: 700px; display: flex; flex-direction: column; gap: 14px">
+            <div style="display: flex; justify-content: flex-end">
+              <div style="max-width: 520px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6">고객 매장 기존 장비 QM55R도 같이 비교해줘</div>
+            </div>
+            <div style="display: flex; gap: 12px">
+              <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+              <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+                <div style="font-size: 14.5px; line-height: 1.65">최신 카탈로그와 다시 대조했어요. QM55R은 단종 모델이고, 출처나 제안서와 값이 다른 곳이 2곳, 고객 요구와 맞지 않는 곳이 1곳 있어요. 오른쪽에서 하나씩 정하면 시트에 반영할게요.</div>
+
+                <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+                  <div style="height: 44px; box-sizing: border-box; padding: 0 14px 0 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Smart Signage 55" 비교 — 기존 장비 포함</span>
+                    <span style="height: 24px; padding: 0 9px; border-radius: 999px; border: 1px solid #1428a0; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; flex-shrink: 0; box-sizing: border-box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>경고 <span style="font-family: Manrope, sans-serif">4</span></span>
+                  </div>
+                  <div style="height: 44px; display: flex; align-items: stretch; background: #f5f6f8; border-bottom: 1px solid #e2e5ea">
+                    <span style="width: 150px; flex-shrink: 0; box-sizing: border-box; padding: 0 12px 0 16px; display: flex; align-items: center; font-size: 12px; font-weight: 600; color: #596170">항목</span>
+                    <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+                      <span style="{{c.style}}">
+                        <span style="display: flex; align-items: center; gap: 5px; min-width: 0">
+                          <span style="font-size: 12.5px; font-weight: 700; color: #121417; white-space: nowrap">{{c.name}}</span>
+                          <sc-if value="{{c.eol}}" hint-placeholder-val="{{false}}">
+                            <span style="height: 17px; padding: 0 6px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">단종</span>
+                            <span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">1</span>
+                          </sc-if>
+                        </span>
+                        <span style="font-size: 10.5px; color: #596170; white-space: nowrap">{{c.role}}</span>
+                      </span>
+                    </sc-for>
+                  </div>
+                  <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+                    <div style="height: 36px; display: flex; align-items: stretch; font-size: 12px; border-bottom: 1px solid #f0f2f5">
+                      <span style="width: 150px; flex-shrink: 0; box-sizing: border-box; padding: 0 10px 0 16px; display: flex; align-items: center; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.k}}</span>
+                      <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="3">
+                        <span style="{{c.wrap}}">
+                          <span style="{{c.style}}">
+                            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.t}}</span>
+                            <sc-if value="{{c.flag}}" hint-placeholder-val="{{false}}">
+                              <span style="width: 15px; height: 15px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{c.n}}</span>
+                            </sc-if>
+                          </span>
+                        </span>
+                      </sc-for>
+                    </div>
+                  </sc-for>
+                  <div style="height: 38px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; color: #596170">
+                    <span style="white-space: nowrap">출처: 사내 제품 카탈로그 2026-10 대조 · 시트 생성 2026-09-12</span>
+                    <span style="display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="width: 12px; height: 12px; box-sizing: border-box; border: 1px dashed #1428a0; border-radius: 3px; background: #f5f7fd; display: block"></span>번호 = 오른쪽 경고</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+          <div style="width: 700px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+            <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+              <div style="font-size: 13px; font-weight: 600">Spec 시트 <span style="color: #596170; font-weight: 500">· 3 / 3 · 경고 확인 중</span></div>
+              <a href="SP3E.dc.html" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 5px; box-sizing: border-box"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>시트 직접 편집</a>
+            </div>
+            <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+              <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">수정 요청</label>
+              <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+                <input id="fix" placeholder="수정 요청 (예: QM55R 열 이름을 '기존 장비'로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+                <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 오른쪽 패널: 확인이 필요한 곳 -->
+      <aside aria-label="확인이 필요한 곳" style="width: 400px; height: 780px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-left: 1px solid #e2e5ea; box-shadow: -12px 0 32px rgba(18,20,23,0.06); display: flex; flex-direction: column">
+        <div style="flex-shrink: 0; padding: 14px 18px 12px 18px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #e2e5ea">
+          <div style="height: 28px; display: flex; align-items: center; justify-content: space-between">
+            <div style="display: flex; align-items: center; gap: 8px">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>
+              <span style="font-size: 15px; font-weight: 700">확인이 필요한 곳</span>
+              <span style="height: 20px; min-width: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">4</span>
+            </div>
+            <a href="SP3.dc.html" aria-label="닫기" style="width: 28px; height: 28px; border-radius: 7px; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+          </div>
+          <div style="display: flex; gap: 6px">
+            <button aria-pressed="true" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap">전체 4</button>
+            <button aria-pressed="false" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">단종 1</button>
+            <button aria-pressed="false" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">값 불일치 2</button>
+            <button aria-pressed="false" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">요구 미충족 1</button>
+          </div>
+        </div>
+
+        <div style="flex-grow: 1; min-height: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; overflow: hidden; background: #f5f6f8">
+          <!-- 1 단종 -->
+          <div style="flex-shrink: 0; box-sizing: border-box; padding: 11px 13px; border-radius: 12px; border: 1.5px solid #1428a0; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+            <div style="height: 22px; display: flex; align-items: center; gap: 7px; min-width: 0">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">1</span>
+              <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">단종</span>
+              <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">QM55R · 고객 기존 장비</span>
+            </div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #3d4452">사내 카탈로그에 단종 모델로 표시돼요. 소비전력 · 보증 값이 없어 [확정 필요]로 두었어요.</div>
+            <div style="margin-top: 2px; padding: 8px 10px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 10px">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><rect x="3" y="5" width="18" height="11" rx="1"/><path d="M12 16v3M8 19h8"/></svg>
+              <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-size: 11px; color: #596170">현행 대체 모델</span>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-size: 13px; font-weight: 700; color: #121417">QM55C</span> · 같은 55" QM 라인업 · 이미 비교 중</span>
+              </div>
+              <a href="SP1C.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">다른 후보 찾기</a>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; padding-top: 2px">
+              <button role="radio" aria-checked="true" style="height: 24px; padding: 0; border: none; background: transparent; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap; text-align: left"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: 4px solid #1428a0; background: #ffffff; display: block; flex-shrink: 0"></span>'기존 장비'로 표기하고 유지 — 교체 전 ↔ 후 비교</button>
+              <button role="radio" aria-checked="false" style="height: 24px; padding: 0; border: none; background: transparent; color: #3d4452; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 8px; white-space: nowrap; text-align: left"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8; background: #ffffff; display: block; flex-shrink: 0"></span>시트에서 빼기</button>
+            </div>
+          </div>
+
+          <!-- 2 값 불일치 · 출처 -->
+          <div style="flex-shrink: 0; box-sizing: border-box; padding: 11px 13px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+            <div style="height: 22px; display: flex; align-items: center; gap: 7px; min-width: 0">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">2</span>
+              <span style="height: 20px; padding: 0 7px; box-sizing: border-box; border-radius: 999px; border: 1px solid #1428a0; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">값 불일치</span>
+              <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">밝기 · QB55C</span>
+            </div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">카탈로그와 제품 데이터시트(PDF)의 값이 달라요.</div>
+            <div style="display: flex; align-items: center; gap: 6px; padding-top: 2px">
+              <button aria-pressed="true" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap">카탈로그 · [000] nit</button>
+              <button aria-pressed="false" style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">데이터시트 · [000] nit</button>
+              <button style="height: 28px; padding: 0 4px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap">출처</button>
+            </div>
+          </div>
+
+          <!-- 3 값 불일치 · 제안서 -->
+          <div style="flex-shrink: 0; box-sizing: border-box; padding: 11px 13px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+            <div style="height: 22px; display: flex; align-items: center; gap: 7px; min-width: 0">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">3</span>
+              <span style="height: 20px; padding: 0 7px; box-sizing: border-box; border-radius: 999px; border: 1px solid #1428a0; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">값 불일치</span>
+              <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">보증 · QM55C · 제안서와 다름</span>
+            </div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">제안서 08 제품 스펙에는 이전 값이 들어가 있어요.</div>
+            <div style="display: flex; align-items: center; gap: 6px; padding-top: 2px">
+              <a href="SP4.dc.html" style="height: 28px; padding: 0 10px; box-sizing: border-box; border-radius: 8px; border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>제안서에도 반영</a>
+              <button style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">그대로 두기</button>
+            </div>
+          </div>
+
+          <!-- 4 요구 미충족 -->
+          <div style="flex-shrink: 0; box-sizing: border-box; padding: 11px 13px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; flex-direction: column; gap: 6px">
+            <div style="height: 22px; display: flex; align-items: center; gap: 7px; min-width: 0">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">4</span>
+              <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">요구 미충족</span>
+              <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">운영 시간 · QB55C</span>
+            </div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">고객 RFP의 '24시간 운영' 요구와 맞지 않아요.</div>
+            <div style="display: flex; align-items: center; gap: 6px; padding-top: 2px">
+              <a href="SP1R.dc.html" style="height: 28px; padding: 0 10px; box-sizing: border-box; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M10 4v16"/></svg>요구사항 대응표 보기</a>
+              <button style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">확인함</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; height: 66px; box-sizing: border-box; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 8px; border-top: 1px solid #e2e5ea">
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">결정 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">2</span> / 4</span>
+          <div style="display: flex; gap: 8px">
+            <a href="SP3.dc.html" style="height: 40px; padding: 0 14px; box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center">나중에</a>
+            <a href="SP3.dc.html" style="height: 40px; padding: 0 16px; box-sizing: border-box; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>선택한 대로 반영</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const colBase = 'flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 0 10px; display: flex; flex-direction: column; justify-content: center; gap: 1px;';
+    const cols = [
+      { name: 'QM55C', role: '제안 모델', eol: false, style: colBase },
+      { name: 'QB55C', role: '제안 모델', eol: false, style: colBase },
+      { name: 'QM55R', role: '고객 기존 장비', eol: true, style: colBase + ' background: #eaeefb;' }
+    ];
+    // [항목, [값, 경고 번호(없으면 0)] × 3]  — 3번째 열은 단종 모델(QM55R)
+    const R = [
+      ['화면 크기 · 해상도', ['55" · 3840×2160', 0], ['55" · 3840×2160', 0], ['55" · 3840×2160', 0]],
+      ['밝기 · 명암비', ['[000] nit · [0000]:1', 0], ['[000] nit', 2], ['[000] nit · [0000]:1', 0]],
+      ['운영 시간', ['[00]/7', 0], ['[00]/7', 4], ['[00]/7', 0]],
+      ['소비전력 (일반 · 최대)', ['[000] W · [000] W', 0], ['[000] W · [000] W', 0], ['[확정 필요]', 1]],
+      ['내장 플레이어 · OS', ['Tizen [0.0]', 0], ['Tizen [0.0]', 0], ['Tizen [0.0]', 0]],
+      ['MagicINFO 호환', ['지원', 0], ['지원', 0], ['지원', 0]],
+      ['보증', ['[0]년', 3], ['[0]년', 0], ['[확정 필요]', 1]]
+    ];
+    const SELECTED = 1; // 패널에서 선택된 경고
+    const rows = R.map(([k, ...cs]) => ({
+      k,
+      cells: cs.map(([t, n], i) => {
+        const eol = i === 2;
+        const sel = n === SELECTED;
+        let style = 'display: flex; align-items: center; justify-content: space-between; gap: 5px; width: 100%; height: 26px; box-sizing: border-box; padding: 0 6px; border-radius: 6px;';
+        if (n && sel) style += ' border: 1.5px solid #1428a0; background: #ffffff; color: #1428a0; font-weight: 600;';
+        else if (n) style += ' border: 1px dashed #1428a0; background: #f5f7fd; color: #1428a0; font-weight: 600;';
+        else style += eol ? ' color: #596170;' : ' color: #121417;';
+        return {
+          t, n: String(n), flag: n > 0, style,
+          wrap: 'flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 0 4px; display: flex; align-items: center;' + (eol ? ' background: #f5f7fd;' : '')
+        };
+      })
+    }));
+    return { steps: ['제품 입력', '항목 · 형식', '시트 생성'], cur: 3, cols, rows };
+  }
+}
+</script>
+</body>
+</html>

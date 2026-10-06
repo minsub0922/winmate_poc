@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>이미지 생성 · 유스케이스 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+
+  <!-- title -->
+  <div style="position: absolute; left: 48px; top: 30px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">USE CASE MAP · IMG</div>
+  <div style="position: absolute; left: 48px; top: 48px; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 36px; white-space: nowrap">이미지 생성 — 유스케이스 맵</div>
+  <div style="position: absolute; left: 48px; top: 92px; width: 960px; font-size: 14px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">기본 흐름 3화면에 새 화면 8개를 더해 들어오는 길부터 결과 활용까지 정리했습니다. 칸을 누르면 그 화면으로 이동합니다.</div>
+  <div style="position: absolute; right: 48px; top: 38px; display: flex; gap: 28px">
+    <sc-for list="{{stats}}" as="st" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+        <span style="{{st.style}}">{{st.n}}</span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">{{st.label}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- lanes -->
+  <sc-for list="{{lanes}}" as="ln" hint-placeholder-count="5">
+    <div style="{{ln.style}}">
+      <div style="display: flex; align-items: baseline; gap: 8px">
+        <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{ln.no}}</span>
+        <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{ln.title}}</span>
+      </div>
+      <div style="font-size: 12px; color: #596170; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ln.desc}}</div>
+    </div>
+  </sc-for>
+
+  <!-- connectors (gutters and empty slots only) -->
+  <sc-for list="{{links}}" as="lk" hint-placeholder-count="6">
+    <svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" style="position: absolute; left: 0; top: 0; pointer-events: none"><path d="{{lk.d}}" stroke="#1428a0" stroke-width="{{lk.w}}" stroke-dasharray="{{lk.dash}}" stroke-linecap="round" stroke-linejoin="round"/><path d="{{lk.head}}" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </sc-for>
+  <span style="position: absolute; left: 912px; top: 372px; width: 160px; height: 24px; box-sizing: border-box; border-radius: 6px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 11.5px; color: #3d4452; display: flex; align-items: center; justify-content: center; white-space: nowrap">기존 '제안서에 넣기' 버튼</span>
+
+  <!-- nodes -->
+  <sc-for list="{{nodes}}" as="n" hint-placeholder-count="18">
+    <a href="{{n.href}}" style="{{n.style}}">
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 20px">
+        <span style="{{n.codeStyle}}">{{n.code}}</span>
+        <span style="{{n.tagStyle}}">{{n.tag}}</span>
+      </div>
+      <div style="font-size: 14px; font-weight: 700; line-height: 20px; color: #121417; margin-top: 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.name}}</div>
+      <div style="font-size: 12px; color: #596170; line-height: 17px; margin-top: 2px; height: 34px; overflow: hidden">{{n.desc}}</div>
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0; overflow: hidden; text-overflow: ellipsis">{{n.next}}</span>
+      </div>
+    </a>
+  </sc-for>
+
+  <!-- vertical connectors between rows -->
+  <sc-for list="{{downs}}" as="dn" hint-placeholder-count="2">
+    <span style="{{dn.style}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg></span>
+  </sc-for>
+
+  <!-- notes in empty slots -->
+  <sc-for list="{{notes}}" as="nt" hint-placeholder-count="2">
+    <div style="{{nt.style}}">
+      <span style="font-size: 12px; font-weight: 700; color: #3d4452">{{nt.title}}</span>
+      <span style="font-size: 12px; color: #596170; line-height: 1.5">{{nt.body}}</span>
+    </div>
+  </sc-for>
+
+  <!-- representative flows -->
+  <div style="position: absolute; left: 48px; top: 738px; width: 1344px; height: 44px; display: flex; align-items: center; gap: 12px">
+    <span style="width: 64px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; letter-spacing: 0.06em; color: #1428a0; line-height: 1.3">대표 흐름</span>
+    <sc-for list="{{flows}}" as="fl" hint-placeholder-count="3">
+      <div style="width: 410px; height: 44px; box-sizing: border-box; flex-shrink: 0; border: 1px solid #e2e5ea; border-radius: 12px; padding: 0 12px; display: flex; align-items: center; gap: 10px">
+        <span style="width: 84px; flex-shrink: 0; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{fl.title}}</span>
+        <div style="display: flex; align-items: center; gap: 3px; min-width: 0">
+          <sc-for list="{{fl.steps}}" as="fs" hint-placeholder-count="5">
+            <sc-if value="{{fs.notFirst}}" hint-placeholder-val="{{false}}">
+              <span style="width: 8px; flex-shrink: 0; font-size: 12px; color: #8a91a0; text-align: center">›</span>
+            </sc-if>
+            <a href="{{fs.href}}" style="{{fs.style}}">{{fs.code}}</a>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- legend -->
+  <div style="position: absolute; left: 48px; top: 806px; width: 1344px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 48px; top: 830px; display: flex; align-items: center; gap: 22px; font-size: 12px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 22px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1.5px solid #1428a0; background: #ffffff"></span>기본 흐름 (기존 IMG1 · IMG2 · IMG3)</span>
+    <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 22px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1px solid #e2e5ea; background: #ffffff"></span>추가 화면</span>
+    <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 22px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1px dashed #b8bec8; background: #fbfbfc"></span>다른 기능 화면</span>
+    <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><svg width="26" height="10" viewBox="0 0 26 10" fill="none"><path d="M1 5H20" stroke="#1428a0" stroke-width="2"/><path d="M18 1.5l4 3.5-4 3.5" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>기존 연결</span>
+    <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><svg width="26" height="10" viewBox="0 0 26 10" fill="none"><path d="M1 5H20" stroke="#1428a0" stroke-width="1.5" stroke-dasharray="4 3"/><path d="M18 1.5l4 3.5-4 3.5" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>새 화면으로 생기는 연결</span>
+    <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0">→ IMG3G</span>이어지는 화면</span>
+  </div>
+  <a href="IMG0.dc.html" style="position: absolute; right: 48px; top: 824px; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap">이미지 작업 목록 열기<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 다른 캔버스에 있는 화면은 그 캔버스를 새 탭으로 엽니다
+    const EXT = {"HomeImage.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk", "Main.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk", "PR6.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "PRS2.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "PRS4.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe"};
+    const ext = (f) => EXT[f] || f;
+    const LX = (i) => 48 + i * 272;          // 레인 x (폭 254, 간격 18)
+    const RY = (r) => 192 + r * 132;         // 노드 행 y (높이 122, 간격 10)
+    const NW = 230, NH = 122;
+    const nl = (i) => LX(i) + 12;            // 노드 왼쪽
+    const nr = (i) => LX(i) + 12 + NW;       // 노드 오른쪽
+    const cy = (r) => RY(r) + NH / 2;
+
+    const lanes = [
+      ['01', '들어오는 길', '어디서 이미지 생성을 시작하나'],
+      ['02', '입력 방식', '설명 · 조건 · 참조 이미지 · 현장 사진'],
+      ['03', '진행 · 확인 상태', '생성 대기 · 결과 확인 · 실패와 제한'],
+      ['04', '편집 · 버전', '한 장을 골라 고치고 변형하기'],
+      ['05', '결과 활용', '내보내기 · 제안서 · 다른 기능']
+    ].map(([no, title, desc], i) => ({
+      no, title, desc,
+      style: 'position: absolute; left: ' + LX(i) + 'px; top: 128px; width: 254px; height: 596px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 14px 14px 0 14px;'
+    }));
+
+    // [레인, 행, 종류, 코드, 링크, 이름, 설명, 다음]
+    const N = [
+      [0, 0, 'home', 'Main', 'https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk', '홈 · 이미지 생성 카드', '홈 메인 카드에서 새 이미지 작업을 바로 시작합니다.', 'IMG1'],
+      [0, 1, 'new', 'IMG0', 'IMG0.dc.html', '작업 목록 · 갤러리', '내 생성 이미지 · 사내 자산 탭과 필터, 생성 중 · 실패 작업 이어가기', 'IMG1 · IMG2R · IMG2P · IMG3G'],
+      [0, 2, 'home', 'HomeImage', 'https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk', '상단 이미지 검색', '사내 자산 · 내 이미지를 골라 참조로 첨부하고 시작합니다.', 'IMG2R · IMG2'],
+      [0, 3, 'other', 'SC4E', 'SC4E.dc.html', '시나리오 장면에서', '공간 시나리오 장면의 설명 · 제품을 넘겨 장면 컷을 만듭니다.', 'IMG2 · IMG0'],
+
+      [1, 0, 'base', 'IMG1', 'IMG1.dc.html', '이미지 유형 · 장면 설명', '공간 · 배경 · 시나리오 중 고르고 장면을 한두 문장으로 설명', 'IMG2 · IMG2R · IMG2P'],
+      [1, 1, 'base', 'IMG2', 'IMG2.dc.html', '상세 조건', '등장 제품 · 스타일 · 비율 · 장수, 이미지 검색에서 고른 참조', 'IMG3G · IMG3 · IMG2R'],
+      [1, 2, 'new', 'IMG2R', 'IMG2R.dc.html', '참조 이미지 · 사내 자산 스타일', '사내 자산에서 고르고 색감 · 구도 · 소재 중 따를 요소와 강도 지정', 'IMG2 · IMG3G'],
+      [1, 3, 'new', 'IMG2P', 'IMG2P.dc.html', '현장 사진에 제품 합성', '고객 매장 사진 → 벽면 인식, 제품 위치 · 크기 · 기준 치수 지정', 'IMG3G · IMG1'],
+
+      [2, 0, 'new', 'IMG3G', 'IMG3G.dc.html', '생성 중', '4장 진행률과 단계, 내 대기열, 장별 · 전체 취소, 완료 알림', 'IMG3 · IMG3X · IMG2 · IMG0'],
+      [2, 1, 'base', 'IMG3', 'IMG3.dc.html', '생성 결과', '4장 중 고르기, 빠른 수정 칩, 내 이미지에 저장, 제안서에 넣기', 'IMG3E · IMG3V · IMG4 · PRS4'],
+      [2, 2, 'new', 'IMG3X', 'IMG3X.dc.html', '생성 실패 · 제한 안내', '제품 인식 실패, 경쟁사 로고 · 실존 인물 제한 → 대안 제시', 'IMG2 · IMG3G · IMG3'],
+
+      [3, 0, 'new', 'IMG3E', 'IMG3E.dc.html', '부분 수정', '영역을 고르고 지시문으로 고치기, 수정 전 / 후 비교', 'IMG3 · IMG4'],
+      [3, 2, 'new', 'IMG3V', 'IMG3V.dc.html', '변형 · 비율 · 해상도', '16:9 · 4:3 · 세로 비율, 업스케일, 한 장 기준 변형 4장', 'IMG3G · IMG3E · IMG4'],
+
+      [4, 0, 'new', 'IMG4', 'IMG4.dc.html', '내보내기 · 제안서에 넣기', '다운로드 형식, 넣을 제안서와 시트 고르기, 다른 기능으로 보내기', 'PRS4 · SC4 · BE1 · PR1 · IMG0'],
+      [4, 1, 'other', 'PRS4', 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe', '제안서 섹션에 바로 넣기', '생성 결과의 \'제안서에 넣기\' — 섹션 작성 화면에 이미지 배치', 'PR5 · PR6'],
+      [4, 2, 'other', 'PRS2', 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe', '슬라이드에 끌어 넣기', '이미지 검색에서 끌어 스토리라인 슬라이드 위에 놓기', 'PR6'],
+      [4, 3, 'other', 'SC4', 'SC4.dc.html', '시나리오 장면에 반영', '만든 이미지를 공간 시나리오의 장면 컷으로 사용', 'SC5']
+    ];
+    const KIND = {
+      base:  { box: ' border: 1.5px solid #1428a0; background: #ffffff; box-shadow: 0 2px 8px rgba(20,40,160,0.08);', code: ' background: #1428a0; color: #ffffff;', tag: '기본 흐름', tagC: ' color: #1428a0; font-weight: 700;' },
+      new:   { box: ' border: 1px solid #e2e5ea; background: #ffffff;', code: ' background: #eaeefb; color: #1428a0;', tag: '추가 화면', tagC: ' color: #596170; font-weight: 600;' },
+      home:  { box: ' border: 1px solid #e2e5ea; background: #ffffff;', code: ' background: #f0f2f5; color: #3d4452;', tag: '기존 화면', tagC: ' color: #596170; font-weight: 600;' },
+      other: { box: ' border: 1px dashed #b8bec8; background: #fbfbfc;', code: ' background: #f0f2f5; color: #3d4452;', tag: '다른 기능', tagC: ' color: #8a91a0; font-weight: 600;' }
+    };
+    const nodes = N.map(([lane, row, kind, code, href, name, desc, next]) => ({
+      code, href, name, desc, next, tag: KIND[kind].tag,
+      style: 'position: absolute; left: ' + nl(lane) + 'px; top: ' + RY(row) + 'px; width: ' + NW + 'px; height: ' + NH + 'px; box-sizing: border-box; border-radius: 12px; padding: 11px 13px 10px 13px; display: flex; flex-direction: column; color: #121417;' + KIND[kind].box,
+      codeStyle: 'height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 5px; display: inline-flex; align-items: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; white-space: nowrap;' + KIND[kind].code,
+      tagStyle: 'font-size: 11px; white-space: nowrap;' + KIND[kind].tagC
+    }));
+
+    // 연결선: 레인 사이 홈(42px)과 비어 있는 칸으로만 지나간다
+    const head = (x, y) => 'M' + (x - 6) + ' ' + (y - 5) + 'l6 5-6 5';
+    const L = (d, endX, endY, dashed) => ({ d, head: head(endX, endY), dash: dashed ? '4 3' : 'none', w: dashed ? 1.5 : 2 });
+    const gx = (i) => nr(i) + 21;            // 레인 i 오른쪽 홈의 가운데
+    const links = [
+      // 기존: Main → IMG1, IMG2 → IMG3, IMG3 → PRS4 ('제안서에 넣기')
+      L('M' + (nr(0) + 3) + ' ' + cy(0) + 'H' + (nl(1) - 3), nl(1) - 3, cy(0), false),
+      L('M' + (nr(1) + 3) + ' ' + cy(1) + 'H' + (nl(2) - 3), nl(2) - 3, cy(1), false),
+      L('M' + (nr(2) + 3) + ' ' + cy(1) + 'H' + (nl(4) - 3), nl(4) - 3, cy(1), false),
+      // 새로 생기는 연결: IMG2 ⇢ IMG3G, IMG3 ⇢ IMG3E, IMG3 ⇢ IMG3V
+      L('M' + (nr(1) + 3) + ' ' + (cy(1) - 34) + 'H' + gx(1) + 'V' + cy(0) + 'H' + (nl(2) - 3), nl(2) - 3, cy(0), true),
+      L('M' + (nr(2) + 3) + ' ' + (cy(1) - 34) + 'H' + gx(2) + 'V' + cy(0) + 'H' + (nl(3) - 3), nl(3) - 3, cy(0), true),
+      L('M' + (nr(2) + 3) + ' ' + (cy(1) + 34) + 'H' + gx(2) + 'V' + cy(2) + 'H' + (nl(3) - 3), nl(3) - 3, cy(2), true)
+    ];
+
+    // 같은 레인 위→아래: IMG1 → IMG2 (기존), IMG3G ⇢ IMG3 (새로)
+    const down = (lane, row, dashed) => ({
+      style: 'position: absolute; left: ' + (nl(lane) + NW / 2 - 11) + 'px; top: ' + (RY(row) + NH - 6) + 'px; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1.5px ' + (dashed ? 'dashed' : 'solid') + ' #1428a0; display: flex; align-items: center; justify-content: center; z-index: 2;'
+    });
+    const downs = [down(1, 0, false), down(2, 0, true)];
+
+    const note = (lane, row, title, body) => ({
+      title, body,
+      style: 'position: absolute; left: ' + nl(lane) + 'px; top: ' + RY(row) + 'px; width: ' + NW + 'px; height: ' + NH + 'px; box-sizing: border-box; border-radius: 12px; border: 1px dashed #b8bec8; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; overflow: hidden;'
+    });
+    const notes = [
+      note(2, 3, '떠나도 이어서 생성', '생성 중 화면을 벗어나도 IMG0 작업 목록에 진행률이 보이고, 끝나면 알림이 옵니다.'),
+      note(3, 3, '시안은 버전으로 쌓임', '부분 수정 · 변형마다 시안이 추가되고, 이전 시안으로 언제든 돌아갈 수 있어요.')
+    ];
+
+    const chip = (code, base) => ({
+      code, href: ext(code + '.dc.html'),
+      style: 'height: 22px; box-sizing: border-box; padding: 0 5px; border-radius: 5px; display: flex; align-items: center; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; white-space: nowrap;' + (base ? ' background: #1428a0; color: #ffffff;' : ' background: #eaeefb; color: #1428a0;')
+    });
+    const BASE = ['IMG1', 'IMG2', 'IMG3'];
+    const flows = [
+      ['현장 사진 합성', ['IMG0', 'IMG2P', 'IMG3G', 'IMG3E', 'IMG4']],
+      ['참조 스타일로', ['HomeImage', 'IMG2R', 'IMG3G', 'IMG3V']],
+      ['실패 후 대안', ['IMG3G', 'IMG3X', 'IMG2', 'IMG3G', 'IMG3']]
+    ].map(([title, codes]) => ({
+      title,
+      steps: codes.map((c, i) => Object.assign({ notFirst: i > 0 }, chip(c, BASE.includes(c))))
+    }));
+
+    const stats = [['3', '기존 화면', '#121417'], ['8', '추가 화면', '#1428a0'], ['6', '연결된 화면', '#596170']].map(([n, label, color]) => ({ n, label, style: 'font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 1.1; color: ' + color + ';' }));
+
+    return { lanes, nodes, links, downs, notes, flows, stats };
+  }
+}
+</script>
+</body>
+</html>

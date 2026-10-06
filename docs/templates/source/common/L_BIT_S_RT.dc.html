@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BIT-S-RT b.IoT 공간 시나리오 · 매장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · b.IoT</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>b.IoT · 빌딩 에너지 관리</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">열기 전엔 미리 시원하게, 영업 중엔 존별로, 닫으면 한 번에</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">매장입구 → 쇼핑공간 → 결제 존을 b.IoT 스케줄 · 중앙 제어로 운영하고, 매장 에너지는 대시보드에서 목표와 비교합니다</div>
+
+  <!-- 매장 존 구성 (사진 스트립) -->
+  <div style="position: absolute; left: 64px; top: 172px; width: 760px; height: 208px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 80px; top: 162px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">D 리테일 매장 · 존 구성</div>
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="3">
+    <img src="{{z.src}}" alt="{{z.alt}}" style="position: absolute; left: {{z.x}}px; top: 184px; width: {{z.w}}px; height: 138px; object-fit: cover; object-position: {{z.pos}}; border-radius: 10px">
+    <div style="{{z.markStyle}}">{{z.no}}</div>
+    <div style="{{z.chipStyle}}">예시 사진 · 고객 공간으로 교체</div>
+    <div style="{{z.labelStyle}}">
+      <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap"><span style="font-family: Manrope, sans-serif; color: #1428a0; margin-right: 6px">{{z.code}}</span>{{z.name}}</span>
+      <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{z.sub}}</span>
+    </div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 하루 단계 축 -->
+  <sc-for list="{{axis}}" as="x" hint-placeholder-count="3">
+    <div style="{{x.labelStyle}}"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{x.time}}</span><span style="margin-left: 5px; color: #596170; font-weight: 700">{{x.tag}}</span></div>
+    <div style="{{x.barStyle}}"></div>
+  </sc-for>
+
+  <!-- 단계 카드: 영업 전 · 영업 중 · 마감 후 -->
+  <sc-for list="{{phases}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.cardStyle}}"></div>
+    <div style="{{p.headStyle}}"><span style="font-size: 16px; font-weight: 800">{{p.name}}</span><span style="font-size: 13px; font-weight: 800; color: #1428a0">{{p.act}}</span></div>
+    <div style="{{p.chipRow}}">
+      <sc-for list="{{p.chips}}" as="c" hint-placeholder-count="3">
+        <span style="{{c.style}}"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{c.z}}</span><span style="font-family: Manrope, sans-serif">{{c.v}}</span></span>
+      </sc-for>
+    </div>
+    <div style="{{p.whatStyle}}">{{p.what}}</div>
+    <sc-if value="{{p.isSched}}" hint-placeholder-val="{{false}}">
+      <div style="{{p.extraStyle}}"><span style="font-weight: 800; color: #3d4452">스케줄</span><span>평일 <span style="font-family: Manrope, sans-serif; font-weight: 700">09:00</span> · 주말 <span style="font-family: Manrope, sans-serif; font-weight: 700">[00:00]</span></span></div>
+    </sc-if>
+    <sc-if value="{{p.isPlan}}" hint-placeholder-val="{{false}}">
+      <div style="{{p.extraStyle}}">
+        <img src="/_blob/d0808414679c457969944638289f2c11" alt="b.IoT 도면 기반 존별 실내기 온도 화면 일부" style="position: absolute; left: -54px; top: -141px; width: 316px; height: 193px; object-fit: cover; border-radius: 0px">
+        <span style="position: absolute; left: 6px; top: 22px; height: 16px; padding: 0 6px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 9.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">도면 화면 · 존별 온도</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{p.isAlert}}" hint-placeholder-val="{{false}}">
+      <div style="{{p.extraStyle}}">
+        <div style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; background: #121417; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z M10 21h4"/></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 0px; white-space: nowrap; min-width: 0"><span style="font-size: 12px; font-weight: 800; line-height: 1.4">비효율 알림 <span style="font-family: Manrope, sans-serif; color: #596170; margin-left: 3px">22:40</span></span><span style="font-size: 11px; color: #3d4452; line-height: 1.4">Z2 실내기 1대 운전 중</span></div>
+      </div>
+    </sc-if>
+    <div style="{{p.quoteStyle}}">
+      <span style="height: 16px; margin-top: 1px; padding: 0 6px; border-radius: 4px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 10px; font-weight: 700; color: #596170; display: flex; align-items: center; flex-shrink: 0">고민</span>
+      <span style="font-size: 11.5px; line-height: 1.5; color: #596170">{{p.quote}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 우: 매장 에너지 대시보드 -->
+  <img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 로고" style="position: absolute; left: 848px; top: 165px; width: 118px; height: 21px; object-fit: contain; object-position: 0% 50%; border-radius: 0px">
+  <div style="position: absolute; left: 978px; top: 162px; font-size: 15px; font-weight: 800; white-space: nowrap; line-height: 1.5">매장 에너지 대시보드</div>
+  <img src="/_blob/5a4ac42a10af63328d12de232610e2d7" alt="b.IoT 통합 모니터링 대시보드 화면" style="position: absolute; left: 848px; top: 192px; width: 368px; height: 173px; object-fit: cover; border-radius: 10px">
+  <div style="position: absolute; left: 1152px; top: 342px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 10px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">실제 화면</div>
+
+  <div style="position: absolute; left: 848px; top: 376px; width: 368px; display: flex; align-items: baseline; white-space: nowrap"><span style="font-size: 12.5px; font-weight: 800">기기별 에너지 → 존 합계 vs 목표</span><span style="flex-grow: 1"></span><span style="font-size: 11px; color: #8a91a0">이번 달 · kWh</span></div>
+  <sc-for list="{{energy}}" as="e" hint-placeholder-count="3">
+    <div style="{{e.labelStyle}}"><span style="font-family: Manrope, sans-serif; color: #1428a0; margin-right: 4px">{{e.code}}</span>{{e.name}}</div>
+    <div style="{{e.targetBar}}"></div>
+    <div style="{{e.actualBar}}"></div>
+    <div style="{{e.textStyle}}">목표 [000] · 실제 [000]</div>
+  </sc-for>
+  <div style="position: absolute; left: 848px; top: 470px; font-size: 11px; color: #8a91a0; white-space: nowrap">온도 · 시간 · 수치는 예시 · 데이터 연결 시 자동 반영</div>
+
+  <!-- 우 하단: 매장 규모별 라인업 -->
+  <div style="position: absolute; left: 848px; top: 494px; width: 368px; height: 154px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 862px; top: 504px; width: 340px; height: 20px; display: flex; align-items: center; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">어떤 b.IoT인가</span><span style="font-size: 11px; color: #8a91a0; margin-left: 6px">카탈로그 라인업</span><span style="flex-grow: 1"></span><span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">중소형 매장 추천 · Lite</span></div>
+  <div style="position: absolute; left: 862px; top: 530px; width: 340px; height: 48px; border-radius: 6px; overflow: hidden; background: #f7f9f8">
+    <img src="/_blob/4cd184109d27188429d4280dfe950d75" alt="b.IoT 라인업 — Enterprise · Lite · Cloud · Energy (카탈로그)" style="position: absolute; left: 0px; top: -38px; width: 340px; height: 110px; object-fit: cover; border-radius: 0px">
+  </div>
+  <div style="position: absolute; left: 948px; top: 527px; width: 94px; height: 54px; box-sizing: border-box; border-radius: 8px; border: 2px solid #1428a0"></div>
+  <div style="position: absolute; left: 862px; top: 584px; width: 340px; display: flex; flex-direction: column">
+    <sc-for list="{{tiers}}" as="t" hint-placeholder-count="3">
+      <div style="height: 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; white-space: nowrap"><span style="{{t.nameStyle}}">{{t.name}}</span><span style="{{t.descStyle}}">{{t.desc}}</span></div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 리테일 체인 · 매장 에너지 관리 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+
+    // 존 사진 스트립: y 184–322 · 라벨 y 330
+    const Z = [
+      { code: 'Z1', name: '매장입구', sub: '실내기 ×[0] · 출입이 잦은 존', x: 76, w: 280, src: '/_blob/c10cf84573ec5270e2fc845b9fa9ea74', alt: '매장입구 예시 사진 — 쇼윈도 사이니지', pos: '30% 50%' },
+      { code: 'Z2', name: '쇼핑공간', sub: '시스템에어컨 360 ×[0] · 체류 최다', x: 368, w: 224, src: '/_blob/4e4fd3e034845eb1928daa8637fdf04c', alt: '쇼핑공간 예시 사진 — 천장 원형 시스템에어컨 360', pos: '50% 10%' },
+      { code: 'Z3', name: '결제', sub: '실내기 ×[0] · 직원 상주', x: 604, w: 208, src: '/_blob/dce234b20fb29a76b4b069a7a172efc0', alt: '결제공간 예시 사진 — 태블릿 POS 카드 결제', pos: '50% 50%' }
+    ];
+    const zones = Z.map((z, i) => Object.assign({}, z, {
+      no: i + 1,
+      markStyle: A + 'left: ' + px(z.x + 8) + 'top: 192px; width: 26px; height: 26px; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+      chipStyle: 'position: absolute; left: ' + px(z.x + 8) + 'top: 296px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; font-size: 10px; color: #3d4452; display: flex; align-items: center; white-space: nowrap;',
+      labelStyle: 'position: absolute; left: ' + px(z.x) + 'top: 330px; width: ' + px(z.w) + 'display: flex; flex-direction: column; gap: 1px; line-height: 1.45;'
+    }));
+    // 존 사이 진행 화살표 (사진 간격 중심)
+    const arrows = [362, 598].map((cx) => A + 'left: ' + px(cx - 12) + 'top: 241px; width: 24px; height: 24px; border-radius: 50%; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: center;');
+
+    // 단계 열: 영업 전 · 영업 중 · 마감 후 (폭은 시간 비례가 아닌 단계 구분)
+    const COL = [[64, 230], [306, 290], [608, 216]];
+    const axisDef = [['09:00', '예냉 시작', '#b8c3ee'], ['10:00', '오픈', '#1428a0'], ['22:00', '마감', '#b8bec8']];
+    const axis = axisDef.map(([time, tag, c], i) => ({
+      time, tag,
+      labelStyle: 'position: absolute; left: ' + px(COL[i][0]) + 'top: 388px; font-size: 12.5px; line-height: 16px; white-space: nowrap;',
+      barStyle: A + 'left: ' + px(COL[i][0]) + 'top: 408px; width: ' + px(COL[i][1]) + 'height: 6px; border-radius: 3px; background: ' + c + ';'
+    }));
+
+    const CHIP = 'height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11.5px; display: flex; align-items: center; gap: 4px; white-space: nowrap; ';
+    const ON = CHIP + 'background: #eaeefb; color: #1428a0;';
+    const OFF = CHIP + 'background: #ffffff; border: 1px solid #b8bec8; color: #8a91a0;';
+    const P = [
+      {
+        name: '영업 전', act: '예냉',
+        chips: [{ z: 'Z1', v: 'OFF', style: OFF }, { z: 'Z2', v: 'ON', style: ON }, { z: 'Z3', v: 'ON', style: ON }],
+        what: '오픈 [00]분 전 스케줄 ON — 쇼핑 · 결제 존부터 미리 시원하게',
+        kind: 'sched',
+        quote: '“바쁜 아침, 오픈 준비시간을 줄일 수 있을까요?”'
+      },
+      {
+        name: '영업 중', act: '존별 제어',
+        chips: [{ z: 'Z1', v: '23℃', style: ON }, { z: 'Z2', v: '25℃', style: ON }, { z: 'Z3', v: '24℃', style: ON }],
+        what: '존마다 다른 설정 온도 + AI 공조 최적화로 쾌적 · 효율 유지',
+        kind: 'plan',
+        quote: '“고객이 많은 피크시간에는 매장이 점점 더워져요”'
+      },
+      {
+        name: '마감 후', act: '일괄 정지',
+        chips: [{ z: 'Z1 · Z2 · Z3', v: 'OFF', style: OFF }],
+        what: '22:00 스케줄로 매장 전 존 실내기를 한 번에 정지',
+        kind: 'alert',
+        quote: '“깜빡하고 매장의 에어컨을 안 끄고 퇴근했어요!”'
+      }
+    ];
+    const phases = P.map((p, i) => {
+      const [x, w] = COL[i];
+      const ix = x + 14, iw = w - 28;
+      const extraBase = 'position: absolute; left: ' + px(ix) + 'top: 544px; width: ' + px(iw) + 'height: 44px; box-sizing: border-box; border-radius: 8px; ';
+      const extra = {
+        sched: extraBase + 'background: #f5f6f8; padding: 0 10px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #596170; white-space: nowrap;',
+        plan: extraBase + 'overflow: hidden; background: #f2f3f5;',
+        alert: extraBase + 'border: 1.5px solid #121417; background: #ffffff; padding: 0 10px; display: flex; align-items: center; gap: 8px;'
+      };
+      return {
+        name: p.name, act: p.act, chips: p.chips, what: p.what, quote: p.quote,
+        isSched: p.kind === 'sched', isPlan: p.kind === 'plan', isAlert: p.kind === 'alert',
+        cardStyle: A + 'left: ' + px(x) + 'top: 424px; width: ' + px(w) + 'height: 224px; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff;',
+        headStyle: 'position: absolute; left: ' + px(ix) + 'top: 436px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap;',
+        chipRow: 'position: absolute; left: ' + px(ix) + 'top: 466px; width: ' + px(iw) + 'display: flex; gap: 6px;',
+        whatStyle: 'position: absolute; left: ' + px(ix) + 'top: 498px; width: ' + px(iw) + 'font-size: 12.5px; line-height: 1.5; color: #121417;',
+        extraStyle: extra[p.kind],
+        quoteStyle: 'position: absolute; left: ' + px(ix) + 'top: 598px; width: ' + px(iw) + 'display: flex; align-items: flex-start; gap: 6px;'
+      };
+    });
+
+    // 존 합계 vs 목표 (예시 형상): 막대 x 916 · 최대 160
+    const E = [['Z1', '입구', 120, 136], ['Z2', '쇼핑', 160, 142], ['Z3', '결제', 90, 78]];
+    const energy = E.map(([code, name, tw, aw], i) => {
+      const T = 398 + i * 24;
+      const over = aw > tw;
+      return {
+        code, name,
+        labelStyle: 'position: absolute; left: 848px; top: ' + px(T) + 'width: 64px; font-size: 12px; font-weight: 700; line-height: 20px; white-space: nowrap;',
+        targetBar: 'position: absolute; left: 916px; top: ' + px(T + 2) + 'width: ' + px(tw) + 'height: 7px; border-radius: 2px; background: #d5d9e0;',
+        actualBar: 'position: absolute; left: 916px; top: ' + px(T + 11) + 'width: ' + px(aw) + 'height: 7px; border-radius: 2px; background: ' + (over ? '#121417' : '#1428a0') + ';',
+        textStyle: 'position: absolute; left: 1084px; top: ' + px(T + 1) + 'width: 132px; text-align: right; font-size: 11px; line-height: 18px; white-space: nowrap; color: ' + (over ? '#121417; font-weight: 700' : '#596170') + ';'
+      };
+    });
+
+    // 매장 규모별 라인업 (통합공조 카탈로그 기준)
+    const tiers = [
+      { name: 'b.IoT Lite', desc: '중소형 매장 · 경량 버전 — 추천', hi: true },
+      { name: 'Enterprise', desc: '대형 매장 · 빌딩 — 기계설비 · 조명 · 전력', hi: false },
+      { name: 'Cloud', desc: '여러 매장 — 원격 유지관리 · 여러 현장', hi: false }
+    ].map((t) => ({
+      name: t.name, desc: t.desc,
+      nameStyle: 'width: 76px; flex-shrink: 0; font-weight: 800; color: ' + (t.hi ? '#1428a0' : '#121417') + ';',
+      descStyle: t.hi ? 'color: #1428a0; font-weight: 700;' : 'color: #3d4452;'
+    }));
+
+    return { zones, arrows, axis, phases, energy, tiers };
+  }
+}
+</script>
+</body>
+</html>

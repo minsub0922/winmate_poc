@@ -1,0 +1,68 @@
+# 핵심 스펙 프로필 (갭 G-PRD-2, 00-shell 부록 B — 보드 행 ↔ KB spec_value.group_name › attr_name)
+# - 값은 KB value_raw 원문. 여러 속성을 한 행에 합칠 때만 ' · ' 와 고정 짧은 말(prefix)을 붙인다.
+# - KB 에 없는 행은 행째 숨긴다. 프로필 행의 절반 미만만 맞는 모델(예: LED 사이니지)은 프로필 대신 KB 원래 그룹을 보인다.
+# - format: size_inch(대각선 + '(N형)') · unit_from_name(속성 이름의 '(ms)' 단위 붙임) · presence_pair · presence_names
+profiles:
+  signage:
+    label: 사이니지 핵심 스펙
+    l1: [top_display]
+    min_coverage: 0.5
+    groups:
+      - name: 디스플레이
+        column: left
+        rows:
+          - {label: 대각선, attrs: [[디스플레이, 대각선 사이즈 (cm)]], format: size_inch}
+          - {label: 패널, attrs: [[디스플레이, 패널 타입]]}
+          - {label: 해상도, attrs: [[디스플레이, 해상도]]}
+          - {label: 픽셀 피치, attrs: [[디스플레이, 픽셀 피치]]}
+          - {label: 밝기 (Typ), attrs: [[디스플레이, 밝기 (Typ)]]}
+          - {label: 명암비, attrs: [[디스플레이, 명암비]]}
+          - {label: 시야각, attrs: [[디스플레이, 시야각(수평/수직)]]}
+          - {label: 응답속도, attrs: [[디스플레이, 응답속도 (ms)]], format: unit_from_name}
+          - {label: 헤이즈, attrs: [[디스플레이, 헤이즈(Haze)]]}
+          - {label: 사용 시간, attrs: [[디스플레이, 제품 사용 시간]]}
+      - name: 전원
+        column: left
+        rows:
+          - {label: 정격 입력, attrs: [[전원, 정격입력]]}
+          - {label: 소비전력, attrs: [[전원, 소비전력 (On Mode)], [전원, 소비전력 (Sleep Mode)]], prefixes: ["", "대기 "]}
+      - name: 크기 · 무게
+        column: left
+        rows:
+          - {label: 제품 크기, attrs: [[크기, 제품(가로x높이x깊이)]]}
+          - {label: 무게, attrs: [[무게, 제품 무게], [무게, 무게 (박스 포장)]], prefixes: ["", "포장 "]}
+          - {label: VESA, attrs: [[기구사양, VESA 마운트]]}
+          - {label: 베젤, attrs: [[기구사양, 베젤 두께]]}
+      - name: 연결성
+        column: right
+        rows:
+          - {label: HDMI, attrs: [[연결성, HDMI 입력], [연결성, HDMI 버전], [연결성, HDCP 버전]], prefixes: ["입력 ", "버전 ", "HDCP "]}
+          - {label: DP, attrs: [[연결성, DP 입력], [연결성, DP 버전]], prefixes: ["입력 ", "버전 "]}
+          - {label: USB, attrs: [[연결성, USB]]}
+          - {label: RS232, attrs: [[연결성, RS232 입력], [연결성, RS232 출력]], format: presence_pair, names: [입력, 출력], prefixes: ["입력 ", "출력 "]}
+          - {label: 네트워크, attrs: [[연결성, RJ45 입력], [연결성, WiFi], [연결성, Bluetooth]], format: presence_names, names: [RJ45, Wi-Fi, Bluetooth]}
+          - {label: 오디오, attrs: [[연결성, 오디오출력]], prefixes: ["출력 "]}
+      - name: 운영 · 환경
+        column: right
+        rows:
+          - {label: 운영체제, attrs: [[SoC, 운영체제 버전]]}
+          - {label: 저장 공간, attrs: [[SoC, 플래시메모리 사이즈]]}
+          - {label: 동작 온도, attrs: [[동작조건, 온도]]}
+          - {label: 동작 습도, attrs: [[동작조건, 습도]]}
+      - name: 인증 · 액세서리
+        column: right
+        rows:
+          - {label: KC 인증, attrs: [[상품 기본정보, KC 인증 필 유무]]}
+          - {label: 안전 규격, attrs: [[인증정보, 안전 규격]]}
+          - {label: EMC, attrs: [[인증정보, EMC]]}
+          - {label: 마운트, attrs: [[추가 기능, 마운트]]}
+          - {label: 스탠드, attrs: [[추가 기능, 스탠드]]}
+
+# 왼쪽 패널 파생값(부록 B 끝): 핵심 칩 · 사실 줄
+key_chips:
+  signage: [resolution_label, brightness_raw, operation_hours_raw, thickness, os_raw]
+  default: [resolution_label, panel_raw]
+facts:
+  - {label: 출시, attr: [상품 기본정보, 동일모델의 출시년월], norm_key: release_ym}
+  - {label: 제조국, attr: [상품 기본정보, 제조국가]}
+  - {label: 동작, attr: [동작조건, 온도], norm_key: operating_temp_c, squeeze_tilde: true}

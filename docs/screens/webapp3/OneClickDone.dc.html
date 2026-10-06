@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>딸깍 — 제안서 완성 (추론 표시 · 검토 필요)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="6" auto-from="4" complete="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">딸깍으로 제안서를 완성했습니다. 21장 중 16장을 추론으로 채웠고, 그 시트에는 <span style="font-weight: 600">추론</span> 표시와 근거 노트를 남겼어요. 먼저 확인이 필요한 3곳을 모았습니다.</div>
+
+            <!-- 결과 파일 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg></div>
+                <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+                  <div style="font-size: 13.5px; font-weight: 600">A커피_디지털메뉴보드_제안서_v1.pptx</div>
+                  <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #596170">
+                    <span>표준 제안서 · 21장</span>
+                    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>확정 5</span>
+                    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #121417"></span>추론 16</span>
+                    <span style="color: #1428a0; font-weight: 600">검토 필요 3</span>
+                  </div>
+                </div>
+                <button style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600">PDF</button>
+                <button style="height: 34px; padding: 0 14px; border-radius: 8px; border: none; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg>PPTX 다운로드</button>
+              </div>
+              <div style="padding: 12px 16px; display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 8px">
+                <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="8">
+                  <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                    <div style="{{t.boxStyle}}">
+                      <div style="position: absolute; left: 0; top: 0; right: 0; height: 3px; background: #1428a0"></div>
+                      <div style="position: absolute; left: 6px; top: 9px; width: 40%; height: 4px; background: #121417; border-radius: 2px"></div>
+                      <div style="position: absolute; left: 6px; top: 18px; right: 10px; height: 16px; background: #f0f2f5; border-radius: 2px"></div>
+                      <sc-if value="{{t.inferred}}" hint-placeholder-val="{{false}}">
+                        <span style="position: absolute; right: 3px; bottom: 3px; display: flex; align-items: center; gap: 2px; height: 14px; padding: 0 4px; border-radius: 3px; background: #121417; color: #ffffff; font-size: 9px; font-weight: 700"><svg width="7" height="7" viewBox="0 0 24 24" fill="#9db4ff"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>추론</span>
+                      </sc-if>
+                    </div>
+                    <span style="font-size: 10.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.label}}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="padding: 0 16px 12px 16px; font-size: 12px; color: #596170">09–21 조감도 포인트 · 공간별 제품 4 · 솔루션 제안 2 · 유관 사례 2 · Why Samsung 2 · 제품 스펙 2 — 모두 추론</div>
+            </div>
+
+            <!-- 검토가 필요한 곳 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="padding: 10px 16px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between">
+                <span style="font-size: 13px; font-weight: 700">검토가 필요한 곳 3</span>
+                <span style="font-size: 12px; color: #596170">나머지 추론 시트는 근거 노트만 확인하면 돼요</span>
+              </div>
+              <sc-for list="{{reviews}}" as="rv" hint-placeholder-count="3">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 9px 16px; border-bottom: 1px solid #f0f2f5">
+                  <span style="width: 22px; height: 22px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: Manrope, sans-serif">{{rv.no}}</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+                    <span style="font-size: 13px; font-weight: 600">{{rv.where}}</span>
+                    <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{rv.why}}</span>
+                  </div>
+                  <button style="height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; flex-shrink: 0">이대로 확정</button>
+                  <a href="{{rv.href}}" style="height: 28px; padding: 0 10px; border-radius: 6px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">섹션 열기</a>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">딸깍 완료 <span style="color: #596170; font-weight: 500">· 섹션을 열어 다듬으면 그 섹션만 다시 생성됩니다</span></div>
+          <div style="display: flex; gap: 6px">
+            <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">추론한 시트만 보기</button>
+            <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">추론 근거 보기</button>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">수정 요청</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="fix" placeholder="수정 요청 (예: 공간별 제품 수량을 매장당 2대로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="PRS4.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">섹션 열어 다듬기</a>
+          <button style="height: 44px; padding: 0 18px; border-radius: 12px; border: none; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg>
+            <span>PPTX 다운로드</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 앞 8장: 표지·목차(자동) · MI 3 · VP 2(확정) · 조감도(추론)
+    const T = [['01 표지', 1], ['02 목차', 1], ['03 MI · 시장', 0], ['04 MI · 고객사', 0], ['05 MI · 경쟁', 0], ['06 VP · 과제', 0], ['07 VP · 가치', 0], ['08 조감도', 1]];
+    const thumbs = T.map(([label, inf]) => ({
+      label, inferred: !!inf,
+      boxStyle: 'position: relative; height: 50px; border-radius: 5px; background: #ffffff; overflow: hidden; box-sizing: border-box;' + (inf ? ' border: 1px dashed #121417;' : ' border: 1px solid #1428a0;')
+    }));
+    const reviews = [
+      { no: 1, where: '공간별 제품 · 주문 · 대기 공간', why: '매장당 1대로 수량을 가정했어요 — 실제 매장 도면과 맞는지 확인', href: 'PRS4.dc.html' },
+      { no: 2, where: 'Why Samsung · 경쟁사 비교', why: '경쟁사 수치를 찾지 못해 [확정 필요]로 두었어요', href: 'PRS7.dc.html' },
+      { no: 3, where: '유관 사례 · 사례 2건', why: '유사도 순으로 자동 선택 — 고객사에 공개 가능한 사례인지 확인', href: 'PRS6.dc.html' }
+    ];
+    return { steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], thumbs, reviews };
+  }
+}
+</script>
+</body>
+</html>

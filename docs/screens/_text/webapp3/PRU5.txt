@@ -1,0 +1,133 @@
+ 
+ 제안서 생성 완료 · 원본 대비 변경 요약 
+ W 
+ PPTX 22장 을 만들었어요. 원본(A 커피 2025 · 21장)과 비교해 무엇을 그대로 두고, 무엇을 바꾸고, 무엇을 새로 넣었는지 정리했어요. 갱신한 수치 · 모델은 검토 필요 목록에 모았어요. 
+ {{s.n}} 
+ {{s.label}} 
+ {{s.desc}} 
+ 섹션별 매핑 
+ 원본 21장 · A 커피 2025 v4 
+ {{lg.label}} 
+ 새 제안서 22장 
+ {{r.name}} 
+ {{r.origLabel}} 
+ {{c.label}} {{c.n}} 
+ {{r.newLabel}} 
+ 검토 필요 6곳 
+ 갱신한 수치 · 모델 · 원본과 달라진 곳 
+ 확정하지 않은 곳은 PPTX에 표시가 남아요 
+ {{rv.no}} 
+ {{rv.pre}} {{rv.mark}} {{rv.post}} 
+ {{rv.tag}} 
+ 바로 고치기 
+ 2곳 더 · 기대 효과 수치 출처 · 유관 사례 공개 범위 
+ 검토 필요 목록 전체 
+ 원본에 남긴 흔적 
+ 버전 · 변경 이력 
+ {{t.title}} 
+ {{t.sub}} 
+ 완료 · 22장 · 원본 대비 변경 11장 · 6 / 6 
+ {{ty.label}} {{ty.n}} 
+ A커피_디지털메뉴보드_제안_v1.pptx · 22장 · 16:9 · 삼성 B2B 표준 템플릿 · 원본 제안서는 바뀌지 않았어요. 
+ 미리보기 · 시트 편집 
+ 검토 요청 
+ PPTX 다운로드 
+class Component extends DCLogic {
+ renderVals() {
+ // 판정 색 (SPEC): 유지 · 갱신 · 재작성 · 신규 · 제외 + 자동(표지 · 목차 · Spec 시트 작업 등 판정 없이 생성)
+ const V = {
+ keep: ['유지', '', ''],
+ upd: ['갱신', '', ''],
+ rew: ['재작성', '', ''],
+ add: ['신규', '', ''],
+ drop: ['제외', '', ''],
+ auto: ['자동', '', '']
+ };
+ const dot = (c) => '' + c + ';';
+ // 요약 숫자 띠 (활용 계획 PRU3A 와 동일)
+ const SUM = [
+ ['keep', 5, '원본 그대로 · 공간 맵 · 대기 공간 · Why Samsung'],
+ ['upd', 5, '모델 · 수치 현행화 · QM55C · MagicINFO 9 · 320곳'],
+ ['rew', 3, '역할만 두고 다시 씀 · 가치 제안 · 기대 효과 · 구성도'],
+ ['add', 2, '요구사항 갭 · R3 가격 차등 · R4 단계 도입 로드맵'],
+ ['drop', 6, '견적 · 일정 · 조감도 · 매장 경험 KM · 지난 사례']
+ ];
+ const summary = SUM.map(([k, n, desc], i) => ({
+ n, label: V[k][0], desc,
+ dotStyle: dot(V[k][1]),
+ numStyle: '' + (k === 'drop' ? '' : '') + ';',
+ cellStyle: '' + (i > 0 ? '' : '')
+ }));
+ // 매핑 행: [섹션, 원본 칸 판정 목록, 새 칸 판정 목록, 칩 [[판정, n]]]
+ const M = [
+ ['표지 · 목차 · 간지', ['auto'], ['auto', 'auto', 'auto', 'auto', 'auto'], [['auto', 5]]],
+ ['Market Intelligence', ['upd', 'upd', 'keep'], ['upd', 'upd', 'keep'], [['upd', 2], ['keep', 1]]],
+ ['Value Props', ['rew', 'rew', 'drop'], ['rew', 'rew'], [['rew', 2], ['drop', 1]]],
+ ['조감도', ['drop'], ['auto'], [['drop', 1], ['auto', 1]]],
+ ['공간별 제품', ['upd', 'upd', 'keep'], ['upd', 'upd', 'keep'], [['upd', 2], ['keep', 1]]],
+ ['솔루션 제안', ['upd', 'rew'], ['upd', 'rew'], [['upd', 1], ['rew', 1]]],
+ ['유관 사례', ['keep', 'drop'], ['keep'], [['keep', 1], ['drop', 1]]],
+ ['Why Samsung', ['keep', 'keep'], ['keep', 'keep'], [['keep', 2]]],
+ ['제품 스펙', ['auto'], ['auto'], [['auto', 1]]],
+ ['요구사항 갭 · R3 · R4', [], ['add', 'add'], [['add', 2]]],
+ ['견적 · 일정', ['drop', 'drop', 'drop'], [], [['drop', 3]]]
+ ];
+ const cols = '';
+ const sq = (k, left) => ({
+ style: '' + (left
+ ? (k === 'drop' ? '' : '')
+ : (k === 'rew' ? '' : k === 'auto' ? '' : ' background: ' + V[k][1] + ';'))
+ });
+ const rows = M.map(([name, left, right, chips], i) => {
+ const isDrop = right.length === 0;
+ const isAdd = left.length === 0;
+ const main = chips[0][0];
+ const lineColor = isDrop ? '' : V[main][1];
+ return {
+ name,
+ left: left.map((k) => sq(k, true)),
+ right: right.map((k) => sq(k, false)),
+ origLabel: isAdd ? '—' : left.length + '장',
+ newLabel: isDrop ? '0장' : right.length + '장',
+ chips: chips.map(([k, n]) => ({ label: V[k][0], n, style: '' + V[k][2] })),
+ arrowColor: isDrop ? '' : lineColor,
+ lineL: '' + (isAdd ? 'transparent' : lineColor) + ';' + (isDrop ? '' : ''),
+ lineR: '' + (isDrop ? 'transparent' : lineColor) + ';' + (isAdd ? '' : ''),
+ nameStyle: '' + (isDrop ? '' : isAdd ? '' : ''),
+ newLabelStyle: '' + (isDrop ? '' : isAdd ? '' : ''),
+ rowStyle: 'display: grid; ' + cols + '' + (isAdd ? '' : '')
+ };
+ });
+ const legend = ['keep', 'upd', 'rew', 'add', 'drop', 'auto'].map((k) => ({
+ label: V[k][0], style: '' + V[k][2]
+ }));
+ const mapHeadStyle = 'display: grid; ' + cols + '';
+ // 검토 필요 6곳 중 4곳 (시트 순)
+ const RV = [
+ ['10', '카운터 메뉴보드 ', 'QM55B → QM55C', ' 치환 확인', '단종 치환'],
+ ['12', 'MagicINFO 9 ', '가격 정책', ' · 라이선스 단위가 8과 달라요', '정책'],
+ ['02', '시장 규모 · 성장 ', '2026 조사 반영', ' · 2025.11 수치 교체', '수치'],
+ ['03', '매장 수 ', '320', ' 전 시트 반영 · 원본 280', '값 전파']
+ ];
+ const reviews = RV.map(([no, pre, mark, post, tag], i) => ({
+ no, pre, mark, post, tag,
+ tagStyle: '',
+ style: ''
+ }));
+ // 원본에 남긴 흔적
+ const T = [
+ ["새 제안서 각 시트 노트에 '원본 p.N 기반 · 갱신' 기록", '시트 17장 · 되돌리기 가능', 'M5 12l5 5L20 7', ''],
+ ["버전 이력에 '2025 제안서 v4에서 파생' 표시", '새 제안서 v1 · 파생 관계가 목록에도 보여요', 'M5 12l5 5L20 7', ''],
+ ['원본 제안서는 바뀌지 않음', 'A 커피 2025 v4 · 2025.11.20 제출본 그대로', 'M12 11v6M9 14h6M6 6h12v15H6z', '']
+ ];
+ const traces = T.map(([title, sub, icon, s]) => ({
+ title, sub, icon,
+ iconStyle: '' + s
+ }));
+ const tally = SUM.map(([k, n]) => ({ label: V[k][0], n: n + '장', style: '' + V[k][2].replace(' text-decoration: line-through;', '') }));
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6,
+ summary, rows, legend, mapHeadStyle, reviews, traces, tally
+ };
+ }
+}

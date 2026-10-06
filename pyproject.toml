@@ -1,0 +1,18 @@
+# Winmate 파이썬 워크스페이스(uv). 서비스마다 자기 pyproject 를 가지며, 잠금 파일(uv.lock)과 가상환경(.venv)은 하나를 공유한다.
+#   uv sync --all-packages      # 전체 설치
+#   uv run pytest services/kb   # 서비스 하나 테스트
+[tool.uv.workspace]
+members = ["libs/common", "services/*"]
+
+[tool.uv]
+dev-dependencies = [
+  "pytest>=9.1",
+  "pytest-asyncio>=1.4",
+  "fakeredis>=2.39",
+  "respx>=0.23",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = "-q --import-mode=importlib -p no:cacheprovider"

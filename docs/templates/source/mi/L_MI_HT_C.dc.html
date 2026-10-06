@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-HT-C 호텔 · 리조트 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">B 호텔 투숙객의 하룻밤, 평가는 입실과 취침 순간에 갈립니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">누가 묵는가 · 도착부터 체크아웃까지의 감정 곡선 · 같은 순간의 운영팀 · 삼성이 개입하는 지점</div>
+
+  <!-- ============ 좌 · B 호텔을 찾는 사람들 ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 270px; height: 488px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 176px; width: 230px; height: 22px; font-size: 15px; font-weight: 800; line-height: 22px; white-space: nowrap">B 호텔을 찾는 사람들</div>
+  <div style="position: absolute; left: 84px; top: 199px; width: 230px; height: 16px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">구성비는 예시 · 예약 데이터로 교체</div>
+  <div style="position: absolute; left: 129px; top: 228px; width: 140px; height: 140px; border-radius: 50%; background: conic-gradient(#1428a0 0 40%, #6f82d6 40% 67%, #b8c3ee 67% 87%, #d5d9e0 87% 100%)"></div>
+  <div style="position: absolute; left: 155px; top: 254px; width: 88px; height: 88px; border-radius: 50%; background: #f5f6f8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px">
+    <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #121417; white-space: nowrap">[00,000]</span>
+    <span style="font-size: 11px; color: #596170; white-space: nowrap">월 투숙 · 방문</span>
+  </div>
+  <sc-for list="{{personas}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.style}}">
+      <span style="{{p.badge}}">{{p.no}}</span>
+      <span style="position: absolute; left: 28px; top: 0px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">{{p.name}}</span>
+      <span style="position: absolute; right: 0px; top: 0px; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; line-height: 20px; color: #1428a0; white-space: nowrap">{{p.share}}</span>
+      <span style="position: absolute; left: 28px; top: 25px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">{{p.need}}</span>
+    </div>
+    <sc-if value="{{p.line}}" hint-placeholder-val="{{true}}">
+      <div style="{{p.lineStyle}}"></div>
+    </sc-if>
+  </sc-for>
+
+  <!-- ============ 우 · 여정 ============ -->
+  <!-- 결정적 순간 띠 -->
+  <sc-for list="{{bands}}" as="b" hint-placeholder-count="2">
+    <div style="{{b.style}}"></div>
+    <span style="{{b.chip}}">결정적 순간</span>
+  </sc-for>
+  <!-- 열 구분선 -->
+  <sc-for list="{{dividers}}" as="d" hint-placeholder-count="5">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+
+  <!-- 단계 머리 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.style}}">
+      <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 20px; height: 20px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span><span style="font-size: 13.5px; font-weight: 800; line-height: 20px">{{s.name}}</span></span>
+      <span style="font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.where}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 감정 곡선 (예시) -->
+  <div style="position: absolute; left: 358px; top: 282px; width: 858px; height: 0px; border-top: 1px dashed #d5d9e0"></div>
+  <span style="position: absolute; left: 362px; top: 236px; height: 14px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">↑ 만족</span>
+  <span style="position: absolute; left: 362px; top: 314px; height: 14px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">↓ 불만 · 감정 곡선은 예시</span>
+  <svg style="position: absolute; left: 358px; top: 232px" width="858" height="100" viewBox="0 0 858 100" fill="none">
+    <polyline points="{{curveNow}}" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="{{curveAfter}}" fill="none" stroke="#1428a0" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+  </svg>
+  <sc-for list="{{dots}}" as="o" hint-placeholder-count="12">
+    <div style="{{o.style}}"></div>
+  </sc-for>
+  <span style="position: absolute; left: 1156px; top: 254px; height: 14px; font-size: 11px; font-weight: 800; line-height: 14px; color: #1428a0; white-space: nowrap">적용 후</span>
+  <span style="position: absolute; left: 1156px; top: 288px; height: 14px; font-size: 11px; font-weight: 700; line-height: 14px; color: #596170; white-space: nowrap">지금</span>
+
+  <!-- 불편 · 누가 -->
+  <sc-for list="{{pains}}" as="q" hint-placeholder-count="6">
+    <div style="{{q.badgeRow}}">
+      <sc-for list="{{q.who}}" as="w" hint-placeholder-count="2">
+        <span style="{{w.style}}">{{w.no}}</span>
+      </sc-for>
+    </div>
+    <div style="{{q.textStyle}}">{{q.text}}</div>
+  </sc-for>
+
+  <!-- 삼성 개입 지점 -->
+  <sc-for list="{{acts}}" as="a" hint-placeholder-count="6">
+    <div style="{{a.style}}">
+      <span style="font-size: 12px; font-weight: 800; line-height: 16px; color: #ffffff; white-space: nowrap">{{a.what}}</span>
+      <span style="font-size: 11.5px; line-height: 16px; color: #dfe6ff">{{a.does}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 같은 순간, 운영팀 -->
+  <div style="position: absolute; left: 358px; top: 504px; width: 858px; height: 18px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 13.5px; font-weight: 800">같은 순간, B 호텔 운영팀은</span><span style="font-size: 11.5px; color: #8a91a0">지금의 수고 → 삼성이 덜어주는 일</span></div>
+  <sc-for list="{{staff}}" as="r" hint-placeholder-count="5">
+    <div style="{{r.style}}">
+      <span style="position: absolute; left: 10px; top: 10px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{r.role}}</span>
+      <div style="{{r.painStyle}}">{{r.pain}}</div>
+      <div style="{{r.lineStyle}}"></div>
+      <div style="{{r.helpStyle}}"><span style="font-weight: 800; color: #1428a0">→ </span>{{r.help}}</div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 객실 · 로비 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+
+    // 페르소나 색 — 도넛 · 배지 공통
+    const PC = [
+      { bg: BLUE, fg: '#ffffff' },
+      { bg: '#6f82d6', fg: '#ffffff' },
+      { bg: '#b8c3ee', fg: '#121417' },
+      { bg: '#d5d9e0', fg: '#121417' }
+    ];
+    const badge = (n, size) => A + 'width: ' + px(size) + 'height: ' + px(size) + 'border-radius: 50%; background: ' + PC[n - 1].bg + '; color: ' + PC[n - 1].fg + '; font-family: Manrope, sans-serif; font-size: ' + (size > 18 ? 11 : 10) + 'px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
+
+    const PS = [
+      ['출장 · 비즈니스', '빠른 체크인 · 객실 업무 · 숙면'],
+      ['외국인 관광객', '다국어 안내 · 교통 · 주변 정보'],
+      ['장기 · 가족 투숙', '세탁 · 휴식 · 객실 엔터테인먼트'],
+      ['연회 · 회의 방문객', '행사장 찾기 · 일정 · 쾌적한 회의장']
+    ];
+    const personas = PS.map(([name, need], i) => ({
+      no: String(i + 1), name, need, share: '[00]%',
+      style: A + box(84, 386 + i * 64, 230, 44),
+      badge: badge(i + 1, 20) + ' left: 0px; top: 0px;',
+      line: i < PS.length - 1,
+      lineStyle: A + box(84, 386 + i * 64 + 54, 230, 1) + 'background: #e2e5ea;'
+    }));
+
+    // 여정 열 — x 358 + i × 143, 폭 143
+    const X0 = 358, CW = 143;
+    const cx = (i) => X0 + i * CW;
+    const ST = [
+      ['도착 · 체크인', '로비 · 프런트'],
+      ['객실 입실', '객실 · 첫 3분'],
+      ['업무 · 휴식', '객실 · 책상 · TV'],
+      ['식사 · 부대시설', '식당 · 연회장 · 세탁실'],
+      ['취침', '객실 · 밤'],
+      ['체크아웃', '객실 → 로비']
+    ];
+    const stages = ST.map(([name, where], i) => ({
+      no: String(i + 1), name, where,
+      style: A + box(cx(i) + 8, 164, CW - 14, 40) + 'display: flex; flex-direction: column; gap: 3px;'
+    }));
+    const MOT = [1, 4];
+    const bands = MOT.map((i) => ({
+      style: A + box(cx(i) + 2, 158, CW - 4, 336) + 'border-radius: 12px; background: #eaeefb;',
+      chip: A + 'left: ' + px(cx(i) + 34) + 'top: 212px; width: 75px; height: 20px; box-sizing: border-box; border-radius: 999px; background: ' + BLUE + '; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; white-space: nowrap;'
+    }));
+    const dividers = [1, 2, 3, 4, 5].filter((i) => MOT.indexOf(i) < 0 && MOT.indexOf(i - 1) < 0).map((i) => ({
+      style: A + box(cx(i), 166, 1, 320) + 'background: #e2e5ea;'
+    }));
+
+    // 감정 곡선 — 값 0(불만)…1(만족), 화면 y = 326 − v × 88, SVG 원점 (358, 232)
+    const NOW = [0.40, 0.30, 0.55, 0.45, 0.22, 0.42];
+    const AFTER = [0.62, 0.86, 0.74, 0.70, 0.83, 0.70];
+    const yOf = (v) => Math.round(326 - v * 88);
+    const pts = (arr) => arr.map((v, i) => (71.5 + i * CW) + ',' + (yOf(v) - 232)).join(' ');
+    const dots = [];
+    NOW.forEach((v, i) => dots.push({ style: A + box(cx(i) + 67, yOf(v) - 4, 9, 9) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #8a91a0;' }));
+    AFTER.forEach((v, i) => dots.push({ style: A + box(cx(i) + 66, yOf(v) - 5, 11, 11) + 'box-sizing: border-box; border-radius: 50%; background: ' + BLUE + '; border: 2px solid #ffffff;' }));
+
+    // 불편 + 누가 느끼는가 (페르소나 번호)
+    const PN = [
+      [[2, 4], '줄 서서 리무진 · 조식 시간 같은 질문을 반복'],
+      [[1, 2, 3], '방이 덥거나 춥고, TV · 조명 조작을 헤맴'],
+      [[1, 3], '호텔 시설 · 프로모션을 몰라 객실에만 머묾'],
+      [[2, 3, 4], '식당 · 세탁실 · 행사장 위치와 시간을 찾아 헤맴'],
+      [[1, 3], '직바람 · 소음 · 온도 때문에 깨는 밤'],
+      [[1, 2], '체크아웃 대기, 객실 TV에 남은 내 계정 걱정']
+    ];
+    const pains = PN.map(([who, text], i) => ({
+      text,
+      who: who.map((n) => ({ no: String(n), style: badge(n, 16).replace(A, '') + ' position: relative;' })),
+      badgeRow: A + box(cx(i) + 8, 338, CW - 16, 16) + 'display: flex; gap: 4px;',
+      textStyle: A + box(cx(i) + 8, 359, CW - 16, 52) + 'font-size: 12px; font-weight: 600; line-height: 17px; color: #121417;'
+    }));
+
+    // 삼성이 개입하는 지점
+    const AC = [
+      ['로비 사이니지', '다국어 FAQ · 리무진 시간 안내'],
+      ['호텔 TV · 공조 제어', '이름 웰컴 화면, 입실 전 맞춘 온도'],
+      ['객실 TV 홈 메뉴', '시설 안내와 룸서비스 · 예약'],
+      ['사이니지 · 무인 세탁', '층별 · 행사 안내, 셀프 결제 세탁실'],
+      ['무풍 시스템에어컨', '직바람 없이, 객실별 개별 제어'],
+      ['LYNK Cloud', '체크아웃 시 계정 · 설정 초기화']
+    ];
+    const acts = AC.map(([what, does], i) => ({
+      what, does,
+      style: A + box(cx(i) + 4, 420, CW - 8, 66) + 'box-sizing: border-box; padding: 8px 9px; border-radius: 10px; background: ' + BLUE + '; display: flex; flex-direction: column; gap: 2px;'
+    }));
+
+    // 운영팀 — [시작 열, 열 수, 역할, 지금의 수고, 삼성이 덜어주는 일]
+    const SF = [
+      [0, 1, '프런트', '같은 안내를 하루 종일 반복', '사이니지가 먼저 안내'],
+      [1, 2, '객실 정비 · 시설', '입실 전 객실 TV 세팅 · 공조 상태를 방마다 확인', 'LYNK Cloud · DMS로 한 화면에서 점검'],
+      [3, 1, '마케팅 · 연회', '일정 · 프로모션 안내물 교체', 'MagicINFO 예약 표출'],
+      [4, 1, '시설 · 야간 당직', '야간 냉난방 민원 · 고장 출동', '원격 제어 · 성수기 전 사전점검'],
+      [5, 1, '객실 정비', 'TV 계정 · 설정 초기화', 'PMS 연동 자동 초기화']
+    ];
+    const staff = SF.map(([c, n, role, pain, help]) => {
+      const w = CW * n - 8, iw = w - 20;
+      return {
+        role, pain, help,
+        style: A + box(cx(c) + 4, 528, w, 120) + 'box-sizing: border-box; border-radius: 10px; background: #f5f6f8;',
+        painStyle: A + box(10, 34, iw, 34) + 'font-size: 12px; line-height: 17px; color: #3d4452;',
+        lineStyle: A + box(10, 74, iw, 1) + 'background: #d5d9e0;',
+        helpStyle: A + box(10, 80, iw, 34) + 'font-size: 12px; font-weight: 700; line-height: 17px; color: #1428a0;'
+      };
+    });
+
+    return { personas, bands, dividers, stages, curveNow: pts(NOW), curveAfter: pts(AFTER), dots, pains, acts, staff };
+  }
+}
+</script>
+</body>
+</html>

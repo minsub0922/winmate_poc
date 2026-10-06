@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>섹션 작성 · 흐름 가이드 · Value Props</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <!-- 상단 띠: 섹션 위치 · 보기 전환 -->
+      <div style="width: 1100px; height: 52px; box-sizing: border-box; padding: 0 16px; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0; position: relative">
+        <span style="height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">표준 2 / 8</span>
+        <span style="font-size: 15px; font-weight: 700; white-space: nowrap">Value Props</span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">가치 제안 · 이해관계자별 가치 · 기대 효과</span>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">원본 · B 베이커리 p.7–8 · 역할만 참고</span>
+        <div style="position: relative; flex-shrink: 0">
+          <div role="radiogroup" aria-label="보기" style="display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: #f0f2f5">
+            <sc-for list="{{views}}" as="v" hint-placeholder-count="3">
+              <button role="radio" aria-checked="{{v.on}}" aria-disabled="{{v.off}}" title="{{v.tip}}" style="{{v.style}}">{{v.label}}</button>
+            </sc-for>
+          </div>
+          <!-- 비활성 보기 툴팁 (호버 상태) -->
+          <div role="tooltip" style="position: absolute; top: 40px; left: 0; z-index: 2; height: 26px; box-sizing: border-box; padding: 0 10px; border-radius: 7px; background: #121417; color: #ffffff; font-size: 11px; display: flex; align-items: center; white-space: nowrap; box-shadow: 0 6px 16px rgba(18,20,23,0.18)">흐름 차용 모드에선 원본 내용을 보여주지 않아요</div>
+          <div style="position: absolute; top: 35px; left: 38px; z-index: 3; width: 8px; height: 8px; background: #121417; transform: rotate(45deg)"></div>
+        </div>
+      </div>
+
+      <!-- 본문 2열 -->
+      <div style="width: 1100px; height: 430px; margin-top: 12px; display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 20px; flex-shrink: 0">
+        <!-- 왼쪽: 흐름 가이드 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; min-width: 0">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 6h10M4 12h16M4 18h12"/></svg>
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">흐름 가이드 · 이 자리의 역할</span>
+            <span style="flex-grow: 1"></span>
+            <span style="font-size: 10.5px; color: #8a91a0; white-space: nowrap">원본 역할 3 / 3 반영</span>
+          </div>
+          <div style="padding: 12px 14px 0 14px; display: flex; flex-direction: column; min-height: 0; overflow: hidden">
+            <sc-for list="{{guide}}" as="g" hint-placeholder-count="3">
+              <div style="display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 0 10px; height: 120px">
+                <!-- 레일 -->
+                <div style="display: flex; flex-direction: column; align-items: center">
+                  <span style="{{g.numStyle}}">{{g.no}}</span>
+                  <sc-if value="{{g.hasLine}}" hint-placeholder-val="{{true}}"><span style="width: 1px; flex-grow: 1; background: #e2e5ea; margin-top: 4px"></span></sc-if>
+                </div>
+                <!-- 내용 -->
+                <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                  <div style="display: flex; align-items: center; gap: 6px; height: 24px">
+                    <span style="{{g.titleStyle}}">{{g.title}}</span>
+                    <span style="{{g.badgeStyle}}">{{g.badge}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; height: 18px; min-width: 0">
+                    <span style="width: 40px; flex-shrink: 0; font-size: 10.5px; color: #8a91a0; white-space: nowrap">역할</span>
+                    <span style="font-size: 12px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{g.role}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; height: 18px; min-width: 0">
+                    <span style="width: 40px; flex-shrink: 0; font-size: 10.5px; color: #8a91a0; white-space: nowrap">원본에서</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{g.orig}}</span>
+                    <span style="height: 16px; box-sizing: border-box; padding: 0 5px; border-radius: 4px; background: #f0f2f5; color: #8a91a0; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">내용 안 가져옴</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px; height: 18px; min-width: 0">
+                    <span style="width: 40px; flex-shrink: 0; font-size: 10.5px; color: #1428a0; font-weight: 700; white-space: nowrap">이번엔</span>
+                    <span style="font-size: 11.5px; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{g.now}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 4px; height: 18px; padding-left: 46px">
+                    <sc-for list="{{g.chips}}" as="c" hint-placeholder-count="3">
+                      <span style="{{c.style}}">{{c.label}}</span>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 오른쪽: 새 시트 · 가치 제안 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; min-width: 0">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">새 시트 · 가치 제안</span>
+            <span style="height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>원본 내용 0줄 사용 · 구조만</span>
+            <span style="flex-grow: 1"></span>
+            <span style="height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11px; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">VP-FB-A</span><span style="color: #596170">업종 레이아웃 · 자동 추천</span></span>
+            <a href="PRS2LayoutInd.dc.html" style="font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 3px; white-space: nowrap">바꾸기<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+          </div>
+          <div style="padding: 12px 14px 0 14px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
+            <!-- 제목 · Key Message -->
+            <div style="display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 6px 8px; align-items: center">
+              <label for="vp-title" style="font-size: 11.5px; color: #596170; white-space: nowrap">시트 제목</label>
+              <input id="vp-title" value="가치 제안 — 본사가 하루에 바꾸는 320개 매장 메뉴보드" style="height: 34px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; background: #ffffff; padding: 0 10px; font-size: 13.5px; font-weight: 600; color: #121417; outline: none; min-width: 0">
+              <label for="vp-km" style="font-size: 11.5px; color: #596170; white-space: nowrap">Key Message</label>
+              <input id="vp-km" value="본사 통제 · 교체 주기 — 콘텐츠 승인부터 매장 송출까지 당일에 끝나는 운영" style="height: 34px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; background: #ffffff; padding: 0 10px; font-size: 13px; color: #121417; outline: none; min-width: 0">
+            </div>
+
+            <!-- 과제 → 해법 → 효과 -->
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) 22px minmax(0, 1fr) 22px minmax(0, 1fr); align-items: start">
+              <sc-for list="{{cols}}" as="col" hint-placeholder-count="3">
+                <sc-if value="{{col.hasArrow}}" hint-placeholder-val="{{false}}">
+                  <div style="height: 160px; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+                </sc-if>
+                <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #fbfbfc; padding: 8px 10px 10px 10px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                  <div style="display: flex; align-items: center; gap: 6px; height: 22px">
+                    <span style="{{col.noStyle}}">{{col.no}}</span>
+                    <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">{{col.title}}</span>
+                    <span style="font-size: 10.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{col.hint}}</span>
+                  </div>
+                  <sc-for list="{{col.lines}}" as="ln" hint-placeholder-count="3">
+                    <div style="position: relative; display: flex; align-items: center">
+                      <label for="{{ln.id}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{ln.label}}</label>
+                      <input id="{{ln.id}}" value="{{ln.value}}" style="{{ln.style}}">
+                      <sc-if value="{{ln.ph}}" hint-placeholder-val="{{false}}">
+                        <span style="position: absolute; right: 6px; height: 16px; box-sizing: border-box; padding: 0 5px; border-radius: 4px; background: #fdf0e6; color: #8a3b00; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">확정 필요</span>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- 플레이스홀더 등록 -->
+            <div style="height: 40px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; background: #fdf8f3; border: 1px solid #f3dcc8; display: flex; align-items: center; gap: 8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a3b00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5v.3"/></svg>
+              <span style="font-size: 12px; font-weight: 600; color: #121417; white-space: nowrap">수치 플레이스홀더 3곳</span>
+              <div style="display: flex; gap: 4px">
+                <sc-for list="{{phs}}" as="p" hint-placeholder-count="3">
+                  <span style="height: 22px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #f3dcc8; color: #8a3b00; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{p.mark}}</span>{{p.label}}</span>
+                </sc-for>
+              </div>
+              <span style="flex-grow: 1"></span>
+              <span style="font-size: 11.5px; color: #596170; white-space: nowrap">확정 필요 목록에 등록됨 · 원본 수치는 출처가 없어 쓰지 않아요</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 띠: 이 섹션의 시트 3장 -->
+      <div style="width: 1100px; height: 106px; margin-top: 12px; box-sizing: border-box; padding: 0 14px; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <div style="width: 96px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">이 섹션의 시트</span>
+          <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">3장 · 흐름 순서</span>
+        </div>
+        <sc-for list="{{sheets}}" as="sh" hint-placeholder-count="3">
+          <button aria-pressed="{{sh.on}}" style="{{sh.style}}">
+            <dc-import name="Thumb" kind="{{sh.kind}}" n="3" hint-size="120px,68px"></dc-import>
+            <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex-grow: 1; text-align: left">
+              <div style="display: flex; align-items: center; gap: 6px">
+                <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #8a91a0">{{sh.no}}</span>
+                <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{sh.name}}</span>
+              </div>
+              <span style="font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{sh.role}}</span>
+              <span style="{{sh.badgeStyle}}">{{sh.badge}}</span>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 12px 40px 22px 40px">
+      <div style="width: 1100px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">흐름 가이드 작성 <span style="color: #596170; font-weight: 500">· 원본 역할 3 / 3 반영 · 수치 플레이스홀더 3곳 확정 필요 등록 · 4 / 6</span></div>
+          <span style="flex-grow: 1"></span>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{tally}}" as="ty" hint-placeholder-count="3">
+              <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">원본 B 베이커리 내용은 한 줄도 들어가지 않아요. 역할 · 순서만 따르고, 수치는 확정 필요 목록에서 채워요.</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="PRS1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">이전 섹션</a>
+            <a href="PRS3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>다음 섹션</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 보기 전환: 원본 대조(비활성 · 흐름 차용 모드) / 새 시트만 / 흐름 가이드(on)
+    const views = [['원본 대조', 'off'], ['새 시트만', ''], ['흐름 가이드', 'on']].map(([label, st]) => ({
+      label, on: st === 'on', off: st === 'off',
+      tip: st === 'off' ? '흐름 차용 모드에선 원본 내용을 보여주지 않아요' : '',
+      style: 'height: 26px; padding: 0 10px; border: none; border-radius: 7px; font-size: 12px; white-space: nowrap;' + (st === 'on' ? ' background: #ffffff; color: #121417; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12);' : st === 'off' ? ' background: transparent; color: #b8bec8; font-weight: 500; cursor: not-allowed;' : ' background: transparent; color: #596170; font-weight: 500;')
+    }));
+
+    // 상태 배지
+    const BADGE = {
+      doing: ['작성 중', ' background: #1428a0; color: #ffffff;'],
+      wait: ['대기', ' color: #596170; background: #f0f2f5;']
+    };
+    const badge = (k) => 'height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + BADGE[k][1];
+    const chip = (kind) => 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 4px; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' + (kind === 'req' ? ' background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-weight: 800;' : kind === 'tpl' ? ' background: #ffffff; border: 1px solid #e2e5ea; color: #121417; font-family: Manrope, sans-serif; font-weight: 800;' : kind === 'warn' ? ' background: #fdf0e6; color: #8a3b00;' : ' background: #f0f2f5; color: #596170;');
+
+    // 흐름 가이드 3단계: [제목, 역할, 원본에서, 이번엔, 칩[[label, kind]], 상태]
+    const G = [
+      ['가치 제안', '과제 → 해법 → 효과 한 장', "'본사 통제 · 운영 부담 ↓'을 말했음", 'R1 R2 · 톤 운영 효율 · 업종 레이아웃 추천', [['R1', 'req'], ['R2', 'req'], ['운영 효율 톤', 'plain'], ['VP-FB-A', 'tpl']], 'doing'],
+      ['이해관계자별 가치', '본사 · 점주 · 손님 3축', "'점주 인터뷰'가 근거였음", '근거는 요구사항 R3 매장별 가격 차등', [['R3', 'req'], ['3축 유지', 'plain'], ['VP-FB-B', 'tpl']], 'wait'],
+      ['기대 효과', 'Before / After', '출처 없는 수치였음', '수치 비워 두고 [00]% 플레이스홀더 · 확정 필요 등록', [['플레이스홀더 3곳', 'warn'], ['VP-FB-C', 'tpl']], 'wait']
+    ];
+    const guide = G.map(([title, role, orig, now, chips, st], i) => ({
+      no: String(i + 1), title, role, orig, now, hasLine: i < G.length - 1,
+      badge: BADGE[st][0], badgeStyle: badge(st),
+      numStyle: 'width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;' + (st === 'doing' ? ' background: #1428a0; color: #ffffff;' : ' background: #ffffff; color: #596170; border: 1.5px solid #d5d9e0;'),
+      titleStyle: 'font-size: 13.5px; font-weight: 700; white-space: nowrap;' + (st === 'doing' ? ' color: #121417;' : ' color: #3d4452;'),
+      chips: chips.map(([label, kind]) => ({ label, style: chip(kind) }))
+    }));
+
+    // 과제 → 해법 → 효과 입력 블록 (A 커피 내용 · 원본 0줄)
+    const C = [
+      ['과제', '지금 겪는 문제', [
+        ['매장 320곳 프로모션 교체에 평균 [0]일', true],
+        ['매장별 가격 안내 불일치', false],
+        ['본사-매장 콘텐츠 승인 지연', false]
+      ]],
+      ['해법', '제안하는 구성', [
+        ['MagicINFO 9 본사 일괄 배포', false],
+        ['매장 변수 템플릿', false],
+        ['승인 워크플로', false]
+      ]],
+      ['효과', '바뀌는 결과', [
+        ['교체 주기 [0]일 → 당일', true],
+        ['가격 오류 [00]% ↓', true],
+        ['운영 인력 [0]명 절감', true]
+      ]]
+    ];
+    const cols = C.map(([title, hint, lines], ci) => ({
+      no: String(ci + 1), title, hint, hasArrow: ci > 0,
+      noStyle: 'width: 18px; height: 18px; border-radius: 5px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;',
+      lines: lines.map(([value, ph], li) => ({
+        id: 'vp-' + ci + '-' + li, label: title + ' ' + (li + 1), value, ph,
+        style: 'width: 100%; height: 34px; box-sizing: border-box; border-radius: 8px; background: #ffffff; padding: 0 ' + (ph ? '62px' : '10px') + ' 0 10px; font-size: 12.5px; color: #121417; outline: none; min-width: 0;' + (ph ? ' border: 1px solid #f3dcc8;' : ' border: 1px solid #e2e5ea;')
+      }))
+    }));
+    // 플레이스홀더 3곳 (효과 열 · 과제 열의 [0]일은 같은 값)
+    const phs = [['[0]일', '교체 소요 · 현재'], ['[00]%', '가격 오류 감소'], ['[0]명', '운영 인력 절감']].map(([mark, label]) => ({ mark, label }));
+
+    // 이 섹션의 시트 3장
+    const S = [['가치 제안', 'indVP', '과제 → 해법 → 효과', 'doing', true], ['이해관계자별 가치', 'persona', '본사 · 점주 · 손님', 'wait', false], ['기대 효과', 'hbars', 'Before / After', 'wait', false]];
+    const sheets = S.map(([name, kind, role, st, on], i) => ({
+      no: String(5 + i).padStart(2, '0'), name, kind, role, on,
+      badge: BADGE[st][0], badgeStyle: badge(st) + ' align-self: flex-start;',
+      style: 'flex-grow: 1; height: 84px; box-sizing: border-box; padding: 7px 10px 7px 7px; border-radius: 10px; display: flex; align-items: center; gap: 10px; min-width: 0; text-align: left;' + (on ? ' background: #f5f7fd; border: 1.5px solid #1428a0; box-shadow: 0 0 0 3px rgba(20,40,160,0.1);' : ' background: #ffffff; border: 1px solid #e2e5ea;')
+    }));
+
+    const tally = [['작성 중', 1, ' color: #ffffff; background: #1428a0;'], ['대기', 2, ' color: #596170; background: #f0f2f5;'], ['확정 필요', 3, ' color: #8a3b00; background: #fdf0e6;']]
+      .map(([label, n, s]) => ({ label, n, style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + s }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 4,
+      views, guide, cols, phs, sheets, tally
+    };
+  }
+}
+</script>
+</body>
+</html>

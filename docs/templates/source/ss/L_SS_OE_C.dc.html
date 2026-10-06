@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-OE-C 파트너 전용 단말 · 에디션 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">등교부터 잠들 때까지 — U 통신사 전용폰의 평일 하루</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">아이 · 부모 · 삼성 단말 · U 통신사 운영 데스크 — 시간마다 공간, 삼성이 하는 일, 그리고 결과</div>
+
+  <!-- 시간 눈금 (낮 → 밤) -->
+  <div style="position: absolute; left: 64px; top: 168px; width: 100px; display: flex; flex-direction: column; gap: 3px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800">시간 · 공간</span>
+    <span style="font-size: 11px; color: #8a91a0">시간은 예시 · 평일</span>
+  </div>
+  <div style="position: absolute; left: 172px; top: 213px; width: 1041px; height: 1px; background: #d5d9e0"></div>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.band}}"></div>
+    <div style="{{c.timePos}}">{{c.time}}</div>
+    <div style="{{c.spacePos}}">{{c.space}}</div>
+    <div style="{{c.tick}}"></div>
+  </sc-for>
+
+  <!-- 레인 라벨 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="5">
+    <div style="{{l.pos}}">
+      <span style="{{l.nameStyle}}">{{l.name}}</span>
+      <span style="{{l.roleStyle}}">{{l.role}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 레인 × 시간 칸 -->
+  <sc-for list="{{cells}}" as="k" hint-placeholder-count="24">
+    <div style="{{k.box}}">
+      <sc-if value="{{k.hasChip}}" hint-placeholder-val="{{false}}">
+        <span style="{{k.chip}}">{{k.chipText}}</span>
+      </sc-if>
+      <span style="{{k.textPos}}">{{k.text}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 결과 -->
+  <sc-for list="{{results}}" as="r" hint-placeholder-count="6">
+    <div style="{{r.box}}">
+      <span style="position: absolute; left: 10px; top: 8px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 24px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{r.kpi}}</span>
+      <span style="position: absolute; left: 10px; top: 34px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap">{{r.label}}</span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 172px; top: 626px; height: 16px; display: flex; align-items: center; gap: 16px; font-size: 11px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #eaeefb; border: 1px solid #b8c3ee"></span>삼성 단말 · Knox가 하는 일</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1px dashed #b8bec8"></span>개입 없음</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #3d4452"></span>운영 데스크가 직접 움직이는 순간</span>
+  </div>
+  <div style="position: absolute; left: 816px; top: 626px; width: 397px; height: 16px; text-align: right; font-size: 11px; color: #8a91a0; white-space: nowrap">시간 · 수치는 예시 · 실측 / 시뮬레이션 후 확정</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>U 통신사 · 전용 단말 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0', INK = '#3d4452';
+    const X = (i) => 172 + i * 175, W = 166;   // 6열 · 폭 166 · 간격 9 → 1213
+
+    // 레인 — y, 높이
+    const LN = {
+      kid: { y: 222, h: 74 }, parent: { y: 302, h: 58 }, sam: { y: 366, h: 108 }, op: { y: 480, h: 58 }, res: { y: 546, h: 60 }
+    };
+
+    // 시간 · 공간 (낮 → 밤 띠 색)
+    const T = [
+      ['08:10', '등굣길', '#eaeefb', false],
+      ['10:30', '학교 · 쉬는 시간', '#eaeefb', false],
+      ['16:00', '학원', '#eaeefb', false],
+      ['19:00', '집 · 숙제', '#b8c3ee', false],
+      ['21:30', '집 · 취침', '#6f82d6', false],
+      ['02:00', '운영 데스크', INK, true]
+    ];
+    const cols = T.map(([time, space, band, night], i) => ({
+      time, space,
+      band: A + box(X(i), 160, W, 6) + 'border-radius: 3px; background: ' + band + ';',
+      timePos: A + box(X(i), 172, 70, 22) + 'font-family: Manrope, sans-serif; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; color: ' + (night ? INK : BLUE) + ';',
+      spacePos: A + box(X(i) + 14, 194, W - 14, 16) + 'font-size: 12.5px; line-height: 16px; font-weight: 700; color: #121417; white-space: nowrap;',
+      tick: A + box(X(i), 198, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid ' + (night ? INK : BLUE) + ';'
+    }));
+
+    // 레인 라벨
+    const LB = [
+      ['아이', '단말 사용', LN.kid, 'u'],
+      ['부모', '부모 앱', LN.parent, 'u'],
+      ['삼성', '단말 · Knox', LN.sam, 's'],
+      ['U 통신사', '운영 데스크 · CS', LN.op, 'o'],
+      ['결과', 'KPI · 예시', LN.res, 'r']
+    ];
+    const lanes = LB.map(([name, role, L, kind]) => ({
+      name, role,
+      pos: A + box(64, L.y, 100, L.h) + 'box-sizing: border-box; border-radius: 10px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: nowrap; ' +
+        (kind === 's' ? 'background: ' + BLUE + ';' : kind === 'o' ? 'background: ' + INK + ';' : 'background: #f5f6f8;'),
+      nameStyle: 'font-size: 14px; font-weight: 800; color: ' + (kind === 's' || kind === 'o' ? '#ffffff' : '#121417') + ';',
+      roleStyle: 'font-size: 11px; color: ' + (kind === 's' ? '#c8d3ff' : kind === 'o' ? '#d5d9e0' : '#596170') + ';'
+    }));
+
+    // 칸 — [아이, 부모, 삼성 [칩, 문장], U 통신사] · null = 개입 없음
+    const C = [
+      ['뛰다 떨어뜨리고 비에 젖어도 그대로 씁니다', '학교 도착 알림 — 확인 전화 없이 출근',
+       ['XCover · 스마트태그', 'IP68 단말에 [U 안심 앱] 안심존 알림이 개통 때부터'], null],
+      ['친구가 알려준 방법으로 설정 해제 · 초기화를 시도', '알림 없음 — 규칙은 그대로',
+       ['Knox 보안', '시스템 수준 기능 제한 — 해제 · 앱 삭제 · 초기화 차단'], '우회 · 초기화 문의가 CS로 오지 않습니다'],
+      ['학원 도착, 학습 앱을 바로 실행합니다', '학원 도착 알림 · 위치 확인',
+       ['KC 앱 사전 탑재', '학습 · 안심 앱은 설치 없이 준비, 배터리는 하루를 버팁니다'], null],
+      ['학습용 갤럭시 탭과 S펜으로 숙제', '사용 시간 연장 요청을 부모 앱에서 승인',
+       ['KC 고급 설정', '학습 시간엔 학습 앱만 허용 — 탭 학습 에디션 런처'], null],
+      ['사용 시간 종료 — 전화 · 알람만 남습니다', '오늘 사용 리포트를 부모 앱에서 확인',
+       ['[자녀 보호 앱] + Knox', '취침 모드는 앱이 걸고, 해제 차단은 Knox가 지킵니다'], '안심 · 부가서비스 이용 지표 집계'],
+      [null, null,
+       ['KC 원격 배포', '새 학기 테마 · 학습 앱 업데이트를 사용 시간 밖에 일괄 적용'], 'KC 콘솔에서 새 프로필 배포 · 오늘 문의 정리']
+    ];
+    const IDLE = { kid: '충전 · 대기', parent: '—', op: '—' };
+    const cells = [];
+    const plain = (i, L, text, idleKey, style) => {
+      const idle = text === null;
+      cells.push({
+        hasChip: false, chip: 'display: none;', chipText: '',
+        text: idle ? IDLE[idleKey] : text,
+        box: A + box(X(i), L.y, W, L.h) + 'box-sizing: border-box; border-radius: 10px; ' + (idle ? 'border: 1px dashed #b8bec8; background: #ffffff;' : style),
+        textPos: A + 'left: 10px; top: 9px; width: 146px; font-size: 12px; line-height: 1.5; color: ' + (idle ? '#8a91a0' : (style.indexOf(INK) >= 0 ? '#ffffff' : '#3d4452')) + ';'
+      });
+    };
+    C.forEach(([kid, parent, sam, op], i) => {
+      plain(i, LN.kid, kid, 'kid', 'background: #f5f6f8;');
+      plain(i, LN.parent, parent, 'parent', 'background: #ffffff; border: 1px solid #e2e5ea;');
+      cells.push({
+        hasChip: true, chipText: sam[0], text: sam[1],
+        box: A + box(X(i), LN.sam.y, W, LN.sam.h) + 'box-sizing: border-box; border-radius: 10px; background: #eaeefb;',
+        chip: A + 'left: 10px; top: 10px; height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: ' + BLUE + '; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;',
+        textPos: A + 'left: 10px; top: 40px; width: 146px; font-size: 12px; line-height: 1.5; color: #121417;'
+      });
+      plain(i, LN.op, op, 'op', i === 5 ? 'background: ' + INK + ';' : 'background: #ffffff; border: 1px solid #e2e5ea;');
+    });
+
+    // 결과 — KPI 자리표시
+    const R = [
+      ['[0]회 ↓', '부모 확인 연락'],
+      ['[00]% ↓', '우회 · 초기화 문의'],
+      ['[00]%', '안심 서비스 이용률'],
+      ['[00]% ↓', '사용 시간 갈등'],
+      ['[0]분', '취침 후 사용'],
+      ['[00]%', '방문 없이 업데이트 적용']
+    ];
+    const results = R.map(([kpi, label], i) => ({
+      kpi, label,
+      box: A + box(X(i), LN.res.y, W, LN.res.h) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #b8c3ee;'
+    }));
+
+    return { cols, lanes, cells, results };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-SV-C 생활 편의 · 무인 매장 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">N 체인의 손님은 아무도 없는 매장에서 혼자 끝까지 해결합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">N 체인 매장을 찾는 손님 세 그룹과 무인 매장 이용 여정 — 불안해지는 순간과 삼성 제품 · 솔루션이 개입하는 지점</div>
+
+  <!-- 왼쪽: 손님 세 그룹 -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; font-size: 15px; font-weight: 800; line-height: 20px; white-space: nowrap">N 체인을 찾는 손님</div>
+  <sc-for list="{{personas}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.boxStyle}}"></div>
+    <div style="{{p.iconStyle}}">
+      <sc-if value="{{p.isCap}}" hint-placeholder-val="{{true}}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/></svg>
+      </sc-if>
+      <sc-if value="{{p.isHome}}" hint-placeholder-val="{{false}}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+      </sc-if>
+      <sc-if value="{{p.isHelp}}" hint-placeholder-val="{{false}}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 0 1 4.6 1.3c0 1.7-2.1 2.2-2.1 3.7"/><path d="M12 17.5h.01"/></svg>
+      </sc-if>
+    </div>
+    <span style="{{p.nameStyle}}">{{p.name}}</span>
+    <span style="{{p.shareStyle}}">{{p.share}}</span>
+    <span style="{{p.ctxStyle}}">{{p.ctx}}</span>
+    <span style="{{p.needStyle}}">{{p.need}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 438px; height: 14px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">비중은 예시 · 결제 · 회원 데이터로 반영</div>
+
+  <!-- 여정: 행 라벨 -->
+  <div style="position: absolute; left: 334px; top: 206px; width: 82px; height: 18px; font-size: 12px; font-weight: 800; line-height: 18px; white-space: nowrap">이용 경험</div>
+  <div style="position: absolute; left: 334px; top: 228px; width: 82px; height: 14px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">↑ 편함</div>
+  <div style="position: absolute; left: 334px; top: 300px; width: 82px; height: 14px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">↓ 불안</div>
+  <div style="position: absolute; left: 334px; top: 330px; width: 82px; height: 18px; font-size: 12px; font-weight: 800; line-height: 18px; white-space: nowrap">막히는 순간</div>
+  <div style="position: absolute; left: 334px; top: 384px; width: 82px; height: 18px; font-size: 12px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">삼성이 개입</div>
+
+  <!-- 여정: 단계 머리 -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="6">
+    <span style="{{s.noStyle}}">{{s.no}}</span>
+    <span style="{{s.nameStyle}}">{{s.name}}</span>
+    <span style="{{s.whereStyle}}">{{s.where}}</span>
+  </sc-for>
+
+  <!-- 여정: 감정 곡선 (모양은 예시) -->
+  <div style="position: absolute; left: 816px; top: 204px; width: 400px; height: 14px; display: flex; justify-content: flex-end; align-items: center; gap: 14px; font-size: 11px; line-height: 14px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 2px; background: #121417"></span>지금의 이용 경험</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 0px; border-top: 2px dashed #1428a0"></span>삼성 적용 시 목표</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; border: 2.5px solid #121417; background: #ffffff"></span>결정적 순간</span>
+  </div>
+  <svg style="position: absolute; left: 424px; top: 204px; width: 792px; height: 118px" width="792" height="118" viewBox="0 0 792 118" fill="none">
+    <path d="M 66 36.4 C 88.0 36.7 154.0 37.7 198 38.3 C 242.0 38.9 286.0 42.1 330 40.2 C 374.0 38.3 418.0 26.1 462 27 C 506.0 27.9 550.0 46.1 594 45.8 C 638.0 45.5 704.0 28.6 726 25.2 L 726 64.6 C 704.0 70.9 638.0 105.0 594 102.2 C 550.0 99.4 506.0 50.2 462 47.7 C 418.0 45.2 374.0 83.1 330 87.2 C 286.0 91.3 242.0 76.9 198 72.2 C 154.0 67.5 88.0 61.2 66 59 Z" fill="#eaeefb" stroke="none"/>
+    <path d="M 66 36.4 C 88.0 36.7 154.0 37.7 198 38.3 C 242.0 38.9 286.0 42.1 330 40.2 C 374.0 38.3 418.0 26.1 462 27 C 506.0 27.9 550.0 46.1 594 45.8 C 638.0 45.5 704.0 28.6 726 25.2" stroke="#1428a0" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/>
+    <path d="M 66 59 C 88.0 61.2 154.0 67.5 198 72.2 C 242.0 76.9 286.0 91.3 330 87.2 C 374.0 83.1 418.0 45.2 462 47.7 C 506.0 50.2 550.0 99.4 594 102.2 C 638.0 105.0 704.0 70.9 726 64.6" stroke="#121417" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+  <sc-for list="{{dots}}" as="d" hint-placeholder-count="6">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+
+  <!-- 여정: 막히는 순간 · 삼성이 개입 -->
+  <sc-for list="{{guides}}" as="g" hint-placeholder-count="5">
+    <div style="{{g.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 334px; top: 372px; width: 882px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 1017px; top: 440px; width: 2px; height: 157px; background: #b8c3ee"></div>
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="6">
+    <span style="{{c.painStyle}}">{{c.pain}}</span>
+    <div style="{{c.pillBox}}"><span style="height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c.sol}}</span></div>
+    <span style="{{c.prodStyle}}">{{c.prod}}</span>
+  </sc-for>
+
+  <!-- 아래: 그 시각, 매장 밖에서 — 이해관계자 레인 -->
+  <div style="position: absolute; left: 64px; top: 456px; width: 1152px; height: 1px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 64px; top: 464px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 13.5px; font-weight: 800; line-height: 20px">그 시각, 매장 밖에서</span><span style="font-size: 11.5px; line-height: 20px; color: #8a91a0">이해관계자가 같은 여정에 닿는 지점</span></div>
+  <sc-for list="{{lanes}}" as="ln" hint-placeholder-count="3">
+    <div style="{{ln.iconStyle}}">
+      <sc-if value="{{ln.isStore}}" hint-placeholder-val="{{true}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11h16V9"/><path d="M3 9h18"/><path d="M10 20v-6h4v6"/></svg>
+      </sc-if>
+      <sc-if value="{{ln.isHq}}" hint-placeholder-val="{{false}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/></svg>
+      </sc-if>
+      <sc-if value="{{ln.isTool}}" hint-placeholder-val="{{false}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/></svg>
+      </sc-if>
+    </div>
+    <span style="{{ln.nameStyle}}">{{ln.name}}</span>
+    <span style="{{ln.careStyle}}">{{ln.care}}</span>
+    <div style="{{ln.lineStyle}}"></div>
+    <sc-for list="{{ln.tps}}" as="tp" hint-placeholder-count="2">
+      <div style="{{tp.boxStyle}}"></div>
+      <span style="{{tp.actStyle}}">{{tp.act}}</span>
+      <span style="{{tp.toolStyle}}">{{tp.tool}}</span>
+    </sc-for>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>N 무인 매장 체인 · 무인 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // ── 손님 세 그룹 (비중은 자리표시자)
+    const P = [
+      ['cap', '대학생 · 수험생', '마감 직전 출력 · 장시간 학습', '원하는 것 · 빠르게, 줄 없이'],
+      ['home', '동네 생활 고객', '대용량 세탁 · 복사 · 스캔 · 팩스', '원하는 것 · 언제든 카드 한 장으로'],
+      ['help', '시니어 · 첫 방문', '기기가 낯설어도 혼자 해결해야', '원하는 것 · 안내 없이 화면만 보고']
+    ];
+    const personas = P.map(([icon, name, ctx, need], i) => {
+      const y = 188 + i * 84;
+      return {
+        name, ctx, need, share: '[00]%',
+        isCap: icon === 'cap', isHome: icon === 'home', isHelp: icon === 'help',
+        boxStyle: A + box(64, y, 246, 76) + 'border-radius: 12px; background: #f5f6f8;',
+        iconStyle: A + box(76, y + 10, 30, 30) + 'border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center;',
+        nameStyle: A + box(116, y + 8, 112, 20) + 'font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        shareStyle: A + box(230, y + 6, 68, 24) + 'display: flex; align-items: center; justify-content: flex-end; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; line-height: 24px; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap;',
+        ctxStyle: A + box(116, y + 32, 182, 17) + 'font-size: 11.5px; line-height: 17px; color: #596170; white-space: nowrap;',
+        needStyle: A + box(116, y + 51, 182, 17) + 'font-size: 11.5px; font-weight: 700; line-height: 17px; color: #121417; white-space: nowrap;'
+      };
+    });
+
+    // ── 여정 6단계: 열 x = 424 + i*132 (폭 132)
+    const COL0 = 424, CW = 132;
+    const colX = (i) => COL0 + i * CW;
+    const S = [
+      { name: '도착 · 입장', where: '입구 · 좌석', v: 0.50, pain: '물어볼 직원이 없다', sol: '좌석 · 입퇴실 관리', prod: '올인원 PC · 갤럭시 탭' },
+      { name: '연결 · 선택', where: 'PC · 기기 화면', v: 0.64, pain: '내 USB · 휴대폰 파일이 안 열린다', sol: '전용 터치 UI', prod: '복합기 화면 · 다단자 모니터 · PC' },
+      { name: '이용', where: '복합기 · 세탁기', v: 0.80, pain: '마감 직전인데 앞사람이 대량 출력 중', sol: '고속 처리', prod: '디지털 복합기 · 상업용 세탁 · 건조기' },
+      { name: '결제', where: '기기 결제부', v: 0.38, mot: true, pain: '현금 없이, 줄 없이 낼 수 있을까', sol: '무인 과금', prod: '카드 · 교통카드 · 쿠폰 카드 결제' },
+      { name: '문제 발생', where: '용지 · 토너 · 오류', v: 0.96, mot: true, pain: '기계가 멈췄는데 아무도 없다', sol: '원격 관리 · 케어', prod: '원격 관리 앱 · 실시간 원격 응대' },
+      { name: '퇴장 · 재방문', where: '출구 · 다음 방문', v: 0.56, pain: '내 파일이 PC에 남았을까', sol: '자료 자동 삭제', prod: '출력 PC · 작업 후 자동 삭제' }
+    ];
+    const steps = S.map((s, i) => {
+      const x = colX(i);
+      return {
+        no: String(i + 1), name: s.name, where: s.where,
+        noStyle: A + box(x + 2, 161, 22, 22) + 'border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        nameStyle: A + box(x + 30, 158, 100, 20) + 'font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        whereStyle: A + box(x + 30, 179, 100, 14) + 'font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap;'
+      };
+    });
+
+    // 곡선 위 점 (SVG 좌표: x = 66 + i*132, y = 12 + v*94 · 원점 424, 204)
+    const SV_X = 424, SV_Y = 204;
+    const dots = S.map((s, i) => {
+      const cx = SV_X + 66 + i * CW;
+      const cy = Math.round((SV_Y + 12 + s.v * 94) * 10) / 10;
+      if (s.mot) {
+        return { style: A + box(cx - 7, Math.round((cy - 7) * 10) / 10, 14, 14) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 3px solid #121417;' };
+      }
+      return { style: A + box(cx - 4, Math.round((cy - 4) * 10) / 10, 8, 8) + 'border-radius: 50%; background: #121417;' };
+    });
+
+    const guides = [1, 2, 3, 4, 5].map((i) => ({ style: A + box(colX(i), 326, 1, 116) + 'background: #e2e5ea;' }));
+
+    const cells = S.map((s, i) => {
+      const x = colX(i);
+      return {
+        pain: s.pain, sol: s.sol, prod: s.prod,
+        painStyle: A + box(x + 8, 328, 118, 36) + 'font-size: 12px; font-weight: 600; line-height: 17px; color: ' + (s.mot ? '#121417' : '#3d4452') + ';',
+        pillBox: A + box(x + 8, 382, 118, 22) + 'display: flex;',
+        prodStyle: A + box(x + 8, 408, 118, 32) + 'font-size: 11px; line-height: 16px; color: #3d4452;'
+      };
+    });
+
+    // ── 이해관계자 레인: 같은 여정의 어느 단계에 닿는지 (열 번호)
+    const L = [
+      { icon: 'store', name: '점주 · 비상주', care: '매장에 가지 않고 운영', tps: [[0, '좌석 · 입퇴실 현황', '좌석 관리 PC'], [4, '이상 알림 확인', '원격 관리 앱']] },
+      { icon: 'hq', name: '본사 운영팀', care: '전 지점 가동 · 이용 현황', tps: [[2, '가동 · 소모품 현황', '원격 관리 앱'], [3, '이용 · 결제 내역', '무인 과금']] },
+      { icon: 'tool', name: '유지보수 파트너', care: '출동 전에 원격으로 해결', tps: [[4, '원격 제어 · 응대', '케어 · 유지관리'], [5, '정기 점검 · 위생', '정기 유지보수']] }
+    ];
+    const lanes = L.map((l, r) => {
+      const y = 490 + r * 52;
+      return {
+        name: l.name, care: l.care,
+        isStore: l.icon === 'store', isHq: l.icon === 'hq', isTool: l.icon === 'tool',
+        iconStyle: A + box(64, y + 7, 32, 32) + 'border-radius: 50%; background: #f5f6f8; display: flex; align-items: center; justify-content: center;',
+        nameStyle: A + box(106, y + 4, 200, 20) + 'font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        careStyle: A + box(106, y + 25, 220, 16) + 'font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap;',
+        lineStyle: A + box(COL0, y + 23, 792, 1) + 'background: #e2e5ea;',
+        tps: l.tps.map(([c, act, tool]) => {
+          const x = colX(c);
+          return {
+            act, tool,
+            boxStyle: A + box(x + 4, y + 3, 124, 40) + 'border-radius: 8px; background: #eaeefb;',
+            actStyle: A + box(x + 12, y + 7, 112, 16) + 'font-size: 11.5px; font-weight: 700; line-height: 16px; color: #121417; white-space: nowrap;',
+            toolStyle: A + box(x + 12, y + 24, 112, 15) + 'font-size: 11px; font-weight: 700; line-height: 15px; color: #1428a0; white-space: nowrap;'
+          };
+        })
+      };
+    });
+
+    return { personas, steps, dots, guides, cells, lanes };
+  }
+}
+</script>
+</body>
+</html>

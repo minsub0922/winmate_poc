@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>EF-C 정량 + 정성 효과</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">숫자로 보이는 효과, 매장이 느끼는 효과</div>
+
+  <!-- 좌: 정량 효과 -->
+  <div style="position: absolute; left: 64px; top: 140px; width: 564px; display: flex; align-items: baseline; gap: 10px">
+    <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">정량 효과</span>
+    <span style="font-size: 13px; color: #8a91a0">측정해서 보고할 수 있는 변화</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 176px; width: 564px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+      <div style="height: 228px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 24px; display: flex; flex-direction: column">
+        <span style="font-family: Manrope, sans-serif; font-size: 52px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: #1428a0">{{k.n}}</span>
+        <span style="margin-top: 10px; font-size: 15px; font-weight: 700; line-height: 1.45; color: #121417">{{k.label}}</span>
+        <div style="flex-grow: 1"></div>
+        <div style="border-top: 1px solid #b8c3ee; padding-top: 10px; font-size: 12px; color: #596170">{{k.src}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 세로 구분선 -->
+  <div style="position: absolute; left: 640px; top: 140px; width: 1px; height: 508px; background: #e2e5ea"></div>
+
+  <!-- 우: 정성 효과 -->
+  <div style="position: absolute; left: 652px; top: 140px; width: 564px; display: flex; align-items: baseline; gap: 10px">
+    <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">정성 효과</span>
+    <span style="font-size: 13px; color: #8a91a0">현장에서 사람이 체감하는 변화</span>
+  </div>
+  <div style="position: absolute; left: 652px; top: 176px; width: 564px; display: flex; flex-direction: column">
+    <sc-for list="{{feels}}" as="f" hint-placeholder-count="4">
+      <div style="height: 118px; box-sizing: border-box; border-top: 1px solid #e2e5ea; display: grid; grid-template-columns: 36px minmax(0, 1fr) 104px; column-gap: 16px; align-items: center">
+        <div style="width: 36px; height: 36px; border-radius: 9px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{f.icon}}"/></svg></div>
+        <div style="display: flex; flex-direction: column; gap: 5px">
+          <span style="font-size: 15px; font-weight: 700; line-height: 1.5">{{f.s}}</span>
+          <span style="font-size: 13px; line-height: 1.5; color: #596170">{{f.d}}</span>
+        </div>
+        <div style="display: flex; justify-content: flex-end"><span style="height: 28px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 12.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{f.who}}</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 정량: 숫자 + 무엇을 쟀는지(측정 출처). 정성: 체감 문장 + 누가 느끼는지.
+    const kpis = [
+      { n: '[00]%', label: '인쇄 · 배송비 절감', src: '측정 · 본사 구매 내역' },
+      { n: '[0]분', label: '신메뉴 전 매장 반영', src: '측정 · MagicINFO 배포 기록' },
+      { n: '[00]%', label: '매장 전력 사용 절감', src: '측정 · SmartThings Pro 리포트' },
+      { n: '[00]%', label: '가격 표기 오류 감소', src: '측정 · 매장 점검 · 고객 문의' }
+    ];
+    const feels = [
+      { icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7v5l3 3', s: '영업 전 메뉴판 교체 부담이 사라짐', d: '준비 시간을 매장 정리 · 응대에 씁니다', who: '점장' },
+      { icon: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z', s: '메뉴와 가격이 한눈에 보여 고르기 쉬움', d: '멀리서도 읽히는 화면, 품절은 바로 표시', who: '손님' },
+      { icon: 'M4 5h16v16H4z M4 10h16 M9 3v4 M15 3v4', s: '캠페인을 원하는 날, 원하는 시간에 시작', d: '인쇄 일정에 맞추지 않고 기획대로 운영', who: '본사 마케팅' },
+      { icon: 'M12 3l9 5-9 5-9-5 9-5z M3 13l9 5 9-5', s: '어느 매장에서나 같은 브랜드 경험', d: '320개 매장이 같은 화면 · 같은 톤으로', who: '경영진' }
+    ];
+    return { kpis, feels };
+  }
+}
+</script>
+</body>
+</html>

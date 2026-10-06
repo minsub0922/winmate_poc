@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CM-C 레이더 종합 비교</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">여섯 가지 기준으로 본 종합 비교</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">기준별 5점 만점 · 경쟁사는 익명 처리</div>
+
+  <!-- 레이더 6열 -->
+  <svg width="460" height="460" viewBox="0 0 460 460" fill="none" style="position: absolute; left: 116px; top: 174px">
+    <path d="{{ring3}}" stroke="#e2e5ea" stroke-width="1" fill="#f5f6f8"/>
+    <path d="{{ring2}}" stroke="#e2e5ea" stroke-width="1"/>
+    <path d="{{ring1}}" stroke="#e2e5ea" stroke-width="1"/>
+    <path d="{{axes}}" stroke="#e2e5ea" stroke-width="1"/>
+    <path d="{{polyB}}" stroke="#b8bec8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="{{polyA}}" stroke="#596170" stroke-width="2" stroke-dasharray="6 5" stroke-linejoin="round"/>
+    <path d="{{polyS}}" stroke="#1428a0" stroke-width="2.5" fill="rgba(20,40,160,0.16)" stroke-linejoin="round"/>
+  </svg>
+  <sc-for list="{{sDots}}" as="d" hint-placeholder-count="6">
+    <div style="{{d}}"></div>
+  </sc-for>
+  <sc-for list="{{axisLabels}}" as="a" hint-placeholder-count="6">
+    <div style="{{a.st}}">{{a.name}}</div>
+  </sc-for>
+
+  <!-- 범례 + 점수표 6열 -->
+  <div style="position: absolute; left: 652px; top: 170px; display: flex; align-items: center; gap: 22px; font-size: 13px; font-weight: 700">
+    <span style="display: flex; align-items: center; gap: 8px; color: #1428a0"><span style="width: 22px; height: 12px; box-sizing: border-box; border: 2px solid #1428a0; background: rgba(20,40,160,0.16); border-radius: 2px"></span>Samsung</span>
+    <span style="display: flex; align-items: center; gap: 8px; color: #3d4452"><span style="width: 24px; height: 0; border-top: 2px dashed #596170"></span>경쟁사 A</span>
+    <span style="display: flex; align-items: center; gap: 8px; color: #3d4452"><span style="width: 24px; height: 2px; background: #b8bec8"></span>경쟁사 B</span>
+  </div>
+
+  <div style="position: absolute; left: 856px; top: 208px; width: 120px; height: 388px; border-radius: 12px; background: #eaeefb"></div>
+  <div style="position: absolute; left: 652px; top: 208px; width: 564px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 204px repeat(3, minmax(0, 1fr)); height: 44px; align-items: center; border-bottom: 2px solid #121417">
+      <span style="padding-left: 4px; font-size: 13px; color: #596170">기준</span>
+      <span style="text-align: center; font-size: 15px; font-weight: 800; color: #1428a0">Samsung</span>
+      <span style="text-align: center; font-size: 14px; font-weight: 700">경쟁사 A</span>
+      <span style="text-align: center; font-size: 14px; font-weight: 700">경쟁사 B</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+      <div style="display: grid; grid-template-columns: 204px repeat(3, minmax(0, 1fr)); height: 48px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <span style="padding-left: 4px; font-size: 14.5px; font-weight: 700">{{r.k}}</span>
+        <span style="text-align: center; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{r.s}}</span>
+        <span style="text-align: center; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 600; color: #596170">{{r.a}}</span>
+        <span style="text-align: center; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 600; color: #596170">{{r.b}}</span>
+      </div>
+    </sc-for>
+    <div style="display: grid; grid-template-columns: 204px repeat(3, minmax(0, 1fr)); height: 56px; align-items: center">
+      <span style="padding-left: 4px; font-size: 14.5px; font-weight: 800">종합 (평균)</span>
+      <span style="text-align: center; font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; color: #1428a0">[0.0]</span>
+      <span style="text-align: center; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 700; color: #3d4452">[0.0]</span>
+      <span style="text-align: center; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 700; color: #3d4452">[0.0]</span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 652px; top: 612px; width: 564px; font-size: 11.5px; color: #8a91a0">점수 기준: [평가 방식] · 수치는 예시 · 데이터 연결 시 자동 반영</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 24</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 레이더: SVG 460×460을 (116,174)에 배치, 중심 (230,230), 반지름 165
+    const OX = 116, OY = 174, C = 230, R = 165;
+    const AX = ['화질 · 밝기', '원격 관리', '솔루션 통합', '내구성', '서비스망', '레퍼런스'];
+    // 도형은 예시 (0–1 = 0–5점)
+    const S = [0.92, 0.95, 0.90, 0.86, 0.92, 0.88];
+    const A = [0.84, 0.62, 0.52, 0.80, 0.66, 0.72];
+    const B = [0.66, 0.72, 0.44, 0.62, 0.78, 0.56];
+    const ang = (i) => (-90 + 60 * i) * Math.PI / 180;
+    const pt = (i, f) => [C + R * f * Math.cos(ang(i)), C + R * f * Math.sin(ang(i))];
+    const f1 = (v) => v.toFixed(1);
+    const poly = (fs) => 'M' + fs.map((f, i) => pt(i, f).map(f1).join(' ')).join(' L') + ' Z';
+    const ring = (f) => poly(AX.map(() => f));
+    const axes = AX.map((_, i) => 'M' + C + ' ' + C + ' L' + pt(i, 1).map(f1).join(' ')).join(' ');
+    const sDots = S.map((f, i) => {
+      const [x, y] = pt(i, f);
+      return 'position: absolute; left: ' + Math.round(OX + x - 5) + 'px; top: ' + Math.round(OY + y - 5) + 'px; width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff';
+    });
+    const LW = 124, base = 'font-size: 14px; font-weight: 700; line-height: 20px; color: #121417;';
+    const axisLabels = AX.map((name, i) => {
+      const [vx, vy] = pt(i, 1);
+      const x = OX + vx, y = OY + vy;
+      let st;
+      if (i === 0) st = 'position: absolute; left: ' + Math.round(x - 80) + 'px; top: ' + Math.round(y - 34) + 'px; width: 160px; text-align: center;';
+      else if (i === 3) st = 'position: absolute; left: ' + Math.round(x - 80) + 'px; top: ' + Math.round(y + 12) + 'px; width: 160px; text-align: center;';
+      else if (i < 3) st = 'position: absolute; left: ' + Math.round(x + 14) + 'px; top: ' + Math.round(y - 10) + 'px; width: ' + LW + 'px; text-align: left;';
+      else st = 'position: absolute; left: ' + Math.round(x - 14 - LW) + 'px; top: ' + Math.round(y - 10) + 'px; width: ' + LW + 'px; text-align: right;';
+      return { name, st: st + ' ' + base };
+    });
+    return {
+      ring1: ring(1 / 3), ring2: ring(2 / 3), ring3: ring(1), axes,
+      polyS: poly(S), polyA: poly(A), polyB: poly(B),
+      sDots, axisLabels,
+      rows: AX.map((k) => ({ k, s: '[0.0]', a: '[0.0]', b: '[0.0]' }))
+    };
+  }
+}
+</script>
+</body>
+</html>

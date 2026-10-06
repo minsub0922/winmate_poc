@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>GN-D 화면 콘텐츠 시안 3</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">메뉴보드에 나올 화면, 시간대별로 미리 만들어 봤습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">A 커피 · 세로형 메뉴보드 QM55C · VXT 템플릿 기반 시안</div>
+
+  <!-- 벽면 + 세로형 디스플레이 3대 (벽걸이) -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 760px; height: 498px; border-radius: 16px; background: #f5f6f8"></div>
+  <sc-for list="{{screens}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.col}}">
+      <div style="width: 216px; height: 372px; box-sizing: border-box; padding: 8px; border-radius: 10px; background: #121417; box-shadow: 0 6px 14px rgba(18,20,23,0.16)">
+        <dc-import name="Img" kind="content" origin="gen" hint="{{s.hint}}" w="200" h="356" radius="4" bg="dark" credit="bl" hint-size="200px,356px"></dc-import>
+      </div>
+    </div>
+    <div style="{{s.cap}}">
+      <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 15px; font-weight: 800">{{s.goal}}</span></span>
+      <span style="font-size: 12.5px; line-height: 1.5; color: #596170; word-break: keep-all">{{s.desc}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 콘텐츠 운영 규칙 -->
+  <div style="position: absolute; left: 848px; top: 150px; width: 368px; height: 498px; box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; padding: 22px 24px">
+    <div style="font-size: 13px; font-weight: 800; color: #1428a0; letter-spacing: 0.02em">콘텐츠 운영 규칙</div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column">
+      <sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
+        <div style="{{r.row}}">
+          <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center">
+            <sc-if value="{{r.isClock}}" hint-placeholder-val="{{true}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></sc-if>
+            <sc-if value="{{r.isPos}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v10H4z"/><path d="M8 18h8"/><path d="M12 14v4"/><path d="M8 9h4"/></svg></sc-if>
+            <sc-if value="{{r.isCheck}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></sc-if>
+            <sc-if value="{{r.isOff}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></sc-if>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+            <span style="font-size: 15px; font-weight: 800; line-height: 1.4">{{r.title}}</span>
+            <span style="font-size: 13px; line-height: 1.5; color: #3d4452; word-break: keep-all">{{r.desc}}</span>
+          </span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 · 메뉴보드 제안 · 화면 콘텐츠는 AI 생성 시안 · 실제 메뉴 · 가격은 POS 데이터로 채워짐</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 18</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 세로형 화면 3대 = 시간대 3개. 화면 안은 생성 시안(kv · gen), 메뉴명 · 가격 칸은 비워 두고 POS 데이터로 채움
+    const S = [
+      ['07–11', '모닝 세트', '아침 메뉴 화면 · 커피와 베이글 · 가격 자리 비움', '세트 3종 · 가격 · 오늘의 원두'],
+      ['11–14', '점심 프로모션', '점심 프로모션 · 샌드위치와 아이스 음료 세트', '세트 할인 · 대기 [N]분 안내'],
+      ['18–22', '브랜드 무드', '저녁 브랜드 무드 · 어두운 톤 · 디저트 클로즈업', '디저트 · 시즌 음료 · 브랜드 영상']
+    ];
+    const screens = S.map(([time, goal, hint, desc], i) => {
+      const x = 104 + i * 248;
+      return {
+        time, goal, hint, desc,
+        col: 'position: absolute; left: ' + x + 'px; top: 178px; width: 216px; height: 372px',
+        cap: 'position: absolute; left: ' + x + 'px; top: 572px; width: 216px; display: flex; flex-direction: column; gap: 3px'
+      };
+    });
+    const R = [
+      ['clock', '시간대 자동 전환', '07시 · 11시 · 18시에 화면이 스스로 바뀝니다'],
+      ['pos', '가격은 POS에서 자동', '메뉴명 · 가격은 POS 데이터로 채워 오타 없음'],
+      ['check', '본사 승인 후 배포', '수정은 본사 승인을 거쳐 전 매장에 한 번에'],
+      ['off', '매장별 품절 표시', '품절 메뉴는 매장에서 한 번 눌러 바로 표시']
+    ];
+    const rules = R.map(([ic, title, desc], i) => ({
+      isClock: ic === 'clock', isPos: ic === 'pos', isCheck: ic === 'check', isOff: ic === 'off', title, desc,
+      row: 'display: flex; gap: 14px; align-items: flex-start; padding: 18px 0; box-sizing: border-box; height: 108px;' + (i > 0 ? ' border-top: 1px solid #e2e5ea;' : '')
+    }));
+    return { screens, rules };
+  }
+}
+</script>
+</body>
+</html>

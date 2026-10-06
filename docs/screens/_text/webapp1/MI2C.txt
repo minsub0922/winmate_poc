@@ -1,0 +1,83 @@
+ 
+ Market Intelligence · 경쟁사 · 비교 기준 설정 
+ 경쟁사는 두세 곳, 본사 통합 관리와 전기료를 가장 중요하게 봐 주세요. 
+ W 
+ 비교할 경쟁사와 기준을 정리했어요. 가중치가 높은 기준부터 비교표에 놓고, 삼성 강점도 그 순서로 뽑습니다. 제안서와 내보내기에는 경쟁사를 익명으로 표기해요. 
+ 경쟁사 · 비교 기준 · 경쟁사 분석 → 삼성 강점 · 2 / 3 
+ 분석 범위로 
+ 비교할 경쟁사 · {{compCount}}곳 
+ 자동 추천 2 · 직접 추가 1 
+ {{c.letter}} 
+ {{c.label}} 
+ {{c.tag}} 
+ {{c.desc}} 
+ 경쟁사 추가 
+ 제안서에 익명으로 표기 
+ 분석에는 실명을 쓰고, 제안서 · PDF · 공유 링크에는 아래 표기로 바꿔요. 경쟁사 로고와 제품 사진은 넣지 않아요. 
+ {{n.label}} 
+ 비교 기준 · 가중치 
+ 끌어서 순서 변경 · 합계 100% 
+ {{k.name}} 
+ {{k.src}} 
+ {{k.pct}}% 
+ 기준 직접 추가 
+ 외식 · 카페 도입사례 23건에서 많이 요구된 기준 
+ + {{g.name}} {{g.n}} 
+ 가중치는 비교표 순서와 강점 도출에만 써요. 경쟁사 수치는 공개 자료로만 채우고, 못 찾으면 [확인 필요]로 남깁니다. 
+ 이전 
+ 분석 시작 (약 3분) 
+class Component extends DCLogic {
+ renderVals() {
+ const st = this.state || {};
+ const anon = st.anon !== false;
+ const nameMode = st.nameMode || 'letter';
+ // 경쟁사: 실명은 분석에만 쓰고 화면 · 제안서에는 익명 표기
+ const C = [
+ ['A', '국내 대형 가전 · 사이니지', '메뉴보드급 사이니지 · 자체 CMS', '자동 추천'],
+ ['B', '글로벌 사이니지 전문', '사이니지 · 3rd-party CMS 연동', '자동 추천'],
+ ['C', '클라우드 CMS 소프트웨어', '매장 콘텐츠 배포 · 스케줄 관리', '직접 추가']
+ ];
+ const comps = C.map(([letter, kind, desc, tag]) => ({
+ letter,
+ label: !anon ? '[실명] · 사내용' : nameMode === 'type' ? kind : '경쟁사 ' + letter,
+ desc: (nameMode === 'type' && anon ? '' : kind + ' · ') + desc,
+ tag,
+ removeLabel: '경쟁사 ' + letter + ' 빼기',
+ tagStyle: '' + (tag === '자동 추천' ? '' : '')
+ }));
+ const naming = [['letter', '경쟁사 A · B · C'], ['type', '유형으로 표기']].map(([k, label]) => ({
+ label, on: nameMode === k,
+ pick: () => this.setState({ nameMode: k }),
+ style: '' + (nameMode === k && anon ? '' : '' + (anon ? '' : '') + '; font-weight: 500;')
+ }));
+ // 비교 기준: 이름 · 출처 · 가중치(1–5) → 비율
+ const K = [
+ ['본사 원격 통합 관리', '요구사항', 5],
+ ['저전력 · 전기료 절감', '요구사항', 4],
+ ['프로모션 교체 속도', '요구사항', 3],
+ ['디자인 조화', '업종 사례 18건', 2],
+ ['유지보수 · AS', '직접 추가', 1]
+ ];
+ const w = Array.isArray(st.w) ? st.w : K.map((k) => k[2]);
+ const sum = w.reduce((s, x) => s + x, 0) || 1;
+ let acc = 0;
+ const crit = K.map(([name, src], i) => {
+ const pct = i === K.length - 1 ? 100 - acc : Math.round((w[i] / sum) * 100);
+ acc += pct;
+ return {
+ name, src, pct,
+ groupLabel: name + ' 가중치 ' + w[i] + ' / 5',
+ srcStyle: '' + (src === '요구사항' ? '' : ''),
+ blocks: [1, 2, 3, 4, 5].map((lv) => ({
+ label: name + ' 가중치 ' + lv,
+ set: () => { const nw = w.slice(); nw[i] = lv; this.setState({ w: nw }); },
+ style: '' + (lv ({ name, n }));
+ return {
+ steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 2,
+ comps, compCount: comps.length, naming, crit, sugg, anon,
+ anonCtl: { on: anon, toggle: () => this.setState({ anon: !anon }) },
+ switchStyle: '' + (anon ? '' : ''),
+ knobStyle: '' + (anon ? '' : '')
+ };
+ }
+}

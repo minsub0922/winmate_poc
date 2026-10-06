@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-OF-B 오피스 · 업무 빌딩 · 고객 비즈니스 · 운영 과제</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">C 빌딩의 수익은 임대에서, 경쟁력은 운영에서 결정됩니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">소유 → 운영 → 입주사 → 이용자로 이어지는 구조와 단계별 KPI, 삼성이 해결할 수 있는 운영 과제</div>
+
+  <!-- A · 사업 구조 — 서비스 흐름(파랑) · 돈의 흐름(점선) -->
+  <div style="position: absolute; left: 64px; top: 160px; display: flex; align-items: baseline; gap: 12px; white-space: nowrap"><span style="font-size: 16px; font-weight: 800; line-height: 22px">C 빌딩의 사업 구조</span><span style="font-size: 12.5px; color: #596170">공간 · 서비스가 흐르고, 임대료 · 관리비가 돌아옵니다</span></div>
+  <div style="position: absolute; right: 64px; top: 164px; display: flex; align-items: center; gap: 16px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 2px; background: #1428a0"></span>공간 · 서비스 흐름</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 0px; border-top: 2px dashed #3d4452"></span>돈의 흐름</span>
+  </div>
+  <sc-for list="{{nodes}}" as="n" hint-placeholder-count="4">
+    <div style="{{n.style}}">
+      <div style="position: absolute; left: 16px; top: 12px; font-size: 11.5px; line-height: 16px; font-weight: 800; color: {{n.roleC}}; white-space: nowrap">{{n.role}}</div>
+      <div style="position: absolute; left: 16px; top: 30px; font-size: 17px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{n.name}}</div>
+      <div style="position: absolute; left: 16px; top: 56px; font-size: 12px; line-height: 17px; color: {{n.subC}}; white-space: nowrap">{{n.sub}}</div>
+      <div style="position: absolute; left: 16px; top: 76px; font-size: 12px; line-height: 17px; font-weight: 700; color: {{n.kpiC}}; white-space: nowrap">{{n.kpi}}</div>
+    </div>
+  </sc-for>
+  <sc-for list="{{flows}}" as="f" hint-placeholder-count="3">
+    <div style="{{f.svcLabel}}">{{f.svc}}</div>
+    <div style="{{f.svcLine}}"></div>
+    <svg style="{{f.svcHead}}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+    <div style="{{f.payLine}}"></div>
+    <svg style="{{f.payHead}}" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3d4452" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg>
+    <div style="{{f.payLabel}}">{{f.pay}}</div>
+  </sc-for>
+
+  <!-- B · 운영 단계 레일 — 단계별 KPI + 과제 핀 -->
+  <div style="position: absolute; left: 64px; top: 312px; font-size: 16px; font-weight: 800; line-height: 22px; white-space: nowrap">운영 단계별 KPI와 운영 과제</div>
+  <div style="position: absolute; right: 64px; top: 315px; display: flex; align-items: center; gap: 14px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 12px; border-radius: 3px; background: #1428a0"></span>삼성이 해결할 수 있는 과제</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1px dashed #b8bec8; background: #ffffff"></span>C 빌딩 자체 과제</span>
+    <span style="color: #8a91a0">KPI 값은 C 빌딩 데이터로 채움</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 361px; width: 1152px; height: 2px; background: #d5d9e0"></div>
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.stem}}"></div>
+    <div style="{{s.dotStyle}}">{{s.no}}</div>
+    <div style="{{s.nameStyle}}">{{s.name}}</div>
+    <sc-for list="{{s.kpis}}" as="k" hint-placeholder-count="2">
+      <div style="{{k.style}}"><span style="font-size: 11.5px; color: #596170">{{k.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 800; color: #1428a0">{{k.val}}</span></div>
+    </sc-for>
+    <div style="{{s.kpiEnd}}"></div>
+    <sc-for list="{{s.cards}}" as="c" hint-placeholder-count="2">
+      <div style="{{c.tick}}"></div>
+      <div style="{{c.pin}}"></div>
+      <div style="{{c.style}}">
+        <div style="position: absolute; left: 12px; top: 10px; width: 157px; font-size: 12.5px; line-height: 18px; font-weight: 700; color: {{c.tc}}">{{c.t}}</div>
+        <div style="{{c.chip}}">{{c.sol}}</div>
+      </div>
+    </sc-for>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // A · 사업 구조 — 4개 주체 (가운데 'C 빌딩 운영'이 이 제안의 상대)
+    const NW = 206, GAP = 109, NY = 188, NH = 100;
+    const ND = [
+      ['소유 · 투자', '건물주 · 자산운용사', '리츠 · 펀드 · 사옥 보유 기업', '관심 · 자산 가치 · NOI', false],
+      ['C 빌딩 운영', 'PM · FM 관리실', '임대 · 시설 · 에너지 · 미화', '수익 · 임대료 + 관리비 + 부대', true],
+      ['고객', '입주사', '기업 사옥 · 공유오피스 · 리테일', '관심 · 임대료 · 근무 환경', false],
+      ['이용자', '임직원 · 방문객', '매일 건물을 쓰고 평가하는 사람', '관심 · 쾌적 · 편의 · 첫인상', false]
+    ];
+    const nodes = ND.map(([role, name, sub, kpi, hi], i) => ({
+      role, name, sub, kpi,
+      roleC: hi ? '#b8c3ee' : '#1428a0',
+      subC: hi ? '#dfe6ff' : '#596170',
+      kpiC: hi ? '#ffffff' : '#3d4452',
+      style: box(64 + i * (NW + GAP), NY, NW, NH) + 'box-sizing: border-box; border-radius: 14px; ' +
+        (hi ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #121417;')
+    }));
+    const FL = [
+      ['운용 위탁 · 투자', '운영 수익 · NOI'],
+      ['공간 · 서비스', '임대료 · 관리비'],
+      ['근무 환경 제공', '만족 → 재계약']
+    ];
+    const flows = FL.map(([svc, pay], i) => {
+      const gx = 64 + NW + i * (NW + GAP) + 10;   // 화살표 시작 x
+      const L = GAP - 20;                          // 89px
+      return {
+        svc, pay,
+        svcLabel: box(gx - 6, 204, L + 12, 16) + 'text-align: center; font-size: 11.5px; line-height: 16px; font-weight: 700; color: #1428a0; white-space: nowrap;',
+        svcLine: box(gx, 225, L - 3, 2) + 'background: #1428a0;',
+        svcHead: box(gx + L - 9, 220, 12, 12),
+        payLine: box(gx + 3, 256, L - 3, 0) + 'border-top: 2px dashed #3d4452;',
+        payHead: box(gx - 3, 251, 12, 12),
+        payLabel: box(gx - 6, 263, L + 12, 16) + 'text-align: center; font-size: 11.5px; line-height: 16px; font-weight: 700; color: #3d4452; white-space: nowrap;'
+      };
+    });
+
+    // B · 운영 단계 — KPI(자리표시) + 과제 핀 (sam: 삼성이 해결 가능)
+    const ST = [
+      ['리뉴얼 · 설비 투자', [['설비 투자비', '[00]억 원'], ['공사 기간', '[0]개월']], [
+        ['입주사가 쓰는 중에 노후 공조를 바꿔야 합니다', 'DVM S · 존별 개별 공조', true],
+        ['기둥 · 곡면 · 무전원 자리에도 화면이 필요합니다', '모듈형 LED · 컬러 이페이퍼', true]]],
+      ['임대 마케팅 · 방문', [['임대율', '[00]%'], ['평균 공실 기간', '[0]개월']], [
+        ['주변 신축 빌딩과 임대료 · 조건으로 경쟁합니다', '임대 전략 · 조건 협상 영역', false],
+        ['방문객에게 건물 브랜드를 보여줄 채널이 없습니다', 'LED 사이니지 · MagicINFO', true]]],
+      ['입주 · 공간 서비스', [['입주사 만족도', '[0.0]점'], ['재계약률', '[00]%']], [
+        ['입주사별 운영 시간이 달라 냉난방 VOC가 몰립니다', 'SmartThings 입주사 앱', true],
+        ['미세먼지 날 창문을 못 열어 공기질 불만이 생깁니다', '시스템에어컨 360 · 환기', true]]],
+      ['회의 · 협업 공간', [['회의실 가동률', '[00]%'], ['노쇼 예약 비율', '[00]%']], [
+        ['빈 회의실과 중복 예약을 한눈에 알 수 없습니다', '갤럭시 탭 예약 · Knox', true],
+        ['자료 공유 · 화면 연결에 회의 시간이 샙니다', '삼성 Flip · 미러링', true]]],
+      ['시설 · 에너지 관리', [['연 에너지 비용', '[0,000]만 원'], ['VOC 처리 시간', '[00]분']], [
+        ['소수 인력이 층마다 흩어진 설비를 관리합니다', 'b.IoT · DMS 통합 관리', true],
+        ['냉난방 · 유지보수 비용이 해마다 늘어납니다', '에너지 모니터링 · 케어', true]]]
+    ];
+    const CY = [444, 552], CH = 96;
+    const stages = ST.map(([name, kp, cs], i) => {
+      const x0 = 64 + i * 235;
+      return {
+        no: i + 1, name,
+        dotStyle: box(x0, 349, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        nameStyle: A + 'left: ' + px(x0 + 30) + 'top: 350px; height: 24px; padding: 0 8px 0 4px; background: #ffffff; font-size: 15px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap;',
+        stem: box(x0 + 12, 375, 2, CY[1] + 22 - 375) + 'background: #e2e5ea;',
+        kpis: kp.map(([label, val], j) => ({
+          label, val,
+          style: box(x0 + 30, 386 + j * 26, 181, 26) + 'box-sizing: border-box; border-top: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between; white-space: nowrap;'
+        })),
+        kpiEnd: box(x0 + 30, 438, 181, 1) + 'background: #e2e5ea;',
+        cards: cs.map(([t, sol, sam], j) => ({
+          t, sol,
+          tc: sam ? '#121417' : '#3d4452',
+          tick: box(x0 + 14, CY[j] + 22, 16, 1) + 'background: #b8bec8;',
+          pin: box(x0 + 9, CY[j] + 19, 8, 8) + 'border-radius: 50%; background: ' + (sam ? '#1428a0' : '#b8bec8') + ';',
+          style: box(x0 + 30, CY[j], 181, CH) + 'box-sizing: border-box; border-radius: 10px; ' +
+            (sam ? 'background: #f5f6f8;' : 'background: #ffffff; border: 1px dashed #b8bec8;'),
+          chip: box(12, CH - 28, 157, 22) + 'box-sizing: border-box; padding: 0 8px; border-radius: 6px; display: flex; align-items: center; font-size: 11px; font-weight: 700; white-space: nowrap; ' +
+            (sam ? 'background: #1428a0; color: #ffffff;' : 'background: #e2e5ea; color: #3d4452;')
+        }))
+      };
+    });
+
+    return { nodes, flows, stages };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+ 
+ Value Proposition 2/3 — 가치 구조 
+ W 
+ 재료를 보고 메시지 구조와 시트를 정했어요. 표준 제안서 Value Props 섹션에 맞춘 3장이고, 바꾸고 싶은 것만 고르면 됩니다. 
+ 메시지 구조 · 과제 → 가치 → 효과 
+ RFP가 과제를 직접 말하고 있어 과제부터 시작해요 
+ 레이아웃 전체 보기 
+ {{s.step}} 
+ {{s.mText}} 
+ {{s.code}} 
+ {{s.name}} 
+ {{s.content}} 
+ {{s.why}} 
+ 그 밖에 정한 것 · 7 
+ 판단 규칙 
+ {{r.k}} 
+ {{r.v}} 
+ {{r.why}} 
+ {{r.mText}} 
+ 가치 구조 · 2 / 3 
+ {{a.code}} {{a.t}} 
+ 구조 요청 
+ 이전 
+ 3장 만들기 (약 1분) 
+class Component extends DCLogic {
+ renderVals() {
+ const MODE = {
+ auto: ['자동', '', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+ check: ['확인 권장', '', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+ };
+ const CHIP = '';
+ const md = (k) => ({ mText: MODE[k][0], mIcon: MODE[k][2], mStyle: CHIP + MODE[k][1] });
+ // 시트: [단계, 코드, 이름, 썸네일, n, 들어갈 내용, 고른 이유, 모드]
+ const S = [
+ ['고객 과제', 'CH-A', '과제 3 + 영향', 'pillars', 3, '인쇄 · 배송 / 매장의 교체 시간 / 가격 오표기', '과제 3개 모두 비용 수치가 있어요', 'auto'],
+ ['가치 제안', 'VP-F·3', '가치 기둥 3 · 제품 이미지', 'cards3img', 3, '본사에서 한 번에 · 승인은 본사, 반영은 몇 분 · 저전력 자동', 'Key Message 3 → 기둥 3 + 제품', 'auto'],
+ ['기대 효과', 'EF-A', 'KPI 전 → 후', 'hbars', 3, '교체 리드타임 · 가격 오표기 · 주문 대기 · 전력', '전 → 후 수치 4개 중 3개 확보', 'auto']
+ ];
+ const spine = S.map(([step, code, name, kind, n, content, why, m], i) => ({ step, code, name, kind, n, content, why, arrow: i ({ k, v, why, ...md(m) }));
+ // 다른 구조로 바꾸면 무엇이 달라지는지 (툴팁)
+ const alts = [
+ ['VP-G', '한 문장형', '경영진 결재용 1장 — 메뉴보드 사진과 근거 3 · 과제 · 효과 시트는 부록으로', 'VP3L.dc.html'],
+ ['VP-H', '이해관계자형', '본사 · 점장 · 손님에게 각각 다른 가치 — 각자 쓰는 제품과 함께', 'VP3L.dc.html'],
+ ['VP-B·3', '이미지 없이', '같은 기둥 3개 · 제품 이미지만 빼요', 'VP3L.dc.html'],
+ ['EF-B', '투자 회수', '견적이 연결돼야 해요 — 연결하면 바로 바뀝니다', 'VP3N.dc.html']
+ ].map(([code, t, tip, href]) => ({ code, t, tip, href }));
+ return { steps: ['재료', '가치 구조', '결과'], cur: 2, spine, log, alts };
+ }
+}

@@ -1,0 +1,113 @@
+ 
+ 섹션 작성 · 흐름 가이드 · Value Props 
+ 표준 2 / 8 
+ Value Props 
+ 가치 제안 · 이해관계자별 가치 · 기대 효과 
+ 원본 · B 베이커리 p.7–8 · 역할만 참고 
+ {{v.label}} 
+ 흐름 차용 모드에선 원본 내용을 보여주지 않아요 
+ 흐름 가이드 · 이 자리의 역할 
+ 원본 역할 3 / 3 반영 
+ {{g.no}} 
+ {{g.title}} 
+ {{g.badge}} 
+ 역할 
+ {{g.role}} 
+ 원본에서 
+ {{g.orig}} 
+ 내용 안 가져옴 
+ 이번엔 
+ {{g.now}} 
+ {{c.label}} 
+ 새 시트 · 가치 제안 
+ 원본 내용 0줄 사용 · 구조만 
+ VP-FB-A 업종 레이아웃 · 자동 추천 
+ 바꾸기 
+ 시트 제목 
+ Key Message 
+ {{col.no}} 
+ {{col.title}} 
+ {{col.hint}} 
+ {{ln.label}} 
+ 확정 필요 
+ 수치 플레이스홀더 3곳 
+ {{p.mark}} {{p.label}} 
+ 확정 필요 목록에 등록됨 · 원본 수치는 출처가 없어 쓰지 않아요 
+ 이 섹션의 시트 
+ 3장 · 흐름 순서 
+ {{sh.no}} 
+ {{sh.name}} 
+ {{sh.role}} 
+ {{sh.badge}} 
+ 흐름 가이드 작성 · 원본 역할 3 / 3 반영 · 수치 플레이스홀더 3곳 확정 필요 등록 · 4 / 6 
+ {{ty.label}} {{ty.n}} 
+ 원본 B 베이커리 내용은 한 줄도 들어가지 않아요. 역할 · 순서만 따르고, 수치는 확정 필요 목록에서 채워요. 
+ 이전 섹션 
+ 다음 섹션 
+class Component extends DCLogic {
+ renderVals() {
+ // 보기 전환: 원본 대조(비활성 · 흐름 차용 모드) / 새 시트만 / 흐름 가이드(on)
+ const views = [['원본 대조', 'off'], ['새 시트만', ''], ['흐름 가이드', 'on']].map(([label, st]) => ({
+ label, on: st === 'on', off: st === 'off',
+ tip: st === 'off' ? '흐름 차용 모드에선 원본 내용을 보여주지 않아요' : '',
+ style: '' + (st === 'on' ? '' : st === 'off' ? '' : '')
+ }));
+ // 상태 배지
+ const BADGE = {
+ doing: ['작성 중', ''],
+ wait: ['대기', '']
+ };
+ const badge = (k) => '' + BADGE[k][1];
+ const chip = (kind) => '' + (kind === 'req' ? '' : kind === 'tpl' ? '' : kind === 'warn' ? '' : '');
+ // 흐름 가이드 3단계: [제목, 역할, 원본에서, 이번엔, 칩[[label, kind]], 상태]
+ const G = [
+ ['가치 제안', '과제 → 해법 → 효과 한 장', "'본사 통제 · 운영 부담 ↓'을 말했음", 'R1 R2 · 톤 운영 효율 · 업종 레이아웃 추천', [['R1', 'req'], ['R2', 'req'], ['운영 효율 톤', 'plain'], ['VP-FB-A', 'tpl']], 'doing'],
+ ['이해관계자별 가치', '본사 · 점주 · 손님 3축', "'점주 인터뷰'가 근거였음", '근거는 요구사항 R3 매장별 가격 차등', [['R3', 'req'], ['3축 유지', 'plain'], ['VP-FB-B', 'tpl']], 'wait'],
+ ['기대 효과', 'Before / After', '출처 없는 수치였음', '수치 비워 두고 [00]% 플레이스홀더 · 확정 필요 등록', [['플레이스홀더 3곳', 'warn'], ['VP-FB-C', 'tpl']], 'wait']
+ ];
+ const guide = G.map(([title, role, orig, now, chips, st], i) => ({
+ no: String(i + 1), title, role, orig, now, hasLine: i ({ label, style: chip(kind) }))
+ }));
+ // 과제 → 해법 → 효과 입력 블록 (A 커피 내용 · 원본 0줄)
+ const C = [
+ ['과제', '지금 겪는 문제', [
+ ['매장 320곳 프로모션 교체에 평균 [0]일', true],
+ ['매장별 가격 안내 불일치', false],
+ ['본사-매장 콘텐츠 승인 지연', false]
+ ]],
+ ['해법', '제안하는 구성', [
+ ['MagicINFO 9 본사 일괄 배포', false],
+ ['매장 변수 템플릿', false],
+ ['승인 워크플로', false]
+ ]],
+ ['효과', '바뀌는 결과', [
+ ['교체 주기 [0]일 → 당일', true],
+ ['가격 오류 [00]% ↓', true],
+ ['운영 인력 [0]명 절감', true]
+ ]]
+ ];
+ const cols = C.map(([title, hint, lines], ci) => ({
+ no: String(ci + 1), title, hint, hasArrow: ci > 0,
+ noStyle: '',
+ lines: lines.map(([value, ph], li) => ({
+ id: 'vp-' + ci + '-' + li, label: title + ' ' + (li + 1), value, ph,
+ style: '' + (ph ? '' : '') + '' + (ph ? '' : '')
+ }))
+ }));
+ // 플레이스홀더 3곳 (효과 열 · 과제 열의 [0]일은 같은 값)
+ const phs = [['[0]일', '교체 소요 · 현재'], ['[00]%', '가격 오류 감소'], ['[0]명', '운영 인력 절감']].map(([mark, label]) => ({ mark, label }));
+ // 이 섹션의 시트 3장
+ const S = [['가치 제안', 'indVP', '과제 → 해법 → 효과', 'doing', true], ['이해관계자별 가치', 'persona', '본사 · 점주 · 손님', 'wait', false], ['기대 효과', 'hbars', 'Before / After', 'wait', false]];
+ const sheets = S.map(([name, kind, role, st, on], i) => ({
+ no: String(5 + i).padStart(2, '0'), name, kind, role, on,
+ badge: BADGE[st][0], badgeStyle: badge(st) + ' align-self: flex-start;',
+ style: '' + (on ? '' : '')
+ }));
+ const tally = [['작성 중', 1, ''], ['대기', 2, ''], ['확정 필요', 3, '']]
+ .map(([label, n, s]) => ({ label, n, style: '' + s }));
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 4,
+ views, guide, cols, phs, sheets, tally
+ };
+ }
+}

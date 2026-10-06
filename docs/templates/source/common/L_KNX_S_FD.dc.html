@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>KNX-S-FD Knox Suite 공간 시나리오 · 제조 현장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Knox Suite</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Knox Suite · 모바일 기기 관리 · 보안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">교대조가 함께 쓰는 현장 단말, 로그인부터 분석까지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">L 제조 공장 · 교대조 공용 단말 <span style="font-family: Manrope, sans-serif; font-weight: 700">[000]</span>대 — 3교대 내내 같은 기기를, 각자 계정으로 안전하게</div>
+
+  <!-- 생산 라인 실사 + 사진 위 번호 콜아웃 -->
+  <img src="/_blob/976560df29712c9382c84024a11f5bf8" alt="공장 로봇암 앞에서 안전모와 장갑을 착용한 작업자가 갤럭시 탭 액티브5 프로를 사용하는 모습" style="position: absolute; left: 64px; top: 160px; width: 492px; height: 488px; object-fit: cover; object-position: 75% 50%; border-radius: 16px">
+  <div style="position: absolute; left: 76px; top: 172px; height: 24px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20 M4 20V9l5 3V9l5 3V5h6v15"/></svg>생산 라인 · 설비 앞</div>
+  <sc-for list="{{pins}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.style}}">
+      <sc-if value="{{p.left}}" hint-placeholder-val="{{false}}"><span style="padding: 0 6px 0 10px; font-size: 12px; font-weight: 700; color: #121417; white-space: nowrap">{{p.label}}</span></sc-if>
+      <span style="width: 26px; height: 26px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.n}}</span>
+      <sc-if value="{{p.right}}" hint-placeholder-val="{{true}}"><span style="padding: 0 10px 0 6px; font-size: 12px; font-weight: 700; color: #121417; white-space: nowrap">{{p.label}}</span></sc-if>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 76px; top: 616px; width: 166px; height: 20px; border-radius: 999px; background: #ffffff; color: #596170; font-size: 10px; display: flex; align-items: center; justify-content: center">예시 사진 · 고객 공간으로 교체</div>
+
+  <!-- 3교대 띠 -->
+  <div style="position: absolute; left: 580px; top: 160px; font-size: 13px; font-weight: 800; color: #121417">교대조 공용 단말 · 하루 3교대</div>
+  <div style="position: absolute; left: 1016px; top: 162px; width: 200px; text-align: right; font-size: 11px; color: #8a91a0">교대 시간은 예시</div>
+  <sc-for list="{{shifts}}" as="h" hint-placeholder-count="3">
+    <div style="{{h.style}}">{{h.name}}</div>
+  </sc-for>
+  <sc-for list="{{handovers}}" as="o" hint-placeholder-count="3">
+    <div style="{{o.style}}">1</div>
+  </sc-for>
+  <sc-for list="{{hours}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.style}}">{{t.label}}</div>
+  </sc-for>
+
+  <!-- 옆 단계 ①–⑤ -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.rule}}"></div>
+    <div style="{{s.dot}}">{{s.n}}</div>
+    <div style="{{s.when}}">
+      <span style="font-size: 14px; font-weight: 800; color: #1428a0; white-space: nowrap">{{s.trig}}</span>
+      <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{s.sub}}</span>
+    </div>
+    <div style="{{s.text}}">
+      <div style="display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="font-size: 14.5px; font-weight: 800">{{s.title}}</span><span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">{{s.mod}}</span></div>
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #3d4452; white-space: nowrap"><sc-if value="{{s.hasPain}}" hint-placeholder-val="{{true}}"><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #f5f6f8; color: #596170; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">고민</span><span style="color: #596170">{{s.pain}}</span><span style="color: #8a91a0">→</span></sc-if><span>{{s.fix}}</span></div>
+    </div>
+  </sc-for>
+  <img src="/_blob/7bd33a7605254d6344216f4cf1612f01" alt="Knox Vault 보호 돔과 Knox 방패가 올라간 갤럭시 탭 액티브5 프로" style="position: absolute; left: 1132px; top: 374px; width: 84px; height: 48px; object-fit: cover; border-radius: 6px">
+
+  <!-- 현장 기기 -->
+  <div style="position: absolute; left: 580px; top: 556px; width: 306px; height: 92px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <img src="/_blob/d4304a05b82e915baafe659b5ff71eec" alt="작업 장갑을 낀 손에 쥔 갤럭시 엑스커버7 프로" style="position: absolute; left: 581px; top: 557px; width: 130px; height: 90px; object-fit: cover; object-position: 50% 40%; border-radius: 11px 0 0 11px">
+  <div style="position: absolute; left: 723px; top: 568px; width: 152px; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap">갤럭시 엑스커버7 프로</span>
+    <span style="font-size: 12px; color: #596170">순회 점검 · 이동 중 사용</span>
+    <span style="margin-top: 6px; font-size: 10px; color: #8a91a0">예시 사진 · 고객 현장으로 교체</span>
+  </div>
+  <div style="position: absolute; left: 898px; top: 556px; width: 318px; height: 92px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <img src="/_blob/0f2c662780a718693a94f6c0c0c1d18b" alt="갤럭시 탭 액티브5 프로 앞뒷면과 S펜 제품 사진" style="position: absolute; left: 906px; top: 562px; width: 88px; height: 80px; object-fit: contain; background: #ffffff">
+  <div style="position: absolute; left: 1004px; top: 566px; width: 206px; display: flex; flex-direction: column; gap: 5px">
+    <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap">갤럭시 탭 액티브5 프로</span>
+    <div style="display: flex; gap: 4px">
+      <sc-for list="{{rugged}}" as="r" hint-placeholder-count="3">
+        <span style="height: 20px; padding: 0 6px; border-radius: 999px; border: 1px solid #d5d9e0; font-size: 10px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{r}}</span>
+      </sc-for>
+    </div>
+    <span style="font-size: 10px; color: #8a91a0">설비 앞 점검 · 사양은 카탈로그 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 공장 · 현장 태블릿 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 사진 위 콜아웃 — 사진 1007×859 를 492×488 에 cover(배율 0.568, 가로 오프셋 60): 화면 x = 4 + 0.568·sx, y = 160 + 0.568·sy
+    // [번호, 라벨, 원 중심 x, 원 중심 y, 라벨 방향, 알약 폭]
+    const PINS = [
+      [1, '자동 로그인', 373, 300, 'L', 112],   // 작업자(안전모) 옆
+      [3, '데이터 보호', 260, 352, 'L', 112],   // 태블릿 위쪽 베젤
+      [2, '점검 앱만', 314, 356, 'R', 100],     // 태블릿 오른쪽 모서리
+      [4, '원격 잠금', 390, 470, 'R', 100]      // 태블릿 스트랩
+    ];
+    const pins = PINS.map(([n, label, cx, cy, dir, w]) => ({
+      n, label, left: dir === 'L', right: dir === 'R',
+      style: A + box(dir === 'L' ? cx + 13 - w : cx - 13, cy - 13, w, 26) + 'box-sizing: border-box; border-radius: 999px; background: #ffffff; display: flex; align-items: center; justify-content: ' + (dir === 'L' ? 'flex-end' : 'flex-start') + ';'
+    }));
+
+    // 3교대 띠: 06 → 14 → 22 → 06, 폭 212씩 (x 580–1216)
+    const SH = [
+      ['주간 · A조', '#eaeefb', '#1428a0', '8px 0 0 8px'],
+      ['오후 · B조', '#b8c3ee', '#121417', '0'],
+      ['야간 · C조', '#121417', '#ffffff', '0 8px 8px 0']
+    ];
+    const shifts = SH.map(([name, bg, fg, r], i) => ({
+      name,
+      style: A + box(580 + i * 212, 184, 212, 32) + 'box-sizing: border-box; border-radius: ' + r + '; background: ' + bg + '; color: ' + fg + '; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; justify-content: center;'
+    }));
+    // 교대 시점마다 ① 자동 로그인
+    const handovers = [591, 792, 1004].map((cx) => ({
+      style: A + box(cx - 11, 189, 22, 22) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+    const hours = [
+      ['06:00', 580, 'left'], ['14:00', 762, 'center'], ['22:00', 974, 'center'], ['06:00', 1156, 'right']
+    ].map(([label, x, al]) => ({ label, style: A + box(x, 222, 60, 16) + 'text-align: ' + al + '; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #596170;' }));
+
+    // 옆 단계: 행 y 252 + 58i, 높이 54
+    const S = [
+      ['교대 시', '06 · 14 · 22시', '교대 근무자 자동 로그인', 'Knox Authentication Manager', '한 단말을 3개 조가 함께 씀', '각자 업무 계정 로그인을 자동화'],
+      ['근무 중', '설비 앞', '설비 점검 앱만', 'Knox Manage', '업무 외 앱 · 설정 변경', '점검 앱만 열리는 전용 모드'],
+      ['항상', '기기 안', '점검 데이터 보호', 'Knox Vault', '', '칩 수준부터 내장된 Knox 보안으로 기기 속 데이터 보호'],
+      ['분실 시', '넓은 현장', '원격 잠금', 'Knox Manage', '현장에서 단말 분실', '관리실 콘솔에서 바로 잠금'],
+      ['매일', '관리실', '기기 상태 분석', 'Knox Asset Intelligence', '', '기기 분석 · 인사이트로 교체 · 운영 판단']
+    ];
+    const steps = S.map(([trig, sub, title, mod, pain, fix], i) => {
+      const y = 252 + i * 58;
+      return {
+        n: i + 1, trig, sub, title, mod, pain, fix, hasPain: pain !== '',
+        rule: A + box(580, y - 3, 636, 1) + 'background: ' + (i === 0 ? 'transparent' : '#e2e5ea') + ';',
+        dot: A + box(580, y + 14, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        when: A + box(616, y + 7, 92, 40) + 'display: flex; flex-direction: column; justify-content: center; gap: 1px;',
+        text: A + box(716, y + 5, i === 2 ? 404 : 500, 44) + 'display: flex; flex-direction: column; justify-content: center; gap: 4px;'
+      };
+    });
+
+    const rugged = ['장갑 터치', 'IP68', 'MIL-STD 테스트'];
+
+    return { pins, shifts, handovers, hours, steps, rugged };
+  }
+}
+</script>
+</body>
+</html>

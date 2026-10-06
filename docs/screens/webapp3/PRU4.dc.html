@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>섹션 작성 · 원본 대조 · 공간별 제품</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <!-- 상단 띠: 섹션 · 보기 전환 -->
+      <div style="width: 1100px; height: 52px; box-sizing: border-box; padding: 0 16px; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <span style="height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">표준 4 / 8</span>
+        <span style="font-size: 15px; font-weight: 700; white-space: nowrap">공간별 제품</span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">시트 3장 · 유지 2 · 갱신 1</span>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">원본 · A 커피 2025 p.9–11</span>
+        <div role="radiogroup" aria-label="보기" style="display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: #f0f2f5; flex-shrink: 0">
+          <sc-for list="{{views}}" as="vw" hint-placeholder-count="3">
+            <button role="radio" aria-checked="{{vw.on}}" style="{{vw.style}}">{{vw.label}}</button>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 본문 2열: 원본 시트 ↔ 새 시트 -->
+      <div style="width: 1100px; height: 444px; margin-top: 12px; display: grid; grid-template-columns: 536px 28px 536px; flex-shrink: 0">
+        <!-- 원본 시트 -->
+        <div style="height: 444px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">원본 시트</span>
+            <span style="font-size: 11.5px; color: #596170; white-space: nowrap">p.10 카운터 메뉴보드 · 2025 v4</span>
+            <span style="flex-grow: 1"></span>
+            <span style="height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f0f2f5; color: #596170; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">읽기 전용</span>
+          </div>
+          <div style="padding: 10px 14px 0 14px; display: flex; justify-content: center; flex-shrink: 0">
+            <div style="width: 440px; height: 240px; box-sizing: border-box; border-radius: 10px; border: 1px solid #d5dbe8; background: linear-gradient(180deg, #f5f7fd 0%, #eaeefb 100%); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden">
+              <span style="position: absolute; left: 10px; top: 8px; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; color: #8a91a0">p.10</span>
+              <div style="width: 240px; height: 136px; display: flex; align-items: center; justify-content: center"><div style="width: 120px; height: 68px; transform: scale(2); transform-origin: center center"><dc-import name="Thumb" kind="cards3img" n="3" hint-size="120px,68px"></dc-import></div></div>
+              <span style="position: absolute; right: 10px; bottom: 8px; font-size: 10.5px; color: #8a91a0; white-space: nowrap">cards3img · 이미지 카드 3</span>
+            </div>
+          </div>
+          <div style="padding: 10px 14px 0 14px; display: flex; flex-direction: column; gap: 4px; min-height: 0">
+            <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 22px; line-height: 22px">카운터 메뉴보드 QM55B 2대 · 바닥형 OM46</span>
+            <sc-for list="{{srcLines}}" as="sl" hint-placeholder-count="3">
+              <div style="height: 24px; display: flex; align-items: center; gap: 8px; min-width: 0">
+                <span style="{{sl.markStyle}}">{{sl.mark}}</span>
+                <span style="{{sl.textStyle}}">{{sl.text}}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin: auto 14px 10px 14px; padding-top: 8px; border-top: 1px solid #f0f2f5; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8a91a0; white-space: nowrap">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 16l5-5 4 4 3-3 6 6"/><circle cx="16" cy="9" r="1.5"/></svg>
+            원본 이미지 3개 · 삼성 공식 2(재사용) · 매장 사진 1(2025 촬영 · 재사용 가능)
+          </div>
+        </div>
+
+        <!-- 가운데 연결 바 -->
+        <div style="display: flex; flex-direction: column; align-items: center; padding-top: 145px; gap: 20px">
+          <sc-for list="{{links}}" as="lk" hint-placeholder-count="3">
+            <div style="height: 24px; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{{lk.color}}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{lk.path}}"/></svg></div>
+          </sc-for>
+        </div>
+
+        <!-- 새 시트 (편집) -->
+        <div style="height: 444px; box-sizing: border-box; background: #ffffff; border: 1.5px solid #1428a0; border-radius: 14px; box-shadow: 0 0 0 3px rgba(20,40,160,0.08); overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">새 시트</span>
+            <span style="font-size: 11.5px; color: #596170; white-space: nowrap">10 카운터 메뉴보드 · 편집 중</span>
+            <span style="flex-grow: 1"></span>
+            <span style="height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap">요구사항 <span style="font-family: Manrope, sans-serif; font-weight: 800">R3 · R1</span> 반영</span>
+          </div>
+          <div style="padding: 12px 14px 0 14px; display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <label for="sheet-title" style="font-size: 11px; color: #596170; white-space: nowrap">시트 제목 <span style="color: #8a3b00; font-weight: 600">· 원본 대비 모델명 갱신 · 유저가 고침</span></label>
+              <div style="height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #ffffff; display: flex; align-items: center; padding: 0 12px; gap: 8px">
+                <input id="sheet-title" value="카운터 메뉴보드 QM55C 2대 · 바닥형 OM46C" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13.5px; font-weight: 600; color: #121417; outline: none">
+                <button style="height: 24px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #596170; font-size: 11px; font-weight: 600; white-space: nowrap; flex-shrink: 0">되돌리기</button>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <span style="font-size: 11px; color: #596170; white-space: nowrap">본문 불릿 · 줄마다 원본 대비 표시</span>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <sc-for list="{{newLines}}" as="nl" hint-placeholder-count="3">
+                  <div style="{{nl.rowStyle}}">
+                    <label for="{{nl.id}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{nl.aria}}</label>
+                    <input id="{{nl.id}}" value="{{nl.text}}" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+                    <span style="{{nl.badgeStyle}}">{{nl.badge}}</span>
+                  </div>
+                </sc-for>
+                <button style="height: 32px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; background: #ffffff; color: #596170; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>줄 추가 · 원본 줄 끌어오기</button>
+              </div>
+            </div>
+          </div>
+          <div style="margin: auto 14px 10px 14px; padding-top: 8px; border-top: 1px solid #f0f2f5; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h5"/></svg>
+            시트 노트 · 원본 p.10 기반 · 갱신 — 이미지 3개는 원본에서 그대로 가져옴
+          </div>
+        </div>
+      </div>
+
+      <!-- 이 섹션의 시트 3장 -->
+      <div style="width: 1100px; height: 96px; margin-top: 12px; box-sizing: border-box; padding: 0 14px; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <div style="display: flex; flex-direction: column; gap: 2px; width: 110px; flex-shrink: 0">
+          <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">이 섹션의 시트</span>
+          <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">3장 · 원본 p.9–11</span>
+        </div>
+        <sc-for list="{{sheets}}" as="sh" hint-placeholder-count="3">
+          <button aria-pressed="{{sh.on}}" style="{{sh.cardStyle}}">
+            <div style="width: 84px; height: 48px; flex-shrink: 0; overflow: hidden; border-radius: 5px; position: relative"><div style="position: absolute; left: 0; top: 0; width: 120px; height: 68px; transform: scale(0.7); transform-origin: top left"><dc-import name="Thumb" kind="{{sh.kind}}" n="3" hint-size="120px,68px"></dc-import></div></div>
+            <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex-grow: 1; align-items: flex-start">
+              <span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; color: #8a91a0; white-space: nowrap">{{sh.page}}</span>
+              <span style="font-size: 12.5px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%">{{sh.name}}</span>
+              <span style="{{sh.badgeStyle}}">{{sh.badge}}</span>
+            </div>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 12px 40px 20px 40px">
+      <div style="width: 1100px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">원본 대조 작성 <span style="color: #596170; font-weight: 500">· 바뀐 줄 {{changed}} · 유저가 고친 줄 {{edited}} · 4 / 6</span></div>
+          <span style="flex-grow: 1"></span>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{tally}}" as="ty" hint-placeholder-count="4">
+              <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">원본과 다른 곳은 시트에 '원본 대비' 노트가 남아요 · 되돌리기 가능</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="PRS3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">이전 섹션</a>
+            <button style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; white-space: nowrap">원본 줄 전부 가져오기</button>
+            <a href="PRS5.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>다음 섹션</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 보기 전환 (원본 대조 선택)
+    const views = [['원본 대조', true], ['새 시트만', false], ['흐름 가이드', false]].map(([label, on]) => ({
+      label, on,
+      style: 'height: 26px; padding: 0 10px; border: none; border-radius: 7px; font-size: 12px; white-space: nowrap;' + (on ? ' background: #ffffff; color: #1428a0; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12);' : ' background: transparent; color: #596170; font-weight: 500;')
+    }));
+
+    // 판정 색 (SPEC)
+    const J = {
+      keep: ['유지', '#1428a0', ' color: #1428a0; background: #eaeefb;'],
+      upd: ['갱신', '#8a3b00', ' color: #8a3b00; background: #fdf0e6;'],
+      add: ['신규', '#0b6e4f', ' color: #0b6e4f; background: #e6f4ee;'],
+      drop: ['제외', '#8a91a0', ' color: #596170; background: #f0f2f5;']
+    };
+    const badge = (k) => 'height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + J[k][2];
+
+    // 원본 줄: [텍스트, 변경 마커]
+    const SRC = [
+      ['QM55B 55형 메뉴보드 2대 · 카운터 상단 가로 배치', 'upd'],
+      ['바닥형 스탠드 1대 · 입구 프로모션 안내', 'keep'],
+      ['2025 가을 프로모션 · 월 1회 본사 교체', 'drop']
+    ];
+    const srcLines = SRC.map(([text, k]) => ({
+      text, mark: J[k][0],
+      markStyle: 'width: 34px; height: 18px; box-sizing: border-box; border-radius: 4px; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; white-space: nowrap;' + J[k][2],
+      textStyle: 'font-size: 12.5px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (k === 'drop' ? ' color: #8a91a0; text-decoration: line-through;' : k === 'upd' ? ' color: #121417; font-weight: 600;' : ' color: #3d4452;')
+    }));
+
+    // 새 시트 줄: [텍스트, 배지 라벨, 판정, 신규 여부]
+    const NEW = [
+      ['QM55C 55형 메뉴보드 2대 · 카운터 상단 가로 배치', '갱신 · 모델', 'upd'],
+      ['바닥형 스탠드 1대 · 입구 프로모션 안내', '유지', 'keep'],
+      ['매장별 가격 차등 — 본사 템플릿 + 매장 변수', '신규 · R3 매장별 가격', 'add']
+    ];
+    const newLines = NEW.map(([text, label, k], i) => ({
+      id: 'line-' + (i + 1), aria: '불릿 ' + (i + 1), text, badge: label, badgeStyle: badge(k),
+      rowStyle: 'height: 38px; box-sizing: border-box; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 10px 0 12px;' + (k === 'add' ? ' border: 1px dashed #0b6e4f; background: #f3faf6;' : k === 'upd' ? ' border: 1px solid #e2e5ea; background: #ffffff; box-shadow: inset 3px 0 0 #8a3b00;' : ' border: 1px solid #e2e5ea; background: #ffffff;')
+    }));
+
+    // 가운데 연결 아이콘: 줄별 (갱신 화살표 · 유지 화살표 · 제외 ×)
+    const links = [
+      { color: '#8a3b00', path: 'M5 12h14M13 6l6 6-6 6' },
+      { color: '#1428a0', path: 'M5 12h14M13 6l6 6-6 6' },
+      { color: '#b8bec8', path: 'M6 6l12 12M18 6L6 18' }
+    ];
+
+    // 이 섹션의 시트 3장: [쪽, kind, 이름, 판정, 선택]
+    const SH = [['p.9', 'zones', '공간 맵', 'keep', false], ['p.10', 'cards3img', '카운터 메뉴보드', 'upd', true], ['p.11', 'image2kpi', '대기 공간', 'keep', false]];
+    const sheets = SH.map(([page, kind, name, k, on]) => ({
+      page, kind, name, on, badge: J[k][0], badgeStyle: badge(k),
+      cardStyle: 'height: 68px; box-sizing: border-box; flex-grow: 1; min-width: 0; padding: 0 10px; border-radius: 10px; background: #ffffff; display: flex; align-items: center; gap: 10px; text-align: left;' + (on ? ' border: 1.5px solid #1428a0; box-shadow: 0 0 0 3px rgba(20,40,160,0.1);' : ' border: 1px solid #e2e5ea;')
+    }));
+
+    const tally = [['갱신', 1, 'upd'], ['유지', 1, 'keep'], ['신규', 1, 'add'], ['제외', 1, 'drop']].map(([label, n, k]) => ({
+      label, n: n + '줄',
+      style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + J[k][2]
+    }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 4,
+      views, srcLines, newLines, links, sheets, tally, changed: 3, edited: 1
+    };
+  }
+}
+</script>
+</body>
+</html>

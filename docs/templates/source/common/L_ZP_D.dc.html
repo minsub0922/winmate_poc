@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ZP-D 실사 핫스팟 · 제품 카드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">한 장면에 들어가는 제품 네 가지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170; white-space: nowrap">유사 매장 실사(도입사례) 위에 제품 위치 표시 · A 커피 매장에 같은 구성 제안</div>
+
+  <!-- 실사 + 핫스팟 (사진 원본 비율 16:9 그대로 → 핫스팟 좌표 = 사진 좌표) -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 776px; height: 436px">
+    <dc-import name="Img" pid="case.mcd.counter" w="776" h="436" radius="16" credit="bl" hint-size="776px,436px"></dc-import>
+    <sc-for list="{{spots}}" as="s" hint-placeholder-count="4">
+      <div style="{{s.ring}}"></div>
+      <span style="{{s.dot}}">{{s.no}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 사진 아래 설명 줄 -->
+  <div style="position: absolute; left: 64px; top: 602px; width: 776px; height: 46px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 0 16px; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">유사 사례</span>
+    <span style="font-size: 13px; font-weight: 700">맥도날드 코리아 고양삼송 DT</span>
+    <span style="font-size: 12.5px; color: #596170">카운터 · 좌석 · 메뉴보드가 한 화면에 보이는 실제 설치 사진</span>
+    <span style="margin-left: auto; font-size: 12px; color: #8a91a0">번호 = 오른쪽 제품</span>
+  </div>
+
+  <!-- 제품 카드 4 -->
+  <div style="position: absolute; left: 864px; top: 150px; width: 352px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+      <div style="position: relative; height: 117px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 12px 14px 12px 12px; display: flex; gap: 14px; align-items: center">
+        <div style="{{c.well}}">
+          <dc-import name="Img" pid="{{c.pid}}" w="88" h="66" bg="{{c.bg}}" radius="8" hint-size="88px,66px"></dc-import>
+          <span style="position: absolute; left: -6px; top: -6px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.no}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex-grow: 1">
+          <span style="font-size: 11.5px; font-weight: 700; color: #1428a0; white-space: nowrap">{{c.place}}</span>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+            <span style="font-size: 15px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{c.model}}</span>
+            <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{c.qty}}</span>
+          </div>
+          <span style="font-size: 12.5px; line-height: 1.45; color: #3d4452">{{c.desc}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 매장 디지털 전환 제안 · 사진 · 삼성 도입사례(맥도날드 코리아) · 외부 제출 전 확인</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 핫스팟 = 사진 위 비율 좌표 (x%, y%). 이미지 슬롯 776 × 436 = 사진 원본 비율이라 크롭 없음.
+    const W = 776, H = 436;
+    const S = [
+      [83, 35],  // ① 카운터 위 메뉴보드 (2 · 3번째 화면 사이)
+      [69, 62],  // ② 카운터 상판 — 주문 · 결제 자리
+      [5, 37],   // ③ 왼쪽 창가 세로 사이니지
+      [39, 8]    // ④ 좌석 위 천장
+    ];
+    const spots = S.map(([px, py], i) => {
+      const x = Math.round(W * px / 100), y = Math.round(H * py / 100);
+      return {
+        no: i + 1,
+        ring: 'position: absolute; left: ' + (x - 23) + 'px; top: ' + (y - 23) + 'px; width: 46px; height: 46px; box-sizing: border-box; border-radius: 50%; border: 2px solid #ffffff; background: rgba(255,255,255,0.28);',
+        dot: 'position: absolute; left: ' + (x - 16) + 'px; top: ' + (y - 16) + 'px; width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(18,20,23,0.35); color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+      };
+    });
+    // 제품 카드 = [pid, bg, 위치, 모델, 수량, 한 줄]
+    const C = [
+      ['qm55c.front', 'soft', '카운터 위 메뉴보드', 'QM55C 스마트 사이니지', '×5', '5면을 한 장처럼 · 메뉴 일괄 변경'],
+      ['km24c.front', 'soft', '카운터 · 주문 결제', 'KM24C 키오스크', '×2', '카운터 위 셀프 주문으로 피크 줄 분산'],
+      ['qm55c.persp', 'soft', '창가 · 벽면 세로 설치', 'QM55C 세로형', '×1', '밖에서 보이는 프로모션 · 시간대별 전환'],
+      ['ac360', 'white', '좌석 위 천장', '360 카세트 시스템에어컨', '×[N]', '원형 바람으로 좌석 · 카운터 고르게']
+    ];
+    const cards = C.map(([pid, bg, place, model, qty, desc], i) => ({
+      no: i + 1, pid, bg, place, model, qty, desc,
+      well: 'position: relative; width: 88px; height: 88px; flex-shrink: 0; box-sizing: border-box; border-radius: 10px; display: flex; align-items: center; justify-content: center; ' + (bg === 'white' ? 'background: #ffffff; border: 1px solid #e2e5ea;' : 'background: #f5f6f8;')
+    }));
+    return { spots, cards };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>시나리오 · 조감도에서 이어 만들기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="scenario" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 시나리오 생성" title="새 작업" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 18px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6"><span style="font-weight: 600">조감도에서 이어 만들기</span> · with 솔루션</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; width: 760px; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">조감도의 존을 시나리오 공간으로 가져옵니다. 존에 배치된 제품도 함께 넘어와 장면에 바로 들어갑니다.</div>
+
+            <!-- 조감도 작업 고르기 -->
+            <div style="display: flex; align-items: center; gap: 6px; height: 32px">
+              <span style="font-size: 12px; color: #596170; margin-right: 4px; white-space: nowrap">조감도 작업</span>
+              <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1.5px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z M12 12l8-4.5 M12 12v9 M12 12L4 7.5"/></svg>
+                <span>강남 플래그십 1층 로비</span><span style="color: #596170; font-weight: 500">· 존 5</span>
+              </button>
+              <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+                <span>B 병원 외래 대기실</span><span style="color: #8a91a0">· 존 3</span>
+              </button>
+              <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+                <span>C 물류센터 관제실</span><span style="color: #8a91a0">· 존 2</span>
+              </button>
+              <div style="flex-grow: 1"></div>
+              <a href="BE5.dc.html" style="height: 28px; padding: 0 4px; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap">조감도 열기
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg>
+              </a>
+            </div>
+
+            <div style="display: flex; gap: 12px; height: 316px">
+              <!-- 존 지도 -->
+              <div style="position: relative; width: 420px; height: 316px; flex-shrink: 0; border-radius: 12px; background: #dfe3ea; overflow: hidden">
+                <div style="position: absolute; left: 12px; top: 10px; display: flex; gap: 6px">
+                  <span style="font-size: 11px; font-weight: 600; color: #ffffff; background: #1428a0; border-radius: 4px; padding: 3px 8px">존 포인트 5</span>
+                  <span style="font-size: 11px; color: #121417; background: rgba(255,255,255,0.92); border-radius: 4px; padding: 3px 8px">120평 · 층고 4.5m</span>
+                </div>
+                <!-- 바닥 · 벽 -->
+                <div style="position: absolute; left: 20px; top: 40px; width: 380px; height: 232px; box-sizing: border-box; background: #eef0f4; border: 3px solid #8a91a0; border-bottom: 3px solid #ffffff"></div>
+                <span style="position: absolute; left: 20px; top: 278px; width: 380px; text-align: center; font-size: 11px; color: #596170">전면 유리창 (도로측)</span>
+                <!-- ② 후면 미디어월 -->
+                <div style="position: absolute; left: 110px; top: 48px; width: 200px; height: 36px; box-sizing: border-box; border: 2px solid #1428a0; background: rgba(20,40,160,0.10); border-radius: 6px"></div>
+                <div style="position: absolute; left: 130px; top: 50px; width: 160px; height: 6px; background: #121417; border-radius: 2px"></div>
+                <span style="position: absolute; left: 100px; top: 40px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+                <!-- ④ 라운지 · 안내 데스크 -->
+                <div style="position: absolute; left: 32px; top: 100px; width: 120px; height: 118px; box-sizing: border-box; border: 2px solid #1428a0; background: rgba(20,40,160,0.10); border-radius: 6px"></div>
+                <div style="position: absolute; left: 46px; top: 118px; width: 56px; height: 26px; border-radius: 4px; background: #c5ccd8"></div>
+                <div style="position: absolute; left: 46px; top: 176px; width: 80px; height: 18px; border-radius: 4px; background: #c5ccd8"></div>
+                <span style="position: absolute; left: 22px; top: 92px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">4</span>
+                <!-- ⑤ 중앙 기둥 (제외) -->
+                <div style="position: absolute; left: 190px; top: 138px; width: 20px; height: 20px; box-sizing: border-box; border: 1.5px dashed #8a91a0; background: #d5d9e0"></div>
+                <div style="position: absolute; left: 236px; top: 138px; width: 20px; height: 20px; box-sizing: border-box; border: 1.5px dashed #8a91a0; background: #d5d9e0"></div>
+                <span style="position: absolute; left: 212px; top: 164px; width: 20px; height: 20px; border-radius: 50%; background: #ffffff; border: 1.5px solid #8a91a0; box-sizing: border-box; color: #596170; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span>
+                <!-- ③ 체험 · 시연 존 -->
+                <div style="position: absolute; left: 290px; top: 100px; width: 98px; height: 118px; box-sizing: border-box; border: 2px solid #1428a0; background: rgba(20,40,160,0.10); border-radius: 6px"></div>
+                <div style="position: absolute; left: 378px; top: 122px; width: 6px; height: 58px; background: #121417; border-radius: 2px"></div>
+                <div style="position: absolute; left: 304px; top: 186px; width: 54px; height: 16px; border-radius: 4px; background: #c5ccd8"></div>
+                <span style="position: absolute; left: 280px; top: 92px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">3</span>
+                <!-- ① 쇼윈도 -->
+                <div style="position: absolute; left: 32px; top: 232px; width: 356px; height: 34px; box-sizing: border-box; border: 2px solid #1428a0; background: rgba(20,40,160,0.10); border-radius: 6px"></div>
+                <div style="position: absolute; left: 82px; top: 256px; width: 64px; height: 6px; background: #121417; border-radius: 2px"></div>
+                <div style="position: absolute; left: 178px; top: 256px; width: 64px; height: 6px; background: #121417; border-radius: 2px"></div>
+                <div style="position: absolute; left: 274px; top: 256px; width: 64px; height: 6px; background: #121417; border-radius: 2px"></div>
+                <span style="position: absolute; left: 22px; top: 224px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>
+                <!-- 범례 -->
+                <div style="position: absolute; right: 12px; top: 10px; display: flex; gap: 8px; align-items: center; background: rgba(255,255,255,0.92); border-radius: 4px; padding: 3px 8px; font-size: 10.5px; color: #596170">
+                  <span style="display: flex; align-items: center; gap: 4px"><span style="width: 10px; height: 4px; background: #121417; border-radius: 1px"></span>삼성 제품</span>
+                  <span style="display: flex; align-items: center; gap: 4px"><span style="width: 10px; height: 8px; background: #c5ccd8; border-radius: 1px"></span>가구</span>
+                </div>
+              </div>
+
+              <!-- 존 목록 -->
+              <div style="width: 328px; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                <div style="display: flex; align-items: center; justify-content: space-between; height: 22px">
+                  <span style="font-size: 13px; font-weight: 600">가져올 존 <span style="color: #596170; font-weight: 500">· 4 / 5 선택</span></span>
+                  <button style="height: 22px; padding: 0 4px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600">모두 선택</button>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px solid #1428a0; background: #ffffff">
+                  <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 4px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                  <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">쇼윈도 · 전면 유리창</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">OH55C ×3 · 거리에서 보이는 첫인상</span>
+                  </div>
+                  <span style="flex-shrink: 0; font-size: 11px; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 2px 6px">장면 1</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px solid #1428a0; background: #ffffff">
+                  <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 4px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                  <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">후면 미디어월</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">The Wall IAB 146" · 입장 후 시선이 닿는 곳</span>
+                  </div>
+                  <span style="flex-shrink: 0; font-size: 11px; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 2px 6px">장면 2</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px solid #1428a0; background: #ffffff">
+                  <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 4px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                  <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">3</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">체험 · 시연 존</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Flip Pro WA75D · 직원이 설명하는 자리</span>
+                  </div>
+                  <span style="flex-shrink: 0; font-size: 11px; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 2px 6px">장면 3</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px solid #1428a0; background: #ffffff">
+                  <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 4px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                  <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">4</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">라운지 · 안내 데스크</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">가구만 배치 · 제품은 다음 단계에서 추천</span>
+                  </div>
+                  <span style="flex-shrink: 0; font-size: 11px; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 2px 6px">장면 4</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; height: 50px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px dashed #b8bec8; background: #fbfbfc">
+                  <span style="width: 16px; height: 16px; flex-shrink: 0; box-sizing: border-box; border-radius: 4px; border: 1.5px solid #b8bec8; background: #ffffff"></span>
+                  <span style="width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #8a91a0; background: #ffffff; color: #596170; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                    <span style="font-size: 13px; font-weight: 600; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">중앙 기둥 ×2</span>
+                    <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">배치 제품 없음 · 랩핑 포인트만 지정</span>
+                  </div>
+                  <span style="flex-shrink: 0; font-size: 11px; color: #596170; background: #f0f2f5; border-radius: 4px; padding: 2px 6px">제외</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">가져오기 설정 <span style="color: #596170; font-weight: 500">· 존 4개 → 장면 4개 · 2 / 4</span></div>
+          <a href="BE5Z.dc.html" style="height: 24px; padding: 0 4px; font-size: 12px; font-weight: 600; display: flex; align-items: center">존 포인트 다시 지정</a>
+        </div>
+        <div style="padding: 10px 18px 0 18px; display: flex; align-items: center; gap: 6px; height: 30px">
+          <span style="width: 72px; flex-shrink: 0; font-size: 12px; color: #596170">시나리오 축</span>
+          <button style="height: 30px; padding: 0 12px; border-radius: 999px; border: 1.5px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>방문객 동선</button>
+          <button style="height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">매장 하루</button>
+          <button style="height: 30px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">런칭 이벤트 당일</button>
+        </div>
+        <div style="padding: 8px 18px 0 18px; display: flex; align-items: center; gap: 6px; height: 30px">
+          <span style="width: 72px; flex-shrink: 0; font-size: 12px; color: #596170">동선 순서</span>
+          <span style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; color: #1428a0; font-weight: 800">1</span>쇼윈도</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; color: #1428a0; font-weight: 800">2</span>미디어월</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; color: #1428a0; font-weight: 800">3</span>체험 · 시연 존</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <span style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; color: #1428a0; font-weight: 800">4</span>라운지 · 상담</span>
+          <span style="font-size: 11.5px; color: #8a91a0; margin-left: 4px; white-space: nowrap">끌어서 순서 바꾸기</span>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+            <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 4px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span style="font-size: 12.5px; color: #121417; white-space: nowrap">조감도와 연결 유지</span>
+            <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">· 배치가 바뀌면 알려드려요</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="SC0.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+            <a href="SC2E.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+              <span>존으로 장면 만들기</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return { steps: ['시나리오 유형', '공간 시나리오 입력', '솔루션 · 제품 입력', '시나리오 생성'], cur: 2 }; }
+}
+</script>
+</body>
+</html>

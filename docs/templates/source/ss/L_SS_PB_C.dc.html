@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-PB-C 공공 · 교통 인프라 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">S 지자체 시민의 하루 뒤에서 관제 · 현장 · 운영이 함께 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">출근길부터 집중호우 귀갓길까지 — 시민이 보는 순간과 그 뒤에서 삼성이 하는 일 (시간은 예시)</div>
+
+  <!-- 열 머리: 시간 · 공간 -->
+  <div style="position: absolute; left: 64px; top: 161px; width: 116px; display: flex; flex-direction: column; white-space: nowrap">
+    <span style="font-size: 12px; font-weight: 800; line-height: 17px">시간 · 공간</span>
+    <span style="font-size: 10.5px; line-height: 15px; color: #8a91a0">시간은 예시</span>
+  </div>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.head}}">
+      <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; line-height: 20px; color: #1428a0">{{c.time}}</span>
+      <span style="font-size: 11.5px; line-height: 16px; color: #596170">{{c.space}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 무대 뒤 영역 (가시선 아래) -->
+  <div style="position: absolute; left: 64px; top: 318px; width: 1152px; height: 222px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 76px; top: 392px; width: 1128px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 76px; top: 464px; width: 1128px; height: 1px; background: #e2e5ea"></div>
+  <!-- 상호작용선 · 가시선 -->
+  <div style="position: absolute; left: 180px; top: 291px; width: 1036px; height: 1px; background: #b8bec8"></div>
+  <div style="position: absolute; left: 64px; top: 284px; width: 116px; display: flex; flex-direction: column; white-space: nowrap">
+    <span style="font-size: 11.5px; font-weight: 800; line-height: 15px; color: #1428a0">삼성 접점</span>
+  </div>
+  <div style="position: absolute; left: 180px; top: 312px; width: 1036px; height: 0; border-top: 1px dashed #8a91a0"></div>
+  <div style="position: absolute; left: 64px; top: 305px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">가시선 — 아래는 무대 뒤</div>
+
+  <!-- 레인 이름 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.pos}}">
+      <span style="font-size: 13px; font-weight: 800; line-height: 18px; color: #121417">{{l.name}}</span>
+      <span style="font-size: 10.5px; line-height: 15px; color: #596170">{{l.sub}}</span>
+      <div style="display: flex; gap: 4px; margin-top: 3px">
+        <sc-for list="{{l.badges}}" as="b" hint-placeholder-count="1">
+          <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{b.code}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 릴레이 화살표 (레인 사이) -->
+  <sc-for list="{{relays}}" as="r" hint-placeholder-count="12">
+    <div style="{{r.style}}"></div>
+  </sc-for>
+
+  <!-- 삼성 접점 칩 (상호작용선 위) -->
+  <sc-for list="{{touch}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.pos}}">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #eaeefb; border: 1px solid #b8c3ee; color: #1428a0; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{t.name}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 단계 카드 -->
+  <sc-for list="{{cells}}" as="e" hint-placeholder-count="13">
+    <div style="{{e.box}}">
+      <span style="{{e.actPos}}">{{e.act}}</span>
+      <sc-if value="{{e.hasSam}}" hint-placeholder-val="{{true}}">
+        <span style="position: absolute; left: 10px; top: 41px; font-size: 11px; font-weight: 700; line-height: 14px; color: #1428a0; white-space: nowrap">{{e.sam}}</span>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <!-- 성과 지표 -->
+  <div style="position: absolute; left: 64px; top: 548px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 556px; width: 116px; display: flex; flex-direction: column; white-space: nowrap">
+    <span style="font-size: 12px; font-weight: 800; line-height: 17px">성과 지표</span>
+    <span style="font-size: 10.5px; line-height: 15px; color: #8a91a0">수치는 예시 · 실측 후 반영</span>
+  </div>
+  <sc-for list="{{kpis}}" as="k" hint-placeholder-count="6">
+    <div style="{{k.pos}}">
+      <span style="font-size: 11px; line-height: 15px; color: #596170">{{k.label}}</span>
+      <span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; line-height: 22px; letter-spacing: -0.02em; color: #1428a0">{{k.val}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 공통 기반 -->
+  <div style="position: absolute; left: 64px; top: 608px; width: 1152px; height: 40px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #eaeefb; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; color: #1428a0">공통 기반</span>
+    <span style="width: 1px; height: 14px; background: #b8c3ee"></span>
+    <span style="font-size: 12.5px; color: #3d4452">모든 화면 · 단말의 상태가 상황실과 운영팀에 모입니다</span>
+    <span style="flex-grow: 1"></span>
+    <sc-for list="{{base}}" as="b" hint-placeholder-count="3">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{b.name}}</span>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>S 지자체 · 공공 인프라 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 열 6 — x 192–1216, 폭 164, 간격 8
+    const W = 164;
+    const colX = (i) => 192 + i * 172;
+    const mid = (i) => colX(i) + W / 2;
+
+    const COLS = [
+      ['06:00', '첫차 전 · 역사 전체'],
+      ['07:30', '출근 · 역 출입구 · 정류장'],
+      ['10:30', '대합실 · 승강장'],
+      ['15:30', '공원 · 탐방로'],
+      ['18:20', '집중호우 · 하천 · 귀갓길'],
+      ['23:00', '야간 · 하루 마감']
+    ];
+    const cols = COLS.map(([time, space], i) => ({
+      time, space,
+      head: A + box(colX(i), 160, W, 38) + 'display: flex; flex-direction: column; white-space: nowrap;'
+    }));
+
+    // 레인: 0 시민 · 방문객 / 1 관제 요원 / 2 현장 · 시설 직원 / 3 운영 · 유지보수
+    const LY = [208, 326, 398, 470];
+    const CH = 60;
+    const LN = [
+      ['시민 · 방문객', '보고 · 만지는 사람', ['P1', 'P2']],
+      ['관제 요원', '교통정보센터 상황실', ['P3']],
+      ['현장 · 시설 직원', '순찰 · 구조 · 시설', ['P4']],
+      ['운영 · 유지보수', 'S 지자체 · 삼성 지원', []]
+    ];
+    const lanes = LN.map(([name, sub, b], i) => ({
+      name, sub,
+      badges: b.map((code) => ({ code })),
+      pos: A + 'left: 64px; top: ' + px(LY[i]) + 'width: 116px; display: flex; flex-direction: column; white-space: nowrap;'
+    }));
+
+    // 상호작용선 위 삼성 접점 (y 280–302)
+    const TY = 280, TH = 22;
+    const T = [[1, '고휘도 스마트 사이니지'], [2, '터치형 안내 사이니지'], [3, '갤럭시 워치 · SOS'], [4, '안내 사이니지 · 긴급 공지']];
+    const touch = T.map(([c, name]) => ({ name, pos: A + box(colX(c), TY, W, TH) + 'display: flex; justify-content: center;' }));
+
+    // 단계 카드 — [열, 레인, 하는 일, 삼성, 종류]
+    const E = [
+      [0, 3, '첫차 전 역사 화면 상태를 원격 점검', 'MagicINFO 원격 관리', 'back'],
+      [1, 0, '강한 햇빛 아래서도 도착 · 혼잡 정보를 봅니다', '', 'user'],
+      [1, 1, '교차로 정체를 감지해 우회 안내로 내보냅니다', 'The Wall · MagicINFO', 'back'],
+      [2, 0, '외국인 방문객이 터치로 환승 길을 찾습니다', '', 'user'],
+      [2, 3, '공사로 바뀐 출구 안내를 원격으로 갱신', 'MagicINFO 콘텐츠 배포', 'back'],
+      [3, 0, '탐방객이 넘어져 움직이지 못합니다', '', 'alert'],
+      [3, 1, 'SOS 위치 · 심박을 보고 출동을 지시', '안전 관제 앱 연동', 'back'],
+      [3, 2, 'PTT로 지령을 받고 탐방로로 출동', '갤럭시 엑스커버 · PTT', 'back'],
+      [4, 0, '역 · 정류장에서 우회 안내를 받습니다', '', 'user'],
+      [4, 1, '하천 CCTV와 현장 보고를 한 화면에 모아 공지', 'The Wall · MagicINFO', 'back'],
+      [4, 2, '장갑 낀 손으로 비상 PTT · 현장 보고', '엑스커버 · PS-LTE · Knox', 'alert'],
+      [5, 1, '야간 CCTV 속 작은 이상까지 확인', '퀀텀 프로세서 Flex · HDR', 'back'],
+      [5, 3, '장비 상태 · 장애 기록을 상주 엔지니어가 조치', '통합 모니터링 · 상주 AS', 'back']
+    ];
+    const FRAME = {
+      user: 'background: #ffffff; border: 1px solid #b8bec8;',
+      back: 'background: #ffffff; border: 1px solid #e2e5ea;',
+      alert: 'background: #ffffff; border: 2px solid #121417;'
+    };
+    const cells = E.map(([c, l, act, sam, kind]) => ({
+      act, sam, hasSam: !!sam,
+      box: A + box(colX(c), LY[l], W, CH) + 'box-sizing: border-box; border-radius: 10px; ' + FRAME[kind],
+      actPos: A + 'left: 10px; top: ' + (sam ? '7px' : '13px') + '; width: 144px; font-size: 12px; font-weight: 700; line-height: 16px; color: #121417;'
+    }));
+
+    // 릴레이 — 같은 열에서 레인 사이를 잇는 화살표 (dir: 'up' | 'down')
+    const relays = [];
+    const seg = (c, y1, y2, dir) => {
+      const x = mid(c);
+      const top = Math.min(y1, y2), bot = Math.max(y1, y2);
+      if (dir === 'up') {
+        relays.push({ style: A + box(x - 1, top + 6, 2, bot - top - 6) + 'background: #1428a0;' });
+        relays.push({ style: A + 'left: ' + px(x - 5) + 'top: ' + px(top) + 'width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid #1428a0;' });
+      } else {
+        relays.push({ style: A + box(x - 1, top, 2, bot - top - 6) + 'background: #1428a0;' });
+        relays.push({ style: A + 'left: ' + px(x - 5) + 'top: ' + px(bot - 7) + 'width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #1428a0;' });
+      }
+    };
+    const L0B = LY[0] + CH, L1T = LY[1], L1B = LY[1] + CH, L2T = LY[2], L3T = LY[3];
+    // 07:30 관제 → 사이니지 → 시민
+    seg(1, TY + TH, L1T, 'up'); seg(1, L0B, TY, 'up');
+    // 10:30 운영팀 → 터치 사이니지 → 방문객
+    seg(2, TY + TH, L3T, 'up'); seg(2, L0B, TY, 'up');
+    // 15:30 탐방객 → 워치 SOS → 관제 → 현장 직원
+    seg(3, L0B, TY, 'down'); seg(3, TY + TH, L1T, 'down'); seg(3, L1B, L2T, 'down');
+    // 18:20 현장 직원 → 관제 → 긴급 공지 → 시민
+    seg(4, L1B, L2T, 'up'); seg(4, TY + TH, L1T, 'up'); seg(4, L0B, TY, 'up');
+
+    // 성과 지표
+    const K = [['첫차 전 장애 조치', '[00]대'], ['혼잡 · 대기 시간', '[00]% ↓'], ['안내 문의', '[00]% ↓'], ['신고 → 현장 도착', '[00]분'], ['감지 → 시민 전파', '[00]분'], ['상시 가동률', '[00.0]%']];
+    const kpis = K.map(([label, val], i) => ({
+      label, val,
+      pos: A + box(colX(i), 556, W, 40) + 'display: flex; flex-direction: column; white-space: nowrap;'
+    }));
+
+    const base = ['MagicINFO 원격 관리', 'Knox 단말 보안', '상주 유지보수'].map((name) => ({ name }));
+
+    return { cols, lanes, touch, cells, relays, kpis, base };
+  }
+}
+</script>
+</body>
+</html>

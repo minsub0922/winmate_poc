@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VXT-S-GF Samsung VXT 공간 시나리오 · 스크린골프장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Samsung VXT</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Samsung VXT · 클라우드 사이니지 CMS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">점주가 휴대폰으로 바꾸고, 영업이 끝나면 화면도 꺼집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">업종 시나리오 · AI 스크린 골프장 — 입구 → 카운터 → 라운지의 이벤트 · 요금 화면을 점주가 직접 운영합니다</div>
+
+  <!-- 고객 동선: 입구 → 카운터 → 라운지 (사진 위 번호 콜아웃) -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.box}}">
+      <img src="{{s.img}}" alt="{{s.alt}}" style="position: absolute; left: 0px; top: 0px; width: 232px; height: 150px; object-fit: cover; object-position: {{s.op}}">
+      <span style="position: absolute; left: 8px; top: 8px; height: 24px; padding: 0 10px 0 3px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; white-space: nowrap"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>{{s.name}}</span>
+      <sc-if value="{{s.hasPin}}" hint-placeholder-val="{{true}}">
+        <span style="{{s.pin}}"></span>
+      </sc-if>
+      <sc-if value="{{s.hasAdd}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; right: 8px; top: 8px; height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px dashed #1428a0; display: flex; align-items: center; font-size: 11.5px; font-weight: 800; color: #1428a0; white-space: nowrap">+ 화면 추가</span>
+      </sc-if>
+      <span style="position: absolute; left: 8px; top: 125px; height: 17px; padding: 0 7px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; font-size: 10px; color: #596170; white-space: nowrap">예시 사진 · 고객 공간으로 교체</span>
+    </div>
+    <div style="{{s.textPos}}">
+      <span style="font-size: 13.5px; font-weight: 800; white-space: nowrap">{{s.screen}}</span>
+      <div style="display: flex; align-items: baseline; gap: 6px; font-size: 12.5px; font-weight: 700; white-space: nowrap"><span style="{{s.whenStyle}}">{{s.when}}</span><span>{{s.what}}</span></div>
+      <span style="font-size: 11.5px; line-height: 1.45; color: #596170">{{s.note}}</span>
+    </div>
+  </sc-for>
+  <sc-for list="{{path}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.style}}"></div>
+  </sc-for>
+
+  <!-- 점주: PC · 모바일 -->
+  <sc-for list="{{owner}}" as="o" hint-placeholder-count="2">
+    <div style="{{o.card}}">
+      <div style="position: relative; height: 128px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f5f6f8">
+        <img src="{{o.img}}" alt="{{o.alt}}" style="position: absolute; {{o.imgPos}} max-width: none; object-fit: cover">
+        <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-radius: 8px; border: 1px solid #e2e5ea"></div>
+        <span style="position: absolute; left: 8px; top: 8px; height: 20px; padding: 0 8px; border-radius: 999px; background: #121417; display: flex; align-items: center; font-size: 10.5px; font-weight: 700; color: #ffffff; white-space: nowrap">{{o.chip}}</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 3px; padding: 0 2px">
+        <span style="font-size: 14px; font-weight: 800; white-space: nowrap">{{o.title}}</span>
+        <span style="font-size: 12.5px; line-height: 1.45; color: #3d4452">{{o.desc}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 하루 시계: 영업시간 · 화면 ON/OFF -->
+  <div style="position: absolute; left: 832px; top: 160px; width: 384px; display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.02em">하루 24시간 · 화면 재생목록과 ON/OFF</span><span style="font-size: 11px; color: #8a91a0">시간은 예시</span></div>
+  <div style="position: absolute; left: 924px; top: 200px; width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(#6f82d6 0deg 30deg, #e2e5ea 30deg 135deg, #1428a0 135deg 270deg, #6f82d6 270deg 360deg)"></div>
+  <div style="position: absolute; left: 950px; top: 226px; width: 148px; height: 148px; border-radius: 50%; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px">
+    <span style="font-size: 11.5px; color: #596170">영업시간 외</span>
+    <span style="font-size: 18px; font-weight: 800; color: #1428a0">자동 OFF</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #596170">02:00 – 09:00</span>
+  </div>
+  <sc-for list="{{ticks}}" as="k" hint-placeholder-count="3">
+    <span style="{{k.style}}">{{k.label}}</span>
+  </sc-for>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="3">
+    <span style="{{m.style}}"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{m.time}}</span>{{m.label}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 832px; top: 426px; width: 384px; display: flex; flex-direction: column; gap: 2px">
+    <sc-for list="{{legend}}" as="g" hint-placeholder-count="3">
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #3d4452; white-space: nowrap"><span style="{{g.swatch}}"></span><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{g.range}}</span>{{g.text}}</div>
+    </sc-for>
+  </div>
+
+  <!-- 업종 고민 → VXT -->
+  <div style="position: absolute; left: 832px; top: 488px; width: 384px; height: 160px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.02em; color: #596170">AI 스크린 골프장 카탈로그의 고민</span>
+    <span style="font-size: 14px; font-weight: 800; line-height: 1.45">“경기가 끝난 후 기기를 다 끄지 않아 에너지가 낭비돼요”</span>
+    <div style="display: flex; align-items: flex-start; gap: 6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><path d="M5 12h14 M13 6l6 6-6 6"/></svg><span style="font-size: 13px; font-weight: 700; line-height: 1.45; color: #1428a0">사이니지는 VXT on/off 타이머 · 휴일 설정으로 자동 OFF</span></div>
+    <span style="font-size: 11px; line-height: 1.45; color: #596170">타석 기기는 SmartThings 스마트 버튼으로 일괄 OFF (카탈로그 제안)</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>J 스크린골프 체인 · 매장 사이니지 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const r1 = (n) => Math.round(n * 10) / 10;
+    const BLUE = '#1428a0';
+    const crop = (iw, ih, sx, sy, sw, bw) => {
+      const s = bw / sw;
+      return 'left: ' + r1(-sx * s) + 'px; top: ' + r1(-sy * s) + 'px; width: ' + r1(iw * s) + 'px; height: ' + r1(ih * s) + 'px;';
+    };
+
+    // 사진 3장: x 64 · 320 · 576, 232 × 150 (y 160–310)
+    const PX = [64, 320, 576], PW = 232, PT = 160, PH = 150;
+    // pin = 사진 안 화면 위치(사진 기준 좌표, 원본 → cover 배율로 환산)
+    const pinAt = (x, y) => A + 'left: ' + px(x - 10) + 'top: ' + px(y - 10) + 'width: 20px; height: 20px; box-sizing: border-box; border-radius: 50%; background: ' + BLUE + '; border: 3px solid #ffffff; box-shadow: 0 0 0 2px ' + BLUE + ';';
+    const spaces = [
+      { no: '1', name: '입구', img: '/_blob/f776b977d365544508b3551d3c201756', alt: '엘리베이터 홀 세로형 스마트 사이니지', op: '40% 50%',
+        pin: pinAt(102, 72), hasPin: true, hasAdd: false,
+        screen: '입구 · 세로형 사이니지', when: '09:00', what: '회원 할인 · 이벤트 재생', note: '시간대에 등록한 재생목록이 자동 전시' },
+      { no: '2', name: '카운터', img: '/_blob/77e1f0e42f3aabddf3e9dd475b3f8b23', alt: '카운터 상단 사이니지 3면', op: '50% 20%',
+        pin: pinAt(101, 53), hasPin: true, hasAdd: false,
+        screen: '카운터 · 3면 사이니지', when: '18:00', what: '저녁 요금표로 자동 전환', note: '주중 · 주말 요금도 스케줄로 미리 등록' },
+      { no: '3', name: '라운지', img: '/_blob/b10a86fd399695c624597afbb51e2e2e', alt: '골프 중계 TV가 있는 라운지', op: '50% 50%',
+        pin: '', hasPin: false, hasAdd: true,
+        screen: '라운지 · 화면을 늘릴 때', when: '도입 당일', what: '6자리 코드로 페어링', note: 'Tizen 6.5↑ 삼성 사이니지 · 사진 속 TV는 중계용' }
+    ].map((s, i) => Object.assign(s, {
+      box: A + 'left: ' + px(PX[i]) + 'top: ' + px(PT) + 'width: ' + px(PW) + 'height: ' + px(PH) + 'border-radius: 12px; overflow: hidden; background: #dfe3ea;',
+      textPos: A + 'left: ' + px(PX[i] + 2) + 'top: ' + px(PT + PH + 8) + 'width: ' + px(PW - 2) + 'display: flex; flex-direction: column; gap: 3px;',
+      whenStyle: (/^\d/.test(s.when) ? 'font-family: Manrope, sans-serif; font-size: 13px; ' : '') + 'font-weight: 800; color: ' + BLUE + ';'
+    }));
+
+    // 동선 화살표 (사진 사이 틈 24px, y 235)
+    const path = [];
+    [PX[0] + PW, PX[1] + PW].forEach((x) => {
+      path.push({ style: A + 'left: ' + px(x + 4) + 'top: 234px; width: 10px; height: 2px; background: ' + BLUE + ';' });
+      path.push({ style: A + 'left: ' + px(x + 12) + 'top: 230px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + BLUE + ';' });
+    });
+
+    // 점주 카드 2장 (y 412–648)
+    const ownerCard = (x, w) => A + 'left: ' + px(x) + 'top: 412px; width: ' + px(w) + 'height: 236px; box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; background: #ffffff; padding: 12px; display: flex; flex-direction: column; gap: 10px;';
+    const owner = [
+      { card: ownerCard(64, 366), chip: 'PC · 모바일 브라우저', img: '/_blob/1cf2c671fd33e4af83da7cb7292f39f2', alt: 'VXT CMS 대시보드 화면',
+        imgPos: crop(732, 428, 40, 66, 652, 342),
+        title: '이벤트 · 요금 콘텐츠 교체', desc: '재생목록 · 스케줄 · 태그 시스템 — 영업 중에도 점주가 직접 바꿉니다' },
+      { card: ownerCard(446, 362), chip: '화면 추가', img: '/_blob/8c613d1a80830a58c4b930c4d601fa31', alt: '6자리 페어링 코드로 화면 등록',
+        imgPos: crop(904, 552, 30, 120, 850, 338),
+        title: '6자리 페어링 코드로 연결', desc: '매장 화면에 뜬 코드를 CMS ‘Add Screen’에 입력하면 등록됩니다' }
+    ];
+
+    // 하루 시계: 중심 (1024, 300), 링 반지름 100 · 두께 26 → 중앙선 87
+    const CX = 1024, CY = 300, RM = 87, RT = 110;
+    const at = (hour, r) => {
+      const a = hour / 24 * 2 * Math.PI;
+      return [CX + r * Math.sin(a), CY - r * Math.cos(a)];
+    };
+    const ticks = [['00', 0], ['06', 6], ['12', 12]].map(([label, h]) => {
+      const [x, y] = at(h, RT);
+      return { label, style: A + 'left: ' + px(r1(x - 12)) + 'top: ' + px(r1(y - 8)) + 'width: 24px; text-align: center; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0;' };
+    });
+    const marks = [['09:00', 'ON', 9, 70], ['18:00', '요금', 18, 74], ['02:00', 'OFF', 2, 74]].map(([time, label, h, w]) => {
+      const [x, y] = at(h, RM);
+      return { time, label, style: A + 'left: ' + px(r1(x - w / 2)) + 'top: ' + px(r1(y - 11)) + 'width: ' + px(w) + 'height: 22px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px solid ' + BLUE + '; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 11px; font-weight: 700; color: #121417; white-space: nowrap;' };
+    });
+    const sw = (c, border) => 'width: 14px; height: 10px; flex-shrink: 0; border-radius: 3px; background: ' + c + ';' + (border ? ' box-sizing: border-box; border: 1px solid #b8bec8;' : '');
+    const legend = [
+      { swatch: sw('#1428a0'), range: '09:00–18:00', text: '주간 재생목록 · 회원 할인 · 이벤트' },
+      { swatch: sw('#6f82d6'), range: '18:00–02:00', text: '저녁 요금 재생목록' },
+      { swatch: sw('#e2e5ea', true), range: '02:00–09:00', text: '자동 OFF · 휴무일은 휴일 설정' }
+    ];
+
+    return { spaces, path, owner, ticks, marks, legend };
+  }
+}
+</script>
+</body>
+</html>

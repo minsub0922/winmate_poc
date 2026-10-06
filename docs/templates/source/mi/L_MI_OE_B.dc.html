@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-OE-B 파트너 전용 단말 · 에디션 · 고객 비즈니스 · 운영 과제</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">U 통신사 전용 단말의 수익은 개통 이후에 쌓입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 800px; font-size: 15px; color: #596170">기획에서 전환까지 5단계 — 단계별 KPI와 운영 과제, 그리고 삼성이 맡을 수 있는 지점</div>
+  <div style="position: absolute; left: 1000px; top: 113px; width: 216px; display: flex; justify-content: flex-end; gap: 6px; white-space: nowrap">
+    <span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">삼성 대응</span>
+    <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; border: 1px solid #d5d9e0; background: #ffffff; color: #596170; font-size: 11px; font-weight: 700; display: flex; align-items: center">U 통신사 영역</span>
+  </div>
+
+  <!-- 단계 체인 · 단계별 KPI -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.chev}}">
+      <span style="font-size: 14px; font-weight: 800; color: #ffffff; white-space: nowrap"><span style="font-family: Manrope, sans-serif; color: #b8c3ee; margin-right: 6px">{{s.no}}</span>{{s.name}}</span>
+      <span style="font-size: 11.5px; color: #d5d9e0; white-space: nowrap">{{s.owner}}</span>
+    </div>
+    <div style="{{s.kpiBox}}">
+      <sc-for list="{{s.kpis}}" as="k" hint-placeholder-count="2">
+        <div style="height: 18px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap">
+          <span style="font-size: 11.5px; color: #596170">{{k.label}}</span>
+          <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{k.val}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="{{s.pin}}"></div>
+  </sc-for>
+
+  <!-- 단계에 꽂힌 운영 과제 -->
+  <sc-for list="{{issues}}" as="c" hint-placeholder-count="10">
+    <div style="{{c.pos}}">
+      <span style="position: absolute; left: 12px; top: 9px; width: 192px; font-size: 13.5px; line-height: 20px; font-weight: 800; white-space: nowrap">{{c.title}}</span>
+      <span style="position: absolute; left: 12px; top: 33px; width: 192px; font-size: 12px; line-height: 18px; color: #596170">{{c.desc}}</span>
+      <span style="{{c.flag}}">{{c.act}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 회선 1개 누적 손익 (예시) -->
+  <div style="position: absolute; left: 64px; top: 510px; width: 1152px; height: 138px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 520px; font-size: 13px; font-weight: 800; white-space: nowrap">회선 1개 누적 손익과 수익 비중 <span style="font-weight: 500; color: #596170">(예시)</span></div>
+  <div style="position: absolute; left: 340px; top: 522px; display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <span style="width: 18px; height: 2px; background: #1428a0"></span><span>재약정 · 기기 변경 시</span>
+    <span style="width: 18px; height: 0px; border-top: 2px dashed #8a91a0; margin-left: 10px"></span><span>전환 시점 이탈 시</span>
+  </div>
+  <div style="position: absolute; left: 896px; top: 522px; width: 300px; text-align: right; font-size: 11.5px; color: #8a91a0; white-space: nowrap">수치는 예시 · 조사 / 실측 후 반영</div>
+  <div style="position: absolute; left: 84px; top: 571px; width: 1112px; height: 0px; border-top: 1px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 84px; top: 556px; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #8a91a0">0</div>
+  <svg style="position: absolute; left: 64px; top: 540px; width: 1152px; height: 64px" width="1152" height="64" viewBox="0 0 1152 64" fill="none">
+    <polyline points="866,13 980,13 1132,13" stroke="#8a91a0" stroke-width="2" stroke-dasharray="5 4" fill="none"></polyline>
+    <polyline points="20,32 108,42 342,56 500,45 576,32 810,19 866,13 1044,8 1132,4" stroke="#1428a0" stroke-width="2.5" stroke-linejoin="round" fill="none"></polyline>
+  </svg>
+  <div style="position: absolute; left: 635px; top: 567px; width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff"></div>
+  <div style="position: absolute; left: 652px; top: 578px; height: 20px; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center; white-space: nowrap">손익분기 · 개통 후 <span style="font-family: Manrope, sans-serif; margin-left: 4px; color: #1428a0">[00]개월</span></div>
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+    <div style="{{t.pos}}">{{t.label}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>U 통신사 · 전용 단말 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+    const COL = (i) => 64 + i * 234;   // 5열 · 열 폭 216 · 간격 18
+
+    // 쉐브론 모양
+    const first = 'polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%)';
+    const mid = 'polygon(0 0, calc(100% - 14px) 0, 100% 50%, calc(100% - 14px) 100%, 0 100%, 14px 50%)';
+    const last = 'polygon(0 0, 100% 0, 100% 100%, 0 100%, 14px 50%)';
+
+    const S = [
+      ['기획 · 제휴', 'U 통신사 상품기획 · 제휴사', [['출시 리드타임', '[0]개월'], ['제휴 IP · 앱', '[00]개']]],
+      ['단말 · 에디션', '삼성 · U 통신사', [['에디션 · 라인업', '[0]종'], ['단말 공급 단가', '[00]만 원']]],
+      ['유통 · 개통', 'U 통신사 매장 · 온라인', [['월 신규 개통', '[0,000]회선'], ['개통 세팅 시간', '[00]분']]],
+      ['사용 · 운영', '아이 · 부모 · U 통신사 CS', [['안심 서비스 가입률', '[00]%'], ['설정 · AS 문의', '[000]건/월']]],
+      ['전환 · 재약정', 'U 통신사 · 가족 고객', [['재약정 · 기변율', '[00]%'], ['해지율', '[0.0]%']]]
+    ];
+    const stages = S.map(([name, owner, K], i) => {
+      const x = COL(i);
+      const isFirst = i === 0, isLast = i === S.length - 1;
+      return {
+        no: '0' + (i + 1), name, owner,
+        chev: A + box(x, 160, isLast ? 216 : 230, 46) + 'box-sizing: border-box; padding-left: ' + px(isFirst ? 14 : 26) + 'background: #3d4452; clip-path: ' + (isFirst ? first : isLast ? last : mid) + '; display: flex; flex-direction: column; justify-content: center; gap: 1px;',
+        kpis: K.map(([label, val]) => ({ label, val })),
+        kpiBox: A + box(x, 214, 216, 44) + 'box-sizing: border-box; padding: 4px 12px; border-radius: 8px; background: #f5f6f8; display: flex; flex-direction: column;',
+        pin: A + box(x + 108, 258, 1, 8) + 'background: #b8bec8;'
+      };
+    });
+
+    // 운영 과제 — [단계, 줄, 제목, 설명, 대응, 삼성 여부]
+    const C = [
+      [0, 0, '출시마다 다시 하는 개발', '에디션마다 런처 · 앱 · 테마를 새로 만들면 출시가 늦어집니다.', '삼성 · Knox Configure 리브랜딩', true],
+      [0, 1, '제휴 IP · 콘텐츠 조율', '캐릭터 · 학습 · 금융 제휴사와 앱 · 정산을 맞춥니다.', 'U 통신사 영역 · 제휴 계약', false],
+      [1, 0, '아이 손에서 버티는 단말', '낙하 · 물에 강하고, 배터리가 하루를 버텨야 합니다.', '삼성 · 갤럭시 XCover · A 시리즈', true],
+      [1, 1, '기존 서비스와의 연동', '위치 확인 · 자녀 보호 · 부모 앱이 단말과 맞물려야 합니다.', '삼성 · 전용 앱 선탑재 · 고급 설정', true],
+      [2, 0, '매장마다 손으로 하는 세팅', '직원이 앱 · 보호 설정을 하나씩 하면 시간과 누락이 생깁니다.', '삼성 · Knox Configure 자동 설정', true],
+      [2, 1, '전용 모델 재고 부담', '에디션마다 박스 · 재고를 따로 두면 물량 예측이 어렵습니다.', '삼성 · 일반 박스 + 무선 전용화', true],
+      [3, 0, '보호 설정 우회 · 초기화', '아이가 설정을 풀거나 앱을 지우면 부모 신뢰가 무너집니다.', '삼성 · Knox 단말 보안 · 앱 통제', true],
+      [3, 1, '업데이트 · AS 부담', '앱 · 콘텐츠 업데이트 오류와 설정 문의가 CS로 몰립니다.', '삼성 · 원격 업데이트 · 서비스망', true],
+      [4, 0, '학년이 오르면 안 맞는 설정', '키즈 설정이 맞지 않게 되면 기기 변경 때 이탈합니다.', '삼성 · 원격 모드 전환', true],
+      [4, 1, '다음 폰으로 잇는 혜택', '주니어 · 일반 요금제로 넘어갈 이유를 미리 설계합니다.', 'U 통신사 영역 · 요금 · 혜택 설계', false]
+    ];
+    const issues = C.map(([st, row, title, desc, act, sam]) => ({
+      title, desc, act,
+      pos: A + box(COL(st), 266 + row * 120, 216, 112) + 'box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff;',
+      flag: A + 'left: 12px; top: 80px; height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' +
+        (sam ? 'background: ' + BLUE + '; color: #ffffff;' : 'border: 1px solid #d5d9e0; background: #ffffff; color: #596170;')
+    }));
+
+    // 손익 레인 — 단계별 투자 / 수익 꼬리표
+    const G = [
+      ['투자 · 제휴 IP · 전용 앱 개발', false],
+      ['투자 · 단말 구매 · 커스터마이징', false],
+      ['수익 · 단말 판매 [00]%', true],
+      ['수익 · 요금제 · 부가서비스 [00]%', true],
+      ['수익 · 재약정 · 기기 변경 [00]%', true]
+    ];
+    const tags = G.map(([label, rev], i) => ({
+      label,
+      pos: A + box(COL(i) + (i === 0 ? 20 : 0), 614, i === 0 ? 196 : 216, 22) + 'box-sizing: border-box; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; white-space: nowrap; ' +
+        (rev ? 'background: #eaeefb; color: ' + BLUE + ';' : 'border: 1px solid #d5d9e0; background: #ffffff; color: #596170;')
+    }));
+
+    return { stages, issues, tags };
+  }
+}
+</script>
+</body>
+</html>

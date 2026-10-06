@@ -1,0 +1,43 @@
+ 
+ 요구사항 · 목록 
+ 고객 요구사항 
+ 새 요구사항 
+ {{t.label}} {{t.n}} 
+ 요구사항 검색 
+ 고객 · 사업 상태 수정 
+ {{r.title}} 
+ {{r.sub}} 
+ {{r.state}} 
+ {{r.when}} 
+ {{r.act}} 
+class Component extends DCLogic {
+ renderVals() {
+ // [고객 · 사업, 한 줄 설명, 상태(save 저장됨 · check 진행 중), 상태 글, 수정, 링크]
+ const R = [
+ ['E 자산운용 용산 AI Ready 오피스', '키맨 3 · 요구사항 8', 'save', '저장됨 · v1', '오늘 11:20', 'RQ6.dc.html'],
+ ['F 시행사 동탄 시니어 복합단지', '키맨 2 · 요구사항 5', 'check', '심층 작성 3 / 5', '방금', 'RQ3B.dc.html'],
+ ['G 공사 판교 스타트업 단지', '키맨 1 · 요구사항 4', 'check', '입력 중', '오늘 09:15', 'RQ2.dc.html'],
+ ['H 디벨로퍼 소형 주거 분양', '키맨 2 · 요구사항 6', 'save', '저장됨 · v1', '어제', 'RQ6.dc.html'],
+ ['A 커피 프랜차이즈 매장 리뉴얼', '키맨 3 · 요구사항 9', 'save', '저장됨 · v3', '11/3', 'RQ6.dc.html'],
+ ['B 병원 로비 안내 시스템', '키맨 1 · 요구사항 3', 'check', '입력 중', '11/2', 'RQ2.dc.html']
+ ];
+ const cols = '';
+ const pillBase = '';
+ const rows = R.map(([title, sub, st, state, when, href], i) => ({
+ title, sub, state, when, href,
+ act: st === 'check' ? '이어서' : '열기',
+ pill: pillBase + (st === 'check' ? '' : ''),
+ cta: '' + (st === 'check' ? '' : ''),
+ row: 'display: grid; ' + cols + ''
+ }));
+ const n = (st) => R.filter((r) => r[2] === st).length;
+ const tabs = [['전체', R.length, true], ['진행 중', n('check'), false], ['저장됨', n('save'), false]].map(([label, c, on]) => ({
+ label, n: c, on: String(on),
+ style: '' + (on ? '' : '')
+ }));
+ return {
+ no: false, tabs, rows,
+ head: 'display: grid; ' + cols + ''
+ };
+ }
+}

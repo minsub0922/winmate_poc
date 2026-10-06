@@ -1,0 +1,99 @@
+# 솔루션 동작 사전(09-scenario §10.5, draft — KB 솔루션 페이지 메시지로 검수 필요, 열린 질문 8).
+# id = KB 솔루션 카탈로그 id(`GET /api/kb/v1/solutions` 의 id), kb_id = KB 엔티티 id(D1 · D5 · E1 질의용),
+# template_code = 솔루션 전용 시트 코드 접두(MGI-S …, 제안서 솔루션 섹션 SXS 힌트).
+# actions[].keywords = 장면 문장에 이 말이 있으면 이 동작을 추천(LLM 대체 경로 · 연결 단계 정규화),
+# required_keywords = 다수 사업장 일괄 · 원격 동작처럼 솔루션만 할 수 있는 말(「꼭 필요」),
+# value = 시트 가치 칸 이름(SS-B 「솔루션 → 제품 → 가치」, 수치는 [확정 필요] — 근거 없는 값은 넣지 않음),
+# optional = 제품 화면만으로도 장면이 성립하는 동작(대체 경로에서 「선택」 태그).
+# 장면 칩 라벨 = 「{name} · {label}」(같은 솔루션 동작이 둘 이상이면 「 · 」로 이음 — 「MagicINFO · 원격 배포 · 장애 알림」).
+solutions:
+  - id: magicinfo
+    template_code: MGI
+    kb_id: sol_magicinfo
+    name: MagicINFO
+    actions:
+      - code: power_schedule
+        value: 오픈 준비 시간
+        label: 전원 스케줄
+        benefit: 시간 맞춰 자동 점등
+        keywords: [켜져 있어야, 자동으로 켜, 자동 점등, 자동으로 꺼, 오픈, 마감, 켜진]
+      - code: daypart_layout
+        value: 화면 교체 수작업
+        label: 시간대 레이아웃
+        benefit: 시간대별 화면 전환
+        keywords: [피크, 점심, 아침 메뉴, 시간대, 저녁 메뉴]
+        optional: true
+      - code: remote_deploy
+        value: 배포 시간
+        label: 원격 배포
+        benefit: 한 번에 배포 · 미수신 알림
+        keywords: [배포, 본사, 프로모션을 내린다, 콘텐츠를 예약]
+        required_keywords: [전국, 개 매장, 전 매장, 모든 매장, 일괄 배포, 원격으로]
+      - code: fault_alert
+        value: 장애 대응 시간
+        label: 장애 알림
+        benefit: 미수신 · 오류 즉시 알림
+        keywords: [장애, 오류, 미수신, 하나가 꺼, 알림을 받]
+        required_keywords: [원격으로 조치]
+      - code: instant_change
+        value: 품절 반영 시간
+        label: 즉시 변경
+        benefit: 품절 · 변경 즉시 반영
+        keywords: [품절, 바로 내린다, 바로 내리, 즉시, 바로 바꾼]
+  - id: smartthings_pro
+    template_code: STP
+    kb_id: sol_smartthings_pro
+    name: SmartThings Pro
+    actions:
+      - code: energy_report
+        value: 전력 사용량
+        label: 에너지 리포트
+        benefit: 매장별 전력 리포트
+        keywords: [전력, 사용량, 집계, 에너지]
+      - code: bulk_off
+        value: 마감 작업 시간
+        label: 일괄 OFF
+        benefit: 디스플레이 · 조명 함께 끄기
+        keywords: [마감, 끄기, 일괄, 자동으로 꺼]
+  - id: vxt
+    template_code: VXT
+    kb_id: sol_vxt
+    name: VXT
+    actions:
+      - code: cloud_management
+        value: 관리 인력
+        label: 원격 통합 관리
+        benefit: 클라우드로 가맹점 화면 관리
+        keywords: [원격, 클라우드, 가맹점]
+        required_keywords: [가맹점 전체, 전국]
+  - id: lynk_cloud
+    template_code: LYN
+    kb_id: sol_lynk_cloud
+    name: LYNK Cloud
+    actions:
+      - code: room_tv
+        value: 투숙객 만족
+        label: 객실 TV 통합 관리
+        benefit: 투숙객 맞춤 콘텐츠
+        keywords: [객실, 투숙객, 체크인]
+  - id: biot
+    template_code: BIT
+    kb_id: sol_biot
+    name: b.IoT · SAC 제어
+    actions:
+      - code: hvac_control
+        value: 냉난방 에너지
+        label: 공조 통합 제어
+        benefit: 공간별 쾌적 · 에너지 절감
+        keywords: [냉난방, 공조, 온도, 에어컨]
+  - id: knox_suite
+    template_code: KNX
+    kb_id: sol_knox
+    name: Knox Suite
+    actions:
+      - code: device_enroll
+        value: 단말 설정 시간
+        label: 기기 등록 · 관리
+        benefit: 업무 단말 일괄 설정 · 보안
+        keywords: [태블릿 배포, 단말, 보안]
+        required_keywords: [단말 일괄, 전 직원 태블릿]

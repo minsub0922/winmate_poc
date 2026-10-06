@@ -1,0 +1,57 @@
+ 
+ 경쟁사 분석 · 경쟁사 A 상세 
+ 한눈에 
+ A 
+ 경쟁사 A 
+ 국내 대형 가전 · 사이니지 
+ 다른 경쟁사 
+ {{s.letter}} 
+ 자체 CMS 기반 풀 라인업 · 500매장 이상은 서버 추가 
+ {{f.k}} 
+ {{f.v}} 
+ {{p.text}} 
+ {{f.src}} 
+ 확인 필요 
+ 출처 5 · 공개 자료 4 · 사내 사례 DB 1 · 수치는 공개 자료로만 채우고, 못 찾은 건 [확인 필요] 로 남겨요 
+ 출처 · 근거 보기 
+ 뒤로 
+ 이 경쟁사 더 찾기 
+ 저장 · 보내기 
+class Component extends DCLogic {
+ renderVals() {
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ // 경쟁사 전환 칩: A 가 현재 화면
+ const switchRows = ['A', 'B', 'C', 'D'].map((letter) => {
+ const on = letter === 'A';
+ return {
+ letter, on,
+ style: '' + (on ? '' : '')
+ };
+ });
+ // 항목: [키, 값 또는 칩 목록, 출처, 확인 필요]
+ const chip = '';
+ const F = [
+ ['제품 라인업', '55" 메뉴보드급 · 43" 소형 · 바닥형', '출처 2', false],
+ ['가격대', '[확인 필요]', '', true],
+ ['솔루션', '자체 CMS · 별도 서버 필요', '출처 1', false],
+ ['레퍼런스', '업종 사례 6건 · 수도권 3', '출처 1 · 사내 사례 DB', false],
+ ['최근 동향', '2026.03 신제품 발표 · 55" 라인업 교체', '출처 1', false],
+ ['삼성 대비', [
+ ['우위 3 · 통합 관리 · 전력 · 배포', ''],
+ ['비슷 2 · 라인업 · 밝기', ''],
+ ['열위 1 · 수도권 설치 파트너', '']
+ ], '', false]
+ ];
+ const facts = F.map(([k, v, src, tbd], i) => {
+ const isChips = Array.isArray(v);
+ return {
+ k, tbd, src, isChips, isText: !isChips, hasSrc: src !== '',
+ v: isChips ? '' : v,
+ chips: isChips ? v.map(([text, c]) => ({ text, style: chip + c })) : [],
+ vStyle: '' + (tbd ? '' : ''),
+ row: '' + (i > 0 ? '' : '')
+ };
+ });
+ return { steps, cur: 4, others: switchRows, facts };
+ }
+}

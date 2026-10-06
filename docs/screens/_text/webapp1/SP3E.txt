@@ -1,0 +1,91 @@
+ 
+ Spec 시트 · 시트 편집 
+ W 
+ 편집 모드예요. 행을 끌어 순서를 바꾸고, 오른쪽 아이콘으로 숨기기 · 강조 · 메모를 달 수 있어요. 숨긴 행은 내보낼 때 빠지고, 메모는 각주나 내부 메모로 남길 수 있어요. 
+ 편집 중 
+ Smart Signage 55" 비교 — QM55C vs QB55C 
+ 숨긴 행 보기 1 
+ 열 순서 바꾸기 
+ 항목 
+ QM55C 
+ QB55C 
+ 숨김 · 강조 · 메모 
+ {{r.k}} 
+ {{tg.t}} 
+ {{r.a}} 
+ {{r.b}} 
+ 밝기 · 명암비 메모 
+ 창가 매장은 오후 직사광이 들어 QM55C 권장 — 고객 미팅에서 언급 
+ 시트에 각주로 표시 
+ 내부 메모만 (내보내지 않음) 
+ 삭제 
+ 메모 저장 
+ 항목 추가 
+ 빠진 항목 
+ 입출력 단자 
+ 베젤 
+ 인증 
+ 액세서리 
+ 보이는 행 7 / 8 
+ 시트 편집 · 변경 5건 — 이동 1 · 강조 1 · 메모 1 · 숨김 1 · 추가 1 
+ 변경 내역 
+ 모두 되돌리기 
+ 말로 고치기 
+ 취소 
+ 편집 완료 
+class Component extends DCLogic {
+ renderVals() {
+ // 편집 중인 시트 행 — win: 우위 셀(a · b) · pending: [확정 필요] 칸 · hl: 행 강조 · moved: 이동 표시 · sel: 선택(메모 열림) · memo: 메모 있음 · hidden: 숨김 · added: 새로 추가
+ const R = [
+ { k: '화면 크기 · 해상도', a: '55" · 3840×2160', b: '55" · 3840×2160' },
+ { k: '운영 시간', a: '[00]/7', b: '[00]/7', win: 'a', hl: true, moved: '↑ 2칸' },
+ { k: '밝기 · 명암비', a: '[000] nit · [0000]:1', b: '[000] nit · [0000]:1', win: 'a', sel: true, memo: true },
+ { k: '소비전력 (일반 · 최대)', a: '[000] W · [000] W', b: '[확정 필요]', pending: 'b' },
+ { k: '내장 플레이어 · OS', a: 'Tizen [0.0]', b: 'Tizen [0.0]', hidden: true },
+ { k: 'MagicINFO 호환', a: '지원', b: '지원' },
+ { k: '보증', a: '[0]년', b: '[0]년' },
+ { k: '크기 (W×H×D)', a: '[0000]×[000]×[00] mm', b: '[0000]×[000]×[00] mm', added: true }
+ ];
+ const EYE = 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z';
+ const EYE_OFF = 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z M4 4l16 16';
+ const tag = (t, kind) => ({
+ t,
+ style: '' + ({
+ hl: '',
+ moved: '',
+ hidden: '',
+ added: ''
+ })[kind]
+ });
+ const iconBtn = (on) => '' + (on ? '' : '');
+ const cell = (win, hidden, pending) => '' +
+ (hidden ? '' : win ? '' : pending ? '' : '');
+ const rows = R.map((r) => {
+ const tags = [];
+ if (r.hl) tags.push(tag('강조', 'hl'));
+ if (r.moved) tags.push(tag(r.moved, 'moved'));
+ if (r.hidden) tags.push(tag('숨김', 'hidden'));
+ if (r.added) tags.push(tag('추가됨', 'added'));
+ let rowStyle = '';
+ if (r.sel) rowStyle += '';
+ else if (r.hl) rowStyle += '';
+ else if (r.hidden) rowStyle += '';
+ return {
+ k: r.k, a: r.a, b: r.b, tags,
+ memoOpen: !!r.sel,
+ rowStyle,
+ grip: r.moved || r.sel ? '' : '',
+ kStyle: 'min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (r.hidden ? '' : '') + (r.hl || r.sel ? ' font-weight: 600;' : ''),
+ aStyle: cell(r.win === 'a', r.hidden, r.pending === 'a'),
+ bStyle: cell(r.win === 'b', r.hidden, r.pending === 'b'),
+ eyeLabel: r.hidden ? '다시 보이기' : '숨기기',
+ eyePath: r.hidden ? EYE_OFF : EYE,
+ eyeBtn: iconBtn(!!r.hidden),
+ hlBtn: iconBtn(!!r.hl),
+ hlFill: r.hl ? '' : 'none',
+ memoBtn: iconBtn(!!r.memo)
+ };
+ });
+ return { steps: ['제품 입력', '항목 · 형식', '시트 생성'], cur: 3, rows };
+ }
+}

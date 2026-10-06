@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>요건 커버리지 3 — 채워야 할 시트</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM · 요건 커버리지 3 / 3</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">채워야 할 시트 10종 — 필요했던 사례가 많은 순서</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170">새 시트 유형마다 템플릿 2–3개 · 실제 도입사례에서 나온 요구를 그대로 예시로</div>
+
+  <div style="position: absolute; left: 64px; top: 156px; width: 1152px; height: 20px; display: flex; align-items: center; font-size: 11px; font-weight: 700; color: #8a91a0">
+    <span style="width: 30px">순위</span><span style="width: 196px">새 시트 유형</span><span style="width: 90px">필요했던 사례</span><span style="width: 166px">많이 나온 곳</span><span style="width: 300px">실제 사례에서 나온 요구</span><span>템플릿 안</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 177px; width: 1152px; height: 1.5px; background: #121417"></div>
+
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+    <div style="{{r.rowStyle}}">
+      <span style="width: 30px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{r.no}}</span>
+      <span style="width: 196px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; padding-right: 10px; box-sizing: border-box"><span style="font-size: 13px; font-weight: 800; line-height: 1.3; white-space: nowrap">{{r.name}}</span><span style="{{r.stateStyle}}">{{r.state}}</span></span>
+      <span style="width: 90px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1px"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; line-height: 1.2">{{r.n}}<span style="font-size: 11px; font-weight: 700; color: #596170"> · {{r.pct}}%</span></span><span style="font-size: 10.5px; color: #8a91a0; white-space: nowrap">{{r.nNote}}</span></span>
+      <span style="width: 166px; flex-shrink: 0; padding-right: 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1px; font-size: 11px; line-height: 1.4; color: #3d4452; white-space: nowrap; overflow: hidden"><span>{{r.whereP}}</span><span style="color: #8a91a0">{{r.whereI}}</span></span>
+      <span style="width: 300px; flex-shrink: 0; padding-right: 12px; box-sizing: border-box; display: flex; flex-direction: column; gap: 1px; min-width: 0"><span style="font-size: 11.5px; font-weight: 700; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.ex}}</span><span style="font-size: 11px; line-height: 1.4; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.exNeed}}</span></span>
+      <span style="flex-grow: 1; min-width: 0; display: flex; flex-wrap: wrap; gap: 4px">
+        <sc-for list="{{r.tpls}}" as="t" hint-placeholder-count="3">
+          <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{t}}</span>
+        </sc-for>
+      </span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 36px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 0 14px; display: flex; align-items: center; gap: 18px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <span style="font-weight: 800; color: #121417">함께 손볼 것</span>
+    <span>제품 소개 템플릿을 제품군별로 (공조 · 모바일 · 가전 · 음향)</span>
+    <span>업종 버전 추가 (건설 · 공공 · 의료 · 금융)</span>
+    <span>사례 시트를 이 198건 데이터에 연결</span>
+    <span>교육 · 운영 이관 (10건)</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 682px; font-size: 11px; color: #8a91a0">출처: 삼성전자 비즈니스 고객 도입사례 198건 · 사례별 요구는 사례 본문에서 추출 · 데이터: project/data/case_requirements.json</div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">WINMATE · REQ 3</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [새 시트 유형, 지금 상태, 필요했던 사례 수, 비고, 많이 나온 곳, 실제 사례, 그 사례의 요구, 템플릿 안]
+    const R = [
+      ['디자인 · 인테리어 시뮬레이션', '일부 — 전/후 비교만 있음', 68, '', ['공조 · 빌트인 가전 · 사이니지', '유통 · 건설'], '클린업키친 쇼룸 · 모나 용평', '가구장과 같은 소재로 일체감 · 세대 타입별 설치', ['설치 형태 비교', '마감 · 컬러 옵션', '인테리어 전 · 후 합성']],
+      ['용량 · 수량 산정 근거', '없음', 57, '', ['사이니지 · 공조 · 음향', '호텔 · 유통'], '롯데시네마 광음LED · 국민대학교', '상영관 구조에 맞춘 크기 · 대형 강의실 냉방 사각지대', ['부하 → 용량 표', '시청 거리 → 크기 · 밝기', '커버리지 도면']],
+      ['설치 · 시공 계획', '없음', 56, '', ['사이니지 · 공조 · 빌트인', '건설 · 유통'], 'KT 광화문빌딩 웨스트 · 하임랩', '관통형 기둥 구조 · 환기 덕트 연계 시공', ['현장 조건 체크', '공사 범위 R&R', '무중단 · 야간 시공 일정']],
+      ['기존 시스템 연동', '없음', 42, '모바일 사례의 52%', ['모바일 · 공조', '호텔 · 건설'], '인스파이어 리조트 · 늘푸른복지센터', '링크 클라우드 별도 구성 · 파트너 IoT 기기 연동', ['연동 매트릭스', '데이터 흐름', '호환 · 전제 조건']],
+      ['견적 · 예산 옵션 · 총비용', '일부 — 투자 회수만 있음', 36, '', ['공조 · 모바일', '건설 · 호텔'], '대구 삼성라이온즈파크 · 앱노트 핸들리', '시즌별 사용량 편차 · 구독형으로 초기 비용 절감', ['3안 비교', '구매 vs 구독 · 렌탈', '유지비 포함 총비용']],
+      ['유지보수 · 케어 플랜', '일부 — SLA 1종', 35, '', ['공조 · 사이니지', '호텔 · 공공'], '호텔 스카이파크 · 인천국제공항', '14개 층 성수기 점검 · 365일 운영 중 중단 최소화', ['점검 주기 · 범위', '장애 대응 SLA', '시즌 케어 일정']],
+      ['파일럿 · 단계적 확산', '일부 — 로드맵 1종', 29, '', ['모바일 · 사이니지', '유통 · 요식 프랜차이즈'], '밀키프레소 · KB국민은행 InsighT', '가맹점 확장 단계 대응 · 내부 보안 규정 속 시범 지점', ['파일럿 → 확산 단계', '성공 기준', '지점 유형별 패키지']],
+      ['맞춤 개발 사양', '없음', 29, '모바일 사례의 43%', ['모바일', '통신 · 제조'], 'LG U+ 키즈폰 · 보이스캐디', '아동용 유해 콘텐츠 차단 · 골프 전용 에디션', ['전용 에디션 사양서', 'Knox Configure 범위', '공급 · 납품 일정']],
+      ['보안 · 규제 · 인증 대응', '없음', 27, '', ['모바일 · 프린팅', '교육 · 공공'], '평택 캠프 험프리스 · LG U+ 키즈폰', '군사시설 보안 · 아동 사용자 보호', ['보안 요건 대응표', '인증 · 규격', '개인정보 · 위치정보']],
+      ['분양 · 입주민 가치 (건설형)', '없음', 16, '건설 사례 36건', ['빌트인 가전 · 공조', '건설'], '그란츠 리버파크 · KCC스위첸', '가전 통합 제어 · 유상 옵션 선택 방식', ['분양 포인트', '세대 타입별 옵션', '입주민 서비스']]
+    ];
+    const rows = R.map(([name, state, n, nNote, where, ex, exNeed, tpls], i) => ({
+      no: i + 1, name, state, n, pct: Math.round(100 * n / 198), nNote, whereP: where[0], whereI: where[1], ex, exNeed, tpls,
+      stateStyle: 'font-size: 10.5px; font-weight: 700; ' + (state === '없음' ? 'color: #121417;' : 'color: #6f82d6;'),
+      rowStyle: 'position: absolute; left: 64px; top: ' + (182 + i * 43) + 'px; width: 1152px; height: 43px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center;'
+    }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

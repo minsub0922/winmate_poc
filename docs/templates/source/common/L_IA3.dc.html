@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IA-3 업종 × 솔루션 — 어느 업종이 어떤 솔루션 · 서비스를 썼나</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM · 업종 분석 3 / 3</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">솔루션은 업종을 탑니다 — 그리고 5건 중 2건은 제품만 도입</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1152px; font-size: 15px; color: #596170; white-space: nowrap">도입사례 198건 · 업종(행) × 솔루션 · 서비스(열) · 오른쪽 = 솔루션 없이 제품만 도입한 사례</div>
+  <div style="position: absolute; left: 216px; top: 140px; width: 120px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">콘텐츠 · 사이니지</div>
+  <div style="position: absolute; left: 340px; top: 140px; width: 58px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">모바일</div>
+  <div style="position: absolute; left: 402px; top: 140px; width: 244px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">공간 · 설비 제어</div>
+  <div style="position: absolute; left: 650px; top: 140px; width: 58px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">호텔</div>
+  <div style="position: absolute; left: 712px; top: 140px; width: 182px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">파트너 · 운영</div>
+  <div style="position: absolute; left: 898px; top: 140px; width: 182px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">서비스</div>
+
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="21">
+    <div style="{{h.style}}">{{h.l1}}<br>{{h.l2}}</div>
+  </sc-for>
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="16">
+    <div style="{{r.style}}">
+      <span style="width: 150px; flex-shrink: 0; display: flex; align-items: center; gap: 6px; padding-right: 8px; box-sizing: border-box"><span style="width: 22px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; color: #1428a0">{{r.code}}</span><span style="flex-grow: 1; min-width: 0; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">{{r.n}}</span></span>
+      <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="21">
+        <span style="{{c.style}}">{{c.v}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 538px; width: 1018px; height: 22px; display: flex; align-items: center; border-top: 1.5px solid #121417">
+    <span style="width: 150px; flex-shrink: 0; font-size: 11.5px; font-weight: 800">전체 198건</span>
+    <sc-for list="{{tots}}" as="c" hint-placeholder-count="21">
+      <span style="{{c.style}}">{{c.v}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 1098px; top: 140px; width: 118px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; white-space: nowrap; padding-left: 2px">제품만 도입</div>
+  <div style="position: absolute; left: 1098px; top: 162px; width: 118px; font-size: 10px; line-height: 1.3; font-weight: 700; color: #3d4452; padding-left: 2px">솔루션 없이<br>제품만 · 사례 중</div>
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="16">
+    <div style="{{r.exStyle}}"><span style="width: 64px; flex-shrink: 0; height: 10px; border-radius: 2px; background: #eef0f3; position: relative; overflow: hidden"><span style="{{r.exBar}}"></span></span><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #3d4452; white-space: nowrap">{{r.ex}}<span style="color: #8a91a0; font-weight: 600"> / {{r.n}}</span></span></div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 570px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #596170; white-space: nowrap">
+    <span style="font-weight: 700; color: #3d4452">칸 = 사례 수 · 색 = 그 업종 사례 중 비율</span>
+    <span style="width: 20px; height: 12px; background: #f5f6f8; border: 1px solid #e2e5ea; box-sizing: border-box"></span><span>~9%</span>
+    <span style="width: 20px; height: 12px; background: #dfe5f7"></span><span>10–24</span>
+    <span style="width: 20px; height: 12px; background: #b8c3ee"></span><span>25–39</span>
+    <span style="width: 20px; height: 12px; background: #6f82d6"></span><span>40–54</span>
+    <span style="width: 20px; height: 12px; background: #1428a0"></span><span>55%+</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 594px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 20px">
+    <sc-for list="{{reads}}" as="r" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 2px; border-left: 2px solid #1428a0; padding-left: 10px"><span style="font-size: 12px; font-weight: 800; white-space: nowrap">{{r.k}}</span><span style="font-size: 11px; line-height: 1.45; color: #3d4452">{{r.v}}</span></div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 682px; font-size: 11px; color: #8a91a0">출처: 삼성전자 비즈니스 고객 도입사례 (samsung.com/sec/business/insights/case-study) 198건 · 한 사례 = 한 업종 · 분류는 자동 추출, 사람 검토 전</div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">WINMATE · IND 3</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [코드, 업종, 사례 수, 열마다 사례 수, 제품만 도입]
+    const R = [
+      ['FB', '외식 · 카페', 23, [3, 1, 3, 3, 0, 0, 0, 0, 5, 0, 0, 0, 1, 1], 10],
+      ['RT', '리테일 · 플래그십', 16, [4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1], 8],
+      ['SV', '생활 편의 · 무인', 9, [0, 0, 0, 0, 0, 0, 0, 0, 1, 6, 0, 1, 0, 1], 2],
+      ['HT', '호텔 · 리조트', 17, [1, 0, 0, 0, 0, 0, 1, 2, 1, 1, 0, 3, 0, 1], 8],
+      ['TP', '테마파크 · 전시', 12, [3, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3], 4],
+      ['VN', '공연 · 경기 · 영화관', 18, [0, 1, 1, 1, 0, 1, 1, 0, 1, 0, 0, 4, 0, 0], 10],
+      ['AD', '옥외 광고', 6, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0], 5],
+      ['OF', '오피스', 11, [3, 0, 1, 2, 0, 2, 1, 0, 1, 0, 0, 2, 0, 0], 4],
+      ['RS', '주거 분양 · 주택', 18, [0, 0, 0, 7, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0], 11],
+      ['ID', '인테리어 · 빌트인', 9, [0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 6],
+      ['ED', '교육 · 캠퍼스', 13, [0, 0, 1, 0, 2, 1, 0, 0, 1, 3, 0, 3, 1, 2], 4],
+      ['PB', '공공 · 교통', 7, [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 2, 1, 0, 0], 4],
+      ['MD', '의료 · 요양', 10, [0, 0, 0, 3, 1, 0, 2, 0, 3, 0, 0, 0, 0, 1], 0],
+      ['MF', '제조 · 물류 · 현장', 7, [0, 0, 3, 1, 1, 0, 1, 0, 2, 0, 2, 1, 0, 1], 0],
+      ['FN', '금융', 5, [1, 0, 2, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0], 1],
+      ['OE', '파트너 전용 단말', 17, [0, 0, 11, 0, 0, 0, 0, 0, 13, 0, 2, 0, 0, 12], 0]
+    ];
+    const HEADS = ['Magic|INFO', 'VXT', 'Knox ·|Configure', 'Smart|Things', 'Smart|Things Pro', 'b.IoT', 'DMS ·|공조 제어', 'LYNK|Cloud', '파트너 앱|연동', '무인|과금', '안전 ·|관제', '케어 ·|유지관리', '콘텐츠|제작 지원', '전용|에디션'];
+    const TOTS = [15, 2, 23, 21, 4, 4, 10, 2, 31, 10, 6, 19, 7, 23];
+    const X0 = 214, CW = 62, TOP = 198, RH = 21;
+    const shade = (v, n) => { if (!v) return ['transparent', '#d5d9e0']; const p = v / n; return p >= 0.55 ? ['#1428a0', '#ffffff'] : p >= 0.4 ? ['#6f82d6', '#ffffff'] : p >= 0.25 ? ['#b8c3ee', '#121417'] : p >= 0.1 ? ['#dfe5f7', '#121417'] : ['#f5f6f8', '#596170']; };
+    const cellBase = 'width: ' + (CW - 3) + 'px; height: ' + (RH - 3) + 'px; margin-right: 3px; flex-shrink: 0; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800;';
+    const heads = HEADS.map((h, j) => { const [l1, l2] = h.split('|'); return { l1, l2: l2 || '', style: 'position: absolute; left: ' + (X0 + j * CW) + 'px; top: 162px; width: ' + (CW - 3) + 'px; font-size: 10px; line-height: 1.3; font-weight: 700; color: #3d4452; text-align: center; white-space: nowrap;' }; });
+    const rows = R.map(([code, name, n, vals, ex], i) => ({
+      code, name, n,
+      style: 'position: absolute; left: 64px; top: ' + (TOP + i * RH) + 'px; width: ' + (X0 - 64 + vals.length * CW) + 'px; height: ' + RH + 'px; display: flex; align-items: center;' + (i % 2 ? '' : ' background: #fafbfc;'),
+      cells: vals.map((v) => { const [bg, fg] = shade(v, n); return { v: v ? v : '·', style: cellBase + ' background: ' + bg + '; color: ' + fg + ';' }; }), exStyle: 'position: absolute; left: 1098px; top: ' + (TOP + i * RH) + 'px; width: 118px; height: ' + (RH - 2) + 'px; display: flex; align-items: center; gap: 8px;', exBar: 'position: absolute; left: 0px; top: 0px; height: 10px; border-radius: 2px; background: #8a91a0; width: ' + Math.round(100 * ex / n) + '%;', ex
+    }));
+    const tots = TOTS.map((v) => ({ v, style: 'width: ' + (CW - 3) + 'px; margin-right: 3px; flex-shrink: 0; text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #121417;' }));
+    const reads = [{ k: '제품만 도입 77건 · 39%', v: '옥외 광고 5/6 · 인테리어 6/9 · 주거 분양 11/18 — 솔루션 제안 여지' }, { k: '파트너 전용 단말 17건', v: '파트너 앱 연동 13 · 전용 에디션 12 · Knox 11 — 세 가지가 한 세트' }, { k: '공간 제어 SmartThings 21 · DMS 10', v: '주거 분양 7 · 4 가 중심, 의료 · 인테리어 · 외식 · 오피스로' }, { k: 'MagicINFO 15 · 케어 19건', v: 'MagicINFO는 리테일 · 테마파크 · 오피스 · 외식, 케어는 10개 업종' }];
+    return { heads, rows, tots, reads };
+  }
+}
+</script>
+</body>
+</html>

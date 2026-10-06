@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-MD-E 의료 · 요양 · 케어 · 공간 시나리오 · 재활치료센터 · 프로그램실</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">재활치료센터 · 프로그램실 · 문제 → 해결</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">W 요양병원 재활센터, 운동은 쾌적하게 기록은 그 자리에서</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">재활치료센터 · 프로그램실에서 매일 생기는 세 가지 문제 — 지금의 방식, 삼성이 바꾸는 것, 달라지는 지표</div>
+
+  <!-- 왼쪽: 공간 패널 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 270px; height: 494px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 76px; top: 168px; width: 246px; height: 160px; border-radius: 12px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">재활치료센터 사진</div>
+  <div style="position: absolute; left: 80px; top: 341px; height: 22px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">3</span>
+    <span style="font-size: 16px; font-weight: 800; line-height: 22px">재활치료센터 · 프로그램실</span>
+  </div>
+  <sc-for list="{{who}}" as="w" hint-placeholder-count="2">
+    <div style="{{w.pos}}"><span style="width: 30px; font-size: 11px; font-weight: 700; color: #8a91a0">{{w.k}}</span><span>{{w.t}}</span></div>
+  </sc-for>
+  <div style="position: absolute; left: 80px; top: 418px; width: 238px; height: 1px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 80px; top: 428px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">놓는 제품</div>
+  <sc-for list="{{prods}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.pos}}">
+      <sc-if value="{{p.ac}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v16H3z M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8"></path></svg></sc-if>
+      <sc-if value="{{p.vent}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h12a3 3 0 1 0-3-3 M3 12h16a3 3 0 1 1-3 3 M3 16h8"></path></svg></sc-if>
+      <sc-if value="{{p.mon}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14v18H5z M8 14l2-3 2 2 4-5 M8 18h8"></path></svg></sc-if>
+      <sc-if value="{{p.scr}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"></path></svg></sc-if>
+      <sc-if value="{{p.tab}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2h14v20H5z M11 18h2"></path></svg></sc-if>
+      <span style="font-size: 12.5px; font-weight: 700; color: #121417">{{p.t}}</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 11px; color: #8a91a0">{{p.at}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 80px; top: 570px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">솔루션 · 서비스</div>
+  <div style="position: absolute; left: 80px; top: 588px; width: 238px; display: flex; flex-wrap: wrap; gap: 4px 6px">
+    <sc-for list="{{lsols}}" as="s" hint-placeholder-count="3">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.t}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 오른쪽: 열 머리 -->
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="3">
+    <div style="{{h.pos}}">{{h.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 358px; top: 182px; width: 858px; height: 1px; background: #e2e5ea"></div>
+
+  <!-- 세 문제 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.pBox}}">
+      <div style="position: absolute; left: 16px; top: 16px; height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8; background: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #596170; display: flex; align-items: center; justify-content: center">{{r.n}}</span>
+        <span style="font-size: 11px; color: #8a91a0">{{r.loc}}</span>
+      </div>
+      <div style="position: absolute; left: 16px; top: 50px; font-size: 15px; font-weight: 800; line-height: 21px; white-space: nowrap">{{r.title}}</div>
+      <div style="position: absolute; left: 16px; top: 78px; font-size: 12.5px; line-height: 18px; color: #596170; white-space: nowrap">{{r.now1}}</div>
+      <div style="position: absolute; left: 16px; top: 96px; font-size: 12.5px; line-height: 18px; color: #596170; white-space: nowrap">{{r.now2}}</div>
+    </div>
+    <div style="{{r.a1}}">→</div>
+    <div style="{{r.sBox}}">
+      <div style="position: absolute; left: 16px; top: 14px; display: flex; gap: 6px; white-space: nowrap">
+        <sc-for list="{{r.sols}}" as="s" hint-placeholder-count="2">
+          <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{s.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 16px; top: 46px; font-size: 13px; font-weight: 700; line-height: 19px; white-space: nowrap">{{r.act1}}</div>
+      <div style="position: absolute; left: 16px; top: 65px; font-size: 13px; font-weight: 700; line-height: 19px; white-space: nowrap">{{r.act2}}</div>
+      <div style="position: absolute; left: 16px; top: 96px; height: 18px; display: flex; align-items: center; gap: 7px; font-size: 12px; color: #3d4452; white-space: nowrap"><span style="font-size: 10.5px; font-weight: 800; color: #6f82d6">기기</span><span>{{r.dev}}</span></div>
+    </div>
+    <div style="{{r.a2}}">→</div>
+    <div style="{{r.vBox}}">
+      <div style="position: absolute; left: 16px; top: 15px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{r.kl}}</div>
+      <div style="position: absolute; left: 16px; top: 34px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 24px; font-weight: 800; line-height: 30px; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{r.kv}}</div>
+      <div style="position: absolute; left: 16px; top: 76px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{r.vd1}}</div>
+      <div style="position: absolute; left: 16px; top: 93px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{r.vd2}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 하단: 한 공간 표준 구성 -->
+  <div style="position: absolute; left: 358px; top: 612px; width: 858px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; margin-right: 4px">한 공간 표준 구성</span>
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 요양병원 · 케어 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = (t) => ({ t });
+
+    // 왼쪽 패널 — 이용 · 운영, 놓는 제품, 솔루션
+    const who = [['이용', '재활 환자 · 프로그램 참여 어르신'], ['운영', '물리 · 작업치료사 · 시설팀']].map(([k, t], i) => ({
+      k, t, pos: A + box(80, 370 + i * 20, 238, 18) + 'display: flex; align-items: center; gap: 4px; font-size: 12px; color: #3d4452; white-space: nowrap;'
+    }));
+    const P = [
+      ['ac', '무풍 4Way · FCU 360', '천장'],
+      ['vent', '시스템 청정환기', '천장'],
+      ['mon', '에어모니터 플러스', '벽면'],
+      ['scr', '스마트 사이니지 QM 시리즈', '입구'],
+      ['tab', '갤럭시 탭', '치료사']
+    ];
+    const prods = P.map(([k, t, at], i) => ({
+      t, at, ac: k === 'ac', vent: k === 'vent', mon: k === 'mon', scr: k === 'scr', tab: k === 'tab',
+      pos: A + box(80, 446 + i * 23, 238, 20) + 'display: flex; align-items: center; gap: 8px; white-space: nowrap;'
+    }));
+    const lsols = ['SmartThings Pro', 'DMS 2.5', 'MagicINFO', '케어 서비스'].map(T);
+
+    // 열 — 문제 358(250) · 해결 636(340) · 가치 1004(212)
+    const PX = 358, PW = 250, SX = 636, SW = 340, VX = 1004, VW = 212;
+    const HD = [[PX, '지금의 문제', '#121417'], [SX, '솔루션이 하는 일', '#1428a0'], [VX, '가치', '#1428a0']];
+    const heads = HD.map(([x, t, c]) => ({
+      t, pos: A + 'left: ' + px(x) + 'top: 158px; font-size: 13px; font-weight: 800; line-height: 18px; color: ' + c + '; white-space: nowrap;'
+    }));
+
+    const R = [
+      {
+        loc: '운동 · 그룹 체조 시간', title: '운동 중 답답하고 더운 공기',
+        now: ['창문을 열고 리모컨으로 그때그때,', '쉬는 어르신은 바람이 차다고 합니다'],
+        sols: ['SmartThings Pro', 'DMS 2.5'],
+        act: ['CO2 · 미세먼지가 오르면 청정환기를 높이고,', '무풍으로 직바람 없이 설정 범위 안에서 운전'],
+        dev: '무풍 4Way · 시스템 청정환기 · 에어모니터',
+        kl: '공기질 기준 초과 시간', kv: '[00]% ↓', vd: ['숨찬 운동 중에도,', '쉬는 동안에도 쾌적합니다']
+      },
+      {
+        loc: '프로그램 시간표 · 치료 기록', title: '안내는 화이트보드, 기록은 두 번',
+        now: ['시간표는 손으로 고쳐 쓰고, 종이에 적은', '치료 기록을 PC에 다시 입력합니다'],
+        sols: ['MagicINFO', '전자서식 앱'],
+        act: ['오늘의 프로그램 · 그룹 · 순서를 화면에,', '치료사는 갤럭시 탭으로 그 자리에서 기록'],
+        dev: '스마트 사이니지 · 갤럭시 탭',
+        kl: '치료사 기록 시간 · 하루', kv: '[00]분 → [0]분', vd: ['기록 대신 환자 곁에,', '어르신은 순서를 헷갈리지 않습니다']
+      },
+      {
+        loc: '세션 사이 · 기구 · 필터', title: '함께 쓰는 공간의 감염 · 위생',
+        now: ['세션이 바뀌어도 환기는 잊기 쉽고,', '에어컨 필터는 냄새가 나야 닦습니다'],
+        sols: ['SmartThings Pro', '케어 서비스'],
+        act: ['세션 사이 [00]분 집중 환기 · 공기청정 루틴,', '필터 · 열교환기는 정기 세척 · 점검'],
+        dev: '시스템 청정환기 · 공기청정기 · FCU 360(PM1.0)',
+        kl: '세션 간 환기 누락', kv: '[0]건', vd: ['다음 그룹이 들어오기 전,', '공기부터 바꿔 둡니다']
+      }
+    ];
+    const RH = 130;
+    const ARW = 'font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; line-height: 24px; color: #6f82d6; text-align: center;';
+    const rows = R.map((r, i) => {
+      const y = 190 + i * (RH + 10);
+      return {
+        n: i + 1, loc: r.loc, title: r.title, now1: r.now[0], now2: r.now[1],
+        sols: r.sols.map(T), act1: r.act[0], act2: r.act[1], dev: r.dev,
+        kl: r.kl, kv: r.kv, vd1: r.vd[0], vd2: r.vd[1],
+        pBox: A + box(PX, y, PW, RH) + 'border-radius: 12px; background: #f5f6f8;',
+        sBox: A + box(SX, y, SW, RH) + 'border-radius: 12px; background: #eaeefb;',
+        vBox: A + box(VX, y, VW, RH) + 'box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #d5d9e0;',
+        a1: A + box(PX + PW, y + RH / 2 - 12, SX - PX - PW, 24) + ARW,
+        a2: A + box(SX + SW, y + RH / 2 - 12, VX - SX - SW, 24) + ARW
+      };
+    });
+
+    const kit = ['무풍 4Way [0]대', '청정환기 [0]대', '에어모니터 [0]대', '사이니지 [0]면', '갤럭시 탭 [0]대'].map(T);
+
+    return { who, prods, lsols, heads, rows, kit };
+  }
+}
+</script>
+</body>
+</html>

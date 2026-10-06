@@ -1,0 +1,7494 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "winmate competitor",
+    "description": "경쟁사 분석 — 경쟁사 찾기 · 6개 비교 기준 · 신뢰도 · 익명화 · 30일 재확인",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api/competitor"
+    }
+  ],
+  "paths": {
+    "/v1/info": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Info",
+        "operationId": "info",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/routing-rules": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Routing Rules",
+        "description": "CAR 보드 원문 + 규칙 임계값(서버 판단과 같은 설정 파일).",
+        "operationId": "routing_rules",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoutingRules"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/capabilities": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Capabilities",
+        "description": "웹 검색 모드(sources · summary_only) — 화면이 `원문 열기` 같은 표시를 정할 때.",
+        "operationId": "capabilities",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Capabilities"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/parse": {
+      "post": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Parse",
+        "description": "CA1 · CA1R 칩 — 네 칸 읽기(≤ 3초 목표, 넘으면 KB 만으로).",
+        "operationId": "parse",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParseIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses": {
+      "post": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Create Analysis",
+        "operationId": "create_analysis",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analysis"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "auto_run — 찾기 → 분석을 사람 확인 없이 잇는다(§6.11 C2)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "List Analyses",
+        "operationId": "list_analyses",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 20,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "all|done|check",
+              "title": "Status"
+            },
+            "description": "all|done|check"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "updated_desc(기본)|created_desc|title",
+              "title": "Sort"
+            },
+            "description": "updated_desc(기본)|created_desc|title"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalysisList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}": {
+      "get": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Get Analysis",
+        "operationId": "get_analysis",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analysis"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Patch Analysis",
+        "operationId": "patch_analysis",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analysis"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Delete Analysis",
+        "operationId": "delete_analysis",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/progress": {
+      "get": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Get Progress",
+        "description": "CA1G · CA3 를 다시 열었을 때 그릴 진행 상태(잡 SSE 와 같은 내용).",
+        "operationId": "get_progress",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProgressOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/versions": {
+      "get": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "List Versions",
+        "operationId": "list_versions",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/versions/{n}/restore": {
+      "post": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Restore Version",
+        "operationId": "restore_version",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "n",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "N"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Analysis"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/find": {
+      "post": {
+        "tags": [
+          "find"
+        ],
+        "summary": "Start Find",
+        "description": "ca.find — 이미 돌고 있으면 취소 후 새로. 사용자가 켜고 끈 · 추가한 후보는 그대로 두고 나머지만 다시 찾는다.",
+        "operationId": "start_find",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/candidates": {
+      "get": {
+        "tags": [
+          "candidates"
+        ],
+        "summary": "Get Candidates",
+        "operationId": "get_candidates",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidatesOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "candidates"
+        ],
+        "summary": "Add Candidate",
+        "description": "경쟁사 직접 추가 → 켜짐 · 고정 · 다음 글자 · 배지 `직접 추가`. 같은 회사(별칭 포함)면 409 DUPLICATE_COMPETITOR.",
+        "operationId": "add_candidate",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidateAdd"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateAddOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/candidates/{cmp}": {
+      "patch": {
+        "tags": [
+          "candidates"
+        ],
+        "summary": "Patch Candidate",
+        "description": "켜기 · 끄기 → pinned=true(다시 찾기 · 다시 분석해도 유지).",
+        "operationId": "patch_candidate",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "cmp",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cmp"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CandidatePatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompetitorView"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/criteria": {
+      "get": {
+        "tags": [
+          "criteria"
+        ],
+        "summary": "Get Criteria",
+        "operationId": "get_criteria",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriteriaOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "criteria"
+        ],
+        "summary": "Put Criteria",
+        "description": "기준 바꾸기(CA3C) — 모두 pinned, 모드 `고정`. 분석 중이면 202(사실 재사용 · 판정부터), 아니면 200(웹이 runs{rejudge}).",
+        "operationId": "put_criteria",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CriteriaPut"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriteriaPutOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "분석 중 — 지금 잡을 끝내고 모은 사실을 재사용해 판정부터 다시",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CriteriaPutOut"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/runs": {
+      "post": {
+        "tags": [
+          "runs"
+        ],
+        "summary": "Start Run",
+        "description": "ca.analyze — full · changed_only · rejudge · resume. 실행 중 409 RUN_IN_PROGRESS · 켜진 경쟁사 0 → 422 NO_COMPETITORS.",
+        "operationId": "start_run",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/additions": {
+      "post": {
+        "tags": [
+          "analyses"
+        ],
+        "summary": "Add Refs",
+        "description": "TopBar `현재 작업에 추가` — 제품 · 솔루션 = 비교 `삼성` 쪽 제품, 사례 = 사내 사례 DB 근거. 다음 실행에서 판정부터 다시. image 는 받지 않는다.",
+        "operationId": "add_refs",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdditionsIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdditionsOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/result": {
+      "get": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Get Result",
+        "operationId": "get_result",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "view",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(overview|table|strengths)$",
+              "default": "overview",
+              "title": "View"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/competitors/{cmp}": {
+      "get": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Get Competitor",
+        "operationId": "get_competitor",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "cmp",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cmp"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompetitorDetail"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/competitors/{cmp}/research": {
+      "post": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Research",
+        "description": "이 경쟁사 더 찾기(ca.research) — 그 경쟁사 사실만 다시 모으고 판정 · 강점 · 주의할 점 다시 → 새 버전.",
+        "operationId": "research",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "cmp",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cmp"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResearchIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/claims": {
+      "get": {
+        "tags": [
+          "evidence"
+        ],
+        "summary": "List Claims",
+        "operationId": "list_claims",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "competitor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Competitor"
+            }
+          },
+          {
+            "name": "fact",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Fact"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/claims/{clm}": {
+      "get": {
+        "tags": [
+          "evidence"
+        ],
+        "summary": "Get Claim",
+        "operationId": "get_claim",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "clm",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Clm"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimDetail"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/sources": {
+      "get": {
+        "tags": [
+          "evidence"
+        ],
+        "summary": "List Sources",
+        "operationId": "list_sources",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "competitor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Competitor"
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Kind"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "evidence"
+        ],
+        "summary": "Add Source",
+        "description": "출처 직접 추가 · URL 또는 사내 문서(ca.source_add) → 수집 · 대조 후 카드로 나타난다.",
+        "operationId": "add_source",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceAddIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceAddOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/sources/{src}/snapshot": {
+      "get": {
+        "tags": [
+          "evidence"
+        ],
+        "summary": "Source Snapshot",
+        "operationId": "source_snapshot",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "src",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Src"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SnapshotOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/claims/{clm}/sources/{src}": {
+      "delete": {
+        "tags": [
+          "evidence"
+        ],
+        "summary": "Remove Source",
+        "description": "이 출처 빼기 → 주장 상태 다시(마지막 출처를 빼면 그 사실은 `[확인 필요]`).",
+        "operationId": "remove_source",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "clm",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Clm"
+            }
+          },
+          {
+            "name": "src",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Src"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClaimItem"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/handoffs": {
+      "post": {
+        "tags": [
+          "handoffs"
+        ],
+        "summary": "Create Handoff",
+        "description": "넘김 기록. 고객 제출물(제안서)인데 익명이 꺼져 있고 실명 확인이 없으면 409 ASK_REQUIRED(묻기 2).",
+        "operationId": "create_handoff",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandoffIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "handoffs"
+        ],
+        "summary": "List Handoffs",
+        "operationId": "list_handoffs",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/handoffs/{hof}": {
+      "patch": {
+        "tags": [
+          "handoffs"
+        ],
+        "summary": "Patch Handoff",
+        "operationId": "patch_handoff",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "hof",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Hof"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HandoffPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HandoffView"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/bundle": {
+      "get": {
+        "tags": [
+          "handoffs"
+        ],
+        "summary": "Get Bundle",
+        "description": "넘김 묶음 — mi 는 실명 포함(MI 가 자기 내보내기에서 익명 처리), proposal_why · storyboard 는 익명(기록에 실명 확인이 있을 때만 실명).",
+        "operationId": "get_bundle",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "target",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^(mi|proposal_why|storyboard)$",
+              "title": "Target"
+            }
+          },
+          {
+            "name": "handoff_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Handoff Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Bundle"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/proposal-handoff": {
+      "get": {
+        "tags": [
+          "handoffs"
+        ],
+        "summary": "Proposal Handoff",
+        "description": "ProposalHandoff v1(§6.11 · 10-proposal §8.8 C1) — Why Samsung 경쟁 비교(CM) · 삼성 강점(ST). 기본 익명.\nnamed=true 는 넘김 기록에 실명 확인(CA5 묻기 2 `실명으로 보내기`)이 있을 때만 — 없으면 409 ASK_REQUIRED, 있으면 응답마다 served_named_at 기록.",
+        "operationId": "proposal_handoff",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^(standard|quickwin|solution)$",
+              "default": "standard",
+              "title": "Type"
+            }
+          },
+          {
+            "name": "section",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "why",
+              "title": "Section"
+            }
+          },
+          {
+            "name": "handoff_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Handoff Id"
+            }
+          },
+          {
+            "name": "named",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Named"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProposalHandoff"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/exports": {
+      "post": {
+        "tags": [
+          "handoffs"
+        ],
+        "summary": "Create Export",
+        "description": "리포트 저장(ca.export) — `internal` = 실명 · 표지 `사내용 · 고객 제출 금지`, `customer` = 익명. 끝나면 result.file_id.",
+        "operationId": "create_export",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/recheck": {
+      "post": {
+        "tags": [
+          "recheck"
+        ],
+        "summary": "Recheck",
+        "operationId": "recheck",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyses/{aid}/changes": {
+      "get": {
+        "tags": [
+          "recheck"
+        ],
+        "summary": "Changes",
+        "operationId": "changes",
+        "parameters": [
+          {
+            "name": "aid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Aid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangesOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdditionsIn": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "product",
+              "solution",
+              "case",
+              "image"
+            ],
+            "title": "Kind"
+          },
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "ids"
+        ],
+        "title": "AdditionsIn"
+      },
+      "AdditionsOut": {
+        "properties": {
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added"
+          }
+        },
+        "type": "object",
+        "required": [
+          "added"
+        ],
+        "title": "AdditionsOut"
+      },
+      "Analysis": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "input_mode": {
+            "type": "string",
+            "enum": [
+              "free",
+              "requirements",
+              "mi"
+            ],
+            "title": "Input Mode",
+            "default": "free"
+          },
+          "input_label": {
+            "type": "string",
+            "title": "Input Label",
+            "default": ""
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          },
+          "extra_text": {
+            "type": "string",
+            "title": "Extra Text",
+            "default": ""
+          },
+          "file_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "File Ids"
+          },
+          "requirements_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirements Id"
+          },
+          "rq_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rq Version"
+          },
+          "mi_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MiRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose"
+          },
+          "customer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Name"
+          },
+          "slots": {
+            "$ref": "#/components/schemas/SlotsView"
+          },
+          "found_count": {
+            "type": "integer",
+            "title": "Found Count",
+            "default": 0
+          },
+          "segment": {
+            "$ref": "#/components/schemas/SegmentView"
+          },
+          "chips": {
+            "items": {
+              "$ref": "#/components/schemas/ChipView"
+            },
+            "type": "array",
+            "title": "Chips"
+          },
+          "rfp": {
+            "$ref": "#/components/schemas/RfpView"
+          },
+          "include_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Include Names"
+          },
+          "exclude_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exclude Names"
+          },
+          "anonymize": {
+            "type": "boolean",
+            "title": "Anonymize",
+            "default": true
+          },
+          "naming_mode": {
+            "type": "string",
+            "title": "Naming Mode",
+            "default": "letter"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "finding",
+              "ask",
+              "confirming",
+              "analyzing",
+              "stopped",
+              "done",
+              "upd",
+              "failed"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "status_label": {
+            "type": "string",
+            "title": "Status Label",
+            "default": ""
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 0
+          },
+          "current_job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Job Id"
+          },
+          "current_job_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Job Kind"
+          },
+          "last_screen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Screen"
+          },
+          "route": {
+            "type": "string",
+            "title": "Route",
+            "default": ""
+          },
+          "competitor_count": {
+            "type": "integer",
+            "title": "Competitor Count",
+            "default": 0
+          },
+          "on_count": {
+            "type": "integer",
+            "title": "On Count",
+            "default": 0
+          },
+          "analyzed_count": {
+            "type": "integer",
+            "title": "Analyzed Count",
+            "default": 0
+          },
+          "criteria_mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "pin"
+            ],
+            "title": "Criteria Mode",
+            "default": "auto"
+          },
+          "ask": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AskRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "find": {
+            "$ref": "#/components/schemas/FindProgress"
+          },
+          "run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "stopped": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/StoppedInfo"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "needs_rejudge": {
+            "type": "boolean",
+            "title": "Needs Rejudge",
+            "default": false
+          },
+          "owner_name": {
+            "type": "string",
+            "title": "Owner Name",
+            "default": ""
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At",
+            "default": ""
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At",
+            "default": ""
+          },
+          "analyzed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analyzed At"
+          },
+          "next_recheck_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Recheck At"
+          },
+          "letters_on": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Letters On",
+            "description": "켜진 경쟁사 글자(CA5 익명 표기 `경쟁사 A · B · C · D`)"
+          },
+          "added_refs": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added Refs",
+            "description": "셸 `현재 작업에 추가`로 넣은 참조(kb:model:… · kb:solution:… · kb:case:…) — 셸 `added`"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "slots"
+        ],
+        "title": "Analysis"
+      },
+      "AnalysisCreate": {
+        "properties": {
+          "input_mode": {
+            "type": "string",
+            "enum": [
+              "free",
+              "requirements",
+              "mi"
+            ],
+            "title": "Input Mode",
+            "default": "free"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "file_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "File Ids"
+          },
+          "requirements_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirements Id"
+          },
+          "rq_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rq Version"
+          },
+          "rq_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RqRef"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "제안서 딸깍(10-proposal §8.8 C2) 호환 — requirements_id 와 같음"
+          },
+          "extra_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Text"
+          },
+          "mi_bundle": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mi Bundle",
+            "description": "MI `bundle?target=competitor` 응답(웹이 읽어 넣음)"
+          },
+          "mi_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MiRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Purpose",
+            "description": "proposal(제안서 딸깍)"
+          },
+          "auto_run": {
+            "type": "boolean",
+            "title": "Auto Run",
+            "default": false
+          },
+          "customer": {
+            "title": "Customer",
+            "description": "제안서 딸깍 호환: 고객사 이름 또는 {name}"
+          },
+          "customer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Name"
+          }
+        },
+        "type": "object",
+        "title": "AnalysisCreate"
+      },
+      "AnalysisList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/ListCounts"
+          },
+          "banner": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ListBanner"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "header": {
+            "type": "string",
+            "title": "Header",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "counts"
+        ],
+        "title": "AnalysisList"
+      },
+      "AnalysisPatch": {
+        "properties": {
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "extra_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Text"
+          },
+          "file_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Ids"
+          },
+          "requirements_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirements Id"
+          },
+          "rq_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rq Version"
+          },
+          "input_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "free",
+                  "requirements",
+                  "mi"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Mode"
+          },
+          "anonymize": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Anonymize"
+          },
+          "last_screen": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Screen"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "title": "AnalysisPatch"
+      },
+      "AskRead": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "partial": {
+            "type": "boolean",
+            "title": "Partial",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "value"
+        ],
+        "title": "AskRead"
+      },
+      "AskRequest": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": "slots"
+          },
+          "missing": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing"
+          },
+          "read": {
+            "items": {
+              "$ref": "#/components/schemas/AskRead"
+            },
+            "type": "array",
+            "title": "Read"
+          },
+          "industry": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Industry"
+          },
+          "default": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Default"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "desc": {
+            "type": "string",
+            "title": "Desc",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "AskRequest"
+      },
+      "AskRow": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "t": {
+            "type": "string",
+            "title": "T"
+          },
+          "where": {
+            "type": "string",
+            "title": "Where"
+          },
+          "default": {
+            "type": "string",
+            "title": "Default",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "t",
+          "where"
+        ],
+        "title": "AskRow"
+      },
+      "Bundle": {
+        "properties": {
+          "target": {
+            "type": "string",
+            "title": "Target"
+          },
+          "analysis_id": {
+            "type": "string",
+            "title": "Analysis Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 0
+          },
+          "handoff_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Id"
+          },
+          "named": {
+            "type": "boolean",
+            "title": "Named",
+            "default": false
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "segment": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Segment"
+          },
+          "slots": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots"
+          },
+          "competitors": {
+            "items": {},
+            "type": "array",
+            "title": "Competitors"
+          },
+          "criteria": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "facts": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Facts"
+          },
+          "positioning": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Positioning"
+          },
+          "samsung_cells": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Samsung Cells"
+          },
+          "verdicts": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdicts"
+          },
+          "strengths": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Strengths"
+          },
+          "cautions": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cautions"
+          },
+          "claims": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claims"
+          },
+          "citations": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citations"
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sources"
+          },
+          "comparison": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comparison"
+          },
+          "footnotes": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Footnotes"
+          },
+          "fact_check": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fact Check"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target",
+          "analysis_id"
+        ],
+        "title": "Bundle",
+        "description": "넘김 묶음(§6.10). target 마다 채우는 필드가 다르다 — mi(실명 포함) · proposal_why(익명) · storyboard(익명)."
+      },
+      "CandidateAdd": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CandidateAdd"
+      },
+      "CandidateAddOut": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "competitor_id": {
+            "type": "string",
+            "title": "Competitor Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "queued"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "competitor_id"
+        ],
+        "title": "CandidateAddOut"
+      },
+      "CandidateCounts": {
+        "properties": {
+          "rec": {
+            "type": "integer",
+            "title": "Rec",
+            "default": 0
+          },
+          "check": {
+            "type": "integer",
+            "title": "Check",
+            "default": 0
+          },
+          "drop": {
+            "type": "integer",
+            "title": "Drop",
+            "default": 0
+          },
+          "user": {
+            "type": "integer",
+            "title": "User",
+            "default": 0
+          },
+          "on": {
+            "type": "integer",
+            "title": "On",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "CandidateCounts"
+      },
+      "CandidatePatch": {
+        "properties": {
+          "on": {
+            "type": "boolean",
+            "title": "On"
+          }
+        },
+        "type": "object",
+        "required": [
+          "on"
+        ],
+        "title": "CandidatePatch"
+      },
+      "CandidatesOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CompetitorView"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/CandidateCounts"
+          },
+          "read_count": {
+            "type": "integer",
+            "title": "Read Count",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "page_size": {
+            "type": "integer",
+            "title": "Page Size",
+            "default": 6
+          },
+          "finding": {
+            "type": "boolean",
+            "title": "Finding",
+            "default": false
+          },
+          "chips": {
+            "items": {
+              "$ref": "#/components/schemas/ChipView"
+            },
+            "type": "array",
+            "title": "Chips"
+          },
+          "slots": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SlotsView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "header": {
+            "$ref": "#/components/schemas/HeaderView"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "counts"
+        ],
+        "title": "CandidatesOut"
+      },
+      "Capabilities": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "summary_only"
+          },
+          "websearch_available": {
+            "type": "boolean",
+            "title": "Websearch Available",
+            "default": true
+          },
+          "returns_sources": {
+            "type": "boolean",
+            "title": "Returns Sources",
+            "default": false
+          },
+          "search_api": {
+            "type": "string",
+            "title": "Search Api",
+            "default": "none"
+          },
+          "fetch": {
+            "type": "boolean",
+            "title": "Fetch",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "Capabilities"
+      },
+      "CautionView": {
+        "properties": {
+          "competitor_id": {
+            "type": "string",
+            "title": "Competitor Id"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter"
+          },
+          "display": {
+            "type": "string",
+            "title": "Display"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "criterion_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Criterion Ids"
+          },
+          "criterion_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Criterion Names"
+          },
+          "claim_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Claim Ids"
+          },
+          "sources_label": {
+            "type": "string",
+            "title": "Sources Label",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "competitor_id",
+          "letter",
+          "display",
+          "note"
+        ],
+        "title": "CautionView"
+      },
+      "ChangeView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "competitor_new_product",
+              "source_changed"
+            ],
+            "title": "Kind"
+          },
+          "competitor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competitor Id"
+          },
+          "letter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Letter"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "`경쟁사 {글자} 신제품 발표` 처럼(실명 없음)"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "product": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "detected_at": {
+            "type": "string",
+            "title": "Detected At",
+            "default": ""
+          },
+          "verification": {
+            "type": "string",
+            "enum": [
+              "matched",
+              "needs_check"
+            ],
+            "title": "Verification",
+            "default": "needs_check"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title"
+        ],
+        "title": "ChangeView"
+      },
+      "ChangesOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ChangeView"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "checked_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Checked At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ChangesOut"
+      },
+      "ChipView": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "industry_basis · region_missing · industry_inferred · place_inferred · industry_check · auto_confirmed · unknown_cells"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "`업종 기준` · `지역 미반영` · `업종 추정` · `장소 추정` · `업종 확인` · `후보 자동 확정` · `확인 필요 {n}`"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "check",
+              "ask",
+              "pin"
+            ],
+            "title": "Mode",
+            "default": "check"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "ChipView"
+      },
+      "CitationRef": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "source_id",
+          "status"
+        ],
+        "title": "CitationRef"
+      },
+      "ClaimCounts": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "matched": {
+            "type": "integer",
+            "title": "Matched",
+            "default": 0
+          },
+          "needs_check": {
+            "type": "integer",
+            "title": "Needs Check",
+            "default": 0
+          },
+          "public": {
+            "type": "integer",
+            "title": "Public",
+            "default": 0
+          },
+          "kb_case": {
+            "type": "integer",
+            "title": "Kb Case",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "ClaimCounts"
+      },
+      "ClaimDetail": {
+        "properties": {
+          "claim": {
+            "$ref": "#/components/schemas/ClaimItem"
+          },
+          "cards": {
+            "items": {
+              "$ref": "#/components/schemas/SourceCard"
+            },
+            "type": "array",
+            "title": "Cards"
+          }
+        },
+        "type": "object",
+        "required": [
+          "claim",
+          "cards"
+        ],
+        "title": "ClaimDetail"
+      },
+      "ClaimItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "competitor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competitor Id"
+          },
+          "fact_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fact Key"
+          },
+          "criterion_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criterion Id"
+          },
+          "block": {
+            "type": "string",
+            "title": "Block",
+            "default": ""
+          },
+          "citations": {
+            "items": {
+              "$ref": "#/components/schemas/CitationRef"
+            },
+            "type": "array",
+            "title": "Citations"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "status",
+          "label"
+        ],
+        "title": "ClaimItem"
+      },
+      "ClaimList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ClaimItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/ClaimCounts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ClaimList"
+      },
+      "CompetitorDetail": {
+        "properties": {
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 0
+          },
+          "header": {
+            "$ref": "#/components/schemas/DetailHeader"
+          },
+          "positioning": {
+            "type": "string",
+            "title": "Positioning",
+            "default": ""
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/FactView"
+            },
+            "type": "array",
+            "title": "Facts"
+          },
+          "vs_samsung": {
+            "$ref": "#/components/schemas/VsSamsung"
+          },
+          "vs_labels": {
+            "items": {
+              "$ref": "#/components/schemas/ChipView"
+            },
+            "type": "array",
+            "title": "Vs Labels",
+            "description": "`우위 3 · 통합 관리 · 전력 · 배포` 칩(0 인 칩은 뺌)"
+          },
+          "footer": {
+            "$ref": "#/components/schemas/FooterView"
+          },
+          "others": {
+            "items": {
+              "$ref": "#/components/schemas/OtherCompetitor"
+            },
+            "type": "array",
+            "title": "Others"
+          },
+          "research": {
+            "$ref": "#/components/schemas/ResearchState"
+          },
+          "state": {
+            "type": "string",
+            "title": "State",
+            "default": "done"
+          }
+        },
+        "type": "object",
+        "required": [
+          "header",
+          "facts"
+        ],
+        "title": "CompetitorDetail"
+      },
+      "CompetitorView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter"
+          },
+          "display": {
+            "type": "string",
+            "title": "Display",
+            "description": "`경쟁사 {글자}`"
+          },
+          "real_name": {
+            "type": "string",
+            "title": "Real Name",
+            "description": "실명(작업 화면 안에서만 보조 글자로)",
+            "default": ""
+          },
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Aliases"
+          },
+          "kind_label": {
+            "type": "string",
+            "title": "Kind Label",
+            "default": ""
+          },
+          "why": {
+            "type": "string",
+            "title": "Why",
+            "default": ""
+          },
+          "chips": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Chips"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "confidence_label": {
+            "type": "string",
+            "title": "Confidence Label",
+            "default": ""
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "rec",
+              "check",
+              "drop",
+              "user"
+            ],
+            "title": "Status"
+          },
+          "status_label": {
+            "type": "string",
+            "title": "Status Label"
+          },
+          "on": {
+            "type": "boolean",
+            "title": "On"
+          },
+          "pinned": {
+            "type": "boolean",
+            "title": "Pinned",
+            "default": false
+          },
+          "removed": {
+            "type": "boolean",
+            "title": "Removed",
+            "default": false
+          },
+          "origin": {
+            "type": "string",
+            "title": "Origin",
+            "default": "auto"
+          },
+          "rank": {
+            "type": "integer",
+            "title": "Rank",
+            "default": 0
+          },
+          "add_state": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "done",
+                  "failed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Add State"
+          },
+          "switch_label": {
+            "type": "string",
+            "title": "Switch Label",
+            "description": "`경쟁사 {글자} 빼기` / `경쟁사 {글자} 넣기`",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "letter",
+          "display",
+          "status",
+          "status_label",
+          "on"
+        ],
+        "title": "CompetitorView"
+      },
+      "CriteriaOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionView"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/CriteriaSummary"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "pin"
+            ],
+            "title": "Mode",
+            "default": "auto"
+          },
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/Suggestion"
+            },
+            "type": "array",
+            "title": "Suggestions"
+          },
+          "on": {
+            "type": "integer",
+            "title": "On",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "summary_text": {
+            "type": "string",
+            "title": "Summary Text",
+            "description": "`요구사항에서 3 · 업종 사례에서 1 · 기본 2`",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "summary"
+        ],
+        "title": "CriteriaOut"
+      },
+      "CriteriaPut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionIn"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "CriteriaPut"
+      },
+      "CriteriaPutOut": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionView"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "summary": {
+            "$ref": "#/components/schemas/CriteriaSummary"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "pin"
+            ],
+            "title": "Mode",
+            "default": "auto"
+          },
+          "suggestions": {
+            "items": {
+              "$ref": "#/components/schemas/Suggestion"
+            },
+            "type": "array",
+            "title": "Suggestions"
+          },
+          "on": {
+            "type": "integer",
+            "title": "On",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "summary_text": {
+            "type": "string",
+            "title": "Summary Text",
+            "description": "`요구사항에서 3 · 업종 사례에서 1 · 기본 2`",
+            "default": ""
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "summary"
+        ],
+        "title": "CriteriaPutOut"
+      },
+      "CriteriaSummary": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "requirements": {
+            "type": "integer",
+            "title": "Requirements",
+            "default": 0
+          },
+          "industry_cases": {
+            "type": "integer",
+            "title": "Industry Cases",
+            "default": 0
+          },
+          "default": {
+            "type": "integer",
+            "title": "Default",
+            "default": 0
+          },
+          "user": {
+            "type": "integer",
+            "title": "User",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "CriteriaSummary"
+      },
+      "CriterionIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 20,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "requirements",
+              "industry_cases",
+              "default",
+              "user"
+            ],
+            "title": "Source",
+            "default": "user"
+          },
+          "source_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Count"
+          },
+          "importance": {
+            "type": "integer",
+            "maximum": 5.0,
+            "minimum": 1.0,
+            "title": "Importance",
+            "default": 3
+          },
+          "order": {
+            "type": "integer",
+            "title": "Order",
+            "default": 0
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CriterionIn"
+      },
+      "CriterionView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "requirements",
+              "industry_cases",
+              "default",
+              "user"
+            ],
+            "title": "Source"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label",
+            "description": "`요구` · `업종 사례 {n}건` · `기본` · `직접 추가`",
+            "default": ""
+          },
+          "source_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Count"
+          },
+          "importance": {
+            "type": "integer",
+            "title": "Importance",
+            "default": 3
+          },
+          "order": {
+            "type": "integer",
+            "title": "Order",
+            "default": 0
+          },
+          "enabled": {
+            "type": "boolean",
+            "title": "Enabled",
+            "default": true
+          },
+          "pinned": {
+            "type": "boolean",
+            "title": "Pinned",
+            "default": false
+          },
+          "requirement_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirement Ref"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "source"
+        ],
+        "title": "CriterionView"
+      },
+      "DetailHeader": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter"
+          },
+          "display": {
+            "type": "string",
+            "title": "Display"
+          },
+          "real_name": {
+            "type": "string",
+            "title": "Real Name",
+            "default": ""
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": ""
+          },
+          "aliases": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Aliases"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "letter",
+          "display"
+        ],
+        "title": "DetailHeader"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "UPPER_SNAKE 오류 코드"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "사람이 읽는 한국어 메시지"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse"
+      },
+      "ExportIn": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "const": "pdf",
+            "title": "Format",
+            "default": "pdf"
+          },
+          "audience": {
+            "type": "string",
+            "enum": [
+              "internal",
+              "customer"
+            ],
+            "title": "Audience",
+            "default": "internal"
+          }
+        },
+        "type": "object",
+        "title": "ExportIn"
+      },
+      "FactView": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "lineup",
+              "price",
+              "solution",
+              "references",
+              "recent"
+            ],
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "tbd": {
+            "type": "boolean",
+            "title": "Tbd",
+            "default": false
+          },
+          "sources": {
+            "type": "integer",
+            "title": "Sources",
+            "default": 0
+          },
+          "has_kb": {
+            "type": "boolean",
+            "title": "Has Kb",
+            "default": false
+          },
+          "sources_label": {
+            "type": "string",
+            "title": "Sources Label",
+            "default": ""
+          },
+          "check": {
+            "type": "boolean",
+            "title": "Check",
+            "description": "칩 `확인 필요`(모르는 값 · 확인 안 된 값)",
+            "default": false
+          },
+          "claim_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Claim Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "text"
+        ],
+        "title": "FactView"
+      },
+      "FindLine": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "done",
+              "active",
+              "wait"
+            ],
+            "title": "State"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "text",
+          "state"
+        ],
+        "title": "FindLine"
+      },
+      "FindProgress": {
+        "properties": {
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/FindLine"
+            },
+            "type": "array",
+            "title": "Lines"
+          },
+          "candidates_so_far": {
+            "type": "integer",
+            "title": "Candidates So Far",
+            "default": 0
+          },
+          "eta_label": {
+            "type": "string",
+            "title": "Eta Label",
+            "default": "약 30초"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "title": "FindProgress"
+      },
+      "FooterView": {
+        "properties": {
+          "sources": {
+            "type": "integer",
+            "title": "Sources",
+            "default": 0
+          },
+          "public": {
+            "type": "integer",
+            "title": "Public",
+            "default": 0
+          },
+          "kb_case": {
+            "type": "integer",
+            "title": "Kb Case",
+            "default": 0
+          },
+          "unverified": {
+            "type": "boolean",
+            "title": "Unverified",
+            "default": false
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "FooterView"
+      },
+      "HandoffConfirm": {
+        "properties": {
+          "real_names": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Real Names"
+          }
+        },
+        "type": "object",
+        "title": "HandoffConfirm"
+      },
+      "HandoffIn": {
+        "properties": {
+          "target": {
+            "type": "string",
+            "enum": [
+              "mi",
+              "proposal_why",
+              "storyboard",
+              "report"
+            ],
+            "title": "Target"
+          },
+          "target_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Id"
+          },
+          "target_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Title"
+          },
+          "confirm": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HandoffConfirm"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "dry_run": {
+            "type": "boolean",
+            "title": "Dry Run",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "title": "HandoffIn"
+      },
+      "HandoffList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/HandoffView"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "HandoffList"
+      },
+      "HandoffOut": {
+        "properties": {
+          "handoff_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Handoff Id"
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "mi",
+              "proposal_why",
+              "storyboard",
+              "report"
+            ],
+            "title": "Target"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "prepared"
+          },
+          "named": {
+            "type": "boolean",
+            "title": "Named",
+            "default": false
+          },
+          "anonymization_map": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Anonymization Map"
+          },
+          "letters": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Letters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "target"
+        ],
+        "title": "HandoffOut"
+      },
+      "HandoffPatch": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "prepared",
+              "delivered",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "target_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Id"
+          },
+          "target_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "HandoffPatch"
+      },
+      "HandoffView": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "analysis_id": {
+            "type": "string",
+            "title": "Analysis Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 0
+          },
+          "target": {
+            "type": "string",
+            "enum": [
+              "mi",
+              "proposal_why",
+              "storyboard",
+              "report"
+            ],
+            "title": "Target"
+          },
+          "target_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Id"
+          },
+          "target_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Title"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "confirmations": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Confirmations"
+          },
+          "anonymization_map": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Anonymization Map"
+          },
+          "served_named_at": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Served Named At"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At",
+            "default": ""
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "analysis_id",
+          "target",
+          "status"
+        ],
+        "title": "HandoffView"
+      },
+      "HeaderView": {
+        "properties": {
+          "kicker": {
+            "type": "string",
+            "title": "Kicker",
+            "default": ""
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "desc": {
+            "type": "string",
+            "title": "Desc",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "HeaderView"
+      },
+      "JobAccepted": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "queued"
+          },
+          "analysis_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analysis Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id"
+        ],
+        "title": "JobAccepted"
+      },
+      "LadderRow": {
+        "properties": {
+          "signal": {
+            "type": "string",
+            "title": "Signal"
+          },
+          "how": {
+            "type": "string",
+            "title": "How"
+          },
+          "n": {
+            "type": "string",
+            "title": "N"
+          },
+          "tag": {
+            "type": "string",
+            "title": "Tag"
+          },
+          "o": {
+            "type": "string",
+            "title": "O"
+          },
+          "desc": {
+            "type": "string",
+            "title": "Desc"
+          },
+          "width": {
+            "type": "integer",
+            "title": "Width"
+          }
+        },
+        "type": "object",
+        "required": [
+          "signal",
+          "how",
+          "n",
+          "tag",
+          "o",
+          "desc",
+          "width"
+        ],
+        "title": "LadderRow"
+      },
+      "ListAction": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "route": {
+            "type": "string",
+            "title": "Route"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "result",
+              "continue",
+              "detail"
+            ],
+            "title": "Kind",
+            "default": "continue"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "route"
+        ],
+        "title": "ListAction"
+      },
+      "ListBanner": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "`{n}건은 다시 분석을 권해요.`"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "`경쟁사 {글자} 가 {YYYY.MM} 신제품을 냈어요 — {작업 제목} · 분석 30일 경과`"
+          },
+          "target_id": {
+            "type": "string",
+            "title": "Target Id"
+          },
+          "competitor_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Competitor Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "title",
+          "text",
+          "target_id"
+        ],
+        "title": "ListBanner"
+      },
+      "ListCounts": {
+        "properties": {
+          "all": {
+            "type": "integer",
+            "title": "All",
+            "default": 0
+          },
+          "done": {
+            "type": "integer",
+            "title": "Done",
+            "default": 0
+          },
+          "check": {
+            "type": "integer",
+            "title": "Check",
+            "default": 0
+          },
+          "upd": {
+            "type": "integer",
+            "title": "Upd",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "title": "ListCounts"
+      },
+      "ListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sub": {
+            "type": "string",
+            "title": "Sub",
+            "description": "`{소유자} · {시점}`"
+          },
+          "owner_name": {
+            "type": "string",
+            "title": "Owner Name",
+            "default": ""
+          },
+          "time_label": {
+            "type": "string",
+            "title": "Time Label",
+            "default": ""
+          },
+          "input_mode": {
+            "type": "string",
+            "enum": [
+              "free",
+              "requirements",
+              "mi"
+            ],
+            "title": "Input Mode",
+            "default": "free"
+          },
+          "input_label": {
+            "type": "string",
+            "title": "Input Label",
+            "default": ""
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count"
+          },
+          "count_label": {
+            "type": "string",
+            "title": "Count Label",
+            "description": "숫자 또는 `—`",
+            "default": "—"
+          },
+          "count_unit": {
+            "type": "string",
+            "title": "Count Unit",
+            "description": "`곳` · `후보`(회색)",
+            "default": ""
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "finding",
+              "ask",
+              "confirming",
+              "analyzing",
+              "stopped",
+              "done",
+              "upd",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "status_label": {
+            "type": "string",
+            "title": "Status Label",
+            "description": "`완료` · `확인 중` · `업데이트 필요`"
+          },
+          "status_tone": {
+            "type": "string",
+            "enum": [
+              "done",
+              "check",
+              "upd"
+            ],
+            "title": "Status Tone",
+            "default": "check"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          },
+          "sent_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sent Label",
+            "description": "`MI 작업 · 제안서` 처럼. 없으면 null(`아직 없음`)"
+          },
+          "action": {
+            "$ref": "#/components/schemas/ListAction"
+          },
+          "route": {
+            "type": "string",
+            "title": "Route"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At",
+            "default": ""
+          },
+          "current_job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Job Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "sub",
+          "status",
+          "status_label",
+          "action",
+          "route"
+        ],
+        "title": "ListItem"
+      },
+      "MiRef": {
+        "properties": {
+          "analysis_id": {
+            "type": "string",
+            "title": "Analysis Id"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "analysis_id"
+        ],
+        "title": "MiRef"
+      },
+      "OtherCompetitor": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter"
+          },
+          "current": {
+            "type": "boolean",
+            "title": "Current",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "letter"
+        ],
+        "title": "OtherCompetitor"
+      },
+      "PHFact": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unit"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "confirmed",
+              "unconfirmed",
+              "placeholder"
+            ],
+            "title": "Status"
+          },
+          "placeholder": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Placeholder"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "status"
+        ],
+        "title": "PHFact"
+      },
+      "PHItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "from_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Label"
+          },
+          "sheet_role": {
+            "type": "string",
+            "title": "Sheet Role"
+          },
+          "sheet_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet Title"
+          },
+          "template_hint": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Hint"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "warn",
+              "add"
+            ],
+            "title": "Status",
+            "default": "ok"
+          },
+          "status_label": {
+            "type": "string",
+            "title": "Status Label",
+            "default": ""
+          },
+          "include_default": {
+            "type": "boolean",
+            "title": "Include Default",
+            "default": true
+          },
+          "content": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Content"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/PHItemSource"
+            },
+            "type": "array",
+            "title": "Sources"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "sheet_role"
+        ],
+        "title": "PHItem"
+      },
+      "PHItemSource": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "ref": {
+            "type": "string",
+            "title": "Ref"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "tier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "ref",
+          "label"
+        ],
+        "title": "PHItemSource"
+      },
+      "PHSource": {
+        "properties": {
+          "feature": {
+            "type": "string",
+            "title": "Feature",
+            "default": "CA"
+          },
+          "ref_id": {
+            "type": "string",
+            "title": "Ref Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "route": {
+            "type": "string",
+            "title": "Route"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref_id",
+          "version",
+          "title",
+          "updated_at",
+          "route"
+        ],
+        "title": "PHSource"
+      },
+      "PHTarget": {
+        "properties": {
+          "proposal_type": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "quickwin",
+              "solution"
+            ],
+            "title": "Proposal Type",
+            "default": "standard"
+          },
+          "section_key": {
+            "type": "string",
+            "title": "Section Key",
+            "default": "why"
+          }
+        },
+        "type": "object",
+        "title": "PHTarget"
+      },
+      "ParseIn": {
+        "properties": {
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "file_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "File Ids"
+          },
+          "requirements_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirements Id"
+          },
+          "rq_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rq Version"
+          },
+          "extra_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 4000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Text"
+          }
+        },
+        "type": "object",
+        "title": "ParseIn"
+      },
+      "ParseOut": {
+        "properties": {
+          "slots": {
+            "$ref": "#/components/schemas/SlotsView"
+          },
+          "found_count": {
+            "type": "integer",
+            "title": "Found Count"
+          },
+          "segment": {
+            "$ref": "#/components/schemas/SegmentView"
+          },
+          "rfp": {
+            "$ref": "#/components/schemas/RfpView"
+          },
+          "include_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Include Names"
+          },
+          "exclude_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Exclude Names"
+          },
+          "reading_files": {
+            "type": "boolean",
+            "title": "Reading Files",
+            "default": false
+          },
+          "degraded": {
+            "type": "boolean",
+            "title": "Degraded",
+            "description": "LLM 없이 KB 만으로 읽음(§4.4 2)",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "slots",
+          "found_count",
+          "segment"
+        ],
+        "title": "ParseOut"
+      },
+      "PartialInfo": {
+        "properties": {
+          "analyzing": {
+            "type": "boolean",
+            "title": "Analyzing",
+            "default": false
+          },
+          "stopped": {
+            "type": "boolean",
+            "title": "Stopped",
+            "default": false
+          },
+          "done": {
+            "type": "integer",
+            "title": "Done",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "PartialInfo"
+      },
+      "ProgressOut": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "finding",
+              "ask",
+              "confirming",
+              "analyzing",
+              "stopped",
+              "done",
+              "upd",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "job_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Kind"
+          },
+          "job_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Status"
+          },
+          "find": {
+            "$ref": "#/components/schemas/FindProgress"
+          },
+          "run": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RunProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "ask": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/AskRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "ProgressOut"
+      },
+      "ProposalHandoff": {
+        "properties": {
+          "source": {
+            "$ref": "#/components/schemas/PHSource"
+          },
+          "target": {
+            "$ref": "#/components/schemas/PHTarget"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "rq_ref": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RqRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PHItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "facts": {
+            "items": {
+              "$ref": "#/components/schemas/PHFact"
+            },
+            "type": "array",
+            "title": "Facts"
+          },
+          "assets": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Assets"
+          },
+          "live_link": {
+            "type": "boolean",
+            "title": "Live Link",
+            "default": false
+          },
+          "named": {
+            "type": "boolean",
+            "title": "Named",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "target",
+          "items"
+        ],
+        "title": "ProposalHandoff"
+      },
+      "ResearchIn": {
+        "properties": {
+          "facts": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "lineup",
+                    "price",
+                    "solution",
+                    "references",
+                    "recent"
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Facts"
+          }
+        },
+        "type": "object",
+        "title": "ResearchIn"
+      },
+      "ResearchState": {
+        "properties": {
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "running": {
+            "type": "boolean",
+            "title": "Running",
+            "default": false
+          },
+          "eta_label": {
+            "type": "string",
+            "title": "Eta Label",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "ResearchState"
+      },
+      "ResultOut": {
+        "properties": {
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "default": 0
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "finding",
+              "ask",
+              "confirming",
+              "analyzing",
+              "stopped",
+              "done",
+              "upd",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "view": {
+            "type": "string",
+            "enum": [
+              "overview",
+              "table",
+              "strengths"
+            ],
+            "title": "View",
+            "default": "overview"
+          },
+          "header": {
+            "$ref": "#/components/schemas/HeaderView"
+          },
+          "competitors": {
+            "items": {
+              "$ref": "#/components/schemas/ResultRow"
+            },
+            "type": "array",
+            "title": "Competitors"
+          },
+          "strengths": {
+            "items": {
+              "$ref": "#/components/schemas/StrengthView"
+            },
+            "type": "array",
+            "title": "Strengths"
+          },
+          "cautions": {
+            "items": {
+              "$ref": "#/components/schemas/CautionView"
+            },
+            "type": "array",
+            "title": "Cautions"
+          },
+          "chips": {
+            "items": {
+              "$ref": "#/components/schemas/ChipView"
+            },
+            "type": "array",
+            "title": "Chips"
+          },
+          "footer": {
+            "$ref": "#/components/schemas/FooterView"
+          },
+          "table": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TableView"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "partial": {
+            "$ref": "#/components/schemas/PartialInfo"
+          },
+          "can_send": {
+            "type": "boolean",
+            "title": "Can Send",
+            "default": false
+          },
+          "criteria_count": {
+            "type": "integer",
+            "title": "Criteria Count",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "competitors"
+        ],
+        "title": "ResultOut"
+      },
+      "ResultRow": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter"
+          },
+          "display": {
+            "type": "string",
+            "title": "Display"
+          },
+          "real_name": {
+            "type": "string",
+            "title": "Real Name",
+            "default": ""
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind",
+            "default": ""
+          },
+          "positioning": {
+            "type": "string",
+            "title": "Positioning",
+            "default": ""
+          },
+          "up": {
+            "type": "integer",
+            "title": "Up",
+            "default": 0
+          },
+          "eq": {
+            "type": "integer",
+            "title": "Eq",
+            "default": 0
+          },
+          "dn": {
+            "type": "integer",
+            "title": "Dn",
+            "default": 0
+          },
+          "unknown": {
+            "type": "integer",
+            "title": "Unknown",
+            "default": 0
+          },
+          "sources": {
+            "type": "integer",
+            "title": "Sources",
+            "default": 0
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "done",
+              "partial",
+              "run",
+              "wait",
+              "skipped"
+            ],
+            "title": "State",
+            "default": "done"
+          },
+          "state_label": {
+            "type": "string",
+            "title": "State Label",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "letter",
+          "display"
+        ],
+        "title": "ResultRow"
+      },
+      "RfpView": {
+        "properties": {
+          "competitor_mentions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Competitor Mentions"
+          },
+          "eval_criteria": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Eval Criteria"
+          }
+        },
+        "type": "object",
+        "title": "RfpView"
+      },
+      "RoutingRule": {
+        "properties": {
+          "signal": {
+            "type": "string",
+            "title": "Signal"
+          },
+          "decision": {
+            "type": "string",
+            "title": "Decision"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "check",
+              "ask",
+              "pin"
+            ],
+            "title": "Mode"
+          },
+          "mode_label": {
+            "type": "string",
+            "title": "Mode Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "signal",
+          "decision",
+          "mode",
+          "mode_label"
+        ],
+        "title": "RoutingRule"
+      },
+      "RoutingRules": {
+        "properties": {
+          "header": {
+            "$ref": "#/components/schemas/HeaderView"
+          },
+          "legend": {
+            "items": {
+              "$ref": "#/components/schemas/ChipView"
+            },
+            "type": "array",
+            "title": "Legend"
+          },
+          "stages": {
+            "items": {
+              "$ref": "#/components/schemas/RoutingStage"
+            },
+            "type": "array",
+            "title": "Stages"
+          },
+          "ladder_title": {
+            "type": "string",
+            "title": "Ladder Title"
+          },
+          "ladder_sub": {
+            "type": "string",
+            "title": "Ladder Sub"
+          },
+          "ladder_example": {
+            "type": "string",
+            "title": "Ladder Example"
+          },
+          "ladder": {
+            "items": {
+              "$ref": "#/components/schemas/LadderRow"
+            },
+            "type": "array",
+            "title": "Ladder"
+          },
+          "asks_title": {
+            "type": "string",
+            "title": "Asks Title"
+          },
+          "asks": {
+            "items": {
+              "$ref": "#/components/schemas/AskRow"
+            },
+            "type": "array",
+            "title": "Asks"
+          },
+          "asks_footer": {
+            "type": "string",
+            "title": "Asks Footer"
+          },
+          "thresholds": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Thresholds"
+          },
+          "ask_requires_ambiguous_industry": {
+            "type": "boolean",
+            "title": "Ask Requires Ambiguous Industry",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "header",
+          "legend",
+          "stages",
+          "ladder_title",
+          "ladder_sub",
+          "ladder_example",
+          "ladder",
+          "asks_title",
+          "asks",
+          "asks_footer"
+        ],
+        "title": "RoutingRules"
+      },
+      "RoutingStage": {
+        "properties": {
+          "no": {
+            "type": "string",
+            "title": "No"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sub": {
+            "type": "string",
+            "title": "Sub"
+          },
+          "rules": {
+            "items": {
+              "$ref": "#/components/schemas/RoutingRule"
+            },
+            "type": "array",
+            "title": "Rules"
+          }
+        },
+        "type": "object",
+        "required": [
+          "no",
+          "title",
+          "sub",
+          "rules"
+        ],
+        "title": "RoutingStage"
+      },
+      "RqRef": {
+        "properties": {
+          "rq_id": {
+            "type": "string",
+            "title": "Rq Id"
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "rq_id"
+        ],
+        "title": "RqRef"
+      },
+      "RunCompetitor": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "letter": {
+            "type": "string",
+            "title": "Letter"
+          },
+          "display": {
+            "type": "string",
+            "title": "Display",
+            "default": ""
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "wait",
+              "run",
+              "done",
+              "partial"
+            ],
+            "title": "State",
+            "default": "wait"
+          },
+          "done_facts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Done Facts"
+          },
+          "current_fact": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Fact"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "CA3 문장(`경쟁사 A — 제품 · 솔루션 · 레퍼런스 완료, 가격대 찾는 중`)",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "letter"
+        ],
+        "title": "RunCompetitor"
+      },
+      "RunIn": {
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "full",
+              "changed_only",
+              "rejudge",
+              "resume"
+            ],
+            "title": "Mode",
+            "default": "full"
+          },
+          "competitor_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competitor Ids"
+          }
+        },
+        "type": "object",
+        "title": "RunIn"
+      },
+      "RunProgress": {
+        "properties": {
+          "competitors": {
+            "items": {
+              "$ref": "#/components/schemas/RunCompetitor"
+            },
+            "type": "array",
+            "title": "Competitors"
+          },
+          "criteria": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Criteria"
+          },
+          "pct": {
+            "type": "integer",
+            "title": "Pct",
+            "default": 0
+          },
+          "eta_s": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eta S"
+          },
+          "eta_label": {
+            "type": "string",
+            "title": "Eta Label",
+            "default": ""
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "full"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "RunProgress"
+      },
+      "SegmentCandidate": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "default": ""
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.0
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "SegmentCandidate"
+      },
+      "SegmentView": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "default": "GEN"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "업종 short 이름",
+            "default": "범용"
+          },
+          "full": {
+            "type": "string",
+            "title": "Full",
+            "default": ""
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence",
+            "default": 0.0
+          },
+          "ambiguous": {
+            "type": "boolean",
+            "title": "Ambiguous",
+            "default": false
+          },
+          "gap": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gap"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/SegmentCandidate"
+            },
+            "type": "array",
+            "title": "Candidates"
+          }
+        },
+        "type": "object",
+        "title": "SegmentView"
+      },
+      "ServiceInfo": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "title",
+          "version"
+        ],
+        "title": "ServiceInfo"
+      },
+      "SlotView": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "enum": [
+              "customer",
+              "industry",
+              "place",
+              "product"
+            ],
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "고객사 · 업종 · 장소 · 제품"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "found": {
+            "type": "string",
+            "enum": [
+              "found",
+              "partial",
+              "empty"
+            ],
+            "title": "Found",
+            "default": "empty"
+          },
+          "origin": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Origin",
+            "description": "input · definition · answer · inferred · mi · rfp"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "chip_text": {
+            "type": "string",
+            "title": "Chip Text",
+            "description": "`{항목} · {값}` 또는 `{항목} · 비어 있음`",
+            "default": ""
+          },
+          "partial": {
+            "type": "boolean",
+            "title": "Partial",
+            "default": false
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "업종 칸이면 업종 코드(FB …)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "SlotView"
+      },
+      "SlotsView": {
+        "properties": {
+          "customer": {
+            "$ref": "#/components/schemas/SlotView"
+          },
+          "industry": {
+            "$ref": "#/components/schemas/SlotView"
+          },
+          "place": {
+            "$ref": "#/components/schemas/SlotView"
+          },
+          "product": {
+            "$ref": "#/components/schemas/SlotView"
+          }
+        },
+        "type": "object",
+        "required": [
+          "customer",
+          "industry",
+          "place",
+          "product"
+        ],
+        "title": "SlotsView"
+      },
+      "SnapshotOut": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "pages": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pages"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "SnapshotOut"
+      },
+      "SourceAddIn": {
+        "properties": {
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id"
+          },
+          "claim_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claim Id"
+          },
+          "competitor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competitor Id"
+          },
+          "fact_key": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "lineup",
+                  "price",
+                  "solution",
+                  "references",
+                  "recent"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fact Key"
+          },
+          "classification": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "internal",
+                  "confidential",
+                  "customer",
+                  "public"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classification"
+          }
+        },
+        "type": "object",
+        "title": "SourceAddIn"
+      },
+      "SourceAddOut": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "queued"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id"
+        ],
+        "title": "SourceAddOut"
+      },
+      "SourceCard": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "n": {
+            "type": "integer",
+            "title": "N",
+            "default": 0
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "kind_label": {
+            "type": "string",
+            "title": "Kind Label"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "status_label": {
+            "type": "string",
+            "title": "Status Label",
+            "description": "`원문 일치` 또는 `확인 필요`"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "meta": {
+            "type": "string",
+            "title": "Meta",
+            "default": ""
+          },
+          "quote": {
+            "type": "string",
+            "title": "Quote",
+            "default": ""
+          },
+          "highlight": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highlight"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "default": ""
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Actions"
+          },
+          "footnote": {
+            "type": "string",
+            "title": "Footnote",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "source_id",
+          "kind",
+          "kind_label",
+          "status",
+          "status_label"
+        ],
+        "title": "SourceCard"
+      },
+      "SourceList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SourceOut"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "SourceList"
+      },
+      "SourceOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "kind_label": {
+            "type": "string",
+            "title": "Kind Label"
+          },
+          "subtype": {
+            "type": "string",
+            "title": "Subtype",
+            "default": ""
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "publisher": {
+            "type": "string",
+            "title": "Publisher",
+            "default": ""
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "published_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Published At"
+          },
+          "retrieved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Retrieved At"
+          },
+          "state": {
+            "type": "string",
+            "title": "State",
+            "default": "used"
+          },
+          "competitor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Competitor Id"
+          },
+          "fact_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fact Key"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": ""
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "kind_label"
+        ],
+        "title": "SourceOut"
+      },
+      "StoppedInfo": {
+        "properties": {
+          "done": {
+            "type": "integer",
+            "title": "Done",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "StoppedInfo"
+      },
+      "StrengthView": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note"
+          },
+          "criterion_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Criterion Ids"
+          },
+          "criterion_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Criterion Names"
+          },
+          "competitor_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Competitor Ids"
+          },
+          "competitor_letters": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Competitor Letters"
+          },
+          "claim_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Claim Ids"
+          },
+          "sources_label": {
+            "type": "string",
+            "title": "Sources Label",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "title",
+          "note"
+        ],
+        "title": "StrengthView"
+      },
+      "Suggestion": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "n": {
+            "type": "integer",
+            "title": "N",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "Suggestion"
+      },
+      "TableCell": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "verdict": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "samsung_better",
+                  "similar",
+                  "samsung_worse",
+                  "unknown"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict"
+          },
+          "claim_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Claim Ids"
+          },
+          "source_ns": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Source Ns"
+          },
+          "tbd": {
+            "type": "boolean",
+            "title": "Tbd",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "TableCell"
+      },
+      "TableColumn": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "letter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Letter"
+          },
+          "real_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Real Name"
+          },
+          "samsung": {
+            "type": "boolean",
+            "title": "Samsung",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "label"
+        ],
+        "title": "TableColumn"
+      },
+      "TableCriterion": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "importance": {
+            "type": "integer",
+            "title": "Importance",
+            "default": 3
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "TableCriterion"
+      },
+      "TableView": {
+        "properties": {
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/TableCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/components/schemas/TableColumn"
+            },
+            "type": "array",
+            "title": "Columns"
+          },
+          "cells": {
+            "items": {
+              "items": {
+                "$ref": "#/components/schemas/TableCell"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Cells"
+          }
+        },
+        "type": "object",
+        "required": [
+          "criteria",
+          "columns",
+          "cells"
+        ],
+        "title": "TableView"
+      },
+      "VersionList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VersionSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "VersionList"
+      },
+      "VersionSummary": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At",
+            "default": ""
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "stopped": {
+            "type": "boolean",
+            "title": "Stopped",
+            "default": false
+          },
+          "current": {
+            "type": "boolean",
+            "title": "Current",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "kind"
+        ],
+        "title": "VersionSummary"
+      },
+      "VsSamsung": {
+        "properties": {
+          "better": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Better"
+          },
+          "similar": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Similar"
+          },
+          "worse": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Worse"
+          },
+          "unknown": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unknown"
+          }
+        },
+        "type": "object",
+        "title": "VsSamsung"
+      }
+    }
+  }
+}

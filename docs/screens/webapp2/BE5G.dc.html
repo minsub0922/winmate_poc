@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>조감도 · 생성 중</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="birdseye" current="강남 플래그십 1층 로비" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 조감도 생성" title="강남 플래그십 1층 로비" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6">이 배치로 3D 생성 · 웜 우드 · 조감 45°</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">배치안을 3D로 만들고 있어요. 공간 구조와 제품 배치까지 끝났고, 지금 가구와 마감재를 입히는 중입니다. 다른 작업을 해도 계속 진행되고, 끝나면 알려드릴게요.</div>
+
+            <div style="display: flex; gap: 12px; align-items: stretch">
+              <!-- 진행 단계 -->
+              <a href="BE5.dc.html" style="width: 408px; flex-shrink: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; color: #121417; display: flex; flex-direction: column">
+                <div style="padding: 14px 16px 12px 16px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #e2e5ea">
+                  <div style="display: flex; align-items: center; justify-content: space-between">
+                    <div style="display: flex; align-items: center; gap: 8px">
+                      <div style="width: 26px; height: 26px; border-radius: 7px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></div>
+                      <span style="font-size: 14px; font-weight: 700">3D 조감도 생성 중</span>
+                    </div>
+                    <span style="font-size: 13px; font-weight: 700; color: #1428a0"><span style="font-family: Manrope, sans-serif">60%</span> · 약 1분 남음</span>
+                  </div>
+                  <div style="font-size: 12px; color: #596170">조감 45° · 웜 우드 · <span style="font-family: Manrope, sans-serif">3840×2160</span> · 제품 3종 · 가구 4종</div>
+                  <div style="height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="width: 60%; height: 6px; border-radius: 999px; background: #1428a0"></div></div>
+                </div>
+                <div style="padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; flex-grow: 1">
+                  <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+                    <div style="{{r.rowStyle}}">
+                      <sc-if value="{{r.isDone}}" hint-placeholder-val="{{false}}">
+                        <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                      </sc-if>
+                      <sc-if value="{{r.isRun}}" hint-placeholder-val="{{false}}">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0"><circle cx="12" cy="12" r="9" stroke="#d5d9e0" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg>
+                      </sc-if>
+                      <sc-if value="{{r.isWait}}" hint-placeholder-val="{{true}}">
+                        <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d5d9e0; box-sizing: border-box; flex-shrink: 0"></span>
+                      </sc-if>
+                      <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+                        <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                        <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.note}}</span>
+                      </div>
+                      <span style="{{r.stStyle}}">{{r.st}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+                <div style="padding: 10px 16px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #596170">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+                  <span>중지해도 끝난 단계까지는 초안으로 저장돼요</span>
+                </div>
+              </a>
+
+              <!-- 초안 미리보기 + 대기열 -->
+              <div style="width: 340px; flex-shrink: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 14px 14px 14px; display: flex; flex-direction: column; gap: 10px">
+                <div style="display: flex; align-items: center; justify-content: space-between">
+                  <span style="font-size: 13px; font-weight: 600">기다리는 동안 미리보기</span>
+                  <span style="font-size: 11px; color: #596170; background: #f0f2f5; border-radius: 4px; padding: 2px 7px">마감재 적용 전</span>
+                </div>
+                <div style="position: relative; width: 310px; height: 174px; border-radius: 8px; overflow: hidden; border: 1px solid #e2e5ea; box-sizing: border-box">
+                  <svg width="308" height="172" viewBox="0 0 308 172" style="display: block" aria-hidden="true"><rect x="0" y="0" width="308" height="172" fill="#eef0f3"/><polygon points="10.5,118.8 191.8,45.6 297.5,88.3 116.2,161.6" fill="#e3e6eb"/><line x1="25.6" y1="112.7" x2="131.3" y2="155.5" stroke="#d8dce2" stroke-width="0.4"/><line x1="40.7" y1="106.6" x2="146.4" y2="149.3" stroke="#d8dce2" stroke-width="0.4"/><line x1="55.8" y1="100.5" x2="161.6" y2="143.2" stroke="#d8dce2" stroke-width="0.4"/><line x1="70.9" y1="94.4" x2="176.7" y2="137.1" stroke="#d8dce2" stroke-width="0.4"/><line x1="86" y1="88.3" x2="191.8" y2="131" stroke="#d8dce2" stroke-width="0.4"/><line x1="101.1" y1="82.2" x2="206.9" y2="124.9" stroke="#d8dce2" stroke-width="0.4"/><line x1="116.2" y1="76.1" x2="222" y2="118.8" stroke="#d8dce2" stroke-width="0.4"/><line x1="131.3" y1="70" x2="237.1" y2="112.7" stroke="#d8dce2" stroke-width="0.4"/><line x1="146.4" y1="63.9" x2="252.2" y2="106.6" stroke="#d8dce2" stroke-width="0.4"/><line x1="161.6" y1="57.8" x2="267.3" y2="100.5" stroke="#d8dce2" stroke-width="0.4"/><line x1="176.7" y1="51.7" x2="282.4" y2="94.4" stroke="#d8dce2" stroke-width="0.4"/><line x1="25.6" y1="124.9" x2="206.9" y2="51.7" stroke="#d8dce2" stroke-width="0.4"/><line x1="40.7" y1="131" x2="222" y2="57.8" stroke="#d8dce2" stroke-width="0.4"/><line x1="55.8" y1="137.1" x2="237.1" y2="63.9" stroke="#d8dce2" stroke-width="0.4"/><line x1="70.9" y1="143.2" x2="252.2" y2="70" stroke="#d8dce2" stroke-width="0.4"/><line x1="86" y1="149.3" x2="267.3" y2="76.1" stroke="#d8dce2" stroke-width="0.4"/><line x1="101.1" y1="155.5" x2="282.4" y2="82.2" stroke="#d8dce2" stroke-width="0.4"/><polygon points="10.5,118.8 194,44.7 194,8 10.5,82.2" fill="#f3f4f6"/><polygon points="8.2,117.9 10.5,118.8 10.5,82.2 8.2,81.2" fill="#c9ced6"/><polygon points="8.2,81.2 191.8,7.1 194,8 10.5,82.2" fill="#d5d9e0"/><polygon points="297.5,88.3 299.8,87.4 299.8,50.7 297.5,51.6" fill="#dde0e5"/><polygon points="189.5,44.7 297.5,88.3 297.5,51.6 189.5,8" fill="#e9ebef"/><polygon points="189.5,8 191.8,7.1 299.8,50.7 297.5,51.6" fill="#d5d9e0"/><polygon points="88.4,80.8 114.1,70.4 114.1,54.3 88.4,64.6" fill="#b8bec8"/><polygon points="89.3,79.8 113.4,70.1 113.4,55.3 89.3,65" fill="#b8bec8"/><polygon points="236.2,57.3 250.2,63 250.2,54.2 236.2,48.5" fill="#b8bec8"/><polygon points="236.7,57 249.6,62.2 249.6,54.5 236.7,49.3" fill="#d5d9e0"/><polygon points="184.2,94.4 191.8,91.4 191.8,71.8 184.2,74.9" fill="#c9ced6"/><polygon points="176.7,91.4 184.2,94.4 184.2,74.9 176.7,71.8" fill="#d5d9e0"/><polygon points="176.7,71.8 184.2,68.8 191.8,71.8 184.2,74.9" fill="#e5e8ec"/><polygon points="184.2,74.2 190.3,71.8 190.3,54.7 184.2,57.1" fill="#c9ced6"/><polygon points="178.2,71.8 184.2,74.2 184.2,57.1 178.2,54.7" fill="#d5d9e0"/><polygon points="178.2,54.7 184.2,52.3 190.3,54.7 184.2,57.1" fill="#e5e8ec"/><polygon points="219,98.1 246.2,87.1 246.2,78.9 219,89.9" fill="#c9ced6"/><polygon points="212.9,95.6 219,98.1 219,89.9 212.9,87.5" fill="#d5d9e0"/><polygon points="212.9,87.5 240.1,76.5 246.2,78.9 219,89.9" fill="#e5e8ec"/><polygon points="219,90.5 247.7,78.9 247.7,78.5 219,90" fill="#dde0e5"/><polygon points="211.4,87.5 219,90.5 219,90 211.4,87" fill="#eef0f3"/><polygon points="211.4,87 240.1,75.4 247.7,78.5 219,90" fill="#eef0f3"/><polygon points="114,100.8 147.2,87.4 147.2,83.7 114,97.2" fill="#c9ced6"/><polygon points="110.2,99.3 114,100.8 114,97.2 110.2,95.6" fill="#d5d9e0"/><polygon points="110.2,95.6 143.4,82.2 147.2,83.7 114,97.2" fill="#e5e8ec"/><polygon points="123,104.5 156.3,91.1 156.3,87.4 123,100.8" fill="#c9ced6"/><polygon points="119.3,103 123,104.5 123,100.8 119.3,99.3" fill="#d5d9e0"/><polygon points="119.3,99.3 152.5,85.9 156.3,87.4 123,100.8" fill="#e5e8ec"/><polygon points="132.1,108.1 165.3,94.7 165.3,91 132.1,104.5" fill="#c9ced6"/><polygon points="128.3,106.6 132.1,108.1 132.1,104.5 128.3,103" fill="#d5d9e0"/><polygon points="128.3,103 161.6,89.5 165.3,91 132.1,104.5" fill="#e5e8ec"/><polygon points="131.3,115.8 138.9,112.7 138.9,93.2 131.3,96.2" fill="#c9ced6"/><polygon points="123.8,112.7 131.3,115.8 131.3,96.2 123.8,93.2" fill="#d5d9e0"/><polygon points="123.8,93.2 131.3,90.1 138.9,93.2 131.3,96.2" fill="#e5e8ec"/><polygon points="131.3,95.6 137.4,93.2 137.4,76.1 131.3,78.5" fill="#c9ced6"/><polygon points="125.3,93.2 131.3,95.6 131.3,78.5 125.3,76.1" fill="#d5d9e0"/><polygon points="125.3,76.1 131.3,73.6 137.4,76.1 131.3,78.5" fill="#e5e8ec"/><polygon points="113.2,134.1 125.3,129.2 125.3,126.1 113.2,131" fill="#c9ced6"/><polygon points="107.9,132 113.2,134.1 113.2,131 107.9,128.9" fill="#d5d9e0"/><polygon points="107.9,128.9 120,124 125.3,126.1 113.2,131" fill="#e5e8ec"/><polygon points="111.3,143.7 147.6,129.1 147.6,125.6 111.3,140.3" fill="#c9ced6"/><polygon points="104.9,141.1 111.3,143.7 111.3,140.3 104.9,137.7" fill="#d5d9e0"/><polygon points="104.9,137.7 141.2,123 147.6,125.6 111.3,140.3" fill="#e5e8ec"/><polygon points="168.5,136.8 169.7,136.3 169.7,128.5 168.5,129" fill="#b8bec8"/><polygon points="167.6,136.4 168.5,136.8 168.5,129 167.6,128.7" fill="#b8bec8"/><polygon points="167.6,128.7 168.8,128.2 169.7,128.5 168.5,129" fill="#b8bec8"/><polygon points="167.6,138.1 172.9,135.9 172.9,135.6 167.6,137.7" fill="#b8bec8"/><polygon points="164.6,136.8 167.6,138.1 167.6,137.7 164.6,136.5" fill="#b8bec8"/><polygon points="164.6,136.5 169.9,134.4 172.9,135.6 167.6,137.7" fill="#b8bec8"/><polygon points="164.4,130.7 173.8,126.9 173.8,121.1 164.4,124.9" fill="#b8bec8"/><polygon points="163.8,130.4 164.4,130.7 164.4,124.9 163.8,124.7" fill="#b8bec8"/><polygon points="163.8,124.7 173.2,120.9 173.8,121.1 164.4,124.9" fill="#b8bec8"/><polygon points="164.8,130.2 173.5,126.7 173.5,121.6 164.8,125.1" fill="#b8bec8"/><polygon points="113.2,144.5 149.5,129.8 149.5,123.1 113.2,137.8" fill="#c9ced6"/><polygon points="111.3,143.7 113.2,144.5 113.2,137.8 111.3,137" fill="#d5d9e0"/><polygon points="111.3,137 147.6,122.4 149.5,123.1 113.2,137.8" fill="#e5e8ec"/><polygon points="98.9,139.9 105.7,137.1 105.7,133.7 98.9,136.5" fill="#c9ced6"/><polygon points="91.3,136.8 98.9,139.9 98.9,136.5 91.3,133.4" fill="#d5d9e0"/><polygon points="91.3,133.4 98.1,130.7 105.7,133.7 98.9,136.5" fill="#e5e8ec"/><polygon points="153.4,142.9 154.6,142.4 154.6,134.6 153.4,135.1" fill="#b8bec8"/><polygon points="152.5,142.5 153.4,142.9 153.4,135.1 152.5,134.8" fill="#b8bec8"/><polygon points="152.5,134.8 153.7,134.3 154.6,134.6 153.4,135.1" fill="#b8bec8"/><polygon points="152.5,144.2 157.8,142 157.8,141.7 152.5,143.8" fill="#b8bec8"/><polygon points="149.5,142.9 152.5,144.2 152.5,143.8 149.5,142.6" fill="#b8bec8"/><polygon points="149.5,142.6 154.8,140.5 157.8,141.7 152.5,143.8" fill="#b8bec8"/><polygon points="149.3,136.8 158.7,133 158.7,127.2 149.3,131" fill="#b8bec8"/><polygon points="148.7,136.5 149.3,136.8 149.3,131 148.7,130.8" fill="#b8bec8"/><polygon points="148.7,130.8 158.1,127 158.7,127.2 149.3,131" fill="#b8bec8"/><polygon points="149.7,136.3 158.3,132.8 158.3,127.7 149.7,131.2" fill="#b8bec8"/><polygon points="138.3,149 139.5,148.5 139.5,140.8 138.3,141.2" fill="#b8bec8"/><polygon points="137.4,148.6 138.3,149 138.3,141.2 137.4,140.9" fill="#b8bec8"/><polygon points="137.4,140.9 138.6,140.4 139.5,140.8 138.3,141.2" fill="#b8bec8"/><polygon points="137.4,150.3 142.7,148.1 142.7,147.8 137.4,149.9" fill="#b8bec8"/><polygon points="134.4,149 137.4,150.3 137.4,149.9 134.4,148.7" fill="#b8bec8"/><polygon points="134.4,148.7 139.6,146.6 142.7,147.8 137.4,149.9" fill="#b8bec8"/><polygon points="134.2,142.9 143.6,139.1 143.6,133.3 134.2,137.1" fill="#b8bec8"/><polygon points="133.6,142.6 134.2,142.9 134.2,137.1 133.6,136.9" fill="#b8bec8"/><polygon points="133.6,136.9 143,133.1 143.6,133.3 134.2,137.1" fill="#b8bec8"/><polygon points="134.6,142.4 143.2,138.9 143.2,133.8 134.6,137.3" fill="#b8bec8"/><polygon points="114.9,162.8 117.1,161.9 117.1,159.3 114.9,160.2" fill="#dde0e5"/><polygon points="5.9,118.8 114.9,162.8 114.9,160.2 5.9,116.2" fill="#c9ced6"/><polygon points="5.9,116.2 8.2,115.3 117.1,159.3 114.9,160.2" fill="#d5d9e0"/><polygon points="117.1,161.9 300.7,87.8 300.7,85.2 117.1,159.3" fill="#e2e5ea"/><polygon points="116.2,161.6 117.1,161.9 117.1,159.3 116.2,158.9" fill="#e2e5ea"/><polygon points="116.2,158.9 299.8,84.8 300.7,85.2 117.1,159.3" fill="#e2e5ea"/><line x1="117.1" y1="159.3" x2="300.7" y2="85.2" stroke="#b8bec8" stroke-width="0.8"/></svg>
+                  <span style="position: absolute; left: 8px; top: 8px; font-size: 10.5px; font-weight: 600; color: #ffffff; background: #1428a0; border-radius: 4px; padding: 2px 7px">초안 · 조감 45°</span>
+                  <div style="position: absolute; right: 8px; bottom: 8px; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.92); border-radius: 999px; padding: 3px 9px 3px 5px; font-size: 10.5px; color: #121417">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#d5d9e0" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg>
+                    <span>가구 · 마감재 입히는 중</span>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px">
+                  <div style="font-size: 12px; font-weight: 600; color: #596170; padding: 2px 0">끝나면 이어서 만들 컷 · 대기열 2</div>
+                  <div style="display: flex; align-items: center; gap: 9px; height: 34px; padding: 0 8px; border-radius: 8px; background: #f5f6f8">
+                    <span style="width: 18px; height: 18px; border-radius: 5px; background: #ffffff; border: 1px solid #e2e5ea; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #596170; display: flex; align-items: center; justify-content: center; flex-shrink: 0">1</span>
+                    <span style="font-size: 12.5px; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">조감 45° · 야간</span>
+                    <span style="font-size: 11.5px; color: #8a91a0">대기</span>
+                    <button aria-label="대기열에서 빼기" style="width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent; color: #8a91a0; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 9px; height: 34px; padding: 0 8px; border-radius: 8px; background: #f5f6f8">
+                    <span style="width: 18px; height: 18px; border-radius: 5px; background: #ffffff; border: 1px solid #e2e5ea; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #596170; display: flex; align-items: center; justify-content: center; flex-shrink: 0">2</span>
+                    <span style="font-size: 12.5px; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">도입 전 · 조감 45° (비교용)</span>
+                    <span style="font-size: 11.5px; color: #8a91a0">대기</span>
+                    <button aria-label="대기열에서 빼기" style="width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent; color: #8a91a0; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                  </div>
+                </div>
+                <a href="BE5V.dc.html" style="display: flex; align-items: center; gap: 6px; height: 30px; font-size: 12.5px; font-weight: 600; color: #1428a0">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                  <span>시점 · 조명 컷 추가</span>
+                </a>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; padding: 10px 12px 10px 14px">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0">!</span>
+              <div style="flex-grow: 1; min-width: 0; font-size: 12.5px; line-height: 1.5; color: #3d4452"><span style="font-weight: 600; color: #121417">확인 필요</span> · 도면에 후면 벽 폭이 없어 The Wall 크기는 146" 비율로 맞췄어요.</div>
+              <a href="BE1D.dc.html" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap">벽 치수 보정</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; font-size: 13px; font-weight: 600">3D 조감도 생성 중 <span style="color: #596170; font-weight: 500">· 5 / 5 · 다른 작업을 해도 돼요, 끝나면 알려드릴게요</span></div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="dir" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">진행 중 요청</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="dir" placeholder="진행 중에도 요청을 남겨주세요 (예: 로비에 사람 실루엣 몇 명 넣어줘)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="BE0.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">작업 목록으로</a>
+          <a href="BE4.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-shrink: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="#121417"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>중지</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [단계, 내용, 상태: done · run · wait]
+    const R = [
+      ['공간 구조', '120평 · 층고 4.5m · 전면 유리창 · 기둥 2개', 'done'],
+      ['제품 배치', 'OH55C ×3 · The Wall IAB 146" · Flip Pro WA75D', 'done'],
+      ['가구 · 마감재', '라운지 소파 · 기둥 랩핑 · 관람 벤치 · 안내 데스크 · 웜 우드', 'run'],
+      ['조명 · 렌더링', '주간 자연광 · 3840×2160', 'wait'],
+      ['품질 확인', '제품 비율 · 겹침 · 로고 노출 점검', 'wait']
+    ];
+    const ST = { done: '완료', run: '진행 중', wait: '대기' };
+    const rows = R.map(([name, note, s]) => ({
+      name, note, st: ST[s],
+      isDone: s === 'done', isRun: s === 'run', isWait: s === 'wait',
+      rowStyle: 'display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 8px; border-radius: 8px;' + (s === 'run' ? ' background: #f5f7fd;' : ''),
+      stStyle: 'flex-shrink: 0; font-size: 12px; font-weight: 600;' + (s === 'run' ? ' color: #1428a0;' : s === 'done' ? ' color: #596170;' : ' color: #8a91a0;')
+    }));
+    return { steps: ['공간 입력', '배치될 제품', '가구 추천', '배치 · 인테리어 컨펌', '3D 조감도 생성'], cur: 5, rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+# 공간 조감도(BE) 가구 카탈로그 — 08-birdseye §10.4 (제안 치수 w × d × h m, draft)
+# - w · d · h = 배치 발자국(회전 전, 로컬 +y = 앞). parts = 3D 초안 덩어리(로컬 중심 기준 x · y, 바닥에서 z)
+# - anchor: window_area(창 쪽 빈 영역) · column(기둥 둘레) · faces_display(가장 큰 디스플레이 정면) ·
+#           near_display(상담형 디스플레이 앞) · entrance(주출입구 안쪽 측면) · wall(빈 벽) · free(빈 영역)
+# - zone: 수량표 가구 행 「{존 약칭 ' · '}」 · 존 이름 템플릿에 쓰는 약칭(없으면 빼고 셈)
+# - purpose: 추천 이유 줄 「{앵커 위치} · {목적}」의 목적
+items:
+  - code: lounge_sofa_set
+    name: 라운지 소파 세트
+    short: 라운지 소파
+    tiny: 소파
+    aliases: [라운지 소파, 소파 세트, 소파, 라운지, 쇼파]
+    w: 2.4
+    d: 1.9
+    h: 0.8
+    parts:
+      - {w: 2.4, d: 0.9, h: 0.8, x: 0.0, y: -0.5, kind: sofa}
+      - {w: 1.0, d: 0.6, h: 0.4, x: 0.0, y: 0.65, kind: table}
+    anchor: window_area
+    zone: 라운지
+    purpose: 외부 시선 유도
+    prompt_ko: 라운지 소파와 낮은 테이블
+
+  - code: column_wrap_frame
+    name: 기둥 랩핑 프레임
+    short: 기둥 랩핑
+    tiny: 랩핑
+    aliases: [기둥 랩핑, 랩핑 프레임, 기둥 프레임, 랩핑]
+    w: 0.8
+    d: 0.8
+    h: 0.0                    # 층고 − 0.3 (엔진이 계산)
+    wrap_margin_m: 0.1
+    anchor: column
+    purpose: 사이니지 매립
+    prompt_ko: 기둥을 감싼 디스플레이 랩핑 프레임
+
+  - code: viewing_bench
+    name: 관람 벤치
+    short: 관람 벤치
+    tiny: 벤치
+    aliases: [벤치, 관람석, 좌석, 의자, 관람 의자]
+    w: 2.4
+    d: 0.45
+    h: 0.45
+    rows: 3                   # 기본 3열(열 간격 0.9 m)
+    seats_per_m: 1.6667       # 벤치 길이 ÷ 0.6 m
+    anchor: faces_display
+    zone: 관람
+    purpose: "시청 거리 {d}m"
+    prompt_ko: 디스플레이를 향한 관람 벤치
+
+  - code: experience_counter
+    name: 체험 카운터
+    short: 체험 카운터
+    tiny: 카운터
+    aliases: [카운터, 체험대, 시연대, 상담 카운터]
+    w: 1.8
+    d: 0.7
+    h: 1.0
+    anchor: near_display
+    zone: 체험
+    purpose: 상담·시연
+    prompt_ko: 제품 체험 카운터
+
+  - code: info_desk
+    name: 안내 데스크
+    short: 안내 데스크
+    tiny: 데스크
+    aliases: [데스크, 안내데스크, 리셉션, 인포 데스크, 안내대]
+    w: 2.0
+    d: 0.8
+    h: 1.05
+    anchor: entrance
+    zone: 안내
+    purpose: 방문객 응대
+    prompt_ko: 입구 옆 안내 데스크
+
+  - code: plant
+    name: 화분
+    short: 화분
+    tiny: 화분
+    aliases: [식물, 화초, 플랜트, 나무 화분]
+    w: 0.5
+    d: 0.5
+    h: 1.2
+    anchor: free
+    purpose: 공간 연출
+    prompt_ko: 큰 실내 화분
+
+  - code: table_set
+    name: 테이블 세트
+    short: 테이블 세트
+    tiny: 테이블
+    aliases: [테이블, 원형 테이블, 휴게 테이블]
+    w: 1.2
+    d: 1.2
+    h: 0.75
+    anchor: window_area
+    zone: 휴식
+    purpose: 휴식·대화
+    prompt_ko: 테이블과 의자 세트
+
+  - code: meeting_table
+    name: 회의 테이블
+    short: 회의 테이블
+    tiny: 회의 테이블
+    aliases: [회의 탁자, 미팅 테이블, 대형 테이블]
+    w: 3.0
+    d: 1.2
+    h: 0.75
+    anchor: faces_display
+    zone: 회의
+    purpose: 회의·공유
+    prompt_ko: 화면을 향한 회의 테이블
+
+  - code: operator_desk
+    name: 운영석 책상
+    short: 운영석
+    tiny: 운영석
+    aliases: [운영석, 운영 책상, 관제석, 콘솔]
+    w: 1.6
+    d: 0.8
+    h: 0.75
+    rows: 2
+    anchor: faces_display
+    zone: 운영
+    purpose: "운영석 {rows}열"
+    prompt_ko: 상황판을 향한 운영석 책상
+
+  - code: display_shelf
+    name: 진열대
+    short: 진열대
+    tiny: 진열대
+    aliases: [선반, 진열 선반, 쇼케이스, 매대]
+    w: 1.8
+    d: 0.5
+    h: 1.5
+    anchor: wall
+    zone: 진열
+    purpose: 제품 진열
+    prompt_ko: 벽면 진열대
+
+# 사용자 가구(카탈로그에 없음) — 기본 치수 · 「· 치수 추정」
+custom_default: {w: 1.0, d: 0.6, h: 0.8}
+
+# 가구 추천 규칙(furniture:rules — LLM 이 막히거나 고르지 못할 때). 위에서부터 점수 높은 순.
+recommend_rules:
+  - {code: lounge_sofa_set,   when: window_outdoor, score: 90}
+  - {code: column_wrap_frame, when: columns,        score: 85}
+  - {code: viewing_bench,     when: large_display,  score: 80}
+  - {code: experience_counter, when: interactive_display, score: 70}
+  - {code: info_desk,         when: chip_store_lobby, score: 65}
+  - {code: operator_desk,     when: chip_control_room, score: 95}
+  - {code: meeting_table,     when: chip_meeting_office, score: 95}
+  - {code: meeting_table,     when: chip_classroom, score: 60}
+  - {code: viewing_bench,     when: chip_hospital_waiting, score: 92}
+  - {code: table_set,         when: chip_hotel_room, score: 90}
+  - {code: plant,             when: always, score: 30}
+  - {code: table_set,         when: always, score: 25}
+  - {code: display_shelf,     when: always, score: 20}
+  - {code: info_desk,         when: always, score: 15}
+  - {code: experience_counter, when: always, score: 12}

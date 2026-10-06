@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-SV-E 생활 편의 · 무인 매장 · 공간 시나리오 · 입구 · 좌석 키오스크</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">입구 · 좌석 키오스크 · 운영 모드</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 940px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">점주가 없는 심야에도, 입구는 낮과 같은 흐름으로 손님을 맞습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">① 입구 · 좌석 키오스크 — 같은 탭 · 사이니지 · 조명 · 에어컨, 낮(점주 상주)과 심야(무인)에 따라 모드만 바뀝니다</div>
+
+  <!-- ============ 두 모드 ============ -->
+  <sc-for list="{{modes}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.card}}"></div>
+    <div style="{{m.head}}">
+      <span style="{{m.iconBox}}">
+        <sc-if value="{{m.day}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+        <sc-if value="{{m.night}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg></sc-if>
+      </span>
+      <span style="font-size: 18px; line-height: 26px; font-weight: 800; letter-spacing: -0.01em">{{m.name}}</span>
+      <span style="{{m.timeS}}">{{m.time}}</span>
+    </div>
+    <div style="{{m.sub}}">{{m.who}}</div>
+    <img src="{{m.src}}" alt="{{m.alt}}" style="{{m.img}}">
+    <div style="{{m.chip}}">예시 사진 · 고객 공간으로 교체</div>
+    <sc-for list="{{m.rows}}" as="r" hint-placeholder-count="3">
+      <div style="{{r.box}}">
+        <div style="position: absolute; left: 14px; top: 0px; height: 60px; display: flex; align-items: center; font-size: 12px; font-weight: 800; color: #596170; white-space: nowrap">{{r.label}}</div>
+        <div style="position: absolute; left: 96px; top: 12px; font-size: 13.5px; line-height: 19px; font-weight: 800; color: #121417; white-space: nowrap">{{r.t}}</div>
+        <div style="position: absolute; left: 96px; top: 32px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{r.d}}</div>
+      </div>
+    </sc-for>
+    <div style="{{m.kpiBox}}">
+      <div style="{{m.kpiL}}">{{m.kl}}</div>
+      <div style="{{m.kpiV}}">{{m.kv}}</div>
+    </div>
+  </sc-for>
+
+  <!-- ============ 가운데 전환 축 ============ -->
+  <div style="position: absolute; left: 639px; top: 160px; width: 2px; height: 422px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 616px; top: 196px; width: 48px; height: 48px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 4px solid #ffffff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h14"></path><path d="M14 5l4 4-4 4"></path><path d="M20 15H6"></path><path d="M10 11l-4 4 4 4"></path></svg></div>
+  <div style="position: absolute; left: 562px; top: 252px; width: 156px; height: 72px; box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #d5d9e0; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap">
+    <span style="font-size: 10.5px; line-height: 15px; font-weight: 800; color: #8a91a0">전환 방식</span>
+    <span style="font-size: 14px; line-height: 20px; font-weight: 800; color: #1428a0">스케줄 자동 전환</span>
+    <span style="font-size: 11px; line-height: 16px; color: #596170">점주 폰으로 수동 전환도</span>
+  </div>
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="3">
+    <div style="{{k.line}}"></div>
+    <div style="{{k.hl}}"></div>
+    <div style="{{k.hr}}"></div>
+    <div style="{{k.chip}}">{{k.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 562px; top: 546px; width: 156px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 11px; line-height: 14px; color: #8a91a0; background: #ffffff; white-space: nowrap">행마다 전환을 맡는 솔루션</div>
+
+  <!-- ============ 하단 띠 ============ -->
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 46px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 617px; height: 20px; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <span style="font-size: 13.5px; font-weight: 800">기기는 그대로, 모드만 바꿉니다</span>
+    <span style="width: 1px; height: 16px; background: #d5d9e0"></span>
+    <span style="font-size: 12px; color: #3d4452">탭 키오스크 · 사이니지 · 조명 · 에어컨은 하나 — 시간표만 정하면 가맹 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">[000]</span>점 입구가 같은 시각에 바뀝니다</span>
+  </div>
+  <div style="position: absolute; right: 82px; top: 619px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치 · 시간은 예시</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>P 스터디카페 · 무인 매장 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 모드 카드 5열씩 (x 64 · 750, 폭 466), 가운데 2열 (554–726) 전환 축
+    const X = [64, 750], W = 466;
+    const RY = [348, 414, 480], RH = 60;
+    const M = [
+      { name: '낮 · 점주 상주', time: '09:00–22:00', who: '점주가 매장에 있는 시간 · 처음 온 손님 응대',
+        src: '/_blob/849690e18704dfaca851e255e44291ee', alt: '입구에 놓인 태블릿으로 출결 · 입실하는 모습 (예시 사진)', op: '50% 45%',
+        rows: [
+          ['화면', '이용권 · 요금 · 이벤트 안내', '처음 온 손님도 화면만 보고 이용 방법을 압니다'],
+          ['공기 · 설비', '입구 조명 밝게 · 냉난방 영업 운전', '문이 자주 열려도 영업시간 루틴으로 유지'],
+          ['사람 · 기기', '점주가 키오스크 옆에서 첫 등록 도움', '탭은 늘 좌석 앱만 — 다른 앱 · 설정은 잠금']
+        ], kl: '키오스크 셀프 입실 비율', kv: '[00]%' },
+      { name: '심야 · 무인', time: '22:00–09:00', who: '점주 없는 시간 · 늦게 오고 늦게 나가는 이용객',
+        src: '/_blob/f776b977d365544508b3551d3c201756', alt: '입구 홀의 세로형 사이니지 (예시 사진)', op: '50% 40%',
+        rows: [
+          ['화면', '야간 이용 수칙 · 비상 연락처', '무인 시간 안내 화면으로 자동 편성'],
+          ['공기 · 설비', '입구 조명 낮추고 출입 알림 켬', '영업 외 시간 문 열림은 점주 폰으로 알림'],
+          ['사람 · 기기', '키오스크 혼자 입실 · 퇴실 처리', '멈추면 원격으로 확인 · 앱 재시작']
+        ], kl: '심야 점주 현장 방문', kv: '[0]회 → [0]회' }
+    ];
+    const modes = M.map((m, i) => {
+      const x = X[i], night = i === 1;
+      return {
+        name: m.name, time: m.time, who: m.who, src: m.src, alt: m.alt, kl: m.kl, kv: m.kv,
+        day: !night, night,
+        card: box(x, 156, W, 436) + 'box-sizing: border-box; border-radius: 16px; ' + (night ? 'background: #f5f6f8;' : 'background: #ffffff; border: 1px solid #d5d9e0;'),
+        head: box(x + 16, 168, W - 32, 26) + 'display: flex; align-items: center; gap: 10px; ' + T,
+        iconBox: 'width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; ' + (night ? 'background: #121417;' : 'background: #eaeefb;'),
+        timeS: 'margin-left: auto; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; ' + (night ? 'background: #121417; color: #ffffff;' : 'background: #eaeefb; color: #1428a0;'),
+        sub: box(x + 16, 198, W - 32, 16) + 'font-size: 11.5px; line-height: 16px; color: #596170; ' + T,
+        img: box(x + 16, 222, W - 32, 116) + 'object-fit: cover; object-position: ' + m.op + '; border-radius: 10px;',
+        chip: A + 'left: ' + px(x + 24) + 'top: 314px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; ' + T,
+        rows: m.rows.map(([label, t, d], j) => ({
+          label, t, d,
+          box: box(x + 16, RY[j], W - 32, RH) + 'border-radius: 10px; ' + (night ? 'background: #ffffff;' : 'background: #f8f9fb;')
+        })),
+        kpiBox: box(x + 16, 546, W - 32, 36) + 'border-radius: 10px; ' + (night ? 'background: #121417;' : 'background: #1428a0;'),
+        kpiL: box(14, 0, 240, 36) + 'display: flex; align-items: center; font-size: 12.5px; font-weight: 700; color: #ffffff; ' + T,
+        kpiV: A + 'right: 14px; top: 0px; height: 36px; display: flex; align-items: center; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #ffffff; ' + T
+      };
+    });
+
+    // 행마다 ↔ — 전환을 맡는 솔루션
+    const L = ['Samsung VXT', 'SmartThings Pro', 'Knox Suite'];
+    const links = L.map((t, j) => {
+      const cy = RY[j] + RH / 2;
+      return {
+        t,
+        line: box(X[0] + W - 16 + 4, cy - 1, X[1] + 16 - (X[0] + W - 16) - 8, 2) + 'background: #1428a0;',
+        hl: A + 'left: ' + px(X[0] + W - 16 + 2) + 'top: ' + px(cy - 5) + 'width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid #1428a0;',
+        hr: A + 'left: ' + px(X[1] + 16 - 9) + 'top: ' + px(cy - 5) + 'width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1428a0;',
+        chip: A + 'left: 640px; top: ' + px(cy - 12) + 'transform: translateX(-50%); height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; ' + T
+      };
+    });
+
+    return { modes, links };
+  }
+}
+</script>
+</body>
+</html>

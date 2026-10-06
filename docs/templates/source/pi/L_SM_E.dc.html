@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SM-E 공간 사진 카드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — B 호텔 전체</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">B 호텔의 여섯 공간 — 공간마다 맡는 일이 다릅니다</div>
+
+  <!-- 3 × 2 공간 카드: 카드 368 × 234, 간격 24 · 16 → y 136–620 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px; row-gap: 16px">
+    <sc-for list="{{spaces}}" as="s" hint-placeholder-count="6">
+      <div style="height: 234px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; overflow: hidden; display: flex; flex-direction: column">
+        <div style="position: relative; height: 132px; flex-shrink: 0; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">
+          {{s.photo}}
+          <span style="position: absolute; left: 12px; top: 12px; width: 28px; height: 28px; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+        </div>
+        <div style="flex-grow: 1; box-sizing: border-box; padding: 11px 16px 11px; display: flex; flex-direction: column">
+          <div style="height: 26px; display: flex; align-items: center; gap: 8px">
+            <span style="font-size: 18px; font-weight: 800; white-space: nowrap">{{s.name}}</span>
+            <sc-if value="{{s.hasCount}}" hint-placeholder-val="{{false}}">
+              <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center">{{s.count}}</span>
+            </sc-if>
+          </div>
+          <div style="margin-top: 3px; font-size: 13.5px; line-height: 20px; color: #596170; white-space: nowrap; overflow: hidden">{{s.role}}</div>
+          <div style="flex-grow: 1"></div>
+          <div style="display: flex; gap: 6px; flex-wrap: nowrap">
+            <sc-for list="{{s.items}}" as="it" hint-placeholder-count="3">
+              <span style="height: 26px; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{it}}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 628px; font-size: 12px; line-height: 18px; color: #596170">사진은 B 호텔 현장 사진으로 교체 · 공간별 수량은 다음 시트</div>
+  <div style="position: absolute; right: 64px; top: 626px; height: 22px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #596170">
+    <span>객실</span><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: #121417">300</span><span>실 ·</span>
+    <span>공용부</span><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: #121417">5</span><span>개 공간 ·</span>
+    <span>제품</span><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: #1428a0">{{kinds}}</span><span style="color: #1428a0; font-weight: 700">종</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 객실 · 공용부 리뉴얼 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [공간, 반복 수(없으면 ''), 이 공간이 맡는 일, 제품]
+    const S = [
+      ['로비 · 프런트', '', '첫인상과 체크인 — 줄 서지 않는 도착', ['The Wall IAB', 'QM55C 안내', 'KM24C 셀프 체크인']],
+      ['객실', '×300', '가장 오래 머무는 곳 — 조용한 냉방과 TV', ['호텔 TV 55"', 'WindFree 1Way', '객실 냉장고']],
+      ['레스토랑', '', '조식 · 디너 메뉴를 시간대별로 바꿔 띄운다', ['QM43C 메뉴', 'QM55C']],
+      ['연회장', '×3', '행사마다 바뀌는 입구 안내와 발표 화면', ['QM55C 입구 안내', '대형 디스플레이']],
+      ['피트니스', '', '운동하며 보는 화면 · 바람 없이 시원하게', ['호텔 TV 43"', '360 카세트']],
+      ['BOH · 직원 공간', '', '객실 상태 · 업무 지시를 손안에서 처리', ['Galaxy Tab Active5 Pro', 'ViewFinity']]
+    ];
+    const spaces = S.map(([name, count, role, items], i) => ({
+      no: String(i + 1).padStart(2, '0'),
+      name, count, role, items,
+      hasCount: count !== '',
+      photo: '공간 사진 · ' + name
+    }));
+    // 제품 종류 수: 칩 이름의 모델(첫 단어 기준) 중복 제거
+    const models = new Set();
+    S.forEach((s) => s[3].forEach((it) => models.add(it.replace(/ (안내|메뉴|입구 안내|셀프 체크인)$/, ''))));
+    return { spaces, kinds: String(models.size) };
+  }
+}
+</script>
+</body>
+</html>

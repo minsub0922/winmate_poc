@@ -1,0 +1,47 @@
+ 
+ Market Intelligence · 레이아웃 바꾸기 · 데이터 적합도 
+ 경쟁 환경은 포지셔닝 맵으로 바꿔줘 
+ W 
+ 포지셔닝 맵(CP-B)은 공급사마다 두 축의 값이 필요하고, 빈자리를 보이려면 5곳 이상이 좋아요. 지금은 3곳이라 이렇게 할 수 있어요. 
+ {{o.k}} 
+ {{o.t}} 
+ 추천 
+ {{o.d}} 
+ 경쟁 환경 · 고를 수 있는 레이아웃 · 업종 틀엔 경쟁 장이 없어 범용 3종 
+ 필요한 데이터가 있는지로 적합도를 매겨요 
+ {{t.code}} 
+ {{t.name}} 
+ {{t.tag}} 
+ {{n.t}} 
+ {{t.fit}} 
+ 이 시트 고정 — 데이터가 바뀌어도 다시 고르지 않아요
+ 레이아웃 바꾸기 · 경쟁 환경 · 나머지 시트는 그대로 
+ 시장 · 트렌드 8종 보기 
+ 고객 비즈니스 5종 보기 
+ 레이아웃 요청 
+ 취소 
+ A로 진행 (약 40초) 
+class Component extends DCLogic {
+ renderVals() {
+ const O = [
+ ['A', '공급사 3곳 더 찾아 6곳으로 → CP-B', '사례 DB · 공개 자료에서 메뉴보드 공급사 추가 · 적합도 58% → 85%', true],
+ ['B', '3곳 그대로 CP-B', '구도는 보이지만 빈자리 메시지는 약해요 · 적합도 58%', false],
+ ['C', '비교표 CP-A 유지', '요구 기준 5개 비교는 그대로 · 적합도 96%', false]
+ ];
+ const opts = O.map(([k, t, d, rec]) => ({
+ k, t, d, rec, on: rec,
+ box: '' + (rec ? '' : '')
+ }));
+ const OK = 'M5 12l5 5L20 7';
+ const NO = 'M6 6l12 12M18 6L6 18';
+ const need = (t, ok) => ({ t, icon: ok ? OK : NO, color: ok ? '' : '' });
+ // 후보: [코드, 이름, 썸네일, 태그, 필요한 데이터, 적합도(-1 = 고를 수 없음), 상태]
+ const T = [
+ ['CP-A', '비교표', 'table', '사용 중', [need('공급사 2~5곳 · 3곳 있음', true), need('비교 기준 · 요구 5개', true)], 96, 'cur'],
+ ['CP-B', '포지셔닝 맵', 'scatter', '요청', [need('두 축 수치 · 가격대 · 관리 기능', true), need('공급사 5곳 이상 · 지금 3곳', false)], 58, 'req'],
+ ['CP-C', '점유율 + 추이', 'stack', '고를 수 없음', [need('점유율 데이터 · 없음', false), need('연도별 추이 · 없음', false)], -1, 'no']
+ ];
+ const tpls = T.map(([code, name, kind, tag, needs, fit, st]) => ({
+ code, name, kind, tag, needs, n: 3,
+ fit: fit = 85 ? '' : '') + ';',
+ fitStyle: '' + (fit 

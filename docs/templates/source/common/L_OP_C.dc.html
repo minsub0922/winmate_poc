@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OP-C 도입 전 → 후 업무</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">메뉴 교체, 5단계 [0]일에서 2단계 [0]분으로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">운영 시나리오 · 신메뉴 1회 반영 기준, 같은 칸끼리 대응</div>
+
+  <!-- 지금 -->
+  <div style="position: absolute; left: 64px; top: 164px; width: 858px; height: 200px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 186px; display: flex; align-items: center; gap: 12px">
+    <span style="height: 28px; padding: 0 12px; border-radius: 999px; background: #596170; color: #ffffff; font-size: 13px; font-weight: 800; display: flex; align-items: center">지금</span>
+    <span style="font-size: 13.5px; color: #596170">점장이 직접 · 인쇄물로 교체</span>
+  </div>
+  <sc-for list="{{before}}" as="s" hint-placeholder-count="5">
+    <div style="position: absolute; left: 0; top: 0">
+      <div style="{{s.box}}"><span style="{{s.numStyle}}">{{s.num}}</span><span style="{{s.nameStyle}}">{{s.name}}</span></div>
+      <div style="{{s.underPos}}"><span style="{{s.underStyle}}">{{s.under}}</span></div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 768px; top: 230px; width: 1px; height: 110px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 784px; top: 230px; width: 118px; height: 80px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+    <span style="font-size: 12.5px; color: #596170">총 소요</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: #121417">[00]일</span>
+  </div>
+
+  <!-- 도입 후 -->
+  <div style="position: absolute; left: 64px; top: 388px; width: 858px; height: 200px; box-sizing: border-box; border-radius: 16px; background: #ffffff; border: 1.5px solid #1428a0"></div>
+  <div style="position: absolute; left: 88px; top: 410px; display: flex; align-items: center; gap: 12px">
+    <span style="height: 28px; padding: 0 12px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 800; display: flex; align-items: center">도입 후</span>
+    <span style="font-size: 13.5px; color: #596170">본사가 MagicINFO로 · 매장 작업 없음</span>
+  </div>
+  <sc-for list="{{after}}" as="s" hint-placeholder-count="5">
+    <div style="position: absolute; left: 0; top: 0">
+      <div style="{{s.box}}"><span style="{{s.numStyle}}">{{s.num}}</span><span style="{{s.nameStyle}}">{{s.name}}</span></div>
+      <div style="{{s.underPos}}"><span style="{{s.underStyle}}">{{s.under}}</span></div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 768px; top: 454px; width: 1px; height: 110px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 784px; top: 454px; width: 118px; height: 80px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+    <span style="font-size: 12.5px; color: #596170">총 소요</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[00]분</span>
+  </div>
+
+  <!-- 단계 사이 화살표 -->
+  <sc-for list="{{chevs}}" as="c" hint-placeholder-count="8">
+    <div style="{{c.pos}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{c.color}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 절감 콜아웃 -->
+  <div style="position: absolute; left: 946px; top: 164px; width: 270px; height: 424px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 28px 24px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">절감 효과</span>
+    <span style="margin-top: 14px; font-size: 16px; font-weight: 700">매장당 연</span>
+    <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 56px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: #1428a0">[00]</span><span style="font-size: 20px; font-weight: 800; color: #1428a0">시간</span></div>
+    <span style="font-size: 16px; font-weight: 700">절감</span>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #b8c3ee; padding-top: 16px; font-size: 13.5px">
+      <div style="display: flex; justify-content: space-between"><span style="color: #596170">단계</span><span style="font-family: Manrope, sans-serif; font-weight: 800">5 → 2</span></div>
+      <div style="display: flex; justify-content: space-between"><span style="color: #596170">1회 소요</span><span style="font-family: Manrope, sans-serif; font-weight: 800">[0]일 → [0]분</span></div>
+      <div style="display: flex; justify-content: space-between"><span style="color: #596170">320개 매장</span><span style="font-family: Manrope, sans-serif; font-weight: 800">연 [0,000]시간</span></div>
+    </div>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 608px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #8a91a0">
+    <span style="width: 24px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1.5px dashed #b8bec8"></span><span>점선 = 없어지는 단계</span>
+    <span style="height: 18px; margin-left: 14px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 800; display: flex; align-items: center">자동</span><span>MagicINFO가 대신 처리</span>
+    <span style="margin-left: 14px">수치는 예시 · 데이터 연결 시 자동 반영</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const X = [88, 226, 364, 502, 640];   // 두 띠가 같은 열을 공유 → 위아래 칸이 서로 대응
+    const BW = 118, BH = 80;
+    const boxBase = 'position: absolute; width: 118px; height: 80px; box-sizing: border-box; border-radius: 10px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 4px; ';
+    const underBase = 'position: absolute; width: 118px; display: flex; justify-content: center; ';
+    // [상자, 번호 색, 이름 스타일, 아래 라벨 스타일]
+    const K = {
+      now: ['background: #ffffff; border: 1px solid #d5d9e0;', 'color: #8a91a0;', 'color: #121417;', 'font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #596170;'],
+      next: ['background: #1428a0; border: 1px solid #1428a0;', 'color: #c8d3ff;', 'color: #ffffff;', 'font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0;'],
+      gone: ['background: #ffffff; border: 1.5px dashed #b8bec8;', 'color: #b8bec8;', 'color: #8a91a0; text-decoration: line-through;', 'height: 22px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 800; display: flex; align-items: center;']
+    };
+    const band = (top, steps) => steps.map(([name, kind, under], i) => ({
+      num: '0' + (i + 1), name, under,
+      box: boxBase + 'left: ' + px(X[i]) + 'top: ' + px(top) + K[kind][0],
+      numStyle: 'font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; ' + K[kind][1],
+      nameStyle: 'font-size: 15px; font-weight: 700; white-space: nowrap; ' + K[kind][2],
+      underPos: underBase + 'left: ' + px(X[i]) + 'top: ' + px(top + BH + 10),
+      underStyle: K[kind][3]
+    }));
+    const before = band(230, [
+      ['시안 제작', 'now', '[0]일'], ['인쇄 발주', 'now', '[0]일'], ['매장 배송', 'now', '[0]일'],
+      ['현장 교체', 'now', '[0]일'], ['교체 확인', 'now', '[0]일']
+    ]);
+    const after = band(454, [
+      ['콘텐츠 등록', 'next', '[0]분'], ['예약 배포', 'next', '[0]분'], ['매장 배송', 'gone', '자동'],
+      ['현장 교체', 'gone', '자동'], ['교체 확인', 'gone', '자동']
+    ]);
+    const chev = (top, colors) => colors.map((color, i) => ({
+      color, pos: 'position: absolute; left: ' + px(X[i] + BW + 2) + 'top: ' + px(top + BH / 2 - 8) + 'width: 16px; height: 16px;'
+    }));
+    const chevs = chev(230, ['#b8bec8', '#b8bec8', '#b8bec8', '#b8bec8'])
+      .concat(chev(454, ['#1428a0', '#d5d9e0', '#d5d9e0', '#d5d9e0']));
+    return { before, after, chevs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>기존 제안서 · 기준별 분석 결과</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="새 제안서" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 1100px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="font-size: 14.5px; line-height: 1.55; padding-top: 3px; flex-grow: 1; min-width: 0"><span style="font-weight: 600">B베이커리_매장사이니지_제안_v3.pptx</span> 24장을 9가지 기준으로 분석했어요. 기준마다 결과를 확인해 주세요 — 필수 확인 3곳(논리 흐름 · 고객 맥락 · 비복제)을 확인하면 활용 방식을 추천해요.</div>
+      </div>
+
+      <div style="width: 1100px; margin-top: 12px; display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 14px">
+        <!-- 원본 미리보기 스트립 -->
+        <div style="height: 540px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
+            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">원본 24장</span>
+            <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">외부 파일 · 섹션 8개</span>
+          </div>
+          <div style="padding: 12px 14px 0 14px; display: grid; grid-template-columns: repeat(4, 56px); gap: 8px 16px; justify-content: space-between">
+            <sc-for list="{{pages}}" as="pg" hint-placeholder-count="24">
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 3px">
+                <div style="{{pg.cardStyle}}">
+                  <span style="{{pg.dotStyle}}"></span>
+                  <sc-for list="{{pg.bars}}" as="b" hint-placeholder-count="3">
+                    <span style="{{b.style}}"></span>
+                  </sc-for>
+                </div>
+                <span style="font-family: Manrope, sans-serif; font-size: 10px; font-weight: 700; color: #8a91a0; line-height: 1">{{pg.no}}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin: auto 14px 12px 14px; padding-top: 10px; border-top: 1px solid #f0f2f5; display: flex; flex-wrap: wrap; gap: 4px 10px">
+            <sc-for list="{{legend}}" as="lg" hint-placeholder-count="8">
+              <span style="height: 16px; display: flex; align-items: center; gap: 5px; font-size: 10.5px; color: #596170; white-space: nowrap"><span style="{{lg.dotStyle}}"></span>{{lg.label}} <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{lg.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 기준 9개 표 -->
+        <div style="height: 540px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+          <div style="{{headStyle}}">
+            <span></span><span>기준</span><span>결과 요약</span><span>신뢰도</span><span>상태</span><span></span><span style="text-align: center">확인</span>
+          </div>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+            <div style="{{r.rowStyle}}">
+              <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #8a91a0">{{r.no}}</span>
+              <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                <sc-if value="{{r.must}}" hint-placeholder-val="{{false}}"><span style="font-size: 10.5px; font-weight: 600; color: #8a3b00; white-space: nowrap">필수 확인</span></sc-if>
+              </div>
+              <span style="font-size: 11.5px; line-height: 1.45; color: #3d4452; min-width: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden">{{r.summary}}</span>
+              <div style="display: flex; align-items: center; gap: 6px">
+                <span aria-label="{{r.confAria}}" style="width: 46px; height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden; flex-shrink: 0"><span style="{{r.barStyle}}"></span></span>
+                <span style="{{r.pctStyle}}">{{r.conf}}%</span>
+              </div>
+              <span style="{{r.badgeStyle}}"><sc-if value="{{r.edited}}" hint-placeholder-val="{{false}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11V8a5 5 0 0 1 10 0v3 M5 11h14v10H5z"/></svg></sc-if>{{r.state}}</span>
+              <a href="{{r.href}}" style="font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 2px; justify-self: end">자세히<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+              <button role="checkbox" aria-checked="{{r.checked}}" aria-label="{{r.checkAria}}" style="{{r.checkStyle}}"><sc-if value="{{r.checked}}" hint-placeholder-val="{{true}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></button>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 12px 40px 22px 40px">
+      <div style="width: 1100px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">분석 결과 확인 <span style="color: #596170; font-weight: 500">· 9개 기준 중 {{doneCount}}개 확인 · 필수 확인 {{mustDone}} / 3 마침 · {{mustLeft}}곳 남음</span></div>
+          <div aria-label="{{progressAria}}" style="width: 160px; height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="{{progressStyle}}"></div></div>
+          <span style="flex-grow: 1"></span>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{tally}}" as="ty" hint-placeholder-count="3">
+              <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">직접 고친 결과(수정함)는 다시 분석해도 바뀌지 않아요 · 비복제 항목 3장은 이미 자동 제외됐어요</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="PR1C.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">이전</a>
+            <button style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.7 M20 4v5h-5"/></svg>다시 분석</button>
+            <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; margin-left: 4px">필수 확인을 마치면 활성화</span>
+            <a href="PRU3B.dc.html" aria-disabled="true" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap; opacity: 0.55">
+              <span>확인 완료 · 활용 방식 추천 보기</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 원본 섹션: [이름, 장수, 색]
+    const SEC = [
+      ['표지', 1, '#121417'], ['시장', 3, '#1428a0'], ['고객 과제', 3, '#8a3b00'], ['가치 제안', 4, '#0b6e4f'],
+      ['솔루션', 5, '#5b3fd1'], ['사례', 3, '#0e7490'], ['스펙', 2, '#596170'], ['견적 · 일정', 3, '#b42318']
+    ];
+    const dot = (c) => 'width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; background: ' + c + ';';
+    const legend = SEC.map(([label, n, c]) => ({ label, n, dotStyle: dot(c) }));
+    // 24쪽 → 섹션 색, 회색 카드(외부 파일) + 제목 줄 막대
+    const pages = [];
+    let p = 0;
+    SEC.forEach(([label, n, c], si) => {
+      for (let k = 0; k < n; k++) {
+        p += 1;
+        const excluded = si === 7;
+        const widths = si === 0 ? [30, 18] : [[34, 22, 14], [26, 36, 18], [40, 20, 28]][k % 3];
+        pages.push({
+          no: String(p),
+          cardStyle: 'position: relative; width: 56px; height: 32px; box-sizing: border-box; border-radius: 4px; background: #f0f2f5; border: 1px solid #e2e5ea; padding: 7px 6px 0 6px; display: flex; flex-direction: column; gap: 3px;' + (si === 0 ? ' align-items: center; justify-content: center; padding-top: 0;' : '') + (excluded ? ' opacity: 0.55;' : ''),
+          dotStyle: 'position: absolute; top: 2px; right: 2px; ' + dot(c) + ' width: 6px; height: 6px;',
+          bars: widths.map((w, bi) => ({ style: 'display: block; height: ' + (bi === 0 ? 3 : 2) + 'px; width: ' + w + 'px; border-radius: 1px; background: ' + (bi === 0 ? '#8a91a0' : '#c3c8d1') + ';' }))
+        });
+      }
+    });
+
+    // 기준 9개: [이름, 요약, 신뢰도, 상태(ok · need · edited), 필수]
+    const R = [
+      ['문서 구조', '24장 → 섹션 8개 복원 · 표지 · 목차 · 부록 없음 · 견적 3장 분리', 96, 'ok', false],
+      ['논리 흐름', '시장 변화 → 고객 과제 → 가치 → 솔루션 → 사례 → 스펙 → 견적 · \'문제 해결형\' · Why Samsung 고리 없음', 82, 'need', true],
+      ['핵심 메시지', 'KM 3개 · \'매장별 운영 부담 ↓ · 본사 통제 ↑ · 고객 체류 ↑\' · 톤 운영 효율 중심', 88, 'ok', false],
+      ['고객 · 프로젝트 맥락', 'B 베이커리 · 베이커리 프랜차이즈 180개 매장 · 요구사항 4건 → 이번 5건과 겹침 3 · 다름 2', 90, 'need', true],
+      ['제품 · 솔루션', 'QM55B ×2 · QB65B · MagicINFO 8 · 단종 1종(QM55B → QM55C) · 버전 1종(MagicINFO 9)', 93, 'edited', false],
+      ['데이터 · 수치', '시장 수치 2024 기준 3건(오래됨) · 효과 수치 4건 중 출처 없음 2건', 85, 'ok', false],
+      ['이미지 · 자산', '31개 · 삼성 공식 14 재사용 가능 · B 베이커리 매장 사진 9 사용 불가 · 출처 미상 8', 79, 'need', false],
+      ['디자인 · 템플릿', '21장 Winmate 시트 유형 매핑 · 매핑 실패 3장(견적 · 일정 · 손글씨 도식)', 74, 'need', false],
+      ['비복제 · 민감 항목', '견적 2장 · 일정 1장 · B 베이커리 매출 1건 → 자동 제외', 99, 'ok', true]
+    ];
+    const STATE = {
+      ok: ['확인됨', ' color: #1428a0; background: #eaeefb;'],
+      need: ['확인 필요', ' color: #121417; background: #ffffff; border: 1px solid #121417;'],
+      edited: ['수정함', ' color: #0b6e4f; background: #e6f4ee;']
+    };
+    const cols = 'grid-template-columns: 20px 124px minmax(0, 1fr) 86px 74px 48px 24px; gap: 0 10px;';
+    const rows = R.map(([name, summary, conf, st, must], i) => {
+      const checked = st !== 'need';
+      const low = conf < 80;
+      return {
+        no: String(i + 1), name, summary, conf, must, edited: st === 'edited', checked,
+        href: 'PRU2F.dc.html',
+        state: STATE[st][0],
+        confAria: '신뢰도 ' + conf + '%',
+        checkAria: name + ' 확인',
+        barStyle: 'display: block; height: 6px; border-radius: 999px; width: ' + conf + '%; background: ' + (low ? '#8a3b00' : '#1428a0') + ';',
+        pctStyle: 'font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; white-space: nowrap;' + (low ? ' color: #8a3b00;' : ' color: #1428a0;'),
+        badgeStyle: 'justify-self: start; height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + STATE[st][1],
+        checkStyle: 'width: 22px; height: 22px; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center; justify-self: center; padding: 0;' + (checked ? ' border: none; background: #1428a0;' : ' border: 1.5px solid #b8bec8; background: #ffffff;'),
+        rowStyle: 'display: grid; ' + cols + ' align-items: center; height: 56px; padding: 0 14px; box-sizing: border-box;' + (st === 'need' && must ? ' background: #fdf8f3;' : '') + (i < R.length - 1 ? ' border-bottom: 1px solid #f0f2f5;' : '')
+      };
+    });
+    const n = (k) => R.filter((r) => r[3] === k).length;
+    const doneCount = R.length - n('need');
+    const mustAll = R.filter((r) => r[4]);
+    const mustDone = mustAll.filter((r) => r[3] !== 'need').length;
+    const mustLeft = mustAll.length - mustDone;
+    const pct = Math.round((doneCount / R.length) * 100);
+    const tally = [['확인됨', n('ok'), STATE.ok[1]], ['확인 필요', n('need'), STATE.need[1]], ['수정함', n('edited'), STATE.edited[1]]]
+      .map(([label, c, s]) => ({ label, n: c, style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + s }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+      pages, legend, rows, tally, doneCount, mustDone, mustLeft,
+      progressAria: '확인 진행률 ' + doneCount + ' / ' + R.length,
+      progressStyle: 'width: ' + pct + '%; height: 6px; border-radius: 999px; background: #1428a0;',
+      headStyle: 'display: grid; ' + cols + ' align-items: center; height: 34px; padding: 0 14px; box-sizing: border-box; background: #fbfbfc; border-bottom: 1px solid #e2e5ea; font-size: 11.5px; color: #596170; flex-shrink: 0;'
+    };
+  }
+}
+</script>
+</body>
+</html>

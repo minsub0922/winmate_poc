@@ -1,0 +1,4017 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "winmate export",
+    "description": "내보내기 — PPTX · XLSX · DOCX · PDF · ZIP 생성, 시트 템플릿 카탈로그",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "/api/export"
+    }
+  ],
+  "paths": {
+    "/v1/info": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Info",
+        "operationId": "info",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/templates": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "summary": "List Templates",
+        "operationId": "list_templates",
+        "parameters": [
+          {
+            "name": "role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "시트 역할(쉼표로 여럿) — 예 MS,TR",
+              "title": "Role"
+            },
+            "description": "시트 역할(쉼표로 여럿) — 예 MS,TR"
+          },
+          {
+            "name": "section",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "섹션(쉼표로 여럿) — common · mi · vp · birdseye · space_products · solution · space_scenario · cases · why · spec · appendix",
+              "title": "Section"
+            },
+            "description": "섹션(쉼표로 여럿) — common · mi · vp · birdseye · space_products · solution · space_scenario · cases · why · spec · appendix"
+          },
+          {
+            "name": "industry",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "업종 코드(FB · RT · …) — 그 업종판 + 범용, 업종판이 앞",
+              "title": "Industry"
+            },
+            "description": "업종 코드(FB · RT · …) — 그 업종판 + 범용, 업종판이 앞"
+          },
+          {
+            "name": "proposal_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "standard · quickwin · solution",
+              "title": "Proposal Type"
+            },
+            "description": "standard · quickwin · solution"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "코드 · 이름 · 쓰는 때 검색",
+              "title": "Q"
+            },
+            "description": "코드 · 이름 · 쓰는 때 검색"
+          },
+          {
+            "name": "solution",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "솔루션 코드(MGI · VXT …)",
+              "title": "Solution"
+            },
+            "description": "솔루션 코드(MGI · VXT …)"
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "common · generic · industry · product · dedicated · industry_solution(쉼표로 여럿)",
+              "title": "Kind"
+            },
+            "description": "common · generic · industry · product · dedicated · industry_solution(쉼표로 여럿)"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "ready · in_production · internal",
+              "title": "Status"
+            },
+            "description": "ready · in_production · internal"
+          },
+          {
+            "name": "codes",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "코드 목록(쉼표) — 표시 코드(VP-F·3)도 된다",
+              "title": "Codes"
+            },
+            "description": "코드 목록(쉼표) — 표시 코드(VP-F·3)도 된다"
+          },
+          {
+            "name": "include_slots",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "slot_schema 포함",
+              "default": true,
+              "title": "Include Slots"
+            },
+            "description": "slot_schema 포함"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 500,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/templates/stats": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "summary": "Template Stats",
+        "operationId": "template_stats",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateStats"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/templates/{code}": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "summary": "Get Template",
+        "operationId": "get_template",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          },
+          {
+            "name": "n",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 12,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "별칭 코드(VP-F 등)를 항목 수로 고를 때",
+              "title": "N"
+            },
+            "description": "별칭 코드(VP-F 등)를 항목 수로 고를 때"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateDetail"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/templates/{code}/thumbnail.png": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "summary": "Template Thumbnail",
+        "operationId": "template_thumbnail",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          },
+          {
+            "name": "w",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1280,
+              "minimum": 60,
+              "description": "가로 px(세로는 16:9)",
+              "default": 120,
+              "title": "W"
+            },
+            "description": "가로 px(세로는 16:9)"
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^#?[0-9a-fA-F]{6}$"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "포인트 색(기본 #1428a0)",
+              "title": "Brand"
+            },
+            "description": "포인트 색(기본 #1428a0)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "썸네일 PNG(w × w·9/16)",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/exports": {
+      "post": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Create Export",
+        "operationId": "create_export",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "느린 내보내기(LibreOffice PDF · 큰 덱) — 잡으로 처리",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportAccepted"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "PDF_CONVERTER_UNAVAILABLE — LibreOffice(SOFFICE_PATH) 없음"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "List Exports",
+        "operationId": "list_exports",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          },
+          {
+            "name": "source_ref",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Ref"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/exports/{export_id}": {
+      "get": {
+        "tags": [
+          "exports"
+        ],
+        "summary": "Get Export",
+        "operationId": "get_export",
+        "parameters": [
+          {
+            "name": "export_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Export Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportRecord"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/renders": {
+      "post": {
+        "tags": [
+          "renders"
+        ],
+        "summary": "Create Render",
+        "operationId": "create_render",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RenderAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "PDF_CONVERTER_UNAVAILABLE — LibreOffice(SOFFICE_PATH) 없음"
+          }
+        }
+      }
+    },
+    "/v1/renders/{render_id}": {
+      "get": {
+        "tags": [
+          "renders"
+        ],
+        "summary": "Get Render",
+        "operationId": "get_render",
+        "parameters": [
+          {
+            "name": "render_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Render Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RenderRecord"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/masters": {
+      "get": {
+        "tags": [
+          "masters"
+        ],
+        "summary": "List Masters",
+        "operationId": "list_masters",
+        "parameters": [
+          {
+            "name": "project_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Project Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MasterList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "masters"
+        ],
+        "summary": "Create Master",
+        "operationId": "create_master",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MasterCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Master"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Box": {
+        "properties": {
+          "slot": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slot",
+            "description": "칸 이름(null 이면 장식)"
+          },
+          "x": {
+            "type": "number",
+            "title": "X",
+            "description": "16:9 슬라이드 기준 0..1"
+          },
+          "y": {
+            "type": "number",
+            "title": "Y"
+          },
+          "w": {
+            "type": "number",
+            "title": "W"
+          },
+          "h": {
+            "type": "number",
+            "title": "H"
+          },
+          "style": {
+            "type": "string",
+            "title": "Style"
+          },
+          "index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Index",
+            "description": "목록 칸의 몇 번째 항목인지"
+          },
+          "part": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part",
+            "description": "카드 항목의 필드 하나만 그리는 상자"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "style"
+        ],
+        "title": "Box"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "UPPER_SNAKE 오류 코드"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "사람이 읽는 한국어 메시지"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse"
+      },
+      "ExportAccepted": {
+        "properties": {
+          "export_id": {
+            "type": "string",
+            "title": "Export Id"
+          },
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "queued",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "export_id",
+          "job_id",
+          "status"
+        ],
+        "title": "ExportAccepted"
+      },
+      "ExportError": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ExportError"
+      },
+      "ExportFile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "mime": {
+            "type": "string",
+            "title": "Mime"
+          },
+          "size": {
+            "type": "integer",
+            "title": "Size"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "lang": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lang"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "mime",
+          "size",
+          "url"
+        ],
+        "title": "ExportFile"
+      },
+      "ExportList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ExportRecord"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "ExportList"
+      },
+      "ExportRecord": {
+        "properties": {
+          "export_id": {
+            "type": "string",
+            "title": "Export Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "done",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "format": {
+            "type": "string",
+            "title": "Format"
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mode"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "bilingual": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bilingual"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          },
+          "file": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExportFile"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/ExportFile"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ref"
+          },
+          "template_codes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Template Codes"
+          },
+          "slide_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slide Count"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExportError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Owner"
+          },
+          "confidential": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidential"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "form_fill": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FormFillReport"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "export_id",
+          "status",
+          "format"
+        ],
+        "title": "ExportRecord"
+      },
+      "ExportRequest": {
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "pptx",
+              "xlsx",
+              "docx",
+              "pdf",
+              "zip"
+            ],
+            "title": "Format"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename",
+            "description": "확장자 없이(붙어 있어도 된다). 비우면 문서 제목"
+          },
+          "document": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document",
+            "description": "pptx(·pdf 덱): {title?, cover?:{title,subtitle,customer,date,presenter,image}, footer?, design?, lang?, tbd_label?, slides:[{template_code, kind?, slots|content, notes?, sources|footnotes?:[{label,url?}], confirm?:[str], sheet_id?}]} · xlsx: {sheets:[{name, columns:[{key,label,width?,format?}], rows, freeze?, merges?, notes?, header_style?, sources?}]} · docx · pdf 보고서: {title, subtitle?, meta?, sections:[{heading, level?, paragraphs?, bullets?, numbered?, table?, images?, captions?, sources?}], page_size?: A4|Letter, orientation?} (pdf 는 {report: …} 로 감싸도 된다) · zip: {entries:[{file_id, path} | {path, text|json} | {path, format, document}]}"
+          },
+          "document_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document File Id",
+            "description": "문서 JSON 을 files 에 올렸으면 그 id(ProposalRenderDoc 등)"
+          },
+          "from_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From File Id",
+            "description": "pdf: 이 파일(PPTX · DOCX · XLSX)을 PDF 로 바꾼다 — LibreOffice 필요"
+          },
+          "design": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Design",
+            "description": "{brand_hex?, master_id?(samsung_b2b · retail_fnb · simple_white · mst_…), master_file_id?(.potx/.pptx), logo_file_id?, cover_image_file_id?, cover_template?, page_numbers?}"
+          },
+          "master_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Master Id"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ko",
+                  "en",
+                  "both",
+                  "ko_en"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language",
+            "description": "both = 한국어 + 영문"
+          },
+          "lang": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ko",
+                  "en",
+                  "both",
+                  "ko_en"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lang",
+            "description": "language 와 같다(ProposalRenderDoc)"
+          },
+          "bilingual": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "files",
+                  "slides",
+                  "inline"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bilingual",
+            "description": "language=both 일 때: files(기본, _KO · _EN 두 파일) · slides(한 덱에 KO/EN 번갈아) · inline(한 칸에 두 줄)"
+          },
+          "tbd_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "keep_marks",
+                  "move_to_notes",
+                  "keep",
+                  "notes"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tbd Mode",
+            "description": "keep_marks(기본) · move_to_notes(칸은 「—」, 문장은 발표자 노트)"
+          },
+          "tbd_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tbd Label",
+            "description": "영문 확인 필요 표시(기본 [TBD])"
+          },
+          "confidential": {
+            "type": "boolean",
+            "title": "Confidential",
+            "default": false
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Ref",
+            "description": "만든 곳(예 proposal:prp_…) — 파일 메타에 남긴다"
+          },
+          "async": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Async",
+            "description": "true 면 늘 잡(202)으로"
+          },
+          "base_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base File Id",
+            "description": "xlsx: 고객사 양식(.xlsx · .xlsm · .xltx · .xls · .ods — 옛 형식은 LibreOffice 필요) — 이 파일 사본의 칸에 값만 써 넣는다(서식 · 병합 · 수식 · 열 너비 유지). document.sheets(행 이름 × 열 머리로 맞춤) · fills(칸 하나씩) 중 하나 이상. 기밀 · project_id 는 원본을 이어받는다. 결과는 form_fill 보고"
+          },
+          "customer_template_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Template File Id",
+            "description": "base_file_id 와 같다"
+          },
+          "fills": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/FormFill"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fills",
+            "description": "base_file_id 양식에 칸 하나씩 쓰기(document 다음에 적용)"
+          },
+          "form": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FormOptions"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "base_file_id 양식 맞추기 힌트 · 규칙"
+          }
+        },
+        "type": "object",
+        "required": [
+          "format"
+        ],
+        "title": "ExportRequest"
+      },
+      "ExportResult": {
+        "properties": {
+          "export_id": {
+            "type": "string",
+            "title": "Export Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "done",
+            "title": "Status"
+          },
+          "file": {
+            "$ref": "#/components/schemas/ExportFile"
+          },
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/ExportFile"
+            },
+            "type": "array",
+            "title": "Files"
+          },
+          "template_codes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Template Codes"
+          },
+          "slide_count": {
+            "type": "integer",
+            "title": "Slide Count",
+            "default": 0
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "form_fill": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FormFillReport"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "base_file_id(고객사 양식)로 만들었을 때만"
+          }
+        },
+        "type": "object",
+        "required": [
+          "export_id",
+          "status",
+          "file",
+          "files"
+        ],
+        "title": "ExportResult"
+      },
+      "FormFill": {
+        "properties": {
+          "sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet",
+            "description": "양식 시트 이름 또는 번호(0부터). 비우면 form.sheet · 첫 보이는 시트"
+          },
+          "cell": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cell",
+            "description": "칸 주소(D7 · $D$7 · 'Sheet'!D7) — 주면 row · column 은 보지 않고, 값이 있어도 덮는다"
+          },
+          "row": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Row",
+            "description": "행 번호(1부터) 또는 행 이름(양식 라벨 글로 찾는다 — 단위 괄호 · 번호 매김 무시)"
+          },
+          "column": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Column",
+            "description": "열 번호(1부터) · 머리 글(행 위쪽에서 찾는다) · 열 글자(D). 비우면 행 이름 칸 바로 오른쪽. 행 번호 + 열 번호/글자면 값이 있어도 덮는다"
+          },
+          "value": {
+            "title": "Value",
+            "description": "쓸 값 — 글 · 숫자 · {ko, en} · {value, note?}. null · 빈 글이면 쓰지 않는다"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "셀 메모로 남길 글(예 변환 전 원래 값 · 직접 입력 표시)"
+          }
+        },
+        "type": "object",
+        "title": "FormFill",
+        "description": "고객사 양식의 한 칸 — 칸 주소(cell) 또는 행(row) · 열(column)로 찾는다."
+      },
+      "FormFillCell": {
+        "properties": {
+          "sheet": {
+            "type": "string",
+            "title": "Sheet"
+          },
+          "cell": {
+            "type": "string",
+            "title": "Cell"
+          },
+          "match": {
+            "type": "string",
+            "title": "Match",
+            "description": "exact · normalized · base · fuzzy · hint · inferred · cell · number · letter · next_to_label · appended"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "sheets[0].rows[3] · fills[2]"
+          },
+          "row_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Row Label"
+          },
+          "column_label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Column Label"
+          },
+          "row_match": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Row Match"
+          },
+          "column_match": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Column Match"
+          },
+          "redirected_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Redirected From",
+            "description": "병합 칸 안쪽 주소였으면 원래 주소(머리칸에 썼다)"
+          },
+          "replaced": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Replaced",
+            "description": "덮어쓴 원래 값"
+          },
+          "warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Warning",
+            "description": "예: 목록(드롭다운)에 없는 값"
+          },
+          "outside": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outside",
+            "description": "양식 범위 밖 칸"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "sheet",
+          "cell",
+          "match",
+          "source"
+        ],
+        "title": "FormFillCell"
+      },
+      "FormFillColumn": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          },
+          "column": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Column",
+            "description": "양식 열 글자(못 맞추면 null)"
+          },
+          "match": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Match"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "key"
+        ],
+        "title": "FormFillColumn"
+      },
+      "FormFillLoss": {
+        "properties": {
+          "part": {
+            "type": "string",
+            "title": "Part",
+            "description": "shapes · form_controls · header_footer_images · ext_validations · sparklines · …"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "base": {
+            "type": "integer",
+            "title": "Base"
+          },
+          "output": {
+            "type": "integer",
+            "title": "Output"
+          }
+        },
+        "type": "object",
+        "required": [
+          "part",
+          "name",
+          "base",
+          "output"
+        ],
+        "title": "FormFillLoss"
+      },
+      "FormFillMiss": {
+        "properties": {
+          "sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key"
+          },
+          "candidates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidates",
+            "description": "값 열 후보(열 글자 + 머리) — form.column_map 으로 고르기"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "label",
+          "source"
+        ],
+        "title": "FormFillMiss"
+      },
+      "FormFillReport": {
+        "properties": {
+          "base_file_id": {
+            "type": "string",
+            "title": "Base File Id"
+          },
+          "base_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Name"
+          },
+          "converted_from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Converted From",
+            "description": "xls · ods · xlsb 를 LibreOffice 로 .xlsx 로 바꿨으면 그 형식"
+          },
+          "filled": {
+            "type": "integer",
+            "title": "Filled",
+            "description": "값을 쓴 칸 수"
+          },
+          "sheets": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillSheet"
+            },
+            "type": "array",
+            "title": "Sheets"
+          },
+          "cells": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillCell"
+            },
+            "type": "array",
+            "title": "Cells",
+            "description": "쓴 칸(최대 300)"
+          },
+          "unmatched_rows": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillMiss"
+            },
+            "type": "array",
+            "title": "Unmatched Rows"
+          },
+          "unmatched_columns": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillMiss"
+            },
+            "type": "array",
+            "title": "Unmatched Columns"
+          },
+          "unmatched_sheets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Unmatched Sheets"
+          },
+          "skipped": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillSkip"
+            },
+            "type": "array",
+            "title": "Skipped"
+          },
+          "form_only_rows": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillRow"
+            },
+            "type": "array",
+            "title": "Form Only Rows",
+            "description": "양식에만 있고 값이 빈 행"
+          },
+          "appended_rows": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillRow"
+            },
+            "type": "array",
+            "title": "Appended Rows"
+          },
+          "appended_sheets": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Appended Sheets"
+          },
+          "lost": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillLoss"
+            },
+            "type": "array",
+            "title": "Lost",
+            "description": "openpyxl 이 다시 쓰지 못한 양식 요소(저장 전후 개수)"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "base_file_id",
+          "filled"
+        ],
+        "title": "FormFillReport",
+        "description": "고객사 양식 채우기 결과 — 쓴 칸 · 못 맞춘 행/열/시트 · 건너뛴 칸 · 양식에만 있는 행 · 유지 못 한 양식 요소."
+      },
+      "FormFillRow": {
+        "properties": {
+          "sheet": {
+            "type": "string",
+            "title": "Sheet"
+          },
+          "row": {
+            "type": "integer",
+            "title": "Row"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "sheet",
+          "row",
+          "label"
+        ],
+        "title": "FormFillRow"
+      },
+      "FormFillSheet": {
+        "properties": {
+          "sheet": {
+            "type": "string",
+            "title": "Sheet"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "문서 시트(sheets[0])"
+          },
+          "orientation": {
+            "type": "string",
+            "enum": [
+              "rows",
+              "columns"
+            ],
+            "title": "Orientation"
+          },
+          "header_row": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Header Row"
+          },
+          "label_column": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Column"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/components/schemas/FormFillColumn"
+            },
+            "type": "array",
+            "title": "Columns"
+          },
+          "rows_total": {
+            "type": "integer",
+            "title": "Rows Total",
+            "default": 0
+          },
+          "rows_matched": {
+            "type": "integer",
+            "title": "Rows Matched",
+            "default": 0
+          },
+          "cells": {
+            "type": "integer",
+            "title": "Cells",
+            "default": 0
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "sheet",
+          "source",
+          "orientation"
+        ],
+        "title": "FormFillSheet"
+      },
+      "FormFillSkip": {
+        "properties": {
+          "sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet"
+          },
+          "cell": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cell"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "description": "formula · merged · locked · not_empty · duplicate · out_of_bounds · invalid_cell · sheet_not_found · column_required"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "current": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current",
+            "description": "not_empty 일 때 칸의 지금 값"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "reason",
+          "source"
+        ],
+        "title": "FormFillSkip"
+      },
+      "FormOptions": {
+        "properties": {
+          "sheet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet",
+            "description": "첫 문서 시트 · fills 기본 시트를 쓸 양식 시트(이름 · 0부터 번호). 비우면 이름이 같은 시트 → 첫 보이는 시트"
+          },
+          "header_row": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Header Row",
+            "description": "머리 행 번호(1부터) — 비우면 문서 열 이름이 가장 많이 맞는 행(위 60행)"
+          },
+          "label_column": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Column",
+            "description": "행 이름 열(B · 2) — 비우면 이름이 가장 많이 맞는 열"
+          },
+          "label_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Key",
+            "description": "문서의 행 이름 열 key — 비우면 글이 든 첫 열"
+          },
+          "column_map": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Column Map",
+            "description": "문서 열 key → 양식 열(글자 D · 번호 4 · 머리 글)"
+          },
+          "row_map": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Row Map",
+            "description": "문서 행 이름(또는 행의 _key · row_key) → 양식 행 번호 · 양식 행 이름"
+          },
+          "orientation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "rows",
+                  "columns"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Orientation",
+            "description": "auto(기본: 문서 그대로와 돌린 것 중 칸이 많이 맞는 쪽) · rows(문서 행 = 양식 행) · columns(문서 행 = 양식 열)"
+          },
+          "overwrite": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "empty",
+                  "always"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overwrite",
+            "description": "이름으로 맞춘 칸에 값이 이미 있으면: empty(기본 — 비었거나 자리표시일 때만) · always(덮기). 수식 칸은 늘 건너뛴다"
+          },
+          "overwrite_formulas": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overwrite Formulas",
+            "description": "true 면 수식 칸도 덮는다(기본 false)"
+          },
+          "fuzzy": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fuzzy",
+            "description": "오타 수준 비슷한 이름도 맞춘다(기본 true — 0.88 이상이고 유일할 때, 보고서 match=fuzzy)"
+          },
+          "unmatched_rows": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "report",
+                  "append"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Unmatched Rows",
+            "description": "못 맞춘 문서 행: report(기본 — 보고만) · append(양식 맨 아래 「추가 항목」에 같은 서식으로 덧붙임)"
+          },
+          "extra_sheets": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "drop",
+                  "append"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extra Sheets",
+            "description": "양식과 짝이 없는 문서 시트: drop(기본 — 보고만) · append(우리 디자인 시트로 뒤에 덧붙임, 예 메모 · 출처)"
+          },
+          "highlight_marks": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Highlight Marks",
+            "description": "[확인 필요] 같은 자리표시가 든 칸을 노랗게(기본 true)"
+          }
+        },
+        "type": "object",
+        "title": "FormOptions",
+        "description": "고객사 양식 맞추기 힌트 · 규칙(모두 선택). document.sheets[i].form 으로 시트마다 덮을 수 있다."
+      },
+      "Master": {
+        "properties": {
+          "master_id": {
+            "type": "string",
+            "title": "Master Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "builtin": {
+            "type": "boolean",
+            "title": "Builtin"
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id"
+          },
+          "cover_template": {
+            "type": "string",
+            "title": "Cover Template",
+            "default": "C01"
+          },
+          "layouts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Layouts"
+          },
+          "aspect": {
+            "type": "string",
+            "title": "Aspect",
+            "default": ""
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "master_id",
+          "name",
+          "builtin"
+        ],
+        "title": "Master"
+      },
+      "MasterCreate": {
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "title": "File Id",
+            "description": ".potx · .pptx 파일 id(files)"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file_id"
+        ],
+        "title": "MasterCreate"
+      },
+      "MasterList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Master"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "MasterList"
+      },
+      "RenderAccepted": {
+        "properties": {
+          "render_id": {
+            "type": "string",
+            "title": "Render Id"
+          },
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "status": {
+            "type": "string",
+            "const": "queued",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "render_id",
+          "job_id",
+          "status"
+        ],
+        "title": "RenderAccepted"
+      },
+      "RenderPage": {
+        "properties": {
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "sheet_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet Id"
+          },
+          "file_id": {
+            "type": "string",
+            "title": "File Id"
+          },
+          "png_file_id": {
+            "type": "string",
+            "title": "Png File Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "index",
+          "file_id",
+          "png_file_id",
+          "url"
+        ],
+        "title": "RenderPage"
+      },
+      "RenderRecord": {
+        "properties": {
+          "render_id": {
+            "type": "string",
+            "title": "Render Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "done",
+              "failed"
+            ],
+            "title": "Status"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "pages": {
+            "items": {
+              "$ref": "#/components/schemas/RenderPage"
+            },
+            "type": "array",
+            "title": "Pages"
+          },
+          "source_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source File Id"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ExportError"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "render_id",
+          "status"
+        ],
+        "title": "RenderRecord"
+      },
+      "RenderRequest": {
+        "properties": {
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id",
+            "description": "PPTX(LibreOffice 필요) · PDF(바로) 파일"
+          },
+          "document": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document",
+            "description": "덱 문서(POST /exports 의 pptx 문서와 같다)"
+          },
+          "document_file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document File Id"
+          },
+          "design": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Design"
+          },
+          "master_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Master Id"
+          },
+          "language": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ko",
+                  "en",
+                  "both",
+                  "ko_en"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Language"
+          },
+          "max_slides": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 500.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Slides"
+          },
+          "sheet_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sheet Ids",
+            "description": "이 시트(slides[].sheet_id)만"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 2560.0,
+                "minimum": 320.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Width",
+            "description": "PNG 가로 px(기본 1280)"
+          },
+          "project_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Project Id"
+          },
+          "confidential": {
+            "type": "boolean",
+            "title": "Confidential",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "RenderRequest"
+      },
+      "ServiceInfo": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          },
+          "catalog_version": {
+            "type": "string",
+            "title": "Catalog Version",
+            "default": ""
+          },
+          "templates": {
+            "type": "integer",
+            "title": "Templates",
+            "default": 0
+          },
+          "pdf_converter": {
+            "type": "boolean",
+            "title": "Pdf Converter",
+            "default": false
+          },
+          "pdf_converter_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pdf Converter Reason",
+            "description": "env(SOFFICE_PATH 사용) · off · missing(경로 없음) · unset(비어 있음 — 끔)"
+          },
+          "pdf_converter_detected": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pdf Converter Detected",
+            "description": "이 서버에서 찾은 soffice 경로(쓰지 않을 때도 — SOFFICE_PATH 에 넣으면 켜진다)"
+          },
+          "features": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Features",
+            "description": "예 form_fill(xlsx 고객사 양식 채우기)"
+          },
+          "pdf_font": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pdf Font",
+            "description": "{family, resolved, ok} — fontconfig 가 덱 글꼴(Noto Sans KR)을 무엇으로 고르는지(ok=false 면 PDF 줄바꿈이 달라짐)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "title",
+          "version"
+        ],
+        "title": "ServiceInfo"
+      },
+      "Slot": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "칸 이름 — 문서 slides[].slots 의 키"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "text",
+              "bullets",
+              "number",
+              "kpi",
+              "image",
+              "table",
+              "chart",
+              "logo",
+              "caption",
+              "source",
+              "card"
+            ],
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": false
+          },
+          "max_chars": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Chars",
+            "description": "한국어 기준 글자 수(영어는 1.8배까지)"
+          },
+          "count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Count",
+            "description": "목록 칸이면 항목 수(카드 · 수치 · 이미지 n개)"
+          },
+          "image_grade": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Grade",
+            "description": "A 공간+제품 · B 솔루션 화면 · C 제품 컷 · D 도식 · E 아이콘/로고"
+          },
+          "fields": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SlotField"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fields",
+            "description": "card 칸의 항목 필드"
+          },
+          "default": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default",
+            "description": "기본값 — 글 칸은 문자열, 목록 칸(count)은 항목별 목록(예 표 머리), 숫자 칸은 숫자"
+          },
+          "default_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Default En",
+            "description": "영문 기본값(모양은 default 와 같다)"
+          },
+          "hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hint"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "type"
+        ],
+        "title": "Slot"
+      },
+      "SlotField": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          },
+          "max_chars": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Chars"
+          },
+          "image_grade": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Grade"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "type"
+        ],
+        "title": "SlotField"
+      },
+      "SlotSchema": {
+        "properties": {
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/SlotSchemaItem"
+            },
+            "type": "array",
+            "title": "Slots"
+          }
+        },
+        "type": "object",
+        "required": [
+          "slots"
+        ],
+        "title": "SlotSchema"
+      },
+      "SlotSchemaItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          },
+          "required": {
+            "type": "boolean",
+            "title": "Required",
+            "default": false
+          },
+          "box": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "number"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Box",
+            "description": "첫 상자(0..1)"
+          },
+          "boxes": {
+            "type": "integer",
+            "title": "Boxes",
+            "default": 0
+          },
+          "capacity": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Capacity",
+            "description": "{max_chars?, count?}"
+          },
+          "fields": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SlotField"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fields"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "title": "SlotSchemaItem"
+      },
+      "TemplateDetail": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "저장 코드(예 VP-F3) — 표시 코드는 display_code(VP-F·3)"
+          },
+          "display_code": {
+            "type": "string",
+            "title": "Display Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "sheet_role": {
+            "type": "string",
+            "title": "Sheet Role"
+          },
+          "role_name": {
+            "type": "string",
+            "title": "Role Name",
+            "default": ""
+          },
+          "section": {
+            "type": "string",
+            "title": "Section"
+          },
+          "section_name": {
+            "type": "string",
+            "title": "Section Name",
+            "default": ""
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "common",
+              "generic",
+              "industry",
+              "product",
+              "dedicated",
+              "industry_solution"
+            ],
+            "title": "Kind"
+          },
+          "family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry"
+          },
+          "industry_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry Code"
+          },
+          "industry_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry Name"
+          },
+          "industry_scheme": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry Scheme"
+          },
+          "solution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solution"
+          },
+          "solution_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solution Code"
+          },
+          "solution_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solution Name"
+          },
+          "variant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant"
+          },
+          "product_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Count"
+          },
+          "proposal_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Proposal Types"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "when": {
+            "type": "string",
+            "title": "When",
+            "default": ""
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "in_production",
+              "internal"
+            ],
+            "title": "Status"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base"
+          },
+          "archetype": {
+            "type": "string",
+            "title": "Archetype"
+          },
+          "thumb_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb Kind"
+          },
+          "thumb_n": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb N"
+          },
+          "thumb_url": {
+            "type": "string",
+            "title": "Thumb Url"
+          },
+          "slot_count": {
+            "type": "integer",
+            "title": "Slot Count"
+          },
+          "data_shape": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data Shape"
+          },
+          "slot_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SlotSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "params": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Params"
+          },
+          "sample_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sample Title"
+          },
+          "slots": {
+            "items": {
+              "$ref": "#/components/schemas/Slot"
+            },
+            "type": "array",
+            "title": "Slots"
+          },
+          "boxes": {
+            "items": {
+              "$ref": "#/components/schemas/Box"
+            },
+            "type": "array",
+            "title": "Boxes"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TemplateSource"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "example_slots": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Example Slots",
+            "description": "칸 값 모양 예시(자리표시 문구 — 사실 아님)"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "code",
+          "display_code",
+          "name",
+          "sheet_role",
+          "section",
+          "kind",
+          "status",
+          "archetype",
+          "thumb_url",
+          "slot_count",
+          "slots",
+          "boxes"
+        ],
+        "title": "TemplateDetail"
+      },
+      "TemplateList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/TemplateSummary"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total"
+        ],
+        "title": "TemplateList"
+      },
+      "TemplateSource": {
+        "properties": {
+          "canvas": {
+            "type": "string",
+            "title": "Canvas"
+          },
+          "board": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Board",
+            "description": "캔버스 보드 파일 — 보드가 없는(제작 중) 템플릿은 비우고 note 에 사유"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "artifact": {
+            "type": "string",
+            "title": "Artifact",
+            "default": ""
+          },
+          "version": {
+            "type": "string",
+            "title": "Version",
+            "default": ""
+          },
+          "path": {
+            "type": "string",
+            "title": "Path",
+            "default": ""
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "canvas"
+        ],
+        "title": "TemplateSource"
+      },
+      "TemplateStats": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "ready": {
+            "type": "integer",
+            "title": "Ready"
+          },
+          "industry": {
+            "type": "integer",
+            "title": "Industry"
+          },
+          "dedicated": {
+            "type": "integer",
+            "title": "Dedicated"
+          },
+          "by_role": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Role"
+          },
+          "by_section": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Section"
+          },
+          "by_kind": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Kind"
+          },
+          "by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Status"
+          },
+          "catalog_version": {
+            "type": "string",
+            "title": "Catalog Version",
+            "default": ""
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "total",
+          "ready",
+          "industry",
+          "dedicated",
+          "by_role",
+          "by_section",
+          "by_kind",
+          "by_status"
+        ],
+        "title": "TemplateStats"
+      },
+      "TemplateSummary": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "저장 코드(예 VP-F3) — 표시 코드는 display_code(VP-F·3)"
+          },
+          "display_code": {
+            "type": "string",
+            "title": "Display Code"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "sheet_role": {
+            "type": "string",
+            "title": "Sheet Role"
+          },
+          "role_name": {
+            "type": "string",
+            "title": "Role Name",
+            "default": ""
+          },
+          "section": {
+            "type": "string",
+            "title": "Section"
+          },
+          "section_name": {
+            "type": "string",
+            "title": "Section Name",
+            "default": ""
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "common",
+              "generic",
+              "industry",
+              "product",
+              "dedicated",
+              "industry_solution"
+            ],
+            "title": "Kind"
+          },
+          "family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry"
+          },
+          "industry_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry Code"
+          },
+          "industry_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry Name"
+          },
+          "industry_scheme": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry Scheme"
+          },
+          "solution": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solution"
+          },
+          "solution_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solution Code"
+          },
+          "solution_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Solution Name"
+          },
+          "variant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Variant"
+          },
+          "product_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product Count"
+          },
+          "proposal_types": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Proposal Types"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "when": {
+            "type": "string",
+            "title": "When",
+            "default": ""
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ready",
+              "in_production",
+              "internal"
+            ],
+            "title": "Status"
+          },
+          "base": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base"
+          },
+          "archetype": {
+            "type": "string",
+            "title": "Archetype"
+          },
+          "thumb_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb Kind"
+          },
+          "thumb_n": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Thumb N"
+          },
+          "thumb_url": {
+            "type": "string",
+            "title": "Thumb Url"
+          },
+          "slot_count": {
+            "type": "integer",
+            "title": "Slot Count"
+          },
+          "data_shape": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Data Shape"
+          },
+          "slot_schema": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SlotSchema"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": [
+          "code",
+          "display_code",
+          "name",
+          "sheet_role",
+          "section",
+          "kind",
+          "status",
+          "archetype",
+          "thumb_url",
+          "slot_count"
+        ],
+        "title": "TemplateSummary"
+      }
+    }
+  }
+}

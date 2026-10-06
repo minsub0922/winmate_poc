@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 · 업종 레이아웃 적용</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.65">업종을 <span style="font-weight: 600">외식 · 카페 프랜차이즈</span>로 판단했어요. 이 업종 도입사례 {{cases}}건으로 만든 업종 레이아웃을 MI · Value Props · 공간 시나리오 시트에 먼저 추천할게요. 시트 구성은 그대로 두고 템플릿만 바꿔요.</div>
+
+          <!-- 감지한 업종 · 근거 · 도입사례 기준 데이터 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: center; gap: 12px; height: 44px">
+              <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5V8z M17 9h1.5a2.5 2.5 0 0 1 0 5H17 M4 21h16"/></svg></div>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1">
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <span style="font-size: 15px; font-weight: 700; white-space: nowrap">외식 · 카페 프랜차이즈</span>
+                  <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">자동 감지</span>
+                </div>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">근거 · 고객사명 'A 커피 프랜차이즈' · RFP p.2 '커피 전문점' · 매장 메뉴보드 320곳</span>
+              </div>
+              <button aria-haspopup="listbox" aria-expanded="false" style="height: 34px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap">업종 바꾸기 · 16개<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+            </div>
+            <div style="height: 1px; background: #f0f2f5"></div>
+            <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px">
+              <sc-for list="{{stats}}" as="st" hint-placeholder-count="3">
+                <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                  <span style="font-size: 11.5px; font-weight: 600; color: #596170">{{st.title}}</span>
+                  <sc-for list="{{st.items}}" as="it" hint-placeholder-count="3">
+                    <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr) 20px; gap: 6px; align-items: center; height: 16px">
+                      <span style="font-size: 11.5px; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.label}}</span>
+                      <span style="height: 6px; border-radius: 3px; background: #f0f2f5; position: relative; overflow: hidden"><span style="{{it.barStyle}}"></span></span>
+                      <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0; text-align: right">{{it.n}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 하단 카드: 업종 레이아웃 추천 -->
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">업종 레이아웃 추천 <span style="color: #596170; font-weight: 500">· 표준 제안서 · 시트 {{appliedCount}}장에 적용 · 3 / 6</span></div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: #596170">
+            <span style="display: flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1428a0"></span>적용</span>
+            <span style="display: flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 3px; border: 1px solid #b8bec8"></span>바꿔 쓰기</span>
+            <span style="display: flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 3px; border: 1px dashed #1428a0"></span>시트 추가 시</span>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 0 18px; display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{fams}}" as="fm" hint-placeholder-count="3">
+            <div style="display: grid; grid-template-columns: 160px repeat(3, minmax(0, 1fr)); gap: 10px; align-items: stretch">
+              <div style="display: flex; flex-direction: column; gap: 3px; padding: 6px 10px; border-radius: 10px; background: #f5f6f8; min-width: 0">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
+                  <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{fm.name}}</span>
+                  <button role="switch" aria-checked="{{fm.on}}" aria-label="{{fm.switchLabel}}" style="width: 30px; height: 18px; flex-shrink: 0; border-radius: 999px; border: none; background: #1428a0; position: relative; padding: 0"><span style="position: absolute; top: 2px; right: 2px; width: 14px; height: 14px; border-radius: 50%; background: #ffffff"></span></button>
+                </div>
+                <sc-for list="{{fm.maps}}" as="mp" hint-placeholder-count="3">
+                  <span style="{{mp.style}}">{{mp.t}}</span>
+                </sc-for>
+                <span style="flex-grow: 1"></span>
+                <a href="{{fm.href}}" style="font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 3px">시트별로 바꾸기<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+              </div>
+              <sc-for list="{{fm.cards}}" as="c" hint-placeholder-count="3">
+                <button aria-pressed="{{c.applied}}" style="{{c.cardStyle}}">
+                  <div style="position: relative; width: 100%; height: 68px; display: flex; justify-content: center">
+                    <dc-import name="Thumb" kind="{{c.kind}}" n="{{c.n}}" hint-size="120px,68px"></dc-import>
+                    <span style="{{c.badgeStyle}}">{{c.badge}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 5px; width: 100%; min-width: 0">
+                    <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #121417; flex-shrink: 0">{{c.code}}</span>
+                    <span style="font-size: 11px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.name}}</span>
+                  </div>
+                </button>
+              </sc-for>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170">업종 레이아웃은 섹션 작성의 템플릿 고르기 맨 앞에도 나와요.</span>
+          <div style="display: flex; gap: 8px; flex-shrink: 0">
+            <a href="PR2.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">이전</a>
+            <a href="PR3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">기본 템플릿 유지</a>
+            <a href="PRS1.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>적용 · 섹션 작성 시작</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // data/industry_matrix.json · FB 외식 · 카페 프랜차이즈 (도입사례 23건)
+    const IND = 'FB', CASES = 23;
+    const ST = [
+      ['고객이 요구한 것 · 사례 ' + CASES + '건 중', [['디자인 조화', 18], ['고객 경험', 17], ['쾌적 · 공기질', 10]]],
+      ['쓰인 제품 · 사례 ' + CASES + '건 중', [['시스템에어컨', 11], ['LCD 사이니지', 10], ['갤럭시 탭', 5]]],
+      ['쓰인 솔루션 · 사례 ' + CASES + '건 중', [['파트너 앱 · 주문 결제', 5], ['MagicINFO', 3], ['SmartThings', 3]]]
+    ];
+    const stats = ST.map(([title, items]) => ({
+      title,
+      items: items.map(([label, n]) => ({ label, n, barStyle: 'position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: #1428a0; width: ' + Math.round((n / CASES) * 100) + '%;' }))
+    }));
+
+    // 업종 레이아웃 (SectionStep IROLE와 같은 이름 · 썸네일): 역할 → A/B/C
+    const IROLE = {
+      MI: { A: ['시장 · 트렌드', 'barline'], B: ['고객 비즈니스 · 운영 과제', 'process'], C: ['사용자 여정', 'journey'] },
+      VP: { A: ['과제 → 해법 → 효과', 'indVP'], B: ['이해관계자별 가치', 'persona'], C: ['기대 효과', 'hbars'] },
+      SS: { A: ['공간 맵', 'indMap'], B: ['대표 공간 장면', 'scenes'], C: ['하루 · 동선', 'indDay'] }
+    };
+    // [역할, 행 이름, 시트별로 바꾸기 화면, 카드 상태 {A,B,C} (on 적용 · alt 바꿔 쓰기 · add 시트 추가 시), 매핑 줄 [텍스트, 강조]]
+    const FAM = [
+      ['MI', 'Market Intelligence', 'PRS1LayoutInd.dc.html', { A: 'on', B: 'on', C: 'add' },
+        [['시장 규모 · 성장 ← A', 1], ['고객사 비즈니스 ← B', 1], ['경쟁 환경 · 기본 템플릿', 0]]],
+      ['VP', 'Value Props', 'PRS2LayoutInd.dc.html', { A: 'on', B: 'alt', C: 'add' },
+        [['가치 제안 ← A', 1], ['B · 본사 · 점주 · 손님별', 0], ['기대 효과 넣으면 ← C', 0]]],
+      ['SS', '공간 시나리오', 'PRX3LayoutInd.dc.html', { A: 'on', B: 'add', C: 'add' },
+        [['공간별 제품 · 공간 맵 ← A', 1], ['B · C는 시트 추가 시', 0], ['Solution형은 섹션 전체', 0]]]
+    ];
+    const BADGE = { on: '적용', alt: '바꿔 쓰기', add: '시트 추가 시' };
+    let appliedCount = 0;
+    const fams = FAM.map(([role, name, href, state, maps]) => ({
+      name, href, on: true, switchLabel: name + ' 업종 레이아웃 사용',
+      maps: maps.map(([t, strong]) => ({ t, style: 'font-size: 11.5px; line-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (strong ? ' color: #121417; font-weight: 600;' : ' color: #596170;') })),
+      cards: ['A', 'B', 'C'].map((v) => {
+        const st = state[v];
+        if (st === 'on') appliedCount += 1;
+        return {
+          code: role + '-' + IND + '-' + v, name: IROLE[role][v][0], kind: IROLE[role][v][1], n: 3, applied: st === 'on', badge: BADGE[st],
+          badgeStyle: 'position: absolute; right: 2px; top: 4px; height: 16px; padding: 0 5px; border-radius: 4px; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; box-sizing: border-box;' + (st === 'on' ? ' background: #1428a0; color: #ffffff;' : st === 'add' ? ' background: #ffffff; color: #1428a0; border: 1px dashed #1428a0;' : ' background: #ffffff; color: #596170; border: 1px solid #e2e5ea;'),
+          cardStyle: 'display: flex; flex-direction: column; align-items: flex-start; gap: 5px; box-sizing: border-box; min-width: 0; padding: 7px; border-radius: 10px; background: #ffffff; text-align: left;' + (st === 'on' ? ' border: 1.5px solid #1428a0; box-shadow: 0 0 0 3px rgba(20,40,160,0.1);' : st === 'add' ? ' border: 1px dashed #b8bec8;' : ' border: 1px solid #e2e5ea;')
+        };
+      })
+    }));
+    // 적용 카드 수 = 실제로 바뀌는 시트 수 (MI 2 · VP 1 · 공간 맵 1)
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 3,
+      cases: CASES, stats, fams, appliedCount
+    };
+  }
+}
+</script>
+</body>
+</html>

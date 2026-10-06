@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ZP-B 존 확대 컷</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">네 곳을 가까이서 보면</div>
+
+  <!-- 키 맵 4열: 전경 위에 확대 영역 프레임 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 368px; height: 512px; border-radius: 16px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">매장 전경 이미지</div>
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="4">
+    <div style="{{z.frame}}"></div>
+    <span style="{{z.badge}}">{{z.no}}</span>
+  </sc-for>
+  <span style="position: absolute; left: 80px; top: 612px; height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">키 맵 · 번호 = 확대 컷</span>
+
+  <!-- 확대 컷 8열: 2 × 2 -->
+  <div style="position: absolute; left: 456px; top: 136px; width: 760px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{zones}}" as="z" hint-placeholder-count="4">
+      <div style="height: 244px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; overflow: hidden; display: flex; flex-direction: column">
+        <div style="position: relative; height: 150px; flex-shrink: 0; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">
+          {{z.img}}
+          <span style="position: absolute; left: 12px; top: 12px; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{z.no}}</span>
+          <span style="position: absolute; right: 12px; top: 12px; width: 30px; height: 30px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.5-4.5"/><path d="M11 8v6"/><path d="M8 11h6"/></svg></span>
+        </div>
+        <div style="padding: 14px 18px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+            <span style="font-size: 16px; font-weight: 800">{{z.name}}</span>
+            <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center">{{z.prod}}</span>
+          </div>
+          <span style="font-size: 13.5px; line-height: 1.5; color: #596170">{{z.desc}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [이름, 제품, 설명, 키 맵 위 확대 영역 x, y, w, h (슬라이드 좌표 · 샘플)]
+    const Z = [
+      ['매장 외부', 'OH55C ×2', '3,000nit로 한낮에도 선명한 외부 메뉴', 88, 166, 148, 96],
+      ['매장 카운터', 'QM55C ×3', '세 화면을 한 장처럼 잇는 메인 메뉴보드', 258, 214, 150, 108],
+      ['대기 공간', 'QM65C ×1', '기다리는 동안 신메뉴 · 프로모션 노출', 96, 420, 166, 100],
+      ['픽업대', 'QM43C ×1', '주문 번호 호출로 픽업 혼잡 해소', 284, 470, 126, 104]
+    ];
+    const zones = Z.map(([name, prod, desc, x, y, w, h], i) => ({
+      no: i + 1, name, prod, desc,
+      img: name + ' 확대 컷',
+      frame: 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 6px; background: rgba(255,255,255,0.18)',
+      badge: 'position: absolute; left: ' + (x - 12) + 'px; top: ' + (y - 12) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center'
+    }));
+    return { zones };
+  }
+}
+</script>
+</body>
+</html>

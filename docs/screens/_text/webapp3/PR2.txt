@@ -1,0 +1,48 @@
+ 
+ B2B 제안서 2/6 — 제안서 유형 
+ A 커피 프랜차이즈 · 전국 매장 디지털 메뉴보드 전환 · 리테일/F&B · 320개 매장 
+ W 
+ 어떤 형태의 제안서로 만들까요? 유형마다 섹션 구성이 다르고, 점선으로 표시된 섹션과 섹션마다 넣을 시트는 다음 단계에서 고릅니다. 요구사항에 공간 구성과 원격 관리 솔루션이 함께 있어 표준 제안서 를 추천합니다. 
+ 제안서 유형 · 하나 선택 · 2 / 6 
+ {{t.name}} 
+ 추천 
+ {{t.desc}} 
+ {{s.no}} 
+ {{s.label}} 
+ 선택 
+ 섹션 {{t.count}} · 넣을 시트는 다음 단계에서 골라요 
+ 유형은 섹션 작성 중에도 바꿀 수 있고, 이미 작성한 섹션은 유지됩니다. 
+ 이전 
+ 다음: 시트 구성 
+class Component extends DCLogic {
+ renderVals() {
+ const T = [
+ { name: '표준 제안서', desc: '시장 분석부터 공간·제품·솔루션·스펙까지 전 과정을 담는 기본형', sheets: 19, href: 'PR3.dc.html', rec: true,
+ secs: [['MI', 1], ['Value Props', 0], ['조감도', 0], ['공간별 제품', 0], ['솔루션 제안', 1], ['유관 사례', 0], ['Why Samsung', 0], ['제품 스펙', 0]] },
+ { name: '퀵윈(제품) 제안서', desc: '제품 중심으로 빠르게 결정을 끌어내는 간결형', sheets: 12, href: 'PR3Quick.dc.html', rec: false,
+ secs: [['Value Props', 0], ['공간별 제품', 0], ['솔루션 제안', 1], ['유관 사례', 0], ['제품 스펙', 0]] },
+ { name: 'Solution형 제안서', desc: '대규모 MI와 공간별 가치 제공 시나리오로 설득하는 솔루션 중심형', sheets: 15, href: 'PR3Solution.dc.html', rec: false,
+ secs: [['대규모 MI', 0], ['Value Props', 1], ['공간별 가치 제공 시나리오', 0], ['유관 사례', 0], ['Why Samsung', 0]] }
+ ];
+ const types = T.map((t) => ({
+ name: t.name, desc: t.desc, sheets: t.sheets, href: t.href, rec: t.rec, count: t.secs.length,
+ cardStyle: '' + (t.rec ? '' : ''),
+ secs: t.secs.map(([label, opt], i) => ({
+ no: i + 1, label, opt: !!opt,
+ style: '' + (opt ? '' : '' + (t.rec ? '' : '') + '')
+ }))
+ }));
+ // 딸깍을 유형 선택 전에 누르면: 유형부터 추론
+ const planRows = [
+ { label: '제안서 유형', note: '표준 제안서 (요구사항 기반 추천)' },
+ { label: '시트 구성', note: '8섹션 · 요구사항 기반 추천 시트' },
+ { label: '섹션 작성', note: '연결된 작업 5건 + 추론 · 시트마다 템플릿 자동 추천' },
+ { label: '디자인 템플릿', note: '삼성 B2B 표준 (기본값)' },
+ { label: 'PPTX 생성', note: '표지 · 목차 포함' }
+ ];
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 2, types,
+ oneClickOpen: !!this.props.oneClickOpen, planConfirmed: ['고객 · 프로젝트'], planRows
+ };
+ }
+}

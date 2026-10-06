@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>C08 표지 D · 이미지 3컷 콜라주</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <!-- 왼쪽 5열: 표지 문구 -->
+  <div style="position: absolute; left: 64px; top: 64px; width: 88px; height: 26px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8a91a0">고객사 로고</div>
+  <div style="position: absolute; left: 64px; top: 236px; width: 32px; height: 4px; background: #1428a0"></div>
+  <div style="position: absolute; left: 64px; top: 256px; font-size: 14px; font-weight: 700; letter-spacing: 0.08em; color: #1428a0">B2B PROPOSAL</div>
+  <div style="position: absolute; left: 64px; top: 286px; width: 484px; font-size: 46px; font-weight: 800; line-height: 1.24; letter-spacing: -0.03em; white-space: nowrap">주문부터 픽업까지,<br>매장의 화면을 하나로</div>
+  <div style="position: absolute; left: 64px; top: 410px; width: 484px; font-size: 18px; line-height: 1.5; color: #596170">A 커피 프랜차이즈 매장 디지털 전환 제안</div>
+  <div style="position: absolute; left: 64px; top: 458px; width: 484px; display: flex; flex-wrap: wrap; gap: 6px">
+    <sc-for list="{{scope}}" as="s" hint-placeholder-count="3">
+      <span style="height: 26px; padding: 0 11px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 64px; top: 620px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #596170">
+    <span style="font-weight: 700; color: #121417">[제안 부서명]</span>
+    <span style="font-family: Manrope, sans-serif">2026. 10</span>
+  </div>
+  <div style="position: absolute; left: 438px; top: 630px; width: 110px; height: 30px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #8a91a0">제안사 로고</div>
+
+  <!-- 오른쪽: 비대칭 3컷 콜라주 (공간 + 제품 · 사람 · 제품) -->
+  <div style="position: absolute; left: 596px; top: 24px; width: 344px; height: 624px">
+    <dc-import name="Img" pid="life.km24c.bakery" w="344" h="624" radius="14" pos="66% 50%" credit="bl" hint-size="344px,624px"></dc-import>
+  </div>
+  <div style="position: absolute; left: 954px; top: 24px; width: 302px; height: 352px">
+    <dc-import name="Img" pid="life.window" w="302" h="352" radius="14" pos="61% 50%" credit="br" hint-size="302px,352px"></dc-import>
+  </div>
+  <div style="position: absolute; left: 954px; top: 390px; width: 302px; height: 258px">
+    <dc-import name="Img" pid="qm55c.persp" w="302" h="258" radius="14" bg="soft" credit="br" hint-size="302px,258px"></dc-import>
+  </div>
+  <sc-for list="{{cuts}}" as="c" hint-placeholder-count="3">
+    <span style="{{c.badge}}">{{c.no}}</span>
+  </sc-for>
+
+  <!-- 3컷의 의미 -->
+  <div style="position: absolute; left: 596px; top: 664px; width: 660px; display: flex; align-items: center; gap: 20px; font-size: 12px; color: #596170; white-space: nowrap">
+    <sc-for list="{{cuts}}" as="c" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{c.no}}</span><span style="font-weight: 700; color: #121417">{{c.kind}}</span><span>{{c.desc}}</span></span>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 콜라주 3컷 — [번호 배지 위치 x, y (슬라이드 좌표), 의미, 설명]
+    const C = [
+      [608, 36, '공간', '카운터 위 셀프 주문'],
+      [966, 36, '사람', '쇼윈도 앞에서 멈추는 손님'],
+      [966, 402, '제품', '스마트 사이니지 QM55C']
+    ];
+    const cuts = C.map(([x, y, kind, desc], i) => ({
+      no: String(i + 1).padStart(2, '0'), kind, desc,
+      badge: 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: 30px; height: 30px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center'
+    }));
+    return {
+      scope: ['디지털 메뉴보드', '셀프 주문 키오스크', '쇼윈도 사이니지'],
+      cuts
+    };
+  }
+}
+</script>
+</body>
+</html>

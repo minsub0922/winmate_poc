@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-1·Z 한 공간 · 존 분할 (플래그십 스토어 1층 × 존 4)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 1곳 · 존 4개 · 솔루션 4개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">M 플래그십 스토어 1층, 네 존마다 다른 조합이 손님을 맞습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">큰 공간 하나를 구역으로 — 쇼윈도부터 계산대까지 존마다 솔루션 · 제품 · 가치</div>
+
+  <!-- ============ 왼쪽: 매장 평면 ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 662px; height: 488px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 174px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">M 플래그십 스토어 1층 · 평면 예시</span><span style="font-size: 11.5px; color: #8a91a0">번호 = 오른쪽 존 · 실제 매장 도면으로 교체</span></div>
+  <div style="position: absolute; right: 582px; top: 174px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; color: #596170; display: flex; align-items: center; white-space: nowrap">1층 · <span style="font-family: Manrope, sans-serif; font-weight: 800; margin-left: 3px">[000]</span>㎡</div>
+
+  <!-- 외벽 -->
+  <div style="position: absolute; left: 92px; top: 208px; width: 606px; height: 384px; box-sizing: border-box; border: 3px solid #121417; border-radius: 4px; background: #ffffff"></div>
+
+  <!-- 존 -->
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="5">
+    <div style="{{z.box}}"></div>
+  </sc-for>
+  <sc-for list="{{zlabels}}" as="z" hint-placeholder-count="4">
+    <div style="{{z.pos}}">
+      <span style="{{z.badge}}">{{z.n}}</span>
+      <span style="font-size: 13.5px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{z.name}}</span>
+    </div>
+    <div style="{{z.solPos}}">{{z.sol}}</div>
+  </sc-for>
+
+  <!-- 기기 -->
+  <sc-for list="{{devs}}" as="d" hint-placeholder-count="14">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+  <sc-for list="{{caps}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.style}}">{{c.t}}</div>
+  </sc-for>
+  <sc-for list="{{phones}}" as="p" hint-placeholder-count="3">
+    <svg style="{{p.style}}" width="16" height="22" viewBox="0 0 16 22" fill="none" stroke="#121417" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="1.5" width="12" height="19" rx="2.5"></rect><path d="M6.5 17.5h3"></path></svg>
+  </sc-for>
+
+  <!-- 입구 -->
+  <div style="position: absolute; left: 370px; top: 588px; width: 60px; height: 5px; background: #ffffff"></div>
+  <div style="position: absolute; left: 366px; top: 584px; width: 4px; height: 12px; background: #121417"></div>
+  <div style="position: absolute; left: 430px; top: 584px; width: 4px; height: 12px; background: #121417"></div>
+  <svg style="position: absolute; left: 388px; top: 600px" width="24" height="32" viewBox="0 0 24 32" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 30V4M4 12l8-8 8 8"></path></svg>
+  <div style="position: absolute; left: 420px; top: 606px; font-size: 12px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">입구</div>
+  <div style="position: absolute; left: 92px; top: 606px; font-size: 11px; line-height: 18px; color: #8a91a0; white-space: nowrap">거리 쪽 · 정면</div>
+
+  <!-- ============ 오른쪽: 존별 조합 ============ -->
+  <div style="position: absolute; left: 750px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">존별 조합</span><span style="font-size: 11.5px; color: #8a91a0">존 · 솔루션 · 제품 · 가치</span></div>
+  <div style="position: absolute; right: 64px; top: 163px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+  <div style="position: absolute; left: 750px; top: 184px; width: 466px; height: 2px; background: #121417"></div>
+
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.badge}}">{{r.n}}</div>
+    <div style="{{r.head}}"><span style="font-size: 15px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em">{{r.name}}</span><span style="{{r.chip}}">{{r.sol}}</span></div>
+    <div style="{{r.prodS}}">{{r.prod}}</div>
+    <div style="{{r.doS}}">{{r.does}}</div>
+    <div style="{{r.kpiS}}">{{r.kpi}}</div>
+    <div style="{{r.kvS}}">{{r.kv}}</div>
+    <div style="{{r.line}}"></div>
+  </sc-for>
+
+  <!-- 존 × 솔루션 점 매트릭스 -->
+  <div style="position: absolute; left: 750px; top: 520px; width: 466px; height: 128px; border-radius: 12px; background: #f8f9fb"></div>
+  <div style="position: absolute; left: 764px; top: 530px; font-size: 12px; line-height: 16px; font-weight: 800; white-space: nowrap">존 × 솔루션</div>
+  <div style="position: absolute; left: 764px; top: 548px; width: 438px; height: 1px; background: #e2e5ea"></div>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.style}}">{{c.t}}</div>
+  </sc-for>
+  <sc-for list="{{mrows}}" as="m" hint-placeholder-count="4">
+    <div style="{{m.pos}}"><span style="{{m.badge}}">{{m.n}}</span><span>{{m.name}}</span></div>
+    <sc-for list="{{m.cells}}" as="c" hint-placeholder-count="4">
+      <div style="{{c.style}}"></div>
+    </sc-for>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>M 패션 · 플래그십 스토어 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 솔루션 구분: ① 채움 블루 ② 채움 잉크 ③ 미드 블루 ④ 흰 바탕 + 블루 테두리
+    const SOL = [
+      { name: 'MagicINFO', bg: '#1428a0', fg: '#ffffff', bd: '#1428a0' },
+      { name: 'Samsung VXT', bg: '#121417', fg: '#ffffff', bd: '#121417' },
+      { name: 'SmartThings Pro', bg: '#6f82d6', fg: '#121417', bd: '#6f82d6' },
+      { name: 'Knox Suite', bg: '#ffffff', fg: '#1428a0', bd: '#1428a0' }
+    ];
+    const badge = (s, d, fs) => 'width: ' + px(d) + 'height: ' + px(d) + 'flex-shrink: 0; box-sizing: border-box; border-radius: 50%; background: ' + s.bg + '; color: ' + s.fg + '; border: 1.5px solid ' + s.bd + '; font-family: Manrope, sans-serif; font-size: ' + px(fs) + 'font-weight: 800; display: flex; align-items: center; justify-content: center;';
+
+    // 평면 존 (외벽 안쪽 95–695 × 211–589)
+    const ZB = [
+      'background: #eaeefb; border: 2px solid #1428a0;',
+      'background: #ffffff; border: 2px dashed #121417;',
+      'background: #ffffff; border: 2px solid #6f82d6;',
+      'background: #ffffff; border: 2px dotted #1428a0;'
+    ];
+    const zb = (x, y, w, h, k) => ({ box: box(x, y, w, h) + 'box-sizing: border-box; border-radius: 8px; ' + ZB[k] });
+    const zones = [zb(107, 508, 253, 70, 0), zb(440, 508, 243, 70, 0), zb(107, 222, 381, 274, 1), zb(500, 222, 183, 130, 2), zb(500, 364, 183, 132, 3)];
+    const ZL = [[117, 515, '쇼윈도'], [117, 230, '체험 존'], [510, 230, '피팅룸'], [510, 372, '계산대']];
+    const zlabels = ZL.map(([x, y, name], i) => ({
+      n: i + 1, name, sol: SOL[i].name,
+      pos: A + 'left: ' + px(x) + 'top: ' + px(y) + 'height: 22px; display: flex; align-items: center; gap: 8px; ' + T,
+      badge: badge(SOL[i], 22, 11),
+      solPos: A + 'left: ' + px(x + 30) + 'top: ' + px(y + 23) + 'font-size: 11px; line-height: 15px; color: #596170; ' + T
+    }));
+
+    // 기기 도형
+    const R = (x, y, w, h, css) => ({ style: box(x, y, w, h) + css });
+    const DARK = 'background: #121417; border-radius: 2px;';
+    const TBL = 'background: #e2e5ea; border-radius: 8px;';
+    const BOOTH = 'box-sizing: border-box; border: 1.5px solid #6f82d6; border-radius: 4px; background: #f8f9fb;';
+    const LAMP = 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #6f82d6; background: #eaeefb;';
+    const devs = [
+      R(123, 564, 221, 7, DARK), R(456, 564, 211, 7, DARK),             // 윈도 디스플레이
+      R(236, 238, 236, 10, DARK),                                        // LED 사이니지 벽
+      R(176, 312, 104, 46, TBL), R(310, 312, 104, 46, TBL),              // 진열 테이블
+      R(136, 414, 132, 6, 'background: #d5d9e0; border-radius: 3px;'), R(136, 438, 132, 6, 'background: #d5d9e0; border-radius: 3px;'),
+      R(376, 404, 60, 34, DARK + 'border-radius: 4px;'), R(403, 438, 6, 10, 'background: #596170;'),
+      R(512, 272, 47, 52, BOOTH), R(569, 272, 47, 52, BOOTH), R(626, 272, 47, 52, BOOTH),
+      R(530, 284, 11, 11, LAMP), R(587, 284, 11, 11, LAMP), R(644, 284, 11, 11, LAMP),
+      R(522, 422, 140, 14, 'background: #e2e5ea; border-radius: 3px;')
+    ];
+    const cap = (x, y, w, t, extra) => ({ t, style: box(x, y, w, 14) + 'font-size: 10.5px; line-height: 14px; color: #596170; text-align: center; ' + T + (extra || '') });
+    const caps = [
+      cap(440, 532, 243, '① 쇼윈도 · 윈도 디스플레이 (고휘도)'),
+      cap(236, 252, 236, 'LED 사이니지 · 시즌 룩북'),
+      cap(176, 328, 104, '진열 테이블', 'color: #8a91a0;'), cap(310, 328, 104, '진열 테이블', 'color: #8a91a0;'),
+      cap(136, 452, 132, '행거'),
+      cap(346, 454, 120, '인터랙티브 디스플레이'),
+      cap(500, 330, 183, '조명 모드 · 재실 센서'),
+      cap(500, 474, 183, '직원 갤럭시 · 모바일 POS')
+    ];
+    const phones = [550, 584, 618].map((x) => ({ style: A + 'left: ' + px(x) + 'top: 444px;' }));
+
+    // 오른쪽 존 리스트
+    const D = [
+      ['쇼윈도', '윈도 디스플레이 (고휘도) ×[0]', '시간대별 쇼윈도 영상 편성 · 원격 관리', '매장 유입', '[00]% ↑'],
+      ['체험 존', 'LED 사이니지 · 인터랙티브 디스플레이', '시즌 룩북 콘텐츠를 웹에서 바로 교체', '체류 시간', '[0]분 ↑'],
+      ['피팅룸', '조명 · 재실 센서', '피팅 조명 모드 · 재실 감지로 자동 전환', '피팅 후 구매 전환', '[00]% ↑'],
+      ['계산대 · 모바일 POS', '갤럭시 스마트폰 (직원용) ×[00]', '재고 조회 · 결제 앱 일괄 설정 · 관리', '계산 대기', '[0]분 ↓']
+    ];
+    const Y0 = 188, RH = 80;
+    const rows = D.map(([name, prod, does, kpi, kv], i) => {
+      const y = Y0 + i * RH, s = SOL[i];
+      return {
+        n: i + 1, name, prod, does, kpi, kv, sol: s.name,
+        badge: box(750, y + 14, 24, 24) + badge(s, 24, 12),
+        head: A + 'left: 784px; top: ' + px(y + 14) + 'height: 24px; display: flex; align-items: center; gap: 10px; ' + T,
+        chip: 'height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: ' + s.bg + '; color: ' + s.fg + '; border: 1.5px solid ' + s.bd + '; font-size: 11.5px; font-weight: 800; display: flex; align-items: center;',
+        prodS: box(784, y + 43, 300, 18) + 'font-size: 12.5px; line-height: 18px; font-weight: 500; color: #121417; ' + T,
+        doS: box(784, y + 61, 300, 16) + 'font-size: 11.5px; line-height: 16px; color: #596170; ' + T,
+        kpiS: A + 'right: 64px; top: ' + px(y + 16) + 'font-size: 11px; line-height: 16px; color: #596170; text-align: right; ' + T,
+        kvS: A + 'right: 64px; top: ' + px(y + 34) + "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 20px; line-height: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; text-align: right; " + T,
+        line: box(750, y + RH - 1, 466, 1) + (i < 3 ? 'background: #e2e5ea;' : 'display: none;')
+      };
+    });
+
+    // 존 × 솔루션 매트릭스
+    const CX0 = 866, CW = 87.5;
+    const cols = ['MagicINFO', 'VXT', 'SmartThings Pro', 'Knox Suite'].map((t, j) => ({
+      t, style: box(CX0 + j * CW, 531, CW, 14) + 'font-size: 10.5px; line-height: 14px; font-weight: 700; color: #3d4452; text-align: center; ' + T
+    }));
+    const MN = ['쇼윈도', '체험 존', '피팅룸', '계산대'];
+    const mrows = MN.map((name, i) => {
+      const y = 554 + i * 22;
+      return {
+        n: i + 1, name,
+        pos: A + 'left: 764px; top: ' + px(y + 2) + 'height: 18px; display: flex; align-items: center; gap: 7px; font-size: 11.5px; font-weight: 700; color: #121417; ' + T,
+        badge: badge(SOL[i], 16, 9),
+        cells: SOL.map((s, j) => {
+          const cx = CX0 + j * CW + CW / 2, cy = y + 11;
+          return { style: j === i
+            ? box(cx - 7, cy - 7, 14, 14) + 'box-sizing: border-box; border-radius: 50%; background: ' + s.bg + '; border: 2px solid ' + s.bd + ';'
+            : box(cx - 2, cy - 2, 4, 4) + 'border-radius: 50%; background: #c9ced6;' };
+        })
+      };
+    });
+
+    return { zones, zlabels, devs, caps, phones, rows, cols, mrows };
+  }
+}
+</script>
+</body>
+</html>

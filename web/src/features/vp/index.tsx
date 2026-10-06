@@ -1,0 +1,62 @@
+/**
+ * Value Proposition(VP) 기능 모듈 — 소유: vp 서비스 세션. 수용 기준: docs/scenarios/05-vp.md · 보드 docs/screens/webapp1/VP*.dc.html
+ * 셸이 자동으로 등록한다(web/src/shell/registry.ts).
+ * 라우트: /vp(VP0) · /vp/rules(VPR) · /vp/new · /vp/:id/materials(VP1) · …/materials/review(VP1A) · …/questions(VP1Q) · …/structure(VP2)
+ *        · …/generating?job=(VP3G) · …/result(VP3) · …/result/layout(VP3L) · …/result/numbers(VP3N) · …/result/images(VPI) · …/export(VP4)
+ *        · /vp/:id → 작업의 resume_route
+ */
+import { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import { feature } from '@/shell/feature';
+import { ErrorState, Skeleton } from '@/ui';
+import { errText, useVp } from './api';
+import { ListPage } from './pages/List';
+import { MaterialsPage } from './pages/Materials';
+import { ReviewPage } from './pages/Review';
+import { QuestionsPage } from './pages/Questions';
+import { StructurePage } from './pages/Structure';
+import { GeneratingPage } from './pages/Generating';
+import { ResultPage } from './pages/Result';
+import { LayoutPage } from './pages/Layout';
+import { NumbersPage } from './pages/Numbers';
+import { ImagesPage } from './pages/Images';
+import { ExportPage } from './pages/Export';
+import { Page, useVpShell } from './parts';
+import './vp.css';
+
+/** `/vp/:id` — 마지막 단계에서 이어 열기 */
+function ResumePage() {
+  const { id = '' } = useParams();
+  const nav = useNavigate();
+  const vp = useVp(id, { poll: false });
+  useVpShell(vp.data, vp.data?.step ?? 1);
+  useEffect(() => {
+    if (vp.data?.resume_route && vp.data.resume_route !== `/vp/${id}`) nav(vp.data.resume_route, { replace: true });
+  }, [vp.data?.resume_route, id, nav]);
+  if (vp.isError) return <Page><ErrorState message={errText(vp.error)} onRetry={() => vp.refetch()} /></Page>;
+  return <Page><Skeleton h={240} /></Page>;
+}
+
+export default feature({
+  code: 'VP',
+  key: 'vp',
+  name: 'Value Proposition',
+  order: 8,
+  home: { section: 'plan', title: 'Value Proposition', desc: '메시지 · 레이아웃 · 이미지 · 수치' },
+  routes: [
+    { index: true, element: <ListPage /> },
+    { path: 'rules', element: <ListPage rules /> },
+    { path: 'new', element: <MaterialsPage /> },
+    { path: ':id', element: <ResumePage /> },
+    { path: ':id/materials', element: <MaterialsPage /> },
+    { path: ':id/materials/review', element: <ReviewPage /> },
+    { path: ':id/questions', element: <QuestionsPage /> },
+    { path: ':id/structure', element: <StructurePage /> },
+    { path: ':id/generating', element: <GeneratingPage /> },
+    { path: ':id/result', element: <ResultPage /> },
+    { path: ':id/result/layout', element: <LayoutPage /> },
+    { path: ':id/result/numbers', element: <NumbersPage /> },
+    { path: ':id/result/images', element: <ImagesPage /> },
+    { path: ':id/export', element: <ExportPage /> },
+  ],
+});

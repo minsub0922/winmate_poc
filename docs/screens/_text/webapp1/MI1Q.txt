@@ -1,0 +1,47 @@
+ 
+ Market Intelligence · 업종이 두 갈래일 때 한 번 묻기 
+ W 
+ 회의록을 읽어 보니 업종이 두 갈래로 읽혀요. 업종에 따라 시장 · 비즈니스 · 사용자 레이아웃이 통째로 달라져서, 이것 하나만 여쭤볼게요. 
+ 선택 필요 
+ 어느 업종 관점으로 분석할까요? 
+ 1 · 2위 차이 0.03 · 기준 0.10 미만 
+ 읽힌 단서 
+ {{c.t}} {{c.code}} 
+ {{o.name}} 
+ 추천 
+ {{o.desc}} 
+ {{o.score}} 
+ {{o.codes}} 
+ 답이 없으면 추천(호텔 · 리조트)으로 진행하고, 결과 화면의 업종 칩에서 언제든 바꿀 수 있어요. 
+ 자동으로 정한 것 
+ {{d}} 
+ 업종 확인 · 선택 필요 1 · 나머지 6개는 자동으로 정했어요 
+ 언제 묻는지 보기 
+ 판단에 도움이 될 말 
+ 이전 
+ 호텔 · 리조트로 분석 시작 
+class Component extends DCLogic {
+ renderVals() {
+ // 회의록에서 읽힌 단서와 그 단서가 가리키는 업종
+ const C = [['로비', 'HT'], ['투숙객', 'HT'], ['객실 320실', 'HT'], ['라운지 카페', 'FB'], ['메뉴보드', 'FB'], ['음료 피크타임', 'FB']];
+ const clues = C.map(([t, code]) => ({
+ t, code,
+ tagStyle: '' + (code === 'HT' ? '' : '')
+ }));
+ // 선택지: [이름, 설명, 점수, 레이아웃 코드, 썸네일 3, 추천]
+ const O = [
+ ['호텔 · 리조트', '호텔 운영 관점 — 로비 · 객실 경험, 투숙객 여정, 호텔 매출 구조. 사례 17건', 0.58, 'MI-HT-A · B · C', ['barline', 'process', 'journey'], true],
+ ['외식 · 카페', '매장 운영 관점 — 메뉴 · 피크 주문, 손님 체류, 가맹 구조. 사례 23건', 0.55, 'MI-FB-A · B · C', ['barline', 'process', 'journey'], false],
+ ['섞어서 보기', '시장 · 비즈니스는 호텔로, 사용자 여정은 라운지 카페 손님으로', 0.57, 'MI-HT-A · B + MI-FB-C', ['barline', 'process', 'journey'], false]
+ ];
+ const opts = O.map(([name, desc, s, codes, thumbs, rec]) => ({
+ name, desc, codes, rec, on: rec,
+ thumbs: thumbs.map((kind) => ({ kind, n: 3 })),
+ score: s.toFixed(2),
+ bar: 'width: ' + Math.round(s * 100) + '' + (rec ? '' : '') + ';',
+ box: '' + (rec ? '' : '')
+ }));
+ const done = ['쓰임 · 표준 MI 3시트', '범위 · 4개 영역', '경쟁사 · 익명 A · B · C', '사내 자료 · 호텔 17 + 외식 23건'];
+ return { steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 2, clues, opts, done };
+ }
+}

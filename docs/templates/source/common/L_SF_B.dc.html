@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SF-B 기능 → 고객 효과</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">MagicINFO의 기능을 A 커피의 언어로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">솔루션 상세 · 기능 이름 대신, 매장에서 달라지는 것으로 읽습니다</div>
+
+  <!-- 헤더 -->
+  <div style="position: absolute; left: 64px; top: 172px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #596170">기능</div>
+  <div style="position: absolute; left: 460px; top: 172px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">A 커피가 얻는 것</div>
+  <div style="position: absolute; left: 970px; top: 172px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #596170">관련 지표</div>
+
+  <!-- 행: 기능 칩 → 고객 효과 → 지표 칩 -->
+  <div style="position: absolute; left: 64px; top: 200px; width: 1152px; display: flex; flex-direction: column; border-bottom: 1px solid #e2e5ea">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+      <div style="height: 84px; box-sizing: border-box; border-top: 1px solid #e2e5ea; display: flex; align-items: center">
+        <div style="width: 290px; height: 56px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; padding: 0 20px 0 10px; display: flex; align-items: center; gap: 12px">
+          <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"/></svg></div>
+          <span style="font-size: 16px; font-weight: 800; white-space: nowrap">{{r.feature}}</span>
+        </div>
+        <div style="width: 106px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+          <div style="width: 58px; height: 2px; background: #b8bec8"></div>
+          <div style="width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #b8bec8"></div>
+        </div>
+        <div style="width: 510px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 16px; font-weight: 700; color: #121417">{{r.effect}}</span>
+          <span style="font-size: 13.5px; color: #596170">{{r.detail}}</span>
+        </div>
+        <div style="flex-grow: 1; display: flex; justify-content: flex-end">
+          <div style="width: 246px; height: 44px; box-sizing: border-box; border-radius: 999px; background: #eaeefb; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap"><span style="font-size: 13px; font-weight: 700; color: #1428a0">{{r.kpi}}</span><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{r.val}}</span></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; right: 64px; top: 630px; font-size: 11.5px; color: #8a91a0">지표 값은 도입 후 측정 · 목표치는 협의</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      schedule: 'M3 5h18v16H3z M3 10h18 M8 3v4 M16 3v4',
+      play: 'M4 4h16v16H4z M10 9l5 3-5 3z',
+      pulse: 'M3 12h4l3-8 4 16 3-8h4',
+      link: 'M9 15l6-6 M11 6l1-1a4 4 0 0 1 6 6l-1 1 M13 18l-1 1a4 4 0 0 1-6-6l1-1',
+      report: 'M4 20V10 M10 20V4 M16 20v-7 M3 20h18'
+    };
+    const R = [
+      ['예약 배포', I.schedule, '신메뉴가 출시 시각에 320개 매장 동시 공개', '인쇄 · 배송 · 현장 교체 없이 본사에서 예약', '신메뉴 반영 시간', '[0]분'],
+      ['조건부 재생', I.play, '시간대 · 날씨에 맞는 메뉴가 먼저 보입니다', '아침엔 세트, 더운 날엔 아이스 음료를 앞에', '시간대 메뉴 매출', '[00]% ↑'],
+      ['원격 모니터링', I.pulse, '꺼진 화면을 손님보다 먼저 발견', '미수신 · 오류 매장을 본사에서 즉시 확인', '화면 가동률', '[00.0]%'],
+      ['POS 연동', I.link, '품절 · 가격 변경이 화면에 바로 반영', '헛주문과 가격 표기 오류가 사라집니다', '표기 오류', '[0]건'],
+      ['사용 리포트', I.report, '어떤 콘텐츠가 팔았는지 숫자로 확인', '노출 대비 판매로 다음 프로모션 결정', '프로모션 전환율', '[0.0]%p']
+    ];
+    return { rows: R.map(([feature, icon, effect, detail, kpi, val]) => ({ feature, icon, effect, detail, kpi, val })) };
+  }
+}
+</script>
+</body>
+</html>

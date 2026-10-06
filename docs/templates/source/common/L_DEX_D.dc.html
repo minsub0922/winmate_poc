@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>DEX-D Samsung DeX 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Samsung DeX</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Samsung DeX · 모바일 데스크톱</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">기기 하나에 업무 자원이 모입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">Samsung DeX 구성도 · 왼쪽은 화면과 입력 장치, 오른쪽은 업무 자원 — 가운데는 휴대폰 한 대</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 170px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #596170">화면 · 입력 장치</div>
+  <div style="position: absolute; left: 284px; top: 170px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #596170">연결 방식</div>
+  <div style="position: absolute; left: 840px; top: 170px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #596170">업무 자원</div>
+
+  <!-- 화면 · 입력 장치 묶음 (실제 구성 사진) -->
+  <div style="position: absolute; left: 64px; top: 200px; width: 190px; height: 284px; border-radius: 14px; background: #f5f6f8"></div>
+  <img src="/_blob/b64a18114335d3bc46eae2082bbd89db" alt="DeX 화면을 띄운 모니터와 키보드, 연결된 갤럭시 탭 액티브" style="position: absolute; left: 64px; top: 200px; width: 190px; height: 196px; object-fit: cover; object-position: 40% 50%; border-radius: 14px 14px 0 0">
+  <div style="position: absolute; left: 64px; top: 404px; width: 190px; text-align: center; font-size: 13px; font-weight: 800; color: #121417">모니터 · TV</div>
+  <div style="position: absolute; left: 64px; top: 426px; width: 190px; text-align: center; font-size: 12.5px; font-weight: 700; color: #3d4452">+ 키보드 · 마우스</div>
+  <div style="position: absolute; left: 64px; top: 456px; width: 190px; text-align: center; font-size: 10.5px; color: #8a91a0">카탈로그 이미지 · 구성 예시</div>
+
+  <!-- 연결선 · 버스 · 화살표 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="20">
+    <div style="{{w.s}}"></div>
+  </sc-for>
+
+  <!-- 연결 방식 카드 -->
+  <sc-for list="{{links}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.box}}">
+      <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{c.icon}}"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+        <span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{c.t}}</span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">{{c.s}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 가운데: 갤럭시 휴대폰 · 태블릿 (실제 제품 컷) -->
+  <div style="position: absolute; left: 550px; top: 176px; width: 180px; height: 332px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 20px; background: #ffffff"></div>
+  <img src="/_blob/4af0d48d891be9a7ff27c471ef581e7e" alt="갤럭시 엑스커버7 프로 전면" style="position: absolute; left: 562px; top: 190px; width: 56px; height: 112px; object-fit: contain">
+  <img src="/_blob/0f2c662780a718693a94f6c0c0c1d18b" alt="갤럭시 탭 액티브5 프로 앞뒷면" style="position: absolute; left: 624px; top: 200px; width: 96px; height: 92px; object-fit: contain">
+  <div style="position: absolute; left: 552px; top: 306px; width: 176px; text-align: center; font-size: 19px; font-weight: 800">갤럭시</div>
+  <div style="position: absolute; left: 552px; top: 334px; width: 176px; text-align: center; font-size: 12px; color: #596170">휴대폰 · 태블릿 1대</div>
+  <sc-for list="{{layers}}" as="l" hint-placeholder-count="3">
+    <div style="{{l.s}}">{{l.t}}</div>
+  </sc-for>
+
+  <!-- Knox · 업무 영역 밴드 -->
+  <div style="position: absolute; left: 766px; top: 200px; width: 44px; height: 284px; box-sizing: border-box; border-radius: 10px; background: #eaeefb; border: 1px solid #b8c3ee; padding-top: 14px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/></svg>
+    <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">Knox</span>
+    <span style="margin-top: 20px; writing-mode: vertical-rl; text-orientation: upright; font-size: 14px; font-weight: 800; letter-spacing: 0.3em; color: #1428a0">업무영역</span>
+  </div>
+
+  <!-- 업무 자원 카드 -->
+  <sc-for list="{{res}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.box}}">
+      <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+        <div style="display: flex; align-items: baseline; gap: 6px; white-space: nowrap"><span style="font-size: 16px; font-weight: 800">{{r.t}}</span><span style="font-size: 12.5px; font-weight: 700; color: #8a91a0">{{r.tag}}</span></div>
+        <span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{r.s}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 526px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #8a91a0">
+    <span style="width: 24px; height: 2px; background: #1428a0"></span><span>연결 · 접속</span>
+    <span style="width: 24px; height: 0; border-top: 2px dashed #6f82d6; margin-left: 12px"></span><span>무선</span>
+    <span style="width: 24px; height: 0; border-top: 2px dashed #8a91a0; margin-left: 12px"></span><span>정책 · 관리</span>
+    <span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; background: #eaeefb; border: 1px solid #b8c3ee; margin-left: 12px"></span><span>Knox 업무 영역 경유</span>
+  </div>
+  <div style="position: absolute; right: 64px; top: 526px; font-size: 12px; color: #8a91a0">구성은 예시 · 제품 사진은 카탈로그 · 도킹 · VDI 제품은 [확인]</div>
+
+  <!-- IT 정책 → 휴대폰 -->
+  <div style="position: absolute; left: 639px; top: 518px; width: 0; height: 58px; border-left: 2px dashed #8a91a0"></div>
+  <div style="position: absolute; left: 635px; top: 510px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #8a91a0"></div>
+  <div style="position: absolute; left: 652px; top: 536px; font-size: 11.5px; font-weight: 700; color: #596170">정책 적용</div>
+
+  <!-- IT 관리 바 -->
+  <div style="position: absolute; left: 64px; top: 576px; width: 1152px; height: 72px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 24px; display: flex; align-items: center; gap: 16px">
+    <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #121417; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z M9 12l2 2 4-4"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; font-weight: 800">IT 관리</span><span style="font-size: 12px; color: #596170">정책으로 관리</span></div>
+    <div style="width: 1px; height: 32px; background: #d5d9e0"></div>
+    <sc-for list="{{policies}}" as="p" hint-placeholder-count="3">
+      <span style="height: 32px; padding: 0 12px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{{p}}</span>
+    </sc-for>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 12px; color: #8a91a0">관리 도구 [확인]</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>F 보험 영업조직 · 모바일 업무 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    // 행 중심 y (카드 top 200 / 300 / 400, 높이 84) · 휴대폰 중심 y 342
+    const ys = [242, 342, 442];
+    const MID = 342;
+
+
+    const hline = (x, y, w, color, dashed) => ({
+      s: A + 'left: ' + px(x) + 'top: ' + px(y - 1) + 'width: ' + px(w) +
+        (dashed ? 'height: 0; border-top: 2px dashed ' + color : 'height: 2px; background: ' + color)
+    });
+    const headR = (x, y, color) => ({ s: A + 'left: ' + px(x) + 'top: ' + px(y - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + color });
+    const headL = (x, y, color) => ({ s: A + 'left: ' + px(x) + 'top: ' + px(y - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 8px solid ' + color });
+
+    const B = '#1428a0', SOFT = '#6f82d6';
+    const wires = [];
+    // 왼쪽: 휴대폰 → 버스(x 522) → 연결 방식 카드 → 화면 · 입력 장치 (화살표는 장치 쪽)
+    wires.push(hline(522, MID, 28, B));
+    wires.push({ s: A + 'left: 521px; top: ' + px(ys[0] - 1) + 'width: 2px; height: ' + px(ys[2] - ys[0] + 2) + 'background: ' + B });
+    ys.forEach((y, i) => {
+      const wireless = i === 1;
+      wires.push(hline(494, y, 28, wireless ? SOFT : B, wireless));
+      wires.push(hline(264, y, 20, wireless ? SOFT : B, wireless));
+      wires.push(headL(256, y, wireless ? SOFT : B));
+    });
+    // 오른쪽: 휴대폰 → Knox 업무 영역 밴드 → 업무 자원 카드
+    wires.push(hline(730, MID, 28, B));
+    wires.push(headR(758, MID, B));
+    ys.forEach((y) => {
+      wires.push(hline(810, y, 20, B));
+      wires.push(headR(830, y, B));
+    });
+
+    const I = {
+      usb: 'M9 2v6 M15 2v6 M6 8h12v4a6 6 0 0 1-12 0z M12 18v4',
+      wifi: 'M2 9a15 15 0 0 1 20 0 M5 12.5a10 10 0 0 1 14 0 M8.5 16a5 5 0 0 1 7 0 M12 19.5h.01',
+      dock: 'M4 14h16v6H4z M9 14V6h6v8',
+      vdi: 'M3 4h18v12H3z M8 20h8 M12 16v4 M7 8l3 2-3 2 M12 12h4',
+      web: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M3 12h18 M12 3a14 14 0 0 1 0 18 M12 3a14 14 0 0 0 0 18',
+      apps: 'M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z'
+    };
+    const card = (x, w, i, extra) => A + 'left: ' + px(x) + 'top: ' + px(200 + i * 100) + 'width: ' + px(w) +
+      'height: 84px; box-sizing: border-box; border-radius: 14px; background: #ffffff; display: flex; align-items: center; ' + extra;
+
+    const links = [
+      ['USB-C 케이블', '유선 · 모니터에 바로', I.usb, 'border: 1px solid #e2e5ea;'],
+      ['무선 DeX', '무선 · 모니터 · TV', I.wifi, 'border: 1px solid #e2e5ea;'],
+      ['[도킹]', '[도킹 스테이션] · 확인', I.dock, 'border: 1.5px dashed #b8bec8;']
+    ].map(([t, s, icon, bd], i) => ({ t, s, icon, box: card(284, 210, i, bd + ' padding: 0 14px; gap: 12px;') }));
+
+    const res = [
+      ['VDI', '[솔루션명]', '가상 데스크톱으로 사내 업무 환경에 접속', I.vdi],
+      ['웹 업무 시스템', '', '브라우저로 사내 시스템 사용', I.web],
+      ['업무 앱', '', '메일 · 결재 · 문서 등 [앱 목록]', I.apps]
+    ].map(([t, tag, s, icon], i) => ({ t, tag, s, icon, box: card(840, 376, i, 'border: 1px solid #e2e5ea; padding: 0 18px; gap: 14px;') }));
+
+    const layer = (y, bg, color, t) => ({
+      t,
+      s: A + 'left: 566px; top: ' + px(y) + 'width: 148px; height: 32px; box-sizing: border-box; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; white-space: nowrap; background: ' + bg + '; color: ' + color
+    });
+    const layers = [
+      layer(362, '#1428a0', '#ffffff', 'DeX 데스크톱'),
+      layer(400, '#eaeefb', '#1428a0', '업무 앱 · 데이터'),
+      layer(438, '#f5f6f8', '#121417', 'Knox 보안')
+    ];
+
+    const policies = ['정책으로 DeX 허용', '외부 저장 장치 제어 [확인]', 'Knox 보안 적용'];
+    return { wires, links, res, layers, policies };
+  }
+}
+</script>
+</body>
+</html>

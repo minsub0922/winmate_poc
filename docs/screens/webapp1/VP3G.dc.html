@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition — 생성 중 · 결정 기록</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="E 대학교 캠퍼스 가치 · 투자 회수" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="display: flex; align-items: center; gap: 8px; max-width: 640px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px">
+            <span style="font-weight: 600">만들기</span><span style="color: #596170">· Solution형 제안 연결 · 대규모 MI 6시트 · RFP · 견적 v2</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.6">만들고 있어요. 단계마다 스스로 정한 것을 아래에 남겨 둘게요 — 이 화면을 떠나도 계속 진행되고, 끝나면 알려 드립니다.</div>
+
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="padding: 14px 16px 12px 16px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #e2e5ea">
+                <div style="display: flex; align-items: center; justify-content: space-between">
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <div style="width: 26px; height: 26px; border-radius: 7px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12l3 5-9 11L3 9l3-5z M3 9h18"/></svg></div>
+                    <span style="font-size: 14px; font-weight: 700; white-space: nowrap">가치 제안 2장 만드는 중</span>
+                    <span style="font-size: 12px; color: #596170; white-space: nowrap">VP-H 이해관계자별 가치 · EF-B 투자 회수</span>
+                  </div>
+                  <span style="font-size: 13px; font-weight: 700; color: #1428a0; white-space: nowrap"><span style="font-family: Manrope, sans-serif">{{pct}}%</span> · 약 40초 남음</span>
+                </div>
+                <div style="height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="{{barStyle}}"></div></div>
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+                    <div style="{{s.box}}">
+                      <sc-if value="{{s.isDone}}" hint-placeholder-val="{{true}}">
+                        <span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                      </sc-if>
+                      <sc-if value="{{s.isRun}}" hint-placeholder-val="{{false}}">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0"><circle cx="12" cy="12" r="9" stroke="#d5d9e0" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg>
+                      </sc-if>
+                      <sc-if value="{{s.isWait}}" hint-placeholder-val="{{false}}">
+                        <span style="width: 16px; height: 16px; border-radius: 50%; border: 2px solid #d5d9e0; box-sizing: border-box; flex-shrink: 0"></span>
+                      </sc-if>
+                      <span style="{{s.nameStyle}}">{{s.name}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 236px">
+                <!-- 결정 기록 -->
+                <div style="padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; min-width: 0; border-right: 1px solid #e2e5ea">
+                  <span style="font-size: 12px; font-weight: 700; margin-bottom: 4px">결정 기록 <span style="color: #596170; font-weight: 500">· 에이전트가 스스로 정한 순서대로</span></span>
+                  <sc-for list="{{log}}" as="r" hint-placeholder-count="7">
+                    <div style="display: grid; grid-template-columns: 56px minmax(0, 1fr) 84px; column-gap: 8px; align-items: center; height: 30px; min-width: 0">
+                      <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #8a91a0">{{r.t}}</span>
+                      <span style="font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.d}}</span>
+                      <span style="{{r.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span>
+                    </div>
+                  </sc-for>
+                  <div style="display: flex; align-items: center; gap: 8px; height: 30px; color: #1428a0; font-size: 12.5px; font-weight: 600">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0"><circle cx="12" cy="12" r="9" stroke="#d5d9e0" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg>
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">투자 회수 기간 계산 중 — 견적 v2 · 절감액 범위 3개 시나리오</span>
+                  </div>
+                </div>
+                <!-- 시트 · 재료 -->
+                <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0">
+                  <span style="font-size: 12px; font-weight: 700">시트</span>
+                  <sc-for list="{{sheets}}" as="s" hint-placeholder-count="2">
+                    <div style="{{s.box}}">
+                      <div style="width: 120px; height: 68px; flex-shrink: 0; align-self: center"><dc-import name="Thumb" kind="{{s.kind}}" n="{{s.n}}" hint-size="120px,68px"></dc-import></div>
+                      <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
+                        <span style="font-size: 12px; font-weight: 600; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{s.code}}</span> {{s.name}}</span>
+                        <span style="{{s.stStyle}}">{{s.st}}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                  <span style="font-size: 11.5px; color: #596170; line-height: 1.5">재료 · 대규모 MI 6시트 · RFP 평가 기준 · 견적 v2 · 유관 사례 3</span>
+                </div>
+              </div>
+
+              <div style="height: 40px; box-sizing: border-box; padding: 0 16px; border-top: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px">
+                <span style="color: #596170">먼저 끝난 시트부터 볼 수 있어요 · 가치 제안 (VP-H)</span>
+                <a href="VP3.dc.html" style="font-weight: 600; display: flex; align-items: center; gap: 4px">미리 보기<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; font-size: 13px; font-weight: 600">만드는 중 <span style="color: #596170; font-weight: 500">· 3 / 3 · 다른 작업을 해도 돼요</span></div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="dir" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">진행 방향 메모</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="dir" placeholder="진행 중에도 방향을 알려주세요 (예: 학생 가치는 수업 참여도로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="VP0.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">목록으로</a>
+          <a href="VP2.dc.html" title="중지하고 가치 구조로 돌아가요. 끝난 시트는 남겨 둡니다." style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-shrink: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="#121417"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>중지</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pct = 64;
+    const S = [['재료 정리', 'done'], ['구조 결정', 'done'], ['시트 작성', 'run'], ['레이아웃 맞춤', 'wait'], ['검토', 'wait']];
+    const stages = S.map(([name, s]) => ({
+      name, isDone: s === 'done', isRun: s === 'run', isWait: s === 'wait',
+      box: 'flex: 1 1 0; min-width: 0; height: 34px; box-sizing: border-box; border-radius: 8px; display: flex; align-items: center; gap: 7px; padding: 0 10px;' + (s === 'run' ? ' border: 1.5px solid #1428a0; background: #f5f7fd;' : ' border: 1px solid #e2e5ea; background: #ffffff;'),
+      nameStyle: 'font-size: 12.5px; font-weight: 700; white-space: nowrap;' + (s === 'run' ? ' color: #1428a0;' : s === 'wait' ? ' color: #8a91a0;' : ' color: #121417;')
+    }));
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; justify-self: start; ';
+    const L = [
+      ['11:02:04', '업종 교육 · 캠퍼스 — 대규모 MI에서 상속', 'auto'],
+      ['11:02:05', 'VP-ED 업종판 제작 중 → 범용 레이아웃으로', 'auto'],
+      ['11:02:07', 'Solution형 → 고객 과제 시트 생략 (대규모 MI가 이미 말함)', 'auto'],
+      ['11:02:09', '의사결정자 4 (총장 · 기획처 · 교수 · 학생) → VP-H', 'auto'],
+      ['11:02:12', 'RFP 경제성 20점 → 기대 효과는 투자 회수 EF-B', 'auto'],
+      ['11:02:20', '투자비 없음 → 연결된 견적 v2로 계산', 'check'],
+      ['11:02:31', '절감액 근거 사례 3건 · 단일 값 대신 범위로 표기', 'check']
+    ];
+    const log = L.map(([t, d, m]) => ({ t, d, mText: MODE[m][0], mIcon: MODE[m][2], mStyle: CHIP + MODE[m][1] }));
+    const SH = [['VP-H', '이해관계자별', 'hub', '완료', true], ['EF-B', '투자 회수', 'roi', '작성 중', false]];
+    const sheets = SH.map(([code, name, kind, st, ok]) => ({
+      code, name, kind, st, n: 3,
+      box: 'display: flex; flex-direction: column; gap: 6px; box-sizing: border-box; padding: 8px 10px; border-radius: 10px;' + (ok ? ' background: #f5f6f8;' : ' background: #f5f7fd; border: 1.5px solid #1428a0;'),
+      stStyle: 'font-size: 11px; font-weight: 700; white-space: nowrap; ' + (ok ? 'color: #121417;' : 'color: #1428a0;')
+    }));
+    return { steps: ['재료', '가치 구조', '결과'], cur: 3, pct, stages, log, sheets, barStyle: 'width: ' + pct + '%; height: 6px; border-radius: 999px; background: #1428a0;' };
+  }
+}
+</script>
+</body>
+</html>

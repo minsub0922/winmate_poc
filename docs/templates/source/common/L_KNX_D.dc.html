@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>KNX-D Knox Suite 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Knox Suite</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Knox Suite · 모바일 기기 관리 · 보안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">관리자는 콘솔 하나, 기기는 업무 영역만</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구성도 · 콘솔의 각 모듈이 보내는 정책 · 앱 · 업데이트가 기기의 어느 층에 닿는지</div>
+
+  <!-- IT 관리자 -->
+  <div style="position: absolute; left: 64px; top: 168px; width: 240px; height: 60px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 14px; display: flex; align-items: center; gap: 12px">
+    <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 15px; font-weight: 800">IT 관리자</span><span style="font-size: 12px; color: #596170">본사 · 웹 브라우저</span></div>
+  </div>
+  <div style="position: absolute; left: 119px; top: 228px; width: 2px; height: 44px; background: #1428a0"></div>
+  <div style="position: absolute; left: 115px; top: 272px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #1428a0"></div>
+  <div style="position: absolute; left: 134px; top: 243px; font-size: 11.5px; color: #596170">콘솔 로그인</div>
+
+  <!-- Knox 클라우드 콘솔 -->
+  <div style="position: absolute; left: 64px; top: 280px; width: 336px; height: 292px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 20px; display: flex; flex-direction: column; gap: 12px">
+    <div style="height: 44px; display: flex; flex-direction: column; gap: 2px">
+      <div style="height: 24px; display: flex; align-items: center; gap: 10px">
+        <span style="width: 152px; height: 24px; flex-shrink: 0; border-radius: 6px; background: #f0f1f3"></span>
+        <span style="font-size: 17px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">클라우드 콘솔</span>
+      </div>
+      <span style="font-size: 12px; color: #c8d3ff; white-space: nowrap">웹 브라우저 하나로 전 매장 기기 관리</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 5px">
+      <sc-for list="{{modules}}" as="m" hint-placeholder-count="6">
+        <div style="height: 28px; box-sizing: border-box; border-radius: 7px; background: {{m.bg}}; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; white-space: nowrap"><span style="font-weight: 700">{{m.name}}</span><span style="color: #c8d3ff">{{m.role}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+  <img src="/_blob/59bbd4ce085f2c58346de014d06e5481" alt="Samsung Knox 로고" style="position: absolute; left: 92px; top: 302px; width: 136px; height: 20px; object-fit: contain">
+
+  <!-- 기존 시스템 -->
+  <div style="position: absolute; left: 143px; top: 572px; width: 2px; height: 20px; background: #b8bec8"></div>
+  <div style="position: absolute; left: 319px; top: 572px; width: 2px; height: 20px; background: #b8bec8"></div>
+  <sc-for list="{{legacy}}" as="g" hint-placeholder-count="2">
+    <div style="position: absolute; {{g.pos}} width: 160px; height: 48px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; border: 1px solid #e2e5ea; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px"><span style="font-size: 13.5px; font-weight: 800">{{g.name}}</span><span style="font-size: 11px; color: #596170">{{g.sub}}</span></div>
+  </sc-for>
+
+  <!-- 관리 범위 -->
+  <div style="position: absolute; left: 424px; top: 164px; width: 438px; display: flex; flex-direction: column; gap: 0">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #596170">관리 범위</span>
+    <span style="display: flex; align-items: baseline; gap: 6px; color: #1428a0; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em">1</span><span style="font-size: 14px; font-weight: 700">콘솔</span><span style="font-size: 16px; color: #b8bec8; margin: 0 4px">→</span><span style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em">[000]</span><span style="font-size: 14px; font-weight: 700">대 매장 태블릿</span></span>
+  </div>
+
+  <!-- 카탈로그 인셋: Knox Manage 기능 패널 (단말 관리 · 모니터링 행) -->
+  <div style="position: absolute; left: 424px; top: 230px; width: 438px; height: 104px; box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; overflow: hidden">
+    <img src="/_blob/714cac99a72b849463ce00114d56887d" alt="카탈로그 Knox Manage 기능 패널 — 단말 관리 및 모니터링" style="position: absolute; left: -445px; top: -66px; width: 884px; height: 269px; object-fit: cover">
+  </div>
+  <div style="position: absolute; left: 424px; top: 339px; font-size: 11.5px; color: #596170; white-space: nowrap"><span style="font-weight: 700; color: #3d4452">카탈로그 · Knox Manage</span> — 클라우드 기반 EMM (단말 관리 · 모니터링)</div>
+
+  <!-- 관리 대상 기기 (실물 사진) -->
+  <img src="/_blob/0f2c662780a718693a94f6c0c0c1d18b" alt="갤럭시 탭 액티브5 프로 앞뒷면 제품 사진" style="position: absolute; left: 886px; top: 164px; width: 136px; height: 124px; object-fit: contain; background: #ffffff">
+  <div style="position: absolute; left: 1034px; top: 178px; width: 182px; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.04em; color: #596170">관리 대상 기기</span>
+    <span style="font-size: 15px; font-weight: 800">매장 태블릿</span>
+    <span style="font-size: 12.5px; color: #3d4452">갤럭시 탭 [모델명]</span>
+    <span style="margin-top: 4px; font-size: 11px; line-height: 1.45; color: #8a91a0">사진은 예시 · 갤럭시 탭 액티브5 프로</span>
+  </div>
+
+  <!-- 기기 (태블릿 단면) -->
+  <div style="position: absolute; left: 886px; top: 300px; width: 330px; height: 344px; box-sizing: border-box; border-radius: 34px; border: 12px solid #121417; background: #ffffff"></div>
+  <div style="position: absolute; left: 1048px; top: 303px; width: 6px; height: 6px; border-radius: 50%; background: #3d4452"></div>
+  <!-- 업무 영역 | 개인 영역 -->
+  <div style="position: absolute; left: 912px; top: 326px; width: 170px; height: 114px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; border: 1.5px solid #1428a0; padding: 10px 12px; display: flex; flex-direction: column; gap: 0">
+    <span style="font-size: 15px; font-weight: 800; color: #1428a0">업무 영역</span>
+    <span style="font-size: 11.5px; color: #3d4452">본사 정책 · 업무 앱만</span>
+    <div style="margin-top: 6px; display: flex; justify-content: space-between">
+      <sc-for list="{{apps}}" as="a" hint-placeholder-count="3">
+        <div style="width: 46px; display: flex; flex-direction: column; align-items: center; gap: 3px"><div style="width: 30px; height: 30px; border-radius: 8px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{a.icon}}"/></svg></div><span style="font-size: 10.5px; color: #121417; white-space: nowrap">{{a.name}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="position: absolute; left: 1092px; top: 326px; width: 98px; height: 114px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; border: 1px solid #d5d9e0; padding: 10px 12px; display: flex; flex-direction: column; gap: 0">
+    <span style="font-size: 13px; font-weight: 800; color: #596170">개인 영역</span>
+    <span style="font-size: 11px; color: #8a91a0">업무와 분리</span>
+    <div style="margin-top: 12px; display: flex; gap: 8px">
+      <div style="width: 30px; height: 30px; border-radius: 8px; background: #d5d9e0"></div>
+      <div style="width: 30px; height: 30px; border-radius: 8px; background: #d5d9e0"></div>
+    </div>
+  </div>
+  <!-- OS -->
+  <div style="position: absolute; left: 912px; top: 448px; width: 278px; height: 58px; box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #b8bec8; padding: 0 14px; display: flex; align-items: center; gap: 12px">
+    <div style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5z M3 13l9 5 9-5"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14.5px; font-weight: 800">OS · 보안 정책</span><span style="font-size: 11.5px; color: #596170">Knox Platform for Enterprise</span></div>
+  </div>
+  <!-- 하드웨어 · 칩 (Knox Vault 비주얼) -->
+  <div style="position: absolute; left: 912px; top: 514px; width: 278px; height: 104px; box-sizing: border-box; border-radius: 10px; background: #121417; color: #ffffff; padding: 0 14px; display: flex; align-items: center">
+    <div style="width: 150px; display: flex; flex-direction: column; gap: 3px"><span style="font-size: 14.5px; font-weight: 800; white-space: nowrap">하드웨어 · 칩 보안</span><span style="font-size: 11.5px; line-height: 1.45; color: #b8bec8">Knox — 칩 수준부터 내장<br>(Knox Vault)</span></div>
+  </div>
+  <img src="/_blob/7bd33a7605254d6344216f4cf1612f01" alt="Knox Vault 보호 돔과 Knox 방패가 올라간 태블릿" style="position: absolute; left: 1090px; top: 524px; width: 90px; height: 84px; object-fit: cover; object-position: 50% 50%; border-radius: 6px">
+
+  <!-- 흐름: 콘솔 모듈 행 → 기기 층 -->
+  <sc-for list="{{flows}}" as="f" hint-placeholder-count="9">
+    <div style="{{f.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 430px; top: 380px; font-size: 12.5px; font-weight: 700; color: #1428a0">정책 · 앱 배포 — Knox Manage</div>
+  <div style="position: absolute; left: 430px; top: 446px; font-size: 12.5px; font-weight: 700; color: #3d4452">OS 업데이트 — Knox E-FOTA</div>
+  <div style="position: absolute; left: 430px; top: 544px; font-size: 12.5px; color: #596170">상태 · 분석 데이터 — Knox Asset Intelligence</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 430px; top: 580px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 2px; background: #1428a0"></span>정책 · 앱 배포 (업무 영역까지만)</span>
+    <span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 2px; background: #6f82d6"></span>업데이트 (OS 층)</span>
+    <span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 0; border-top: 2px dashed #8a91a0"></span>상태 · 분석 데이터 (콘솔로)</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 매장 태블릿 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+
+    // 콘솔 박스 top 280 · 패딩 20 · 헤더 44 · 간격 12 → 첫 모듈 행 y 356, 행 높이 28 + 간격 5 → 중심 370 + 33i
+    // 흐름이 나가는 행(Manage · E-FOTA · Asset Intelligence)만 조금 밝게
+    const M = [
+      ['Knox Mobile Enrollment', '자동 등록', false],
+      ['Knox Manage', '정책 · 앱', true],
+      ['Knox Platform for Enterprise', '보안', false],
+      ['Knox E-FOTA', '업데이트', true],
+      ['Knox Remote Support', '원격 지원', false],
+      ['Knox Asset Intelligence', '분석', true]
+    ];
+    const modules = M.map(([name, role, out]) => ({ name, role, bg: out ? 'rgba(255,255,255,0.22)' : 'rgba(255,255,255,0.10)' }));
+    const rowY = (i) => 370 + i * 33;
+
+    const line = (x1, x2, yc, c) => ({ style: A + 'left: ' + px(x1) + 'top: ' + px(yc - 1) + 'width: ' + px(x2 - x1) + 'height: 2px; background: ' + c + ';' });
+    const dash = (x1, x2, yc, c) => ({ style: A + 'left: ' + px(x1) + 'top: ' + px(yc - 1) + 'width: ' + px(x2 - x1) + 'height: 0; border-top: 2px dashed ' + c + ';' });
+    const headR = (x, yc, c) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(yc - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + c + ';' });
+    const headL = (x, yc, c) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(yc - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 8px solid ' + c + ';' });
+    const port = (yc) => ({ style: A + 'left: 395px; top: ' + px(yc - 5) + 'width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;' });
+
+    // 기기 층: 업무 영역 326–440 · OS 448–506 · 하드웨어 514–618 (화살 끝 x 912)
+    const yPolicy = rowY(1), yUpdate = rowY(3), yData = rowY(5); // 403 · 469 · 535
+    const flows = [
+      line(405, 904, yPolicy, '#1428a0'), headR(904, yPolicy, '#1428a0'), port(yPolicy),
+      line(405, 904, yUpdate, '#6f82d6'), headR(904, yUpdate, '#6f82d6'), port(yUpdate),
+      dash(408, 912, yData, '#8a91a0'), headL(400, yData, '#8a91a0'), port(yData)
+    ];
+
+    const apps = [
+      { name: '주문', icon: 'M6 2h12v20l-3-2-3 2-3-2-3 2z M9 7h6 M9 11h6 M9 15h4' },
+      { name: '재고', icon: 'M3 7l9-4 9 4v10l-9 4-9-4z M3 7l9 4 9-4 M12 11v10' },
+      { name: '[업무 앱]', icon: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z' }
+    ];
+
+    const legacy = [
+      { name: '[IdP · 계정]', sub: '기존 시스템 · 자동 로그인', pos: 'left: 64px; top: 592px;' },
+      { name: '[기존 EMM]', sub: '기존 시스템 · 연동 [확인]', pos: 'left: 240px; top: 592px;' }
+    ];
+
+    return { modules, flows, apps, legacy };
+  }
+}
+</script>
+</body>
+</html>

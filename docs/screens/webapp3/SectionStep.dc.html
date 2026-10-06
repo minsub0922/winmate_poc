@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 — 섹션 작성</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; position: relative; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="{{sbGroup}}" current="{{sbCurrent}}" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="{{popover}}" accepts="{{acceptsStr}}" drag-item="{{dragItem}}" added="{{added}}" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" one-click-open="{{isOneClick}}" plan-confirmed="{{planConfirmed}}" plan-rows="{{planRows}}" plan-summary="{{planSummary}}" hint-size="1180px,56px"></dc-import>
+
+    <!-- 섹션 레일: 선택한 유형의 섹션 순서 · 진행 상태 · 시트 수 -->
+    <nav aria-label="섹션" style="height: 48px; box-sizing: border-box; flex-shrink: 0; display: flex; align-items: center; gap: 6px; padding: 0 28px; border-bottom: 1px solid #e2e5ea; background: #ffffff">
+      <span style="font-size: 12px; font-weight: 600; color: #121417; margin-right: 6px; flex-shrink: 0">{{typeName}}</span>
+      <sc-for list="{{rail}}" as="r" hint-placeholder-count="8">
+        <a href="{{r.href}}" title="{{r.tip}}" style="{{r.style}}">
+          <sc-if value="{{r.done}}" hint-placeholder-val="{{false}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if>
+          <span>{{r.label}}</span>
+          <span style="{{r.countStyle}}">{{r.count}}</span>
+        </a>
+      </sc-for>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 12px; color: #596170; flex-shrink: 0">시트 {{totalSheets}}</span>
+    </nav>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">{{intro}}</div>
+
+            <sc-if value="{{showMain}}" hint-placeholder-val="{{true}}">
+              <!-- 연결된 자료 -->
+              <sc-if value="{{showSources}}" hint-placeholder-val="{{true}}">
+                <div style="display: flex; flex-direction: column; gap: 6px">
+                  <div style="font-size: 12px; color: #596170">연결된 자료</div>
+                  <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                    <sc-for list="{{sources}}" as="s" hint-placeholder-count="2">
+                      <span style="{{s.style}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{s.icon}}"/></svg><span>{{s.label}}</span><button aria-label="연결 해제" style="width: 20px; height: 20px; border: none; background: transparent; color: #8a91a0; font-size: 13px; line-height: 1">×</button></span>
+                    </sc-for>
+                    <sc-if value="{{noSources}}" hint-placeholder-val="{{false}}">
+                      <span style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px dashed #d5d9e0; font-size: 12px; color: #596170; display: flex; align-items: center">아직 연결된 자료가 없어요 — 아래 영역에 끌어다 놓으세요</span>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-if>
+
+              <!-- 이 섹션의 시트: 시트 = 역할, 카드의 코드 = 지금 쓰는 템플릿 -->
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; align-items: center; justify-content: space-between">
+                  <span style="font-size: 12px; color: #596170">{{sheetLabel}} · 누르면 템플릿 변경</span>
+                  <a href="{{composeHref}}" style="font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>시트 추가 · 빼기</a>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px">
+                  <sc-for list="{{sheets}}" as="sh" hint-placeholder-count="3">
+                    <a href="{{sh.href}}" style="{{sh.cardStyle}}">
+                      <div style="position: relative; width: 100%; height: 68px; display: flex; justify-content: center">
+                        <dc-import name="Thumb" kind="{{sh.kind}}" n="{{sh.n}}" hint-size="120px,68px"></dc-import>
+                        <span style="{{sh.tagStyle}}">{{sh.tag}}</span>
+                      </div>
+                      <span style="font-size: 12px; font-weight: 600; color: #121417; text-align: left; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{sh.title}}</span>
+                      <span style="{{sh.statusStyle}}"><span style="{{sh.dotStyle}}"></span>{{sh.status}}</span>
+                    </a>
+                  </sc-for>
+                </div>
+              </div>
+
+              <!-- 템플릿 고르기: 이 시트의 역할에 맞는 템플릿들 · 자동 추천 / 직접 선택 -->
+              <sc-if value="{{isLayout}}" hint-placeholder-val="{{false}}">
+                <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+                  <div style="display: flex; align-items: center; gap: 10px; height: 30px">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v16H3z M3 9h18 M9 9v11"/></svg>
+                    <div style="font-size: 13.5px; font-weight: 700; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{selTitle}} <span style="color: #596170; font-weight: 500">· “{{selMsg}}”를 보여줄 템플릿 {{variantCount}}종</span></div>
+                    <div role="radiogroup" aria-label="템플릿 선택 방식" style="display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: #f0f2f5; flex-shrink: 0">
+                      <button role="radio" aria-checked="{{isAutoPick}}" style="{{segAuto}}">자동 추천</button>
+                      <button role="radio" aria-checked="{{isManualPick}}" style="{{segManual}}">직접 선택</button>
+                    </div>
+                  </div>
+                  <sc-if value="{{showCount}}" hint-placeholder-val="{{true}}">
+                    <div style="display: flex; align-items: center; gap: 6px; height: 28px">
+                      <span style="font-size: 12px; color: #596170; margin-right: 4px; white-space: nowrap">시트 속 제품</span>
+                      <sc-for list="{{countPills}}" as="cp" hint-placeholder-count="5">
+                        <button aria-label="{{cp.aria}}" style="{{cp.style}}">{{cp.n}}</button>
+                      </sc-for>
+                      <span style="font-size: 12px; color: #121417; margin-left: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{countNote}}</span>
+                      <span style="flex-grow: 1"></span>
+                      <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">6개 이상이면 2장으로 나눠요 (7 → 4 + 3)</span>
+                    </div>
+                  </sc-if>
+                  <div role="radiogroup" aria-label="템플릿" style="display: grid; {{variantGrid}}; gap: 8px">
+                    <sc-for list="{{variants}}" as="v" hint-placeholder-count="4">
+                      <button role="radio" aria-checked="{{v.on}}" style="{{v.cardStyle}}">
+                        <div style="position: relative; width: 100%; height: 68px; display: flex; justify-content: center">
+                          <dc-import name="Thumb" kind="{{v.kind}}" n="{{v.n}}" hint-size="120px,68px"></dc-import>
+                          <sc-if value="{{v.isAutoOn}}" hint-placeholder-val="{{false}}">
+                            <span style="position: absolute; right: 4px; top: 6px; height: 16px; padding: 0 5px; border-radius: 4px; background: #1428a0; color: #ffffff; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; gap: 3px"><svg width="9" height="9" viewBox="0 0 24 24" fill="#ffffff"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>자동</span>
+                          </sc-if>
+                          <sc-if value="{{v.isRecOnly}}" hint-placeholder-val="{{false}}">
+                            <span style="position: absolute; right: 4px; top: 6px; height: 16px; padding: 0 5px; border-radius: 4px; background: #eaeefb; color: #1428a0; font-size: 9.5px; font-weight: 700; display: flex; align-items: center">추천</span>
+                          </sc-if>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px; width: 100%; min-width: 0">
+                          <span style="{{v.radioStyle}}"></span>
+                          <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #121417; flex-shrink: 0">{{v.code}}</span>
+                          <span style="font-size: 11.5px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{v.name}}</span>
+                        </div>
+                        <span style="font-size: 11px; line-height: 1.35; color: #596170; width: 100%; text-align: left; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; min-height: 30px">{{v.when}}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px; height: 32px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#1428a0" style="flex-shrink: 0"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>
+                    <span style="font-size: 12px; color: #596170; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{recCode}}</span> 추천 · {{reason}}</span>
+                    <button style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; flex-shrink: 0; white-space: nowrap">섹션 전체 자동으로</button>
+                    <a href="{{selfHref}}" style="height: 32px; padding: 0 14px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap">이 시트에 적용</a>
+                  </div>
+                </div>
+              </sc-if>
+            </sc-if>
+
+            <!-- 사이드바 채팅을 놓은 직후: 추출 결과 확인 -->
+            <sc-if value="{{isExtract}}" hint-placeholder-val="{{false}}">
+              <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10 M10 20V4 M16 20v-8 M22 20H2"/></svg>
+                  <div style="font-size: 13px; flex-grow: 1"><span style="color: #596170">Market Intelligence ·</span> <span style="font-weight: 600">A 커피 프랜차이즈 시장·경쟁사 분석</span></div>
+                  <span style="font-size: 11.5px; font-weight: 600; color: #1428a0; background: #eaeefb; border-radius: 999px; padding: 3px 9px">{{exCount}}개 항목 추출됨</span>
+                </div>
+                <div style="padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+                  <div style="font-size: 13px; color: #596170">이 섹션의 시트에 이렇게 넣을까요? 필요한 것만 남겨 주세요.</div>
+                  <sc-for list="{{extract}}" as="ex" hint-placeholder-count="4">
+                    <label style="display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; background: #f5f6f8; font-size: 13px; line-height: 1.5">
+                      <input type="checkbox" checked="{{ex.on}}" style="accent-color: #1428a0; flex-shrink: 0">
+                      <span style="font-weight: 600; flex-shrink: 0">{{ex.what}}</span>
+                      <span style="{{ex.toStyle}}">{{ex.to}}</span>
+                    </label>
+                  </sc-for>
+                  <div style="display: flex; justify-content: flex-end; gap: 8px; padding-top: 2px">
+                    <a href="https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">원본 채팅 보기</a>
+                    <a href="{{selfHref}}" style="height: 32px; padding: 0 14px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">이대로 반영</a>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 하단 입력 카드 -->
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">{{secName}} <span style="color: #596170; font-weight: 500">· 섹션 {{secNo}} / {{secTotal}} · 시트 {{sheetCount}}</span></div>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{quick}}" as="q" hint-placeholder-count="3">
+              <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">{{q}}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 드롭 영역: 평소엔 받을 수 있는 자료 안내, 드래그 중엔 크게 강조 -->
+        <sc-if value="{{dropIdle}}" hint-placeholder-val="{{true}}">
+          <div style="margin: 10px 18px 0 18px; height: 40px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px dashed #d5d9e0; background: #fbfbfc; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #596170; overflow: hidden">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>
+            <span style="flex-shrink: 0">여기에 끌어 놓기</span>
+            <sc-for list="{{acceptChips}}" as="ac" hint-placeholder-count="2">
+              <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; color: #121417; font-size: 11.5px; display: flex; align-items: center; white-space: nowrap">{{ac}}</span>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{dragging}}" hint-placeholder-val="{{false}}">
+          <div style="margin: 10px 18px 0 18px; height: 76px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; border: 1.5px dashed #1428a0; background: #eaeefb; box-shadow: 0 0 0 4px rgba(20,40,160,0.08); display: flex; align-items: center; gap: 12px">
+            <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 3px; max-width: 400px">
+              <div style="font-size: 13.5px; font-weight: 700; color: #1428a0">{{dropTitle}}</div>
+              <div style="font-size: 12px; color: #596170">{{dropSub}}</div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{isDropped}}" hint-placeholder-val="{{false}}">
+          <div style="margin: 10px 18px 0 18px; height: 40px; box-sizing: border-box; padding: 0 8px 0 12px; border-radius: 10px; background: #f5f7fd; border: 1px solid #1428a0; display: flex; align-items: center; gap: 8px; font-size: 12.5px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+            <span style="flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 700">「{{demoLabel}}」</span> 추가됨 · <span style="color: #596170">{{droppedNote}}</span></span>
+            <button style="height: 26px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 600; flex-shrink: 0">실행 취소</button>
+          </div>
+        </sc-if>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="req" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">섹션 수정 요청</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="req" placeholder="{{placeholder}}" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="{{prevHref}}" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap">이전</a>
+          <a href="{{nextHref}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>{{nextLabel}}</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 고스트: 사이드바 작업(채팅)을 끌어오는 중 -->
+  <sc-if value="{{isDragSidebar}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 930px; top: 732px; z-index: 60; width: 290px; box-sizing: border-box; background: #ffffff; border: 1px solid #1428a0; border-radius: 12px; box-shadow: 0 16px 40px rgba(18,20,23,0.24); padding: 10px 12px; display: flex; align-items: center; gap: 10px; transform: rotate(-2deg)">
+      <div style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10 M10 20V4 M16 20v-8 M22 20H2"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+        <div style="font-size: 11px; color: #596170">사이드바 · Market Intelligence</div>
+        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">A 커피 프랜차이즈 시장·경쟁사 분석</div>
+      </div>
+    </div>
+    <svg style="position: absolute; left: 1196px; top: 768px; z-index: 61" width="22" height="26" viewBox="0 0 22 26" fill="none"><path d="M2 2l7 20 3-8 8-3L2 2z" fill="#121417" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </sc-if>
+
+  <!-- 고스트: 상단 팝업 항목을 끌어오는 중 -->
+  <sc-if value="{{isDragItem}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 930px; top: 732px; z-index: 60; width: 270px; box-sizing: border-box; background: #ffffff; border: 1px solid #1428a0; border-radius: 12px; box-shadow: 0 16px 40px rgba(18,20,23,0.24); padding: 10px 12px; display: flex; align-items: center; gap: 10px; transform: rotate(-2deg)">
+      <div style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{demoIcon}}"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1">
+        <div style="font-size: 11px; color: #596170">{{demoSub}}</div>
+        <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{demoLabel}}</div>
+      </div>
+      <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+    </div>
+    <svg style="position: absolute; left: 1180px; top: 768px; z-index: 61" width="22" height="26" viewBox="0 0 22 26" fill="none"><path d="M2 2l7 20 3-8 8-3L2 2z" fill="#121417" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"type":{"editor":"enum","options":["standard","quickwin","solution"],"default":"standard"},"idx":{"editor":"int","default":1,"min":1,"max":8},"mode":{"editor":"enum","options":["default","dragSidebar","extract","dragItem","dropped","oneClick","layout"],"default":"default"},"popover":{"editor":"enum","options":["none","product","solution","image","case"],"default":"none"},"sel":{"editor":"int","default":0,"min":0,"max":5},"pick":{"editor":"text","default":"auto"},"count":{"editor":"int","default":0,"min":0,"max":5},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const type = this.props.type ?? 'standard';
+    const idx = Number(this.props.idx ?? 1);
+    const mode = this.props.mode ?? 'default';
+
+    const ICON = {
+      market: 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2',
+      storyboard: 'M4 5h16v14H4z M4 11h16 M10 11v8',
+      birdseye: 'M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z M12 12l8-4.5 M12 12v9 M12 12L4 7.5',
+      scenario: 'M4 6h16v12H4z M10 9l5 3-5 3V9z',
+      spec: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7',
+      image: 'M4 5h16v14H4z M20 15l-5-5-8 8',
+      product: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z',
+      solution: 'M12 3l9 5-9 5-9-5 9-5z M3 13l9 5 9-5',
+      case: 'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z M9 14h6'
+    };
+    const TYPE_LABEL = { product: '제품', solution: '솔루션', image: '이미지', case: '유관 사례' };
+
+    // ── 시트 유형(역할) → 템플릿(그 역할을 가장 잘 보여주는 형태). 캔버스 'PPT 레이아웃 템플릿' 페이지와 같은 코드
+    // 템플릿: [코드, 이름, 언제 쓰나(메시지 · 데이터 모양), 썸네일]
+    const ST = {
+      MS: { name: '시장 규모 · 성장', msg: '이 시장은 크고, 커지고 있다', tpls: [
+        ['MS-A', '핵심 수치 4', '지표는 여럿인데 연도별 추이는 없을 때', 'kpi4'],
+        ['MS-B', '성장 추이', '연도별 시장 규모 데이터가 있을 때', 'barline'],
+        ['MS-C', 'TAM · SAM · SOM', '전체 중 노릴 수 있는 몫을 말할 때', 'circles'],
+        ['MS-D', '세그먼트 규모 × 성장률', '어디가 크고 빠른지, 고객 위치를 찍을 때', 'bubble'],
+        ['MS-E', '성장 동인 → 전망', '수치는 적어도 왜 커지는지 설득할 때', 'panel']] },
+      TR: { name: '산업 트렌드', msg: '업계가 이렇게 바뀐다', tpls: [
+        ['TR-A', '흐름 타임라인', '과거에서 다음으로 가는 방향을 보여줄 때', 'timeline'],
+        ['TR-B', '트렌드 → 고객 시사점', "트렌드마다 '그래서 A 커피는'을 붙일 때", 'cards2tier'],
+        ['TR-C', '영향도 × 시급성', '트렌드가 많아 우선순위가 필요할 때', 'quad']] },
+      CB: { name: '고객사 비즈니스', msg: '고객을 제대로 이해했다', tpls: [
+        ['CB-A', '한 줄 요약 + 3단', '공개 자료로 현황을 요약할 때', 'summary3'],
+        ['CB-B', '전략 목표 → 과제', '고객 전략과 이번 제안을 연결할 때', 'tree'],
+        ['CB-C', '운영 흐름 속 문제', '업무 단계마다 문제가 있을 때', 'process'],
+        ['CB-D', 'SWOT', '내부 · 외부 상황을 균형 있게 볼 때', 'swot']] },
+      US: { name: '사용자 분석', msg: '고객의 손님과 직원을 안다', tpls: [
+        ['US-A', '페르소나 3', '사용자 유형이 뚜렷이 나뉠 때', 'persona'],
+        ['US-B', '고객 여정 맵', '경험 흐름 속 개입 지점을 보여줄 때', 'journey'],
+        ['US-C', '사용자 구성 + 니즈', '방문객 구성 비율 데이터가 있을 때', 'donut']] },
+      CP: { name: '경쟁 환경', msg: '시장 판도는 이렇다', tpls: [
+        ['CP-A', '비교표', '공급사를 항목별로 따져볼 때', 'table'],
+        ['CP-B', '포지셔닝 맵', '구도와 빈자리를 한눈에 보여줄 때', 'scatter'],
+        ['CP-C', '점유율 + 추이', '점유율 데이터가 있을 때', 'stack']] },
+      IM: { name: 'MI 시사점', msg: '그래서 이번 제안은', tpls: [
+        ['IM-A', '발견 → 시사점 → 방향', 'MI를 제안 방향 하나로 좁힐 때', 'funnel'],
+        ['IM-B', '4분면 요약 + 결론', '경영진용 한 장 요약', 'quadCircle']] },
+      CH: { name: '고객 과제', msg: '지금 이런 문제가 있다', tpls: [
+        ['CH-A', '과제 3 + 영향', '문제와 그 비용을 함께 보여줄 때', 'pillars'],
+        ['CH-B', '지금 → 바라는 모습', '고객이 원하는 상태가 분명할 때', 'asis'],
+        ['CH-C', '문제 → 근본 원인', '원인을 짚어 제안의 필요성을 만들 때', 'tree']] },
+      VP: { name: '가치 제안', msg: '우리는 이런 가치를 준다', tpls: [
+        ['VP-A', '과제 ↔ 해결 1:1', '과제마다 해법을 짝지을 때', 'rows'],
+        ['VP-B', '가치 기둥 2 · 3 · 4', 'Key Message 수만큼 기둥으로 세울 때', 'pillars'],
+        ['VP-C', '한 문장 + 근거 3', '메시지 하나를 강하게 말할 때', 'statement'],
+        ['VP-D', '이해관계자별 가치', '의사결정자가 여럿일 때', 'persona']] },
+      EF: { name: '기대 효과', msg: '도입하면 이만큼 좋아진다', tpls: [
+        ['EF-A', 'KPI 전 → 후', '개선 수치(전/후)가 있을 때', 'hbars'],
+        ['EF-B', '투자 회수', '재무 관점으로 설득해야 할 때', 'roi'],
+        ['EF-C', '정량 + 정성 효과', '수치와 체감 효과를 함께 말할 때', 'split']] },
+      BV: { name: '공간 전경', msg: '완성된 공간을 미리 본다', tpls: [
+        ['BV-A', '풀폭 전경', '조감도 한 장으로 충분할 때', 'image'],
+        ['BV-B', '두 시점 비교', '주간/야간, 도입 전/후를 비교할 때', 'image2'],
+        ['BV-C', '전경 + 한 장 요약', '경영진에게 제안 전체를 요약할 때', 'imagePanel']] },
+      ZP: { name: '존별 포인트', msg: '공간마다 무엇이 달라지나', tpls: [
+        ['ZP-A', '번호 콜아웃', '조감도 한 장 위에 포인트를 찍을 때', 'callouts'],
+        ['ZP-B', '존 확대 컷', '존마다 디테일 이미지가 있을 때', 'zoom'],
+        ['ZP-C', '고객 동선 따라가기', '손님 동선 순서로 설명할 때', 'path']] },
+      SM: { name: '공간 맵', msg: '어디에 무엇을', tpls: [
+        ['SM-A', '존 맵 + 목록', '공간이 3곳 안팎일 때', 'zones'],
+        ['SM-B', '공간 × 제품 수량표', '공간 · 제품이 많아 교차표가 필요할 때', 'qtyMatrix']] },
+      PI: { name: '공간 제품 소개', msg: '이 공간에는 이 제품', product: true },
+      BM: { name: '구성 · 수량', msg: '무엇을 몇 대', tpls: [
+        ['BM-A', '전체 구성표', '견적 전에 전체 물량을 확정할 때', 'table'],
+        ['BM-B', '매장 유형별 구성', '매장 규모가 여러 가지일 때', 'cards3img']] },
+      SA: { name: '솔루션 구성도', msg: '어떻게 연결되나', tpls: [
+        ['SA-A', '계층형', '본사 → 클라우드 → 매장 구조일 때', 'tiers'],
+        ['SA-B', '허브형', '솔루션 하나가 여러 기기를 묶을 때', 'hub'],
+        ['SA-C', '레이어 스택', '제공 범위(누가 무엇을)를 보여줄 때', 'layers']] },
+      OP: { name: '운영 시나리오', msg: '어떻게 쓰이나', tpls: [
+        ['OP-A', '단계 타임라인', '하루 · 이벤트 흐름을 따라갈 때', 'timeline'],
+        ['OP-B', '역할별 스윔레인', '여러 역할이 한 흐름에 관여할 때', 'swimlane'],
+        ['OP-C', '도입 전 → 후 업무', '업무가 얼마나 줄어드는지 보여줄 때', 'stepsCompare']] },
+      SF: { name: '솔루션 상세', msg: '이 솔루션은 무엇을 하나', tpls: [
+        ['SF-A', '솔루션 + 함께 쓰는 제품', '솔루션 하나를 소개할 때', 'panelLeft'],
+        ['SF-B', '기능 → 고객 효과', '기능을 고객의 언어로 옮길 때', 'featureMap']] },
+      // 솔루션별 시트: 솔루션마다 전용 템플릿 1종 + 범용 템플릿 (전용이 기본 추천)
+      SXI: { name: '솔루션 소개', msg: '이 솔루션은 무엇이고, 언제 쓰나', role: 'I', generic: ['SF-A', 'SF-B'] },
+      SXD: { name: '솔루션 구성도', msg: '어떻게 연결되고 움직이나', role: 'D', generic: ['SA-A', 'SA-B', 'SA-C'] },
+      SXS: { name: '솔루션 공간 시나리오', msg: '고객의 공간에서 언제 · 어디서 일하나', role: 'S', generic: ['OP-A', 'OP-B', 'SS-A'] },
+      VM: { name: '공간 × 솔루션 전체 맵', msg: '공간마다 어떤 솔루션이', tpls: [
+        ['VM-A', '공간 × 솔루션 매트릭스', '공간과 솔루션이 격자로 맞을 때', 'matrix'],
+        ['VM-B', '공간 3개 한 장', '공간이 3곳이라 나란히 볼 때', 'cards3img'],
+        ['VM-C', '조감도 위 솔루션 핀', '조감도가 있어 위치로 보여줄 때', 'pins'],
+        ['VM-D', '하루 타임라인 × 공간', '시간에 따라 공간을 넘나들 때', 'swimlane']] },
+      SS: { name: '공간 시나리오', msg: '이 공간에서 이렇게 가치가 생긴다', tpls: [
+        ['SS-A', '한 공간의 장면 3', '시간대별 장면이 있을 때', 'scenes'],
+        ['SS-B', '솔루션 → 제품 → 가치', '인과(무엇이 · 무엇으로 · 어떤 가치)를 보일 때', 'chain'],
+        ['SS-C', '이 공간 전 → 후', '변화가 눈에 보이는 공간일 때', 'image2']] },
+      CD: { name: '사례 상세', msg: '비슷한 고객이 이렇게 성공했다', tpls: [
+        ['CD-A', '과제 · 해결 · 성과', '사례를 이야기로 풀 때', 'cases'],
+        ['CD-B', '도입 전 → 후 사진', '전후 사진이 있을 때', 'image2kpi'],
+        ['CD-C', '성과 수치 + 코멘트', '공개된 성과 수치가 강할 때', 'bignum']] },
+      CL: { name: '사례 모음', msg: '이미 여러 곳에서 검증됐다', tpls: [
+        ['CL-A', '2건 비교', '비슷한 사례 두 건을 나란히', 'cards2'],
+        ['CL-B', '3건 요약', '업종이 다른 사례 세 건', 'list3'],
+        ['CL-C', '레퍼런스 월', '사례 수 자체가 메시지일 때', 'logos']] },
+      CM: { name: '경쟁 비교', msg: '경쟁사보다 낫다', tpls: [
+        ['CM-A', '비교표 (삼성 강조)', '항목별로 우위를 보일 때', 'tableHl'],
+        ['CM-B', '요구사항별 충족도', '고객 요구사항을 기준으로 비교할 때', 'hbars'],
+        ['CM-C', '레이더 종합 비교', '여러 기준을 한 번에 종합할 때', 'radar']] },
+      ST: { name: '삼성 강점', msg: '삼성이어야 하는 이유', tpls: [
+        ['ST-A', '강점 3', '강점이 3개로 정리될 때', 'pillars'],
+        ['ST-B', '요구 ↔ 강점 2×2', '요구사항 4개에 하나씩 답할 때', 'grid4'],
+        ['ST-C', '강점 + 증거 수치', '검증된 수치가 있을 때', 'panel']] },
+      SV: { name: '지원 체계', msg: '도입 후에도 책임진다', tpls: [
+        ['SV-A', '도입 로드맵', '일정 · 단계 · 책임을 제시할 때', 'gantt'],
+        ['SV-B', '서비스 커버리지 + SLA', '매장이 전국에 흩어져 있을 때', 'mapTable']] },
+      SC: { name: '스펙 비교', msg: '제품별 사양 차이', tpls: [
+        ['SC-A', '사양 비교표 2~5개', '제품 간 사양 차이를 볼 때', 'specTable'],
+        ['SC-B', '요구사항 대응표', '요구사항 충족을 증명해야 할 때', 'checkTable']] },
+      SD: { name: '제품 상세', msg: '한 제품의 모든 것', tpls: [
+        ['SD-A', '그룹별 상세 사양', '사양 전체를 정리할 때', 'specGroups'],
+        ['SD-B', '치수 · 설치 정보', '설치 검토가 필요할 때', 'drawing']] }
+    };
+    // 삼성 솔루션별 전용 템플릿: [이름, { I 소개 · D 구성도 · S 공간 시나리오 — 무엇을 보여주나 }]
+    const SOLS = {
+      MGI: ['MagicINFO', { I: '서버 · 보안 요건과 데이터 연동을 앞세울 때', D: '사내 서버 · 방화벽 안에서 도는 구조', S: '가격이 바뀌면 매장까지 몇 분 — 데이터 연동 흐름' }],
+      VXT: ['Samsung VXT', { I: '설치 없이 바로 쓰는 구독형임을 강조할 때', D: '매장엔 화면만, 나머지는 클라우드', S: '점장이 휴대폰으로 3분 만에 교체' }],
+      STP: ['SmartThings Pro', { I: '여러 매장의 기기 · 에너지를 한 화면에', D: '기기는 매장에, 판단은 클라우드에', S: '매장의 하루 — 에너지 자동화' }],
+      BIT: ['b.IoT', { I: '공조 중심 빌딩 관리 · b.IoT / Lite 비교', D: '층별 설비 → 게이트웨이 → 관리 화면', S: '층 × 시간 — 쓰는 층만 쾌적하게' }],
+      LYN: ['LYNK Cloud', { I: '투숙객 · 호텔 양쪽의 가치', D: 'PMS ↔ LYNK Cloud ↔ 객실 TV', S: '체크인부터 체크아웃까지 객실 TV' }],
+      KNX: ['Knox Suite', { I: '받는 날부터 회수까지 — 기기 수명주기', D: '콘솔 하나 · 기기 속 업무 영역', S: '새 태블릿이 매장에서 바로 일하기까지' }],
+      KCP: ['Knox Capture', { I: '전용 스캐너 + 단말 → 갤럭시 1대', D: '스캔 값이 기존 앱까지 가는 길', S: '입고부터 계산대까지 한 대로' }],
+      DEX: ['Samsung DeX', { I: '휴대폰 하나로 PC 업무까지', D: '연결 방식 · 업무 자원 · 보안', S: '영업 사원의 하루, 기기는 하나' }],
+      CCH: ['삼성 콜드체인', { I: '성능 · 설치 · 관리 · 서비스 4 UP', D: '실외기 → 쇼케이스 · 저장고 → b.IoT Cloud', S: '한여름 오후 · 새벽에도 보관 온도 유지' }],
+      HVC: ['삼성 통합공조', { I: '개별 + 중앙공조 = b.IoT 하나로', D: '열원 → 냉수 → AHU · FCU, 개별 DVM', S: '건물마다 다른 운전 시간을 한 화면에' }],
+      SAC: ['SAC 제어 시스템', { I: '리모컨부터 BMS 연동까지 제어 단계', D: 'DMS · R1/R2 · F1/F2 통신 구조', S: '임대 호실별 제어 · 전력량 분배' }]
+    };
+    const ROLE = { I: ['전용 소개', 'solIntro'], D: ['전용 구성도', 'solDiagram'], S: ['전용 공간 시나리오', 'solScene'] };
+    // 업종별 공간 시나리오 (전용 S 템플릿의 업종 버전): 솔루션 → 업종 코드
+    const IND = { OF: '오피스', HT: '비즈니스 호텔', RT: '매장', GF: '스크린골프장', AC: '학원', LG: '물류센터', FD: '제조 현장', WH: '저온 저장시설' };
+    const VARS = { MGI: ['RT', 'HT'], VXT: ['RT', 'GF'], STP: ['OF', 'HT', 'GF'], BIT: ['HT', 'RT'], LYN: ['HT'], KNX: ['AC', 'FD'], KCP: ['LG'], DEX: ['OF', 'FD'], CCH: ['RT', 'WH'], HVC: ['OF', 'HT'], SAC: ['AC', 'GF'] };
+    // 업종별 제안 레이아웃 (도입사례 198건으로 나눈 16개 업종 × MI · Value Props · 공간 시나리오 3장씩): 업종 코드 → 업종명
+    const INDS = { FB: '외식 · 카페', RT: '리테일 · 플래그십', SV: '생활 편의 · 무인 매장', HT: '호텔 · 리조트', TP: '테마파크 · 전시', VN: '공연장 · 경기장', AD: '옥외 광고', OF: '오피스', RS: '주거 분양', ID: '인테리어 · 빌트인', ED: '교육 · 캠퍼스', PB: '공공 · 교통', MD: '의료 · 요양', MF: '제조 · 물류 · 현장', FN: '금융', OE: '파트너 전용 단말' };
+    const IROLE = {
+      MI: { A: ['시장 · 트렌드', 'barline', '업종 시장 규모 · 동인 → 그래서 고객에게'], B: ['고객 비즈니스 · 운영 과제', 'process', '업종 사업 구조 · KPI · 운영 과제'], C: ['사용자 여정', 'journey', '사용자 · 이해관계자 여정과 개입 지점'] },
+      VP: { A: ['과제 → 해법 → 효과', 'indVP', '업종 핵심 과제마다 삼성 해법과 효과'], B: ['이해관계자별 가치', 'persona', '업종의 결정권자 · 이용자별 가치'], C: ['기대 효과', 'hbars', '업종 KPI 전 → 후 · 투자 효과'] },
+      SS: { A: ['공간 맵', 'indMap', '업종 공간 전체 × 제품 · 솔루션 · 가치'], B: ['대표 공간 장면', 'scenes', '업종의 핵심 공간 한 곳의 장면'], C: ['하루 · 동선', 'indDay', '하루 · 동선 · 역할별 스윔레인'] }
+    };
+    // 시트 유형 → 업종 레이아웃 (고객 업종이 정해지면 고르기 목록 맨 앞에)
+    const IND_FOR = { MS: ['MI', 'A'], TR: ['MI', 'A'], CB: ['MI', 'B'], CP: ['MI', 'B'], IM: ['MI', 'B'], US: ['MI', 'C'], CH: ['VP', 'A'], VP: ['VP', 'A'], EF: ['VP', 'C'], VM: ['SS', 'A'], SM: ['SS', 'A'], SS: ['SS', 'B'], OP: ['SS', 'C'] };
+    const CUST_IND = 'FB'; // 샘플 고객 A 커피 프랜차이즈 → 외식 · 카페
+    const PV = { A: ['제품 이미지 중심', '제품 사진이 좋을 때 (기본)', 'pA'], B: ['공간 · 설치 중심', '설치 모습 · 조감도가 연결됐을 때', 'pB'], C: ['스펙 · 비교 중심', '수치 비교 · 라인업이 핵심일 때', 'pC'], D: ['강조형', '주력 제품을 지정했을 때', 'pD'] };
+    const prodRe = /^P(\d)-([A-D])$/;
+    const tplOf = (code) => {
+      const m = prodRe.exec(code || '');
+      if (m) { const c = Number(m[1]), v = m[2]; return { code, name: v === 'D' && c === 1 ? '메시지 강조' : PV[v][0], when: v === 'D' && c === 1 ? '제품 하나의 메시지를 강하게 말할 때' : PV[v][1], kind: v === 'D' && c === 1 ? 'pD1' : PV[v][2], n: c }; }
+      const im = /^(MI|VP|SS)-([A-Z]{2})-([ABC])$/.exec(code || '');
+      if (im && INDS[im[2]]) { const r = IROLE[im[1]][im[3]]; return { code, name: INDS[im[2]] + ' · ' + r[0], when: INDS[im[2]] + ' 고객용 — ' + r[2], kind: r[1], n: 3 }; }
+      const sm = /^([A-Z]{3})-([IDS])(?:-([A-Z]{2}))?$/.exec(code || '');
+      if (sm && SOLS[sm[1]] && sm[3] && IND[sm[3]]) return { code, name: IND[sm[3]] + ' 업종 버전', when: '고객 업종이 ' + IND[sm[3]] + '일 때 — 그 업종의 공간 사진과 순서로', kind: 'solSceneInd', n: 3 };
+      if (sm && SOLS[sm[1]]) return { code, name: SOLS[sm[1]][0] + ' ' + ROLE[sm[2]][0], when: SOLS[sm[1]][1][sm[2]], kind: ROLE[sm[2]][1], n: 3 };
+      const st = ST[code.split('-')[0]];
+      const t = st && st.tpls.find((x) => x[0] === code);
+      return t ? { code, name: t[1], when: t[2], kind: t[3], n: code === 'SC-A' ? 3 : 3 } : { code, name: code, when: '', kind: 'table', n: 3 };
+    };
+
+    // 제안서 유형: 섹션 순서 · 선택 섹션 · 화면 파일 접두어
+    const TYPES = {
+      standard: { name: '표준 제안서', secs: ['mi', 'vp', 'birdseye', 'spaceProducts', 'solution', 'cases', 'why', 'spec'], opt: ['mi', 'solution'], prefix: 'PRS', compose: 'PR3.dc.html' },
+      quickwin: { name: '퀵윈(제품) 제안서', secs: ['vp', 'spaceProducts', 'solution', 'cases', 'spec'], opt: ['solution'], prefix: 'PRQ', compose: 'PR3Quick.dc.html' },
+      solution: { name: 'Solution형 제안서', secs: ['bigMi', 'vp', 'spaceScenario', 'cases', 'why'], opt: ['vp'], prefix: 'PRX', compose: 'PR3Solution.dc.html' }
+    };
+
+    // 섹션: 연결 자료 · 시트(제목, 시트 유형, 자동 추천 템플릿, 추천 이유 = 데이터 모양) · 드롭 · 빠른 요청 · 드래그 시연
+    const SEC = {
+      mi: { name: 'Market Intelligence', short: 'MI',
+        intro: 'Market Intelligence 섹션입니다. 사이드바의 MI 작업을 끌어 놓으면 필요한 내용만 뽑아 시트에 넣고, 시트마다 데이터 모양에 맞는 템플릿을 골라 둡니다.',
+        sources: [['market', 'MI · A 커피 시장·경쟁사 분석']],
+        sheets: [['시장 규모 · 성장', 'MS', 'MS-B', '연결된 MI에 연도별 시장 규모(2020~2028)가 있어요'], ['고객사 비즈니스', 'CB', 'CB-C', '요구사항이 매장 운영 문제(메뉴 교체 · 가격 표기)예요'], ['경쟁 환경', 'CP', 'CP-A', '경쟁사 3곳을 요구사항 5개로 비교해요']],
+        side: ['MI 작업'], accepts: ['case'], quick: ['수치 근거 보강', '더 간결하게'],
+        demo: ['case', '글로벌 버거 체인 드라이브스루 옥외 메뉴보드', '유관 사례 · QSR · 2024'], demoSheet: 2 },
+      bigMi: { name: '대규모 MI', short: '대규모 MI',
+        intro: 'Solution형 제안서의 출발점인 대규모 Market Intelligence입니다. 산업·고객사·사용자·경쟁 구도를 넓게 다루며, 사이드바의 MI 작업 여러 개를 끌어 놓아 합칠 수 있습니다.',
+        sources: [['market', 'MI · A 커피 시장·경쟁사 분석'], ['market', 'MI · 국내 F&B 디지털 전환 동향']],
+        sheets: [['시장 규모 · 성장', 'MS', 'MS-C', '전 매장 확장 계획이 있어 노릴 수 있는 몫이 핵심이에요'], ['산업 트렌드', 'TR', 'TR-B', '트렌드 3개가 모두 A 커피 과제와 이어져요'], ['고객사 비즈니스', 'CB', 'CB-B', "고객 전략 문서에 '운영 효율' 목표가 있어요"], ['사용자 분석', 'US', 'US-B', '매장 방문 흐름 인터뷰가 있어요'], ['경쟁 환경', 'CP', 'CP-B', '공급사 6곳을 두 축으로 나눌 수 있어요']],
+        side: ['MI 작업'], accepts: ['case'], quick: ['조사 범위 넓히기', '출처 보기'],
+        demo: ['case', '글로벌 버거 체인 드라이브스루 옥외 메뉴보드', '유관 사례 · QSR · 2024'], demoSheet: 4 },
+      vp: { name: 'Value Props', short: 'Value Props',
+        intro: '고객에게 줄 핵심 가치를 정리합니다. Storyboard의 Key Message와 제안 전략을 가져와 고객 과제 → 가치 제안 흐름의 시트로 만들었습니다.',
+        sources: [['storyboard', 'Storyboard · A 커피 매장 리뉴얼']],
+        sheets: [['고객 과제', 'CH', 'CH-B', '요구사항에 바라는 운영 모습이 적혀 있어요'], ['가치 제안', 'VP', 'VP-B', 'Storyboard Key Message가 3개예요']],
+        side: ['Storyboard 작업'], accepts: ['image'], quick: ['가치 하나 추가', '경영진 톤으로'],
+        demo: ['image', '카페 메뉴보드 A · 2025', '이미지 · 사내 자산'], demoSheet: 1 },
+      birdseye: { name: '조감도', short: '조감도',
+        intro: '공간 특징이 드러나는 조감도 시트입니다. 공간 조감도 작업의 결과를 연결했고, 다른 조감도 작업이나 이미지를 끌어 놓아 바꿀 수 있습니다.',
+        sources: [['birdseye', '조감도 · 강남 플래그십 로비']],
+        sheets: [['공간 전경', 'BV', 'BV-A', '조감도 1장에 공간 전체가 들어와요'], ['존별 포인트', 'ZP', 'ZP-A', '조감도 위에 포인트 4곳이 표시돼 있어요']],
+        side: ['조감도 작업'], accepts: ['image'], quick: ['시점 추가', '조감도 새로 만들기'],
+        demo: ['image', '쇼윈도 투명 OLED', '이미지 · 사내 자산'], demoSheet: 1 },
+      spaceProducts: { name: '공간별 제품', short: '공간별 제품',
+        intro: '공간마다 어떤 제품이 어디에 놓이는지 보여줍니다. 조감도 배치안에서 공간 3곳과 제품을 가져왔고, 제품 탐색에서 끌어 놓아 더할 수 있습니다.',
+        sources: [['birdseye', '조감도 배치안 · 로비'], ['product', 'Smart Signage QM55C'], ['product', 'Outdoor Signage OH55C']],
+        sheets: [['공간 맵', 'SM', 'SM-A', '공간이 3곳이라 존 맵으로 충분해요'], ['카운터 · 메뉴보드', 'PI', 'P3-B', ''], ['쇼윈도 · 외부', 'PI', 'P2-A', ''], ['주문 · 대기 공간', 'PI', 'P1-B', '']],
+        side: ['조감도 · Spec 시트 작업'], accepts: ['product', 'image'], quick: ['공간 추가', '수량 조정'],
+        demo: ['product', 'QM65C', '제품 · Smart Signage 65"'], demoSheet: 1, droppedNote: '"카운터 · 메뉴보드" 시트에 배치됨 · 수량 320' },
+      solution: { name: '솔루션 제안', short: '솔루션 제안',
+        intro: '제품과 함께 쓸 솔루션을 제안합니다. 솔루션마다 전용 템플릿(소개 · 구성도 · 공간 시나리오)으로 그 솔루션의 특징대로 보여주고, 두 개 이상이면 통합 구성도를 더합니다.',
+        sources: [['solution', 'MagicINFO'], ['solution', 'SmartThings Pro'], ['scenario', '시나리오 · A 커피 매장 하루']],
+        sheets: [
+          ['MagicINFO · 소개', 'SXI', 'MGI-I', '연결된 솔루션 — MagicINFO 전용 템플릿이 있어요', 'MGI'],
+          ['MagicINFO · 구성도', 'SXD', 'MGI-D', '요구사항에 사내 서버 · 보안 조건이 있어요', 'MGI'],
+          ['MagicINFO · 공간 시나리오', 'SXS', 'MGI-S', 'POS 가격 연동이 핵심 장면이에요', 'MGI'],
+          ['SmartThings Pro · 소개', 'SXI', 'STP-I', '연결된 솔루션 — SmartThings Pro 전용 템플릿이 있어요', 'STP'],
+          ['SmartThings Pro · 구성도', 'SXD', 'STP-D', '매장 기기가 여러 종류이고 매장이 많아요', 'STP'],
+          ['SmartThings Pro · 공간 시나리오', 'SXS', 'STP-S', '영업시간 기반 에너지 절감이 요구사항에 있어요', 'STP'],
+          ['통합 구성도', 'SA', 'SA-A', '두 솔루션이 본사 → 매장으로 함께 배포돼요', '']],
+        side: ['공간 시나리오 작업'], accepts: ['solution', 'product'], quick: ['통합 운영 시나리오 추가', '운영 비용 추가'],
+        demo: ['solution', 'Samsung VXT', '솔루션 · 클라우드 CMS'], demoSheet: 0, droppedNote: 'VXT 전용 시트 3장(소개 · 구성도 · 공간 시나리오)이 추가됨' },
+      cases: { name: '유관 사례', short: '유관 사례',
+        intro: '비슷한 고객의 도입 사례로 설득력을 더합니다. 유사도가 높은 사례 2건을 골라 두었고, 유관 사례 검색에서 끌어 놓아 바꾸거나 더할 수 있습니다.',
+        sources: [['case', '국내 커피 프랜차이즈 800개 매장'], ['case', '편의점 체인 쇼윈도 투명 OLED']],
+        sheets: [['사례 · 커피 프랜차이즈', 'CD', 'CD-A', '과제 · 해결 · 성과가 모두 있는 사례예요'], ['사례 · 편의점 체인', 'CD', 'CD-B', '도입 전후 사진이 있어요']],
+        side: [], accepts: ['case', 'image'], quick: ['성과 수치 강조', '사례 한 장으로 모으기'],
+        demo: ['case', '글로벌 버거 체인 드라이브스루 옥외 메뉴보드', '유관 사례 · QSR · 해외 · 2024'], demoSheet: 1, droppedNote: '새 시트 "사례 · 버거 체인"이 추가됨' },
+      why: { name: 'Why Samsung', short: 'Why Samsung',
+        intro: '경쟁사 대비 삼성의 강점을 정리합니다. MI의 경쟁사 분석에서 비교 항목과 강점 3개를 가져왔습니다. 수치는 검증 전이라 [확정 필요]로 표시해 두었습니다.',
+        sources: [['market', 'MI · 경쟁사 → 삼성 강점']],
+        sheets: [['경쟁 비교', 'CM', 'CM-A', '경쟁사 2곳을 항목 6개로 비교해요'], ['삼성 강점', 'ST', 'ST-A', '강점이 3개이고 수치는 아직 검증 전이에요']],
+        side: ['MI 작업'], accepts: ['case'], quick: ['비교 항목 추가', '레퍼런스 강조'],
+        demo: ['case', '국내 커피 프랜차이즈 800개 매장 디지털 메뉴보드 전환', '유관 사례 · F&B · 2025'], demoSheet: 1 },
+      spec: { name: '제품 스펙', short: '제품 스펙',
+        intro: '제안한 제품의 스펙을 정리합니다. 공간별 제품에 들어간 모델로 비교표를 만들었고, Spec 시트 작업이나 제품 탐색에서 끌어 놓아 더할 수 있습니다.',
+        sources: [['spec', 'Spec 시트 · QM55C vs QB55C'], ['product', 'Outdoor Signage OH55C']],
+        sheets: [['스펙 비교', 'SC', 'SC-A', '제품 3종의 사양 차이를 보여줘요'], ['제품 상세 · QM55C', 'SD', 'SD-A', '주력 제품 1종의 전체 사양이에요']],
+        side: ['Spec 시트 작업'], accepts: ['product'], quick: ['제품별로 나누기', '영문 스펙'],
+        demo: ['product', 'QM65C', '제품 · Smart Signage 65"'], demoSheet: 0 },
+      spaceScenario: { name: '공간별 가치 제공 시나리오', short: '공간별 가치 시나리오',
+        intro: '어떤 솔루션이 어느 공간에서, 어떤 제품과 함께, 어떻게 쓰이는지를 시나리오로 보여줍니다. 공간 시나리오 작업을 가져와 공간 3곳 × 솔루션 2개로 구성했습니다.',
+        sources: [['scenario', '시나리오 · A 커피 매장 하루'], ['solution', 'MagicINFO'], ['solution', 'SmartThings Pro'], ['birdseye', '조감도 · 로비']],
+        sheets: [['공간 × 솔루션 맵', 'VM', 'VM-A', '공간 3곳 × 솔루션 2개가 격자로 맞아요'], ['본사 운영실', 'SS', 'SS-B', '솔루션 → 제품 → 가치가 한 공간에서 이어져요'], ['매장 카운터', 'SS', 'SS-A', '시간대별 장면 3개가 있어요'], ['매장 외부', 'SS', 'SS-C', '도입 전후 차이가 눈에 보이는 공간이에요']],
+        side: ['공간 시나리오 · 조감도 작업'], accepts: ['solution', 'product', 'image'], quick: ['공간 추가', '솔루션 추가'],
+        demo: ['solution', 'Samsung VXT', '솔루션 · 클라우드 CMS'], demoSheet: 0, droppedNote: '"공간 × 솔루션 맵"에 열 추가 · 본사 운영실 시트 갱신' }
+    };
+
+    // 딸깍: 섹션별로 무엇을 근거로 추론해 채우는지
+    const INFER = {
+      mi: '연결된 MI 작업 + 요구사항 기반 조사',
+      bigMi: '연결된 MI 2건 + 산업·경쟁 추가 조사',
+      vp: 'Storyboard Key Message · 전략으로 작성',
+      birdseye: '연결된 조감도 작업으로 완성',
+      spaceProducts: '조감도 배치안 · 요구사항에서 제품 추론',
+      solution: '연결된 솔루션 2개 · 시나리오로 작성',
+      cases: '유사도 상위 사례 자동 선택',
+      why: 'MI 경쟁사 분석으로 비교 작성',
+      spec: '공간별 제품 모델로 비교표 생성',
+      spaceScenario: '시나리오 작업 + 공간별 솔루션 매핑 추론'
+    };
+
+    const T = TYPES[type] || TYPES.standard;
+    const keys = T.secs;
+    const n = keys.length;
+    const i0 = Math.min(Math.max(idx, 1), n) - 1;
+    const key = keys[i0];
+    const S = SEC[key];
+    const hrefOf = (i) => T.prefix + (i + 1) + '.dc.html';
+
+    const isDragSidebar = mode === 'dragSidebar', isExtract = mode === 'extract';
+    const isDragItem = mode === 'dragItem', isDropped = mode === 'dropped';
+    const isLayout = mode === 'layout';
+    const dragging = isDragSidebar || isDragItem;
+    const noSrc = isDragSidebar || isExtract;
+    const [demoKind, demoLabel, demoSub] = S.demo;
+
+    // 섹션 레일
+    const railBase = 'display: flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; border-radius: 999px; font-size: 12px; white-space: nowrap; flex-shrink: 0;';
+    const rail = keys.map((k, i) => {
+      const st = i < i0 ? 'done' : i === i0 ? 'cur' : 'todo';
+      const opt = T.opt.includes(k);
+      return {
+        label: SEC[k].short, count: SEC[k].sheets.length, href: hrefOf(i), done: st === 'done',
+        tip: SEC[k].name + (opt ? ' (선택 섹션)' : ''),
+        style: railBase + (st === 'cur' ? ' background: #eaeefb; border: 1px solid #1428a0; color: #1428a0; font-weight: 700;' : st === 'done' ? ' background: #f5f6f8; border: 1px solid #f5f6f8; color: #596170;' : ' background: #ffffff; border: 1px ' + (opt ? 'dashed' : 'solid') + ' #d5d9e0; color: #596170;'),
+        countStyle: 'min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 999px; font-size: 10.5px; display: flex; align-items: center; justify-content: center;' + (st === 'cur' ? ' background: #1428a0; color: #ffffff;' : ' background: #e2e5ea; color: #596170;')
+      };
+    });
+    const totalSheets = keys.reduce((a, k) => a + SEC[k].sheets.length, 0) + (isDropped && key === 'cases' ? 1 : 0);
+
+    // 연결된 자료
+    const chip = 'display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 2px 0 10px; border-radius: 8px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12px; color: #121417; white-space: nowrap;';
+    const sources = noSrc ? [] : S.sources.map(([k, label]) => ({ icon: ICON[k], label, style: chip }));
+    if (isDropped) sources.push({ icon: ICON[demoKind], label: demoLabel, style: chip + ' border-color: #1428a0; box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #1428a0;' });
+
+    // 시트 카드 + 템플릿 고르기
+    const pick = String(this.props.pick ?? 'auto');
+    let sheetDefs = S.sheets.slice();
+    if (isDropped && key === 'cases') sheetDefs.push(['사례 · 버거 체인', 'CD', 'CD-C', '성과 수치가 공개된 사례예요']);
+    const selI = Math.min(Math.max(Number(this.props.sel ?? 0), 0), sheetDefs.length - 1);
+    const [selTitle, selSt, selAuto, selReason] = sheetDefs[selI];
+    const selM = prodRe.exec(selAuto);
+    const selProd = selSt === 'PI';
+    const pCount = Number(this.props.count) > 0 ? Math.min(Number(this.props.count), 5) : selM ? Number(selM[1]) : 3;
+    const recV = S.sources.some((s) => s[0] === 'birdseye') ? 'B' : 'A';
+    const recCode = selProd ? 'P' + pCount + '-' + recV : selAuto;
+    const pickCode = pick === 'auto' ? recCode : (selProd ? 'P' + pCount + '-' + pick : pick);
+    const LAYOUT_DEMO = { mi: 'PRS1Layout.dc.html', spaceProducts: 'PRS4Layout.dc.html', solution: 'PRS5Layout.dc.html', why: 'PRS7Layout.dc.html' };
+    const layoutHref = type === 'standard' && LAYOUT_DEMO[key] ? LAYOUT_DEMO[key] : hrefOf(i0);
+    const selSol = sheetDefs[selI][4] || '';
+    const tagBase = 'position: absolute; right: 8px; top: 7px; height: 15px; padding: 0 5px; border-radius: 4px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+    const sheets = sheetDefs.map(([title, st, auto], i) => {
+      const updated = isDropped && (key === 'cases' ? i === sheetDefs.length - 1 : i === S.demoSheet);
+      const status = noSrc ? 'need' : updated ? 'upd' : 'ready';
+      const isSel = isLayout && i === selI;
+      const code = isSel ? pickCode : auto;
+      const fixed = isSel && pick !== 'auto';
+      const t = tplOf(code);
+      const hl = updated || isSel;
+      return {
+        title, href: layoutHref, kind: t.kind, n: code === 'SC-A' ? 3 : t.n,
+        tag: fixed ? code + ' · 직접' : '자동 · ' + code,
+        tagStyle: tagBase + (fixed ? ' background: #1428a0; color: #ffffff; border: 1px solid #1428a0;' : ' background: #ffffff; color: #596170; border: 1px solid #e2e5ea;'),
+        status: status === 'need' ? '자료 필요' : status === 'upd' ? '업데이트됨' : isSel ? '템플릿 고르는 중' : ST[st].name,
+        statusStyle: 'display: flex; align-items: center; gap: 5px; font-size: 11px; white-space: nowrap; overflow: hidden;' + (status === 'upd' || isSel ? ' color: #1428a0; font-weight: 700;' : status === 'need' ? ' color: #8a91a0;' : ' color: #596170;'),
+        dotStyle: 'width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box;' + (status === 'need' ? ' border: 1.5px solid #b8bec8;' : ' background: #1428a0;'),
+        cardStyle: 'display: flex; flex-direction: column; align-items: flex-start; gap: 6px; box-sizing: border-box; min-height: 124px; padding: 8px; border-radius: 10px; background: #ffffff; text-align: left; color: #121417; min-width: 0;' + (hl ? ' border: 1.5px solid #1428a0; box-shadow: 0 0 0 3px rgba(20,40,160,0.1);' : ' border: 1px solid #e2e5ea;')
+      };
+    });
+
+    const segOn = 'height: 26px; padding: 0 12px; border: none; border-radius: 8px; background: #ffffff; color: #121417; font-size: 12px; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12);';
+    const segOff = 'height: 26px; padding: 0 12px; border: none; border-radius: 8px; background: transparent; color: #596170; font-size: 12px; font-weight: 500;';
+    const vCard = 'display: flex; flex-direction: column; align-items: flex-start; gap: 5px; box-sizing: border-box; min-width: 0; padding: 7px; border-radius: 10px; background: #ffffff; text-align: left;';
+    const codes = selProd ? ['A', 'B', 'C', 'D'].map((v) => 'P' + pCount + '-' + v)
+      : ST[selSt].generic ? [selSol + '-' + ST[selSt].role].concat(ST[selSt].role === 'S' ? (VARS[selSol] || []).map((x) => selSol + '-S-' + x) : []).concat(ST[selSt].generic).slice(0, 5)
+      : (IND_FOR[selSt] ? [IND_FOR[selSt][0] + '-' + CUST_IND + '-' + IND_FOR[selSt][1]] : []).concat(ST[selSt].tpls.map((x) => x[0])).slice(0, 5);
+    // 템플릿 고르기 중에는 시트가 많으면 같은 솔루션(그룹)의 시트만 보여줌
+    const grouped = isLayout && sheets.length > 5;
+    const shownSheets = grouped ? sheets.filter((s, i) => (sheetDefs[i][4] || '') === selSol).slice(0, 5) : sheets;
+    const sheetLabel = grouped ? (selSol ? SOLS[selSol][0] : '통합') + ' 시트 ' + shownSheets.length + ' · 섹션 전체 ' + sheets.length : '시트 ' + sheets.length;
+    const variants = !isLayout ? [] : codes.map((c) => {
+      const t = tplOf(c);
+      const on = c === pickCode;
+      return {
+        code: c, name: t.name, when: t.when, kind: t.kind, n: c === 'SC-A' ? 3 : t.n, on,
+        isAutoOn: on && pick === 'auto', isRecOnly: c === recCode && !(on && pick === 'auto'),
+        cardStyle: vCard + (on ? ' border: 1.5px solid #1428a0; box-shadow: 0 0 0 3px rgba(20,40,160,0.1);' : ' border: 1px solid #e2e5ea;'),
+        radioStyle: 'width: 12px; height: 12px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box;' + (on ? ' border: 4px solid #1428a0;' : ' border: 1.5px solid #b8bec8;')
+      };
+    });
+    const PRODS = ['QM55C', 'KM24C', 'QM65C', 'OH55C', 'QM43C'];
+    const countPills = [1, 2, 3, 4, 5].map((c) => ({ n: c, aria: '제품 ' + c + '개', style: 'width: 28px; height: 28px; border-radius: 8px; font-family: Manrope, sans-serif; font-size: 13px;' + (c === pCount ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 800;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 600;') }));
+    const reason = selProd ? '조감도 배치안이 연결돼 설치 모습이 핵심이에요 · 앞 시트와도 겹치지 않아요' : selReason;
+
+    // 사이드바 MI 작업 추출 결과
+    const EX = [
+      ['시장 규모 · 성장률 (연도별)', '→ 시장 규모 · 성장 · 성장 추이 템플릿', true],
+      ['A 커피 매장 운영 프로세스', '→ 고객사 비즈니스 · 운영 흐름 템플릿', true],
+      ['경쟁사 비교표 (3사)', '→ 경쟁 환경 · 비교표 템플릿', true],
+      ['사용자 페르소나', '이 섹션엔 없는 시트 · 사용자 분석 시트로 추가 가능', false]
+    ];
+    const extract = EX.map(([what, to, on]) => ({ what, to, on, toStyle: 'flex-grow: 1; text-align: right; font-size: 12px;' + (on ? ' color: #1428a0;' : ' color: #8a91a0;') }));
+
+    const acceptChips = S.side.map((s) => s + ' (사이드바)').concat(S.accepts.map((t) => TYPE_LABEL[t]));
+    const next = i0 < n - 1 ? { href: hrefOf(i0 + 1), label: '다음: ' + SEC[keys[i0 + 1]].short } : { href: 'PR6.dc.html', label: '다음: 디자인 템플릿' };
+
+    // 딸깍 확인 팝오버: 확정된 것 / 추론해 채울 것
+    const planConfirmed = ['고객 · 프로젝트', T.name, '시트 구성'].concat(keys.slice(0, i0).map((k) => SEC[k].short));
+    const planRows = [{ label: S.short + ' (작성 중)', note: '입력한 내용 반영 · ' + INFER[key] }]
+      .concat(keys.slice(i0 + 1).map((k) => ({ label: SEC[k].short, note: INFER[k] })))
+      .concat([{ label: '디자인 템플릿', note: '삼성 B2B 표준 (기본값)' }, { label: 'PPTX 생성', note: '표지 · 목차 포함' }]);
+    const remainSheets = keys.slice(i0).reduce((a, k) => a + SEC[k].sheets.length, 0);
+
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 4,
+      isOneClick: mode === 'oneClick', planConfirmed, planRows,
+      planSummary: '섹션 ' + (n - i0) + ' · 시트 ' + remainSheets,
+      sbGroup: noSrc ? 'market' : 'proposal',
+      sbCurrent: noSrc ? '' : 'A 커피 프랜차이즈 메뉴보드 제안',
+      popover: this.props.popover ?? 'none',
+      acceptsStr: S.accepts.join(','),
+      dragItem: isDragItem ? demoLabel : '',
+      added: isDropped ? demoLabel : '',
+      typeName: T.name, rail, totalSheets,
+      intro: isExtract ? 'MI 작업에서 이 섹션에 쓸 내용을 뽑았습니다. 어느 시트에, 어떤 템플릿으로 들어갈지 함께 표시했어요.' : isLayout ? '메시지와 데이터에 맞는 템플릿을 고르세요. 자동 추천을 두거나 직접 골라 고정해요.' : S.intro,
+      showMain: !isExtract, isExtract, noSources: sources.length === 0, showSources: !isLayout,
+      sources, sheets: shownSheets, sheetCount: sheets.length, sheetLabel, composeHref: T.compose,
+      isLayout, selTitle, selMsg: ST[selSt].msg, variantCount: variants.length,
+      isAutoPick: pick === 'auto', isManualPick: pick !== 'auto',
+      segAuto: pick === 'auto' ? segOn : segOff, segManual: pick !== 'auto' ? segOn : segOff,
+      showCount: isLayout && selProd, countPills, countNote: PRODS.slice(0, pCount).join(' · '),
+      variants, recCode, reason,
+      variantGrid: 'grid-template-columns: repeat(' + Math.max(variants.length, 1) + ', minmax(0, 1fr))',
+      extract, exCount: EX.length, selfHref: hrefOf(i0),
+      secName: S.name, secNo: i0 + 1, secTotal: n, quick: S.quick.concat(['템플릿 바꾸기']),
+      dropIdle: !dragging && !isDropped, dragging, isDropped, isDragSidebar, isDragItem,
+      acceptChips,
+      dropTitle: isDragSidebar ? '놓으면 이 섹션에 필요한 내용만 추출합니다' : '여기에 놓아 「' + demoLabel + '」 추가',
+      dropSub: isDragSidebar ? '추출 결과를 확인한 뒤 ' + S.name + ' 시트에 반영됩니다' : '→ ' + S.name + ' · 관련 시트가 함께 업데이트됩니다',
+      demoIcon: ICON[demoKind], demoLabel, demoSub,
+      droppedNote: S.droppedNote || ('"' + S.sheets[S.demoSheet][0] + '" 시트에 반영됨'),
+      placeholder: S.name + ' 수정 요청 (예: 시트 순서 바꾸기, 내용 보강)',
+      prevHref: i0 > 0 ? hrefOf(i0 - 1) : T.compose,
+      nextHref: next.href, nextLabel: next.label
+    };
+  }
+}
+</script>
+</body>
+</html>

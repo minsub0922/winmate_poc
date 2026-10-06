@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-PB-A 공공 · 교통 인프라 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">S 지자체의 여섯 공간, 화면과 단말이 상황실로 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">도시 단면으로 본 여섯 공간 — 공간마다 놓는 삼성 제품 · 솔루션과 그곳에서 지키는 가치</div>
+
+  <!-- 도시 단면: 하늘 · 지상 · 지하 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 1152px; height: 224px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 64px; top: 318px; width: 1152px; height: 66px; border-radius: 0 0 14px 14px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 317px; width: 1152px; height: 2px; background: #b8bec8"></div>
+
+  <!-- 곡선 · 다각형 요소 (산 · 탐방로 · 박공 · 비 · 계단) -->
+  <svg style="position: absolute; left: 64px; top: 160px; width: 1152px; height: 224px" viewBox="64 160 1152 224" fill="none">
+    <polygon points="1044,318 1110,248 1134,262 1170,234 1216,264 1216,318" fill="#d5d9e0"></polygon>
+    <polyline points="1086,318 1100,304 1090,292 1112,278 1104,268 1122,256" stroke="#8a91a0" stroke-width="1.5" stroke-dasharray="3 3" fill="none"></polyline>
+    <polygon points="1044,300 1066,288 1088,300" fill="#8a91a0"></polygon>
+    <polygon points="476,250 542,226 608,250" fill="#b8bec8"></polygon>
+    <polyline points="872,240 866,254" stroke="#b8bec8" stroke-width="1.5" fill="none"></polyline>
+    <polyline points="892,236 886,250" stroke="#b8bec8" stroke-width="1.5" fill="none"></polyline>
+    <polyline points="912,244 906,258" stroke="#b8bec8" stroke-width="1.5" fill="none"></polyline>
+    <polyline points="952,238 946,252" stroke="#b8bec8" stroke-width="1.5" fill="none"></polyline>
+    <polyline points="972,246 966,260" stroke="#b8bec8" stroke-width="1.5" fill="none"></polyline>
+    <polyline points="996,240 990,254" stroke="#b8bec8" stroke-width="1.5" fill="none"></polyline>
+  </svg>
+
+  <!-- 단면 속 시설 · 기기 (사각 요소) -->
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}"></div>
+  </sc-for>
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="6">
+    <span style="{{t.style}}">{{t.text}}</span>
+  </sc-for>
+
+  <!-- 관제망: 상황실 ← 역사 · 재난 현장 · 탐방로 -->
+  <sc-for list="{{net}}" as="n" hint-placeholder-count="5">
+    <div style="{{n.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 584px; top: 164px; width: 310px; height: 20px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #b8c3ee; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #1428a0; white-space: nowrap">관제망 — 안내 화면 상태 · 현장 단말 위치 · SOS가 상황실로</div>
+
+  <!-- 공간 표지 (단면 위 번호) -->
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="6">
+    <div style="{{m.pos}}">
+      <span style="height: 24px; box-sizing: border-box; padding: 0 9px 0 3px; border-radius: 999px; background: #ffffff; border: 1px solid {{m.border}}; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{m.n}}</span><span style="font-size: 12px; font-weight: 800; color: #121417">{{m.name}}</span></span>
+    </div>
+  </sc-for>
+
+  <!-- 공간별: 놓는 것 · 움직이는 것 · 가치 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.box}}">
+      <span style="position: absolute; left: 12px; top: 11px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">{{c.name}}</span>
+      <span style="position: absolute; left: 12px; top: 33px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{c.sub}}</span>
+      <div style="position: absolute; left: 12px; top: 56px; width: 152px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px">
+        <sc-for list="{{c.chips}}" as="h" hint-placeholder-count="3">
+          <span style="{{h.style}}">{{h.name}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 8px; top: 140px; width: 160px; height: 44px; box-sizing: border-box; padding: 6px 8px; border-radius: 8px; background: #eaeefb; font-size: 12px; font-weight: 700; line-height: 16px; color: #1428a0">{{c.value}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 전체 구성: 제품 ↔ 솔루션 -->
+  <div style="position: absolute; left: 64px; top: 598px; width: 1152px; height: 50px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 603px; font-size: 12.5px; font-weight: 800; line-height: 18px; white-space: nowrap">전체 구성</div>
+  <div style="position: absolute; left: 80px; top: 627px; display: flex; align-items: center; gap: 5px; font-size: 10.5px; line-height: 14px; color: #596170; white-space: nowrap">
+    <span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 3px; background: #ffffff; border: 1px solid #b8bec8"></span><span>제품</span>
+    <span style="width: 10px; height: 10px; border-radius: 3px; background: #1428a0; margin-left: 3px"></span><span>솔루션</span>
+    <span style="width: 10px; height: 10px; border-radius: 3px; background: #eaeefb; margin-left: 3px"></span><span>기능</span>
+  </div>
+  <div style="position: absolute; left: 228px; top: 604px; width: 1px; height: 38px; background: #d5d9e0"></div>
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+    <div style="{{g.pos}}">
+      <sc-for list="{{g.nums}}" as="u" hint-placeholder-count="1">
+        <span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{u.n}}</span>
+      </sc-for>
+      <span style="width: 52px; font-size: 11.5px; font-weight: 800; color: #121417">{{g.name}}</span>
+      <sc-for list="{{g.prods}}" as="p" hint-placeholder-count="1">
+        <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{p.name}}</span>
+      </sc-for>
+      <span style="font-size: 12px; font-weight: 700; color: #8a91a0">↔</span>
+      <sc-for list="{{g.sols}}" as="o" hint-placeholder-count="2">
+        <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{o.name}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>S 지자체 · 공공 인프라 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const rect = (x, y, w, h, extra) => ({ style: A + box(x, y, w, h) + extra });
+
+    // 6열 — 단면의 시설과 아래 공간 설명이 같은 열에 놓입니다
+    const W = 176;
+    const colX = (i) => 64 + Math.round(i * 195.2);   // 64 · 259 · 454 · 650 · 845 · 1040
+    const mid = (i) => colX(i) + W / 2;
+
+    // 단면 속 시설 (지면 y 318) — 모두 예시 도식
+    const DARK = 'background: #1f232a; border: 2px solid #121417; box-sizing: border-box; border-radius: 2px;';
+    const shapes = [
+      // ① 교통정보센터 — 건물 단면, 벽면 상황판, 관제석, 교차로 CCTV
+      rect(84, 234, 136, 84, 'background: #d5d9e0; border-radius: 6px 6px 0 0;'),
+      rect(92, 242, 120, 76, 'background: #ffffff; border-radius: 3px 3px 0 0;'),
+      rect(100, 249, 104, 36, DARK),
+      rect(103, 252, 48, 30, 'background: #1428a0;'),
+      rect(154, 252, 47, 14, 'background: #3d4452;'),
+      rect(154, 268, 47, 14, 'background: #3d4452;'),
+      rect(177, 252, 1, 30, 'background: #1f232a;'),
+      rect(106, 304, 40, 6, 'background: #b8bec8; border-radius: 2px;'),
+      rect(158, 304, 40, 6, 'background: #b8bec8; border-radius: 2px;'),
+      rect(121, 293, 9, 9, 'background: #8a91a0; border-radius: 50%;'),
+      rect(173, 293, 9, 9, 'background: #8a91a0; border-radius: 50%;'),
+      rect(198, 222, 2, 12, 'background: #b8bec8;'),
+      rect(232, 276, 2, 42, 'background: #8a91a0;'),
+      rect(225, 271, 13, 7, 'background: #596170; border-radius: 2px;'),
+      // ② 역사 — 출입구 캐노피 · 고휘도 사이니지, 지하 대합실 · 승강장
+      rect(292, 288, 72, 6, 'background: #8a91a0; border-radius: 2px;'),
+      rect(296, 294, 2, 24, 'background: #b8bec8;'),
+      rect(358, 294, 2, 24, 'background: #b8bec8;'),
+      rect(378, 280, 16, 38, DARK),
+      rect(381, 283, 10, 22, 'background: #1428a0;'),
+      rect(268, 323, 160, 26, 'background: #f5f6f8; border-radius: 4px;'),
+      rect(404, 326, 12, 20, DARK),
+      rect(407, 329, 6, 10, 'background: #1428a0;'),
+      rect(268, 354, 160, 26, 'background: #f5f6f8; border-radius: 4px;'),
+      rect(318, 365, 104, 12, 'background: #b8bec8; border-radius: 4px;'),
+      rect(334, 356, 28, 6, 'background: #1f232a; border-radius: 1px;'),
+      // ③ 시청 · 행정동 — 사무 공간의 복합기
+      rect(482, 250, 120, 68, 'background: #d5d9e0;'),
+      rect(496, 262, 92, 42, 'background: #ffffff; border-radius: 3px;'),
+      rect(526, 282, 32, 20, 'background: #596170; border-radius: 3px;'),
+      rect(531, 277, 22, 5, 'background: #b8bec8; border-radius: 1px;'),
+      rect(504, 296, 16, 6, 'background: #b8bec8; border-radius: 1px;'),
+      rect(566, 296, 16, 6, 'background: #b8bec8; border-radius: 1px;'),
+      // ④ 도서관 — 천장 원형 시스템에어컨 · 서가
+      rect(668, 254, 140, 64, 'background: #d5d9e0; border-radius: 28px 28px 0 0;'),
+      rect(682, 268, 112, 50, 'background: #ffffff; border-radius: 4px 4px 0 0;'),
+      rect(702, 272, 14, 14, 'box-sizing: border-box; background: #ffffff; border: 2px solid #1428a0; border-radius: 50%;'),
+      rect(760, 272, 14, 14, 'box-sizing: border-box; background: #ffffff; border: 2px solid #1428a0; border-radius: 50%;'),
+      rect(690, 296, 30, 22, 'background: #b8bec8; border-radius: 2px 2px 0 0;'),
+      rect(756, 296, 30, 22, 'background: #b8bec8; border-radius: 2px 2px 0 0;'),
+      // ⑤ 하천 · 재난 현장 — 하천, 교량, 통제선, 현장 직원(러기드폰)
+      rect(862, 319, 142, 22, 'background: #b8c3ee; border-radius: 0 0 10px 10px;'),
+      rect(852, 306, 162, 5, 'background: #8a91a0; border-radius: 2px;'),
+      rect(898, 311, 4, 30, 'background: #8a91a0;'),
+      rect(962, 311, 4, 30, 'background: #8a91a0;'),
+      rect(921, 279, 10, 10, 'background: #596170; border-radius: 50%;'),
+      rect(919, 290, 14, 16, 'background: #596170; border-radius: 5px 5px 2px 2px;'),
+      rect(934, 289, 6, 9, 'background: #1428a0; border-radius: 1px;'),
+      rect(968, 293, 34, 6, 'background: #121417; border-radius: 1px;'),
+      rect(972, 299, 2, 7, 'background: #121417;'),
+      rect(996, 299, 2, 7, 'background: #121417;'),
+      // ⑥ 공원 · 탐방로 — 탐방센터, 워치를 찬 탐방객, SOS
+      rect(1048, 300, 36, 18, 'background: #b8bec8;'),
+      rect(1060, 306, 10, 12, 'background: #ffffff;'),
+      rect(1118, 244, 8, 8, 'background: #596170; border-radius: 50%;'),
+      rect(1117, 253, 10, 12, 'background: #596170; border-radius: 4px 4px 2px 2px;'),
+      rect(1127, 256, 4, 4, 'background: #1428a0; border-radius: 1px;'),
+      rect(1109, 237, 26, 26, 'box-sizing: border-box; border: 1.5px solid #6f82d6; border-radius: 50%;')
+    ];
+    const tag = (x, y, text, bold) => ({ text, style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10px; line-height: 13px; white-space: nowrap; ' + (bold ? 'font-weight: 800; color: #1428a0;' : 'color: #596170;') });
+    const tags = [
+      tag(296, 273, '출입구', false),
+      tag(274, 329, '대합실', false),
+      tag(274, 360, '승강장', false),
+      tag(1138, 243, 'SOS', true),
+      tag(972, 280, '통제', false)
+    ];
+
+    // 관제망 — 상황실(①)에 역사(②) · 재난 현장(⑤) · 탐방로(⑥)가 연결
+    const NY = 174;
+    const net = [
+      { style: A + 'left: ' + px(mid(0)) + 'top: ' + px(NY) + 'width: ' + px(mid(5) - mid(0)) + 'height: 0; border-top: 2px dashed #1428a0;' }
+    ].concat([0, 1, 4, 5].map((i) => rect(mid(i) - 1, NY, 2, 20, 'background: #1428a0;')));
+
+    // 공간 표지
+    const MK = [['1', '교통정보센터'], ['2', '역사 · 정류장'], ['3', '시청 · 행정동'], ['4', '도서관'], ['5', '하천 · 재난 현장'], ['6', '공원 · 탐방로']];
+    const marks = MK.map(([n, name], i) => ({
+      n, name,
+      border: (i === 2 || i === 3) ? '#d5d9e0' : '#1428a0',
+      pos: A + box(colX(i), 194, W, 24) + 'display: flex; justify-content: center;'
+    }));
+
+    // 공간별 설명 — 제품(p) · 솔루션(s) · 제품 기능(f)
+    const chip = (k) => 'height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + (
+      k === 'p' ? 'background: #ffffff; border: 1px solid #b8bec8; color: #121417;'
+      : k === 's' ? 'background: #1428a0; color: #ffffff;'
+      : 'background: #eaeefb; color: #1428a0;');
+    const C = [
+      ['교통정보센터 상황실', '상황실 벽면 · 관제석 · 24시간',
+        [['The Wall · 모듈러 LED', 'p'], ['퀀텀 프로세서 Flex', 'f'], ['CCTV · 교통 데이터 연동', 's']],
+        '수십 대 모니터 대신 한 장의 상황판으로 교대 관제'],
+      ['역사 · 정류장', '출입구 · 대합실 · 승강장',
+        [['고휘도 스마트 사이니지', 'p'], ['터치형 안내 사이니지', 'p'], ['MagicINFO 원격 관리', 's']],
+        '햇빛 · 먼지 속에서도 읽히는 다국어 안내'],
+      ['시청 · 행정 사무 공간', '민원 · 행정 출력 · 보안 문서',
+        [['A3 컬러 디지털 복합기', 'p'], ['카드 태깅 · 출력 실명제', 's'], ['통합 모니터링 · 상주 AS', 's']],
+        '출력물 정보 유출을 막고 장애는 바로 대응'],
+      ['도서관 · 공공시설', '자료실 · 어린이실 · 휴게실',
+        [['시스템에어컨 360', 'p'], ['천장 매립 · 4계절 공기청정', 'f']],
+        '오래 머물러도 직바람 없이 고르게 쾌적'],
+      ['하천 · 재난 현장', '야외 현장 · 재난 · 화재',
+        [['갤럭시 엑스커버 러기드폰', 'p'], ['PS-LTE PTT · 비상 키', 's'], ['Knox 단말 보안', 's']],
+        '장갑 낀 손으로 비상 PTT, 분실해도 정보는 안전'],
+      ['공원 · 탐방로', '등산로 · 탐방센터',
+        [['갤럭시 워치 (대여 · 직원)', 'p'], ['낙상 감지 · SOS', 'f'], ['안전 관제 앱 연동', 's']],
+        '위급 순간을 스스로 알려 골든타임 확보']
+    ];
+    const cards = C.map(([name, sub, ch, value], i) => ({
+      name, sub, value,
+      chips: ch.map(([n, k]) => ({ name: n, style: chip(k) })),
+      box: A + box(colX(i), 394, W, 194) + 'box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea;'
+    }));
+
+    // 전체 구성 — 2행 × 2묶음
+    const G = [
+      [['1'], '상황판', ['The Wall 상황판'], ['기존 관제 · CCTV 연동']],
+      [['2'], '안내', ['스마트 사이니지'], ['MagicINFO', '종합안내 앱 · 파트너']],
+      [['5', '6'], '현장 안전', ['갤럭시 엑스커버 · 워치'], ['Knox · PS-LTE PTT', '안전 관제 앱']],
+      [['3', '4'], '시설', ['디지털 복합기', '시스템에어컨 360'], ['보안 출력 · 케어 서비스']]
+    ];
+    const groups = G.map(([nums, name, prods, sols], i) => ({
+      name,
+      nums: nums.map((n) => ({ n })),
+      prods: prods.map((n) => ({ name: n })),
+      sols: sols.map((n) => ({ name: n })),
+      pos: A + box(244 + (i % 2) * 480, 602 + Math.floor(i / 2) * 22, 470, 20) + 'display: flex; align-items: center; gap: 6px; white-space: nowrap;'
+    }));
+
+    return { shapes, tags, net, marks, cards, groups };
+  }
+}
+</script>
+</body>
+</html>

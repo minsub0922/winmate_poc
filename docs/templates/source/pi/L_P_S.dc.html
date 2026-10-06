@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-S 한 제품 · 여러 공간</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 캠퍼스 전역</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">한 모델로 통일하고, 공간마다 다른 일을 맡깁니다 — QM55C</div>
+
+  <!-- 연결선: 가운데 제품 → 네 공간 (개별 div 선) -->
+  <sc-for list="{{lines}}" as="l" hint-placeholder-count="10">
+    <div style="{{l}}"></div>
+  </sc-for>
+
+  <!-- 네 공간 패널 -->
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.box}}">
+      <div style="position: relative; width: 140px; height: 184px; flex-shrink: 0; border-radius: 10px; background: #dfe3ea; overflow: hidden">
+        <sc-for list="{{s.mount}}" as="m" hint-placeholder-count="2">
+          <div style="{{m}}"></div>
+        </sc-for>
+        <div style="{{s.screen}}">
+          <sc-for list="{{s.ui}}" as="u" hint-placeholder-count="6">
+            <span style="{{u.style}}">{{u.t}}</span>
+          </sc-for>
+        </div>
+        <span style="position: absolute; left: 10px; top: 158px; font-size: 12px; color: #8a91a0">공간 사진</span>
+      </div>
+      <div style="display: flex; flex-direction: column; min-width: 0; flex-grow: 1">
+        <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{s.name}}</span>
+        <span style="margin-top: 2px; font-size: 12.5px; color: #596170; white-space: nowrap">{{s.where}}</span>
+        <span style="margin-top: 14px; font-size: 12px; font-weight: 700; color: #1428a0">화면이 맡는 일</span>
+        <span style="margin-top: 2px; font-size: 15px; font-weight: 700; white-space: nowrap">{{s.show}}</span>
+        <span style="margin-top: 2px; font-size: 13px; color: #3d4452; white-space: nowrap">{{s.when}}</span>
+        <div style="flex-grow: 1"></div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 12px; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{s.mountName}}</span>
+          <span style="display: flex; align-items: baseline; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; color: #1428a0">{{s.qty}}</span><span style="font-size: 13px; font-weight: 700; color: #1428a0">대</span></span>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 가운데 표준 모델 -->
+  <div style="position: absolute; left: 510px; top: 160px; width: 260px; height: 408px; box-sizing: border-box; border-radius: 16px; border: 2px solid #1428a0; background: #ffffff; padding: 20px; display: flex; flex-direction: column; align-items: center">
+    <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">캠퍼스 표준 모델</span>
+    <div style="margin-top: 16px; width: 216px; height: 120px; flex-shrink: 0; border-radius: 12px; background: #f5f6f8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+      <div style="width: 160px; height: 90px; box-sizing: border-box; border-radius: 4px; background: #1f232a; border: 4px solid #121417; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #6b7280">제품 이미지</div>
+    </div>
+    <span style="margin-top: 14px; font-family: Manrope, sans-serif; font-size: 34px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em">QM55C</span>
+    <span style="margin-top: 2px; font-size: 13px; color: #596170">Smart Signage</span>
+    <span style="margin-top: 8px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #3d4452">55" · 500nit · 4K · 24/7</span>
+    <div style="flex-grow: 1"></div>
+    <div style="width: 216px; height: 1px; flex-shrink: 0; background: #e2e5ea"></div>
+    <span style="margin-top: 10px; font-size: 12px; color: #596170">캠퍼스 전체 · 네 공간 합계</span>
+    <span style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; color: #1428a0">×[000]</span><span style="font-size: 16px; font-weight: 800; color: #1428a0">대</span></span>
+  </div>
+
+  <!-- 왜 한 모델인가 -->
+  <div style="position: absolute; left: 64px; top: 608px; width: 1152px; height: 40px; box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 0 20px; display: flex; align-items: center; gap: 14px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+    <span style="font-size: 14px; font-weight: 800; color: #1428a0">왜 한 모델인가</span>
+    <span style="font-size: 14px; color: #121417">부품 · 예비품 · 콘텐츠 규격 하나로 — 운영팀 관리 부담 ↓</span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12.5px; color: #596170">공간별 수량은 현장 실사 후 확정</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 · 스마트 캠퍼스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const abs = (l, t, w, h) => 'position: absolute; left: ' + l + 'px; top: ' + t + 'px; width: ' + w + 'px; height: ' + h + 'px; ';
+    // 패널 위치: 좌상 · 좌하 · 우상 · 우하 (390 × 220)
+    const POS = [[64, 136], [64, 372], [826, 136], [826, 372]];
+
+    // 화면 속 콘텐츠 스케치 (화면 안쪽 106 × 57 기준)
+    const bar = (l, t, w, c) => ({ style: abs(l, t, w, 4) + 'border-radius: 1px; background: ' + c, t: '' });
+    const head = (l, w, c) => ({ style: abs(l, 5, w, 5) + 'border-radius: 1px; background: ' + c, t: '' });
+    const UI = {
+      timetable: [head(6, 44, '#6f82d6'),
+        bar(6, 16, 14, '#596170'), bar(24, 16, 54, '#596170'),
+        bar(6, 26, 14, '#596170'), bar(24, 26, 46, '#b8c3ee'), bar(84, 26, 16, '#6f82d6'),
+        bar(6, 36, 14, '#596170'), bar(24, 36, 60, '#596170'),
+        bar(6, 46, 14, '#596170'), bar(24, 46, 40, '#596170')],
+      menu: [head(6, 30, '#6f82d6'), head(66, 32, '#596170'),
+        bar(6, 16, 42, '#596170'), bar(6, 26, 36, '#596170'), bar(6, 36, 46, '#596170'), bar(6, 46, 30, '#596170'),
+        { style: abs(66, 32, 8, 19) + 'background: #6f82d6', t: '' },
+        { style: abs(78, 24, 8, 27) + 'background: #6f82d6', t: '' },
+        { style: abs(90, 38, 8, 13) + 'background: #b8c3ee', t: '' }],
+      seats: [head(6, 40, '#6f82d6')].concat(
+        Array.from({ length: 24 }, (_, i) => {
+          const c = i % 8, r = Math.floor(i / 8);
+          const free = [2, 5, 9, 14, 15, 20].includes(i);
+          return { style: abs(6 + c * 12, 16 + r * 12, 9, 9) + 'border-radius: 1px; background: ' + (free ? '#6f82d6' : '#3d4452'), t: '' };
+        })),
+      queue: [head(6, 30, '#596170'),
+        { style: abs(6, 14, 60, 34) + 'font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 34px; color: #ffffff', t: '127' },
+        { style: abs(68, 20, 30, 22) + 'box-sizing: border-box; border: 2px solid #6f82d6; border-radius: 3px', t: '' },
+        bar(6, 48, 50, '#596170')]
+    };
+    // 설치 방식별 사진 속 배치 (사진 140 × 184 기준)
+    const scr = (t) => abs(14, t, 112, 63) + 'box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417';
+    const floor = abs(0, 150, 140, 1) + 'background: #b8bec8';
+    const MOUNT = {
+      wall: { name: '벽부착', screen: scr(44), parts: [floor] },
+      stand: { name: '스탠드', screen: scr(30), parts: [floor, abs(68, 93, 4, 53) + 'background: #8a91a0', abs(44, 146, 52, 4) + 'border-radius: 2px; background: #8a91a0'] },
+      ceiling: { name: '천장 매달기', screen: scr(36), parts: [floor, abs(36, 0, 2, 36) + 'background: #8a91a0', abs(102, 0, 2, 36) + 'background: #8a91a0'] }
+    };
+    const S = [
+      ['강의동 복도', '각 층 엘리베이터 앞', '오늘 시간표 · 휴강 안내', '쉬는 시간, 걸으면서 확인', 'timetable', 'wall', '×[00]'],
+      ['학생식당', '배식구 앞 · 입구', '오늘 메뉴 · 혼잡도', '줄 서기 전에 메뉴를 고른다', 'menu', 'stand', '×[0]'],
+      ['도서관', '열람실 입구', '열람실 좌석 현황', '빈자리를 찾아 헤매지 않게', 'seats', 'wall', '×[0]'],
+      ['행정동 민원 창구', '창구 [0]석 위', '대기 번호 호출', '내 차례를 앉아서 확인', 'queue', 'ceiling', '×[0]']
+    ];
+    const spaces = S.map(([name, where, show, when, ui, mount, qty], i) => ({
+      name, where, show, when, qty,
+      ui: UI[ui],
+      mount: MOUNT[mount].parts,
+      mountName: MOUNT[mount].name,
+      screen: MOUNT[mount].screen,
+      box: abs(POS[i][0], POS[i][1], 390, 220) + 'box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 18px; display: flex; gap: 16px'
+    }));
+
+    // 연결선: 패널 중앙(y 246 · 482) → 세로 모음선 → 카드 중앙(y 364)
+    const ln = 'background: #6f82d6';
+    const dot = (cx, cy) => abs(cx - 4, cy - 4, 8, 8) + 'border-radius: 50%; background: #1428a0';
+    const lines = [
+      abs(454, 245, 28, 2) + ln, abs(454, 481, 28, 2) + ln, abs(481, 245, 2, 238) + ln, abs(482, 363, 28, 2) + ln,
+      abs(798, 245, 28, 2) + ln, abs(798, 481, 28, 2) + ln, abs(797, 245, 2, 238) + ln, abs(770, 363, 28, 2) + ln,
+      dot(482, 364), dot(798, 364)
+    ];
+    return { spaces, lines };
+  }
+}
+</script>
+</body>
+</html>

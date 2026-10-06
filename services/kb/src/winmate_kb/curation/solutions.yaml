@@ -1,0 +1,192 @@
+# Winmate 솔루션 카탈로그 11개 (갭 G-SOL-1) — 순서 고정
+# 원천: 00-shell §5.4.2(이름 · 설명 · id · 템플릿 코드 · KB 대응) · 부록 A(아이콘 path) · §5.9(MagicINFO 시트 보드 원문)
+#       10-proposal 부록 B(PR3 설명 · 전용 템플릿 설명 · 업종 버전)
+# - kb_ids: KB solution 대응(draft, seed winmate_solution_set). 없으면 [] — KB 에 없는 솔루션(G-SOL-1)
+# - title_aliases: 사례 제목에서 이 솔루션을 찾을 이름(§7.2.12 '제목에 명시')
+# - industries 는 여기 적지 않는다: KB kg_edge FEATURED_BY_SITE(업종 페이지 추천)에서 계산한다
+# - profile: 솔루션 프로필(갭 G-SOL-2). 보드에 원문이 있는 MagicINFO 만. 나머지는 null → 시트는 KB 메시지(E1)로 대신
+industry_chips:
+  retail: {label: 리테일, verticals: [kr_retail, kr_fnb, us_retail, us_qsr]}
+  hospitality: {label: 호스피탈리티, verticals: [kr_hotel, us_hospitality]}
+  education: {label: 교육, verticals: [kr_school, kr_academy, us_education]}
+  healthcare: {label: 헬스케어, verticals: [kr_hospital, kr_clinic]}
+  office: {label: 오피스, verticals: [kr_office, kr_small_office, us_corporate]}
+
+solutions:
+  - id: magicinfo
+    name: MagicINFO
+    domain: 디스플레이
+    desc: 디스플레이 · 설치형 사이니지 CMS · 콘텐츠 · 스케줄 · 데이터 연동
+    icon: M3 4h18v12H3z M8 20h8
+    template_code: MGI
+    kb_ids: [sol_magicinfo]
+    kb_match: full
+    title_aliases: [MagicINFO, 매직인포, Magic INFO]
+    version_label: MagicINFO™ 8
+    category_path: [디스플레이 솔루션, 사이니지 CMS]
+    subtitle: 삼성 스마트 사이니지 콘텐츠 관리 솔루션 (CMS)
+    key_chips: [Author · Server · Player, 설치형, 클라우드형 (월 구독)]
+    intro_url: https://www.samsung.com/sec/business/display-solutions/magicinfo/
+    purchase_note: 별도 구매 · 견적 문의 ({site_code}) · 라이선스 단가 [견적 확인]
+    supported_devices: {label: 삼성 스마트 사이니지, example_family_id: fam_G000182628}
+    proposal: {summary: 설치형 사이니지 CMS, intro: 서버 · 보안 요건과 데이터 연동을 앞세울 때, diagram: 사내 서버 · 방화벽 안에서 도는 구조, scenario: 가격이 바뀌면 매장까지 몇 분 — 데이터 연동 흐름, industry_versions: [{code: MGI-S-RT, label: 매장}, {code: MGI-S-HT, label: 비즈니스 호텔}]}
+    profile:
+      intro: 콘텐츠를 만들고 예약해 배포하는 일, 사이니지 기기를 원격으로 살피는 일, 외부 데이터를 화면에 연결하는 일을 한 서버에서 하는 삼성 사이니지 CMS입니다.
+      pillars:
+        - {name: 콘텐츠 관리, items: [제작, 스케줄링, 배포]}
+        - {name: 디바이스 관리, items: [모니터링, 제어, 알림]}
+        - {name: 데이터 관리, items: [자동화, 분석, 시각화]}
+      parts:
+        - {name: MagicINFO Author, does: "템플릿 · 클립아트 · 시각 효과를 조합해 콘텐츠를 만들고, HTML · CSS · JS 요소도 코딩 없이 넣습니다."}
+        - {name: MagicINFO Server, does: "재생 목록에 담아 날짜 · 시간별로 예약 배포하고, 연결된 기기를 실시간 모니터링 · 원격 제어하며 통계를 봅니다."}
+        - {name: MagicINFO Player, does: "8K 화질과 멀티스크린 동시 재생을 지원하고, 거의 모든 웹 표준 콘텐츠를 재생합니다."}
+        - {name: MagicINFO Datalink, does: "외부 데이터를 콘텐츠에 연결하는 기능 (공식 기능 목록 기준)."}
+      deploy:
+        - {name: 설치형 — 고객사 서버, desc: 웹으로 MagicINFO 서버에 접속해 네트워크의 모든 디스플레이를 원격 관리합니다., evidence_deployment_id: dep_33}
+        - {name: 클라우드형 — 월 구독, desc: 별도 서버 구축 없이 월 구독으로 씁니다. 일반 기업 첫 도입 사례로 소개됨., evidence_deployment_id: dep_2129}
+      device_functions: [보안 제어, 원격 펌웨어 업데이트, 기기 상태, 메일 알림]
+      source_note: 출처 · samsung.com MagicINFO 소개 페이지 · 견적 페이지 · 도입사례 2건 (2026-10-02 확인) · 설명은 원문을 줄여 쓴 것
+      status: board_text
+
+  - id: vxt
+    name: Samsung VXT
+    domain: 디스플레이
+    desc: 디스플레이 · 클라우드 사이니지 CMS · Canvas · 원격 관리
+    icon: M4 16a4 4 0 0 1 1-7.9A6 6 0 0 1 17 8a4 4 0 0 1 1 8H4z
+    template_code: VXT
+    kb_ids: [sol_vxt]
+    kb_match: full
+    title_aliases: [VXT]
+    category_path: [디스플레이 솔루션, 클라우드 사이니지 CMS]
+    subtitle: 클라우드 사이니지 CMS · Canvas · 원격 관리
+    purchase_note: 별도 구매 · 견적 문의 ({site_code}) · 라이선스 단가 [견적 확인]
+    supported_devices: {label: 삼성 스마트 사이니지, example_family_id: fam_G000182628}
+    proposal: {summary: 클라우드 사이니지 CMS, intro: 설치 없이 바로 쓰는 구독형임을 강조할 때, diagram: "매장엔 화면만, 나머지는 클라우드", scenario: 점장이 휴대폰으로 3분 만에 교체, industry_versions: [{code: VXT-S-RT, label: 매장}, {code: VXT-S-GF, label: 스크린골프장}]}
+
+  - id: smartthings_pro
+    name: SmartThings Pro
+    domain: 공간 · 에너지
+    desc: 공간 · 에너지 · 여러 사업장 IoT · 에너지 대시보드
+    icon: M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z M12 2v3 M12 19v3 M2 12h3 M19 12h3
+    template_code: STP
+    kb_ids: [sol_smartthings_pro]
+    kb_match: full
+    title_aliases: [SmartThings Pro, 스마트싱스 프로]
+    category_path: [공간 · 에너지 솔루션, 여러 사업장 IoT]
+    subtitle: 여러 사업장 IoT · 에너지 대시보드
+    purchase_note: 견적 문의 · 단가 [견적 확인]
+    proposal: {summary: 여러 사업장 IoT · 에너지, intro: 여러 매장의 기기 · 에너지를 한 화면에, diagram: "기기는 매장에, 판단은 클라우드에", scenario: 매장의 하루 — 에너지 자동화, industry_versions: [{code: STP-S-OF, label: 오피스}, {code: STP-S-HT, label: 비즈니스 호텔}, {code: STP-S-GF, label: 스크린골프장}]}
+
+  - id: biot
+    name: b.IoT
+    domain: 공간 · 에너지
+    desc: 공간 · 에너지 · 공조 중심 빌딩 관리
+    icon: M4 21V3h10v18 M14 9h6v12 M8 7h2 M8 11h2 M8 15h2
+    template_code: BIT
+    kb_ids: [sol_biot]
+    kb_match: full
+    title_aliases: [b.IoT]
+    category_path: [공간 · 에너지 솔루션, 공조 중심 빌딩 관리]
+    subtitle: 공조 중심 빌딩 관리
+    purchase_note: 별도 구매 · 견적 문의 ({site_code}) · 단가 [견적 확인]
+    proposal: {summary: null, intro: 공조 중심 빌딩 관리 · b.IoT / Lite 비교, diagram: 층별 설비 → 게이트웨이 → 관리 화면, scenario: 층 × 시간 — 쓰는 층만 쾌적하게, industry_versions: [{code: BIT-S-HT, label: 비즈니스 호텔}, {code: BIT-S-RT, label: 매장}]}
+
+  - id: lynk_cloud
+    name: LYNK Cloud
+    domain: 호스피탈리티
+    desc: 호스피탈리티 · 호텔 객실 TV · 투숙객 서비스
+    icon: M3 5h18v14H3z M3 10h18
+    template_code: LYN
+    kb_ids: [sol_lynk_cloud]
+    kb_match: full
+    title_aliases: [LYNK Cloud, 링크 클라우드]
+    category_path: [호스피탈리티 솔루션, 호텔 객실 TV]
+    subtitle: 호텔 객실 TV · 투숙객 서비스
+    purchase_note: 별도 구매 · 견적 문의 ({site_code}) · 라이선스 단가 [견적 확인]
+    proposal: {summary: null, intro: 투숙객 · 호텔 양쪽의 가치, diagram: PMS ↔ LYNK Cloud ↔ 객실 TV, scenario: 체크인부터 체크아웃까지 객실 TV, industry_versions: [{code: LYN-S-HT, label: 비즈니스 호텔}]}
+
+  - id: knox_suite
+    name: Knox Suite
+    domain: 모바일
+    desc: 모바일 · 업무용 갤럭시 등록 · 관리 · 보안
+    icon: M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z
+    template_code: KNX
+    kb_ids: [sol_knox]
+    kb_match: partial
+    kb_note: KB 는 'Knox 솔루션'(Samsung Knox 전체)으로만 있다 — Knox Suite 와 부분 일치(Q-KB-4)
+    title_aliases: [Knox Suite]
+    category_path: [모바일 솔루션, 업무용 갤럭시 관리 · 보안]
+    subtitle: 업무용 갤럭시 등록 · 관리 · 보안
+    purchase_note: 별도 구매 · 견적 문의 ({site_code}) · 라이선스 단가 [견적 확인]
+    proposal: {summary: 업무용 갤럭시 관리 · 보안, intro: 받는 날부터 회수까지 — 기기 수명주기, diagram: 콘솔 하나 · 기기 속 업무 영역, scenario: 새 태블릿이 매장에서 바로 일하기까지, industry_versions: [{code: KNX-S-AC, label: 학원}, {code: KNX-S-FD, label: 제조 현장}]}
+
+  - id: knox_capture
+    name: Knox Capture
+    domain: 모바일
+    desc: 모바일 · 갤럭시 카메라로 바코드 스캔
+    icon: M4 6v12 M7 6v12 M10 6v12 M14 6v12 M17 6v12 M20 6v12
+    template_code: KCP
+    kb_ids: []
+    kb_match: none
+    title_aliases: [Knox Capture, 녹스 캡처]
+    category_path: [모바일 솔루션, 바코드 스캔]
+    subtitle: 갤럭시 카메라로 바코드 스캔
+    proposal: {summary: null, intro: 전용 스캐너 + 단말 → 갤럭시 1대, diagram: 스캔 값이 기존 앱까지 가는 길, scenario: 입고부터 계산대까지 한 대로, industry_versions: [{code: KCP-S-LG, label: 물류센터}]}
+
+  - id: dex
+    name: Samsung DeX
+    domain: 모바일
+    desc: 모바일 · 휴대폰을 모니터에 연결해 PC처럼
+    icon: M3 5h14v10H3z M7 19h6 M19 9h2v10h-2z
+    template_code: DEX
+    kb_ids: []
+    kb_match: none
+    title_aliases: [Samsung DeX, 삼성 덱스, DeX]
+    category_path: [모바일 솔루션, 휴대폰 PC 모드]
+    subtitle: 휴대폰을 모니터에 연결해 PC처럼
+    proposal: {summary: null, intro: 휴대폰 하나로 PC 업무까지, diagram: 연결 방식 · 업무 자원 · 보안, scenario: "영업 사원의 하루, 기기는 하나", industry_versions: [{code: DEX-S-OF, label: 오피스}, {code: DEX-S-FD, label: 제조 현장}]}
+
+  - id: cold_chain
+    name: 삼성 콜드체인
+    domain: 공조
+    desc: 공조 · 냉장 · 냉동 쇼케이스 · 저장고 + 에어컨 통합 관리
+    icon: M12 2v20 M4.9 7l14.2 10 M4.9 17L19.1 7
+    template_code: CCH
+    kb_ids: []
+    kb_match: none
+    kb_note: KB 에는 솔루션이 없고 카테고리 '콜드체인 시스템'(cat_Cold_Chain_System)만 있다
+    kb_category_id: cat_Cold_Chain_System
+    title_aliases: [콜드체인]
+    category_path: [공조 솔루션, 냉장 · 냉동 + 에어컨 통합 관리]
+    subtitle: 냉장 · 냉동 쇼케이스 · 저장고 + 에어컨 통합 관리
+    proposal: {summary: 냉장 · 냉동 + 에어컨 통합 관리, intro: 성능 · 설치 · 관리 · 서비스 4 UP, diagram: 실외기 → 쇼케이스 · 저장고 → b.IoT Cloud, scenario: 한여름 오후 · 새벽에도 보관 온도 유지, industry_versions: [{code: CCH-S-RT, label: 매장}, {code: CCH-S-WH, label: 저온 저장시설}]}
+
+  - id: hvac_integrated
+    name: 삼성 통합공조
+    domain: 공조
+    desc: 공조 · 개별공조 + 중앙공조 + b.IoT 통합
+    icon: M3 8h12a3 3 0 1 0-3-3 M3 12h16a3 3 0 1 1-3 3 M3 16h8
+    template_code: HVC
+    kb_ids: []
+    kb_match: none
+    kb_note: KB 에는 솔루션이 없고 카테고리 '중앙공조'(cat_central-air-conditionings)만 있다
+    kb_category_id: cat_central-air-conditionings
+    title_aliases: [통합공조]
+    category_path: [공조 솔루션, 개별공조 + 중앙공조 통합]
+    subtitle: 개별공조 + 중앙공조 + b.IoT 통합
+    proposal: {summary: 개별 + 중앙공조 + b.IoT, intro: 개별 + 중앙공조 = b.IoT 하나로, diagram: "열원 → 냉수 → AHU · FCU, 개별 DVM", scenario: 건물마다 다른 운전 시간을 한 화면에, industry_versions: [{code: HVC-S-OF, label: 오피스}, {code: HVC-S-HT, label: 비즈니스 호텔}]}
+
+  - id: sac_control
+    name: SAC 제어 시스템
+    domain: 공조
+    desc: 공조 · 리모컨부터 DMS · BMS 연동 · 전력량 분배
+    icon: M4 6h16 M4 12h16 M4 18h16 M9 4v4 M15 10v4 M7 16v4
+    template_code: SAC
+    kb_ids: [sol_dms, sol_touch_central_controller, sol_wifi_kit]
+    kb_match: partial
+    kb_note: KB 의 DMS 2.5 · 터치 중앙 제어기 · Wi-Fi KIT 세 솔루션 묶음(부분 일치)
+    title_aliases: [DMS]
+    category_path: [공조 솔루션, 시스템에어컨 제어]
+    subtitle: 리모컨부터 DMS · BMS 연동 · 전력량 분배
+    purchase_note: 별도 구매 · 견적 문의 ({site_code}) · 단가 [견적 확인]
+    proposal: {summary: 시스템에어컨 제어 · 전력량 분배, intro: 리모컨부터 BMS 연동까지 제어 단계, diagram: DMS · R1/R2 · F1/F2 통신 구조, scenario: 임대 호실별 제어 · 전력량 분배, industry_versions: [{code: SAC-S-AC, label: 학원}, {code: SAC-S-GF, label: 스크린골프장}]}

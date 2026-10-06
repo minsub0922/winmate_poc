@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>시나리오 2/4 — 공간 시나리오 입력</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="scenario" current="A 커피 매장 하루 시나리오" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 시나리오 생성" title="A 커피 매장 하루 시나리오" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 28px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 22px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6"><span style="font-weight: 600">with 솔루션</span> · 솔루션 + 연관 제품 활용</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px">
+            <div style="font-size: 14.5px; line-height: 1.65">고객 공간에서 벌어지는 시나리오를 적어주세요. 하루의 흐름(오픈 → 피크 → 마감)이나 특정 상황(신메뉴 출시일)처럼 시간 축이 있으면 장면을 나누기 좋습니다. 등장인물(점장, 손님, 본사 담당자)도 함께 적어주세요.</div>
+            <div style="display: flex; gap: 8px; font-size: 12.5px; color: #596170"><span style="color: #1428a0; font-weight: 700">Tip</span><span>Storyboard나 조감도 작업이 있다면 사이드바에서 끌어와 공간·고객 정보를 재사용할 수 있습니다.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">공간 시나리오 <span style="color: #596170; font-weight: 500">· 2 / 4</span></div>
+          <div style="display: flex; gap: 6px">
+            <span style="font-size: 12px; color: #596170; align-self: center">예시 골격</span>
+            <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">매장 하루</button>
+            <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">신메뉴 출시일</button>
+            <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">장애 발생 상황</button>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 0 18px">
+          <label for="sc" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">공간 시나리오 입력</label>
+          <textarea id="sc" style="width: 100%; height: 150px; box-sizing: border-box; resize: none; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; padding: 12px 14px; font-size: 14px; line-height: 1.6; color: #121417; outline: none">07:00 점장이 매장을 오픈한다. 메뉴보드가 아침 메뉴로 켜져 있어야 한다.
+11:30 점심 피크. 주문 줄이 길어지고 프로모션 음료가 잘 팔린다.
+14:00 본사 마케팅팀이 전국 320개 매장에 오후 프로모션을 배포한다.
+21:00 마감. 메뉴보드가 자동으로 꺼지고 전력 사용량이 집계된다.</textarea>
+        </div>
+        <div style="padding: 10px 18px 0 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+          <span style="font-size: 12px; color: #596170">등장인물</span>
+          <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center">점장 ×</span>
+          <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center">손님 ×</span>
+          <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center">본사 마케팅 담당자 ×</span>
+          <label for="ch" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">등장인물 추가</label>
+          <input id="ch" placeholder="추가…" style="width: 120px; height: 28px; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: flex-end; gap: 8px">
+          <a href="SC1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+          <a href="SC3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+            <span>솔루션 · 제품 입력</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return { steps: ['시나리오 유형', '공간 시나리오 입력', '솔루션 · 제품 입력', '시나리오 생성'], cur: 2 }; }
+}
+</script>
+</body>
+</html>

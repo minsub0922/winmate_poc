@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-MF-A 제조 · 물류 · 현장 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">L 제조 공장의 여섯 공간, 하나의 관제 화면으로 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">생산동부터 물류 야드까지 — 공간마다 놓이는 삼성 제품 · 솔루션과 그 자리에서 생기는 가치</div>
+
+  <!-- 1. 공장 배치도 (예시) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 662px; height: 356px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 170px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">L 제조 [OO] 공장 · 배치도</span><span style="font-size: 11px; color: #8a91a0">예시 배치 · 실제 도면으로 교체</span></div>
+  <div style="position: absolute; left: 446px; top: 172px; width: 260px; height: 16px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; font-size: 10.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1px solid #b8bec8; background: #ffffff"></span>건물 · 실내</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1.5px dashed #8a91a0"></span>야외 구역</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #1428a0"></span>삼성 구성 위치</span>
+  </div>
+
+  <!-- 구내 도로 -->
+  <div style="position: absolute; left: 84px; top: 390px; width: 622px; height: 12px; border-radius: 4px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 404px; top: 200px; width: 8px; height: 194px; border-radius: 4px; background: #e2e5ea"></div>
+
+  <sc-for list="{{blocks}}" as="b" hint-placeholder-count="7">
+    <div style="{{b.frame}}"></div>
+    <div style="{{b.nameStyle}}">{{b.name}}</div>
+    <div style="{{b.subStyle}}">{{b.sub}}</div>
+    <div style="{{b.marker}}">{{b.n}}</div>
+  </sc-for>
+
+  <!-- 공간 안쪽 구획 -->
+  <sc-for list="{{inner}}" as="r" hint-placeholder-count="5">
+    <div style="{{r.style}}">{{r.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 642px; top: 466px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap">정문<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+
+  <!-- 공간별 삼성 구성 아이콘 -->
+  <sc-for list="{{icons}}" as="ic" hint-placeholder-count="12">
+    <div style="{{ic.style}}">
+      <sc-if value="{{ic.air}}" hint-placeholder-val="{{false}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="8" rx="2"></rect><path d="M7 16v4M12 16v5M17 16v4"></path></svg>
+      </sc-if>
+      <sc-if value="{{ic.tab}}" hint-placeholder-val="{{false}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="2.5"></rect><path d="M10 18.5h4"></path></svg>
+      </sc-if>
+      <sc-if value="{{ic.watch}}" hint-placeholder-val="{{false}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6.5" width="12" height="11" rx="3.5"></rect><path d="M9 6.5l1-3.5h4l1 3.5M9 17.5l1 3.5h4l1-3.5"></path></svg>
+      </sc-if>
+      <sc-if value="{{ic.tag}}" hint-placeholder-val="{{false}}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="4.5"></rect><circle cx="12" cy="9" r="1.6"></circle></svg>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <!-- 2. 전체 구성 — 제품 ↔ 솔루션 · 서비스 · 쓰이는 공간 -->
+  <div style="position: absolute; left: 64px; top: 530px; height: 18px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">전체 구성</span><span style="height: 16px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; border: 1px solid #b8bec8; background: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center">제품</span><span style="font-size: 11px; color: #596170">↔</span><span style="height: 16px; padding: 0 6px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10px; font-weight: 700; display: flex; align-items: center">솔루션 · 서비스</span><span style="font-size: 11px; color: #8a91a0">· 오른쪽 번호 = 쓰이는 공간</span></div>
+  <sc-for list="{{legend}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.style}}">
+      <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; background: #ffffff; display: flex; align-items: center; justify-content: center">
+        <sc-if value="{{l.air}}" hint-placeholder-val="{{false}}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="8" rx="2"></rect><path d="M7 16v4M12 16v5M17 16v4"></path></svg>
+        </sc-if>
+        <sc-if value="{{l.tab}}" hint-placeholder-val="{{false}}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2.5" width="16" height="19" rx="2.5"></rect><path d="M10 18.5h4"></path></svg>
+        </sc-if>
+        <sc-if value="{{l.watch}}" hint-placeholder-val="{{false}}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6.5" width="12" height="11" rx="3.5"></rect><path d="M9 6.5l1-3.5h4l1 3.5M9 17.5l1 3.5h4l1-3.5"></path></svg>
+        </sc-if>
+        <sc-if value="{{l.tag}}" hint-placeholder-val="{{false}}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="14" height="14" rx="4.5"></rect><circle cx="12" cy="9" r="1.6"></circle></svg>
+        </sc-if>
+      </span>
+      <span style="width: 196px; flex-shrink: 0; font-size: 12px; font-weight: 800; color: #121417; white-space: nowrap">{{l.prod}}</span>
+      <svg width="20" height="10" viewBox="0 0 22 10" fill="none" stroke="#1428a0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h18"></path><path d="M5 2L2 5l3 3"></path><path d="M17 2l3 3-3 3"></path></svg>
+      <sc-for list="{{l.sols}}" as="s" hint-placeholder-count="3">
+        <span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.t}}</span>
+      </sc-for>
+      <span style="flex-grow: 1"></span>
+      <sc-for list="{{l.nums}}" as="u" hint-placeholder-count="3">
+        <span style="width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{u.n}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <!-- 3. 공간별 구성 · 가치 -->
+  <div style="position: absolute; left: 750px; top: 160px; width: 466px; height: 20px; display: flex; align-items: baseline; justify-content: space-between; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">공간별 구성 · 가치</span><span style="font-size: 11px; color: #8a91a0">사진은 예시 · 고객 공간으로 교체</span></div>
+  <sc-for list="{{spaces}}" as="s" hint-placeholder-count="6">
+    <div style="{{s.sep}}"></div>
+    <sc-if value="{{s.hasImg}}" hint-placeholder-val="{{true}}">
+      <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; {{s.imgPos}} object-fit: {{s.fit}}; object-position: {{s.op}}; border-radius: 8px; {{s.imgFrame}}">
+      <div style="{{s.chipStyle}}">{{s.chip}}</div>
+    </sc-if>
+    <sc-if value="{{s.noImg}}" hint-placeholder-val="{{false}}">
+      <div style="{{s.phStyle}}">{{s.ph}}</div>
+    </sc-if>
+    <div style="{{s.headStyle}}">
+      <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <span style="font-size: 14.5px; font-weight: 800; color: #121417">{{s.name}}</span>
+      <span style="font-size: 11px; color: #596170">{{s.bld}}</span>
+    </div>
+    <div style="{{s.gearStyle}}">
+      <sc-for list="{{s.gear}}" as="g" hint-placeholder-count="4">
+        <span style="{{g.style}}">{{g.t}}</span>
+      </sc-for>
+    </div>
+    <div style="{{s.valStyle}}"><span style="height: 18px; flex-shrink: 0; box-sizing: border-box; padding: 0 6px; border-radius: 4px; background: #1428a0; color: #ffffff; font-size: 10px; font-weight: 800; display: flex; align-items: center">가치</span><span style="font-size: 12px; font-weight: 700; color: #121417">{{s.value}}</span></div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 공장 · 현장 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const ICON = (k) => ({ air: k === 'air', tab: k === 'tab', watch: k === 'watch', tag: k === 'tag' });
+
+    // 1. 배치도 — 건물(bld) · 야외 구역(out). 번호 = 오른쪽 공간 목록 · SS-C 카드의 공간 번호
+    const BL = [
+      [1, '생산동', '생산 라인 · 클린룸 · 실외기', 84, 200, 316, 182, 'bld', ['air', 'tab', 'watch']],
+      [2, '연구 · 품질동', '검사실 · 연구실', 416, 200, 140, 84, 'bld', ['air']],
+      [6, '사무동', '통합 관제실', 566, 200, 140, 84, 'bld', ['air', 'tab', 'watch']],
+      [3, '현장 사무실', '브리핑룸 · 교대실', 416, 298, 140, 84, 'bld', ['tab']],
+      [5, '창고동', '자재 · 완제품', 566, 298, 140, 84, 'bld', ['tag']],
+      [4, '야외 작업장 · 설비 구역', '고위험 · 협력사 작업', 84, 410, 390, 94, 'out', ['watch']],
+      [5, '물류 야드 · 출하장', '하역장 · 배송 차량', 490, 410, 216, 94, 'out', ['tag', 'tab']]
+    ];
+    const blocks = [], icons = [];
+    BL.forEach(([n, name, sub, x, y, w, h, kind, ic]) => {
+      const out = kind === 'out';
+      blocks.push({
+        n, name, sub,
+        frame: A + box(x, y, w, h) + 'box-sizing: border-box; border-radius: 10px; ' + (out ? 'border: 1.5px dashed #8a91a0;' : 'background: #ffffff; border: 1px solid #d5d9e0;'),
+        nameStyle: A + box(x + 11, y + 8, w - 50, 19) + 'font-size: 13px; font-weight: 800; line-height: 19px; white-space: nowrap;',
+        subStyle: A + box(x + 11, y + 28, w - 22, 15) + 'font-size: 10.5px; line-height: 15px; color: #596170; white-space: nowrap;',
+        marker: A + box(x + w - 31, y + 8, 22, 22) + 'box-sizing: border-box; border-radius: 50%; border: 2px solid #ffffff; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+      });
+      const iy = y + h - (out ? 36 : 32);
+      ic.forEach((k, j) => {
+        icons.push(Object.assign({
+          style: A + box(x + 11 + j * 28, iy, 24, 24) + 'border-radius: 6px; background: #eaeefb; display: flex; align-items: center; justify-content: center;'
+        }, ICON(k)));
+      });
+    });
+
+    // 공간 안쪽 구획 (라인 · 클린룸 · 야적장 · 배송 차량)
+    const RI = [
+      ['라인 A', 95, 252, 200, 26],
+      ['라인 B', 95, 286, 200, 26],
+      ['클린룸', 307, 252, 82, 60],
+      ['야적장', 218, 456, 112, 38],
+      ['유틸리티 · 배관 랙', 340, 456, 122, 38],
+      ['배송 차량', 566, 460, 68, 32]
+    ];
+    const inner = RI.map(([t, x, y, w, h]) => ({
+      t,
+      style: A + box(x, y, w, h) + 'box-sizing: border-box; border-radius: 6px; background: #e2e5ea; padding-left: 8px; font-size: 10.5px; font-weight: 600; color: #596170; display: flex; align-items: center; white-space: nowrap;'
+    }));
+
+    // 2. 전체 구성 — 제품 ↔ 솔루션 · 서비스 · 쓰이는 공간
+    const LG = [
+      ['air', '시스템에어컨 DVM S2 · DVM 칠러', ['DMS', 'SmartThings Pro', '케어 서비스'], [1, 2, 6]],
+      ['tab', '갤럭시 탭 액티브', ['Knox Configure', '현장 업무 앱'], [1, 3, 5, 6]],
+      ['watch', '갤럭시 워치', ['안전 관제 · SmartThings Pro'], [1, 4, 6]],
+      ['tag', '갤럭시 스마트태그2', ['SmartThings Find', 'Knox 보안'], [5]]
+    ];
+    const legend = LG.map(([k, prod, sols, nums], i) => Object.assign({
+      prod,
+      sols: sols.map((t) => ({ t })),
+      nums: nums.map((n) => ({ n })),
+      style: A + box(64, 554 + i * 24, 662, 22) + 'box-sizing: border-box; padding: 0 10px 0 0; border-radius: 6px; background: #f5f6f8; display: flex; align-items: center; gap: 6px;'
+    }, ICON(k)));
+
+    // 3. 공간별 구성 · 가치 (p = 제품 칩, s = 솔루션 · 서비스 칩)
+    const chip = (sol) => 'height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; '
+      + (sol ? 'background: #eaeefb; color: #1428a0;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #121417;');
+    const SP = [
+      { n: 1, name: '생산 라인 · 클린룸', bld: '생산동',
+        img: ['/_blob/976560df29712c9382c84024a11f5bf8', '공장 로봇암 앞에서 작업자가 장갑 낀 손으로 러기드 태블릿을 사용', 'cover', '55% 45%', '예시 사진'],
+        gear: [['DVM 칠러 · S2', 0], ['탭 액티브', 0], ['갤럭시 워치', 0], ['DMS', 1], ['현장 업무 앱', 1]],
+        value: '라인별 온 · 습도를 규격 안에 — 수율과 점검 기록을 함께' },
+      { n: 2, name: '검사 · 연구실', bld: '연구 · 품질동', ph: '검사실 사진',
+        gear: [['DVM S2 개별공조', 0], ['DMS', 1], ['케어 서비스', 1]],
+        value: '실마다 다른 운전 시간에도 정밀 환경, 고장 전에 점검' },
+      { n: 3, name: '브리핑룸 · 교대실', bld: '현장 사무실',
+        img: ['/_blob/0f2c662780a718693a94f6c0c0c1d18b', '갤럭시 탭 액티브5 프로 앞 · 뒷면과 S펜 제품 사진', 'contain', '50% 50%', '제품 사진'],
+        gear: [['갤럭시 탭 액티브', 0], ['Knox Configure', 1], ['현장 업무 앱', 1]],
+        value: '켜면 업무 모드인 공용 단말 — 늘 최신 절차로 브리핑' },
+      { n: 4, name: '야외 작업장 · 설비 구역', bld: '야적장 · 유틸리티',
+        img: ['/_blob/e8acf7e984f3f6cbe95ba2602017f6fd', '작업자 손목 위 갤럭시 워치에 온열 위험 경고 알림', 'cover', '45% 50%', '예시 사진'],
+        gear: [['갤럭시 워치', 0], ['안전 관제 · SmartThings Pro', 1]],
+        value: '넘어짐 · 심박 이상 · 온열 위험을 관제실이 바로 안다' },
+      { n: 5, name: '창고 · 물류 야드 · 배송 차량', bld: '창고동 · 출하장',
+        img: ['/_blob/fd7152aca97436229470b5ac6ced1ffe', '물류창고 선반 앞에서 작업자가 스마트폰으로 박스를 확인', 'cover', '62% 45%', '예시 사진'],
+        gear: [['스마트태그2', 0], ['탭 액티브', 0], ['SmartThings Find', 1], ['Knox 보안', 1]],
+        value: '출하품 위치를 실시간으로, 분실 시에도 정보는 차단' },
+      { n: 6, name: '통합 관제실', bld: '사무동',
+        img: ['/_blob/37eb6322b0acde024eb630ba187e8fa1', '작업자 위치 · 위험 알림 · 조치 현황을 보여 주는 안전 관제 대시보드 화면', 'cover', '50% 45%', '화면 예시'],
+        gear: [['탭 액티브', 0], ['SmartThings Pro', 1], ['DMS', 1], ['안전 관제', 1]],
+        value: '공조 · 에너지 · 작업자 상태를 한 화면에서 판단' }
+    ];
+    const spaces = SP.map((s, i) => {
+      const y = 188 + i * 76;
+      const has = !!s.img;
+      return {
+        n: s.n, name: s.name, bld: s.bld, value: s.value,
+        hasImg: has, noImg: !has,
+        src: has ? s.img[0] : '', alt: has ? s.img[1] : '', fit: has ? s.img[2] : 'cover', op: has ? s.img[3] : '50% 50%', chip: has ? s.img[4] : '',
+        imgPos: box(750, y, 84, 70),
+        imgFrame: has && s.img[2] === 'contain' ? 'background: #ffffff; box-sizing: border-box; border: 1px solid #e2e5ea; padding: 4px 4px 14px;' : '',
+        chipStyle: A + 'left: 754px; top: ' + px(y + 52) + 'height: 14px; padding: 0 5px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9px; display: flex; align-items: center; white-space: nowrap;',
+        ph: s.ph || '',
+        phStyle: A + box(750, y, 84, 70) + 'border-radius: 8px; background: #dfe3ea; color: #8a91a0; font-size: 13px; display: flex; align-items: center; justify-content: center; white-space: nowrap;',
+        sep: A + box(750, y - 5, 466, 1) + 'background: ' + (i ? '#e2e5ea' : '#121417') + ';',
+        headStyle: A + box(846, y + 1, 370, 22) + 'display: flex; align-items: center; gap: 7px; white-space: nowrap;',
+        gearStyle: A + box(846, y + 27, 370, 20) + 'display: flex; align-items: center; gap: 4px; white-space: nowrap;',
+        gear: s.gear.map(([t, sol]) => ({ t, style: chip(sol) })),
+        valStyle: A + box(846, y + 51, 370, 18) + 'display: flex; align-items: center; gap: 6px; white-space: nowrap;'
+      };
+    });
+
+    return { blocks, icons, inner, legend, spaces };
+  }
+}
+</script>
+</body>
+</html>

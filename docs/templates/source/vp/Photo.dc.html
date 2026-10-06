@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>실사 이미지 슬롯 — 삼성 공식 제품 · 사례 · 솔루션 화면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="{{box}}">
+  <img src="{{src}}" alt="{{alt}}" style="{{imgStyle}}">
+  <sc-if value="{{credit}}" hint-placeholder-val="{{false}}">
+    <span style="{{chip}}">{{source}}</span>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"pid":{"editor":"enum","options":["qm55c.front","qm55c.persp","km24c.front","km24c.persp","oh55a.front","oh55a.persp","ac360","case.mcd.menuboard","case.mcd.counter","case.mcd.dt","case.mcd.dt2","case.mcd.window","case.mcd.seat","life.km24c.bakery","life.km24c.mounts","life.qm55c.coffee","life.qm55c.wall","life.oh55a.dt","life.ac360.store","life.ac360.wide","life.window","ui.cms","ui.mi.overview","ui.mi.insight","ui.mi.kv","ui.stp.map","ui.stp.energy","ui.stp.schedule","ui.stp.detect","ui.stp.store"],"default":"qm55c.persp"},"w":{"editor":"int","default":240},"h":{"editor":"int","default":160},"fit":{"editor":"enum","options":["auto","cover","contain"],"default":"auto"},"pos":{"editor":"text","default":"50% 50%"},"bg":{"editor":"enum","options":["none","soft","white","dark"],"default":"none"},"radius":{"editor":"int","default":0},"credit":{"editor":"boolean","default":false},"$preview":{"width":240,"height":160}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 실사 이미지 카탈로그 — 삼성 공식 이미지(samsung.com 제품 · 솔루션 페이지, 공식 성공 사례)를 캔버스에 올린 것.
+    // t: cut 제품 누끼 · life 공식 연출 사진 · case 설치 사례 · ui 솔루션 실제 화면
+    // 사내 DAM이 연결되면 url만 바꾸면 모든 실사판 레이아웃이 따라 바뀝니다.
+    const C = {
+      'qm55c.front': ['/_blob/4a01ba4218c549a281fa927997071a86', 'cut', 'QM55C', '스마트 사이니지 QMC 55형 · 정면'],
+      'qm55c.persp': ['/_blob/2490e8ae5c4072ef597f3d30cd074248', 'cut', 'QM55C', '스마트 사이니지 QMC 55형 · 측면'],
+      'km24c.front': ['/_blob/be3133bead5465a576a70e227a25b67e', 'cut', 'KM24C', '삼성 키오스크 24형 · 정면'],
+      'km24c.persp': ['/_blob/da9e9cd37ff5569ca418977443123d43', 'cut', 'KM24C', '삼성 키오스크 24형 · 측면'],
+      'oh55a.front': ['/_blob/6bac807ba27f00f4c84bf9da03a86687', 'cut', 'OH55A-S', '옥외 사이니지 OHA-S 55형 · 정면'],
+      'oh55a.persp': ['/_blob/80a68982c8a7587c47851ff452682ab2', 'cut', 'OH55A-S', '옥외 사이니지 OHA-S 55형 · 측면'],
+      'ac360': ['/_blob/f624cd61816044135bc5e22547f92d8b', 'cut', '360 카세트', '시스템에어컨 360 카세트', true],
+      'case.mcd.menuboard': ['/_blob/96ab8fe49e0983f2d4bb250d5262e7ac', 'case', '맥도날드 코리아', '고양삼송DT · 카운터 메뉴보드'],
+      'case.mcd.counter': ['/_blob/4cb413bdd37cc27f3486aee6b27dcc12', 'case', '맥도날드 코리아', '고양삼송DT · 카운터와 좌석'],
+      'case.mcd.dt': ['/_blob/30d0b5a130b2000d1fd31aacc121564b', 'case', '맥도날드 코리아', '고양삼송DT · 드라이브스루 주문대'],
+      'case.mcd.dt2': ['/_blob/ce4e850ceec5eb515addcc93c2f174ab', 'case', '맥도날드 코리아', '고양삼송DT · 드라이브스루 정면'],
+      'case.mcd.window': ['/_blob/0264f8b9268b5f5fe2b03e606e71f2eb', 'case', '맥도날드 코리아', '고양삼송DT · 창가 사이니지'],
+      'case.mcd.seat': ['/_blob/7993e617713ddbbbf6c0dee7fe0129d1', 'case', '맥도날드 코리아', '고양삼송DT · 좌석 쪽 사이니지'],
+      'life.km24c.bakery': ['/_blob/902c3ba8a540b5597b1157c29145ed7b', 'life', 'KM24C', '베이커리 카운터의 키오스크'],
+      'life.km24c.mounts': ['/_blob/382a180efe0b4aabc3940a31ffddb998', 'life', 'KM24C', '카운터 · 스탠드 · 벽걸이 설치'],
+      'life.qm55c.coffee': ['/_blob/1003259cb624c8bc817998ade2249510', 'life', 'QM55C', '세로형 커피 메뉴 화면'],
+      'life.qm55c.wall': ['/_blob/11eed259da34b9b1708b5e39a83b816d', 'life', 'QM55C', '슬림 벽걸이 메뉴보드'],
+      'life.oh55a.dt': ['/_blob/34dd6096c59cc2dfcdbe82798707f30d', 'life', 'OH55A-S', '드라이브스루 옥외 메뉴보드'],
+      'life.ac360.store': ['/_blob/037f085bceea0f756aec2e3691d5d504', 'life', '360 카세트', '매장 천장에 설치된 360 카세트'],
+      'life.ac360.wide': ['/_blob/e98edb5a03971f963a63ca57fbd3b3ac', 'life', '360 카세트', '매장 천장 · 와이드'],
+      'life.window': ['/_blob/8f899b348510a9518c9d0d6a035f6832', 'life', '윈도 사이니지', '매장 쇼윈도 사이니지'],
+      'ui.cms': ['/_blob/1b00624fd7dd760d979cdcc57478dea5', 'ui', 'Samsung VXT CMS', '메뉴 템플릿 편집 화면'],
+      'ui.mi.overview': ['/_blob/d5b37f833c4006ce6500ae77123577bf', 'ui', 'MagicINFO', '콘텐츠 · 기기 · 데이터 관리'],
+      'ui.mi.insight': ['/_blob/d9ac96b1ca8b408bda7acd522546337d', 'ui', 'MagicINFO Insight', 'POS 데이터 → 분석 화면'],
+      'ui.mi.kv': ['/_blob/e2eb7075b855c6b361ecc70d284cd7c0', 'ui', 'MagicINFO', 'MagicINFO 대표 이미지'],
+      'ui.stp.map': ['/_blob/14bf695d40b1894a67ff0edde04c2752', 'ui', 'SmartThings Pro', '지점 지도 대시보드'],
+      'ui.stp.energy': ['/_blob/cc46703c167981c596abe3aa180810c4', 'ui', 'SmartThings Pro', '에너지 사용량 대시보드'],
+      'ui.stp.schedule': ['/_blob/10218e1d548e97ac204a15b6ac95b77c', 'ui', 'SmartThings Pro', '냉난방 스케줄 제어'],
+      'ui.stp.detect': ['/_blob/5641529426a38163ec295ae3bbfc1870', 'ui', 'SmartThings Pro', '비효율 운전 감지'],
+      'ui.stp.store': ['/_blob/5c66fe6b72cc892a8c200c5670d5872f', 'ui', 'SmartThings Pro', '매장 + 관제 화면']
+    };
+    const pid = String(this.props.pid ?? 'qm55c.persp');
+    const e = C[pid] || C['qm55c.persp'];
+    const [src, t, model, label, blend] = e;
+    const w = Number(this.props.w ?? 240);
+    const h = Number(this.props.h ?? 160);
+    const want = String(this.props.fit ?? 'auto');
+    const fit = want === 'auto' ? (t === 'cut' ? 'contain' : 'cover') : want;
+    const pos = String(this.props.pos ?? '50% 50%');
+    const BG = { none: 'transparent', soft: '#f5f6f8', white: '#ffffff', dark: '#121417' };
+    const bg = BG[String(this.props.bg ?? 'none')] || 'transparent';
+    const radius = Number(this.props.radius ?? 0);
+    const credit = this.props.credit === true || this.props.credit === 'true';
+    const pad = fit === 'contain' ? Math.round(Math.min(w, h) * 0.06) : 0;
+    const SRC = { cut: 'samsung.com 제품 이미지', life: 'samsung.com 공식 이미지', ui: 'samsung.com 솔루션 화면', case: '삼성 성공 사례 · ' + model };
+    return {
+      src,
+      alt: model + ' — ' + label,
+      source: SRC[t],
+      credit,
+      box: 'position: relative; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; padding: ' + pad + 'px; overflow: hidden; border-radius: ' + radius + 'px; background: ' + bg + ';',
+      imgStyle: 'display: block; width: 100%; height: 100%; object-fit: ' + fit + '; object-position: ' + pos + ';' + (blend ? ' mix-blend-mode: multiply;' : ''),
+      chip: 'position: absolute; left: 8px; bottom: 8px; height: 18px; padding: 0 7px; border-radius: 999px; background: rgba(18,20,23,0.66); color: #ffffff; font-family: \'Noto Sans KR\', system-ui, sans-serif; font-size: 10px; font-weight: 600; display: flex; align-items: center; white-space: nowrap;'
+    };
+  }
+}
+</script>
+</body>
+</html>

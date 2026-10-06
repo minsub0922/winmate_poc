@@ -1,0 +1,197 @@
+# 업종 템플릿 16개 — SC1T 보드 데이터 그대로(docs/screens/_text/webapp2/SC1T.txt), 09-scenario §10.4.
+# short = 목록 · W 문구용 약칭(「업종 템플릿 · 의료」, 「외식 · 카페 도입사례」), case_label = SC3R 「· {약칭} 사례 {n}건」 용,
+# kr_verticals = §10.3 KB 업종 대응(verticals.yaml winmate_segments, draft — 빈 목록은 KB 업종 질의를 건너뛰고 사례 수 「[00]」).
+# presets[].flow · roles 는 보드의 「 → 」 · 「 · 」 를 나눈 배열. needs · used 항목 경계는 보드 배열 그대로.
+industries:
+  - code: FB
+    name: 외식 · 카페 프랜차이즈
+    short: 외식 · 카페
+    case_label: 카페
+    kr_verticals: [kr_fnb]
+    spaces: [주문 카운터, 홀 테이블, 주방, 드라이브스루, 테라스]
+    presets:
+      - {title: 매장 하루, flow: [오픈, 점심 피크, 본사 배포, 마감], roles: [점장, 손님, 본사 담당자]}
+      - {title: 신메뉴 출시일, flow: [전날 예약, 오픈 교체, 피크 주문, 반응 집계], roles: [본사 마케팅, 점장, 손님]}
+      - {title: 드라이브스루 피크, flow: [진입, 메뉴 확인, 주문 결제, 픽업], roles: [운전자 손님, 크루]}
+    needs: [디자인 조화, 고객 경험, 쾌적 · 공기질, 업무 효율]
+    used: [시스템에어컨, LCD 사이니지, 갤럭시 탭, 파트너 앱 · 주문 결제, MagicINFO]
+  - code: RT
+    name: 리테일 · 브랜드 플래그십
+    short: 리테일
+    case_label: 리테일
+    kr_verticals: [kr_retail]
+    spaces: [쇼윈도, 매장 벽면, 체험존, VIP 라운지, 건물 외벽]
+    presets:
+      - {title: 방문객 동선, flow: [거리에서 발견, 입장, 체험존, 상담 · 구매], roles: [방문객, 매장 스태프]}
+      - {title: 신제품 런칭, flow: [티저 송출, 런칭 당일, 체험 이벤트, 재방문], roles: [방문객, 본사 VMD, 스태프]}
+      - {title: 매장 하루, flow: [오픈, 피크, VMD 교체, 마감], roles: [매장 스태프, 본사 VMD]}
+    needs: [브랜드 · 공간 임팩트, 디자인 조화, 고객 경험, 설치 · 시공]
+    used: [LCD 사이니지, LED 사이니지, 시스템에어컨, MagicINFO, 케어 · 유지관리 서비스]
+  - code: SV
+    name: 생활 편의 · 무인 매장
+    short: 생활 편의
+    case_label: 무인 매장
+    kr_verticals: []
+    spaces: [무인 출력 코너, 셀프 세탁 존, PC 좌석, 스터디 룸]
+    presets:
+      - {title: 무인 24시간, flow: [심야 이용, 셀프 결제, 원격 점검, 아침 보충], roles: [손님, 점주, 원격 관리자]}
+      - {title: 첫 방문 손님, flow: [입장, 기기 사용, 결제, 문의 대응], roles: [손님, 점주]}
+      - {title: 기기 장애 대응, flow: [오류 발생, 원격 알림, 조치, 정상화], roles: [점주, 원격 관리자, 손님]}
+    needs: [고객 경험, 업무 효율, 확장성, 유지보수 · AS]
+    used: [TV · 모니터, 디지털 복합기, PC · 노트북, 무인 과금, 파트너 앱 · 주문 결제]
+  - code: HT
+    name: 호텔 · 리조트
+    short: 호텔 · 리조트
+    case_label: 호텔
+    kr_verticals: [kr_hotel]
+    spaces: [로비 프런트, 객실, 연회장, 레스토랑 주방, 코인 세탁실]
+    presets:
+      - {title: 투숙객 여정, flow: [체크인, 객실 입실, 부대시설, 체크아웃], roles: [투숙객, 프런트, 객실팀]}
+      - {title: 연회 · 행사, flow: [셋업, 행사 진행, 식사, 철수], roles: [주최 측, 연회팀, 참석자]}
+      - {title: 객실 운영 하루, flow: [객실 점검, 입실 준비, 야간, 에너지 정리], roles: [객실팀, 시설팀]}
+    needs: [고객 경험, 디자인 조화, 브랜드 · 공간 임팩트, 쾌적 · 공기질]
+    used: [호텔 TV, 시스템에어컨, TV · 모니터, 케어 · 유지관리 서비스, LYNK Cloud]
+  - code: TP
+    name: 테마파크 · 관광 · 전시
+    short: 테마파크
+    case_label: 테마파크
+    kr_verticals: []
+    spaces: [입장 대기 공간, 전시 공간, 어트랙션, 야외 무대]
+    presets:
+      - {title: 관람객 하루, flow: [입장 대기, 어트랙션, 공연, 퇴장], roles: [관람객, 운영팀]}
+      - {title: 시즌 이벤트, flow: [사전 홍보, 개막, 야간 공연, 종료], roles: [관람객, 콘텐츠 담당, 운영팀]}
+      - {title: 외국인 관광객, flow: [입구 안내, 다국어 전시, 기념품, 귀가], roles: [외국인 관광객, 안내 직원]}
+    needs: [브랜드 · 공간 임팩트, 고객 경험, 디자인 조화, 설치 · 시공]
+    used: [LCD 사이니지, LED 사이니지, TV · 모니터, MagicINFO, 전용 에디션 · 커스터마이징]
+  - code: VN
+    name: 공연장 · 경기장 · 영화관
+    short: 공연장 · 경기장
+    case_label: 공연장
+    kr_verticals: []
+    spaces: [입구, 상영관 객석, 클럽하우스 라운지, 라커룸, 중계실]
+    presets:
+      - {title: 경기일 하루, flow: [입장, 경기, 하프타임, 퇴장], roles: [관중, 운영팀, 선수단]}
+      - {title: 관객 여정, flow: [예매, 입장, 상영 · 공연, 식음 · 굿즈], roles: [관객, 매점 직원]}
+      - {title: 선수 · 운영 동선, flow: [준비, 라커룸, 중계, 정리], roles: [선수단, 중계팀]}
+    needs: [고객 경험, 브랜드 · 공간 임팩트, 설치 · 시공, 업무 효율]
+    used: [하만 프로 오디오, LED 사이니지, 시스템에어컨, 케어 · 유지관리 서비스, VXT]
+  - code: AD
+    name: 옥외 · 미디어 광고
+    short: 옥외 광고
+    case_label: 옥외 광고
+    kr_verticals: []
+    spaces: [건물 외벽, 미디어폴, 환승통로, 공항 출입구]
+    presets:
+      - {title: 매체 하루 송출, flow: [출근 시간, 낮, 퇴근 피크, 야간], roles: [시민, 매체사]}
+      - {title: 캠페인 집행, flow: [계약, 콘텐츠 등록, 송출, 결과 보고], roles: [광고주, 매체사]}
+      - {title: 시민 동선, flow: [접근, 시선, 참여, 이동], roles: [시민, 매체사]}
+    needs: [브랜드 · 공간 임팩트, 현장 내구성, 설치 · 시공, 규제 · 인증]
+    used: [LED 사이니지, LCD 사이니지, 케어 · 유지관리 서비스, 콘텐츠 제작 지원]
+  - code: OF
+    name: 오피스 · 업무 빌딩
+    short: 오피스
+    case_label: 오피스
+    kr_verticals: [kr_office, kr_small_office]
+    spaces: [로비, 회의실, 업무 공간, 라운지, 타운홀]
+    presets:
+      - {title: 직원의 하루, flow: [출근, 회의, 집중 업무, 퇴근], roles: [직원, 시설 관리팀]}
+      - {title: 타운홀 · 행사, flow: [준비, 진행, 원격 참여, 정리], roles: [경영진, 직원, 운영팀]}
+      - {title: 방문객 동선, flow: [로비 안내, 회의실 이동, 미팅, 배웅], roles: [방문객, 안내 직원, 직원]}
+    needs: [원격 통합 관리, 브랜드 · 공간 임팩트, 설치 · 시공, 쾌적 · 공기질]
+    used: [시스템에어컨, LED 사이니지, LCD 사이니지, MagicINFO, SmartThings]
+  - code: RS
+    name: 주거 분양 · 주택
+    short: 주거 분양
+    case_label: 주거
+    kr_verticals: [kr_home, kr_officetel]
+    spaces: [주방, 거실, 침실, 세탁 공간, 견본주택]
+    presets:
+      - {title: 분양부터 입주까지, flow: [견본주택 방문, 계약, 입주, 생활], roles: [예비 입주민, 분양 담당, 시행사]}
+      - {title: 입주민의 하루, flow: [아침, 외출, 귀가, 취침], roles: [입주민, 관리사무소]}
+      - {title: 견본주택 투어, flow: [입장, 주방, 거실, 상담], roles: [방문객, 분양 상담사]}
+    needs: [분양 · 자산 가치, 디자인 조화, 쾌적 · 공기질, 에너지 절감]
+    used: [시스템에어컨, 빌트인 주방가전, 리빙가전, SmartThings, DMS · 공조 제어]
+  - code: ID
+    name: 인테리어 · 빌트인 파트너
+    short: 인테리어
+    case_label: 인테리어
+    kr_verticals: []
+    spaces: [키친 전시장, 거실 쇼룸, 빌트인 존, 상담 공간]
+    presets:
+      - {title: 쇼룸 방문, flow: [입장, 키친 체험, 거실 연출, 상담], roles: [방문 고객, 디자이너]}
+      - {title: 시공부터 입주까지, flow: [설계, 시공, 설치 확인, 입주], roles: [고객, 디자이너, 시공 파트너]}
+      - {title: 설치 후 하루, flow: [아침 주방, 외출, 귀가, 휴식], roles: [고객 가족]}
+    needs: [디자인 조화, 브랜드 · 공간 임팩트, 설치 · 시공, 쾌적 · 공기질]
+    used: [빌트인 주방가전, 리빙가전, 시스템에어컨, SmartThings]
+  - code: ED
+    name: 교육 · 캠퍼스
+    short: 교육 · 캠퍼스
+    case_label: 교육
+    kr_verticals: [kr_school, kr_academy]
+    spaces: [강의실, 도서관, 기숙사, 학생회관]
+    presets:
+      - {title: 학생의 하루, flow: [등교, 강의, 도서관, 기숙사], roles: [학생, 교수, 교직원]}
+      - {title: 수업 한 시간, flow: [수업 준비, 강의, 모둠 활동, 정리], roles: [교수, 학생]}
+      - {title: 시험 · 행사 기간, flow: [공지, 출결, 시험, 결과 안내], roles: [학생, 교직원]}
+    needs: [교육 · 학습 환경, 업무 효율, 협업 · 회의, 쾌적 · 공기질]
+    used: [시스템에어컨, 갤럭시 탭, PC · 노트북, 무인 과금, 케어 · 유지관리 서비스]
+  - code: PB
+    name: 공공 · 교통 인프라
+    short: 공공 · 교통
+    case_label: 공공
+    kr_verticals: [kr_public_agency, kr_military]
+    spaces: [교통 상황실, 역 대합실, 승강장, 탐방센터]
+    presets:
+      - {title: 관제실 24시간, flow: [주간 모니터링, 사고 발생, 대응, 교대], roles: [관제 요원, 현장 직원]}
+      - {title: 시민 이용 동선, flow: [역 출입구, 안내, 승강장, 하차], roles: [시민, 역무원]}
+      - {title: 현장 순찰, flow: [출동 준비, 현장, 상황 공유, 복귀], roles: [현장 직원, 관제 요원]}
+    needs: [현장 내구성, 데이터 · 모니터링, 안전 · 재난, 시스템 연동]
+    used: [LED 사이니지, LCD 사이니지, 시스템에어컨, 안전 · 관제 솔루션, Knox · Knox Configure]
+  - code: MD
+    name: 의료 · 요양 · 케어
+    short: 의료
+    case_label: 의료
+    kr_verticals: [kr_hospital, kr_clinic]
+    spaces: [진료 대기실, 진료실, 병실, 재활치료실]
+    presets:
+      - {title: 외래 환자 동선, flow: [접수, 대기, 진료, 수납], roles: [환자, 보호자, 의료진]}
+      - {title: 입원 하루, flow: [회진, 식사, 재활, 야간], roles: [환자, 간호사, 의료진]}
+      - {title: 요양 시설 하루, flow: [기상, 프로그램, 식사, 취침], roles: [어르신, 요양보호사, 가족]}
+    needs: [쾌적 · 공기질, 업무 효율, 원격 통합 관리, 고객 경험]
+    used: [시스템에어컨, 리빙가전, LCD 사이니지, SmartThings, 파트너 앱 · 주문 결제]
+  - code: MF
+    name: 제조 · 물류 · 현장
+    short: 제조 · 물류
+    case_label: 제조
+    kr_verticals: [kr_manufacturing, kr_transport]
+    spaces: [생산 시설, 물류 현장, 재배 하우스, 사무 공간]
+    presets:
+      - {title: 교대 근무 하루, flow: [출근 점검, 작업, 이상 감지, 교대], roles: [작업자, 관리자]}
+      - {title: 물류 흐름, flow: [입고, 분류, 출고, 배송 추적], roles: [작업자, 관제 담당]}
+      - {title: 안전 점검, flow: [작업 전, 위험 구역, 경보, 보고], roles: [작업자, 안전 관리자]}
+    needs: [현장 내구성, 업무 효율, 원격 통합 관리, 에너지 절감]
+    used: [시스템에어컨, 갤럭시 탭, 갤럭시 워치 · 태그, Knox · Knox Configure, 파트너 앱 · 주문 결제]
+  - code: FN
+    name: 금융
+    short: 금융
+    case_label: 금융
+    kr_verticals: [kr_finance]
+    spaces: [영업점 객장, 상담 창구, 본사 로비, 대강당]
+    presets:
+      - {title: 고객 방문 동선, flow: [입구, 대기, 창구 상담, 배웅], roles: [고객, 창구 직원]}
+      - {title: 영업점 하루, flow: [오픈, 피크, 마감 정산, 보안 점검], roles: [창구 직원, 지점장, 본사]}
+      - {title: 찾아가는 영업, flow: [방문 준비, 고객 상담, 전자 서명, 후속], roles: [영업 직원, 고객]}
+    needs: [고객 경험, 보안 · 기기 통제, 브랜드 · 공간 임팩트, 설치 · 시공]
+    used: [갤럭시 탭, LED 사이니지, LCD 사이니지, Knox · Knox Configure, 파트너 앱 · 주문 결제]
+  - code: OE
+    name: 파트너 전용 단말 · 에디션
+    short: 파트너 단말
+    case_label: 파트너 단말
+    kr_verticals: []
+    spaces: [이동 중, 업무 현장, 골프 필드, 가정]
+    presets:
+      - {title: 사용자의 하루, flow: [아침, 이동, 업무 · 레저, 귀가], roles: [최종 사용자]}
+      - {title: 단말 도입 과정, flow: [기획, 맞춤 개발, 배포, 운영], roles: [파트너사, 삼성, 사용자]}
+      - {title: 현장 업무, flow: [출동, 측정 · 기록, 공유, 복귀], roles: [현장 작업자, 관리자]}
+    needs: [맞춤 개발, 시스템 연동, 보안 · 기기 통제, 현장 내구성]
+    used: [갤럭시 스마트폰, 갤럭시 탭, 갤럭시 워치 · 태그, 파트너 앱 · 주문 결제, 전용 에디션 · 커스터마이징]

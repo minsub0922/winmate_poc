@@ -1,0 +1,137 @@
+/* Winmate 디자인 토큰 — docs/scenarios/00-shell.md §2 (보드 실측값). 기능 모듈은 hex 를 직접 쓰지 않고 var(--wm-*) 를 쓴다. */
+/* 글꼴은 로컬 번들(@fontsource) — CDN 금지(ARCHITECTURE §1-6). */
+@import '@fontsource/noto-sans-kr/400.css';
+@import '@fontsource/noto-sans-kr/500.css';
+@import '@fontsource/noto-sans-kr/600.css';
+@import '@fontsource/noto-sans-kr/700.css';
+@import '@fontsource/manrope/600.css';
+@import '@fontsource/manrope/700.css';
+@import '@fontsource/manrope/800.css';
+
+:root {
+  /* 색 §2.1 */
+  --wm-brand: #1428a0;
+  --wm-brand-hover: #0f1f80;
+  --wm-brand-50: #eaeefb;
+  --wm-brand-25: #f5f7fd;
+  --wm-brand-hero: #f7f8fd;
+  --wm-brand-hero-hover: #f3f5fd;
+  --wm-brand-hero-line: #c9d1f2;
+  --wm-brand-badge: #e4e9fa;
+  --wm-brand-line: #c9d0e6;
+  --wm-brand-sel-line: #b8c3ee;
+  --wm-brand-on-dark: #9db4ff;
+  --wm-text: #121417;
+  --wm-text-2: #3d4452;
+  --wm-text-muted: #596170;
+  --wm-text-subtle: #8a91a0;
+  --wm-text-disabled: #9aa1ad;
+  --wm-placeholder: #a3a9b5;
+  --wm-bg: #f5f6f8;
+  --wm-surface: #ffffff;
+  --wm-surface-2: #fbfbfc;
+  --wm-surface-3: #f0f2f5;
+  --wm-line: #e2e5ea;
+  --wm-line-hover: #cfd4dc;
+  --wm-line-soft: #f0f2f5;
+  --wm-line-tile: #eef0f3;
+  --wm-line-disabled: #e9ebef;
+  --wm-line-step: #d5d9e0;
+  --wm-line-dashed: #b8bec8;
+  --wm-dark: #121417;
+  --wm-dark-divider: #3a3f48;
+  --wm-dark-text-2: #c5cbd6;
+  --wm-scrim: rgba(18, 20, 23, 0.42);
+  --wm-photo-badge: rgba(18, 20, 23, 0.78);
+  --wm-grip-chip: rgba(255, 255, 255, 0.92);
+  /* 상태색(기능 보드) */
+  --wm-ok: #0b6e4f;
+  --wm-ok-bg: #e6f4ee;
+  --wm-ok-bg-2: #f3faf6;
+  --wm-ok-line: #cfe8dc;
+  --wm-warn: #8a3b00;
+  --wm-warn-bg: #fdf0e6;
+  --wm-warn-line: #f3dcc8;
+  /* 오류색은 보드에 없다(Q-UI-1) — 문구 위주로 쓰고 색은 최소한으로 */
+  --wm-danger: #a32020;
+  --wm-danger-bg: #fdecec;
+  --wm-danger-line: #f2caca;
+  /* AI 추론 출처 배지(기능 보드 공통) */
+  --wm-ai: #5b2bb5;
+  --wm-ai-bg: #f1ecfb;
+  /* 키맨 색(보드 COL 팔레트 5색 — RQ · SB · MI 키맨 아바타 · 가중치 막대 · 질문 태그). color_index 0..4 순환 */
+  --wm-km-0-bg: var(--wm-brand);
+  --wm-km-0-fg: #ffffff;
+  --wm-km-1-bg: #5468d8;
+  --wm-km-1-fg: #ffffff;
+  --wm-km-2-bg: var(--wm-brand-hero-line);
+  --wm-km-2-fg: var(--wm-brand);
+  --wm-km-3-bg: #8b9be6;
+  --wm-km-3-fg: #ffffff;
+  --wm-km-4-bg: var(--wm-brand-badge);
+  --wm-km-4-fg: var(--wm-brand);
+
+  /* 그림자 · 겹침 §2.4 */
+  --wm-shadow-popover: 0 16px 40px rgba(18, 20, 23, 0.16);
+  --wm-shadow-sheet: 0 24px 64px rgba(18, 20, 23, 0.28);
+  --wm-shadow-dialog: 0 20px 48px rgba(18, 20, 23, 0.24);
+  --wm-shadow-ghost: 0 16px 40px rgba(18, 20, 23, 0.24);
+  --wm-shadow-dropdown: 0 12px 32px rgba(18, 20, 23, 0.12);
+  --wm-shadow-composer: 0 8px 28px rgba(18, 20, 23, 0.08);
+  --wm-shadow-card-hover: 0 6px 18px rgba(20, 40, 160, 0.1);
+  --wm-shadow-card-new: 0 2px 10px rgba(20, 40, 160, 0.08);
+  --wm-ring: 0 0 0 3px rgba(20, 40, 160, 0.2);
+  --wm-ring-soft: 0 0 0 3px rgba(20, 40, 160, 0.1);
+  --wm-ring-drop: 0 0 0 4px rgba(20, 40, 160, 0.08);
+  --wm-elev-1: 0 1px 2px rgba(18, 20, 23, 0.12);
+  /* 선택 카드(SB1Q · SB3S · SB4U · SB4E 선택 = 2px brand + 이 그림자) · 오른쪽 패널(MI3S 근거 패널) · 오른쪽 시트 */
+  --wm-shadow-choice: 0 4px 14px rgba(20, 40, 160, 0.1);
+  --wm-shadow-panel: -10px 0 28px rgba(18, 20, 23, 0.06);
+  --wm-shadow-side: -16px 0 48px rgba(18, 20, 23, 0.2);
+
+  /* 글꼴 §2.2 */
+  --wm-font: 'Noto Sans KR', system-ui, sans-serif;
+  --wm-font-num: 'Manrope', 'Noto Sans KR', system-ui, sans-serif;
+
+  /* 레이아웃 §3 */
+  --wm-sidebar-w: 260px;
+  --wm-topbar-h: 64px;
+  --wm-stepper-h: 56px;
+  --wm-content-w: 800px;
+
+  /* 겹침 §3.2 */
+  --wm-z-stepper: 20;
+  --wm-z-topbar: 30;
+  --wm-z-scrim: 40;
+  --wm-z-sheet: 41;
+  --wm-z-toast: 50;
+  --wm-z-ghost: 60;
+
+  /* 움직임 §2.6 [제안] */
+  --wm-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body {
+  margin: 0;
+  background: var(--wm-bg);
+  color: var(--wm-text);
+  font-family: var(--wm-font);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--wm-brand); text-decoration: none; }
+a:hover { color: var(--wm-brand-hover); }
+button, input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+input::placeholder, textarea::placeholder { color: var(--wm-placeholder); }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.wm-num { font-family: var(--wm-font-num); }
+.wm-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.wm-ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@keyframes wm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes wm-spin { to { transform: rotate(360deg); } }
+@keyframes wm-shimmer { 0% { opacity: 1; } 50% { opacity: 0.55; } 100% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }

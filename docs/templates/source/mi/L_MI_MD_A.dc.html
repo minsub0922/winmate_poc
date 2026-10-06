@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-MD-A 의료 · 요양 · 케어 · 시장 · 트렌드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">W 요양병원이 놓인 시장은 오래 머무는 환자와 함께 커집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">국내 노인 의료 · 요양 시장의 규모와, W 요양병원의 병동 운영을 바꾸는 네 가지 흐름</div>
+
+  <!-- 왼쪽 6열: 시장 규모 · 성장 (누적 막대, 표본 형태) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 564px; height: 488px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 178px; font-size: 16px; font-weight: 800; line-height: 22px; white-space: nowrap">노인 의료 · 요양 시장 규모</div>
+  <div style="position: absolute; left: 88px; top: 203px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">단위: 억 원 · 출처: [조사 기관] · 수치는 예시 · 조사 / 실측 후 반영</div>
+  <div style="position: absolute; left: 444px; top: 176px; width: 160px; height: 52px; text-align: right">
+    <div style="font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">연평균 성장률 · <span style="font-family: Manrope, sans-serif">2020→2030E</span></div>
+    <div style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; line-height: 34px; letter-spacing: -0.02em; color: #1428a0">[0.0]%</div>
+  </div>
+  <div style="position: absolute; left: 88px; top: 234px; height: 16px; display: flex; align-items: center; gap: 16px; font-size: 12px; color: #3d4452; white-space: nowrap">
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: {{l.c}}"></span><span style="font-weight: {{l.w}}">{{l.label}}</span></span>
+    </sc-for>
+  </div>
+
+  <!-- 전망 구간 -->
+  <div style="position: absolute; left: 362px; top: 262px; width: 234px; height: 284px; border-radius: 8px 8px 0 0; background: #ffffff"></div>
+  <div style="position: absolute; left: 370px; top: 266px; font-size: 11px; font-weight: 700; line-height: 14px; color: #8a91a0; white-space: nowrap">전망</div>
+
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="5">
+    <div style="{{g.line}}"></div>
+    <div style="{{g.lab}}">{{g.text}}</div>
+  </sc-for>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+    <sc-for list="{{b.segs}}" as="s" hint-placeholder-count="3">
+      <div style="{{s.style}}"></div>
+    </sc-for>
+    <div style="{{b.tot}}">{{b.total}}</div>
+    <div style="{{b.yr}}">{{b.year}}</div>
+  </sc-for>
+
+  <!-- 패널 하단 요약 -->
+  <div style="position: absolute; left: 88px; top: 582px; width: 516px; height: 1px; background: #e2e5ea"></div>
+  <sc-for list="{{stats}}" as="t" hint-placeholder-count="3">
+    <div style="{{t.pos}}">
+      <div style="font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{t.label}}</div>
+      <div style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; line-height: 26px; letter-spacing: -0.02em; color: {{t.c}}; white-space: nowrap">{{t.val}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 오른쪽 6열: 흐름 → 그래서 W 요양병원에게 -->
+  <div style="position: absolute; left: 652px; top: 160px; font-size: 13px; font-weight: 800; line-height: 18px; color: #121417; white-space: nowrap">W 요양병원의 운영을 바꾸는 흐름</div>
+  <div style="position: absolute; left: 952px; top: 160px; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">그래서 W 요양병원에게</div>
+  <sc-for list="{{trends}}" as="d" hint-placeholder-count="4">
+    <div style="{{d.rule}}"></div>
+    <span style="{{d.num}}">{{d.n}}</span>
+    <div style="{{d.titlePos}}">{{d.title}}</div>
+    <div style="{{d.descPos}}">{{d.desc}}</div>
+    <div style="{{d.kpiPos}}"><span style="font-size: 11.5px; color: #596170">{{d.kpi}}</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{d.kpiVal}}</span></div>
+    <div style="{{d.arrowLine}}"></div>
+    <div style="{{d.arrowHead}}"></div>
+    <div style="{{d.box}}">
+      <div style="position: absolute; left: 16px; top: 12px; font-size: 11px; font-weight: 800; line-height: 14px; letter-spacing: 0.02em; color: #1428a0; white-space: nowrap">그래서 W 요양병원에게</div>
+      <div style="position: absolute; left: 16px; top: 32px; width: 232px; font-size: 13.5px; font-weight: 700; line-height: 20px; color: #121417">{{d.impl}}</div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 요양병원 · 케어 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 4</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const C1 = '#1428a0', C2 = '#6f82d6', C3 = '#b8c3ee';
+
+    const legend = [
+      { label: '요양병원 (W 요양병원)', c: C1, w: 800 },
+      { label: '노인 요양시설', c: C2, w: 500 },
+      { label: '재가 · 시니어 케어', c: C3, w: 500 }
+    ];
+
+    // 플롯 영역: x 128–596, 기준선 y 546, 눈금 69px 간격 (표본 형태)
+    const BASE = 546, STEP = 69;
+    const grid = [0, 1, 2, 3, 4].map((i) => {
+      const y = BASE - i * STEP;
+      return {
+        text: i === 0 ? '0' : '[0,000]',
+        line: A + box(128, y, 468, 1) + 'background: ' + (i === 0 ? '#b8bec8' : '#e2e5ea') + ';',
+        lab: A + box(76, y - 8, 44, 16) + 'text-align: right; font-family: Manrope, sans-serif; font-size: 10.5px; line-height: 16px; color: #8a91a0; white-space: nowrap;'
+      };
+    });
+
+    // 누적 막대 — 아래부터 요양병원 · 노인 요양시설 · 재가 · 시니어 케어 (비율 · 높이는 표본)
+    const B = [
+      ['2020', 118, [0.52, 0.33, 0.15]],
+      ['2022', 138, [0.50, 0.34, 0.16]],
+      ['2024', 160, [0.48, 0.34, 0.18]],
+      ['2026E', 186, [0.46, 0.34, 0.20]],
+      ['2028E', 216, [0.45, 0.33, 0.22]],
+      ['2030E', 250, [0.44, 0.32, 0.24]]
+    ];
+    const SLOT = 78, BW = 44;
+    const bars = B.map(([year, total, r], i) => {
+      const x = 128 + i * SLOT + (SLOT - BW) / 2;
+      const last = i === B.length - 1;
+      let y = BASE;
+      const cols = [C1, C2, C3];
+      const segs = r.map((f, j) => {
+        const h = Math.round(total * f);
+        y -= h;
+        const top = j === r.length - 1;
+        return { style: A + box(x, y, BW, top ? h : h - 2) + 'background: ' + cols[j] + '; border-radius: ' + (top ? '4px 4px 0 0' : '0') + ';' };
+      });
+      return {
+        year, total: '[0,000]', segs,
+        tot: A + box(x - 18, BASE - total - 20, BW + 36, 16) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 12px; line-height: 16px; font-weight: ' + (last ? 800 : 700) + '; color: ' + (last ? C1 : '#596170') + '; white-space: nowrap;',
+        yr: A + box(x - 18, BASE + 8, BW + 36, 16) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 12px; line-height: 16px; font-weight: ' + (last ? 800 : 600) + '; color: ' + (last ? C1 : '#596170') + '; white-space: nowrap;'
+      };
+    });
+
+    const S = [
+      ['요양병원 시장 · 2026E', '[0,000]억 원', C1],
+      ['요양병원 비중', '[00]%', C1],
+      ['전국 요양병원 수', '[0,000]곳', '#121417']
+    ];
+    const SX = [88, 290, 430];
+    const stats = S.map(([label, val, c], i) => ({
+      label, val, c,
+      pos: A + box(SX[i], 594, i === 0 ? 180 : 150, 44)
+    }));
+
+    // 흐름 4 — 업종 흐름 → W 요양병원에 주는 의미
+    const T = [
+      ['고령 · 장기 재원 환자 증가', '병실이 치료 공간이자 수개월을 지내는 생활 공간이 됩니다', '65세 이상 인구 비중', '[00]%',
+        '병실 냉난방 · 공기질이 곧 치료 환경 — 직바람 없는 24시간 쾌적이 기본 사양입니다'],
+      ['한정된 인력, 24시간 병동', '호실 순회 점검 · 호출 응대 · 서류가 간호 시간을 잠식합니다', '간호 인력 1인당 병상', '[0.0]',
+        '점검은 원격으로, 반복 제어는 자동으로 — 간호 · 요양 인력이 환자 곁에 머물도록'],
+      ['24시간 냉난방 에너지 부담', '하절기 24시간 냉방 · 한겨울 난방, 피크 전력이 운영비를 좌우합니다', '병상당 월 에너지 비용', '[00]만 원',
+        '심야 축열 · 피크 전력 제어 · 실별 사용량 가시화로 에너지 비용을 관리합니다'],
+      ['프리미엄 케어 · 보호자 선택', '쾌적 · 안심 · 소통이 병원 선택 기준이 되고 1인실 · VIP 수요가 늘어납니다', '1인실 · VIP 병상 비중', '[00]%',
+        '보이는 쾌적, 즉각 대응하는 안전, 병상 서비스가 W 요양병원의 차별점이 됩니다']
+    ];
+    const RY = 186, RH = 104, RG = 12;
+    const trends = T.map(([title, desc, kpi, kpiVal, impl], i) => {
+      const y = RY + i * (RH + RG);
+      return {
+        n: i + 1, title, desc, kpi, kpiVal, impl,
+        rule: A + box(652, y - 7, 564, 1) + 'background: ' + (i === 0 ? '#121417' : '#e2e5ea') + ';',
+        num: A + box(652, y + 2, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        titlePos: A + box(688, y + 2, 236, 24) + 'font-size: 17px; font-weight: 800; line-height: 24px; white-space: nowrap;',
+        descPos: A + box(688, y + 30, 236, 38) + 'font-size: 12.5px; line-height: 19px; color: #3d4452;',
+        kpiPos: A + box(688, y + 76, 236, 20) + 'display: flex; align-items: center; gap: 8px; white-space: nowrap;',
+        arrowLine: A + box(930, y + RH / 2 - 1, 10, 2) + 'background: #1428a0;',
+        arrowHead: A + 'left: ' + px(939) + 'top: ' + px(y + RH / 2 - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1428a0;',
+        box: A + box(952, y, 264, RH - 8) + 'border-radius: 12px; background: #eaeefb;'
+      };
+    });
+
+    return { legend, grid, bars, stats, trends };
+  }
+}
+</script>
+</body>
+</html>

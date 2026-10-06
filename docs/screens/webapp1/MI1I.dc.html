@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 업종 인사이트 프리셋</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="A 커피 프랜차이즈 시장·경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="새 작업" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 24px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.65">업종을 고르면 삼성 도입사례에서 그 업종 고객이 요구한 것과 많이 쓰인 제품 · 솔루션을 분석 출발점으로 채워 드려요. 고객사만의 요구사항은 다음 단계에서 더하거나 뺄 수 있어요.</div>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #596170; min-width: 0">
+            <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">업종 감지</span>
+            <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">A 커피 프랜차이즈 → <span style="color: #121417; font-weight: 600">외식 · 카페 프랜차이즈</span> · Storyboard 'A 커피 프랜차이즈 매장 리뉴얼' 기준</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">업종 인사이트 프리셋 <span style="color: #596170; font-weight: 500">· 삼성 도입사례 {{allCases}}건 · {{indCount}}개 업종 · 1 / 3</span></div>
+          <a href="MI1.dc.html" style="height: 28px; padding: 0 10px; border-radius: 6px; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">직접 입력으로</a>
+        </div>
+
+        <div style="padding: 12px 18px 0 18px; display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 14px; align-items: stretch">
+          <!-- 업종 16 -->
+          <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+            <div style="height: 34px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 10px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <label for="indq" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">업종 검색</label>
+              <input id="indq" placeholder="업종 검색 (예: 호텔, 무인 매장)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+            </div>
+            <div role="radiogroup" aria-label="업종" style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px">
+              <sc-for list="{{tiles}}" as="t" hint-placeholder-count="16">
+                <button role="radio" aria-checked="{{t.on}}" onClick="{{t.pick}}" title="{{t.full}}" style="{{t.style}}">
+                  <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{t.short}}</span>
+                  <span style="{{t.nStyle}}">{{t.n}}</span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- 선택 업종 인사이트 -->
+          <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #fbfbfc; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; min-width: 0">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0">
+              <span style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+              <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">도입사례 {{d.cases}}건 기준</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; align-items: baseline; justify-content: space-between">
+                <span style="font-size: 12.5px; font-weight: 700">이 업종 고객이 요구한 것</span>
+                <span style="font-size: 11.5px; color: #596170">분석에 넣을 항목 {{checkedCount}}개</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 3px">
+                <sc-for list="{{d.reqs}}" as="q" hint-placeholder-count="6">
+                  <button role="checkbox" aria-checked="{{q.on}}" onClick="{{q.toggle}}" style="display: grid; grid-template-columns: 16px 116px minmax(0, 1fr) 40px; gap: 8px; align-items: center; height: 22px; padding: 0; border: none; background: transparent; text-align: left; color: #121417">
+                    <span style="{{q.boxStyle}}"><sc-if value="{{q.on}}" hint-placeholder-val="{{true}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></span>
+                    <span style="{{q.labelStyle}}">{{q.label}}</span>
+                    <span style="height: 8px; border-radius: 4px; background: #eef0f3; overflow: hidden; display: block"><span style="{{q.barStyle}}"></span></span>
+                    <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #3d4452; text-align: right">{{q.n}}건</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding-top: 10px; border-top: 1px solid #e2e5ea">
+              <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+                <span style="font-size: 12px; font-weight: 700">많이 쓰인 제품</span>
+                <sc-for list="{{d.prods}}" as="p" hint-placeholder-count="4">
+                  <div style="height: 22px; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #121417">{{p.name}}</span>
+                    <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #596170; flex-shrink: 0">{{p.n}}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+                <span style="font-size: 12px; font-weight: 700">많이 쓰인 솔루션</span>
+                <sc-for list="{{d.sols}}" as="p" hint-placeholder-count="4">
+                  <div style="height: 22px; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px">
+                    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #1428a0; font-weight: 600">{{p.name}}</span>
+                    <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #596170; flex-shrink: 0">{{p.n}}</span>
+                  </div>
+                </sc-for>
+                <sc-if value="{{d.noSol}}" hint-placeholder-val="{{false}}">
+                  <span style="font-size: 12px; color: #8a91a0">솔루션 없이 제품만 도입</span>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 적용하면 무엇이 채워지나 -->
+        <div style="padding: 12px 18px 0 18px">
+          <div style="height: 40px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 12px; color: #3d4452; white-space: nowrap; overflow: hidden">
+            <span style="font-weight: 700; color: #121417; flex-shrink: 0">적용하면</span>
+            <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; flex-shrink: 0">고객 요구사항 ← 요구 {{checkedCount}}개</span>
+            <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; flex-shrink: 0">경쟁 비교 기준 ← 같은 {{checkedCount}}개</span>
+            <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; flex-shrink: 0">제안서 MI 레이아웃 ← <span style="font-family: Manrope, sans-serif; font-weight: 700; margin-left: 4px">{{d.layouts}}</span></span>
+          </div>
+        </div>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170">사례 수는 도입사례 본문을 자동 분류한 값이에요. 업종 하나에 사례 하나씩 셉니다.</span>
+          <div style="display: flex; gap: 8px; flex-shrink: 0">
+            <a href="MI1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">직접 입력</a>
+            <a href="MI2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+              <span>이 프리셋으로 분석 범위 선택</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 삼성 도입사례 198건 → 16개 업종 (data/industry_matrix.json): 코드 · 업종명 · 짧은 이름 · 사례 수 · 요구 유형 상위 6 · 제품 상위 4 · 솔루션 상위 4
+    const IND = [
+      ['FB', '외식 · 카페 프랜차이즈', '외식 · 카페', 23, [['디자인 조화', 18], ['고객 경험', 17], ['쾌적 · 공기질', 10], ['업무 효율', 8], ['원격 통합 관리', 7], ['브랜드 · 공간 임팩트', 7]], [['시스템에어컨', 11], ['LCD 사이니지', 10], ['갤럭시 탭', 5], ['리빙가전', 5]], [['파트너 앱 · 주문 결제', 5], ['MagicINFO', 3], ['Knox · Knox Configure', 3], ['SmartThings', 3]]],
+      ['RT', '리테일 · 브랜드 플래그십', '리테일 · 플래그십', 16, [['브랜드 · 공간 임팩트', 14], ['디자인 조화', 11], ['고객 경험', 9], ['설치 · 시공', 6], ['확장성', 5], ['현장 내구성', 5]], [['LCD 사이니지', 8], ['LED 사이니지', 3], ['시스템에어컨', 3], ['특수 사이니지', 2]], [['MagicINFO', 4], ['케어 · 유지관리 서비스', 2], ['콘텐츠 제작 지원', 2], ['전용 에디션 · 커스터마이징', 1]]],
+      ['SV', '생활 편의 · 무인 매장', '무인 · 생활 편의', 9, [['고객 경험', 9], ['업무 효율', 6], ['확장성', 5], ['유지보수 · AS', 4], ['현장 내구성', 3], ['비용 · 투자 효과', 3]], [['TV · 모니터', 5], ['디지털 복합기', 5], ['PC · 노트북', 4], ['갤럭시 탭', 2]], [['무인 과금', 6], ['파트너 앱 · 주문 결제', 1], ['케어 · 유지관리 서비스', 1], ['전용 에디션 · 커스터마이징', 1]]],
+      ['HT', '호텔 · 리조트', '호텔 · 리조트', 17, [['고객 경험', 13], ['디자인 조화', 10], ['브랜드 · 공간 임팩트', 9], ['쾌적 · 공기질', 7], ['원격 통합 관리', 6], ['비용 · 투자 효과', 5]], [['호텔 TV', 6], ['시스템에어컨', 6], ['TV · 모니터', 5], ['LCD 사이니지', 4]], [['케어 · 유지관리 서비스', 3], ['LYNK Cloud', 2], ['MagicINFO', 1]]],
+      ['TP', '테마파크 · 관광 · 전시', '테마파크 · 전시', 12, [['브랜드 · 공간 임팩트', 11], ['고객 경험', 10], ['디자인 조화', 5], ['설치 · 시공', 4], ['콘텐츠 운영', 4], ['다국어 안내', 4]], [['LCD 사이니지', 6], ['LED 사이니지', 4], ['TV · 모니터', 2], ['PC · 노트북', 2]], [['MagicINFO', 3], ['전용 에디션 · 커스터마이징', 3], ['콘텐츠 제작 지원', 2]]],
+      ['VN', '공연장 · 경기장 · 영화관', '공연장 · 경기장', 18, [['고객 경험', 11], ['브랜드 · 공간 임팩트', 10], ['설치 · 시공', 8], ['업무 효율', 7], ['유지보수 · AS', 6], ['쾌적 · 공기질', 6]], [['하만 프로 오디오', 5], ['LED 사이니지', 4], ['시스템에어컨', 4], ['시네마 LED', 3]], [['케어 · 유지관리 서비스', 4], ['VXT', 1], ['Knox · Knox Configure', 1]]],
+      ['AD', '옥외 · 미디어 광고', '옥외 광고', 6, [['브랜드 · 공간 임팩트', 6], ['현장 내구성', 6], ['설치 · 시공', 5], ['규제 · 인증', 2], ['유지보수 · AS', 2], ['디자인 조화', 2]], [['LED 사이니지', 4], ['LCD 사이니지', 2]], [['케어 · 유지관리 서비스', 1], ['콘텐츠 제작 지원', 1]]],
+      ['OF', '오피스 · 업무 빌딩', '오피스 · 빌딩', 11, [['원격 통합 관리', 7], ['브랜드 · 공간 임팩트', 5], ['설치 · 시공', 5], ['쾌적 · 공기질', 5], ['에너지 절감', 5], ['협업 · 회의', 5]], [['시스템에어컨', 4], ['LED 사이니지', 3], ['LCD 사이니지', 2], ['공조 · 환기', 2]], [['MagicINFO', 3], ['SmartThings', 2], ['b.IoT', 2]]],
+      ['RS', '주거 분양 · 주택', '주거 분양', 18, [['분양 · 자산 가치', 14], ['디자인 조화', 11], ['쾌적 · 공기질', 9], ['에너지 절감', 8], ['비용 · 투자 효과', 6], ['데이터 · 모니터링', 4]], [['시스템에어컨', 10], ['빌트인 주방가전', 10], ['리빙가전', 6], ['TV · 모니터', 2]], [['SmartThings', 7], ['DMS · 공조 제어', 4]]],
+      ['ID', '인테리어 · 가구 · 빌트인 파트너', '인테리어 · 빌트인', 9, [['디자인 조화', 9], ['브랜드 · 공간 임팩트', 6], ['설치 · 시공', 4], ['쾌적 · 공기질', 4], ['에너지 절감', 3], ['맞춤 개발', 3]], [['빌트인 주방가전', 8], ['리빙가전', 6], ['시스템에어컨', 4], ['TV · 모니터', 3]], [['SmartThings', 3]]],
+      ['ED', '교육 · 캠퍼스', '교육 · 캠퍼스', 13, [['교육 · 학습 환경', 8], ['업무 효율', 6], ['협업 · 회의', 4], ['쾌적 · 공기질', 4], ['시스템 연동', 4], ['유지보수 · AS', 4]], [['시스템에어컨', 5], ['갤럭시 탭', 5], ['PC · 노트북', 5], ['전자칠판 · Flip', 3]], [['무인 과금', 3], ['케어 · 유지관리 서비스', 3], ['SmartThings Pro', 2]]],
+      ['PB', '공공 · 교통 인프라', '공공 · 교통', 7, [['현장 내구성', 5], ['데이터 · 모니터링', 4], ['안전 · 재난', 4], ['시스템 연동', 4], ['확장성', 3], ['보안 · 기기 통제', 2]], [['LED 사이니지', 2], ['LCD 사이니지', 1], ['시스템에어컨', 1], ['갤럭시 스마트폰', 1]], [['안전 · 관제 솔루션', 2], ['Knox · Knox Configure', 1], ['파트너 앱 · 주문 결제', 1]]],
+      ['MD', '의료 · 요양 · 케어', '의료 · 요양', 10, [['쾌적 · 공기질', 8], ['업무 효율', 7], ['원격 통합 관리', 5], ['고객 경험', 5], ['에너지 절감', 4], ['데이터 · 모니터링', 4]], [['시스템에어컨', 7], ['리빙가전', 5], ['LCD 사이니지', 3], ['TV · 모니터', 2]], [['SmartThings', 3], ['파트너 앱 · 주문 결제', 3], ['DMS · 공조 제어', 2]]],
+      ['MF', '제조 · 물류 · 현장', '제조 · 물류 · 현장', 7, [['현장 내구성', 6], ['업무 효율', 4], ['원격 통합 관리', 3], ['에너지 절감', 3], ['데이터 · 모니터링', 3], ['고객 경험', 3]], [['시스템에어컨', 3], ['갤럭시 탭', 2], ['갤럭시 워치 · 태그', 2], ['공조 · 환기', 1]], [['Knox · Knox Configure', 3], ['파트너 앱 · 주문 결제', 2], ['안전 · 관제 솔루션', 2]]],
+      ['FN', '금융', '금융', 5, [['고객 경험', 3], ['보안 · 기기 통제', 3], ['브랜드 · 공간 임팩트', 2], ['설치 · 시공', 2], ['비용 · 투자 효과', 2], ['쾌적 · 공기질', 2]], [['갤럭시 탭', 3], ['LED 사이니지', 2], ['LCD 사이니지', 2], ['TV · 모니터', 2]], [['Knox · Knox Configure', 2], ['파트너 앱 · 주문 결제', 2], ['MagicINFO', 1]]],
+      ['OE', '파트너 전용 단말 · 에디션', '파트너 전용 단말', 17, [['맞춤 개발', 15], ['시스템 연동', 14], ['보안 · 기기 통제', 8], ['현장 내구성', 7], ['고객 경험', 7], ['안전 · 재난', 5]], [['갤럭시 스마트폰', 8], ['갤럭시 탭', 7], ['갤럭시 워치 · 태그', 2], ['TV · 모니터', 1]], [['파트너 앱 · 주문 결제', 13], ['전용 에디션 · 커스터마이징', 12], ['Knox · Knox Configure', 11]]]
+    ];
+    const st = this.state || {};
+    const sel = st.sel || 'FB';
+    const off = st.off || {};
+    const DEFAULT_ON = 4;
+
+    const tiles = IND.map(([code, full, short, n]) => {
+      const on = code === sel;
+      return {
+        code, full, short, n: n + '건', on,
+        pick: () => this.setState({ sel: code }),
+        style: 'height: 35px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between; gap: 6px; padding: 0 10px; border-radius: 9px; font-size: 12.5px; text-align: left; min-width: 0;' + (on ? ' border: 1.5px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;'),
+        nStyle: 'font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; flex-shrink: 0;' + (on ? ' color: #1428a0;' : ' color: #8a91a0;')
+      };
+    });
+
+    const cur = IND.find((x) => x[0] === sel) || IND[0];
+    const [code, name, , cases, reqRows, prodRows, solRows] = cur;
+    let checkedCount = 0;
+    const reqs = reqRows.map(([label, n], i) => {
+      const key = code + ':' + i;
+      const on = (i < DEFAULT_ON) !== !!off[key];
+      if (on) checkedCount += 1;
+      const pct = Math.round((n / cases) * 100);
+      return {
+        label, n, on,
+        toggle: () => { const o = Object.assign({}, off); o[key] = !o[key]; this.setState({ off: o }); },
+        boxStyle: 'width: 16px; height: 16px; border-radius: 4px; box-sizing: border-box; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #1428a0;' : ' border: 1.5px solid #b8bec8; background: #ffffff;'),
+        labelStyle: 'font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (on ? ' color: #121417; font-weight: 600;' : ' color: #596170;'),
+        barStyle: 'display: block; height: 8px; border-radius: 4px; width: ' + pct + '%;' + (on ? ' background: #1428a0;' : ' background: #b8bec8;')
+      };
+    });
+    const list = (rows) => rows.map(([n0, c]) => ({ name: n0, n: c + '건' }));
+    const d = {
+      name, cases, reqs,
+      prods: list(prodRows), sols: list(solRows), noSol: solRows.length === 0,
+      layouts: 'MI-' + code + '-A · B · C'
+    };
+    return {
+      steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 1,
+      tiles, d, checkedCount,
+      allCases: IND.reduce((s, x) => s + x[3], 0), indCount: IND.length
+    };
+  }
+}
+</script>
+</body>
+</html>

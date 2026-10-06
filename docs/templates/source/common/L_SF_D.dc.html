@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SF-D 실제 화면 투어 · 확대 3</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">관리자는 이 화면 하나로 1,200개 매장의 전기를 봅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">SmartThings Pro 실제 화면 · H 편의점 체인</div>
+
+  <!-- 전체 화면 + 번호 영역 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 656px; height: 472px">
+    <dc-import name="Img" pid="ui.stp.energy" w="656" h="472" bg="soft" radius="16" fit="contain" credit="bl" hint-size="656px,472px"></dc-import>
+  </div>
+  <sc-for list="{{spots}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.frame}}"></div>
+    <span style="{{s.badge}}">{{s.no}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 634px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #8a91a0">
+    <span style="width: 14px; height: 10px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 3px; background: rgba(20,40,160,0.10)"></span>
+    <span>번호 영역 = 오른쪽 확대 화면 · 에너지 대시보드 (본사 관리자 화면)</span>
+  </div>
+
+  <!-- 확대 3 -->
+  <div style="position: absolute; left: 744px; top: 150px; width: 472px; display: flex; flex-direction: column; gap: 11px">
+    <sc-for list="{{spots}}" as="s" hint-placeholder-count="3">
+      <div style="height: 150px; display: flex; gap: 18px; align-items: stretch">
+        <div style="width: 248px; height: 150px; flex-shrink: 0">
+          <dc-import name="Img" pid="ui.stp.energy" w="248" h="150" bg="soft" radius="10" fit="cover" zoom="{{s.zoom}}" pos="{{s.pos}}" hint-size="248px,150px"></dc-import>
+        </div>
+        <div style="flex-grow: 1; min-width: 0; box-sizing: border-box; border-top: 1px solid #e2e5ea; padding: 14px 0 2px; display: flex; flex-direction: column; gap: 7px">
+          <span style="display: flex; align-items: center; gap: 8px"><span style="width: 28px; height: 28px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 0 0 1px #e2e5ea; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span><span style="font-size: 15px; font-weight: 800; line-height: 1.35; white-space: nowrap">{{s.name}}</span></span>
+          <span style="font-size: 13px; line-height: 1.55; color: #3d4452; word-break: keep-all">{{s.effect}}</span>
+          <span style="margin-top: auto; font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{s.where}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 편의점 체인 · 매장 에너지 관리 제안 · 화면 samsung.com 공식 이미지 · 화면 속 수치는 공식 예시 값</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 원본 화면(852×520) 위 영역 [u0, v0, u1, v1] → 왼쪽 전체 화면 위 번호 영역 + 오른쪽 확대 크롭(zoom · pos)
+    // 전체 화면: 656×472 contain, 여백 28 → 원점 (92, 202.9), 배율 0.7042
+    const MAIN = { x: 92, y: 202.9, s: 0.7042 };
+    const TILE = { w: 248, h: 150 };
+    const IW = 852, IH = 520;
+    const S = [
+      [[6, 238, 226], '절감 모드 현황', '절감 제어가 꺼진 매장만 골라 원격으로 바로 켭니다', '화면 위치 · 왼쪽 상태 패널'],
+      [[504, 12, 752], '매장별 이번 달 사용량', '월말 예상이 목표를 넘는 매장을 미리 찾아 조치합니다', '화면 위치 · 오른쪽 위 막대 그래프'],
+      [[590, 300, 846], '전월 대비 사용 추이', '지난달과 겹쳐 보고 사용량이 벌어진 날을 짚습니다', '화면 위치 · 오른쪽 아래 라인 그래프']
+    ];
+    const cs = Math.max(TILE.w / IW, TILE.h / IH);
+    const spots = S.map(([[u0, v0, u1], name, effect, where], i) => {
+      const zoom = TILE.w / ((u1 - u0) * cs);
+      const vw = TILE.w / (zoom * cs), vh = TILE.h / (zoom * cs);
+      const px = u0 * cs / (IW * cs - TILE.w / zoom) * 100;
+      const py = v0 * cs / (IH * cs - TILE.h / zoom) * 100;
+      const x = Math.round(MAIN.x + u0 * MAIN.s), y = Math.round(MAIN.y + v0 * MAIN.s);
+      const w = Math.round(vw * MAIN.s), h = Math.round(vh * MAIN.s);
+      return {
+        no: i + 1, name, effect, where,
+        zoom: Math.round(zoom * 1000) / 1000,
+        pos: px.toFixed(1) + '% ' + py.toFixed(1) + '%',
+        frame: 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 6px; background: rgba(20,40,160,0.10)',
+        badge: 'position: absolute; left: ' + (x - 15) + 'px; top: ' + (y - 15) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center'
+      };
+    });
+    return { spots };
+  }
+}
+</script>
+</body>
+</html>

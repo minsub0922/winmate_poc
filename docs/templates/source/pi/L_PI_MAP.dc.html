@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>공간별 제품 템플릿 지도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 40px; width: 1152px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">LAYOUT SYSTEM · 04 공간별 제품</span>
+    <span style="font-size: 28px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">같은 목적도 다른 형태로 — 공간별 제품 템플릿 {{total}}장</span>
+    <span style="font-size: 14px; color: #596170">시트 3종 · 템플릿은 무엇이 설득 포인트인지, 어떤 자료가 있는지로 고릅니다 · <span style="color: #1428a0; font-weight: 700">신규</span> 표시가 이번에 추가된 표현</span>
+  </div>
+
+  <!-- 공간 맵 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px; height: 96px; display: flex; gap: 16px">
+    <div style="width: 176px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 6px">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">SM · {{smCount}}</span>
+      <span style="font-size: 17px; font-weight: 800">공간 맵</span>
+      <span style="font-size: 12.5px; color: #596170">“어디에 무엇을” · 섹션 첫 시트</span>
+    </div>
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{sm}}" as="t" hint-placeholder-count="5">
+        <div style="{{t.box}}">
+          <div style="display: flex; align-items: center; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{t.code}}</span><sc-if value="{{t.isNew}}" hint-placeholder-val="{{false}}"><span style="height: 16px; padding: 0 6px; border-radius: 999px; border: 1px solid #1428a0; color: #1428a0; font-size: 10px; font-weight: 700; display: flex; align-items: center">신규</span></sc-if></div>
+          <span style="font-size: 13.5px; font-weight: 700">{{t.name}}</span>
+          <span style="font-size: 11.5px; line-height: 1.4; color: #596170">{{t.when}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 공간 제품 소개 -->
+  <div style="position: absolute; left: 64px; top: 262px; width: 1152px; height: 250px; display: flex; gap: 16px">
+    <div style="width: 176px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 6px">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">P · {{pCount}}</span>
+      <span style="font-size: 17px; font-weight: 800">공간 제품 소개</span>
+      <span style="font-size: 12.5px; color: #596170">“이 공간에 이 제품” · 공간마다 한 장</span>
+    </div>
+    <div style="width: 230px; flex-shrink: 0; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+      <span style="font-size: 12.5px; font-weight: 800">기본 · 제품 수 × 성격 = 20</span>
+      <div style="display: grid; grid-template-columns: 34px repeat(4, minmax(0, 1fr)); gap: 4px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #596170">
+        <span></span><span style="text-align: center">A</span><span style="text-align: center">B</span><span style="text-align: center">C</span><span style="text-align: center">D</span>
+        <sc-for list="{{matrix}}" as="r" hint-placeholder-count="5">
+          <span style="display: flex; align-items: center">P{{r.n}}</span>
+          <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="4">
+            <span style="height: 16px; border-radius: 3px; background: #b8c3ee"></span>
+          </sc-for>
+        </sc-for>
+      </div>
+      <span style="font-size: 11px; line-height: 1.45; color: #596170">A 이미지 · B 공간 · 설치<br>C 스펙 · D 메시지 / 주력 + 보조</span>
+    </div>
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+        <div style="box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; padding: 12px 12px 10px 12px; display: flex; flex-direction: column; gap: 7px">
+          <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 12.5px; font-weight: 800">{{g.name}}</span><span style="font-size: 10.5px; font-weight: 700; color: #1428a0">신규 {{g.count}}</span></div>
+          <sc-for list="{{g.items}}" as="t" hint-placeholder-count="5">
+            <div style="display: flex; flex-direction: column; gap: 1px">
+              <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{t.code}}</span> {{t.name}}</span>
+              <span style="font-size: 11px; color: #596170; white-space: nowrap">{{t.when}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 구성 · 수량 -->
+  <div style="position: absolute; left: 64px; top: 528px; width: 1152px; height: 96px; display: flex; gap: 16px">
+    <div style="width: 176px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px; padding-top: 6px">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">BM · {{bmCount}}</span>
+      <span style="font-size: 17px; font-weight: 800">구성 · 수량</span>
+      <span style="font-size: 12.5px; color: #596170">“무엇을 몇 대” · 섹션 마지막</span>
+    </div>
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{bm}}" as="t" hint-placeholder-count="5">
+        <div style="{{t.box}}">
+          <div style="display: flex; align-items: center; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{t.code}}</span><sc-if value="{{t.isNew}}" hint-placeholder-val="{{false}}"><span style="height: 16px; padding: 0 6px; border-radius: 999px; border: 1px solid #1428a0; color: #1428a0; font-size: 10px; font-weight: 700; display: flex; align-items: center">신규</span></sc-if></div>
+          <span style="font-size: 13.5px; font-weight: 700">{{t.name}}</span>
+          <span style="font-size: 11.5px; line-height: 1.4; color: #596170">{{t.when}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 고르는 순서 -->
+  <div style="position: absolute; left: 64px; top: 640px; width: 1152px; height: 44px; box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 0 18px; display: flex; align-items: center; gap: 22px; font-size: 12.5px">
+    <span style="font-weight: 800; color: #1428a0; flex-shrink: 0">고르는 순서</span>
+    <sc-for list="{{rules}}" as="r" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span><b>{{r.head}}</b><span style="color: #596170">{{r.body}}</span></span>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const cell = (isNew) => 'box-sizing: border-box; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px;' + (isNew ? ' background: #ffffff; border: 1px solid #b8c3ee;' : ' background: #f5f6f8; border: 1px solid #f5f6f8;');
+    const mk = (rows) => rows.map(([code, name, when, isNew]) => ({ code, name, when, isNew, box: cell(isNew) }));
+    const sm = mk([
+      ['SM-A', '존 맵 + 목록', '공간 3곳 안팎 · 평면이 있을 때', false],
+      ['SM-B', '공간 × 제품 수량표', '공간 · 제품이 많을 때', false],
+      ['SM-C', '동선 스트립', '순서대로 지나가는 공간', true],
+      ['SM-D', '층별 단면', '층마다 쓰임이 다른 건물', true],
+      ['SM-E', '공간 사진 카드', '공간 사진이 있을 때 · 4~6곳', true]
+    ]);
+    const bm = mk([
+      ['BM-A', '전체 구성표', '견적 전 전체 물량 확정', false],
+      ['BM-B', '매장 유형별 구성', '매장 규모가 여러 가지일 때', false],
+      ['BM-C', '반복 유닛 + 공용부', '객실 · 교실처럼 반복될 때', true],
+      ['BM-D', '단계별 도입', '파일럿 → 확대 → 전체', true],
+      ['BM-E', '지역별 물량', '지점이 전국에 흩어질 때', true]
+    ]);
+    const G = [
+      ['공간 속 모습', [
+        ['P-E', '정면 입면도 · 치수', '높이 · 간격이 핵심일 때'],
+        ['P-F', '시야 거리 단면', '크기를 거리로 증명할 때'],
+        ['P-G', '설치 방식 옵션', '다는 방식을 고를 때'],
+        ['P-H', '커버리지 평면', '천장 속 · 닿는 범위가 핵심'],
+        ['P-I', '무드 컷', '분위기로 설득할 때']]],
+      ['왜 이 제품인가', [
+        ['P-J', '제품 디테일 콜아웃', '제품 설계가 논거일 때'],
+        ['P-K', '조건 → 대응 사양', '옥외 · 고온 · 24시간'],
+        ['P-L', '비디오월 · LED 구성', '패널을 이어 붙일 때'],
+        ['P-M', '수량 · 용량 산정', '“왜 이만큼”에 답할 때']]],
+      ['고르기 · 바꾸기', [
+        ['P-N', '기존 장비 → 교체', '쓰던 장비를 바꿀 때'],
+        ['P-O', '구성 3안', '예산으로 고르게 할 때']]],
+      ['사람 · 묶음 · 다수', [
+        ['P-P', '사용자별 접점', '한 공간, 여러 사람'],
+        ['P-Q', '직무별 기기 키트', '기기가 사람을 따라갈 때'],
+        ['P-R', '유닛 패키지', '여러 제품군이 한 세대에'],
+        ['P-S', '한 제품 · 여러 공간', '한 모델로 통일할 때'],
+        ['P-T', '카탈로그 6~8', '한 공간에 제품이 많을 때']]]
+    ];
+    const groups = G.map(([name, items]) => ({ name, count: items.length, items: items.map(([code, n, when]) => ({ code, name: n, when })) }));
+    const newP = groups.reduce((a, g) => a + g.count, 0);
+    const matrix = [1, 2, 3, 4, 5].map((n) => ({ n, cells: [0, 1, 2, 3] }));
+    const rules = [
+      { no: 1, head: '설득 포인트', body: '제품 · 공간 맥락 · 숫자 · 사람 · 선택지' },
+      { no: 2, head: '가진 자료', body: '제품 사진 · 설치 컷 · 평면도 · 치수' },
+      { no: 3, head: '제품 수', body: '1~5 기본 · 6~8 P-T · 9개+ 시트 분할' }
+    ];
+    return {
+      sm, bm, groups, matrix, rules,
+      smCount: sm.length, bmCount: bm.length, pCount: 20 + newP,
+      total: sm.length + bm.length + 20 + newP
+    };
+  }
+}
+</script>
+</body>
+</html>

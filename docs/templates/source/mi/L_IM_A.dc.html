@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IM-A 발견 → 시사점 → 제안 방향</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">시장 분석이 가리키는 이번 제안의 방향</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 368px; height: 24px; display: flex; align-items: center; gap: 8px"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #8a91a0">01</span><span style="font-size: 14px; font-weight: 800; color: #3d4452">발견</span><span style="font-size: 12px; color: #8a91a0">4가지</span></div>
+  <div style="position: absolute; left: 488px; top: 136px; width: 320px; height: 24px; display: flex; align-items: center; gap: 8px"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #8a91a0">02</span><span style="font-size: 14px; font-weight: 800; color: #3d4452">시사점</span><span style="font-size: 12px; color: #8a91a0">2가지</span></div>
+  <div style="position: absolute; left: 864px; top: 136px; width: 352px; height: 24px; display: flex; align-items: center; gap: 8px"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">03</span><span style="font-size: 14px; font-weight: 800; color: #1428a0">제안 방향</span><span style="font-size: 12px; color: #1428a0">하나로</span></div>
+
+  <!-- 깔때기 면: 4 → 2 → 1 로 좁아짐 -->
+  <svg style="position: absolute; left: 432px; top: 172px" width="432" height="476" viewBox="0 0 432 476" fill="none"><polygon points="0,0 56,40 376,40 432,80 432,396 376,436 56,436 0,476" fill="#f5f6f8"></polygon></svg>
+
+  <!-- 1열 발견 -->
+  <sc-for list="{{finds}}" as="f" hint-placeholder-count="4">
+    <div style="{{f.box}}">
+      <span style="width: 64px; height: 28px; flex-shrink: 0; border-radius: 999px; background: #f5f6f8; font-size: 12.5px; font-weight: 800; color: #3d4452; display: flex; align-items: center; justify-content: center">{{f.k}}</span>
+      <span style="font-size: 15px; font-weight: 700; line-height: 1.5">{{f.t}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 2열 시사점 -->
+  <sc-for list="{{imps}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.box}}">
+      <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">{{m.label}}</span>
+      <span style="font-size: 18px; font-weight: 800; line-height: 1.45">{{m.t}}</span>
+      <span style="font-size: 13.5px; line-height: 1.55; color: #3d4452">{{m.d}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #596170">
+        <span>근거</span>
+        <sc-for list="{{m.from}}" as="src" hint-placeholder-count="2">
+          <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #ffffff; font-weight: 700; display: flex; align-items: center">{{src}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 3열 제안 방향 -->
+  <div style="position: absolute; left: 864px; top: 252px; width: 352px; height: 316px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 28px; display: flex; flex-direction: column; gap: 14px">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #c8d3ff">제안 방향</span>
+    <span style="font-size: 24px; font-weight: 800; line-height: 1.4; letter-spacing: -0.01em">320개 매장을 한 번에 운영하는 디지털 메뉴보드</span>
+    <div style="height: 1px; background: rgba(255, 255, 255, 0.24)"></div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <sc-for list="{{dir}}" as="x" hint-placeholder-count="3">
+        <span style="display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #dbe2ff"><span style="width: 6px; height: 6px; flex-shrink: 0; border-radius: 2px; background: #ffffff"></span>{{x}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 화살표 원 -->
+  <div style="position: absolute; left: 440px; top: 390px; width: 40px; height: 40px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1.5px solid #b8bec8; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+  <div style="position: absolute; left: 816px; top: 390px; width: 40px; height: 40px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 9</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 세로 폭이 열마다 좁아짐: 발견 172–648 · 시사점 212–608 · 제안 방향 252–568
+    const F = [
+      ['시장', '식음료 매장 메뉴보드 시장, 연 [00]% 성장'],
+      ['고객사', '메뉴 교체 한 번에 다섯 단계 · [00]일 소요'],
+      ['사용자', '손님은 메뉴 탐색 · 픽업 대기에서 머뭇거림'],
+      ['경쟁', '원격 운영까지 갖춘 공급사는 소수']
+    ];
+    const finds = F.map(([k, t], i) => ({
+      k, t,
+      box: 'position: absolute; left: 64px; top: ' + (172 + i * 122) + 'px; width: 368px; height: 110px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; padding: 0 20px; display: flex; align-items: center; gap: 14px'
+    }));
+    const M = [
+      ['시사점 1', '메뉴는 본사에서 한 번에 바꿔야 합니다', '교체 비용과 가격 불일치를 함께 해결', ['시장', '고객사']],
+      ['시사점 2', '화면이 손님의 선택을 도와야 합니다', '추천 메뉴 · 픽업 호출로 머뭇거림 해소', ['사용자', '경쟁']]
+    ];
+    const imps = M.map(([label, t, d, from], i) => ({
+      label, t, d, from,
+      box: 'position: absolute; left: 488px; top: ' + (212 + i * 206) + 'px; width: 320px; height: 190px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 20px 24px; display: flex; flex-direction: column; gap: 8px'
+    }));
+    const dir = ['본사에서 전 매장 콘텐츠 일괄 배포', '시간대별 메뉴 · 가격 자동 전환', '픽업 호출 · 키오스크와 한 화면 흐름'];
+    return { finds, imps, dir };
+  }
+}
+</script>
+</body>
+</html>

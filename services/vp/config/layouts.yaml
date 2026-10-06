@@ -1,0 +1,531 @@
+# Value Props 레이아웃 카탈로그 — 범용 35종(05-vp.md §4.15.1) + 업종판(16 × 3, 코드로 만든다 — catalog.py)
+# - code = 정본 코드(저장 · 계약 · export 템플릿 코드), display = 화면 코드(가운뎃점).
+# - board: image(제품 이미지판) · scene(장면판) · text(이미지 없는 판) · field(현장 질문형) · photo(실사 중심판)
+# - thumb: Thumb kind · n(보드에 정의 없는 `—` 는 export 썸네일이 먼저 나오고, 없으면 여기 kind)
+# - slots: 이미지 칸 정의 — subject(product · solution · space · case · customer) · per(pillar · pair · stakeholder · product · one) · label(칸 이름 틀)
+# - needs: 적합도(§4.15.5) — fit = round(100 × Σ w·s / Σ w), s ∈ [0,1](개수는 비율, strict 는 0/1). (제안) 가중치 — §11 Q9
+# - why: 이유 문장 틀(met · unmet)
+layouts:
+  - code: VP-E
+    display: VP-E
+    family: 제품 이미지판
+    board: image
+    role: VP
+    name: 과제 → 제품 → 가치
+    short: 과제 ↔ 제품
+    when: 과제 = 제품
+    shape: 과제 n = 제품 n(1:1 짝)
+    thumb: {kind: chain, n: 3}
+    twin: VP-A
+    slots: {subject: product, per: pair, grade: C, label: '짝 {i}'}
+    needs:
+      - {key: pairs, strict: true, w: 3}
+      - {key: challenges, min: 2, w: 1}
+      - {key: products, min: 2, w: 1}
+    why: {met: '과제 {challenges} · 제품 {products} — 1:1로 맞아요', unmet: '과제 {challenges} · 제품 {products} — 짝이 안 맞음'}
+  - code: VP-F2
+    display: VP-F·2
+    family: 제품 이미지판
+    board: image
+    role: VP
+    name: 가치 기둥 2 · 제품 이미지
+    short: 가치 기둥 2
+    when: KM 2 · 3 · 4
+    shape: pillars 2
+    pillars: 2
+    thumb: {kind: cards3img, n: 2}
+    twin: VP-B2
+    slots: {subject: product, per: pillar, grade: C, label: '기둥 {i}'}
+    needs:
+      - {key: values, min: 2, w: 3}
+      - {key: products, min: 1, w: 1}
+    why: {met: 'Key Message {km} · 기둥마다 제품', unmet: '기둥 2개로 줄여야'}
+  - code: VP-F3
+    display: VP-F·3
+    family: 제품 이미지판
+    board: image
+    role: VP
+    name: 가치 기둥 3 · 제품 이미지
+    short: 가치 기둥 3
+    when: KM 2 · 3 · 4
+    shape: pillars 3
+    pillars: 3
+    thumb: {kind: cards3img, n: 3}
+    twin: VP-B3
+    slots: {subject: product, per: pillar, grade: C, label: '기둥 {i}'}
+    needs:
+      - {key: values, min: 3, w: 3}
+      - {key: products, min: 1, w: 1}
+    why: {met: 'Key Message {km} · 기둥마다 제품', unmet: '{lack}는 MI 강점에서 채워야'}
+  - code: VP-F4
+    display: VP-F·4
+    family: 제품 이미지판
+    board: image
+    role: VP
+    name: 가치 기둥 4 · 제품 이미지
+    short: 가치 기둥 4
+    when: KM 2 · 3 · 4 · KM 5개+ → 4로 묶기
+    shape: pillars 4
+    pillars: 4
+    thumb: {kind: cards3img, n: 4}
+    twin: VP-B4
+    slots: {subject: product, per: pillar, grade: C, label: '기둥 {i}'}
+    needs:
+      - {key: values, min: 4, w: 3}
+      - {key: products, min: 1, w: 1}
+    why: {met: 'Key Message {km} · 기둥마다 제품', unmet: '{lack}는 MI 강점에서 채워야'}
+  - code: VP-G
+    display: VP-G
+    family: 제품 이미지판
+    board: image
+    role: VP
+    name: 한 문장 + 제품 사진 · 근거 3
+    short: 한 문장형
+    when: 1개 · 경영진 · 퀵윈
+    shape: pillars 1 · 근거 3
+    thumb: {kind: imagePanel, n: 3}
+    twin: VP-C
+    slots: {subject: product, per: one, grade: C, label: '제품 사진'}
+    needs:
+      - {key: message_one, strict: true, w: 3}
+      - {key: evidence, min: 3, w: 1}
+    why: {met: '메시지 하나 · 근거 {evidence}', unmet: '메시지 하나로 좁혀야 함'}
+  - code: VP-H
+    display: VP-H
+    family: 제품 이미지판
+    board: image
+    role: VP
+    name: 이해관계자 + 쓰는 제품
+    short: 이해관계자별 가치
+    when: 결재자 여럿
+    shape: stakeholders ≥ 2
+    thumb: {kind: hub, n: 3}
+    twin: VP-D
+    slots: {subject: product, per: stakeholder, grade: C, label: '이해관계자 {i}'}
+    needs:
+      - {key: stakeholders, min: 3, w: 3}
+      - {key: stakeholder_kpis, strict: true, w: 2}
+      - {key: products, min: 1, w: 1}
+    why: {met: '결재자 {stakeholders} · 각자 쓰는 제품', unmet: '이해관계자가 둘 이상 있어야 해요'}
+  - code: VP-I
+    display: VP-I
+    family: 장면판
+    board: scene
+    role: VP
+    name: 제품 콜아웃 · 제품 1대의 기능
+    short: 제품 콜아웃
+    when: 제품 1대의 기능
+    shape: product_count 1 · 기능 3+
+    thumb: {kind: callouts, n: 3}
+    slots: {subject: product, per: one, grade: C, label: '제품'}
+    needs:
+      - {key: single_product, strict: true, w: 3}
+      - {key: values, min: 3, w: 1}
+    why: {met: '제품 1대 · 기능 {values}', unmet: '제품이 하나여야 해요'}
+  - code: VP-J
+    display: VP-J
+    family: 장면판
+    board: scene
+    role: VP
+    name: 솔루션 화면 + 연결 기기
+    short: 솔루션 화면
+    when: 솔루션 화면
+    shape: 화면 이미지 1(B)
+    thumb: {kind: solScene, n: 3}
+    slots: {subject: solution, per: one, grade: B, label: '솔루션 화면'}
+    needs:
+      - {key: solution_screen, strict: true, w: 3}
+    why: {met: '솔루션 화면이 중심', unmet: '솔루션 화면이 중심이 아니에요'}
+  - code: VP-K
+    display: VP-K
+    family: 장면판
+    board: scene
+    role: VP
+    name: 공간 동선 · 고객 여정 핀맵
+    short: 공간 동선
+    when: 공간 · 손님 동선
+    shape: space_count ≥ 2
+    thumb: {kind: pins, n: 4}
+    slots: {subject: space, per: one, grade: A, label: '공간'}
+    needs:
+      - {key: spaces, min: 2, w: 3}
+    why: {met: '공간 {spaces}곳 · 동선', unmet: '공간이 둘 이상이어야 해요'}
+  - code: VP-L
+    display: VP-L
+    family: 장면판
+    board: scene
+    role: VP
+    name: 교체 전 → 후(같은 장소)
+    short: 교체 전 → 후
+    when: 기존 설비 교체
+    shape: before_after
+    thumb: {kind: image2, n: 2}
+    slots: {subject: space, per: before_after, grade: A, label: '{side}'}
+    needs:
+      - {key: replacement, strict: true, w: 3}
+    why: {met: '기존 설비 교체 · 전 → 후', unmet: '교체 전 모습이 있어야 해요'}
+  - code: VP-M
+    display: VP-M
+    family: 장면판
+    board: scene
+    role: VP
+    name: 제품 × 가치 매트릭스
+    short: 제품 × 가치
+    when: 제품 4개 이상
+    shape: product_count ≥ 4
+    thumb: {kind: matrix, n: 3}
+    slots: {subject: product, per: product, grade: C, label: '제품 {i}', max: 4}
+    needs:
+      - {key: products, min: 4, w: 3}
+      - {key: values, min: 3, w: 2}
+    why: {met: '제품 {products} × 가치 {values}', unmet: '제품 {products} × 가치 {values}'}
+  - code: EF-D
+    display: EF-D
+    family: 장면판
+    board: scene
+    role: EF
+    name: 제품별 전 → 후
+    short: 제품별 효과
+    when: 제품마다 전 → 후
+    shape: per_product_numbers
+    thumb: {kind: image2kpi, n: 3}
+    slots: {subject: product, per: product, grade: C, label: '제품 {i}', max: 3}
+    needs:
+      - {key: per_product_numbers, strict: true, w: 3}
+      - {key: numbers, min: 2, w: 1}
+    why: {met: '제품마다 전 → 후 수치', unmet: '제품마다 수치가 있어야 해요'}
+  - code: VP-A
+    display: VP-A
+    family: 이미지 없는 판
+    board: text
+    role: VP
+    name: 과제 ↔ 해결 1:1
+    short: 과제 ↔ 해결
+    when: 이미지 없이(VP-E 짝)
+    shape: 과제 n = 해법 n
+    thumb: {kind: rows, n: 3}
+    twin_of: VP-E
+    needs:
+      - {key: pairs, strict: true, w: 3}
+      - {key: challenges, min: 2, w: 1}
+    why: {met: '이미지 없이 — 과제 ↔ 해결', unmet: '과제 {challenges} · 제품 {products} — 짝이 안 맞음'}
+  - code: VP-B2
+    display: VP-B·2
+    family: 이미지 없는 판
+    board: text
+    role: VP
+    name: 가치 기둥 2
+    short: 가치 기둥 2
+    when: 이미지 없이(VP-F·2 짝)
+    shape: pillars 2
+    pillars: 2
+    thumb: {kind: pillars, n: 2}
+    twin_of: VP-F2
+    needs:
+      - {key: values, min: 2, w: 3}
+    why: {met: '이미지 없이 — 기둥 2', unmet: '기둥 2개로 줄여야'}
+  - code: VP-B3
+    display: VP-B·3
+    family: 이미지 없는 판
+    board: text
+    role: VP
+    name: 가치 기둥 3
+    short: 가치 기둥 3
+    when: 이미지 없이(VP-F·3 짝)
+    shape: pillars 3
+    pillars: 3
+    thumb: {kind: pillars, n: 3}
+    twin_of: VP-F3
+    needs:
+      - {key: values, min: 3, w: 3}
+    why: {met: '이미지 없이 — 기둥 3', unmet: '{lack}는 MI 강점에서 채워야'}
+  - code: VP-B4
+    display: VP-B·4
+    family: 이미지 없는 판
+    board: text
+    role: VP
+    name: 가치 기둥 4
+    short: 가치 기둥 4
+    when: 이미지 없이(VP-F·4 짝)
+    shape: pillars 4
+    pillars: 4
+    thumb: {kind: pillars, n: 4}
+    twin_of: VP-F4
+    needs:
+      - {key: values, min: 4, w: 3}
+    why: {met: '이미지 없이 — 기둥 4', unmet: '{lack}는 MI 강점에서 채워야'}
+  - code: VP-C
+    display: VP-C
+    family: 이미지 없는 판
+    board: text
+    role: VP
+    name: 한 문장 + 근거 3
+    short: 한 문장 + 근거
+    when: 이미지 없이(VP-G 짝) · 퀵윈 1장 요약
+    shape: 메시지 1 · 근거 3
+    thumb: {kind: statement, n: 3}
+    twin_of: VP-G
+    needs:
+      - {key: message_one, strict: true, w: 3}
+      - {key: evidence, min: 3, w: 1}
+    why: {met: '이미지 없이 — 한 문장', unmet: '메시지 하나로 좁혀야 함'}
+  - code: VP-D
+    display: VP-D
+    family: 이미지 없는 판
+    board: text
+    role: VP
+    name: 이해관계자별 가치
+    short: 이해관계자별
+    when: 이미지 없이(VP-H 짝)
+    shape: stakeholders ≥ 2
+    thumb: {kind: persona, n: 3}
+    twin_of: VP-H
+    needs:
+      - {key: stakeholders, min: 3, w: 3}
+      - {key: stakeholder_kpis, strict: true, w: 2}
+    why: {met: '이미지 없이 — 이해관계자별', unmet: '이해관계자가 둘 이상 있어야 해요'}
+  - code: CH-A
+    display: CH-A
+    family: 이미지 없는 판(과제)
+    board: text
+    role: CH
+    name: 과제 3 + 영향
+    short: 과제 3 + 영향
+    when: 과제에 비용 수치
+    shape: 과제 3 · 영향 수치
+    thumb: {kind: pillars, n: 3}
+    slots: {subject: space, per: first, grade: A, label: '과제 1'}
+    needs:
+      - {key: cost_challenges, min: 2, w: 3}
+      - {key: challenges, min: 3, w: 1}
+    why: {met: '과제 {challenges}개 · 비용 수치 {cost_challenges}', unmet: '과제에 비용 수치가 없어요'}
+  - code: CH-B
+    display: CH-B
+    family: 이미지 없는 판(과제)
+    board: text
+    role: CH
+    name: 지금 → 바라는 모습
+    short: 지금 → 바라는 모습
+    when: 바라는 모습이 분명
+    shape: as-is · to-be
+    thumb: {kind: asis, n: 3}
+    slots: {subject: space, per: first, grade: A, label: '공간'}
+    needs:
+      - {key: to_be, strict: true, w: 3}
+      - {key: challenges, min: 2, w: 1}
+    why: {met: '바라는 모습이 분명해요', unmet: '바라는 모습이 적혀 있지 않아요'}
+  - code: CH-C
+    display: CH-C
+    family: 이미지 없는 판(과제)
+    board: text
+    role: CH
+    name: 문제 → 근본 원인
+    short: 문제 → 원인
+    when: 같은 증상이 반복
+    shape: 증상 · 원인 트리
+    thumb: {kind: tree, n: 3}
+    needs:
+      - {key: repeated, strict: true, w: 3}
+      - {key: challenges, min: 2, w: 1}
+    why: {met: '같은 증상이 여러 자료에서 반복', unmet: '반복되는 증상이 없어요'}
+  - code: EF-A
+    display: EF-A
+    family: 이미지 없는 판(효과)
+    board: text
+    role: EF
+    name: KPI 전 → 후
+    short: KPI 전 → 후
+    when: 전 → 후 3개 이상
+    shape: numbers ≥ 3
+    thumb: {kind: hbars, n: 3}
+    needs:
+      - {key: numbers, min: 3, w: 3}
+    why: {met: '전 → 후 수치 {numbers}개', unmet: '쓸 수 있는 수치가 {numbers}개뿐'}
+  - code: EF-B
+    display: EF-B
+    family: 이미지 없는 판(효과)
+    board: text
+    role: EF
+    name: 투자 회수
+    short: 투자 회수
+    when: 투자비 + 절감액
+    shape: 투자비 · 절감액 범위 · 회수 기간
+    thumb: {kind: roi, n: 3}
+    needs:
+      - {key: investment, strict: true, w: 3}
+      - {key: economic, strict: true, w: 1}
+      - {key: numbers, min: 1, w: 1}
+    why: {met: '투자비 + 절감액 범위', unmet: '견적이 연결돼야 해요'}
+  - code: EF-C
+    display: EF-C
+    family: 이미지 없는 판(효과)
+    board: text
+    role: EF
+    name: 정량 + 정성 효과
+    short: 정량 + 정성
+    when: 수치 1~2 + 체감 · 수치 없음 → 업종 평균 범위
+    shape: numbers ≤ 2 + 정성
+    thumb: {kind: split, n: 3}
+    needs:
+      - {key: qualitative, strict: true, w: 2}
+      - {key: numbers, min: 2, w: 1}
+    why: {met: '수치 {numbers} + 체감 효과', unmet: '수치 없음 → 업종 평균 범위'}
+  - code: VP-U
+    display: VP-U
+    family: 현장 질문형
+    board: field
+    role: VP
+    name: 현장 질문 → 제품 · 솔루션 → 핵심 가치
+    short: 현장 질문
+    when: 현장 질문 3
+    shape: 질문 ≥ 3
+    thumb: {kind: list3, n: 3}
+    slots: {subject: product, per: question, grade: C, label: '질문 {i}', max: 3}
+    needs:
+      - {key: field_questions, min: 3, w: 3}
+    why: {met: '현장 질문 {field_questions}', unmet: '고객의 질문이 3개 이상이어야 해요'}
+  - code: VP-UC
+    display: VP-U·C
+    family: 현장 질문형
+    board: field
+    role: VP
+    name: 현장 질문 · 열형
+    short: 현장 질문 · 열형
+    when: 현장 질문 3(후보)
+    shape: 질문 ≥ 3
+    thumb: {kind: tiers, n: 3}
+    slots: {subject: product, per: question, grade: C, label: '질문 {i}', max: 3}
+    needs:
+      - {key: field_questions, min: 3, w: 3}
+    why: {met: '현장 질문 {field_questions}', unmet: '고객의 질문이 3개 이상이어야 해요'}
+  - code: VP-US
+    display: VP-U·S
+    family: 현장 질문형
+    board: field
+    role: VP
+    name: 매장 실사 위 질문 핀
+    short: 매장 실사 핀
+    when: 현장 질문 3 + 고객 매장 사진(후보)
+    shape: 질문 ≥ 3 · 매장 사진 1
+    thumb: {kind: pins, n: 3}
+    slots: {subject: customer, per: one, grade: A, label: '매장 사진'}
+    needs:
+      - {key: field_questions, min: 3, w: 2}
+      - {key: customer_photo, strict: true, w: 2}
+    why: {met: '매장 사진 위 질문 {field_questions}', unmet: '고객 매장 사진이 있어야 해요'}
+  - code: VP-N
+    display: VP-N
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 실사 히어로
+    short: 실사 히어로
+    when: 같은 업종 사례(후보)
+    shape: 사례 사진 1 · 가치 3
+    thumb: {kind: panelLeft, n: 3}
+    slots: {subject: case, per: one, grade: A, label: '히어로'}
+    needs:
+      - {key: same_vertical_case, strict: true, w: 3}
+      - {key: values, min: 3, w: 1}
+    why: {met: '같은 업종 사례 사진 · 가치 {values}', unmet: '같은 업종 사례 사진이 없어요'}
+  - code: VP-O
+    display: VP-O
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 제품 라인업
+    short: 제품 라인업
+    when: 제품 컷 4개 이상(후보)
+    shape: 제품 컷 ≥ 4
+    thumb: {kind: cases, n: 4}
+    slots: {subject: product, per: product, grade: C, label: '제품 {i}', max: 4}
+    needs:
+      - {key: official_cuts, min: 4, w: 3}
+    why: {met: '제품 컷 {official_cuts}', unmet: '제품 컷이 4개 이상이어야 해요'}
+  - code: VP-P
+    display: VP-P
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 솔루션 실제 화면
+    short: 솔루션 실제 화면
+    when: 솔루션 실제 화면(후보)
+    shape: 실제 화면
+    thumb: {kind: zoom, n: 3}
+    slots: {subject: solution, per: one, grade: B, label: '실제 화면'}
+    needs:
+      - {key: solution_screen, strict: true, w: 3}
+    why: {met: '솔루션 실제 화면', unmet: '솔루션 화면이 중심이 아니에요'}
+  - code: VP-Q
+    display: VP-Q
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 레퍼런스 사례
+    short: 레퍼런스 사례
+    when: 같은 업종 사례(후보 · 추가 제안 칸)
+    shape: 사례 1 · 사진
+    thumb: {kind: image, n: 1}
+    slots: {subject: case, per: one, grade: A, label: '사례 사진'}
+    needs:
+      - {key: same_vertical_case, strict: true, w: 3}
+    why: {met: '같은 업종 사례', unmet: '같은 업종 사례가 없어요'}
+  - code: VP-R
+    display: VP-R
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 동선 투어
+    short: 동선 투어
+    when: 공식 연출 · 동선(후보)
+    shape: 공간 사진 n
+    thumb: {kind: journey, n: 4}
+    slots: {subject: space, per: space, grade: A, label: '공간 {i}', max: 4}
+    needs:
+      - {key: spaces, min: 2, w: 2}
+      - {key: same_vertical_case, strict: true, w: 1}
+    why: {met: '공간 {spaces}곳 · 공식 연출', unmet: '공간이 둘 이상이어야 해요'}
+  - code: VP-S
+    display: VP-S
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 고객 사진 → 도입 후
+    short: 고객 사진 → 도입 후
+    when: 고객 매장 사진(후보)
+    shape: 고객 사진 1 + 도입 후
+    thumb: {kind: stepsCompare, n: 2}
+    slots: {subject: customer, per: before_after, grade: A, label: '{side}'}
+    needs:
+      - {key: customer_photo, strict: true, w: 3}
+    why: {met: '고객 매장 사진 → 도입 후', unmet: '고객 매장 사진이 있어야 해요'}
+  - code: VP-T
+    display: VP-T
+    family: 실사 중심판
+    board: photo
+    role: VP
+    name: 제품 + 연출
+    short: 제품 + 연출
+    when: 제품 1대 + 연출(후보)
+    shape: 제품 1 · 연출 사진
+    thumb: {kind: panel, n: 3}
+    slots: {subject: product, per: one, grade: A, label: '연출 사진'}
+    needs:
+      - {key: single_product, strict: true, w: 2}
+      - {key: official_cuts, min: 1, w: 2}
+    why: {met: '제품 1대 + 공식 연출', unmet: '제품이 하나여야 해요'}
+  - code: EF-E
+    display: EF-E
+    family: 실사 중심판
+    board: photo
+    role: EF
+    name: 효과 + 확인 화면
+    short: 효과 + 확인 화면
+    when: 확인 화면까지(후보)
+    shape: 수치 + 확인 화면
+    thumb: {kind: kpi4, n: 3}
+    slots: {subject: solution, per: one, grade: B, label: '확인 화면'}
+    needs:
+      - {key: numbers, min: 2, w: 2}
+      - {key: solution_screen, strict: true, w: 1}
+    why: {met: '수치 {numbers} + 확인 화면', unmet: '확인할 화면이 있어야 해요'}

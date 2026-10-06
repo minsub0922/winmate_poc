@@ -1,0 +1,21 @@
+{
+  "responses": [
+    {"when": {"contains": "#mock:llm-down"}, "error": {"status": 503, "code": "UPSTREAM_UNAVAILABLE", "message": "mock LLM 장애"}},
+    {
+      "when": {"contains": ["요청 종류: 공간 정규화", "본사 사무실"]},
+      "json": {
+        "spaces": ["매장 카운터", "본사 운영실"],
+        "mapping": [
+          {"place": "카운터", "space": "매장 카운터"},
+          {"place": "주문 대기 줄", "space": "매장 카운터"},
+          {"place": "카운터 앞", "space": "매장 카운터"},
+          {"place": "매장 전체", "space": "매장 카운터"},
+          {"place": "창고 · 카운터", "space": "매장 카운터"},
+          {"place": "픽업대", "space": "매장 카운터"},
+          {"place": "본사 사무실", "space": "본사 운영실"}
+        ]
+      }
+    },
+    {"json": {"spaces": [], "mapping": []}}
+  ]
+}

@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BM-C 반복 유닛 + 공용부</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">객실 300실은 한 실의 키트로, 공용부는 따로 셉니다</div>
+
+  <!-- ① 객실 1실 키트 (x 64–404, y 136–412) -->
+  <div style="position: absolute; left: 64px; top: 136px; width: 340px; height: 276px; box-sizing: border-box; border-radius: 16px; border: 2px solid #1428a0; background: #ffffff; padding: 16px 20px; display: flex; flex-direction: column">
+    <div style="height: 62px; display: flex; align-items: flex-start; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 20px; font-weight: 800; color: #1428a0">객실 1실 키트</span>
+        <span style="font-size: 12.5px; color: #596170">스탠다드 · 트윈 공통 구성</span>
+      </div>
+      <!-- 객실 평면 기호 -->
+      <div style="position: relative; width: 88px; height: 62px; flex-shrink: 0; box-sizing: border-box; border: 2px solid #b8bec8; border-radius: 4px; background: #ffffff">
+        <div style="position: absolute; left: 6px; top: 8px; width: 32px; height: 40px; border-radius: 3px; background: #dfe3ea"></div>
+        <div style="position: absolute; left: 9px; top: 11px; width: 26px; height: 8px; border-radius: 2px; background: #ffffff"></div>
+        <div style="position: absolute; left: 46px; top: 5px; width: 12px; height: 12px; box-sizing: border-box; border: 1.5px solid #8a91a0; border-radius: 2px"></div>
+        <div style="position: absolute; left: 76px; top: 16px; width: 4px; height: 24px; border-radius: 1px; background: #1f232a"></div>
+        <div style="position: absolute; left: 50px; top: 38px; width: 10px; height: 14px; box-sizing: border-box; border: 1.5px solid #8a91a0; border-radius: 2px; background: #eef0f3"></div>
+      </div>
+    </div>
+    <div style="margin-top: 12px; display: flex; flex-direction: column">
+      <sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+        <div style="height: 40px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 12px">
+          <div style="width: 44px; height: 30px; flex-shrink: 0; border-radius: 6px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><span style="{{k.glyph}}"></span></div>
+          <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14.5px; font-weight: 700; line-height: 1.3; white-space: nowrap">{{k.name}}</span>
+            <span style="font-size: 12px; line-height: 1.3; color: #596170; white-space: nowrap">{{k.spec}}</span>
+          </div>
+          <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">×{{k.q}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 곱하기 300 (x 404–540) -->
+  <div style="position: absolute; left: 404px; top: 136px; width: 136px; height: 276px; display: flex; flex-direction: column; align-items: center; justify-content: center">
+    <span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 700; line-height: 1; color: #6f82d6">×</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 60px; font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; color: #1428a0">{{rooms}}</span>
+    <span style="font-size: 15px; font-weight: 800; color: #1428a0">실</span>
+    <span style="margin-top: 10px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; color: #596170">= 객실분 {{roomUnits}}대</span>
+  </div>
+  <span style="position: absolute; left: 540px; top: 256px; width: 28px; height: 36px; font-family: Manrope, sans-serif; font-size: 30px; font-weight: 700; line-height: 36px; text-align: center; color: #6f82d6">+</span>
+
+  <!-- ② 공용부 (x 568–1216, y 136–412) -->
+  <div style="position: absolute; left: 568px; top: 136px; width: 648px; height: 276px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 14px 22px; display: flex; flex-direction: column">
+    <div style="height: 30px; display: flex; align-items: center; gap: 10px">
+      <span style="font-size: 18px; font-weight: 800">공용부</span>
+      <span style="font-size: 12.5px; color: #596170">다섯 공간 · 공간마다 따로 셉니다</span>
+    </div>
+    <div style="margin-top: 4px; display: flex; flex-direction: column">
+      <sc-for list="{{pub}}" as="p" hint-placeholder-count="5">
+        <div style="height: 42px; border-top: 1px solid #e2e5ea; display: flex; align-items: center">
+          <div style="width: 136px; flex-shrink: 0; display: flex; align-items: center; gap: 6px">
+            <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{p.name}}</span>
+            <sc-if value="{{p.hasCount}}" hint-placeholder-val="{{false}}">
+              <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">{{p.count}}</span>
+            </sc-if>
+          </div>
+          <div style="display: flex; gap: 6px; min-width: 0">
+            <sc-for list="{{p.items}}" as="it" hint-placeholder-count="3">
+              <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12px; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-weight: 600">{{it.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">{{it.qty}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ③ 제품별 합계: 객실분 + 공용부 = 합계 (y 432–614) -->
+  <div style="position: absolute; left: 64px; top: 432px; width: 1152px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 136px repeat(12, minmax(0, 1fr)); height: 24px; column-gap: 0">
+      <span></span>
+      <span style="grid-column: span 4; margin-right: 6px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">객실 키트 · 4종</span>
+      <span style="grid-column: span 8; margin-left: 6px; border-radius: 6px; background: #f5f6f8; color: #596170; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center">공용부 제품 · 8종</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 136px repeat(12, minmax(0, 1fr)); height: 40px; margin-top: 2px; border-bottom: 2px solid #121417">
+      <span style="align-self: end; padding: 0 0 7px 4px; font-size: 12px; color: #596170">제품 →</span>
+      <sc-for list="{{cols}}" as="c" hint-placeholder-count="12">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 6px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; line-height: 15px; text-align: center; white-space: nowrap"><span>{{c.l1}}</span><span>{{c.l2}}</span></div>
+      </sc-for>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="{{r.style}}">
+        <div style="display: flex; align-items: baseline; gap: 6px; padding-left: 4px">
+          <span style="{{r.labelStyle}}">{{r.label}}</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; color: #596170; white-space: nowrap">{{r.sub}}</span>
+        </div>
+        <sc-for list="{{r.cells}}" as="v" hint-placeholder-count="12">
+          <span style="{{v.style}}">{{v.t}}</span>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 626px; font-size: 12px; line-height: 18px; color: #596170">단가 · 금액은 견적서에서 제시 · 공용부 수량은 현장 실사 후 확정</div>
+  <div style="position: absolute; right: 64px; top: 622px; height: 24px; display: flex; align-items: baseline; gap: 6px; font-size: 13px; color: #596170">
+    <span>객실분</span><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: #121417">{{roomUnits}}</span>
+    <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #6f82d6">+</span>
+    <span>공용부</span><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: #121417">{{pubUnits}}</span>
+    <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #6f82d6">=</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">{{allUnits}}</span><span style="font-weight: 700; color: #1428a0">대</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 객실 · 공용부 리뉴얼 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const isNum = (v) => typeof v === 'number';
+    const ROOMS = 300;
+    // 제품 열: [키, 머리글 1줄, 2줄]
+    const P = [
+      ['tv55', '호텔 TV', '55"'], ['wf1', 'WindFree', '1Way'], ['fridge', '객실', '냉장고'], ['tab', '컨트롤', '태블릿'],
+      ['wall', 'The Wall', 'IAB 146"'], ['qm55', 'QM55C', '55"'], ['qm43', 'QM43C', '43"'], ['km24', 'KM24C', '키오스크'],
+      ['big', '대형', '디스플레이'], ['tv43', '호텔 TV', '43"'], ['c360', '360', '카세트'], ['tabA', 'Tab Active5', 'Pro']
+    ];
+    // 객실 1실 키트: [키, 이름, 설명, 실당 수량, 기호]
+    const glyph = {
+      tv: 'width: 26px; height: 15px; border-radius: 2px; background: #1f232a',
+      cas: 'width: 22px; height: 12px; box-sizing: border-box; border: 1.5px solid #8a91a0; border-radius: 3px; background: #ffffff',
+      fridge: 'width: 13px; height: 20px; box-sizing: border-box; border: 1.5px solid #8a91a0; border-radius: 2px; background: #ffffff',
+      tab: 'width: 22px; height: 15px; box-sizing: border-box; border: 2px solid #8a91a0; border-radius: 3px; background: #1f232a'
+    };
+    const KIT = [
+      ['tv55', '호텔 TV 55"', '[모델명] · 객실 콘텐츠', 1, 'tv'],
+      ['wf1', 'WindFree 1Way 카세트', '무풍 냉방 · 객실별 제어', 1, 'cas'],
+      ['fridge', '객실 냉장고', '[모델명] · 소형', 1, 'fridge'],
+      ['tab', '객실 컨트롤 태블릿', '조명 · 냉방 한 화면 제어', 1, 'tab']
+    ];
+    // 공용부: [공간, 반복 표시, [[키, 칩 이름, 수량]]]
+    const PUB = [
+      ['로비 · 프런트', '', [['wall', 'The Wall IAB', 1], ['qm55', 'QM55C 안내', 2], ['km24', 'KM24C 체크인', 2]]],
+      ['레스토랑', '', [['qm43', 'QM43C 메뉴', '[0]'], ['qm55', 'QM55C', 1]]],
+      ['연회장', '×3', [['qm55', 'QM55C 입구 안내', 3], ['big', '대형 디스플레이', 3]]],
+      ['피트니스', '', [['tv43', '호텔 TV 43"', '[0]'], ['c360', '360 카세트', '[0]']]],
+      ['BOH · 직원', '', [['tabA', 'Galaxy Tab Active5 Pro', '[00]']]]
+    ];
+    const kit = KIT.map(([, name, spec, q, g]) => ({ name, spec, q: String(q), glyph: glyph[g] }));
+    const pub = PUB.map(([name, count, items]) => ({
+      name, count, hasCount: count !== '',
+      items: items.map(([, label, q]) => ({ label, qty: '×' + q }))
+    }));
+    // 제품별 객실분 · 공용부 · 합계 (숫자가 모두 확정일 때만 계산)
+    const sumOf = (vals) => (vals.every(isNum) ? vals.reduce((a, b) => a + b, 0) : null);
+    const room = P.map(([key]) => {
+      const k = KIT.find((x) => x[0] === key);
+      return k ? k[3] * ROOMS : 0;
+    });
+    const pubQ = P.map(([key]) => {
+      const vals = [];
+      PUB.forEach((s) => s[2].forEach((it) => { if (it[0] === key) vals.push(it[2]); }));
+      return vals.length ? sumOf(vals) : 0;
+    });
+    const tot = P.map((_, j) => (pubQ[j] === null ? null : room[j] + pubQ[j]));
+    const ph = (j) => (room[j] ? '[000]' : '[00]');
+    const cell = (n, strong) => {
+      const base = 'display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-weight: 800; ';
+      if (n === 0) return { t: '—', style: base + 'font-size: 15px; font-weight: 600; color: #b8bec8' };
+      return { t: fmt(n), style: base + (strong ? 'font-size: 17px; color: #1428a0' : 'font-size: 15px; color: #121417') };
+    };
+    const rowBase = 'display: grid; grid-template-columns: 136px repeat(12, minmax(0, 1fr)); align-items: center; box-sizing: border-box; ';
+    const rows = [
+      { label: '객실분', sub: '키트 × ' + ROOMS + '실', labelStyle: 'font-size: 14px; font-weight: 800',
+        style: rowBase + 'height: 36px; border-bottom: 1px solid #e2e5ea',
+        cells: room.map((n) => cell(n, false)) },
+      { label: '+ 공용부', sub: '5개 공간', labelStyle: 'font-size: 14px; font-weight: 800',
+        style: rowBase + 'height: 36px; border-bottom: 1px solid #e2e5ea',
+        cells: pubQ.map((n, j) => (n === null ? { t: '[00]', style: 'display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #121417' } : cell(n, false))) },
+      { label: '= 합계', sub: '', labelStyle: 'font-size: 14.5px; font-weight: 800; color: #1428a0',
+        style: rowBase + 'height: 42px; background: #eaeefb; border-radius: 0 0 10px 10px',
+        cells: tot.map((n, j) => (n === null ? { t: ph(j), style: 'display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; color: #1428a0' } : cell(n, true))) }
+    ];
+    const roomUnits = room.reduce((a, b) => a + b, 0);
+    const pubKnown = pubQ.every((n) => n !== null);
+    const pubUnits = pubKnown ? pubQ.reduce((a, b) => a + b, 0) : null;
+    return {
+      kit, pub, rows,
+      cols: P.map(([, l1, l2]) => ({ l1, l2 })),
+      rooms: String(ROOMS),
+      roomUnits: fmt(roomUnits),
+      pubUnits: pubUnits === null ? '[00]' : fmt(pubUnits),
+      allUnits: pubUnits === null ? '[0,000]' : fmt(roomUnits + pubUnits)
+    };
+  }
+}
+</script>
+</body>
+</html>

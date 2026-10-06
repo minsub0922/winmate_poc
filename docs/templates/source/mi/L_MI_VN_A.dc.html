@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-VN-A 공연장 · 경기장 · 영화관 · 시장 · 트렌드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">V 경기장의 관람 시장은 커지고, 승부는 관람 경험에서 납니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">국내 프로스포츠 관람 시장의 규모 · 성장과 이 시장을 움직이는 네 가지 흐름 — 각 흐름이 V 경기장에 주는 의미</div>
+
+  <!-- ① 시장 규모 차트 (8열) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 760px; height: 220px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 176px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 15px; font-weight: 800">국내 프로스포츠 관람 시장 규모</span><span style="font-size: 12px; color: #8a91a0">단위 · 억 원</span></div>
+  <div style="position: absolute; left: 536px; top: 179px; width: 264px; height: 16px; display: flex; justify-content: flex-end; align-items: center; gap: 12px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: {{l.color}}"></span>{{l.name}}</span>
+    </sc-for>
+  </div>
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="3">
+    <div style="{{g.style}}"></div>
+  </sc-for>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+    <sc-for list="{{b.segs}}" as="s" hint-placeholder-count="3">
+      <div style="{{s.style}}"></div>
+    </sc-for>
+    <div style="{{b.totalPos}}">[0,000]</div>
+    <div style="{{b.yearPos}}">{{b.year}}</div>
+    <div style="{{b.fanPos}}"><span style="font-family: Manrope, sans-serif">[000]</span>만 명</div>
+  </sc-for>
+  <div style="position: absolute; left: 88px; top: 349px; height: 14px; font-size: 10.5px; line-height: 14px; font-weight: 700; color: #8a91a0; white-space: nowrap">관중</div>
+  <!-- 마지막 막대 주석: 입장권 외 매출 비중 -->
+  <sc-for list="{{brace}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 654px; top: 222px; width: 150px; display: flex; flex-direction: column; gap: 2px; white-space: nowrap">
+    <span style="font-size: 11.5px; font-weight: 700; line-height: 16px; color: #3d4452">입장권 외 매출 비중</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; color: #1428a0">[00]% → [00]%</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 11px; line-height: 15px; color: #8a91a0">2021 → 2026E</span>
+    <span style="font-size: 11px; line-height: 15px; color: #596170">경기장 내 소비 + 광고</span>
+  </div>
+
+  <!-- ② 핵심 수치 (4열) -->
+  <sc-for list="{{stats}}" as="k" hint-placeholder-count="3">
+    <div style="{{k.pos}}">
+      <span style="font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{k.label}}</span>
+      <span style="display: flex; align-items: baseline; gap: 4px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; line-height: 36px; letter-spacing: -0.02em; color: #1428a0">{{k.num}}</span><span style="font-size: 15px; font-weight: 700; color: #1428a0">{{k.unit}}</span></span>
+    </div>
+    <sc-if value="{{k.line}}" hint-placeholder-val="{{true}}">
+      <div style="{{k.linePos}}"></div>
+    </sc-if>
+  </sc-for>
+  <div style="position: absolute; left: 848px; top: 360px; width: 368px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">[출처] 조사 기관 · 연도 — 수치는 예시 · 조사 / 실측 후 반영</div>
+
+  <!-- ③ 네 가지 흐름 → 그래서 V 경기장에게 -->
+  <div style="position: absolute; left: 64px; top: 396px; height: 20px; font-size: 15px; font-weight: 800; line-height: 20px; white-space: nowrap">이 시장을 움직이는 네 가지 흐름</div>
+  <div style="position: absolute; left: 64px; top: 564px; width: 1152px; height: 84px; border-radius: 14px; background: #eaeefb"></div>
+  <sc-for list="{{trends}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.card}}">
+      <span style="position: absolute; left: 16px; top: 16px; width: 34px; height: 34px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"></path></svg></span>
+      <span style="position: absolute; left: 60px; top: 14px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 14px; color: #1428a0">{{t.no}}</span>
+      <span style="position: absolute; left: 60px; top: 29px; font-size: 16px; font-weight: 800; line-height: 20px; letter-spacing: -0.01em; white-space: nowrap">{{t.title}}</span>
+      <span style="position: absolute; left: 16px; top: 62px; width: 238px; font-size: 12.5px; line-height: 1.55; color: #3d4452">{{t.desc}}</span>
+    </div>
+    <div style="{{t.arrow}}"></div>
+    <div style="{{t.implPos}}">
+      <span style="font-size: 11px; font-weight: 800; line-height: 14px; color: #1428a0; white-space: nowrap">그래서 V 경기장에게</span>
+      <span style="font-size: 13.5px; font-weight: 700; line-height: 1.45; color: #121417">{{t.impl}}</span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>V 스포츠 경기장 · 관람 경험 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 4</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // ① 누적 막대 — 표본 형상(값은 자리표시자). 아래 → 위: 입장 수입 · 광고 · 스폰서십 · 경기장 내 소비
+    const C_TICKET = '#d5d9e0', C_AD = '#b8c3ee', C_SPEND = '#1428a0';
+    const legend = [
+      { name: '입장 수입', color: C_TICKET },
+      { name: '광고 · 스폰서십', color: C_AD },
+      { name: '경기장 내 소비', color: C_SPEND }
+    ];
+    const BASE = 326, K = 1.0, BW = 50, X0 = 140, PITCH = 88;
+    const grid = [
+      { style: A + box(136, BASE - 104, 494, 1) + 'background: #e2e5ea;' },
+      { style: A + box(136, BASE - 52, 494, 1) + 'background: #e2e5ea;' },
+      { style: A + box(136, BASE, 494, 1) + 'background: #b8bec8;' }
+    ];
+    const Y = ['2021', '2022', '2023', '2024', '2025', '2026E'];
+    const T = [34, 37, 40, 42, 44, 46], AD = [14, 16, 19, 21, 23, 26], SP = [14, 17, 21, 25, 28, 32];
+    const bars = Y.map((year, i) => {
+      const x = X0 + i * PITCH, last = i === Y.length - 1;
+      const parts = [[T[i], C_TICKET], [AD[i], C_AD], [SP[i], C_SPEND]];
+      let top = BASE;
+      const segs = parts.map(([v, c], j) => {
+        const h = Math.round(v * K);
+        top -= h;
+        return { style: A + box(x, top, BW, h) + 'background: ' + c + '; border-radius: ' + (j === 2 ? '4px 4px 0 0' : '0') + ';' + (j < 2 ? ' border-top: 1px solid #ffffff; box-sizing: border-box;' : '') };
+      });
+      return {
+        year, segs,
+        totalPos: A + box(x - 11, top - 18, 72, 14) + 'font-family: Manrope, sans-serif; font-size: 11.5px; line-height: 14px; text-align: center; white-space: nowrap; ' + (last ? 'font-weight: 800; color: #1428a0;' : 'font-weight: 700; color: #596170;'),
+        yearPos: A + box(x - 11, BASE + 6, 72, 16) + 'font-family: Manrope, sans-serif; font-size: 12px; line-height: 16px; text-align: center; white-space: nowrap; ' + (last ? 'font-weight: 800; color: #1428a0;' : 'font-weight: 600; color: #596170;'),
+        fanPos: A + box(x - 11, BASE + 23, 72, 14) + 'font-size: 10.5px; line-height: 14px; text-align: center; color: #8a91a0; white-space: nowrap;'
+      };
+    });
+    // 마지막 막대의 입장권 외 구간(광고 + 소비)에 괄호
+    const lx = X0 + 5 * PITCH + BW; // 막대 오른쪽 끝
+    const yTop = BASE - (T[5] + AD[5] + SP[5]), yBot = BASE - T[5];
+    const brace = [
+      { style: A + box(lx + 9, yTop, 2, yBot - yTop) + 'background: #1428a0;' },
+      { style: A + box(lx + 4, yTop, 7, 2) + 'background: #1428a0;' },
+      { style: A + box(lx + 4, yBot - 2, 7, 2) + 'background: #1428a0;' }
+    ];
+
+    // ② 핵심 수치
+    const S = [
+      ['2026E 국내 프로스포츠 관람 시장', '[0,000]', '억 원'],
+      ['연평균 성장률 · 2021–2026E', '[0.0]', '%'],
+      ['연간 관중 수 · 2026E', '[000]', '만 명']
+    ];
+    const stats = S.map(([label, num, unit], i) => ({
+      label, num, unit,
+      pos: A + 'left: 848px; top: ' + px(160 + i * 66) + 'width: 368px; display: flex; flex-direction: column; gap: 2px;',
+      line: i < S.length - 1,
+      linePos: A + box(848, 160 + i * 66 + 59, 368, 1) + 'background: #e2e5ea;'
+    }));
+
+    // ③ 네 가지 흐름
+    const ICON = {
+      screen: 'M3 4h18v12H3z M8 20h8 M12 16v4 M7 8h4 M7 12h7',
+      star: 'M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z',
+      kiosk: 'M6 3h12v12H6z M9 21h6 M12 15v6 M9 7h6 M9 11h3',
+      gauge: 'M10 14V5a2 2 0 0 1 4 0v9a4 4 0 1 1-4 0z M12 9v6'
+    };
+    const TR = [
+      ['랜드마크 전광판 · 팬 참여', '초대형 화면이 경기장을 찾는 이유가 되고, 관중은 구단 앱 · 응원 이벤트로 화면에 참여합니다', '외야 전광판을 구단 앱 · 응원 이벤트와 연결된 참여형 화면으로', ICON.screen],
+      ['프리미엄 좌석 경쟁', '스카이박스 · 스윗박스처럼 집처럼 편안한 프라이빗 관람이 객단가를 끌어올립니다', '프리미엄석을 화면 · 저소음 공조 · 가전으로 차별화', ICON.star],
+      ['적은 인력 · 셀프 서비스', '경기 전 · 휴식 시간에 몰리는 발권 · 주문은 셀프 기기로 나누고, 직원은 호출에 바로 대응합니다', '피크 대기를 키오스크 · 직원 호출로 분산 — 대기 [00]분 단축', ICON.kiosk],
+      ['멈추지 않는 시즌 운영', '시즌 중 이어지는 경기와 장시간 가동, 계절마다 크게 다른 냉난방 부하를 함께 관리해야 합니다', '경기 중엔 무중단 설비 케어, 비시즌엔 공조 · 전력 절감', ICON.gauge]
+    ];
+    const trends = TR.map(([title, desc, impl, icon], i) => {
+      const x = 64 + i * 294;
+      return {
+        no: '0' + (i + 1), title, desc, impl, icon,
+        card: A + box(x, 424, 270, 124) + 'border-radius: 14px; background: #f5f6f8;',
+        arrow: A + 'left: ' + px(x + 128) + 'top: 552px; width: 0px; height: 0px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid #1428a0;',
+        implPos: A + 'left: ' + px(x + 16) + 'top: 576px; width: 238px; display: flex; flex-direction: column; gap: 4px;'
+      };
+    });
+
+    return { legend, grid, bars, brace, stats, trends };
+  }
+}
+</script>
+</body>
+</html>

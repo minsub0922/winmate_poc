@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition — 내보내기 · 제안서로 보내기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="A 커피 메뉴보드 가치 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="A 커피 메뉴보드 가치 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{done}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.6">어디에 쓸지 골라 주세요. 보낼 제안서의 유형을 보고 시트 수와 레이아웃을 맞춰서 보냅니다.</div>
+
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+            <div style="height: 52px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v12H3z M8 20h8 M12 16v4 M7 12l3-3 2 2 4-4"/></svg>
+              <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">제안서 Value Props로</span>
+              <span style="flex-grow: 1"></span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">보낼 제안서</span>
+              <button aria-haspopup="listbox" style="width: 300px; height: 34px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+                <span style="flex-grow: 1; min-width: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 600">A 커피 프랜차이즈 메뉴보드 제안</span> · 표준</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <a href="https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe" style="font-size: 12.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0">새 제안서로</a>
+            </div>
+            <div style="padding: 12px 16px 0 16px; display: flex; align-items: center; justify-content: space-between; height: 18px">
+              <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">제안서 유형마다 시트 구성이 달라져요 <span style="color: #596170; font-weight: 500">· 고른 제안서는 표준</span></span>
+              <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">다른 유형으로 보내면 에이전트가 자동으로 줄이거나 빼요</span>
+            </div>
+            <div style="padding: 10px 16px 0 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+              <sc-for list="{{types}}" as="t" hint-placeholder-count="3">
+                <div style="{{t.box}}">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
+                    <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">{{t.name}}</span>
+                    <span style="{{t.badgeStyle}}">{{t.badge}}</span>
+                  </div>
+                  <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #596170; white-space: nowrap">{{t.path}}</span>
+                  <sc-for list="{{t.rows}}" as="r" hint-placeholder-count="3">
+                    <div style="display: flex; align-items: flex-start; gap: 8px; min-width: 0">
+                      <span style="{{r.codeStyle}}">{{r.code}}</span>
+                      <div style="display: flex; flex-direction: column; gap: 0; min-width: 0">
+                        <span style="{{r.sheetStyle}}">{{r.sheet}}</span>
+                        <span style="font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.st}}</span>
+                      </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+            <div style="margin-top: 12px; padding: 0 16px; height: 42px; border-top: 1px solid #f0f2f5; display: flex; align-items: center; gap: 16px; font-size: 12px; color: #121417">
+              <label style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><input type="checkbox" checked style="accent-color: #1428a0; margin: 0">[추정] 값은 노트로 남기기</label>
+              <label style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><input type="checkbox" checked style="accent-color: #1428a0; margin: 0">다듬은 Key Message를 Storyboard에도 반영</label>
+              <label style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><input type="checkbox" checked style="accent-color: #1428a0; margin: 0">고정한 시트는 덮어쓰기 전에 묻기</label>
+            </div>
+          </div>
+
+          <!-- 파일 · 다른 기능 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 16px 14px 16px; display: grid; grid-template-columns: minmax(0, 1fr) 1px minmax(0, 1fr); gap: 16px">
+            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+              <span style="font-size: 12.5px; font-weight: 600">파일 · 공유</span>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px">
+                <sc-for list="{{exports}}" as="x" hint-placeholder-count="4">
+                  <button style="height: 40px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; display: flex; align-items: center; gap: 8px; text-align: left; min-width: 0">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{x.icon}}"/></svg>
+                    <span style="display: flex; flex-direction: column; min-width: 0">
+                      <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">{{x.label}}</span>
+                      <span style="font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{x.sub}}</span>
+                    </span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="background: #e2e5ea"></div>
+            <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+              <span style="font-size: 12.5px; font-weight: 600">다른 기능으로 이어가기</span>
+              <sc-for list="{{handoffs}}" as="h" hint-placeholder-count="3">
+                <a href="{{h.href}}" style="height: 26px; display: flex; align-items: center; gap: 8px; color: #121417; font-size: 12.5px; min-width: 0">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{h.icon}}"/></svg>
+                  <span style="font-weight: 600; white-space: nowrap; flex-shrink: 0">{{h.tool}}</span>
+                  <span style="color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0">{{h.what}}</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </a>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">결과 활용 <span style="color: #596170; font-weight: 500">· 표준 · 보낼 시트 3 · 섹션에 없는 시트 1 추가</span></div>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">[추정] 1건은 노트로</span>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">보내기 전 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="보내기 전 요청 (예: 퀵윈 버전도 함께 만들어 둬)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="VP3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">이전</a>
+          <a href="https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>제안서에 3시트 보내기</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 같은 가치 제안이 제안서 유형마다 어떻게 들어가나: [코드('—' = 빠짐), 시트, 처리]
+    const T = [
+      ['표준 제안서', 'PRS2 · Value Props', '보낼 곳', true, [['CH-A', '고객 과제', '그대로 들어가요'], ['VP-F·3', '가치 제안', '그대로 들어가요'], ['EF-A', '기대 효과', '섹션에 없는 시트 · 추가해요']]],
+      ['퀵윈 제안서', 'PRQ1 · Value Props', '다른 유형', false, [['VP-G', '가치 제안 1장', '3장 → 한 문장 + 제품 사진 + 근거 3'], ['—', '고객 과제', '퀵윈엔 빼요'], ['—', '기대 효과', 'VP-G 근거 칸에 한 줄로']]],
+      ['Solution형', 'PRX2 · Value Props (선택)', '다른 유형', false, [['—', '고객 과제', '대규모 MI가 이미 말해 빼요'], ['VP-F·3', '가치 제안', '그대로 들어가요'], ['EF-A', '기대 효과', '견적이 있으면 EF-B 추천']]]
+    ];
+    const types = T.map(([name, path, badge, on, rows]) => ({
+      name, path, badge,
+      box: 'display: flex; flex-direction: column; gap: 7px; box-sizing: border-box; padding: 10px 12px; border-radius: 12px; min-width: 0;' + (on ? ' border: 1.5px solid #1428a0; background: #f5f7fd;' : ' border: 1px solid #e2e5ea; background: #ffffff;'),
+      badgeStyle: 'font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 2px 7px; white-space: nowrap;' + (on ? ' background: #1428a0; color: #ffffff;' : ' background: #f0f2f5; color: #596170;'),
+      rows: rows.map(([code, sheet, st]) => ({
+        code, sheet, st,
+        codeStyle: 'width: 52px; flex-shrink: 0; height: 20px; box-sizing: border-box; border-radius: 5px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; ' + (code === '—' ? 'background: #f5f6f8; color: #b8bec8;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #121417;'),
+        sheetStyle: 'font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (code === '—' ? 'color: #8a91a0; text-decoration: line-through;' : 'color: #121417;')
+      }))
+    }));
+    const exports = [
+      ['PPTX 3장', '고른 레이아웃 그대로', 'M3 4h18v12H3z M8 20h8 M12 16v4'],
+      ['PDF 한 장 요약', '경영진 보고용 · VP-G', 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7'],
+      ['메시지 복사', '기둥 3 · 근거 문장', 'M8 8h11v13H8z M5 16V3h11'],
+      ['링크 공유', '팀원 보기 · 코멘트', 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1 M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1']
+    ].map(([label, sub, icon]) => ({ label, sub, icon }));
+    const handoffs = [
+      ['Storyboard', 'Key Message를 다듬은 문장으로', 'SB2.dc.html', 'M4 5h16v14H4z M4 11h16 M10 11v8'],
+      ['공간 시나리오', '가치 기둥 3을 장면으로', 'https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX', 'M4 6h16v12H4z M10 9l5 3-5 3V9z'],
+      ['Spec 시트', '기둥에 나온 QM55C 스펙', 'SP1.dc.html', 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7']
+    ].map(([tool, what, href, icon]) => ({ tool, what, href, icon }));
+    return { steps: ['재료', '가치 구조', '결과'], cur: 3, done: true, types, exports, handoffs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 · 검토 · 코멘트 · 승인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <!-- 결과 툴바 -->
+    <div style="height: 52px; box-sizing: border-box; flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 0 20px 0 14px; background: #ffffff; border-bottom: 1px solid #e2e5ea">
+      <a href="PR7.dc.html" style="height: 32px; padding: 0 10px 0 6px; border-radius: 8px; color: #3d4452; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>결과</a>
+      <span style="width: 1px; height: 20px; background: #e2e5ea; flex-shrink: 0"></span>
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #eaeefb; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg></div>
+      <span style="font-size: 13.5px; font-weight: 600; white-space: nowrap">A커피_디지털메뉴보드_제안서</span>
+      <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">v2 · 검토 중</span>
+      <span style="font-size: 12px; color: #596170; white-space: nowrap">코멘트 열린 4 · 해결 2</span>
+      <span style="flex-grow: 1"></span>
+      <a href="PR7P.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>편집</a>
+      <a href="PR7Q.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">확정 필요<span style="min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span></a>
+      <a href="PR7V.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>버전</a>
+      <span style="font-size: 12px; color: #596170; white-space: nowrap; flex-shrink: 0">승인 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">1 / 3</span></span>
+      <a href="PR7X.dc.html" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg>내보내기</a>
+    </div>
+
+    <div style="height: 728px; display: flex; overflow: hidden">
+      <!-- 검토 요청 · 검토자 · 공유 -->
+      <aside aria-label="검토 요청" style="width: 284px; height: 728px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-right: 1px solid #e2e5ea; padding: 16px; display: flex; flex-direction: column; overflow: hidden">
+        <div style="display: flex; align-items: center; gap: 8px; height: 22px">
+          <span style="font-size: 14px; font-weight: 700">검토 요청</span>
+          <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">진행 중</span>
+        </div>
+        <div style="margin-top: 4px; font-size: 12px; color: #596170; white-space: nowrap">오늘 11:00 보냄 · 마감 10월 8일 (수)</div>
+
+        <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; height: 18px">
+          <span style="font-size: 12px; font-weight: 600; color: #3d4452">검토자 3</span>
+          <button style="height: 22px; padding: 0 4px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 3px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>추가</button>
+        </div>
+        <div style="margin-top: 6px; display: flex; flex-direction: column">
+          <sc-for list="{{reviewers}}" as="p" hint-placeholder-count="3">
+            <div style="height: 44px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f2f5">
+              <span style="width: 30px; height: 30px; border-radius: 50%; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{p.initial}}</span>
+              <div style="display: flex; flex-direction: column; gap: 0; flex-grow: 1; min-width: 0">
+                <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">{{p.name}}</span>
+                <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.role}}</span>
+              </div>
+              <span style="{{p.tagStyle}}"><sc-if value="{{p.ok}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if>{{p.status}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="margin-top: 10px; box-sizing: border-box; padding: 9px 12px; border-radius: 10px; background: #f5f6f8; font-size: 12.5px; line-height: 1.55; color: #3d4452">“1차 제출본입니다. Why Samsung 수치 위주로 봐주세요.”</div>
+
+        <div style="margin-top: 12px; font-size: 12px; font-weight: 600; color: #3d4452">공유</div>
+        <div style="margin-top: 6px; display: flex; gap: 6px">
+          <button aria-label="링크 권한" style="flex-grow: 1; height: 34px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0"><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">팀 내부 · 코멘트 가능</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 9l6 6 6-6"/></svg></button>
+          <button style="height: 34px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap; flex-shrink: 0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>링크 복사</button>
+        </div>
+        <button style="margin-top: 10px; height: 36px; border-radius: 8px; border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 600">코멘트 반영 후 다시 검토 요청</button>
+
+        <div style="margin: 16px 0 14px 0; height: 1px; background: #e2e5ea"></div>
+        <div style="font-size: 12px; font-weight: 600; color: #3d4452">코멘트가 있는 시트</div>
+        <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 2px">
+          <sc-for list="{{sheets}}" as="s" hint-placeholder-count="4">
+            <button aria-current="{{s.cur}}" style="{{s.rowStyle}}">
+              <span style="{{s.noStyle}}">{{s.no}}</span>
+              <span style="font-size: 12.5px; flex-grow: 1; min-width: 0; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.name}}</span>
+              <span style="{{s.countStyle}}">{{s.count}}</span>
+            </button>
+          </sc-for>
+        </div>
+      </aside>
+
+      <!-- 슬라이드 + 코멘트 핀 -->
+      <section style="width: 572px; height: 728px; box-sizing: border-box; flex-shrink: 0; padding: 16px 20px 0 20px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+        <div style="height: 34px; display: flex; align-items: center; gap: 8px">
+          <span style="height: 24px; padding: 0 7px; border-radius: 6px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center">21</span>
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">경쟁 비교</span>
+          <span style="font-size: 12.5px; color: #596170; white-space: nowrap">Why Samsung · 코멘트 3</span>
+          <span style="flex-grow: 1"></span>
+          <button role="switch" aria-checked="true" style="height: 30px; padding: 0 10px 0 6px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 28px; height: 16px; border-radius: 999px; background: #1428a0; position: relative; display: block"><span style="position: absolute; right: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ffffff"></span></span>코멘트 핀</button>
+          <button aria-label="이전 슬라이드" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <button aria-label="다음 슬라이드" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+
+        <div style="position: relative; width: 532px; height: 299px; flex-shrink: 0; border-radius: 6px; box-shadow: 0 0 0 1px #e2e5ea, 0 8px 24px rgba(18,20,23,0.08); overflow: hidden; background: #ffffff">
+          <div style="position: absolute; left: 0; top: 0; width: 620px; height: 349px; background: #ffffff; transform: scale(0.8581); transform-origin: 0 0">
+            <div style="position: absolute; left: 0; top: 0; right: 0; height: 6px; background: #1428a0"></div>
+            <div style="position: absolute; left: 28px; top: 20px; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; color: #1428a0">WHY SAMSUNG</div>
+            <div style="position: absolute; left: 28px; top: 36px; width: 564px; font-size: 19px; font-weight: 700; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{slideTitle}}</div>
+            <div style="position: absolute; left: 28px; top: 66px; width: 564px; font-size: 11px; color: #596170; white-space: nowrap">A 커피 요구사항 6개 기준 · 출처 MI 경쟁사 분석</div>
+            <div style="position: absolute; left: 28px; top: 96px; width: 564px; display: flex; flex-direction: column">
+              <div style="display: grid; grid-template-columns: 164px 152px 124px 124px; height: 28px">
+                <div style="display: flex; align-items: center; padding: 0 10px; background: #f5f6f8; font-size: 11px; font-weight: 600; color: #3d4452">비교 항목</div>
+                <div style="{{headStyle}}">삼성 제안</div>
+                <div style="display: flex; align-items: center; padding: 0 10px; background: #f5f6f8; font-size: 11px; font-weight: 600; color: #3d4452">경쟁사 A</div>
+                <div style="display: flex; align-items: center; padding: 0 10px; background: #f5f6f8; font-size: 11px; font-weight: 600; color: #3d4452">경쟁사 B</div>
+              </div>
+              <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+                <div style="{{r.rowStyle}}">
+                  <div style="display: flex; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden">{{r.label}}</div>
+                  <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="3">
+                    <div style="{{c.cellStyle}}">
+                      <sc-if value="{{c.hasDot}}" hint-placeholder-val="{{true}}"><span style="{{c.dotStyle}}"></span></sc-if>
+                      <span style="{{c.txtStyle}}">{{c.txt}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+            <div style="position: absolute; left: 28px; top: 324px; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 700; color: #8a91a0">21</div>
+            <div style="position: absolute; right: 28px; top: 324px; font-size: 9.5px; color: #8a91a0">A 커피 프랜차이즈 메뉴보드 제안</div>
+          </div>
+          <!-- 코멘트 핀 (화면 좌표) -->
+          <sc-for list="{{pins}}" as="pn" hint-placeholder-count="3">
+            <button aria-label="{{pn.aria}}" style="{{pn.style}}"><sc-if value="{{pn.isNum}}" hint-placeholder-val="{{true}}">{{pn.n}}</sc-if><sc-if value="{{pn.done}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></button>
+          </sc-for>
+        </div>
+
+        <!-- 시트별 검토 진행 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 12px; height: 20px">
+            <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">시트 확인 <span style="font-family: Manrope, sans-serif; font-weight: 800">18 / 24</span></span>
+            <span style="flex-grow: 1"></span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #596170; white-space: nowrap"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1428a0"></span>확인됨</span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #596170; white-space: nowrap"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #1428a0; background: #ffffff"></span>열린 코멘트</span>
+            <span style="display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #596170; white-space: nowrap"><span style="width: 10px; height: 10px; border-radius: 3px; background: #e2e5ea"></span>아직</span>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(12, 38px); gap: 4px">
+            <sc-for list="{{grid}}" as="g" hint-placeholder-count="24">
+              <span title="{{g.tip}}" style="{{g.style}}">{{g.no}}</span>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- W 제안 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px">
+          <div style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 7px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 11.5px; display: flex; align-items: center; justify-content: center">W</div>
+          <span style="font-size: 12.5px; line-height: 1.5; color: #121417; flex-grow: 1; min-width: 0">열린 코멘트 4건을 반영한 수정안을 만들 수 있어요. 새 버전으로 저장하고 바뀐 곳을 비교해 드릴게요.</span>
+          <a href="PR7V.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">수정안 만들기</a>
+        </div>
+      </section>
+
+      <!-- 코멘트 스레드 -->
+      <aside aria-label="코멘트" style="width: 324px; height: 728px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-left: 1px solid #e2e5ea; display: flex; flex-direction: column">
+        <div style="height: 48px; box-sizing: border-box; flex-shrink: 0; padding: 0 16px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px">
+          <span style="font-size: 14px; font-weight: 700">코멘트</span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">21 경쟁 비교</span>
+          <span style="flex-grow: 1"></span>
+          <div role="radiogroup" aria-label="코멘트 보기" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #f0f2f5">
+            <button role="radio" aria-checked="true" style="height: 24px; padding: 0 8px; border: none; border-radius: 6px; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12)">열린 2</button>
+            <button role="radio" aria-checked="false" style="height: 24px; padding: 0 8px; border: none; border-radius: 6px; background: transparent; color: #596170; font-size: 11.5px; font-weight: 500">해결 1</button>
+          </div>
+        </div>
+
+        <div style="flex-grow: 1; min-height: 0; overflow: hidden; padding: 12px 12px 0 12px; display: flex; flex-direction: column; gap: 10px">
+          <!-- 코멘트 1 (선택) -->
+          <div style="box-sizing: border-box; border-radius: 12px; border: 1.5px solid #1428a0; background: #f5f7fd; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; align-items: center; gap: 7px">
+              <span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">1</span>
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 0 1.5px #ffffff">김</span>
+              <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">김지훈</span>
+              <span style="font-size: 11.5px; color: #596170; white-space: nowrap">영업팀장 · 11:40</span>
+            </div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #121417">경쟁사 B 유지보수 응답 값은 출처가 있나요? 없으면 노트로 옮겨 주세요.</div>
+            <div style="display: flex; gap: 8px; padding-left: 12px; border-left: 2px solid #e2e5ea">
+              <span style="width: 20px; height: 20px; border-radius: 50%; background: #121417; color: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0">최</span>
+              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                <span style="font-size: 11.5px; color: #596170; white-space: nowrap"><span style="font-weight: 600; color: #121417">최민섭</span> · 11:52</span>
+                <span style="font-size: 12.5px; line-height: 1.5; color: #121417">MI에서 다시 찾아볼게요. 못 찾으면 노트로 옮길게요.</span>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px">
+              <button style="height: 26px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600">답글</button>
+              <a href="PR7Q.dc.html" style="height: 26px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">확정 필요로 보내기</a>
+              <span style="flex-grow: 1"></span>
+              <button style="height: 26px; padding: 0 10px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>해결</button>
+            </div>
+          </div>
+
+          <!-- 코멘트 2 + W 제안 -->
+          <div style="box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; align-items: center; gap: 7px">
+              <span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">2</span>
+              <span style="width: 24px; height: 24px; border-radius: 50%; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0">이</span>
+              <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">이서연</span>
+              <span style="font-size: 11.5px; color: #596170; white-space: nowrap">디자인 · 13:05</span>
+            </div>
+            <div style="font-size: 12.5px; line-height: 1.55; color: #121417">삼성 열 머리글이 검정이에요. 표준 마스터의 블루로 맞춰 주세요.</div>
+            <div style="box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 8px 10px; display: flex; align-items: center; gap: 8px">
+              <span style="width: 18px; height: 18px; flex-shrink: 0; border-radius: 5px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 10px; display: flex; align-items: center; justify-content: center">W</span>
+              <span style="font-size: 12px; line-height: 1.45; color: #121417; flex-grow: 1; min-width: 0">표준 마스터 색으로 바꿀까요? 이 시트 머리글 1곳만 바뀌어요.</span>
+              <button style="height: 26px; padding: 0 9px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 600; flex-shrink: 0">적용</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px">
+              <button style="height: 26px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600">답글</button>
+              <span style="flex-grow: 1"></span>
+              <button style="height: 26px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600">해결</button>
+            </div>
+          </div>
+
+          <!-- 해결된 코멘트 (접힘) -->
+          <div style="box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 10px 12px; display: flex; align-items: center; gap: 8px">
+            <span style="width: 18px; height: 18px; border-radius: 50%; background: #8a91a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+              <span style="font-size: 12px; font-weight: 600; color: #3d4452; white-space: nowrap">해결됨 · 박준호 · 어제</span>
+              <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">유지보수 항목 추가 요청 — v2에 반영</span>
+            </div>
+            <a href="PR7V.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">변경 보기</a>
+          </div>
+        </div>
+
+        <div style="flex-shrink: 0; padding: 12px 16px 16px 16px; border-top: 1px solid #e2e5ea">
+          <label for="cmt" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">코멘트 남기기</label>
+          <div style="height: 40px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 6px; padding: 0 5px 0 10px">
+            <input id="cmt" placeholder="코멘트 남기기 · @로 멘션" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 28px; height: 28px; border-radius: 7px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tag = 'height: 22px; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 3px; white-space: nowrap; flex-shrink: 0;';
+    const reviewers = [
+      ['박', '박준호', '솔루션 컨설턴트', '승인', 'ok'],
+      ['이', '이서연', '디자인', '수정 요청', 'change'],
+      ['김', '김지훈', '영업팀장', '대기 중', 'wait']
+    ].map(([initial, name, role, status, st]) => ({
+      initial, name, role, status, ok: st === 'ok',
+      tagStyle: tag + (st === 'ok' ? ' background: #1428a0; color: #ffffff;' : st === 'change' ? ' border: 1px solid #1428a0; color: #1428a0; background: #ffffff;' : ' background: #f0f2f5; color: #596170;')
+    }));
+
+    const sheets = [['21', '경쟁 비교', '열린 2', 1, 1], ['09', '카운터 · 메뉴보드', '열린 1', 1, 0], ['01', '시장 규모 · 성장', '열린 1', 1, 0], ['22', '삼성 강점', '해결 1', 0, 0]].map(([no, name, count, open, cur]) => ({
+      no, name, count, cur: !!cur,
+      rowStyle: 'height: 34px; box-sizing: border-box; padding: 0 8px; border: none; border-radius: 8px; display: flex; align-items: center; gap: 8px; color: #121417;' + (cur ? ' background: #eaeefb;' : ' background: transparent;'),
+      noStyle: 'width: 22px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; text-align: left;' + (cur ? ' color: #1428a0;' : ' color: #8a91a0;'),
+      countStyle: 'height: 20px; padding: 0 7px; border-radius: 999px; font-size: 11px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (open ? ' background: #1428a0; color: #ffffff;' : ' background: #f0f2f5; color: #596170;')
+    }));
+
+    // 21 경쟁 비교 · v2 (머리글 검정 · 6행 경쟁사 값 [00])
+    const cellBase = 'display: flex; align-items: center; gap: 6px; padding: 0 10px; min-width: 0; overflow: hidden;';
+    const dot = (t, sam) => {
+      const b = 'width: 9px; height: 9px; box-sizing: border-box; border-radius: 50%; flex-shrink: 0;';
+      if (t === 'f') return b + ' background: ' + (sam ? '#1428a0' : '#3d4452') + ';';
+      if (t === 'h') return b + ' border: 1.5px solid #3d4452; background: linear-gradient(90deg, #3d4452 50%, #ffffff 50%);';
+      return b + ' border: 1.5px solid #b8bec8; background: #ffffff;';
+    };
+    const ROWS = [
+      ['원격 콘텐츠 배포', ['f', '본사 일괄 배포'], ['f', '일괄 배포'], ['h', '매장별 등록']],
+      ['POS 가격 연동', ['f', '자동 반영'], ['h', '수동 업로드'], ['n', '미지원']],
+      ['사내 서버 · 보안', ['f', '설치형 · 사내망'], ['n', '클라우드 전용'], ['h', '별도 구축']],
+      ['매장 에너지 관리', ['f', 'SmartThings Pro'], ['n', '미지원'], ['n', '미지원']],
+      ['전국 설치 · A/S', ['f', '직영 서비스망'], ['h', '협력사 위탁'], ['h', '협력사 위탁']],
+      ['유지보수 응답 시간', ['', '[00]시간 이내'], ['', '[00]시간'], ['', '[00]시간']]
+    ];
+    const rows = ROWS.map(([label, ...cs], i) => ({
+      label,
+      rowStyle: 'display: grid; grid-template-columns: 164px 152px 124px 124px; height: 30px; border-bottom: 1px solid #e2e5ea;',
+      cells: cs.map(([d, txt], j) => {
+        const flagged = txt.indexOf('[') >= 0;
+        const anchor = i === 5 && j === 2; // 코멘트 1이 달린 셀
+        return {
+          txt, hasDot: d !== '', dotStyle: d ? dot(d, j === 0) : '',
+          cellStyle: cellBase + (j === 0 ? ' background: #eaeefb;' : '') + (anchor ? ' box-shadow: inset 0 0 0 2px #1428a0; background: #f5f7fd;' : ''),
+          txtStyle: 'font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (flagged ? ' color: #1428a0; font-weight: 700;' : j === 0 ? ' color: #121417; font-weight: 600;' : ' color: #3d4452;')
+        };
+      })
+    }));
+
+    // 코멘트 핀: 슬라이드 좌표(620×349) × 0.8581
+    const S = 0.8581;
+    const pinBase = 'position: absolute; width: 24px; height: 24px; box-sizing: border-box; border-radius: 50% 50% 50% 4px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0;';
+    const pins = [[1, 530, 289, 'sel'], [2, 268, 110, 'open'], [3, 110, 289, 'done']].map(([n, x, y, st]) => ({
+      n: String(n), isNum: st !== 'done', done: st === 'done', aria: st === 'done' ? '해결된 코멘트' : '코멘트 ' + n,
+      style: pinBase + ' left: ' + Math.round(x * S - 4) + 'px; top: ' + Math.round(y * S - 22) + 'px;' + (st === 'sel' ? ' background: #1428a0; color: #ffffff; border: 2px solid #ffffff; box-shadow: 0 0 0 2px #1428a0, 0 4px 10px rgba(18,20,23,0.25);' : st === 'open' ? ' background: #1428a0; color: #ffffff; border: 2px solid #ffffff; box-shadow: 0 4px 10px rgba(18,20,23,0.2);' : ' background: #8a91a0; color: #ffffff; border: 2px solid #ffffff;')
+    }));
+
+    // 시트 확인 현황 24장: 열린 코멘트 01 · 09 · 21 / 아직 19 · 23 · 24
+    const OPEN = ['01', '09', '21'], TODO = ['19', '23', '24'];
+    const gBase = 'height: 26px; box-sizing: border-box; border-radius: 5px; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center;';
+    const grid = Array.from({ length: 24 }, (_, i) => {
+      const no = String(i + 1).padStart(2, '0');
+      const st = OPEN.includes(no) ? 'open' : TODO.includes(no) ? 'todo' : 'ok';
+      return {
+        no, tip: no + (st === 'open' ? ' · 열린 코멘트' : st === 'todo' ? ' · 아직 확인 전' : ' · 확인됨'),
+        style: gBase + (st === 'ok' ? ' background: #1428a0; color: #ffffff;' : st === 'open' ? ' border: 1.5px solid #1428a0; background: #ffffff; color: #1428a0;' : ' background: #e2e5ea; color: #596170;') + (no === '21' ? ' box-shadow: 0 0 0 2px #ffffff, 0 0 0 3.5px #121417;' : '')
+      };
+    });
+
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6,
+      reviewers, sheets, rows, pins, grid,
+      slideTitle: '운영 · 지원에서 앞서는 삼성',
+      headStyle: 'display: flex; align-items: center; padding: 0 10px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700;'
+    };
+  }
+}
+</script>
+</body>
+</html>

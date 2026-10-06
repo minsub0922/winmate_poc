@@ -1,0 +1,58 @@
+{
+  "responses": [
+    {"when": {"contains": "#mock:llm-down"}, "error": {"status": 503, "code": "UPSTREAM_UNAVAILABLE", "message": "mock LLM 장애"}},
+    {
+      "when": {"contains": ["본사 마케팅팀이 전국 320개 매장", "21:00 마감"], "not_contains": ["18:00", "배우"]},
+      "json": {
+        "title": "매장 하루 시나리오",
+        "customer_name": null,
+        "space_label": "매장",
+        "slots": [
+          {"time": "07:00", "label": "오픈"},
+          {"time": "11:30", "label": "점심 피크"},
+          {"time": "14:00", "label": "본사 배포"},
+          {"time": "21:00", "label": "마감"}
+        ],
+        "roles": [{"name": "점장"}, {"name": "손님"}, {"name": "본사 마케팅 담당자"}],
+        "beats": [
+          {"slot": 0, "role": "점장", "text": "아침 메뉴로 켜진 메뉴보드 확인", "place": "카운터"},
+          {"slot": 1, "role": "손님", "text": "키오스크로 프로모션 음료 주문", "place": "주문 대기 줄"},
+          {"slot": 2, "role": "본사 마케팅 담당자", "text": "오후 프로모션 320개 매장 배포", "place": "본사 사무실"},
+          {"slot": 2, "role": "손님", "text": "프로모션 화면 보고 추가 주문", "place": "카운터 앞"},
+          {"slot": 3, "role": "점장", "text": "화면 자동 종료 확인 후 마감", "place": "매장 전체"},
+          {"slot": 3, "role": "본사 마케팅 담당자", "text": "매장별 전력 리포트 확인", "place": "본사 사무실"}
+        ],
+        "personas": [
+          {"role": "점장", "intro": "매장 운영 책임자 · 오픈과 마감 담당", "wants": ["바쁜 시간 손 덜기", "표기 실수 없애기"], "pains": ["메뉴판 수작업 교체", "공지 늦게 받음"]},
+          {"role": "손님", "intro": "점심 시간에 빠르게 주문하려는 직장인", "wants": ["줄 서는 시간 줄이기", "프로모션 한눈에 보기"], "pains": ["긴 주문 줄", "품절 메뉴 늦게 앎"]},
+          {"role": "본사 마케팅 담당자", "intro": "전국 매장 프로모션 · 콘텐츠 운영", "wants": ["한 번에 전 매장 배포", "매장별 반영 확인"], "pains": ["매장마다 수작업 교체", "반영 여부 모름"]}
+        ],
+        "suggestion": {"slot": null, "time": "18:00", "label": "저녁 퇴근길", "role": "손님", "text": "퇴근길 모바일 주문 픽업", "place": "픽업대"},
+        "suggested_roles": ["바리스타", "배달 라이더"]
+      }
+    },
+    {
+      "when": {"contains": ["배우", "방문"]},
+      "json": {
+        "title": "매장 이벤트 시나리오",
+        "space_label": "매장",
+        "slots": [
+          {"time": "10:00", "label": "오픈"},
+          {"time": "15:00", "label": "방문 이벤트"},
+          {"time": "21:00", "label": "마감"}
+        ],
+        "roles": [{"name": "점장"}, {"name": "손님"}, {"name": "배우"}],
+        "beats": [
+          {"slot": 0, "role": "점장", "text": "이벤트 안내 화면 켜기", "place": "카운터"},
+          {"slot": 1, "role": "배우", "text": "배우가 매장을 방문해 신메뉴 소개", "place": "매장 전체"},
+          {"slot": 1, "role": "손님", "text": "방문 이벤트 화면 보고 줄 서기", "place": "주문 대기 줄"},
+          {"slot": 2, "role": "점장", "text": "이벤트 화면 끄고 마감", "place": "매장 전체"}
+        ],
+        "personas": [],
+        "suggestion": null,
+        "suggested_roles": ["바리스타"]
+      }
+    },
+    {"json": {"slots": [], "roles": [], "beats": [], "personas": [], "suggested_roles": []}}
+  ]
+}

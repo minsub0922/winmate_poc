@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RT-D 리테일 · 브랜드 플래그십 · 공간 시나리오 · B1 식품관</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">B1 식품관 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">B1 식품관, 장보는 길 지점마다 신선도와 기다림을 챙깁니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">④ B1 식품관 — 입구에서 계산대까지 고객이 지나가는 순서대로, 지점마다 움직이는 솔루션과 기기</div>
+
+  <!-- 평면 머리 -->
+  <div style="position: absolute; left: 64px; top: 158px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">④ B1 식품관 · 평면</span><span style="font-size: 11px; color: #8a91a0">배치는 예시 · 도면으로 교체</span></div>
+  <div style="position: absolute; left: 446px; top: 160px; width: 280px; height: 16px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; font-size: 10.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 18px; height: 0px; border-top: 2px dashed #1428a0"></span>고객 동선</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #121417"></span>화면</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 8px; box-sizing: border-box; border-radius: 2px; border: 1.5px solid #1428a0; background: #eaeefb"></span>냉장 · 온도 감시</span>
+  </div>
+
+  <!-- 평면도 -->
+  <div style="position: absolute; left: 64px; top: 184px; width: 662px; height: 416px; border-radius: 14px; background: #e9ecf0"></div>
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="6">
+    <div style="{{z.style}}"></div>
+    <div style="{{z.lab}}">{{z.t}}</div>
+  </sc-for>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+
+  <!-- 동선 -->
+  <sc-for list="{{path}}" as="p" hint-placeholder-count="9">
+    <div style="{{p.style}}"></div>
+  </sc-for>
+  <sc-for list="{{pins}}" as="m" hint-placeholder-count="5">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+
+  <!-- 오른쪽: 순서 리스트 -->
+  <div style="position: absolute; left: 763px; top: 188px; width: 2px; height: 356px; background: #d5d9e0"></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.card}}">
+      <div style="position: absolute; left: 14px; top: 8px; font-size: 14px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{s.name}}</div>
+      <div style="position: absolute; left: 14px; top: 30px; font-size: 12.5px; line-height: 18px; color: #3d4452; white-space: nowrap">{{s.moment}}</div>
+      <div style="position: absolute; left: 14px; top: 54px; height: 20px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+        <sc-for list="{{s.sols}}" as="c" hint-placeholder-count="2">
+          <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span>
+        </sc-for>
+        <span style="font-size: 11.5px; color: #596170">{{s.dev}}</span>
+      </div>
+      <div style="position: absolute; left: 332px; top: 12px; width: 1px; height: 58px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 344px; top: 16px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">{{s.kl}}</div>
+      <div style="position: absolute; left: 344px; top: 36px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 17px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{s.kv}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 동선 전체 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 18px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">동선 전체</span>
+    <sc-for list="{{totals}}" as="t" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 7px; font-size: 12px; color: #3d4452"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>{{t.l}}<span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 800; color: #1428a0">{{t.v}}</span></span>
+    </sc-for>
+    <span style="margin-left: auto; font-size: 11px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 백화점 · 플래그십 점포 공간 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 평면 x 64–726 · y 184–600 — 동선: 입구(왼쪽) ↑ 윗 통로 → 오른쪽 통로 ↓ 계산대(←)
+    const Z = [
+      ['입구 · 에스컬레이터', 76, 330, 120, 258],
+      ['신선 코너', 76, 196, 330, 96],
+      ['델리 · 베이커리', 418, 196, 296, 96],
+      ['진열 매대', 236, 330, 336, 132],
+      ['와인 · 냉장', 616, 330, 98, 258],
+      ['계산대', 236, 476, 228, 112]
+    ];
+    const zones = Z.map(([t, x, y, w, h]) => ({
+      t, style: box(x, y, w, h) + 'border-radius: 8px; background: ' + (t === '진열 매대' ? '#f5f6f8' : '#ffffff') + ';',
+      lab: A + 'left: ' + px(x + 10) + 'top: ' + px(y + h - 22) + 'font-size: 11.5px; line-height: 16px; font-weight: 800; color: #596170; ' + T
+    }));
+
+    const shapes = [];
+    const sh = (x, y, w, h, css, t) => shapes.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const cap = (x, y, t) => shapes.push({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10.5px; line-height: 14px; color: #596170; ' + T, t });
+    const scr = 'border-radius: 2px; background: #121417;';
+    const cold = 'box-sizing: border-box; border-radius: 3px; border: 1.5px solid #1428a0; background: #eaeefb;';
+    // ① 입구: 천장 사이니지 · 에스컬레이터
+    sh(88, 344, 64, 10, scr); cap(88, 358, '천장 사이니지');
+    sh(92, 400, 44, 120, 'box-sizing: border-box; border-radius: 4px; border: 1.5px solid #8a91a0; background: #f5f6f8;');
+    [0, 1, 2, 3, 4, 5, 6].forEach((i) => sh(98, 410 + i * 15, 32, 2, 'background: #b8bec8;'));
+    cap(146, 404, '에스컬레이터');
+    // ② 신선: 프라이스 사이니지 + 쇼케이스 ×3
+    [0, 1, 2].forEach((i) => { sh(92 + i * 102, 208, 88, 8, scr); sh(92 + i * 102, 222, 88, 30, cold); });
+    cap(92, 256, '프라이스 사이니지 · 쇼케이스');
+    // ③ 델리 · 베이커리: 메뉴보드 ×3 · 카운터 · 오븐
+    [0, 1, 2].forEach((i) => sh(432 + i * 56, 208, 48, 9, scr));
+    cap(432, 221, '메뉴보드 ×3');
+    sh(432, 242, 160, 14, 'border-radius: 3px; background: #e9ecf0;');
+    sh(606, 214, 92, 42, 'border-radius: 4px; background: #e9ecf0; display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: #3d4452; ' + T, '오븐');
+    // 진열 매대
+    [0, 1, 2].forEach((i) => sh(256, 350 + i * 28, 296, 12, 'border-radius: 3px; background: #dfe3ea;'));
+    // ④ 와인 · 냉장: 와인 셀러 · 리치인 냉장
+    sh(628, 344, 74, 92, cold);
+    [0, 1, 2, 3].forEach((i) => sh(636, 356 + i * 19, 58, 2, 'background: #6f82d6;'));
+    cap(630, 440, '와인 셀러');
+    sh(628, 470, 74, 64, cold);
+    cap(630, 538, '냉장 · 유제품');
+    // ⑤ 계산대: 대기 안내 화면 · 계산대 ×3
+    sh(252, 488, 120, 10, scr); cap(380, 486, '대기 안내');
+    [0, 1, 2].forEach((i) => sh(252 + i * 66, 516, 50, 18, 'box-sizing: border-box; border-radius: 3px; border: 1.5px solid #8a91a0; background: #ffffff;'));
+    cap(486, 576, '출구 · 엘리베이터 →');
+
+    // 동선 (점선 2px) — 시작 (196, 540)
+    const P = [];
+    const hz = (x1, x2, y) => P.push({ style: box(Math.min(x1, x2), y - 1, Math.abs(x2 - x1), 0) + 'border-top: 2px dashed #1428a0;' });
+    const vt = (x, y1, y2) => P.push({ style: box(x - 1, Math.min(y1, y2), 0, Math.abs(y2 - y1)) + 'border-left: 2px dashed #1428a0;' });
+    const tri = (x, y, dir) => {
+      const b = { up: 'border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 9px solid #1428a0;', right: 'border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid #1428a0;', down: 'border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid #1428a0;', left: 'border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 9px solid #1428a0;' }[dir];
+      P.push({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: 0px; height: 0px; ' + b });
+    };
+    hz(150, 216, 540); vt(216, 540, 311); hz(216, 594, 311); vt(594, 311, 520); hz(594, 476, 520);
+    tri(210, 410, 'up'); tri(500, 305, 'right'); tri(588, 444, 'down'); tri(478, 514, 'left');
+
+    const pin = (n, x, y) => ({ n, style: box(x - 13, y - 13, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+    const pins = [pin(1, 216, 500), pin(2, 300, 311), pin(3, 560, 311), pin(4, 594, 400), pin(5, 520, 520)];
+
+    // 순서 리스트 (x 750–1216)
+    const S = [
+      ['입구 · 에스컬레이터 앞', '내려서자마자 오늘 들어온 신선 · 시식 행사 확인', ['MagicINFO'], '천장 · 스탠드 사이니지', '행사 코너 유입', '[00]% ↑'],
+      ['신선 코너', '가격 · 원산지는 화면으로, 신선도는 온도로', ['삼성 콜드체인', 'MagicINFO'], '쇼케이스 · 온도 센서', '신선 폐기', '[00]% ↓'],
+      ['델리 · 베이커리', '갓 구운 메뉴 · 품절이 메뉴보드에 바로 반영', ['MagicINFO'], '메뉴보드 QM55C ×3', '메뉴 교체', '[0]분 ↓'],
+      ['와인 · 냉장', '셀러 · 냉장 온도가 기록으로 남아 안심하고 고름', ['삼성 콜드체인'], '워크인 냉장 · 냉장 쇼케이스', '이탈 알림', '[0]분 내'],
+      ['계산대', '대기 화면이 열린 계산대 · 배송 접수를 안내', ['MagicINFO'], '스마트 사이니지 QM43C', '체감 대기', '[0]분 ↓']
+    ];
+    const steps = S.map(([name, moment, sols, dev, kl, kv], i) => {
+      const y = 160 + i * 89;
+      return {
+        n: i + 1, name, moment, dev, kl, kv, sols: sols.map((t) => ({ t })),
+        badge: box(751, y + 28, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        card: box(786, y, 430, 82) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;'
+      };
+    });
+
+    const totals = [['신선 폐기', '[00]% ↓'], ['가격 · 메뉴 교체', '[0]시간 → [0]분'], ['계산 대기', '[0]분 ↓']].map(([l, v]) => ({ l, v }));
+
+    return { zones, shapes, path: P, pins, steps, totals };
+  }
+}
+</script>
+</body>
+</html>

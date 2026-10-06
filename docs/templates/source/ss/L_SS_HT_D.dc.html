@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-HT-D 호텔 · 리조트 · 공간 시나리오 · 연회장 · 회의실</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">연회장 · 회의실 · 운영 모드</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 940px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">N 호텔 연회장, 행사일엔 손님을 맞고 빈 날엔 스스로 쉽니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">③ 연회장 · 회의실 — 같은 화면 · 공조 · 음향이 연회 일정에 따라 두 모드로 바뀝니다</div>
+
+  <!-- 전환 축 -->
+  <div style="position: absolute; left: 639px; top: 160px; width: 2px; height: 384px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 562px; top: 160px; width: 156px; height: 192px; background: #ffffff"></div>
+  <div style="position: absolute; left: 618px; top: 164px; width: 44px; height: 44px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h13l-3-3"></path><path d="M20 15H7l3 3"></path></svg></div>
+  <div style="position: absolute; left: 562px; top: 216px; width: 156px; text-align: center; font-size: 11px; line-height: 15px; font-weight: 800; color: #596170; white-space: nowrap">전환 방식</div>
+  <div style="position: absolute; left: 562px; top: 233px; width: 156px; text-align: center; font-size: 13.5px; line-height: 19px; font-weight: 800; color: #121417; white-space: nowrap">연회 일정에 맞춘</div>
+  <div style="position: absolute; left: 562px; top: 252px; width: 156px; text-align: center; font-size: 13.5px; line-height: 19px; font-weight: 800; color: #1428a0; white-space: nowrap">스케줄 자동 전환</div>
+  <sc-for list="{{axisSols}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.style}}">{{c.t}}</div>
+  </sc-for>
+  <sc-for list="{{axisRows}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.style}}"><span style="font-size: 14px; line-height: 16px; font-weight: 800; color: #1428a0">↔</span><span style="font-size: 12px; line-height: 16px; font-weight: 800; color: #121417">{{r.t}}</span></div>
+  </sc-for>
+  <div style="position: absolute; left: 635px; top: 540px; width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #b8bec8"></div>
+
+  <!-- 두 모드 -->
+  <sc-for list="{{modes}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.card}}">
+      <div style="{{m.band}}"></div>
+      <div style="{{m.nameS}}">{{m.name}}</div>
+      <div style="{{m.chipS}}">{{m.chip}}</div>
+      <img src="{{m.src}}" alt="{{m.alt}}" style="position: absolute; left: 12px; top: 58px; width: 440px; height: 140px; object-fit: cover; object-position: {{m.op}}; border-radius: 10px">
+      <div style="position: absolute; left: 20px; top: 172px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+      <sc-for list="{{m.rows}}" as="r" hint-placeholder-count="3">
+        <div style="{{r.rule}}"></div>
+        <div style="{{r.mainS}}">{{r.main}}</div>
+        <div style="{{r.subS}}">{{r.sub}}</div>
+      </sc-for>
+    </div>
+    <div style="{{m.kpiBox}}">
+      <div style="position: absolute; left: 16px; top: 8px; font-size: 11px; line-height: 15px; font-weight: 800; color: #1428a0; white-space: nowrap">{{m.kpiTag}}</div>
+      <div style="position: absolute; left: 16px; top: 25px; font-size: 12.5px; line-height: 17px; font-weight: 700; color: #121417; white-space: nowrap">{{m.kpi}}</div>
+      <div style="position: absolute; right: 16px; top: 10px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 22px; line-height: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{m.kv}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 하단 띠 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 12px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">기기는 그대로, 모드만 바꿉니다</span>
+    <span style="width: 1px; height: 16px; background: #d5d9e0"></span>
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="5">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+    <span style="margin-left: auto; font-size: 10.5px; color: #8a91a0">수치 · 시간은 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>N 호텔 · 투숙 경험 · 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 모드 카드: 왼쪽 5열 x 64 · 오른쪽 5열 x 750 (폭 466), 가운데 2열 554–726 전환 축
+    const CY = 160, CH = 384, RY0 = 208, RH = 58;
+
+    const axisSols = ['MagicINFO', 'SAC 제어 · DMS', 'b.IoT'].map((t, i) => ({
+      t, style: box(580, 280 + i * 24, 120, 20) + 'box-sizing: border-box; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; ' + T
+    }));
+    const axisRows = ['화면', '공기 · 설비', '사람 · 기기'].map((t, i) => ({
+      t, style: box(580, CY + RY0 + i * RH + 9, 120, 40) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #d5d9e0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; ' + T
+    }));
+
+    const M = [
+      { x: 64, on: true, name: '행사일', chip: '입장 [0]시간 전 ~ 종료',
+        src: '/_blob/e625d71cc8d0865bc5e709f4dcecd518', alt: '대화면으로 발표하는 회의 행사 (예시 사진)', op: '50% 40%',
+        rows: [
+          ['행사명 · 시간표 · 홀 위치를 앞 · 로비 화면에', '일정이 바뀌면 웹에서 바로 수정 · 예약 편성'],
+          ['입장 전 냉난방 준비, 음향은 행사 프리셋 한 번', '휴식 · 만찬 시간엔 조명 · 공조 장면 전환'],
+          ['연회팀은 태블릿으로 홀 세팅 · 현장 요청 확인', '지정 앱만 열리는 탭 — 행사 중 기기 혼선 없음']
+        ],
+        kpiTag: '행사일의 가치', kpi: '행사 세팅 · 안내 교체 시간', kv: '[0]시간 → [0]분' },
+      { x: 750, on: false, name: '행사 없는 날', chip: '평일 공실 · 야간',
+        src: '/_blob/a14414799350aa67c39b1ce639897726', alt: '천장 시스템에어컨이 있는 빈 회의실 (예시 사진)', op: '50% 30%',
+        rows: [
+          ['다가오는 웨딩 · 대관 · 세미나 프로모션', '같은 화면이 연회 영업 채널로'],
+          ['공조 최소 운전 · 조명 OFF, 설정 온도 범위 제한', '빈 홀 전력 사용은 대시보드로 확인'],
+          ['화면 · 음향 · 공조 상태를 원격 점검', '이상이 있을 때만 케어 엔지니어 출동']
+        ],
+        kpiTag: '행사 없는 날의 가치', kpi: '빈 연회장 냉난방 · 조명 전력', kv: '[00]% ↓' }
+    ];
+    const modes = M.map((m) => ({
+      name: m.name, chip: m.chip, src: m.src, alt: m.alt, op: m.op, kpiTag: m.kpiTag, kpi: m.kpi, kv: m.kv,
+      card: box(m.x, CY, 466, CH) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid #d5d9e0; background: #ffffff; overflow: hidden;',
+      band: A + 'left: -1px; top: -1px; width: 466px; height: 49px; background: ' + (m.on ? '#1428a0' : '#f5f6f8') + ';',
+      nameS: A + 'left: 16px; top: 12px; font-size: 17px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em; color: ' + (m.on ? '#ffffff' : '#121417') + '; ' + T,
+      chipS: A + 'right: 16px; top: 13px; height: 22px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; ' + T +
+        (m.on ? 'background: #ffffff; color: #1428a0;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #3d4452;'),
+      rows: m.rows.map(([main, sub], i) => ({
+        main, sub,
+        rule: box(16, RY0 + i * RH, 432, 1) + 'background: #eef0f3;',
+        mainS: box(16, RY0 + i * RH + 9, 432, 20) + 'font-size: 13.5px; line-height: 20px; font-weight: 700; color: #121417; ' + T,
+        subS: box(16, RY0 + i * RH + 31, 432, 17) + 'font-size: 12px; line-height: 17px; color: #596170; ' + T
+      })),
+      kpiBox: box(m.x, 552, 466, 50) + 'border-radius: 12px; background: #eaeefb;'
+    }));
+
+    const kit = ['스마트 사이니지 [0]대', '하만 프로 오디오', '시스템에어컨 · DMS', '조명 · 재실 센서', '갤럭시 탭 · Knox Suite'].map((t) => ({ t }));
+
+    return { axisSols, axisRows, modes, kit };
+  }
+}
+</script>
+</body>
+</html>

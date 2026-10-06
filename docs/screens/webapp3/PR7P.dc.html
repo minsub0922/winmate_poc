@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 · 미리보기 · 시트 편집</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="A 커피 프랜차이즈 메뉴보드 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <!-- 결과 툴바: 파일 · 버전 · 다음 할 일 -->
+    <div style="height: 52px; box-sizing: border-box; flex-shrink: 0; display: flex; align-items: center; gap: 10px; padding: 0 20px 0 14px; background: #ffffff; border-bottom: 1px solid #e2e5ea">
+      <a href="PR7.dc.html" style="height: 32px; padding: 0 10px 0 6px; border-radius: 8px; color: #3d4452; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>결과</a>
+      <span style="width: 1px; height: 20px; background: #e2e5ea; flex-shrink: 0"></span>
+      <div style="width: 28px; height: 28px; border-radius: 7px; background: #eaeefb; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg></div>
+      <span style="font-size: 13.5px; font-weight: 600; white-space: nowrap">A커피_디지털메뉴보드_제안서</span>
+      <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">v1 · 수정 1</span>
+      <span style="font-size: 12px; color: #596170; white-space: nowrap">시트 24 + 표지 · 목차 · 자동 저장됨</span>
+      <span style="flex-grow: 1"></span>
+      <a href="PR7Q.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">확정 필요<span style="min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">7</span></a>
+      <a href="PR7V.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>버전</a>
+      <a href="PR7C.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4V5z"/></svg>검토 요청</a>
+      <a href="PR7X.dc.html" style="height: 34px; padding: 0 14px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M6 10l6 6 6-6M4 20h16"/></svg>내보내기</a>
+    </div>
+
+    <div style="height: 728px; display: flex; overflow: hidden">
+      <!-- 썸네일 레일 (스크롤 영역 · 유관 사례부터 보이는 위치) -->
+      <nav aria-label="슬라이드" style="width: 196px; height: 728px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-right: 1px solid #e2e5ea; padding: 12px 10px 0 12px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 20px">
+          <span style="font-size: 12.5px; font-weight: 700">시트 24</span>
+          <span style="font-size: 11.5px; color: #596170">표지 · 목차 포함 26장</span>
+        </div>
+        <button aria-label="섹션으로 이동" style="height: 30px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #f5f6f8; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: space-between">
+          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">07 Why Samsung</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div style="position: relative; flex-grow: 1; min-height: 0; overflow: hidden">
+          <div style="display: flex; flex-direction: column; gap: 2px; padding-right: 8px">
+            <sc-for list="{{rail}}" as="it" hint-placeholder-count="9">
+              <sc-if value="{{it.isLabel}}" hint-placeholder-val="{{false}}">
+                <div style="height: 26px; box-sizing: border-box; padding: 8px 4px 0 4px; display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; color: #596170"><span>{{it.title}}</span><span style="font-family: Manrope, sans-serif">{{it.count}}</span></div>
+              </sc-if>
+              <sc-if value="{{it.isSheet}}" hint-placeholder-val="{{true}}">
+                <button aria-label="{{it.aria}}" aria-current="{{it.cur}}" style="{{it.rowStyle}}">
+                  <span style="{{it.numStyle}}">{{it.no}}</span>
+                  <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                    <div style="{{it.wrapStyle}}">
+                      <dc-import name="Thumb" kind="{{it.kind}}" n="{{it.n}}" hint-size="120px,68px"></dc-import>
+                      <sc-if value="{{it.edited}}" hint-placeholder-val="{{false}}">
+                        <span style="position: absolute; left: 4px; bottom: 4px; height: 14px; padding: 0 4px; border-radius: 3px; background: #121417; color: #ffffff; font-size: 9px; font-weight: 700; display: flex; align-items: center">수정됨</span>
+                      </sc-if>
+                      <sc-if value="{{it.flag}}" hint-placeholder-val="{{false}}">
+                        <span style="position: absolute; right: 4px; bottom: 4px; height: 14px; padding: 0 4px; border-radius: 3px; background: #1428a0; color: #ffffff; font-size: 9px; font-weight: 700; display: flex; align-items: center">확정 필요</span>
+                      </sc-if>
+                    </div>
+                    <span style="{{it.titleStyle}}">{{it.title}}</span>
+                  </div>
+                </button>
+              </sc-if>
+            </sc-for>
+          </div>
+          <div aria-hidden="true" style="position: absolute; right: 0; top: 0; width: 4px; height: 100%; border-radius: 999px; background: #f0f2f5"><div style="position: absolute; left: 0; top: 70%; width: 4px; height: 22%; border-radius: 999px; background: #b8bec8"></div></div>
+        </div>
+      </nav>
+
+      <!-- 큰 미리보기 -->
+      <section style="width: 660px; height: 728px; box-sizing: border-box; flex-shrink: 0; padding: 16px 19px 0 19px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+        <div style="height: 34px; display: flex; align-items: center; gap: 8px">
+          <span style="height: 24px; padding: 0 7px; border-radius: 6px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center">21</span>
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">경쟁 비교</span>
+          <span style="font-size: 12.5px; color: #596170; white-space: nowrap">Why Samsung</span>
+          <a href="PRS7Layout.dc.html" style="height: 26px; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; display: flex; align-items: center; gap: 5px; white-space: nowrap; margin-left: 4px"><span style="font-family: Manrope, sans-serif; font-weight: 800">CM-A</span><span style="color: #596170">비교표 (삼성 강조)</span><span style="color: #1428a0; font-weight: 600">바꾸기</span></a>
+          <span style="flex-grow: 1"></span>
+          <button aria-label="이전 슬라이드" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+          <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #3d4452; white-space: nowrap">21 / 24</span>
+          <button aria-label="다음 슬라이드" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+        </div>
+
+        <!-- 슬라이드 (16:9) -->
+        <div style="position: relative; width: 620px; height: 349px; flex-shrink: 0; background: #ffffff; border-radius: 6px; box-shadow: 0 0 0 1px #e2e5ea, 0 8px 24px rgba(18,20,23,0.08); overflow: hidden">
+          <div style="position: absolute; left: 0; top: 0; right: 0; height: 6px; background: #1428a0"></div>
+          <div style="position: absolute; left: 28px; top: 20px; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; letter-spacing: 0.12em; color: #1428a0">WHY SAMSUNG</div>
+          <div style="position: absolute; left: 28px; top: 36px; width: 564px; font-size: 19px; font-weight: 700; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{slideTitle}}</div>
+          <div style="position: absolute; left: 28px; top: 66px; width: 564px; font-size: 11px; color: #596170; white-space: nowrap">A 커피 요구사항 6개 기준 · 출처 MI 경쟁사 분석</div>
+          <div style="position: absolute; left: 28px; top: 96px; width: 564px; display: flex; flex-direction: column">
+            <div style="display: grid; grid-template-columns: 164px 152px 124px 124px; height: 28px">
+              <div style="display: flex; align-items: center; padding: 0 10px; background: #f5f6f8; font-size: 11px; font-weight: 600; color: #3d4452">비교 항목</div>
+              <div style="{{headStyle}}">삼성 제안</div>
+              <div style="display: flex; align-items: center; padding: 0 10px; background: #f5f6f8; font-size: 11px; font-weight: 600; color: #3d4452">경쟁사 A</div>
+              <div style="display: flex; align-items: center; padding: 0 10px; background: #f5f6f8; font-size: 11px; font-weight: 600; color: #3d4452">경쟁사 B</div>
+            </div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+              <div style="{{r.rowStyle}}">
+                <div style="display: flex; align-items: center; padding: 0 10px; font-size: 11px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden">{{r.label}}</div>
+                <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="3">
+                  <div style="{{c.cellStyle}}">
+                    <sc-if value="{{c.hasDot}}" hint-placeholder-val="{{true}}"><span style="{{c.dotStyle}}"></span></sc-if>
+                    <span style="{{c.txtStyle}}">{{c.txt}}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="position: absolute; left: 28px; top: 324px; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 700; color: #8a91a0">21</div>
+          <div style="position: absolute; right: 28px; top: 324px; font-size: 9.5px; color: #8a91a0">A 커피 프랜차이즈 메뉴보드 제안</div>
+
+          <!-- 선택한 요소 위 미니 툴바 -->
+          <div role="toolbar" aria-label="선택한 행" style="position: absolute; right: 30px; top: 236px; height: 30px; box-sizing: border-box; padding: 0 4px; border-radius: 8px; background: #121417; box-shadow: 0 6px 16px rgba(18,20,23,0.24); display: flex; align-items: center; gap: 2px">
+            <button style="height: 24px; padding: 0 8px; border: none; border-radius: 6px; background: transparent; color: #ffffff; font-size: 11.5px; font-weight: 600; white-space: nowrap">텍스트 수정</button>
+            <button style="height: 24px; padding: 0 8px; border: none; border-radius: 6px; background: transparent; color: #ffffff; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="11" height="11" viewBox="0 0 24 24" fill="#9db4ff"><path d="M12 2l2.2 6.3L20.5 10l-6.3 2.2L12 18.5l-2.2-6.3L3.5 10l6.3-1.7z"/></svg>W로 다시 쓰기</button>
+            <span style="width: 1px; height: 14px; background: #3a3f48"></span>
+            <button aria-label="행 삭제" style="width: 24px; height: 24px; border: none; border-radius: 6px; background: transparent; color: #c5cbd6; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13"/></svg></button>
+          </div>
+        </div>
+
+        <!-- 발표자 노트 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; padding: 11px 14px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="font-size: 12px; font-weight: 600">발표자 노트</span>
+            <span style="font-size: 11.5px; color: #8a91a0">W 작성 · 눌러서 수정</span>
+          </div>
+          <div style="font-size: 12.5px; line-height: 1.6; color: #3d4452">요구사항 R5 '장애 시 빠른 대응'에 답하는 행입니다. 경쟁사 응답 시간은 공개 자료를 찾지 못해 <span style="color: #1428a0; font-weight: 600">[확정 필요]</span>로 두었어요. 수치를 말하기 전에 출처를 먼저 확인하세요.</div>
+        </div>
+
+        <!-- 이 시트 상태 -->
+        <div style="height: 40px; box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 0 12px; display: flex; align-items: center; gap: 8px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.5"/></svg>
+          <span style="font-size: 12.5px; color: #121417; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">이 시트에 확정 필요 1곳 · 6행 유지보수 응답 시간 (삼성 · 경쟁사 A · B)</span>
+          <a href="PR7Q.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">확정 필요 목록</a>
+        </div>
+      </section>
+
+      <!-- 편집 패널 -->
+      <aside aria-label="시트 편집" style="width: 324px; height: 728px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-left: 1px solid #e2e5ea; display: flex; flex-direction: column">
+        <div style="height: 48px; box-sizing: border-box; flex-shrink: 0; padding: 0 16px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between">
+          <span style="font-size: 14px; font-weight: 700">시트 편집</span>
+          <span style="font-size: 12px; color: #596170">21 경쟁 비교</span>
+        </div>
+
+        <!-- 선택한 요소: 텍스트 수정 -->
+        <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
+          <div style="display: flex; align-items: center; gap: 6px">
+            <span style="font-size: 12.5px; font-weight: 600">선택 · 표 6행</span>
+            <span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">방금 추가</span>
+            <span style="flex-grow: 1"></span>
+            <button style="height: 24px; padding: 0 6px; border: none; background: transparent; color: #596170; font-size: 12px">선택 해제</button>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <label for="f-item" style="font-size: 11.5px; color: #596170">비교 항목</label>
+            <div style="height: 36px; box-sizing: border-box; border: 1.5px solid #1428a0; border-radius: 8px; background: #ffffff; display: flex; align-items: center; padding: 0 10px"><input id="f-item" value="유지보수 응답 시간" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <label for="f-s" style="font-size: 11.5px; color: #596170">삼성 제안</label>
+            <div style="height: 36px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; gap: 6px; padding: 0 6px 0 10px"><input id="f-s" value="[00]시간 이내" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none"><span style="height: 20px; padding: 0 6px; border-radius: 4px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">확정 필요</span></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+              <label for="f-a" style="font-size: 11.5px; color: #596170">경쟁사 A</label>
+              <div style="height: 36px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; padding: 0 10px"><input id="f-a" value="[00]시간" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+              <label for="f-b" style="font-size: 11.5px; color: #596170">경쟁사 B</label>
+              <div style="height: 36px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; padding: 0 10px"><input id="f-b" value="[00]시간" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none"></div>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px; padding-top: 2px">
+            <button style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 12px; font-weight: 600">행 삭제</button>
+            <span style="flex-grow: 1"></span>
+            <button style="height: 30px; padding: 0 14px; border-radius: 8px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 600">적용</button>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: #e2e5ea; margin: 0 16px; flex-shrink: 0"></div>
+
+        <!-- 이 시트 다시 만들기 -->
+        <div style="padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <span style="font-size: 12.5px; font-weight: 600">이 시트 다시 만들기</span>
+            <span style="font-size: 11.5px; color: #8a91a0">다른 시트는 그대로</span>
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap">
+            <sc-for list="{{regen}}" as="g" hint-placeholder-count="3">
+              <button aria-pressed="{{g.on}}" style="{{g.style}}">{{g.label}}</button>
+            </sc-for>
+          </div>
+          <div style="display: flex; gap: 8px">
+            <a href="PRS7Layout.dc.html" style="height: 34px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">템플릿 바꾸기</a>
+            <button style="flex-grow: 1; height: 34px; border-radius: 8px; border: none; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg>이 시트 재생성</button>
+          </div>
+          <a href="PRS7.dc.html" style="font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 4px">섹션 전체를 다시 쓰려면 Why Samsung 섹션 열기<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
+        </div>
+
+        <div style="height: 1px; background: #e2e5ea; margin: 0 16px; flex-shrink: 0"></div>
+
+        <!-- W와 대화로 수정 -->
+        <div style="flex-grow: 1; min-height: 0; padding: 12px 16px 16px 16px; display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; overflow: hidden">
+          <div style="align-self: flex-end; max-width: 240px; box-sizing: border-box; padding: 8px 12px; border-radius: 14px 14px 4px 14px; background: #f0f2f5; font-size: 12.5px; line-height: 1.5; color: #121417">비교표에 유지보수 항목 추가해줘</div>
+          <div style="display: flex; gap: 8px">
+            <div style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center">W</div>
+            <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+              <div style="font-size: 12.5px; line-height: 1.55; color: #121417">6행에 '유지보수 응답 시간'을 넣었어요. 경쟁사 값은 <span style="color: #1428a0; font-weight: 600">[확정 필요]</span>로 두었습니다.</div>
+              <a href="PR7V.dc.html" style="font-size: 12px; font-weight: 600">바뀐 곳 보기 · 되돌리기</a>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px">
+            <label for="ask" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">이 시트 수정 요청</label>
+            <div style="flex-grow: 1; height: 40px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 6px; padding: 0 5px 0 10px">
+              <input id="ask" placeholder="이 시트 수정 요청" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+              <button aria-label="보내기" style="width: 28px; height: 28px; border-radius: 7px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 레일: 스크롤 위치는 '유관 사례'부터. [종류, 번호/섹션, 제목, 썸네일, n, 현재, 수정됨, 확정 필요]
+    const R = [
+      ['label', '06 유관 사례', 2],
+      ['sheet', '19', '사례 · 커피 프랜차이즈', 'cases', 3, 0, 0, 1],
+      ['sheet', '20', '사례 · 편의점 체인', 'image2kpi', 3, 0, 0, 0],
+      ['label', '07 Why Samsung', 2],
+      ['sheet', '21', '경쟁 비교', 'tableHl', 3, 1, 1, 1],
+      ['sheet', '22', '삼성 강점', 'pillars', 3, 0, 0, 1],
+      ['label', '08 제품 스펙', 2],
+      ['sheet', '23', '스펙 비교', 'specTable', 3, 0, 0, 1],
+      ['sheet', '24', '제품 상세 · QM55C', 'specGroups', 3, 0, 0, 0]
+    ];
+    const rail = R.map((r) => {
+      if (r[0] === 'label') return { isLabel: true, isSheet: false, title: r[1], count: r[2], no: '', kind: 'table', n: 3, cur: false, edited: false, flag: false, aria: '', rowStyle: '', numStyle: '', wrapStyle: '', titleStyle: '' };
+      const [, no, title, kind, n, cur, edited, flag] = r;
+      return {
+        isLabel: false, isSheet: true, no, title, kind, n, count: '', cur: !!cur, edited: !!edited, flag: !!flag,
+        aria: no + ' ' + title,
+        rowStyle: 'display: flex; align-items: flex-start; gap: 6px; width: 100%; box-sizing: border-box; padding: 6px 4px; border: none; border-radius: 8px; text-align: left;' + (cur ? ' background: #eaeefb;' : ' background: transparent;'),
+        numStyle: 'width: 18px; flex-shrink: 0; padding-top: 2px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700;' + (cur ? ' color: #1428a0;' : ' color: #8a91a0;'),
+        wrapStyle: 'position: relative; width: 120px; height: 68px; border-radius: 6px;' + (cur ? ' box-shadow: 0 0 0 2px #1428a0;' : ''),
+        titleStyle: 'width: 120px; font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (cur ? ' color: #1428a0; font-weight: 600;' : ' color: #3d4452;')
+      };
+    });
+
+    // 21 경쟁 비교 (v1 + 방금 추가한 6행). 셀: [점 f·h·n·'', 텍스트]
+    const cellBase = 'display: flex; align-items: center; gap: 6px; padding: 0 10px; min-width: 0; overflow: hidden;';
+    const dot = (t, sam) => {
+      const b = 'width: 9px; height: 9px; box-sizing: border-box; border-radius: 50%; flex-shrink: 0;';
+      if (t === 'f') return b + ' background: ' + (sam ? '#1428a0' : '#3d4452') + ';';
+      if (t === 'h') return b + ' border: 1.5px solid #3d4452; background: linear-gradient(90deg, #3d4452 50%, #ffffff 50%);';
+      return b + ' border: 1.5px solid #b8bec8; background: #ffffff;';
+    };
+    const ROWS = [
+      ['원격 콘텐츠 배포', ['f', '본사 일괄 배포'], ['f', '일괄 배포'], ['h', '매장별 등록']],
+      ['POS 가격 연동', ['f', '자동 반영'], ['h', '수동 업로드'], ['n', '미지원']],
+      ['사내 서버 · 보안', ['f', '설치형 · 사내망'], ['n', '클라우드 전용'], ['h', '별도 구축']],
+      ['매장 에너지 관리', ['f', 'SmartThings Pro'], ['n', '미지원'], ['n', '미지원']],
+      ['전국 설치 · A/S', ['f', '직영 서비스망'], ['h', '협력사 위탁'], ['h', '협력사 위탁']],
+      ['유지보수 응답 시간', ['', '[00]시간 이내'], ['', '[00]시간'], ['', '[00]시간']]
+    ];
+    const rows = ROWS.map(([label, ...cs], i) => {
+      const sel = i === 5;
+      return {
+        label,
+        rowStyle: 'display: grid; grid-template-columns: 164px 152px 124px 124px; height: 30px; border-bottom: 1px solid #e2e5ea;' + (sel ? ' outline: 1.5px dashed #1428a0; outline-offset: -1px;' : ''),
+        cells: cs.map(([d, txt], j) => {
+          const flagged = txt.indexOf('[') >= 0;
+          return {
+            txt, hasDot: d !== '', dotStyle: d ? dot(d, j === 0) : '',
+            cellStyle: cellBase + (j === 0 ? ' background: #eaeefb;' : ''),
+            txtStyle: 'font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (flagged ? ' color: #1428a0; font-weight: 700;' : j === 0 ? ' color: #121417; font-weight: 600;' : ' color: #3d4452;')
+          };
+        })
+      };
+    });
+
+    const chip = 'height: 28px; padding: 0 10px; border-radius: 999px; font-size: 12px; white-space: nowrap;';
+    const regen = [['같은 템플릿', 1], ['더 간결하게', 1], ['수치 강조', 0]].map(([label, on]) => ({
+      label, on: !!on,
+      style: chip + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 600;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;')
+    }));
+
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6,
+      rail, rows, regen,
+      slideTitle: '운영 · 지원에서 앞서는 삼성',
+      headStyle: 'display: flex; align-items: center; padding: 0 10px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700;'
+    };
+  }
+}
+</script>
+</body>
+</html>

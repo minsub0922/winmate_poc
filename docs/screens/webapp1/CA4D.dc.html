@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 경쟁사 A 상세</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="A 커피 메뉴보드 경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="경쟁사 분석" title="A 커피 메뉴보드 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
+        <a href="CA4.dc.html" style="display: flex; align-items: center; gap: 3px; width: fit-content; font-size: 12.5px; font-weight: 700; color: #1428a0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>한눈에</a>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="width: 36px; height: 36px; border-radius: 10px; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">A</span>
+          <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">경쟁사 A</h1>
+          <span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #f0f2f5; color: #596170; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">국내 대형 가전 · 사이니지</span>
+          <span style="flex-grow: 1"></span>
+          <nav aria-label="경쟁사 전환" style="display: flex; align-items: center; gap: 4px">
+            <span style="font-size: 11.5px; color: #8a91a0; margin-right: 4px">다른 경쟁사</span>
+            <sc-for list="{{others}}" as="s" hint-placeholder-count="4">
+              <a href="CA4D.dc.html" aria-current="{{s.on}}" style="{{s.style}}">{{s.letter}}</a>
+            </sc-for>
+          </nav>
+        </div>
+        <span style="font-size: 14.5px; color: #121417; line-height: 1.5">자체 CMS 기반 풀 라인업 · 500매장 이상은 서버 추가</span>
+      </div>
+
+      <!-- 항목 6개 · 키 - 값 - 출처 -->
+      <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; display: flex; flex-direction: column; flex-shrink: 0; overflow: hidden">
+        <sc-for list="{{facts}}" as="f" hint-placeholder-count="6">
+          <div style="{{f.row}}">
+            <span style="width: 96px; flex-shrink: 0; font-size: 13px; color: #8a91a0">{{f.k}}</span>
+            <sc-if value="{{f.isText}}" hint-placeholder-val="{{true}}">
+              <span style="{{f.vStyle}}">{{f.v}}</span>
+            </sc-if>
+            <sc-if value="{{f.isChips}}" hint-placeholder-val="{{false}}">
+              <div style="flex-grow: 1; min-width: 0; display: flex; gap: 6px; overflow: hidden">
+                <sc-for list="{{f.chips}}" as="p" hint-placeholder-count="3">
+                  <span style="{{p.style}}">{{p.text}}</span>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{f.hasSrc}}" hint-placeholder-val="{{true}}">
+              <span style="flex-shrink: 0; font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{f.src}}</span>
+            </sc-if>
+            <sc-if value="{{f.tbd}}" hint-placeholder-val="{{false}}">
+              <span style="height: 22px; padding: 0 8px; border-radius: 5px; border: 1px dashed #8a91a0; color: #596170; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">확인 필요</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-shrink: 0; font-size: 12px; color: #596170">
+        <span style="white-space: nowrap">출처 5 · 공개 자료 4 · 사내 사례 DB 1 · 수치는 공개 자료로만 채우고, 못 찾은 건 [확인 필요] 로 남겨요</span>
+        <button style="height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">출처 · 근거 보기</button>
+      </div>
+
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+        <a href="CA4.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>뒤로</a>
+        <span style="flex-grow: 1"></span>
+        <button style="height: 48px; box-sizing: border-box; padding: 0 18px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>이 경쟁사 더 찾기</button>
+        <a href="CA5.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">저장 · 보내기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+
+    // 경쟁사 전환 칩: A 가 현재 화면
+    const switchRows = ['A', 'B', 'C', 'D'].map((letter) => {
+      const on = letter === 'A';
+      return {
+        letter, on,
+        style: 'width: 28px; height: 28px; box-sizing: border-box; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #596170;')
+      };
+    });
+
+    // 항목: [키, 값 또는 칩 목록, 출처, 확인 필요]
+    const chip = 'height: 22px; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const F = [
+      ['제품 라인업', '55" 메뉴보드급 · 43" 소형 · 바닥형', '출처 2', false],
+      ['가격대', '[확인 필요]', '', true],
+      ['솔루션', '자체 CMS · 별도 서버 필요', '출처 1', false],
+      ['레퍼런스', '업종 사례 6건 · 수도권 3', '출처 1 · 사내 사례 DB', false],
+      ['최근 동향', '2026.03 신제품 발표 · 55" 라인업 교체', '출처 1', false],
+      ['삼성 대비', [
+        ['우위 3 · 통합 관리 · 전력 · 배포', ' background: #e6f4ee; color: #0b6e4f;'],
+        ['비슷 2 · 라인업 · 밝기', ' background: #f0f2f5; color: #596170;'],
+        ['열위 1 · 수도권 설치 파트너', ' background: #fdf0e6; color: #8a3b00;']
+      ], '', false]
+    ];
+    const facts = F.map(([k, v, src, tbd], i) => {
+      const isChips = Array.isArray(v);
+      return {
+        k, tbd, src, isChips, isText: !isChips, hasSrc: src !== '',
+        v: isChips ? '' : v,
+        chips: isChips ? v.map(([text, c]) => ({ text, style: chip + c })) : [],
+        vStyle: 'flex-grow: 1; min-width: 0; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (tbd ? ' color: #596170;' : ' color: #121417;'),
+        row: 'display: flex; align-items: center; gap: 12px; height: 52px; box-sizing: border-box; padding: 0 20px; color: #121417;' + (i > 0 ? ' border-top: 1px solid #f0f2f5;' : '')
+      };
+    });
+
+    return { steps, cur: 4, others: switchRows, facts };
+  }
+}
+</script>
+</body>
+</html>

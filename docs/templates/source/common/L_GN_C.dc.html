@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>GN-C 공간별 지금 → 제안 시안</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간 시안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">강의실 · 열람실 · 학생식당, 세 공간의 전과 후</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">K 대학교 · 공간별 현장 사진과 생성 시안 · 같은 시점에서 비교</div>
+
+  <!-- 머리 행 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px; height: 30px; font-size: 13px; color: #596170">
+    <span style="position: absolute; left: 0px; top: 0px; line-height: 30px">공간</span>
+    <span style="position: absolute; left: 160px; top: 0px; line-height: 30px">지금 · 현장 사진</span>
+    <span style="position: absolute; left: 444px; top: 0px; line-height: 30px">과제</span>
+    <span style="position: absolute; left: 676px; top: 0px; line-height: 30px; font-weight: 700; color: #1428a0">제안 시안 · AI 생성</span>
+    <span style="position: absolute; left: 964px; top: 0px; line-height: 30px">들어가는 제품</span>
+  </div>
+
+  <!-- 3행 -->
+  <div style="position: absolute; left: 64px; top: 180px; width: 1152px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="position: relative; width: 1152px; height: 160px; box-sizing: border-box; border-top: 1px solid #e2e5ea">
+        <div style="position: absolute; left: 0px; top: 18px; width: 144px; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{r.no}}</span>
+          <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.35">{{r.name}}</span>
+          <span style="font-size: 12px; line-height: 1.5; color: #8a91a0; word-break: keep-all">{{r.where}}</span>
+        </div>
+
+        <div style="position: absolute; left: 160px; top: 6px; width: 264px; height: 148px">
+          <dc-import name="Img" kind="space" origin="site" hint="{{r.nowHint}}" w="264" h="148" radius="10" credit="bl" hint-size="264px,148px"></dc-import>
+        </div>
+
+        <div style="position: absolute; left: 444px; top: 22px; width: 178px; display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{r.issues}}" as="t" hint-placeholder-count="2">
+            <span style="display: flex; gap: 8px; font-size: 13px; line-height: 1.5; color: #3d4452"><span style="width: 5px; height: 5px; margin-top: 8px; flex-shrink: 0; border-radius: 50%; background: #8a91a0"></span><span style="word-break: keep-all">{{t}}</span></span>
+          </sc-for>
+        </div>
+
+        <div style="position: absolute; left: 630px; top: 64px; width: 32px; height: 32px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></div>
+
+        <div style="position: absolute; left: 676px; top: 6px; width: 264px; height: 148px">
+          <dc-import name="Img" kind="insitu" origin="gen" hint="{{r.genHint}}" w="264" h="148" radius="10" credit="bl" hint-size="264px,148px"></dc-import>
+        </div>
+
+        <div style="position: absolute; left: 964px; top: 20px; width: 188px; display: flex; flex-direction: column; align-items: flex-start; gap: 6px">
+          <sc-for list="{{r.prods}}" as="p" hint-placeholder-count="2">
+            <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p}}</span>
+          </sc-for>
+          <span style="margin-top: 2px; font-size: 12px; line-height: 1.5; color: #596170; word-break: keep-all">{{r.effect}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>K 대학교 · 캠퍼스 공간 제안 · 지금 = 고객 현장 사진(2026.09.[00]) · 제안 = AI 생성 시안, 실제와 다를 수 있음</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 행 = 공간 하나: 현장 사진(space · site) → 같은 시점 생성 시안(insitu · gen). 3행 기준, 행 높이 156
+    const R = [
+      ['강의실', '공학관 3층 · [N]개 실',
+        '뒤쪽에서 본 칠판 · 스크린 · 천장',
+        ['판서와 화면이 따로라 뒷자리는 잘 안 보임', '오후 수업 냉방 편차 · 소음'],
+        '같은 시점 · 전자칠판 · 천장 매립 에어컨',
+        ['전자칠판 Flip Pro ×[N]', '시스템에어컨 ×[N]'], '판서 · 자료를 한 화면에'],
+      ['도서관 열람실', '중앙도서관 2층 · [000]석',
+        '입구에서 본 좌석 열 · 종이 배치도',
+        ['빈자리를 찾아 층마다 돌아다님', '자리마다 냉방 바람 편차'],
+        '같은 시점 · 좌석 안내 화면 · 360 카세트',
+        ['좌석 안내 사이니지', '360 카세트 ×[N]'], '빈자리 한눈에 · 바람 고르게'],
+      ['학생식당', '학생회관 · 배식구 [N]곳',
+        '배식구 앞 대기 줄 · 벽 인쇄 메뉴판',
+        ['점심 피크 주문 대기 [00]분', '품절 · 메뉴 변경 안내 지연'],
+        '같은 시점 · 메뉴 화면 3면 · 키오스크',
+        ['메뉴 사이니지 QM55C ×3', '키오스크 KM24C ×2'], '주문 분산 · 품절 즉시 표시']
+    ];
+    const rows = R.map(([name, where, nowHint, issues, genHint, prods, effect], i) => ({
+      no: String(i + 1).padStart(2, '0'), name, where, nowHint, issues, genHint, prods, effect
+    }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

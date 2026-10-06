@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SAC-D 시스템에어컨 제어 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SAC 제어 시스템</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SAC 제어 · 시스템에어컨 제어 시스템</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">관리실 한 곳에서 256대까지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구성도 · 상위 Ethernet → DMS 2.5 → R1/R2 버스 (RS485) → 실외기 → F1/F2 버스 → 호실 실내기</div>
+
+  <!-- 왼쪽 레일: 계층 · 통신선 이름 -->
+  <div style="position: absolute; left: 128px; top: 164px; width: 1px; height: 450px; background: #e2e5ea"></div>
+  <sc-for list="{{rail}}" as="r" hint-placeholder-count="7">
+    <div style="{{r.style}}">{{r.t}}</div>
+  </sc-for>
+
+  <!-- 상위: 관리자 PC · b.IoT Cloud · 기존 BMS -->
+  <sc-for list="{{tops}}" as="t" hint-placeholder-count="3">
+    <div style="{{t.style}}">
+      <div style="{{t.iconBox}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{t.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{t.icon}}"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 3px; white-space: nowrap">
+        <sc-if value="{{t.logo}}" hint-placeholder-val="{{false}}">
+          <img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 로고" style="width: 96px; height: 17px; object-fit: contain; object-position: 0% 50%; display: block">
+        </sc-if>
+        <sc-if value="{{t.text}}" hint-placeholder-val="{{true}}">
+          <span style="font-size: 13.5px; font-weight: 800; line-height: 1.4">{{t.t}}</span>
+        </sc-if>
+        <span style="font-size: 11px; color: #596170">{{t.d}}</span>
+      </div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 242px; top: 223px; font-size: 11px; font-weight: 700; color: #1428a0; white-space: nowrap">웹 · 원격 제어</div>
+  <div style="position: absolute; left: 458px; top: 223px; font-size: 11px; font-weight: 700; color: #1428a0; white-space: nowrap">클라우드 연결</div>
+  <div style="position: absolute; left: 540px; top: 219px; height: 24px; display: flex; align-items: center; gap: 5px; font-size: 11px; color: #596170; white-space: nowrap"><img src="/_blob/5750215a6f546f3b2d1f1ef4e0ee1dbe" alt="링크 컨트롤러 AIM-B30N" style="width: 30px; height: 23px; object-fit: contain; display: block">또는 링크 컨트롤러</div>
+  <div style="position: absolute; left: 710px; top: 223px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #1428a0; white-space: nowrap">BACnet IP</div>
+
+  <!-- 관리: DMS 2.5 (BMS 연동 시 BACnet 게이트웨이) -->
+  <div style="position: absolute; left: 136px; top: 248px; width: 676px; height: 70px; box-sizing: border-box; border-radius: 14px; background: #1428a0; color: #ffffff">
+    <div style="position: absolute; left: 8px; top: 6px; width: 54px; height: 58px; border-radius: 9px; overflow: hidden; background: #f2f3f5">
+      <img src="/_blob/c4f218ab65683afc48e0812d2719437f" alt="DMS 2.5 AIM-D01AN 본체" style="position: absolute; left: 2px; top: 2px; width: 50px; height: 54px; object-fit: contain">
+    </div>
+    <div style="position: absolute; left: 72px; top: 12px; display: flex; flex-direction: column; gap: 1px; white-space: nowrap">
+      <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; line-height: 26px">DMS 2.5</span>
+      <span style="font-size: 11.5px; color: #c8d3ff"><span style="font-family: Manrope, sans-serif">AIM-D01AN</span> · 웹서버 내장</span>
+    </div>
+    <div style="position: absolute; left: 218px; top: 8px; display: flex; flex-direction: column; gap: 6px">
+      <sc-for list="{{dmsRows}}" as="row" hint-placeholder-count="2">
+        <div style="display: flex; gap: 6px">
+          <sc-for list="{{row}}" as="c" hint-placeholder-count="2">
+            <span style="height: 24px; padding: 0 8px; border-radius: 7px; background: rgba(255,255,255,0.14); font-size: 11px; display: flex; align-items: center; white-space: nowrap">{{c}}</span>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+    <div style="position: absolute; left: 448px; top: 8px; width: 220px; height: 54px; box-sizing: border-box; border-radius: 10px; background: rgba(255,255,255,0.12); border: 1px dashed rgba(255,255,255,0.55); padding: 0 12px; display: flex; flex-direction: column; justify-content: center; white-space: nowrap">
+      <span style="font-size: 12.5px; font-weight: 800; line-height: 17px">또는 BACnet 게이트웨이</span>
+      <span style="font-size: 11px; line-height: 15px; color: #c8d3ff"><span style="font-family: Manrope, sans-serif">AIM-B17BN</span> · BMS 연동 시</span>
+      <span style="font-size: 11px; line-height: 15px; color: #c8d3ff">DMS 2.5 기능 포함</span>
+    </div>
+  </div>
+
+  <!-- RS485 포트 (채널 1~5) -->
+  <sc-for list="{{ports}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.style}}">{{p.n}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 274px; top: 322px; font-size: 11.5px; color: #596170; white-space: nowrap">RS485 채널 1~5 · 최대 1,000m · 채널 1만 표시</div>
+
+  <!-- 선 · 접점 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="30">
+    <div style="{{w}}"></div>
+  </sc-for>
+
+  <!-- R1/R2 버스에 걸린 기기 -->
+  <sc-for list="{{drops}}" as="d" hint-placeholder-count="6">
+    <div style="{{d.style}}">
+      <span style="font-size: 13.5px; font-weight: 800; line-height: 19px; white-space: nowrap">{{d.t}}</span>
+      <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; line-height: 16px; color: #1428a0; white-space: nowrap">{{d.code}}</span>
+      <span style="font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{d.d}}</span>
+      <sc-if value="{{d.fan}}" hint-placeholder-val="{{false}}">
+        <div style="position: absolute; right: 12px; top: 19px; width: 26px; height: 26px; box-sizing: border-box; border-radius: 50%; border: 2px solid #121417; display: flex; align-items: center; justify-content: center"><div style="width: 8px; height: 8px; border-radius: 50%; background: #121417"></div></div>
+      </sc-if>
+      <sc-for list="{{d.thumbs}}" as="th" hint-placeholder-count="1">
+        <div style="{{th.wrap}}">
+          <img src="{{th.src}}" alt="{{th.alt}}" style="position: absolute; object-fit: contain; {{th.st}}">
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <!-- 계량기 -->
+  <sc-for list="{{meters}}" as="m" hint-placeholder-count="2">
+    <div style="{{m.style}}">
+      <div style="{{m.well}}">
+        <sc-for list="{{m.thumbs}}" as="th" hint-placeholder-count="2">
+          <div style="{{th.wrap}}">
+            <img src="{{th.src}}" alt="{{th.alt}}" style="position: absolute; object-fit: contain; {{th.st}}">
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; font-weight: 800; line-height: 17px">{{m.t}}</span><span style="font-size: 11px; line-height: 15px; color: #596170">{{m.d}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- F1/F2 버스 · 호실 -->
+  <div style="position: absolute; left: 232px; top: 500px; font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap">F1/F2 · 실내외기 통신 — 호실마다 실내기 + 유선리모컨</div>
+  <sc-for list="{{rooms}}" as="r" hint-placeholder-count="6">
+    <div style="{{r.style}}">
+      <div style="display: flex; align-items: center; gap: 5px; height: 22px">
+        <span style="font-size: 13px; font-weight: 800; white-space: nowrap; color: {{r.color}}">{{r.t}}</span>
+        <span style="flex-grow: 1"></span>
+        <sc-if value="{{r.glyph}}" hint-placeholder-val="{{true}}">
+          <span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 3px; border: 2px solid #1428a0; display: flex; align-items: center; justify-content: center"><span style="width: 6px; height: 6px; border-radius: 1px; background: #1428a0"></span></span>
+          <img src="/_blob/99bb1b59cc337f7f8d2eed6fed537a92" alt="통합 유선리모컨 AWR-WE13N" style="width: 21px; height: 22px; object-fit: contain; display: block">
+        </sc-if>
+        <sc-if value="{{r.fcu}}" hint-placeholder-val="{{false}}">
+          <img src="/_blob/32f45fb432862afe6a58d479993eafdb" alt="FCU 360 카세트" style="width: 28px; height: 22px; object-fit: contain; mix-blend-mode: multiply; display: block">
+        </sc-if>
+      </div>
+      <span style="font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{r.d}}</span>
+    </div>
+  </sc-for>
+
+  <!-- DMS 2.5 범위 카드 -->
+  <div style="position: absolute; left: 848px; top: 164px; width: 368px; height: 156px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff">
+    <div style="position: absolute; left: 16px; top: 13px; width: 336px; display: flex; align-items: baseline; justify-content: space-between; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">DMS 2.5 한 대가 맡는 범위</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #8a91a0">AIM-D01AN</span></div>
+    <div style="position: absolute; left: 16px; top: 42px; width: 336px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0px">
+      <sc-for list="{{spec}}" as="s" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 30px; letter-spacing: -0.02em; color: #1428a0">{{s.n}}</span><span style="font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.l}}</span></div>
+      </sc-for>
+    </div>
+    <div style="position: absolute; left: 16px; top: 100px; width: 336px; height: 1px; background: #e2e5ea"></div>
+    <div style="position: absolute; left: 16px; top: 110px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap">채널당 실외기 16대 · 합계 80대 · 신 · 구형 실외기 호환</div>
+    <div style="position: absolute; left: 16px; top: 129px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 600; line-height: 15px; color: #8a91a0; white-space: nowrap">DVM · CAC · ERV · AHU · GHP · DVM Chiller · FCU</div>
+  </div>
+
+  <!-- 카탈로그 구성도 인셋 -->
+  <div style="position: absolute; left: 1046px; top: 462px; width: 170px; height: 186px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 1058px; top: 470px; font-size: 11.5px; font-weight: 800; line-height: 17px; white-space: nowrap">카탈로그 구성도</div>
+  <img src="/_blob/b6df9d6d807a946ad08e1b15baf079e3" alt="카탈로그의 DMS 중심 시스템에어컨 제어 구성도" style="position: absolute; left: 1054px; top: 493px; width: 154px; height: 97px; object-fit: contain; border-radius: 6px">
+  <div style="position: absolute; left: 1058px; top: 597px; width: 150px; display: flex; flex-direction: column; font-size: 10.5px; line-height: 15px; color: #596170; white-space: nowrap"><span>DMS → SIM · 에너지 미터</span><span>전력감시 · 디맨드 · 에어컨</span></div>
+
+  <div style="position: absolute; left: 136px; top: 627px; font-size: 12px; color: #8a91a0; white-space: nowrap">기기 · 호실 · 채널 배분은 도면 확인 후 반영 · 채널 2~5도 같은 방식</div>
+
+  <!-- 범례 (가로) -->
+  <div style="position: absolute; left: 538px; top: 624px; height: 22px; display: flex; align-items: center; gap: 14px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <span style="font-size: 11.5px; font-weight: 800; color: #121417">범례</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 2px; flex-shrink: 0; background: #1428a0"></span>Ethernet · 상위</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 3px; flex-shrink: 0; background: #121417"></span>R1/R2 · 제어기</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 3px; flex-shrink: 0; background: #8a91a0"></span>F1/F2 · 실내외기</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 0px; flex-shrink: 0; border-top: 2px dashed #596170"></span>계량 신호</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>G 임대형 오피스 빌딩 · 냉난방 제어 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const BLUE = '#1428a0', INK = '#121417', GRAY = '#8a91a0', METER = '#596170';
+    const h = (x1, x2, y, c, t) => A + 'left: ' + px(x1) + 'top: ' + px(y - Math.floor(t / 2)) + 'width: ' + px(x2 - x1) + 'height: ' + px(t) + 'background: ' + c + ';';
+    const v = (x, y1, y2, c, t) => A + 'left: ' + px(x - Math.floor(t / 2)) + 'top: ' + px(y1) + 'width: ' + px(t) + 'height: ' + px(y2 - y1) + 'background: ' + c + ';';
+    const vDash = (x, y1, y2, c) => A + 'left: ' + px(x - 1) + 'top: ' + px(y1) + 'width: 0px; height: ' + px(y2 - y1) + 'border-left: 2px dashed ' + c + ';';
+    const dot = (x, y, d, c) => A + 'left: ' + px(x - d / 2) + 'top: ' + px(y - d / 2) + 'width: ' + px(d) + 'height: ' + px(d) + 'border-radius: 50%; background: ' + c + '; border: 2px solid #ffffff;';
+
+    // ---- 왼쪽 레일 (x 64–124) ----
+    const railKr = (t, y) => ({ t, style: A + 'left: 64px; top: ' + px(y) + 'width: 60px; font-size: 12px; font-weight: 700; line-height: 18px; color: #596170; white-space: nowrap;' });
+    const railBus = (t, y, c) => ({ t, style: A + 'left: 64px; top: ' + px(y) + 'width: 60px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 17px; color: ' + c + '; white-space: nowrap;' });
+    const railSub = (t, y) => ({ t, style: A + 'left: 64px; top: ' + px(y) + 'width: 60px; font-size: 10.5px; line-height: 15px; color: #8a91a0; white-space: nowrap;' });
+    const rail = [
+      railKr('상위', 180),
+      railBus('Ethernet', 223, BLUE),
+      railKr('관리', 274),
+      railBus('R1/R2', 336, INK), railSub('RS485', 353),
+      railKr('제어 · 계량', 399),
+      railBus('F1/F2', 514, GRAY), railSub('실내외기', 531),
+      railKr('호실', 575)
+    ];
+
+    // ---- 상위 박스 (y 164–214) ----
+    const T = [
+      ['관리자 PC', '웹 브라우저', 136, 196, 'M3 4h18v12H3z M8 20h8 M12 16v4', false],
+      ['b.IoT Cloud', 'Cloud · 원격 관리', 352, 196,'M7 18a5 5 0 0 1-.5-10A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z', true],
+      ['기존 BMS', '빌딩 자동제어', 592, 220, 'M4 21V4h10v17 M14 9h6v12 M2 21h20 M8 8h2 M8 12h2 M8 16h2', false]
+    ];
+    const tops = T.map(([t, d, x, w, icon, blue]) => ({
+      t, d, icon,
+      logo: blue,
+      text: !blue,
+      stroke: blue ? BLUE : INK,
+      iconBox: 'width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: ' + (blue ? '#eaeefb' : '#f5f6f8') + ';',
+      style: A + 'left: ' + px(x) + 'top: 164px; width: ' + px(w) + 'height: 50px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 12px; display: flex; align-items: center; gap: 10px;'
+    }));
+
+    // ---- DMS 기능 칩 ----
+    const dmsRows = [['스케줄 · 존 편집', '관리자 사용 제한'], ['전력량 분배 (옵션)', '피크 제어 (옵션)']];
+
+    // ---- RS485 포트 (DMS 아래, x 150 + 24k) ----
+    const ports = [1, 2, 3, 4, 5].map((n, k) => ({
+      n,
+      style: A + 'left: ' + px(150 + k * 24) + 'top: 318px; width: 18px; height: 12px; border-radius: 0 0 3px 3px; font-family: Manrope, sans-serif; font-size: 9px; font-weight: 800; line-height: 10px; display: flex; align-items: center; justify-content: center; ' + (k === 0 ? 'background: #121417; color: #ffffff;' : 'background: #ffffff; border: 1.5px solid #121417; border-top: 0; color: #121417;')
+    }));
+
+    // ---- 좌표 ----
+    const BUS1 = 352, DROP_T = 376, DROP_H = 64, BUS2 = 530, ROOM_T = 554;
+    const dropX = (i) => 136 + i * 182;       // 폭 166
+    const dropC = (i) => dropX(i) + 83;
+    const roomX = (i) => 136 + i * 151;       // 폭 138
+    const roomC = (i) => roomX(i) + 69;
+
+    const wires = [];
+    // Ethernet (상위 → DMS)
+    [234, 450, 702].forEach((x) => wires.push(v(x, 214, 248, BLUE, 2)));
+    // 채널 1 → R1/R2 버스, 채널 2~5 스텁
+    wires.push(v(159, 330, BUS1, INK, 2));
+    [183, 207, 231, 255].forEach((x) => wires.push(vDash(x, 330, 340, GRAY)));
+    // R1/R2 버스
+    wires.push(h(158, dropC(5) + 1, BUS1, INK, 3));
+    for (let i = 0; i < 6; i++) {
+      wires.push(v(dropC(i), BUS1, DROP_T, INK, 2));
+      wires.push(dot(dropC(i), BUS1, 10, INK));
+    }
+    wires.push(dot(159, BUS1, 10, INK));
+    // 계량 신호 (SIM · PIM → 계량기)
+    [3, 4].forEach((i) => wires.push(vDash(dropC(i), DROP_T + DROP_H, 462, METER)));
+    // 실외기 → F1/F2 버스
+    wires.push(v(dropC(0), DROP_T + DROP_H, BUS2, GRAY, 2));
+    wires.push(h(roomC(0), roomC(5) + 1, BUS2, GRAY, 3));
+    wires.push(dot(dropC(0), BUS2, 10, GRAY));
+    for (let i = 0; i < 6; i++) {
+      wires.push(v(roomC(i), BUS2, ROOM_T, GRAY, 2));
+      wires.push(dot(roomC(i), BUS2, 8, GRAY));
+    }
+
+    // ---- 실제 제품 · 카탈로그 이미지 썸네일 ----
+    const IMG = {
+      touch: '/_blob/56e937b702b293adaa073b70c2937a50',
+      onoff: '/_blob/760a1087c670c4364c202a1415aa46ed',
+      diagram: '/_blob/b6df9d6d807a946ad08e1b15baf079e3'
+    };
+    // 일반 썸네일: 래퍼 = 이미지 크기
+    const thumb = (src, alt, right, top, w, h, extra) => ({
+      src, alt,
+      wrap: A + 'right: ' + px(right) + 'top: ' + px(top) + 'width: ' + px(w) + 'height: ' + px(h) + 'overflow: hidden;',
+      st: 'left: 0px; top: 0px; width: ' + px(w) + 'height: ' + px(h) + (extra || '')
+    });
+    // 카탈로그 구성도(1100×690)에서 영역 [sx, sy, sw, sh]만 잘라 h 높이로
+    const crop = (alt, sx, sy, sw, sh, h, wrapPos) => {
+      const s = h / sh, w = Math.round(sw * s);
+      return {
+        src: IMG.diagram, alt,
+        wrap: A + wrapPos + 'width: ' + px(w) + 'height: ' + px(h) + 'overflow: hidden;',
+        st: 'left: ' + px(Math.round(-sx * s * 10) / 10) + 'top: ' + px(Math.round(-sy * s * 10) / 10) + 'width: ' + px(Math.round(1100 * s * 10) / 10) + 'height: ' + px(Math.round(690 * s * 10) / 10)
+      };
+    };
+
+    // ---- R1/R2 기기 ----
+    const D = [
+      ['실외기 ×[0]', '채널당 최대 16대', 'F1/F2 → 실내기', 'odu', []],
+      ['터치제어기', 'ACM-A300BN', '128대 · 존 50', 'ctl', [thumb(IMG.touch, '터치제어기 ACM-A300BN', 8, 13, 56, 38)]],
+      ['On/Off 제어기', 'ACM-A202DN', '16 그룹 · 128대', 'ctl', [thumb(IMG.onoff, 'On/Off 제어기 ACM-A202DN', 10, 15, 46, 33)]],
+      ['SIM 중계기', '적산 전력', '전력량계 최대 8대', 'relay', [crop('카탈로그 구성도의 SIM 중계기', 82, 402, 58, 72, 44, 'right: 10px; top: 10px; ')]],
+      ['PIM 중계기', '펄스식 계량', '가스 · 수도 등 8대', 'relay', []],
+      ['전력감시 중계기', '피크 레벨 판단', '디맨드 컨트롤러 없이', 'relay', [crop('카탈로그 구성도의 전력감시 중계기', 484, 402, 68, 88, 40, 'right: 8px; top: 12px; ')]]
+    ];
+    const skin = {
+      odu: 'background: #ffffff; border: 1.5px solid #121417;',
+      ctl: 'background: #ffffff; border: 1px solid #d5d9e0;',
+      relay: 'background: #f5f6f8;'
+    };
+    const drops = D.map(([t, code, d, kind, thumbs], i) => ({
+      t, code, d, fan: kind === 'odu', thumbs,
+      style: A + 'left: ' + px(dropX(i)) + 'top: ' + px(DROP_T) + 'width: 166px; height: ' + px(DROP_H) + 'border-radius: 10px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; ' + skin[kind]
+    }));
+
+    // ---- 계량기 (SIM · PIM 아래) ----
+    // 카탈로그 에너지 미터: 가스 x 52–98 · 전력 x 101–134 · 수도(유량) x 136–186, y 549–620
+    const meters = [
+      { t: '전력량계 ×[0]', d: '적산 전력 계량', i: 3, ww: 20,
+        thumbs: [crop('카탈로그 구성도의 전력량계', 101, 549, 33, 71, 36, 'left: 1px; top: 2px; ')] },
+      { t: '가스 · 수도', d: '펄스식 계량 ×[0]', i: 4, ww: 50,
+        thumbs: [crop('카탈로그 구성도의 가스 계량기', 52, 549, 46, 71, 36, 'left: 0px; top: 2px; '), crop('카탈로그 구성도의 수도 유량계', 136, 549, 50, 71, 36, 'left: 24px; top: 2px; ')] }
+    ].map((m) => Object.assign(m, {
+      well: 'position: relative; flex-shrink: 0; width: ' + px(m.ww) + 'height: 40px; border-radius: 6px; overflow: hidden; background: #f2f3f5;',
+      style: A + 'left: ' + px(dropX(m.i)) + 'top: 462px; width: 166px; height: 44px; border-radius: 10px; border: 1px solid #d5d9e0; background: #ffffff; padding: 0 10px; display: flex; align-items: center; gap: 8px;'
+    }));
+
+    // ---- 호실 (F1/F2 드롭) ----
+    const R = [
+      ['호실 101', '실내기 + 유선리모컨', 'room'],
+      ['호실 102', '실내기 + 유선리모컨', 'room'],
+      ['호실 103 …', '같은 구성 반복', 'more'],
+      ['호실 1[00]', '실내기 + 유선리모컨', 'room'],
+      ['ERV ×[0]', 'ERV 중계기', 'dev'],
+      ['FCU ×[00]', 'FCU 중계기 · 16대', 'dev']
+    ];
+    const roomSkin = {
+      room: 'background: #ffffff; border: 1px solid #d5d9e0;',
+      more: 'background: #ffffff; border: 1px dashed #b8bec8;',
+      dev: 'background: #f5f6f8;'
+    };
+    const rooms = R.map(([t, d, kind], i) => ({
+      t, d,
+      glyph: kind === 'room',
+      fcu: i === 5,
+      color: kind === 'more' ? '#8a91a0' : '#121417',
+      style: A + 'left: ' + px(roomX(i)) + 'top: ' + px(ROOM_T) + 'width: 138px; height: 60px; border-radius: 10px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 4px; ' + roomSkin[kind]
+    }));
+
+    const spec = [
+      { n: '256', l: '실내기' },
+      { n: '80', l: '실외기' },
+      { n: '5', l: 'RS485 채널' },
+      { n: '128', l: '채널당 실내기' }
+    ];
+
+    return { rail, tops, dmsRows, ports, wires, drops, meters, rooms, spec };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-MF-E 제조 · 물류 · 현장 · 공간 시나리오 · 야외 작업장 · 설비 구역</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">야외 작업장 · 설비 구역 · 이용자별</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">흩어진 야외 현장도 세 사람이 한 안전망으로 지킵니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">④ 야외 작업장 · 설비 구역 — 작업자 · 안전관리자 · 관제실, 같은 구성에서 세 사람이 얻는 것</div>
+
+  <!-- 위 띠: 공간 사진 + 공간 성격 · 구성 -->
+  <img src="/_blob/e8acf7e984f3f6cbe95ba2602017f6fd" alt="야외 작업자 손목 위 갤럭시 워치에 위험 경고 알림이 뜬 모습" style="position: absolute; left: 64px; top: 156px; width: 368px; height: 140px; object-fit: cover; object-position: 50% 45%; border-radius: 14px">
+  <div style="position: absolute; left: 76px; top: 168px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #1428a0">④</span><span style="font-size: 12px; font-weight: 800">야외 작업장 · 설비 구역</span></div>
+  <div style="position: absolute; left: 76px; top: 268px; height: 18px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+
+  <div style="position: absolute; left: 456px; top: 156px; width: 760px; height: 140px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 476px; top: 170px; height: 24px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em">야외 작업장 · 설비 구역</span><span style="font-size: 12px; color: #596170">야적장 · 유틸리티 · 배관 랙</span></div>
+  <div style="position: absolute; left: 476px; top: 198px; width: 720px; height: 20px; font-size: 13.5px; line-height: 20px; color: #3d4452; white-space: nowrap">넓고 흩어진 고위험 구역 — 혼자 일하는 시간이 길고, 날씨 · 협력사 인원이 매일 바뀝니다</div>
+  <div style="position: absolute; left: 476px; top: 230px; height: 14px; font-size: 10.5px; font-weight: 800; line-height: 14px; letter-spacing: 0.04em; color: #8a91a0; white-space: nowrap">이 공간의 구성</div>
+  <sc-for list="{{kitRows}}" as="r" hint-placeholder-count="2">
+    <div style="{{r.style}}">
+      <span style="width: 40px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: #596170">{{r.label}}</span>
+      <sc-for list="{{r.chips}}" as="c" hint-placeholder-count="4">
+        <span style="{{c.style}}">{{c.t}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 1060px; top: 230px; width: 1px; height: 52px; background: #d5d9e0"></div>
+  <sc-for list="{{scale}}" as="q" hint-placeholder-count="2">
+    <div style="{{q.style}}"><span style="font-size: 11px; color: #596170">{{q.l}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800; color: #121417">{{q.v}}</span></div>
+  </sc-for>
+
+  <!-- 본문: 세 사람 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.box}}"></div>
+    <div style="{{c.iconBox}}">
+      <sc-if value="{{c.isWorker}}" hint-placeholder-val="{{true}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 10a6.5 6.5 0 0 1 13 0"></path><path d="M3.5 10h17"></path><path d="M8 10.5a4 4 0 0 0 8 0"></path><path d="M5 21a7 7 0 0 1 14 0"></path></svg>
+      </sc-if>
+      <sc-if value="{{c.isManager}}" hint-placeholder-val="{{false}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M15.5 11l2 2 4-4"></path></svg>
+      </sc-if>
+      <sc-if value="{{c.isControl}}" hint-placeholder-val="{{false}}">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M9 20h6M12 16v4"></path><path d="M6.5 10h2.5l1.5-2.5 2 5 1.5-2.5h3.5"></path></svg>
+      </sc-if>
+    </div>
+    <div style="{{c.roleStyle}}">{{c.role}}</div>
+    <div style="{{c.sitStyle}}">{{c.sit}}</div>
+    <div style="{{c.kindStyle}}">{{c.kind}}</div>
+    <sc-for list="{{c.rows}}" as="r" hint-placeholder-count="3">
+      <div style="{{r.rule}}"></div>
+      <div style="{{r.labStyle}}">{{r.lab}}</div>
+    </sc-for>
+    <div style="{{c.m1Style}}">{{c.m1}}</div>
+    <div style="{{c.m2Style}}">{{c.m2}}</div>
+    <div style="{{c.solRow}}">
+      <sc-for list="{{c.sols}}" as="s" hint-placeholder-count="2">
+        <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.t}}</span>
+      </sc-for>
+    </div>
+    <div style="{{c.actStyle}}">{{c.act}}</div>
+    <div style="{{c.devStyle}}">{{c.dev}}</div>
+    <div style="{{c.valBox}}"></div>
+    <div style="{{c.valLab}}">가치</div>
+    <div style="{{c.valStyle}}">{{c.val}}</div>
+    <div style="{{c.klStyle}}">{{c.kl}}</div>
+    <div style="{{c.kvStyle}}">{{c.kv}}</div>
+  </sc-for>
+
+  <!-- 하단 띠 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; border-radius: 10px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 612px; height: 38px; display: flex; align-items: center; gap: 12px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">세 사람 · 하나의 구성</span>
+    <span style="width: 1px; height: 14px; background: #d5d9e0"></span>
+    <span style="font-size: 12.5px; color: #3d4452">워치 경보 · 작업자 위치 · 현장 공지가 같은 안전 관제 화면에서 출발하고, 기록도 한 곳에 남습니다</span>
+  </div>
+  <div style="position: absolute; right: 82px; top: 624px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 공장 · 현장 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const B = '#1428a0';
+    const NW = 'white-space: nowrap; ';
+    const CHIP = 'height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; ' + NW;
+
+    // 이 공간의 구성 — 솔루션 · 제품
+    const KR = [
+      ['솔루션', ['안전 관제 · SmartThings Pro', 'Knox Configure', 'MagicINFO'], true],
+      ['제품', ['갤럭시 워치 · 전용 에디션', '갤럭시 탭 액티브', '실외용 스마트 사이니지 OH55C', '관제 모니터'], false]
+    ];
+    const kitRows = KR.map(([label, chips, sol], i) => ({
+      label,
+      style: box(476, 248 + i * 24, 720, 22) + 'display: flex; align-items: center; gap: 5px; ' + NW,
+      chips: chips.map((t) => ({ t, style: CHIP + (sol ? 'background: #eaeefb; color: ' + B + ';' : 'background: #ffffff; border: 1px solid #b8bec8; color: #121417;') }))
+    }));
+
+    // 세 사람 — 카드 x 64 / 456 / 848, y 312–600
+    const P = [
+      { k: 'worker', role: '현장 작업자', sit: '협력사 인원 · 처음 투입된 구역', kind: '현장 사용자',
+        m1: '처음 온 넓은 구역 — 어디가 위험하고,', m2: '일이 생기면 누구를 불러야 할지 모른다',
+        sols: ['안전 관제 · SmartThings Pro'], act: '워치가 곧 연락망 — 버튼 한 번에 관제실 호출',
+        dev: '갤럭시 워치 · 전용 에디션 · 출입 시 지급',
+        val: '첫날부터 같은 안전망 안에서', kl: '미착용 투입', kv: '[0]건' },
+      { k: 'manager', role: '안전관리자', sit: '고위험 작업 시작 전 · 순회 중', kind: '운영 · 현장',
+        m1: '화기 · 고소 작업 허가 전, 투입 인원의 워치', m2: '착용과 상태를 현장에서 직접 확인한다',
+        sols: ['안전 관제', 'Knox Configure'], act: '구역별 인원 · 착용 · 경보 현황을 탭 한 화면에',
+        dev: '갤럭시 탭 액티브 · 안전 앱만 여는 전용 모드',
+        val: '허가 전 확인을 화면 한 장으로', kl: '작업 전 확인', kv: '[0]분 → [0]분' },
+      { k: 'control', role: '통합 관제실', sit: '강풍 · 폭염 경보가 뜬 날', kind: '운영 · 관제',
+        m1: '구역마다 흩어진 작업자에게 작업 중지 · 대피를', m2: '빠짐없이, 한 번에 알려야 한다',
+        sols: ['안전 관제', 'MagicINFO'], act: '워치로 개인 경보, 구역 입구 사이니지에 같은 공지',
+        dev: '관제 모니터 · 실외용 사이니지 OH55C',
+        val: '경보가 사람과 구역에 동시에', kl: '전 구역 공지', kv: '[00]분 → [0]분' }
+    ];
+    const RL = [['이 공간에서', 72], ['움직이는 것', 128], ['쓰는 기기', 190]];
+    const cards = P.map((p, i) => {
+      const x = 64 + i * 392, y = 312, w = 368;
+      const op = i > 0;
+      return {
+        role: p.role, sit: p.sit, kind: p.kind, m1: p.m1, m2: p.m2, act: p.act, dev: p.dev, val: p.val, kl: p.kl, kv: p.kv,
+        isWorker: p.k === 'worker', isManager: p.k === 'manager', isControl: p.k === 'control',
+        sols: p.sols.map((t) => ({ t })),
+        box: box(x, y, w, 288) + 'box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid ' + (op ? '#d5d9e0' : '#b8bec8') + ';',
+        iconBox: box(x + 16, y + 14, 40, 40) + 'box-sizing: border-box; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center;',
+        roleStyle: box(x + 66, y + 14, 200, 22) + 'font-size: 15.5px; font-weight: 800; line-height: 22px; ' + NW,
+        sitStyle: box(x + 66, y + 37, 280, 17) + 'font-size: 12px; line-height: 17px; color: #596170; ' + NW,
+        kindStyle: A + 'right: ' + px(1280 - (x + w - 16)) + 'top: ' + px(y + 16) + 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10px; font-weight: 700; display: flex; align-items: center; ' + NW
+          + (op ? 'background: #121417; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #596170;'),
+        rows: RL.map(([lab, dy]) => ({
+          lab,
+          rule: box(x + 16, y + dy - 10, w - 32, 1) + 'background: #e2e5ea;',
+          labStyle: box(x + 16, y + dy + 1, 64, 16) + 'font-size: 10.5px; font-weight: 700; line-height: 16px; color: #8a91a0; ' + NW
+        })),
+        m1Style: box(x + 86, y + 72, 268, 18) + 'font-size: 12.5px; line-height: 18px; color: #121417; ' + NW,
+        m2Style: box(x + 86, y + 90, 268, 18) + 'font-size: 12.5px; line-height: 18px; color: #121417; ' + NW,
+        solRow: box(x + 86, y + 127, 268, 20) + 'display: flex; align-items: center; gap: 4px; ' + NW,
+        actStyle: box(x + 86, y + 151, 268, 18) + 'font-size: 12px; line-height: 18px; color: #3d4452; ' + NW,
+        devStyle: box(x + 86, y + 190, 268, 18) + 'font-size: 12.5px; font-weight: 700; line-height: 18px; ' + NW,
+        valBox: box(x + 10, y + 222, w - 20, 56) + 'border-radius: 10px; background: #eaeefb;',
+        valLab: box(x + 22, y + 230, 60, 15) + 'font-size: 10.5px; font-weight: 700; line-height: 15px; color: #596170; ' + NW,
+        valStyle: box(x + 22, y + 247, 196, 22) + 'font-size: 13.5px; font-weight: 800; line-height: 22px; ' + NW,
+        klStyle: box(x + w - 172, y + 230, 150, 15) + 'font-size: 10.5px; line-height: 15px; color: #596170; text-align: right; ' + NW,
+        kvStyle: box(x + w - 172, y + 245, 150, 26) + "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 17px; font-weight: 800; line-height: 26px; letter-spacing: -0.01em; color: " + B + '; text-align: right; ' + NW
+      };
+    });
+
+    const scale = [['작업 구역', '[00]곳'], ['하루 투입', '[000]명']].map(([l, v], i) => ({
+      l, v, style: box(1076, 232 + i * 26, 124, 22) + 'display: flex; align-items: center; justify-content: space-between; ' + NW
+    }));
+
+    return { kitRows, cards, scale };
+  }
+}
+</script>
+</body>
+</html>

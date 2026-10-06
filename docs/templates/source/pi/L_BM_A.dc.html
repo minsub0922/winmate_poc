@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BM-A 전체 구성표</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">320개 매장 전체 구성 — 하드웨어 · 소프트웨어 · 서비스</div>
+
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: flex; flex-direction: column; font-size: 13px">
+    <!-- 헤더 -->
+    <div style="display: flex; height: 36px; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="width: 120px; flex-shrink: 0; box-sizing: border-box; padding-left: 12px; display: flex; align-items: center">구분</span>
+      <div style="flex-grow: 1; display: grid; grid-template-columns: 170px minmax(0, 1fr) 72px 96px 120px 170px; column-gap: 16px; padding-right: 12px; align-items: center">
+        <span>품목</span><span>모델 · 사양</span><span style="text-align: right">매장당</span><span style="text-align: right">매장 수</span><span style="text-align: right">총 수량</span><span>비고</span>
+      </div>
+    </div>
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="3">
+      <!-- 그룹: 구분 셀이 품목 행 전체를 묶음 -->
+      <div style="display: flex">
+        <div style="width: 120px; flex-shrink: 0; box-sizing: border-box; padding: 8px 0 0 12px; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 14px; font-weight: 800">{{g.name}}</span><span style="font-size: 11.5px; color: #8a91a0">{{g.count}}</span></div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column">
+          <sc-for list="{{g.items}}" as="r" hint-placeholder-count="3">
+            <div style="{{r.rowStyle}}">
+              <span style="font-weight: 700">{{r.item}}</span>
+              <span style="white-space: nowrap; overflow: hidden"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{r.model}}</span><span style="{{r.specStyle}}">{{r.spec}}</span></span>
+              <span style="text-align: right; font-family: Manrope, sans-serif; font-weight: 700">{{r.per}}</span>
+              <span style="text-align: right; font-family: Manrope, sans-serif; font-weight: 600"><span style="color: #b8bec8; padding-right: 6px">×</span>{{r.stores}}</span>
+              <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0"><span style="color: #b8bec8; font-weight: 600; padding-right: 6px">=</span>{{r.total}}<span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; padding-left: 2px">{{r.unit}}</span></span>
+              <span style="color: #596170; white-space: nowrap; overflow: hidden">{{r.note}}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <!-- 소계 -->
+      <div style="display: flex; height: 33px; box-sizing: border-box; background: #f5f6f8; border-bottom: 1px solid #b8bec8">
+        <span style="width: 120px; flex-shrink: 0"></span>
+        <div style="flex-grow: 1; display: grid; grid-template-columns: 170px minmax(0, 1fr) 72px 96px 120px 170px; column-gap: 16px; padding-right: 12px; align-items: center">
+          <span style="font-weight: 800">{{g.subLabel}}</span><span style="color: #596170">{{g.subDesc}}</span><span></span><span></span>
+          <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{g.subTotal}}<span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; padding-left: 2px">{{g.unit}}</span></span>
+          <span style="color: #596170">{{g.subNote}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 총계 -->
+  <div style="position: absolute; left: 64px; top: 578px; width: 1152px; height: 52px; box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 0 20px; display: flex; align-items: center; gap: 22px">
+    <span style="font-size: 15px; font-weight: 800">총계</span>
+    <span style="display: flex; align-items: baseline; gap: 6px"><span style="font-size: 13px; color: #3d4452">하드웨어</span><span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[0,000]</span><span style="font-size: 14px; font-weight: 700; color: #1428a0">대</span></span>
+    <span style="color: #b8c3ee; font-weight: 800">·</span>
+    <span style="display: flex; align-items: baseline; gap: 6px"><span style="font-size: 13px; color: #3d4452">라이선스</span><span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[0,000]</span><span style="font-size: 14px; font-weight: 700; color: #1428a0">개</span></span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12.5px; color: #596170">단가 · 금액은 견적서에서 제시</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const isNum = (v) => typeof v === 'number';
+    // 총 수량 = 매장당 × 매장 수 (둘 다 확정일 때만 계산, 아니면 자리표시)
+    const mul = (per, st) => (isNum(per) && isNum(st) ? per * st : null);
+    const G = [
+      { name: '하드웨어', unit: '대', subNote: '매장 수 확정 전', items: [
+        ['스마트 사이니지', 'QM55C', '55" · 500nit · 4K · 24/7', 3, 320, '카운터 메뉴보드'],
+        ['스마트 사이니지', 'QM65C', '65" · 500nit · 4K', 1, 320, '대기 공간'],
+        ['스마트 사이니지', 'QM43C', '43" · 500nit', 1, 320, '픽업대 호출'],
+        ['옥외 사이니지', 'OH55C', '55" · 3,000nit · IP56', 2, '[000]', '가두 매장만'],
+        ['키오스크', 'KM24C', '24" · 세로형 · 터치', 1, '[000]', '대기열 있는 매장']
+      ] },
+      { name: '소프트웨어', unit: '개', subNote: '', items: [
+        ['CMS 라이선스', 'MagicINFO', '원격 관리 · 기기당 1', '[0]', 320, '매장 기기 대수만큼'],
+        ['에너지 관리', 'SmartThings Pro', '에너지 · 기기 제어', 1, 320, '매장 단위 1개']
+      ] },
+      { name: '서비스', unit: '식', subNote: '', items: [
+        ['설치', '', '운반 · 거치 · 배선 · 초기 설정', 1, 320, '권역별 순차 설치'],
+        ['유지보수 [0]년', '', '원격 모니터링 · 방문 A/S', 1, 320, '장애 대응 [0]시간 내']
+      ] }
+    ];
+    const rowBase = 'display: grid; grid-template-columns: 170px minmax(0, 1fr) 72px 96px 120px 170px; column-gap: 16px; padding-right: 12px; align-items: center; height: 32px; box-sizing: border-box';
+    const groups = G.map((g) => {
+      const items = g.items.map(([item, model, spec, per, st, note], i) => {
+        const t = mul(per, st);
+        return {
+          item, model, spec, note, unit: g.unit,
+          specStyle: 'color: #596170' + (model ? '; padding-left: 8px' : ''),
+          per: isNum(per) ? String(per) : per,
+          stores: isNum(st) ? fmt(st) : st,
+          total: t === null ? (isNum(st) ? '[0,000]' : '[000]') : fmt(t),
+          rowStyle: rowBase + (i === 0 ? '' : '; border-top: 1px solid #e2e5ea')
+        };
+      });
+      const totals = g.items.map(([, , , per, st]) => mul(per, st));
+      const known = totals.every((t) => t !== null);
+      return {
+        name: g.name,
+        count: g.items.length + '종',
+        items,
+        unit: g.unit,
+        subLabel: g.name + ' 소계',
+        subDesc: g.items.length + '종',
+        subTotal: known ? fmt(totals.reduce((a, b) => a + b, 0)) : '[0,000]',
+        subNote: g.subNote
+      };
+    });
+    return { groups };
+  }
+}
+</script>
+</body>
+</html>

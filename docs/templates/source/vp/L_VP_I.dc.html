@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-I 제품 콜아웃 — 기능이 곧 가치</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">키오스크 한 대, 네 가지 기능이 피크 시간의 네 가지 가치로</div>
+
+  <!-- 제품 이미지 -->
+  <div style="position: absolute; left: 470px; top: 140px; width: 340px; height: 500px; border-radius: 18px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 470px; top: 140px; width: 340px; height: 500px">
+    <dc-import name="Prod" kind="kiosk" w="340" h="500" zoom="{{yes}}" hint-size="340px,500px"></dc-import>
+  </div>
+  <div style="position: absolute; left: 484px; top: 604px; height: 26px; padding: 0 10px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #9db4ff"></span>Kiosk KM24C · 24" 터치 · 결제 모듈</div>
+
+  <!-- 지시선 · 핫스팟 -->
+  <sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+    <div style="{{l}}"></div>
+  </sc-for>
+  <sc-for list="{{spots}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.style}}">{{s.no}}</div>
+  </sc-for>
+
+  <!-- 콜아웃 카드 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.style}}">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 24px; height: 24px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0">{{c.no}}</span>
+        <span style="font-size: 16px; font-weight: 800; white-space: nowrap">{{c.feat}}</span>
+      </div>
+      <span style="font-size: 14.5px; font-weight: 800; color: #1428a0; line-height: 1.4">→ {{c.value}}</span>
+      <span style="font-size: 12.5px; line-height: 1.5; color: #596170">{{c.desc}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 한 대로 얻는 것 -->
+  <div style="position: absolute; left: 876px; top: 520px; width: 340px; height: 128px; box-sizing: border-box; border-radius: 14px; background: #121417; color: #ffffff; padding: 16px 20px; display: flex; flex-direction: column; gap: 10px">
+    <span style="font-size: 12.5px; font-weight: 700; color: #9db4ff">매장 한 곳에 한 대 두면</span>
+    <div style="display: flex; gap: 22px">
+      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #c5cbd6">피크 주문 대기</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800">[00]% ↓</span></div>
+      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; color: #c5cbd6">주문 받는 인력</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800">[0]명 → 제조로</span></div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 제품 이미지는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 10</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 이미지 좌표 → 슬라이드 좌표 (Prod kiosk 확대 viewBox 84 8 72 148, 340 × 500 상자, 가운데 맞춤)
+    const L = 470, T = 140, W = 340, H = 500, VX = 84, VY = 8, VW = 72, VH = 148;
+    const S = Math.min(W / VW, H / VH);
+    const ox = (W - VW * S) / 2, oy = (H - VH * S) / 2;
+    const at = (vx, vy) => [Math.round(L + ox + (vx - VX) * S), Math.round(T + oy + (vy - VY) * S)];
+    // [번호, 이미지 위 지점, 기능, 가치, 설명, 쪽]
+    const C = [
+      [1, [138, 21], '다국어 · 큰 글씨 화면', '외국인 · 중장년도 혼자 주문', '언어 전환 한 번 · 글자 크기 2단계', 'R'],
+      [2, [107, 56], '메뉴 · 품절 실시간', '품절 문의와 주문 취소가 사라짐', 'POS와 연동해 다 떨어진 메뉴는 자동으로 흐리게', 'L'],
+      [3, [114, 113], '결제 모듈 내장', '카운터 줄이 둘로 나뉨', '카드 · 간편결제를 키오스크에서 바로', 'L'],
+      [4, [133, 75], '본사 원격 업데이트', '매장은 아무것도 안 해도 됨', '신메뉴 · 가격을 본사에서 한 번에', 'R']
+    ];
+    const spots = [], lines = [], cards = [];
+    C.forEach(([no, [vx, vy], feat, value, desc, side]) => {
+      const [x, y] = at(vx, vy);
+      spots.push({ no, style: 'position: absolute; left: ' + (x - 14) + 'px; top: ' + (y - 14) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 2px 6px rgba(18,20,23,0.25); color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+      const top = y - 30;
+      if (side === 'L') {
+        lines.push('position: absolute; left: 404px; top: ' + y + 'px; width: ' + (x - 14 - 404) + 'px; height: 2px; background: #1428a0;');
+        cards.push({ no, feat, value, desc, style: 'position: absolute; left: 64px; top: ' + top + 'px; width: 340px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;' });
+      } else {
+        lines.push('position: absolute; left: ' + (x + 14) + 'px; top: ' + y + 'px; width: ' + (876 - x - 14) + 'px; height: 2px; background: #1428a0;');
+        cards.push({ no, feat, value, desc, style: 'position: absolute; left: 876px; top: ' + top + 'px; width: 340px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 14px 18px; display: flex; flex-direction: column; gap: 6px;' });
+      }
+    });
+    return { yes: true, spots, lines, cards };
+  }
+}
+</script>
+</body>
+</html>

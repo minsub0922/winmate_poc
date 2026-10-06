@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>이미지 생성 · 현장 사진 제품 합성</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="image" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="이미지 생성" title="A 커피 카운터 벽면 합성" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 24px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">카운터 위 흰 벽면을 설치 가능한 면으로 인식하고 QM55C 3대를 올려두었습니다. 끌어서 위치를, 모서리로 크기를 맞춰 주세요. 실제 치수를 하나 알려주시면 비율을 정확히 맞춥니다.</div>
+
+            <div style="width: 760px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+              <!-- uploaded site photos -->
+              <div style="height: 52px; flex-shrink: 0; box-sizing: border-box; padding: 0 12px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px">
+                <sc-for list="{{photos}}" as="ph" hint-placeholder-count="2">
+                  <button style="{{ph.style}}">
+                    <span style="position: relative; width: 44px; height: 30px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: #e2e5ea">
+                      <img src="{{ph.src}}" alt="{{ph.alt}}" style="position: absolute; left: 0; top: 0; width: 44px; height: 30px; object-fit: cover; object-position: {{ph.pos}}">
+                    </span>
+                    <span style="display: flex; flex-direction: column; align-items: flex-start; min-width: 0">
+                      <span style="font-size: 12.5px; font-weight: 600; line-height: 17px; color: #121417; white-space: nowrap">{{ph.label}}</span>
+                      <span style="{{ph.stStyle}}">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ph.stIcon}}"/></svg>
+                        <span>{{ph.status}}</span>
+                      </span>
+                    </span>
+                  </button>
+                </sc-for>
+                <button style="height: 40px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                  <span>사진 추가</span>
+                </button>
+                <div style="flex-grow: 1"></div>
+                <button style="height: 30px; padding: 0 8px; border-radius: 8px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
+                  <span>촬영 가이드 · 다시 인식</span>
+                </button>
+              </div>
+
+              <!-- placement canvas -->
+              <div style="position: relative; width: 758px; height: 330px; overflow: hidden; background: #d9dde5">
+                <img src="/_blob/32ff0c99abf13faa018e854421553cc7" alt="고객 매장 현장 사진 — 카운터 위 흰 벽면과 펜던트 조명" style="position: absolute; left: -240px; top: -96px; width: 1000px; height: 599px; object-fit: cover">
+
+                <div style="position: absolute; left: 34px; top: 70px; width: 390px; height: 300px; box-sizing: border-box; border: 1.5px dashed #1428a0; border-radius: 4px; background: rgba(20,40,160,0.06)"></div>
+                <span style="position: absolute; left: 150px; top: 238px; height: 24px; padding: 0 8px; border-radius: 6px; background: rgba(255,255,255,0.94); color: #1428a0; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+                  <span>인식된 벽면 · 설치 가능</span>
+                </span>
+
+                <span style="position: absolute; left: 52px; top: 64px; height: 22px; padding: 0 8px; border-radius: 6px 6px 6px 0; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">QM55C ×3 · 가로 3연</span>
+
+                <sc-for list="{{screens}}" as="sc" hint-placeholder-count="3">
+                  <div style="{{sc.style}}">
+                    <div style="height: 14px; background: {{sc.hero}}"></div>
+                    <div style="padding: 5px 7px 0 7px; display: flex; flex-direction: column; gap: 4px">
+                      <div style="width: 46px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.75)"></div>
+                      <div style="width: 70px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.4)"></div>
+                      <div style="width: 60px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.4)"></div>
+                      <div style="width: 66px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.4)"></div>
+                    </div>
+                  </div>
+                </sc-for>
+                <div style="position: absolute; left: 52px; top: 92px; width: 312px; height: 62px; box-sizing: border-box; border: 1.5px solid #1428a0; border-radius: 2px"></div>
+                <sc-for list="{{handles}}" as="h" hint-placeholder-count="8">
+                  <span style="{{h}}"></span>
+                </sc-for>
+
+                <span style="position: absolute; left: 116px; top: 162px; height: 22px; padding: 0 8px; border-radius: 6px; background: rgba(255,255,255,0.94); color: #121417; font-size: 11.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M6 9l-3 3 3 3M18 9l3 3-3 3"/></svg>
+                  <span>가로 약 <span style="font-family: Manrope, sans-serif; font-weight: 700">[00]</span> mm · 바닥에서 <span style="font-family: Manrope, sans-serif; font-weight: 700">[00]</span> mm</span>
+                </span>
+
+                <div style="position: absolute; left: 374px; top: 92px; height: 32px; box-sizing: border-box; padding: 0 3px; border-radius: 9px; background: #ffffff; border: 1px solid #e2e5ea; box-shadow: 0 6px 16px rgba(18,20,23,0.14); display: flex; align-items: center; gap: 2px">
+                  <button aria-label="복제" title="복제" style="width: 26px; height: 26px; border-radius: 6px; border: none; background: transparent; color: #121417; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg></button>
+                  <button aria-label="원근 맞춤" title="원근 맞춤" style="width: 26px; height: 26px; border-radius: 6px; border: none; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l16-2v16L4 18z"/></svg></button>
+                  <button aria-label="삭제" title="삭제" style="width: 26px; height: 26px; border-radius: 6px; border: none; background: transparent; color: #121417; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+                </div>
+
+                <div style="position: absolute; left: 12px; bottom: 12px; height: 30px; box-sizing: border-box; border-radius: 8px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; overflow: hidden">
+                  <button style="height: 28px; padding: 0 10px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 600; white-space: nowrap">배치 편집</button>
+                  <button style="height: 28px; padding: 0 10px; border: none; background: #ffffff; color: #596170; font-size: 12px; font-weight: 500; white-space: nowrap">원본 사진</button>
+                </div>
+                <div style="position: absolute; right: 12px; bottom: 12px; height: 30px; box-sizing: border-box; padding: 0 4px 0 10px; border-radius: 8px; background: rgba(255,255,255,0.94); border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap">
+                  <span>끌어서 이동 · 모서리로 크기 조절</span>
+                  <span style="width: 1px; height: 14px; background: #e2e5ea"></span>
+                  <button aria-label="축소" style="width: 22px; height: 22px; border: none; background: transparent; color: #121417; font-size: 14px; line-height: 1">−</button>
+                  <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">100%</span>
+                  <button aria-label="확대" style="width: 22px; height: 22px; border: none; background: transparent; color: #121417; font-size: 14px; line-height: 1">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">제품 배치 <span style="color: #596170; font-weight: 500">· 현장 사진 합성 · 2 / 3</span></div>
+          <button style="height: 28px; padding: 0 10px; border-radius: 6px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>제품 추가</span>
+          </button>
+        </div>
+
+        <div style="padding: 10px 18px 0 18px; display: flex; align-items: center; gap: 8px">
+          <span style="height: 32px; box-sizing: border-box; padding: 0 12px 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M12 16v3M8 19h8"/></svg>
+            <span>Smart Signage QM55C ×3</span>
+          </span>
+          <span style="font-size: 12px; color: #596170; margin-left: 6px; flex-shrink: 0">배열</span>
+          <div style="display: flex; border: 1px solid #e2e5ea; border-radius: 8px; overflow: hidden; flex-shrink: 0">
+            <sc-for list="{{arrange}}" as="o" hint-placeholder-count="3">
+              <button style="{{o.style}}">{{o.label}}</button>
+            </sc-for>
+          </div>
+          <span style="font-size: 12px; color: #596170; margin-left: 6px; flex-shrink: 0">설치</span>
+          <div style="display: flex; border: 1px solid #e2e5ea; border-radius: 8px; overflow: hidden; flex-shrink: 0">
+            <sc-for list="{{mount}}" as="o" hint-placeholder-count="2">
+              <button style="{{o.style}}">{{o.label}}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="padding: 10px 18px 0 18px; display: flex; align-items: center; gap: 10px">
+          <span style="font-size: 12px; color: #596170; flex-shrink: 0">기준 치수</span>
+          <sc-for list="{{dims}}" as="d" hint-placeholder-count="2">
+            <div style="height: 34px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 9px; background: #f5f6f8; padding: 0 10px; display: flex; align-items: center; gap: 6px; flex-shrink: 0">
+              <label for="{{d.id}}" style="font-size: 12px; color: #596170; white-space: nowrap">{{d.label}}</label>
+              <input id="{{d.id}}" placeholder="[00]" style="width: 56px; border: none; background: transparent; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; color: #121417; outline: none; text-align: right">
+              <span style="font-size: 12px; color: #596170">mm</span>
+            </div>
+          </sc-for>
+          <div style="flex-grow: 1"></div>
+          <sc-for list="{{toggles}}" as="tg" hint-placeholder-count="2">
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #121417; white-space: nowrap; flex-shrink: 0">
+              <span style="width: 30px; height: 18px; box-sizing: border-box; border-radius: 999px; background: #1428a0; padding: 2px; display: flex; justify-content: flex-end"><span style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff"></span></span>
+              <span>{{tg}}</span>
+            </span>
+          </sc-for>
+        </div>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12.5px; color: #596170; white-space: nowrap">치수를 모르면 비워 두세요. 사진 속 비율로 추정합니다</span>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <a href="IMG1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+            <a href="IMG3G.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>합성 이미지 4장 생성</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tab = 'height: 40px; box-sizing: border-box; padding: 0 12px 0 4px; border-radius: 10px; display: flex; align-items: center; gap: 8px; text-align: left; flex-shrink: 0;';
+    const stBase = 'display: flex; align-items: center; gap: 3px; font-size: 11px; line-height: 15px; white-space: nowrap;';
+    const photos = [
+      { label: '카운터 벽면', status: '벽면 인식 완료', src: '/_blob/32ff0c99abf13faa018e854421553cc7', alt: '카운터 벽면 현장 사진', pos: '45% 40%',
+        stIcon: 'M5 12l5 5L20 7', stStyle: stBase + ' color: #1428a0; font-weight: 600;',
+        style: tab + ' border: 1.5px solid #1428a0; background: #ffffff;' },
+      { label: '매장 안쪽', status: '어두워 인식 어려움 · 다시 촬영 권장', src: '/_blob/81b89af89b6620bd4871944e66844272', alt: '조명이 어두운 매장 안쪽 현장 사진', pos: '50% 50%',
+        stIcon: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 11v5 M12 8h.01', stStyle: stBase + ' color: #121417; font-weight: 500;',
+        style: tab + ' border: 1px solid #e2e5ea; background: #ffffff;' }
+    ];
+
+    // 3연 메뉴보드: 96×54 (16:9) 화면 3대, 간격 8px
+    const heroes = ['#2b3346', '#323a4d', '#2b3346'];
+    const screens = [0, 1, 2].map((i) => ({
+      hero: heroes[i],
+      style: 'position: absolute; left: ' + (56 + i * 104) + 'px; top: 96px; width: 96px; height: 54px; box-sizing: border-box; border: 2px solid #1f2229; border-radius: 2px; background: #121417; overflow: hidden; box-shadow: 0 6px 14px rgba(18,20,23,0.28);'
+    }));
+    const hx = [52, 208, 364], hy = [92, 123, 154];
+    const handles = [];
+    hy.forEach((y, yi) => hx.forEach((x, xi) => {
+      if (yi === 1 && xi === 1) return;
+      handles.push('position: absolute; left: ' + (x - 4) + 'px; top: ' + (y - 4) + 'px; width: 8px; height: 8px; box-sizing: border-box; background: #ffffff; border: 1.5px solid #1428a0; border-radius: 2px;');
+    }));
+
+    const seg = (labels, active) => labels.map((label, i) => ({
+      label,
+      style: 'height: 30px; padding: 0 10px; border: none; font-size: 12px; white-space: nowrap;' + (label === active ? ' background: #1428a0; color: #ffffff; font-weight: 600;' : ' background: #ffffff; color: #121417; font-weight: 500;') + (i > 0 ? ' border-left: 1px solid #e2e5ea;' : '')
+    }));
+    const arrange = seg(['가로 3연', '세로 3연', '따로 배치'], '가로 3연');
+    const mount = seg(['벽 부착', '천장 매달기'], '벽 부착');
+    const dims = [{ id: 'dw', label: '카운터 폭' }, { id: 'dh', label: '설치 높이' }];
+    const toggles = ['원근 · 조명 맞춤', '화면에 메뉴 넣기'];
+
+    return { steps: ['이미지 유형', '상세 조건', '생성 결과'], cur: 2, photos, screens, handles, arrange, mount, dims, toggles };
+  }
+}
+</script>
+</body>
+</html>

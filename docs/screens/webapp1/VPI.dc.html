@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition — 이미지 칸 채우기 (공식 실사 자동 매칭)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="A 커피 메뉴보드 가치 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="A 커피 메뉴보드 가치 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{done}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.6">이미지 칸 5개를 채웠어요. 공식 실사 4 · 일러스트 1이고, 확인할 것은 2개예요.</div>
+
+          <!-- 이미지 칸 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+            <div style="height: 40px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+              <span style="font-size: 13px; font-weight: 700; white-space: nowrap">이미지 칸 <span style="color: #596170; font-weight: 500">· 5</span></span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">칸마다 가치를 만드는 제품 · 솔루션 → 공식 실사부터 찾아 넣음</span>
+              <span style="flex-grow: 1"></span>
+              <a href="VPR.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap">고르는 순서</a>
+            </div>
+            <sc-for list="{{slots}}" as="r" hint-placeholder-count="5">
+              <div style="{{r.row}}">
+                <div style="width: 96px; height: 56px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f5f6f8; display: flex; align-items: center; justify-content: center">
+                  <sc-if value="{{r.hasImg}}" hint-placeholder-val="{{true}}">
+                    <img src="{{r.src}}" alt="{{r.alt}}" style="{{r.imgStyle}}">
+                  </sc-if>
+                  <sc-if value="{{r.noImg}}" hint-placeholder-val="{{false}}">
+                    <span style="width: 88px; height: 48px; box-sizing: border-box; border: 1.5px dashed #b8bec8; border-radius: 6px; font-size: 10.5px; font-weight: 700; color: #8a91a0; display: flex; align-items: center; justify-content: center">일러스트</span>
+                  </sc-if>
+                </div>
+                <div style="width: 168px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                  <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0; white-space: nowrap">{{r.code}}</span>
+                  <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.slot}}</span>
+                </div>
+                <span style="{{r.tierStyle}}">{{r.tier}}</span>
+                <span style="font-size: 12px; color: #3d4452; line-height: 1.45; flex-grow: 1; min-width: 0; max-height: 35px; overflow: hidden">{{r.why}}</span>
+                <span style="{{r.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- 후보 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; align-items: center; justify-content: space-between; height: 18px">
+              <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">기둥 1 · 본사에서 한 번에 운영 <span style="color: #596170; font-weight: 500">— 바꿀 수 있는 후보</span></span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">모두 MagicINFO가 만드는 가치에 맞는 이미지</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px">
+              <sc-for list="{{alts}}" as="a" hint-placeholder-count="4">
+                <div style="{{a.box}}">
+                  <div style="height: 76px; border-radius: 7px; overflow: hidden; background: #f5f6f8; display: flex; align-items: center; justify-content: center">
+                    <sc-if value="{{a.hasImg}}" hint-placeholder-val="{{true}}">
+                      <img src="{{a.src}}" alt="{{a.alt}}" style="{{a.imgStyle}}">
+                    </sc-if>
+                    <sc-if value="{{a.noImg}}" hint-placeholder-val="{{false}}">
+                      <span style="font-size: 11px; font-weight: 700; color: #8a91a0">일러스트 · cms</span>
+                    </sc-if>
+                  </div>
+                  <span style="font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{a.name}}</span>
+                  <span style="font-size: 11px; color: #596170; white-space: nowrap">{{a.tier}}</span>
+                </div>
+              </sc-for>
+              <label style="box-sizing: border-box; border-radius: 10px; border: 1.5px dashed #b8bec8; background: #fbfbfc; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; text-align: center">
+                <input type="file" accept="image/*" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>
+                <span style="font-size: 12px; font-weight: 700; color: #3d4452">사진 올리기</span>
+                <span style="font-size: 10.5px; color: #8a91a0; line-height: 1.4">고객 매장 사진은 공간 칸에 자동 배치</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">이미지 <span style="color: #596170; font-weight: 500">· 5칸 · 공식 실사 4</span></div>
+          <div style="display: flex; gap: 6px; min-width: 0">
+            <sc-for list="{{acts}}" as="a" hint-placeholder-count="3">
+              <a href="{{a.href}}" title="{{a.tip}}" style="display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{a.code}}</span>{{a.t}}</a>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">이미지 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="이미지 요청 (예: 기둥 2는 매장에 걸린 모습으로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="VP3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">결과로</a>
+          <a href="VP4.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>제안서 Value Props로</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; ';
+    // 이미지 출처 5단계 — 이 순서로 찾음
+    const TIER = {
+      customer: ['고객 현장 사진', 'background: #ffffff; color: #121417; border: 1px solid #121417;'],
+      cut: ['공식 제품 컷', 'background: #1428a0; color: #ffffff;'],
+      case: ['설치 사례', 'background: #121417; color: #ffffff;'],
+      ui: ['솔루션 화면', 'background: #eaeefb; color: #1428a0;'],
+      illust: ['일러스트', 'background: #ffffff; color: #596170; border: 1px dashed #8a91a0;']
+    };
+    // 이 캔버스에 올린 삼성 공식 이미지 (samsung.com 제품 · 솔루션 페이지, 공식 성공 사례)
+    const IMG = {
+      miOverview: '/_blob/606db2e1f2fc6fd5c166bb8808e32619',
+      qm55c: '/_blob/5afb0878e0cff2a74179b159aebc9757',
+      stpEnergy: '/_blob/b54ae6561ecae5340db8e521236affe9',
+      mcdDt: '/_blob/5bb3edd320842cf781647186bce0004c',
+      mcdMenu: '/_blob/695072c09938dbf697dc8a8915606baf',
+      cms: '/_blob/88901010ebc9ad4d029427f491102902'
+    };
+    const img = (key, fit) => ({ src: key ? IMG[key] : '', hasImg: !!key, noImg: !key, imgStyle: 'display: block; width: 100%; height: 100%; object-fit: ' + (fit || 'cover') + ';' });
+    // [시트 · 칸 코드, 칸, 이미지, 맞춤, 출처, 이유, 모드]
+    const S = [
+      ['VP-F·3 · 기둥 1', '본사에서 한 번에 운영', 'miOverview', 'cover', 'ui', 'MagicINFO가 만드는 가치 · 공개 화면이라 "실제 데이터 아님" 표시', 'auto'],
+      ['VP-F·3 · 기둥 2', '승인은 본사, 반영은 몇 분', 'qm55c', 'contain', 'cut', '제안 모델 QM55C와 같은 모델의 공식 컷', 'auto'],
+      ['VP-F·3 · 기둥 3', '저전력 자동 운영', 'stpEnergy', 'contain', 'ui', 'SmartThings Pro 에너지 화면 · "실제 데이터 아님" 표시', 'auto'],
+      ['CH-A · 과제 1', '인쇄 · 배송 · 교체 비용', '', '', 'illust', '고객 매장 사진 없음 → 일러스트 · 사진 요청 초안 준비, 받으면 자동 교체', 'check'],
+      ['추가 제안 · VP-Q', '같은 문제를 먼저 푼 곳', 'mcdDt', 'cover', 'case', '같은 QSR 업종 · 다른 고객사 브랜드 노출 → 외부 제출 전 인용 확인', 'check']
+    ];
+    const slots = S.map(([code, slot, key, fit, tier, why, m], i) => ({
+      code, slot, why, alt: slot,
+      ...img(key, fit),
+      tier: TIER[tier][0],
+      tierStyle: CHIP + 'width: 92px; justify-content: center; ' + TIER[tier][1],
+      mText: MODE[m][0], mIcon: MODE[m][2], mStyle: CHIP + MODE[m][1],
+      row: 'display: flex; align-items: center; gap: 14px; height: 64px; box-sizing: border-box; padding: 0 16px; border-top: 1px solid #f0f2f5;' + (i === 0 ? ' background: #f5f7fd;' : '')
+    }));
+    const A = [
+      ['miOverview', 'cover', 'MagicINFO 개요 화면', '솔루션 화면 · 지금', true],
+      ['cms', 'cover', 'VXT CMS 메뉴 편집', '솔루션 화면', false],
+      ['mcdMenu', 'cover', '사례 · 카운터 메뉴보드', '설치 사례 · 확인 권장', false],
+      ['', '', 'MagicINFO 일러스트', '일러스트', false]
+    ];
+    const alts = A.map(([key, fit, name, tier, on]) => ({
+      name, tier, alt: name, ...img(key, fit),
+      box: 'box-sizing: border-box; border-radius: 10px; padding: 6px; display: flex; flex-direction: column; gap: 5px; min-width: 0;' + (on ? ' border: 1.5px solid #1428a0; background: #f5f7fd;' : ' border: 1px solid #e2e5ea; background: #ffffff;')
+    }));
+    const acts = [
+      ['VP-N', '실사 히어로로', '설치 사례 사진을 왼쪽에 크게 · 가치 3개는 오른쪽', 'VP3L.dc.html'],
+      ['VP-Q', '레퍼런스 1장 추가', '맥도날드 코리아 DT 사례 · 외부 제출 전 인용 확인', 'VP3L.dc.html'],
+      ['Prod', '일러스트로 통일', '실사를 모두 빼고 같은 톤의 일러스트로', 'VP3.dc.html']
+    ].map(([code, t, tip, href]) => ({ code, t, tip, href }));
+    return { steps: ['재료', '가치 구조', '결과'], cur: 3, done: true, slots, alts, acts };
+  }
+}
+</script>
+</body>
+</html>

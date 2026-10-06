@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-ED-E 교육 · 캠퍼스 · 공간 시나리오 · 기숙사 · 생활관</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">기숙사 · 생활관 · 단계별 도입</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">생활관은 학기 중 불편 없이, 한 동에서 시작해 방학마다 넓힙니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">⑥ 기숙사 · 생활관 — 학생이 사는 동안엔 크게 바꾸지 않고, 단계마다 효과를 확인한 뒤 다음 동으로 갑니다</div>
+
+  <!-- 위 띠 — 사진 (4열) -->
+  <img src="/_blob/0fa24d57bb4bc44b93a8edfadbf6e512" alt="기숙사 방 (예시 사진)" style="position: absolute; left: 64px; top: 156px; width: 368px; height: 130px; object-fit: cover; object-position: 50% 50%; border-radius: 14px">
+  <span style="position: absolute; left: 76px; top: 168px; height: 22px; box-sizing: border-box; padding: 0 9px 0 3px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">6</span><span style="font-size: 11.5px; font-weight: 800; color: #121417">기숙사 · 생활관 · [0]개 동</span></span>
+  <span style="position: absolute; left: 76px; top: 256px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</span>
+
+  <!-- 위 띠 — 왜 단계적으로 (8열) -->
+  <div style="position: absolute; left: 456px; top: 156px; width: 760px; height: 130px; border-radius: 14px; background: #f5f6f8">
+    <span style="position: absolute; left: 20px; top: 14px; height: 18px; font-size: 12px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">왜 단계적으로 가는가</span>
+    <span style="position: absolute; left: 20px; top: 36px; height: 22px; font-size: 15px; font-weight: 700; line-height: 22px; white-space: nowrap">학기 중엔 학생이 방에 살고 있어 한 번에 바꾸기 어렵습니다.</span>
+    <span style="position: absolute; left: 20px; top: 58px; height: 22px; font-size: 15px; font-weight: 700; line-height: 22px; white-space: nowrap">한 동에서 효과를 확인하고, 방학 기간에 맞춰 범위를 넓힙니다.</span>
+    <div style="position: absolute; left: 20px; top: 92px; height: 24px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+      <span style="font-size: 11.5px; font-weight: 800; color: #596170; margin-right: 4px">지금 상태</span>
+      <sc-for list="{{now}}" as="n" hint-placeholder-count="3">
+        <span style="height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">{{n.t}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 본문 — 3단계 로드맵 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.card}}">
+      <span style="{{s.numStyle}}">{{s.n}}</span>
+      <span style="{{s.nameStyle}}">{{s.name}}</span>
+      <span style="{{s.periodStyle}}">{{s.period}}</span>
+      <div style="{{s.rule1}}"></div>
+      <span style="{{s.labStyle1}}">범위</span>
+      <span style="{{s.txtStyle1}}">{{s.scope}}</span>
+      <span style="{{s.labStyle2}}">더하는 것</span>
+      <div style="position: absolute; left: 16px; top: 123px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+        <sc-for list="{{s.chips}}" as="k" hint-placeholder-count="2">
+          <span style="{{k.style}}">{{k.t}}</span>
+        </sc-for>
+      </div>
+      <span style="{{s.txtStyle2}}">{{s.adds}}</span>
+      <span style="{{s.labStyle3}}">달라지는 운영</span>
+      <span style="{{s.txtStyle3}}">{{s.ops1}}</span>
+      <span style="{{s.txtStyle4}}">{{s.ops2}}</span>
+      <div style="{{s.critBox}}">
+        <span style="{{s.critLab}}">{{s.critName}}</span>
+        <div style="position: absolute; left: 12px; top: 27px; width: 16px; height: 16px">
+          <sc-if value="{{s.light}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg></sc-if>
+          <sc-if value="{{s.dark}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M7.5 12.5l3 3 6-6.5"></path></svg></sc-if>
+        </div>
+        <span style="{{s.critTxt}}">{{s.crit}}</span>
+      </div>
+    </div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.style}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- 하단 띠 — 전체 일정 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8"></div>
+  <span style="position: absolute; left: 80px; top: 622px; height: 18px; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">전체 일정</span>
+  <sc-for list="{{bar}}" as="b" hint-placeholder-count="3">
+    <div style="{{b.style}}"><span style="font-weight: 800">{{b.a}}</span><span style="{{b.subStyle}}">{{b.b}}</span></div>
+  </sc-for>
+  <span style="position: absolute; right: 80px; top: 623px; height: 16px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치 · 기간은 예시</span>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 스마트 교육 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const box = (x, y, w, h) => 'position: absolute; left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+    const nw = 'white-space: nowrap; ';
+
+    const now = ['동마다 에어컨 · 청정기 제각각', '민원이 오면 그때 현장 방문', '천장형 에어컨 세척은 그때그때'].map((t) => ({ t }));
+
+    // 단계 — [이름, 기간, 범위, 솔루션 칩, 더하는 일, 운영 2줄, 기준 이름, 기준]
+    const S = [
+      ['1단계 · 시범 한 동', '[0]개월 · 1학기', '한 동 공용 라운지 · 스터디룸 [00]곳 · 에어컨 [00]대',
+        ['SmartThings Pro'], '공용 공간 에어컨 · 공기청정기 · 에어모니터를 한 화면에',
+        '사감실에서 공용 공간 공기질을 먼저 확인', '빈 라운지 · 스터디룸은 재실 센서로 자동 OFF',
+        '다음 단계로 가는 기준', '공용 공간 공기질 민원 [00]% ↓ 확인'],
+      ['2단계 · 전 동 확대', '[0]개월 · 여름방학', '[0]개 동 · 방 [000]실 · 시스템에어컨 [000]대',
+        ['b.IoT', 'SmartThings Pro'], '동별 공조 · 전력을 건물 단위로 보고, 낭비는 알림으로',
+        '시설팀이 모든 동을 한 대시보드에서', '빈 방 · 방학 중 에어컨은 원격으로 일괄 OFF',
+        '다음 단계로 가는 기준', '생활관 냉난방 전력 [00]% ↓ 확인'],
+      ['3단계 · 방학 세척 · 장기 케어', '매 방학 · [0]년', '전 동 천장형 에어컨 [000]대 · 공기청정기 [00]대',
+        ['케어 · 유지관리 서비스'], '방학마다 천장형 에어컨 종합세척 · 당일 검수',
+        '세척 · 점검이 학사 일정에 맞춰 정해지고', '학기 중 고장은 전담 엔지니어가 바로 대응',
+        '장기 운영 기준', '개학 전 세척 완료 [000]대 · 고장 [00]% ↓']
+    ];
+    const stages = S.map(([name, period, scope, chips, adds, ops1, ops2, critName, crit], i) => {
+      const dark = i === 2;
+      const ink = dark ? '#ffffff' : '#121417';
+      const sub = dark ? '#c8d3ff' : '#8a91a0';
+      const body = dark ? '#ffffff' : '#3d4452';
+      const lab = (y) => 'position: absolute; left: 16px; top: ' + px(y) + 'height: 15px; font-size: 10.5px; font-weight: 800; line-height: 15px; color: ' + sub + '; ' + nw;
+      const txt = (y, w) => 'position: absolute; left: 16px; top: ' + px(y) + 'height: 17px; font-size: 12.5px; font-weight: ' + (w || 500) + '; line-height: 17px; color: ' + body + '; ' + nw;
+      return {
+        n: i + 1, name, period, scope, adds, ops1, ops2, critName, crit, dark, light: !dark,
+        chips: chips.map((t) => ({
+          t,
+          style: 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; ' +
+            (dark ? 'background: #ffffff; color: ' + BLUE + ';' : 'background: ' + BLUE + '; color: #ffffff;')
+        })),
+        card: box(64 + i * 392, 300, 368, 300) + 'box-sizing: border-box; border-radius: 14px; ' +
+          (i === 0 ? 'background: #ffffff; border: 1px solid #d5d9e0;' : (i === 1 ? 'background: #eaeefb;' : 'background: ' + BLUE + ';')),
+        numStyle: box(16, 16, 26, 26) + 'border-radius: 50%; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' +
+          (dark ? 'background: #ffffff; color: ' + BLUE + ';' : 'background: ' + BLUE + '; color: #ffffff;'),
+        nameStyle: 'position: absolute; left: 50px; top: 17px; height: 24px; font-size: 15.5px; font-weight: 800; line-height: 24px; letter-spacing: -0.01em; color: ' + ink + '; ' + nw,
+        periodStyle: 'position: absolute; right: 14px; top: 19px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; ' + nw +
+          (dark ? 'background: #3b4fb8; color: #ffffff;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #3d4452;'),
+        rule1: box(16, 54, 336, 1) + 'background: ' + (dark ? '#3b4fb8' : (i === 1 ? '#c8d3ff' : '#e2e5ea')) + ';',
+        labStyle1: lab(64), txtStyle1: txt(81, 700),
+        labStyle2: lab(106), txtStyle2: txt(148),
+        labStyle3: lab(174), txtStyle3: txt(191), txtStyle4: txt(208),
+        critBox: box(10, 236, 348, 54) + 'border-radius: 10px; ' + (dark ? 'background: #3b4fb8;' : 'background: #ffffff;' + (i === 0 ? ' border: 1px solid #e2e5ea; box-sizing: border-box;' : '')),
+        critLab: 'position: absolute; left: 12px; top: 7px; height: 15px; font-size: 10.5px; font-weight: 800; line-height: 15px; color: ' + sub + '; ' + nw,
+        critTxt: 'position: absolute; left: 34px; top: 25px; height: 20px; font-size: 13px; font-weight: 800; line-height: 20px; color: ' + (dark ? '#ffffff' : BLUE) + '; ' + nw
+      };
+    });
+
+    // 단계 사이 굵은 화살표 (간격 가운데)
+    const arrows = [444, 836].map((cx) => ({
+      style: box(cx - 15, 435, 30, 30) + 'box-sizing: border-box; border-radius: 50%; background: ' + BLUE + '; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 전체 일정 바 — 3칸
+    const B = [['1단계 시범', '1학기', 172, 0], ['2단계 전 동', '여름방학 ~ 2학기', 236, 1], ['3단계 케어', '겨울방학부터 매 방학', 520, 2]];
+    let x = 160;
+    const bar = B.map(([a, b, w, k]) => {
+      const st = box(x, 619, w, 24) + 'box-sizing: border-box; padding: 0 10px; display: flex; align-items: center; gap: 8px; font-size: 11.5px; ' + nw +
+        (k === 0 ? 'background: #ffffff; border: 1px solid #d5d9e0; color: #121417; border-radius: 6px 0 0 6px;' : (k === 1 ? 'background: #eaeefb; border-top: 1px solid #b8c3ee; border-bottom: 1px solid #b8c3ee; color: ' + BLUE + ';' : 'background: ' + BLUE + '; color: #ffffff; border-radius: 0 6px 6px 0;'));
+      x += w + 2;
+      return { a, b, style: st, subStyle: 'font-size: 11px; color: ' + (k === 2 ? '#c8d3ff' : (k === 1 ? '#3d4452' : '#596170')) + ';' };
+    });
+
+    return { now, stages, arrows, bar };
+  }
+}
+</script>
+</body>
+</html>

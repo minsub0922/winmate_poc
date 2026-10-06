@@ -1,0 +1,133 @@
+ 
+ 기존 제안서 · 기준 상세 · 논리 흐름 
+ 기준별 분석 결과 
+ 2 
+ 논리 흐름 
+ 확인 필요 · 필수 
+ 신뢰도 82% · 다음 단계로 가려면 확인이 필요해요 
+ 기준 
+ {{c.no}} 
+ W 
+ 24장 각각이 설득 흐름에서 맡은 역할을 태그했어요. 역할이 틀리면 바꿔 주세요 — 유저가 고친 태그는 다시 분석해도 바뀌지 않아요. 이 흐름이 이번 제안서 시트 구성의 뼈대가 돼요. 
+ {{s.name}} 
+ {{s.sub}} 
+ 패턴 · 문제 해결형 Problem → Solution 
+ 주장 → 근거 연결 11 / 14 
+ 끊긴 고리 3 
+ · p.3 출처 없음 · p.8 근거 없음 · Why Samsung 단계 없음 
+ 점선 단계는 원본에 없어 이번 시트 구성에 추가를 제안해요 
+ 쪽 원본 제목 · 추출 텍스트 역할 태그 주장 → 근거 상태 
+ {{r.no}} 
+ {{r.title}} 
+ {{r.cand1}} 
+ {{r.cand2}} 
+ {{r.role}} 
+ {{r.ev}} 
+ {{r.state}} 
+ 쪽 11–24 더 보기 · 확인 필요 1 · 수정함 0 
+ W 
+ 에이전트 메모 
+ · 이번 제안서에 쓸 때 
+ {{m.no}} 
+ {{m.text}} 
+ {{m.tag}} 
+ {{m.act}} 
+ 메모는 활용 방식 추천과 시트 구성 초안에 그대로 반영돼요. 
+ 논리 흐름 확인 · 24장 중 태그 확인 {{okCount}} · 수정 {{editCount}} · 남음 {{leftCount}} 
+ 남은 2장은 확인하지 않으면 에이전트 태그로 넘어가요 · 고정한 태그는 재분석에서 제외 
+ {{ty.label}} {{ty.n}} 
+ 이전 
+ 이 흐름으로 확인 
+class Component extends DCLogic {
+ renderVals() {
+ // 기준 9개 전환 칩 (2 선택)
+ const CRIT = ['문서 구조', '논리 흐름', '핵심 메시지', '고객 · 프로젝트 맥락', '제품 · 솔루션', '데이터 · 수치', '이미지 · 자산', '디자인 · 템플릿', '비복제 · 민감 항목'];
+ const chips = CRIT.map((name, i) => ({
+ no: String(i + 1), on: i === 1, aria: (i + 1) + ' · ' + name,
+ style: '' + (i === 1 ? '' : '')
+ }));
+ // 역할 색 (PRU2 섹션 색과 동일)
+ const ROLE = {
+ '표지': '', '문제 제기': '', '시장 변화': '', '고객 과제': '', '가치 제안': '',
+ '솔루션 구성': '', '도입 사례': '', '제품 스펙': '', '견적 · 일정': '', '공간 시나리오': ''
+ };
+ const dot = (c) => '' + c + ';';
+ // 스토리라인: [이름, 장수, 점선(원본에 없음), 부제]
+ const STEP = [
+ ['문제 제기', 1, false, ''], ['시장 변화', 3, false, ''], ['고객 과제', 3, false, ''], ['가치 제안', 4, false, ''],
+ ['솔루션 구성', 5, false, ''], ['도입 사례', 3, false, ''], ['Why Samsung · 경쟁 비교', 0, true, '원본에 없음 → 이번엔 추가 제안'],
+ ['제품 스펙', 2, false, ''], ['견적 · 일정', 3, false, '자동 제외']
+ ];
+ const flow = STEP.map(([name, n, dashed, note], i) => {
+ const excluded = name === '견적 · 일정';
+ return {
+ name, dashed, hasDot: !dashed, hasArrow: i > 0,
+ sub: dashed ? note : (n + '장' + (note ? ' · ' + note : '')),
+ dotStyle: dot(ROLE[name] || ''),
+ subStyle: '' + (dashed ? '' : excluded ? '' : ''),
+ style: '' + (dashed ? '' : excluded ? '' : '')
+ };
+ });
+ // 시트별 역할: [쪽, 제목, 역할, 근거, 상태(auto · ok · edited · need), 후보2(확인 필요일 때)]
+ const R = [
+ [1, '표지 · B 베이커리 매장 사이니지 제안', '표지', '—', 'auto', ''],
+ [2, '오프라인 매장, 디지털 전환의 기로', '문제 제기', '근거 p.3 시장 수치', 'ok', ''],
+ [3, '국내 QSR 디지털 메뉴보드 도입 추이', '시장 변화', '[출처 없음] · 수치 출처 미기재', 'auto', ''],
+ [4, '경쟁 브랜드 도입 현황', '시장 변화', '근거 p.3 보강 · 경쟁 5개 브랜드', 'ok', ''],
+ [5, 'B 베이커리 매장 운영 과제 3가지', '고객 과제', '근거 p.6 점주 인터뷰', 'edited', ''],
+ [6, '점주 인터뷰 요약', '고객 과제', 'p.5의 근거 역할 · 인용 4건', 'auto', ''],
+ [7, '가치 제안: 본사 통제 · 운영 부담 ↓', '가치 제안', '근거 p.8 기대 효과', 'ok', ''],
+ [8, '기대 효과 Before / After', '가치 제안', '근거 없음 · 수치 출처 없음', 'auto', ''],
+ [9, '솔루션 구성도 MagicINFO', '솔루션 구성', '근거 p.17 도입 사례', 'auto', ''],
+ [10, '매장 동선별 사이니지 배치', '솔루션 구성', '역할 후보 2 · 공간 시나리오로 볼 수도', 'need', '공간 시나리오']
+ ];
+ const STATE = {
+ auto: ['자동', ''],
+ ok: ['확인됨', ''],
+ edited: ['수정함', ''],
+ need: ['확인 필요', '']
+ };
+ const cols = '';
+ const rows = R.map(([p, title, role, ev, st, cand2], i) => {
+ const dual = st === 'need';
+ const locked = st === 'edited';
+ const warn = ev.indexOf('없음') >= 0 || dual;
+ const widths = p === 1 ? [30, 18] : [[34, 22, 14], [26, 36, 18], [40, 20, 28]][i % 3];
+ return {
+ no: 'p.' + p, title, role, ev, locked, dual, single: !dual, cand1: role, cand2, evWarn: warn,
+ roleAria: 'p.' + p + ' 역할 태그',
+ state: STATE[st][0],
+ dotStyle: dot(ROLE[role]),
+ bars: widths.map((w, bi) => ({ style: 'display: block; height: ' + (bi === 0 ? 3 : 2) + '' + w + '' + (bi === 0 ? '' : '') + ';' })),
+ cardStyle: '' + (p === 1 ? ' align-items: center; justify-content: center; padding-top: 0;' : ''),
+ roleStyle: '' + (locked ? '' : ''),
+ evStyle: '' + (warn ? '' : ev === '—' ? '' : ''),
+ badgeStyle: '' + STATE[st][1],
+ rowStyle: 'display: grid; ' + cols + '' + (dual ? '' : locked ? '' : '')
+ };
+ });
+ // 에이전트 메모
+ const M = [
+ ['Why Samsung 단계가 없어 R5 POS 연동의 신뢰 근거가 약해요. 경쟁 비교 시트 2장 추가를 제안해요.', 'R5', '시트 구성에 신규 추가'],
+ ['p.8 기대 효과는 출처가 없어요. 흐름(Before / After)만 가져오고 수치는 이번 고객 기준으로 새로 채워요.', '수치', '[00]% 플레이스홀더 · 확정 필요 등록'],
+ ['p.10을 공간 시나리오로 보면 이번 320개 매장 단계 도입(R4)에 맞아요. 역할을 바꾸면 로드맵 시트와 이어져요.', 'R4', '역할 후보 선택 대기']
+ ];
+ const memos = M.map(([text, tag, act], i) => ({
+ no: String(i + 1), text, tag, act,
+ tagStyle: '' + (tag === '수치' ? '' : '')
+ }));
+ // 24장 전체 집계: 확인 21 · 수정 1 · 남음 2
+ const okCount = 21, editCount = 1, leftCount = 2;
+ const total = 24;
+ const pct = Math.round(((okCount + editCount) / total) * 100);
+ const tally = [['확인', okCount, STATE.ok[1]], ['수정함', editCount, STATE.edited[1]], ['확인 필요', leftCount, STATE.need[1]]]
+ .map(([label, c, s]) => ({ label, n: c, style: '' + s }));
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+ chips, flow, rows, memos, tally, okCount, editCount, leftCount,
+ progressAria: '태그 확인 진행률 ' + (okCount + editCount) + ' / ' + total,
+ progressStyle: 'width: ' + pct + '',
+ headStyle: 'display: grid; ' + cols + ''
+ };
+ }
+}

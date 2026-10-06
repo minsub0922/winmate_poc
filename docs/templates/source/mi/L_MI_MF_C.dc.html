@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-MF-C 제조 · 물류 · 현장 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">L 제조 현장의 하루는 ‘이상이 생긴 순간’에 판가름 납니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">현장을 움직이는 네 사용자 그룹과 한 교대 근무의 여정 — 불편이 쌓이는 지점과 삼성이 개입하는 순간</div>
+
+  <!-- 1. 사용자 그룹 4 -->
+  <sc-for list="{{personas}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.card}}"></div>
+    <img src="{{p.src}}" alt="{{p.alt}}" style="position: absolute; {{p.imgPos}} object-fit: cover; object-position: {{p.op}}; border-radius: 10px">
+    <div style="{{p.badge}}">{{p.k}}</div>
+    <div style="{{p.chipStyle}}">{{p.chip}}</div>
+    <div style="{{p.nameStyle}}">{{p.name}}</div>
+    <div style="{{p.shareStyle}}"><span style="font-size: 11px; color: #596170">인원</span><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">[00]%</span></div>
+    <div style="{{p.whoStyle}}">{{p.who}}</div>
+    <div style="{{p.painStyle}}"><span style="height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 4px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 10px; font-weight: 800; color: #3d4452; display: flex; align-items: center">불편</span><span style="font-size: 12px; font-weight: 700; color: #121417">{{p.pain}}</span></div>
+  </sc-for>
+
+  <!-- 2. 한 교대의 여정 -->
+  <div style="position: absolute; left: 64px; top: 380px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">한 교대의 여정</span><span style="font-size: 11.5px; color: #8a91a0">시간은 예시 · 곡선은 현장 체감 (정성)</span></div>
+  <div style="position: absolute; left: 736px; top: 382px; width: 480px; height: 16px; display: flex; align-items: center; justify-content: flex-end; gap: 14px; font-size: 11px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 16px; height: 2px; background: #8a91a0"></span>지금 체감</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; border: 2px solid #eaeefb; background: #1428a0"></span>삼성이 개입하는 순간</span>
+    <span style="height: 16px; padding: 0 6px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; font-weight: 700; display: flex; align-items: center">결정적 순간</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 408px; font-size: 10.5px; color: #8a91a0; white-space: nowrap">좋음</div>
+  <div style="position: absolute; left: 64px; top: 472px; font-size: 10.5px; color: #8a91a0; white-space: nowrap">불편</div>
+  <svg style="position: absolute; left: 64px; top: 404px" width="1152" height="92" viewBox="0 0 1152 92" fill="none">
+    <line x1="40" y1="44" x2="1152" y2="44" stroke="#d5d9e0" stroke-width="1" stroke-dasharray="4 4"></line>
+    <polyline points="{{curve}}" stroke="#8a91a0" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" fill="none"></polyline>
+  </svg>
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="7">
+    <div style="{{s.link}}"></div>
+    <div style="{{s.dot}}"></div>
+    <sc-if value="{{s.mot}}" hint-placeholder-val="{{false}}">
+      <div style="{{s.motStyle}}">결정적 순간</div>
+    </sc-if>
+    <div style="{{s.card}}"></div>
+    <div style="{{s.headStyle}}">
+      <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{s.time}}</span>
+      <span style="display: flex; align-items: center; gap: 3px">
+        <sc-for list="{{s.who}}" as="w" hint-placeholder-count="2">
+          <span style="{{w.style}}">{{w.t}}</span>
+        </sc-for>
+      </span>
+    </div>
+    <div style="{{s.nameStyle}}">{{s.name}}</div>
+    <div style="{{s.painStyle}}">{{s.pain}}</div>
+    <div style="{{s.solStyle}}">{{s.sol}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 공장 · 현장 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 1. 사용자 그룹 — 사진은 카탈로그 예시 (고객 현장 사진으로 교체)
+    const P = [
+      ['A', '생산 라인 작업자', '교대 근무 · 장갑 · 소음 속에서 설비를 다루고 점검표를 채웁니다', '종이 작업서 · 사후 재입력',
+       '/_blob/976560df29712c9382c84024a11f5bf8', '공장 로봇암 앞에서 안전모 · 조끼 차림의 작업자가 장갑 낀 손으로 러기드 태블릿을 사용', '50% 42%', '예시 사진 · 고객 공간으로 교체'],
+      ['B', '야외 · 고위험 작업자', '협력사 포함 · 넓은 야외 작업장을 이동 — 중장년 근무자도 쉽게 써야 합니다', '쓰러져도 발견이 늦음',
+       '/_blob/e8acf7e984f3f6cbe95ba2602017f6fd', '현장 작업자 손목 위 갤럭시 워치에 온열 위험 경고 알림', '50% 50%', '예시 사진 · 고객 공간으로 교체'],
+      ['C', '물류 · 출하 담당', '창고 · 야드 · 차량을 오가며 물품을 싣고 고객사에 인계합니다', '‘지금 어디쯤?’ 문의 응대',
+       '/_blob/fd7152aca97436229470b5ac6ced1ffe', '물류창고 선반 앞에서 작업자가 스마트폰으로 박스 재고를 확인', '50% 40%', '예시 사진 · 고객 공간으로 교체'],
+      ['D', '설비 · 안전 관리자', '여러 동 · 사업장의 공조 설비와 작업자 안전을 책임지는 시설 · 안전팀입니다', '현장을 돌아야 상태를 앎',
+       '/_blob/37eb6322b0acde024eb630ba187e8fa1', '작업자 위치 지도 · 위험 알림 · 조치 현황을 보여 주는 안전 관제 대시보드 화면 모음', '22% 50%', '화면 예시 · 카탈로그']
+    ];
+    const personas = P.map(([k, name, who, pain, src, alt, op, chip], i) => {
+      const x = 64 + i * 294;
+      return {
+        k, name, who, pain, src, alt, chip,
+        card: A + box(x, 160, 270, 200) + 'border-radius: 14px; background: #f5f6f8;',
+        imgPos: box(x + 10, 170, 250, 92), op,
+        badge: A + box(x + 18, 178, 26, 26) + 'box-sizing: border-box; border-radius: 50%; border: 2px solid #ffffff; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        chipStyle: A + 'left: ' + px(x + 18) + 'top: 238px; height: 18px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap;',
+        nameStyle: A + box(x + 16, 272, 160, 22) + 'font-size: 15px; font-weight: 800; line-height: 22px; white-space: nowrap;',
+        shareStyle: A + box(x + 176, 273, 78, 20) + 'display: flex; align-items: baseline; justify-content: flex-end; gap: 4px; white-space: nowrap;',
+        whoStyle: A + box(x + 16, 298, 238, 34) + 'font-size: 12px; line-height: 17px; color: #3d4452;',
+        painStyle: A + box(x + 16, 336, 238, 18) + 'display: flex; align-items: center; gap: 6px; white-space: nowrap;'
+      };
+    });
+
+    // 2. 한 교대의 여정 — s = 현장 체감 (0 불편 … 1 좋음, 정성), on = 삼성 개입, mot = 결정적 순간
+    const S = [
+      ['06:30', ['A', 'B', 'C'], '출근 · 단말 수령', '공용 단말 충전 · 로그인 · 앱 설정이 제각각', 'Knox · 전용 모드', 0.70, true, false],
+      ['07:00', ['A', 'B'], '작업 전 브리핑', '두꺼운 종이 매뉴얼 — 바뀐 절차 확인이 늦음', '갤럭시 탭 액티브', 0.42, true, false],
+      ['08:00', ['A', 'D'], '라인 · 현장 작업', '구역마다 다른 온 · 습도, 더위 · 추위 속 정밀 작업', '통합공조 · DMS', 0.55, true, false],
+      ['10:40', ['B', 'D'], '이상 · 위험 발생', '넘어짐 · 추락 · 심박 이상 — 혼자면 골든타임을 놓침', '갤럭시 워치 · 관제', 0.04, true, true],
+      ['13:30', ['A', 'D'], '점검 · 기록', '수기 점검표를 사무실에서 다시 입력 — 누락 · 지연', 'S펜 · 현장 앱 입력', 0.30, true, false],
+      ['15:00', ['C', '고객사'], '출하 · 배송', '고객사의 ‘지금 어디쯤?’ 문의, 분실 시 정보 유출 우려', '스마트태그2 · Knox', 0.22, true, true],
+      ['18:00', ['A', 'D'], '교대 · 인계', '구두 · 메모 인계로 이상 내역이 다음 교대에 덜 전달됨', 'L 제조 인계 절차', 0.60, false, false]
+    ];
+    const STEP = 166, CW = 156, TOP = 404;
+    const pts = [];
+    const stages = S.map(([time, who, name, pain, sol, s, on, mot], i) => {
+      const x = 64 + i * STEP;
+      const cx = x + 78;
+      const cy = Math.round((TOP + 8 + (1 - s) * 72) * 10) / 10;
+      pts.push((cx - 64) + ',' + (cy - TOP).toFixed(1));
+      const d = on ? 18 : 12;
+      const linkTop = Math.round(cy + d / 2);
+      return {
+        time, name, pain, sol, mot,
+        who: who.map((t) => ({
+          t,
+          style: (t.length > 1 ? 'height: 16px; padding: 0 5px; border-radius: 999px; ' : 'width: 16px; height: 16px; border-radius: 50%; justify-content: center; ') + 'background: ' + (t.length > 1 ? '#121417; color: #ffffff; ' : '#d5d9e0; color: #121417; ') + 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap;'
+        })),
+        link: A + box(cx, linkTop, 0, 500 - linkTop) + 'border-left: 1px dashed ' + (on ? '#b8c3ee' : '#d5d9e0') + ';',
+        dot: A + box(Math.round(cx - d / 2), Math.round(cy - d / 2), d, d) + 'box-sizing: border-box; border-radius: 50%; ' + (on ? 'border: 3px solid #eaeefb; background: #1428a0;' : 'border: 2px solid #ffffff; background: #8a91a0;'),
+        motStyle: A + box(cx - 35, Math.round(cy - 34), 70, 18) + 'border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; white-space: nowrap;',
+        card: A + box(x, 500, CW, 148) + 'box-sizing: border-box; border-radius: 12px; ' + (mot ? 'background: #ffffff; border: 1.5px solid #1428a0;' : 'background: #f5f6f8;'),
+        headStyle: A + box(x + 12, 510, CW - 24, 18) + 'display: flex; align-items: center; justify-content: space-between; white-space: nowrap;',
+        nameStyle: A + box(x + 12, 532, CW - 24, 20) + 'font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap;',
+        painStyle: A + box(x + 12, 556, CW - 24, 51) + 'font-size: 12px; line-height: 17px; color: #3d4452;',
+        solStyle: A + box(x + 12, 614, CW - 24, 24) + 'box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + (on ? 'background: #eaeefb; color: #1428a0;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #8a91a0;')
+      };
+    });
+
+    return { personas, stages, curve: pts.join(' ') };
+  }
+}
+</script>
+</body>
+</html>

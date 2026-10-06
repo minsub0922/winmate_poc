@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-6·4 여섯 공간 · 솔루션 4개 — 히트맵 (리조트)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 6곳 · 솔루션 4개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">O 리조트 여섯 공간 × 네 솔루션 — 진한 칸이 그 공간의 핵심입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">공간이 많을 때 — 칸의 진하기로 비중을, 한 줄로 쓰임을 보여줍니다</div>
+
+  <!-- 표 머리 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 180px; height: 52px; box-sizing: border-box; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: nowrap"><span style="font-size: 12px; font-weight: 800; color: #596170">공간 \ 솔루션</span><span style="font-size: 11px; color: #8a91a0">공간 · 이용자</span></div>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.style}}"><span style="font-size: 14px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em">{{c.name}}</span><span style="font-size: 11.5px; line-height: 16px; color: #596170">{{c.def}}</span></div>
+  </sc-for>
+  <div style="position: absolute; left: 1024px; top: 160px; width: 192px; height: 52px; box-sizing: border-box; padding: 0 14px; border-radius: 10px; background: #1428a0; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: nowrap"><span style="font-size: 14px; line-height: 20px; font-weight: 800; color: #ffffff">공간의 가치</span><span style="font-size: 11.5px; line-height: 16px; color: #c8d3ff">대표 KPI · 예시</span></div>
+
+  <!-- 행 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+    <div style="{{r.head}}">
+      <div style="display: flex; align-items: center; gap: 7px"><span style="width: 20px; height: 20px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.n}}</span><span style="font-size: 14px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em">{{r.name}}</span></div>
+      <span style="padding-left: 27px; font-size: 11.5px; line-height: 16px; color: #596170">{{r.who}}</span>
+    </div>
+    <sc-for list="{{r.cells}}" as="k" hint-placeholder-count="4">
+      <div style="{{k.style}}">
+        <span style="{{k.labS}}">{{k.lab}}</span>
+        <span style="{{k.txtS}}">{{k.t}}</span>
+      </div>
+    </sc-for>
+    <div style="{{r.val}}"><span style="font-size: 11.5px; line-height: 16px; color: #596170">{{r.kpi}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 17px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">{{r.kv}}</span></div>
+  </sc-for>
+
+  <!-- 열 합계 -->
+  <div style="position: absolute; left: 64px; top: 572px; width: 180px; height: 44px; box-sizing: border-box; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 1px; white-space: nowrap"><span style="font-size: 12.5px; font-weight: 800">열 합계</span><span style="font-size: 11px; color: #596170">솔루션별 핵심 공간 수</span></div>
+  <sc-for list="{{totals}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.style}}">
+      <div style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 20px; line-height: 24px; font-weight: 800; color: #1428a0">{{t.core}}</span><span style="font-size: 12px; font-weight: 700; color: #121417">핵심</span><span style="margin-left: 4px; font-size: 11.5px; color: #596170">{{t.sub}}</span></div>
+      <div style="display: flex; gap: 3px">
+        <sc-for list="{{t.strip}}" as="q" hint-placeholder-count="6">
+          <span style="{{q.style}}"></span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 1024px; top: 572px; width: 192px; height: 44px; box-sizing: border-box; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 1px; white-space: nowrap"><span style="font-size: 11.5px; color: #596170">핵심 칸 합계</span><span style="font-size: 12.5px; font-weight: 800"><span style="font-family: Manrope, sans-serif; color: #1428a0">{{coreSum}}</span> / 24칸</span></div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 626px; width: 1152px; height: 26px; border-top: 1px solid #eef0f3"></div>
+  <div style="position: absolute; left: 78px; top: 632px; height: 20px; display: flex; align-items: center; gap: 18px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 14px; border-radius: 4px; background: #1428a0"></span><b style="font-weight: 800">핵심</b> 그 공간의 주된 솔루션</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 14px; border-radius: 4px; background: #eaeefb"></span><b style="font-weight: 800">보조</b> 함께 쓰면 좋은 솔루션</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1px solid #d5d9e0; background: #ffffff"></span><b style="font-weight: 800">없음</b> 이 공간엔 쓰지 않음</span>
+    <span style="color: #8a91a0">· 막대는 공간 ①–⑥ 순서</span>
+  </div>
+  <div style="position: absolute; right: 64px; top: 632px; height: 20px; display: flex; align-items: center; font-size: 11px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>O 리조트 · 리조트 통합 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 열: 행 머리 64(180) · 솔루션 252 + j*192 (186) · 가치 1024(192). 행: 218 + i*58 (52)
+    const CX = (j) => 252 + j * 192, CW = 186;
+    const RY = (i) => 218 + i * 58, RH = 52;
+
+    const C = [
+      ['LYNK Cloud', '호텔 TV 클라우드'],
+      ['MagicINFO', '구축형 사이니지 CMS'],
+      ['SmartThings Pro', '공간 기기 · 자동화 루틴'],
+      ['SAC 제어 시스템', '시스템에어컨 중앙 제어']
+    ];
+    const cols = C.map(([name, def], j) => ({
+      name, def,
+      style: box(CX(j), 160, CW, 52) + 'box-sizing: border-box; padding: 0 14px; border-radius: 10px; background: #f5f6f8; display: flex; flex-direction: column; justify-content: center; gap: 2px; ' + T
+    }));
+
+    // 2 = 핵심 · 1 = 보조 · 0 = 없음
+    const R = [
+      ['로비', '투숙객 · 방문객', [[0, ''], [2, '체크인 안내 · 행사 화면'], [1, '조명 일정'], [1, '로비 공조 스케줄']], '체크인 대기', '[0]분 ↓'],
+      ['객실', '투숙객', [[2, '웰컴 화면 · 캐스팅'], [0, ''], [2, '공실 객실 절전'], [1, '설정 온도 범위 제한']], '객실 전력', '[00]% ↓'],
+      ['레스토랑', '투숙객 · 외부 손님', [[0, ''], [2, '메뉴 · 프로모션'], [1, '영업시간 조명'], [1, '영업시간 공조 스케줄']], '부대 매출', '[00]% ↑'],
+      ['연회장', '행사 주최 · 참석자', [[1, '행사 안내 화면'], [2, '연회 안내 · 스폰서'], [1, '행사 모드 조명 · 전원'], [2, '행사 시간만 공조']], '연회장 공조', '[00]% ↓'],
+      ['스파 · 피트니스', '투숙객 · 회원', [[0, ''], [1, '프로그램 안내'], [2, '기구 · 조명 · 환기'], [1, '실별 설정 온도']], '이용 만족', '[0.0]점 ↑'],
+      ['관리실', '시설 · 객실 관리팀', [[1, '객실 TV 원격 관리'], [1, '전 화면 원격 관리'], [2, '전 공간 대시보드'], [2, 'DMS 2.5 중앙 제어']], '관리 인력 순회', '[00]% ↓']
+    ];
+    const LV = [
+      { lab: '', bg: 'background: #ffffff; border: 1px solid #e2e5ea;', labC: '#b8bec8', txtC: '#b8bec8' },
+      { lab: '보조', bg: 'background: #eaeefb;', labC: '#6f82d6', txtC: '#1428a0' },
+      { lab: '핵심', bg: 'background: #1428a0;', labC: '#c8d3ff', txtC: '#ffffff' }
+    ];
+
+    const rows = R.map(([name, who, cells, kpi, kv], i) => ({
+      n: i + 1, name, who, kpi, kv,
+      head: box(64, RY(i), 180, RH) + 'box-sizing: border-box; padding: 0 12px; border-radius: 10px; background: #f5f6f8; display: flex; flex-direction: column; justify-content: center; gap: 1px; ' + T,
+      cells: cells.map(([lv, t], j) => {
+        const L = LV[lv];
+        return {
+          lab: lv ? L.lab : '—', t,
+          style: box(CX(j), RY(i), CW, RH) + 'box-sizing: border-box; padding: 0 14px; border-radius: 10px; ' + L.bg + ' display: flex; flex-direction: column; justify-content: center; gap: 1px; ' + T +
+            (lv ? '' : ' align-items: center;'),
+          labS: lv ? 'font-size: 10px; line-height: 14px; font-weight: 800; letter-spacing: 0.04em; color: ' + L.labC + ';' : 'font-size: 14px; line-height: 18px; color: ' + L.labC + ';',
+          txtS: lv ? 'font-size: 12.5px; line-height: 18px; font-weight: ' + (lv === 2 ? 700 : 600) + '; color: ' + L.txtC + ';' : 'display: none;'
+        };
+      }),
+      val: box(1024, RY(i), 192, RH) + 'box-sizing: border-box; padding: 0 14px; border-radius: 10px; border: 1px solid #d5d9e0; background: #ffffff; display: flex; align-items: center; justify-content: space-between; gap: 8px; ' + T
+    }));
+
+    // 열 합계 — 핵심 · 보조 개수와 공간 ①–⑥ 막대
+    const SQ = ['background: #ffffff; border: 1px solid #d5d9e0;', 'background: #c8d3ff;', 'background: #1428a0;'];
+    let coreSum = 0;
+    const totals = C.map((c, j) => {
+      const lv = R.map((r) => r[2][j][0]);
+      const core = lv.filter((v) => v === 2).length, sub = lv.filter((v) => v === 1).length;
+      coreSum += core;
+      return {
+        core: core + '곳', sub: '· 보조 ' + sub + '곳',
+        strip: lv.map((v) => ({ style: 'width: 22px; height: 8px; box-sizing: border-box; border-radius: 2px; ' + SQ[v] })),
+        style: box(CX(j), 572, CW, 44) + 'box-sizing: border-box; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 4px; ' + T
+      };
+    });
+
+    return { cols, rows, totals, coreSum: String(coreSum) };
+  }
+}
+</script>
+</body>
+</html>

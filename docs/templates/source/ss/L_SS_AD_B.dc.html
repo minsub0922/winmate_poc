@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-AD-B 옥외 · 미디어 광고 · 대표 공간 장면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">J 미디어의 랜드마크 외벽은 아침부터 심야까지 스스로 표정을 바꿉니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">대표 공간 ① 랜드마크 외벽 — 하루를 네 장면으로: 순간 → 솔루션 → 제품 → 가치 (시간은 예시)</div>
+
+  <!-- 행 라벨 (거터 x 64–136) -->
+  <div style="position: absolute; left: 64px; top: 224px; width: 72px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; line-height: 17px; font-weight: 800; color: #596170">장면</span><span style="font-size: 10.5px; line-height: 15px; color: #8a91a0">그림은 예시</span></div>
+  <div style="position: absolute; left: 64px; top: 330px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">순간</div>
+  <div style="position: absolute; left: 64px; top: 398px; width: 72px; display: flex; flex-direction: column; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0; white-space: nowrap"><span>솔루션이</span><span>하는 일</span></div>
+  <div style="position: absolute; left: 64px; top: 471px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">제품</div>
+  <div style="position: absolute; left: 64px; top: 536px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">가치</div>
+
+  <!-- 외벽 그림 (장면마다) -->
+  <sc-for list="{{art}}" as="g" hint-placeholder-count="80">
+    <div style="{{g.s}}">{{g.t}}</div>
+  </sc-for>
+
+  <!-- 네 장면 -->
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.head}}"><span style="font-family: Manrope, sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{s.title}}</span></div>
+    <div style="{{s.ctxS}}">{{s.ctx}}</div>
+    <div style="{{s.solBox}}">
+      <div style="position: absolute; left: 12px; top: 10px; font-size: 12.5px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{s.sol}}</div>
+      <div style="position: absolute; left: 12px; top: 32px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d1}}</div>
+      <div style="position: absolute; left: 12px; top: 49px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d2}}</div>
+    </div>
+    <div style="{{s.prodBox}}">
+      <svg style="position: absolute; left: 12px; top: 12px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+      <div style="position: absolute; left: 36px; top: 10px; font-size: 12.5px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{s.prod}}</div>
+    </div>
+    <div style="{{s.valBox}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-size: 12.5px; line-height: 18px; font-weight: 600; color: #121417; white-space: nowrap">{{s.val}}</div>
+      <div style="position: absolute; left: 12px; top: 33px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.kpi}}</div>
+      <div style="position: absolute; left: 12px; top: 48px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{s.kv}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 장면 사이 화살표 -->
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="3">
+    <div style="{{a.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- 외벽 1곳 표준 구성 -->
+  <div style="position: absolute; left: 64px; top: 594px; width: 1152px; height: 54px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 601px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">랜드마크 외벽 1곳 표준 구성</div>
+  <div style="position: absolute; left: 80px; top: 623px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+  <div style="position: absolute; left: 290px; top: 604px; width: 1px; height: 34px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 306px; top: 601px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="5">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 306px; top: 626px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0">운영</span><span>MagicINFO (편성 · 밝기 스케줄 · 장애 알림) · 케어 · 유지관리 서비스 (비바람 · 먼지 대비 정기 점검) · 콘텐츠 제작 지원</span></div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>J 미디어 · 옥외 미디어 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    const X0 = 148, STEP = 270, W = 258, Y = 160, H = 156;
+    const S = [
+      { time: '07:30', title: '출근길 광고 편성', ctx: '출근 인파 · 대로 차량 정체',
+        sol: 'MagicINFO 편성 스케줄', d1: '출근 시간대 광고주 편성이 예약대로', d2: '재생 상태는 관제실에서 원격 확인',
+        prod: '실외 곡면 LED 사이니지',
+        val: '가장 붐비는 시간에 빈 화면이 없습니다', kpi: '출근 시간대 송출률', kv: '[00]%',
+        sky: '#f5f6f8', bld: '#b8bec8', scr: '#1428a0', lvl: 0.6, mode: 'ad' },
+      { time: '13:00', title: '한낮 직사광선 속 선명하게', ctx: '정오 햇빛이 외벽 정면으로',
+        sol: 'MagicINFO 원격 관리', d1: '고휘도 실외 LED가 햇빛 아래서도 선명,', d2: '시간대에 맞춰 밝기를 올려 둡니다',
+        prod: '실외 곡면 LED 사이니지 (고휘도)',
+        val: '한낮에도 광고가 햇빛에 묻히지 않습니다', kpi: '한낮 시인성 불만', kv: '[00]% ↓',
+        sky: '#f8f9fb', bld: '#b8bec8', scr: '#6f82d6', lvl: 1, mode: 'sun' },
+      { time: '19:30', title: '곡면을 잇는 미디어아트', ctx: '퇴근길 · 관광객 · 사진 촬영',
+        sol: '콘텐츠 제작 지원 · MagicINFO', d1: '두 면을 잇는 곡면 · 세로형 미디어아트를', d2: '정시마다 편성해 랜드마크로',
+        prod: '곡면 LED · 외벽 두 면 연결',
+        val: '머물러 찍어 가는 장소가 됩니다', kpi: '저녁 시간대 판매 슬롯', kv: '[00]% ↑',
+        sky: '#dfe3ea', bld: '#8a91a0', scr: '#1428a0', lvl: 0.75, mode: 'art' },
+      { time: '23:30', title: '심야 밝기 저감', ctx: '주변 상가 소등 · 야간 운전자',
+        sol: 'MagicINFO 스케줄 · 원격 관제', d1: '심야엔 밝기를 단계적으로 낮추고,', d2: '화면 꺼짐 · 장애는 관제실로 알림',
+        prod: 'LED 사이니지 · 관제실 모니터',
+        val: '운전자 · 주민 눈부심 걱정을 덜어 줍니다', kpi: '야간 눈부심 민원', kv: '[00]% ↓',
+        sky: '#121417', bld: '#3d4452', scr: '#3b4fb8', lvl: 0.3, mode: 'night' }
+    ];
+
+    const art = [];
+    const r = (x, y, w, h, c) => art.push({ s: box(x, y, w, h) + c, t: '' });
+    S.forEach((s, i) => {
+      const x = X0 + i * STEP, night = s.mode === 'night';
+      r(x, Y, W, H, 'border-radius: 12px; background: ' + s.sky + ';');
+      // 거리
+      r(x, Y + 132, W, 24, 'border-radius: 0 0 12px 12px; background: ' + (night ? '#3d4452' : '#d5d9e0') + ';');
+      r(x + 12, Y + 143, W - 24, 2, 'background: ' + (night ? '#596170' : '#ffffff') + ';');
+      [40, 120, 196].forEach((cx, k) => r(x + cx + (i * 13 % 30), Y + 136 + (k % 2) * 8, 16, 6, 'border-radius: 2px; background: ' + (night ? '#c8d3ff' : '#596170') + ';'));
+      // 건물 — 정면 + 둥근 모서리 + 측면
+      r(x + 66, Y + 14, 170, 118, 'border-radius: 4px 30px 0 0; background: ' + s.bld + ';');
+      [0, 1, 2, 3, 4, 5].forEach((k) => r(x + 78 + k * 25, Y + 108, 16, 14, 'border-radius: 2px; background: ' + (night ? '#596170' : '#dfe3ea') + ';'));
+      // 곡면 LED (두 면 연결)
+      const sx = x + 76, sy = Y + 24, sw = 150, sh = 76;
+      const fx = 'border-radius: 3px 24px 24px 3px; ';
+      r(sx, sy, sw, sh, fx + 'background: ' + s.scr + ';' + (night ? ' opacity: 0.7;' : ''));
+      if (s.mode === 'ad') {
+        r(sx + 10, sy + 12, 62, 9, 'border-radius: 2px; background: #ffffff;');
+        r(sx + 10, sy + 27, 44, 6, 'border-radius: 2px; background: #c8d3ff;');
+        r(sx + 10, sy + 54, 30, 12, 'border-radius: 999px; background: #ffffff;');
+        r(sx + 86, sy + 10, 46, 56, 'border-radius: 4px 16px 16px 4px; background: #6f82d6;');
+      }
+      if (s.mode === 'sun') {
+        r(sx + 10, sy + 10, 74, 56, 'border-radius: 4px; background: #ffffff;');
+        r(sx + 20, sy + 22, 40, 8, 'border-radius: 2px; background: #1428a0;');
+        r(sx + 20, sy + 36, 28, 6, 'border-radius: 2px; background: #6f82d6;');
+        r(sx + 92, sy + 12, 36, 52, 'border-radius: 4px 14px 14px 4px; background: #eaeefb;');
+      }
+      if (s.mode === 'art') {
+        ['#121417', '#1428a0', '#3b4fb8', '#6f82d6', '#c8d3ff', '#6f82d6', '#3b4fb8', '#1428a0'].forEach((c, k) =>
+          r(sx + 6 + k * 17, sy + 8 + (k % 3) * 6, 12, sh - 16 - (k % 3) * 12, 'border-radius: 6px; background: ' + c + ';'));
+      }
+      if (s.mode === 'night') {
+        r(sx + 12, sy + 14, 54, 8, 'border-radius: 2px; background: #6f82d6;');
+        r(sx + 12, sy + 28, 36, 6, 'border-radius: 2px; background: #6f82d6;');
+      }
+      // 모서리 이음선
+      r(sx + 112, sy, 1, sh, 'background: ' + (night ? '#596170' : '#c8d3ff') + ';');
+      // 하늘 — 해 · 달
+      if (s.mode === 'ad') r(x + 18, Y + 20, 18, 18, 'border-radius: 50%; background: #c8d3ff;');
+      if (s.mode === 'sun') {
+        r(x + 12, Y + 12, 34, 34, 'border-radius: 50%; background: #eaeefb;');
+        r(x + 19, Y + 19, 20, 20, 'border-radius: 50%; background: #6f82d6;');
+      }
+      if (s.mode === 'art') r(x + 16, Y + 36, 24, 12, 'border-radius: 12px 12px 0 0; background: #b8bec8;');
+      if (night) {
+        r(x + 18, Y + 16, 20, 20, 'border-radius: 50%; background: #c8d3ff;');
+        r(x + 25, Y + 12, 20, 20, 'border-radius: 50%; background: #121417;');
+      }
+      // 밝기 막대
+      const mh = 40, fill = Math.round(mh * s.lvl);
+      r(x + 22, Y + 84, 10, mh, 'box-sizing: border-box; border-radius: 3px; border: 1.5px solid #8a91a0;');
+      r(x + 24, Y + 86 + (mh - 4 - Math.round((mh - 4) * s.lvl)), 6, Math.round((mh - 4) * s.lvl), 'border-radius: 2px; background: ' + (night ? '#c8d3ff' : '#1428a0') + ';');
+      art.push({ s: A + 'left: ' + px(x + 12) + 'top: ' + px(Y + 64) + 'font-size: 10px; line-height: 14px; font-weight: 700; color: ' + (night ? '#ffffff' : '#596170') + '; ' + T, t: '밝기' });
+    });
+
+    const scenes = S.map((s, i) => {
+      const x = X0 + i * STEP;
+      return {
+        n: i + 1, time: s.time, title: s.title, ctx: s.ctx, sol: s.sol, d1: s.d1, d2: s.d2, prod: s.prod,
+        val: s.val, kpi: s.kpi, kv: s.kv,
+        badge: box(x, 326, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        head: box(x + 34, 324, W - 34, 22) + 'display: flex; align-items: center; gap: 8px; ' + T,
+        ctxS: box(x + 34, 348, W - 34, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + T,
+        solBox: box(x, 378, W, 74) + 'border-radius: 10px; background: #eaeefb;',
+        prodBox: box(x, 460, W, 40) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;',
+        valBox: box(x, 508, W, 74) + 'border-radius: 10px; background: #f5f6f8;'
+      };
+    });
+
+    const arrows = [0, 1, 2].map((i) => ({
+      style: box(X0 + i * STEP + W + 6 - 12, 226, 24, 24) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    const kit = ['실외 곡면 LED 사이니지 · 두 면', 'MagicINFO 서버 · 관제실', '관제 모니터', '정기 점검 · 세척', '미디어아트 콘텐츠'].map((t) => ({ t }));
+
+    return { art, scenes, arrows, kit };
+  }
+}
+</script>
+</body>
+</html>

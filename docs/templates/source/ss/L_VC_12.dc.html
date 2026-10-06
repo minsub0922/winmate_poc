@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-1·2 한 공간 · 솔루션 2개 — 역할 분담 (민원실 × VXT + Knox Suite)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 1곳 · 솔루션 2개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">Q 구청 민원실, 보는 화면은 VXT가 · 쓰는 태블릿은 Knox Suite가</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">한 공간에 두 솔루션 — 민원인이 보는 것과 손에 드는 것을 나눠 맡습니다</div>
+
+  <!-- 솔루션 카드 2개 (왼쪽 4열 · 오른쪽 4열) -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="2">
+    <div style="{{c.box}}">
+      <div style="position: absolute; left: 24px; top: 128px; font-size: 12px; line-height: 16px; font-weight: 800; color: #596170; white-space: nowrap">이 민원실에서 하는 일</div>
+      <sc-for list="{{c.items}}" as="it" hint-placeholder-count="3">
+        <div style="{{it.row}}">
+          <span style="{{it.badge}}">{{it.n}}</span>
+          <span style="font-size: 14px; line-height: 20px; font-weight: 700; color: #121417; letter-spacing: -0.01em">{{it.t}}</span>
+        </div>
+        <div style="{{it.rule}}"></div>
+      </sc-for>
+      <div style="position: absolute; left: 24px; top: 280px; font-size: 12px; line-height: 16px; font-weight: 800; color: #596170; white-space: nowrap">제품</div>
+      <div style="position: absolute; left: 24px; top: 302px; height: 30px; box-sizing: border-box; padding: 0 12px 0 10px; border-radius: 999px; border: 1px solid #d5d9e0; background: #ffffff; display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: #121417; white-space: nowrap">
+        <sc-if value="{{c.tab}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M11 18h2"></path></svg></sc-if>
+        <sc-if value="{{c.scr}}" hint-placeholder-val="{{true}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg></sc-if>
+        <span>{{c.prod}}</span>
+      </div>
+      <div style="{{c.valBox}}">
+        <div style="{{c.valTag}}">가치</div>
+        <div style="position: absolute; left: 16px; top: 33px; font-size: 14px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{c.valT}}</div>
+        <div style="{{c.kpi}}">{{c.kv}}</div>
+      </div>
+    </div>
+    <div style="{{c.head}}">
+      <div style="{{c.roleS}}">{{c.role}}</div>
+      <div style="position: absolute; left: 24px; top: 40px; font-size: 24px; line-height: 32px; font-weight: 800; letter-spacing: -0.01em; color: #ffffff; white-space: nowrap">{{c.name}}</div>
+      <div style="{{c.descS}}">{{c.desc}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 카드 머리 아이콘 -->
+  <div style="position: absolute; left: 372px; top: 184px; width: 36px; height: 36px; border-radius: 10px; background: #2a3cb0; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg></div>
+  <div style="position: absolute; left: 1156px; top: 184px; width: 36px; height: 36px; border-radius: 10px; background: #2b2f36; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M11 18h2"></path></svg></div>
+
+  <!-- 가운데: 민원실 사진 자리 -->
+  <div style="position: absolute; left: 456px; top: 160px; width: 368px; height: 200px; border-radius: 16px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">민원실 사진</div>
+  <div style="position: absolute; left: 472px; top: 322px; height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">Q 구청 민원실</div>
+
+  <!-- 카드 ↔ 사진 연결 -->
+  <sc-for list="{{links}}" as="l" hint-placeholder-count="2">
+    <div style="{{l.line}}"></div>
+    <div style="{{l.dot}}"></div>
+    <div style="{{l.chip}}">{{l.t}}</div>
+  </sc-for>
+
+  <!-- 민원 한 건의 흐름 -->
+  <div style="position: absolute; left: 456px; top: 376px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">민원 한 건의 흐름</span><span style="font-size: 11.5px; color: #8a91a0">번호표부터 창구까지</span></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.box}}">
+      <span style="position: absolute; left: 14px; top: 15px; width: 26px; height: 26px; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0; box-sizing: border-box; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 52px; top: 8px; font-size: 14px; line-height: 20px; font-weight: 800; white-space: nowrap">{{s.t}}</div>
+      <div style="position: absolute; left: 52px; top: 29px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">{{s.d}}</div>
+      <div style="position: absolute; right: 12px; top: 17px; height: 20px; display: flex; gap: 4px; white-space: nowrap">
+        <sc-for list="{{s.chips}}" as="k" hint-placeholder-count="1">
+          <span style="{{k.style}}">{{k.t}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <sc-for list="{{joins}}" as="j" hint-placeholder-count="2">
+    <div style="{{j.style}}"></div>
+  </sc-for>
+
+  <!-- 공통 가치 띠 -->
+  <div style="position: absolute; left: 64px; top: 600px; width: 1152px; height: 48px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 612px; height: 24px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">Samsung VXT</span>
+    <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #8a91a0">+</span>
+    <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">Knox Suite</span>
+    <span style="width: 1px; height: 20px; background: #d5d9e0; margin: 0 8px"></span>
+    <span style="font-size: 15px; font-weight: 800; letter-spacing: -0.01em">두 솔루션 · 한 민원실 — <span style="color: #1428a0">기다림은 짧게, 서류는 종이 없이</span></span>
+  </div>
+  <div style="position: absolute; right: 82px; top: 617px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>Q 구청 · 스마트 민원실 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 3열 대칭: 왼쪽 4열(64) · 가운데 4열(456) · 오른쪽 4열(848), 폭 368
+    const TOP = 160, W = 368, H = 424, HEAD = 108;
+    const C = [
+      { x: 64, fill: '#1428a0', sub: '#c8d3ff', tint: '#eaeefb', ink: '#1428a0',
+        role: '보는 화면', name: 'Samsung VXT', desc: '클라우드 사이니지 CMS · 설치 없이 웹에서',
+        items: ['대기 번호 · 창구 안내', '민원 안내 · 공지를 웹에서 바로 교체', '큰 글씨 · 다국어 화면'],
+        prod: '스마트 사이니지 QM 시리즈 ×[0]', tab: false, valT: '대기 체감', kv: '[00]% ↓' },
+      { x: 848, fill: '#121417', sub: '#b8bec8', tint: '#f5f6f8', ink: '#121417',
+        role: '손에 드는 기기', name: 'Knox Suite', desc: '업무용 갤럭시 기기 통합 관리',
+        items: ['민원 서식 앱만 열리는 키오스크 모드', '태블릿 [00]대 일괄 설정 · 업데이트', '분실 시 원격 잠금'],
+        prod: '갤럭시 탭 ×[00] · 거치대', tab: true, valT: '종이 서식', kv: '[0,000]장/월 ↓' }
+    ];
+    const cards = C.map((c) => ({
+      role: c.role, name: c.name, desc: c.desc, prod: c.prod, tab: c.tab, scr: !c.tab, valT: c.valT, kv: c.kv,
+      box: box(c.x, TOP, W, H) + 'box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; background: #ffffff;',
+      head: box(c.x, TOP, W, HEAD) + 'border-radius: 16px 16px 0 0; background: ' + c.fill + ';',
+      roleS: A + 'left: 24px; top: 20px; font-size: 12.5px; line-height: 18px; font-weight: 700; letter-spacing: 0.02em; color: ' + c.sub + '; ' + T,
+      descS: A + 'left: 24px; top: 76px; font-size: 12.5px; line-height: 18px; color: ' + c.sub + '; ' + T,
+      items: c.items.map((t, i) => ({
+        n: i + 1, t,
+        row: box(24, 152 + i * 38, W - 48, 28) + 'display: flex; align-items: center; gap: 10px; ' + T,
+        badge: 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: ' + c.fill + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        rule: i < 2 ? box(24, 152 + i * 38 + 33, W - 48, 1) + 'background: #eef0f3;' : 'display: none;'
+      })),
+      valBox: box(16, 346, W - 34, 62) + 'border-radius: 12px; background: ' + c.tint + ';',
+      valTag: A + 'left: 16px; top: 11px; font-size: 11px; line-height: 16px; font-weight: 800; letter-spacing: 0.04em; color: ' + c.ink + '; ' + T,
+      kpi: A + 'right: 16px; top: 13px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 26px; line-height: 36px; font-weight: 800; letter-spacing: -0.02em; color: ' + c.ink + '; ' + T
+    }));
+
+    // 카드 머리 → 사진 속 기기 위치 (연결선 + 끝점 + 칩)
+    const LY = TOP + 54;
+    const chip = (fill) => 'height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: ' + fill + '; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; ' + T;
+    const links = [
+      { t: '대기 번호 · 안내 화면', line: box(432, LY - 1, 44, 2) + 'background: #1428a0;',
+        dot: box(427, LY - 5, 10, 10) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;',
+        chip: A + 'left: 476px; top: ' + px(LY - 12) + chip('#1428a0') },
+      { t: '민원 서식 태블릿', line: box(804, LY - 1, 44, 2) + 'background: #121417;',
+        dot: box(843, LY - 5, 10, 10) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #121417;',
+        chip: A + 'right: 476px; top: ' + px(LY - 12) + chip('#121417') }
+    ];
+
+    // 민원 한 건의 흐름 (가운데 4열)
+    const pill = (fill, color, bd) => 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: ' + fill + '; color: ' + color + '; border: 1px solid ' + bd + '; font-size: 11px; font-weight: 700; display: flex; align-items: center;';
+    const V = { t: 'VXT', style: pill('#1428a0', '#ffffff', '#1428a0') };
+    const K = { t: 'Knox Suite', style: pill('#121417', '#ffffff', '#121417') };
+    const SY = 404, SH = 56, SG = 6;
+    const S = [
+      ['번호 호출', '대기 화면에 번호와 창구를 크게', [V]],
+      ['태블릿 서식 작성', '서식 앱만 열린 태블릿에서 바로', [K]],
+      ['창구 처리', '안내된 창구에서 종이 없이 마무리', [V, K]]
+    ];
+    const steps = S.map(([t, d, chips], i) => ({
+      n: i + 1, t, d, chips,
+      box: box(456, SY + i * (SH + SG), W, SH) + 'box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+    const joins = [0, 1].map((i) => ({ style: box(482, SY + i * (SH + SG) + SH, 2, SG) + 'background: #1428a0;' }));
+
+    return { cards, links, steps, joins };
+  }
+}
+</script>
+</body>
+</html>

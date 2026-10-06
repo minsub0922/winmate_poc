@@ -1,0 +1,30 @@
+ 
+ Value Proposition — 되묻기 (방향 두 갈래 · 결재자) 
+ N 체인 무인 매장 · Storyboard · MI 연결 · RFP 없음 
+ W 
+ 두 가지만 확인할게요. 나머지 6개는 정한 대로 진행합니다. 
+ 선택 필요 
+ 1 · 이번 제안의 첫 메시지는? 
+ 매출 0.52 : 비용 0.49 · 차이 0.10 미만 
+ Storyboard는 '매출'(객단가 · 24시간 판매)을, MI는 '인건비''{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+ renderVals() {
+ // 방향: [이름, 첫 메시지, 썸네일, n, 코드, 이렇게 바뀌어요, 추천]
+ const Q1 = [
+ ['① 매출 먼저', "'24시간 매장의 객단가를 올립니다' — 판매 화면 · 추천 상품", 'cards3img', 3, 'VP-F·3', '매출 기둥 2 + 운영 기둥 1', false],
+ ['② 비용 먼저', "'점원 없이도 돌아가는 운영비' — 원격 관리 · 무인 결제", 'chain', 3, 'CH-A + VP-E', '과제 3 ↔ 제품 3으로 짝지어요', false],
+ ['③ 둘 다', '매출과 비용을 나란히 — 경영진이 둘 다 볼 수 있게', 'cards3img', 2, 'VP-F·2', '기둥 2개 · 기대 효과 EF-C', true]
+ ];
+ const q1 = Q1.map(([t, d, kind, n, code, so, rec]) => ({
+ t, d, kind, n, code, so, rec, on: rec,
+ box: '' + (rec ? '' : '')
+ }));
+ const Q2 = [['대표', false], ['운영본부장', true], ['재무', false], ['가맹점주 협의회', false]];
+ const q2 = Q2.map(([t, on]) => ({
+ t, on,
+ box: '' + (on ? '' : '')
+ }));
+ const done = ['업종 생활 편의 · MI 상속', '업종판 제작 중 → 범용', '시트 3', '과제 4 · 근거 수치 6/8', '경쟁사 언급 없음', '고객사명 사용'];
+ return { steps: ['재료', '가치 구조', '결과'], cur: 2, q1, q2, done };
+ }
+}

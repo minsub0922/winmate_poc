@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>제안서 레이아웃 시스템</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM</div>
+  <div style="position: absolute; left: 64px; top: 66px; font-size: 30px; font-weight: 700; letter-spacing: -0.02em">제안서 레이아웃 시스템</div>
+  <div style="position: absolute; left: 64px; top: 112px; font-size: 15px; color: #596170">섹션 → 시트(역할) → 템플릿(그 역할을 가장 잘 보여주는 형태). 모든 템플릿은 같은 프레임 · 12열 그리드를 씁니다.</div>
+
+  <!-- 프레임 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 368px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 12px; font-weight: 700; color: #596170">프레임 · 1280 × 720 · 콘텐츠 1152 × 488</div>
+    <div style="position: relative; width: 368px; height: 207px; border: 1px solid #121417; border-radius: 4px; box-sizing: border-box; overflow: hidden">
+      <div style="position: absolute; left: 18px; top: 11px; width: 110px; height: 4px; background: #1428a0; border-radius: 2px"></div>
+      <div style="position: absolute; left: 18px; top: 19px; width: 230px; height: 8px; background: #121417; border-radius: 2px"></div>
+      <div style="position: absolute; left: 18px; top: 32px; width: 170px; height: 4px; background: #b8bec8; border-radius: 2px"></div>
+      <div style="position: absolute; left: 18px; top: 45px; width: 330px; height: 140px; background: #eaeefb; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 0 7px">
+        <div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div><div style="background: rgba(20,40,160,0.08)"></div>
+      </div>
+      <div style="position: absolute; left: 18px; top: 45px; width: 330px; height: 140px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #1428a0">12열 · 여백 64 · 간격 24</div>
+      <div style="position: absolute; left: 18px; top: 191px; width: 330px; height: 1px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 18px; top: 195px; width: 24px; height: 6px; border: 1px dashed #b8bec8; box-sizing: border-box"></div>
+      <div style="position: absolute; right: 18px; top: 196px; width: 34px; height: 3px; background: #d5d9e0"></div>
+    </div>
+  </div>
+
+  <!-- 타입 -->
+  <div style="position: absolute; left: 456px; top: 156px; width: 368px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 12px; font-weight: 700; color: #596170">타입 · Noto Sans KR / 수치 Manrope</div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #e2e5ea; padding-bottom: 7px"><span style="font-size: 22px; font-weight: 700">시트 제목 — 주장 한 문장</span><span style="font-size: 11px; color: #8a91a0">30 · 700</span></div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #e2e5ea; padding-bottom: 7px"><span style="font-size: 17px; font-weight: 700">카드 제목</span><span style="font-size: 11px; color: #8a91a0">17–23 · 800</span></div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #e2e5ea; padding-bottom: 7px"><span style="font-size: 14px">본문 · 설명</span><span style="font-size: 11px; color: #8a91a0">14–15.5 · 400</span></div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #e2e5ea; padding-bottom: 7px"><span style="font-size: 12px; color: #596170">캡션 · 출처 · "수치는 예시"</span><span style="font-size: 11px; color: #8a91a0">11.5–13</span></div>
+    <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 30px; font-weight: 800; color: #1428a0; font-family: Manrope, sans-serif">[00]%</span><span style="font-size: 11px; color: #8a91a0">수치 28–72 · 800 · 미확정은 자리표시</span></div>
+  </div>
+
+  <!-- 컬러 · 의미 -->
+  <div style="position: absolute; left: 848px; top: 156px; width: 368px; display: flex; flex-direction: column; gap: 8px">
+    <div style="font-size: 12px; font-weight: 700; color: #596170">컬러는 의미로 씁니다</div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px">
+      <div style="display: flex; align-items: center; gap: 8px"><span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; background: #1428a0"></span><span style="font-size: 11.5px; line-height: 1.4">Blue #1428A0<br><span style="color: #596170">제안 · 도입 후 · 삼성</span></span></div>
+      <div style="display: flex; align-items: center; gap: 8px"><span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; background: #121417"></span><span style="font-size: 11.5px; line-height: 1.4">Ink #121417<br><span style="color: #596170">문제 · 비용 · 지금</span></span></div>
+      <div style="display: flex; align-items: center; gap: 8px"><span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; background: #eaeefb"></span><span style="font-size: 11.5px; line-height: 1.4">Blue Soft #EAEEFB<br><span style="color: #596170">시사점 · 가치 칸</span></span></div>
+      <div style="display: flex; align-items: center; gap: 8px"><span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; background: #f5f6f8; border: 1px solid #e2e5ea; box-sizing: border-box"></span><span style="font-size: 11.5px; line-height: 1.4">Surface #F5F6F8<br><span style="color: #596170">현황 · 중립 카드</span></span></div>
+      <div style="display: flex; align-items: center; gap: 8px"><span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; background: linear-gradient(90deg, #1428a0 0 33%, #6f82d6 33% 66%, #b8c3ee 66% 100%)"></span><span style="font-size: 11.5px; line-height: 1.4">차트 3단계<br><span style="color: #596170">#1428A0 · #6F82D6 · #B8C3EE</span></span></div>
+      <div style="display: flex; align-items: center; gap: 8px"><span style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; background: #dfe3ea"></span><span style="font-size: 11.5px; line-height: 1.4">Image #DFE3EA<br><span style="color: #596170">이미지 자리</span></span></div>
+    </div>
+    <div style="font-size: 11.5px; color: #596170; line-height: 1.5">고객사 포인트 컬러는 표지 · 간지에만. 본문 강조는 항상 Blue 한 가지.</div>
+  </div>
+
+  <!-- 시트 = 역할, 템플릿 = 표현 · 자동 추천 규칙 -->
+  <div style="position: absolute; left: 64px; top: 424px; width: 1152px; height: 224px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 16px 20px; display: grid; grid-template-columns: 600px minmax(0, 1fr); gap: 28px">
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="font-size: 13px; font-weight: 700">시트는 역할, 템플릿은 그 역할의 표현 — 예) 시장 규모 · 성장</div>
+      <div style="display: flex; gap: 12px">
+        <div style="width: 150px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px">
+          <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 11.5px; display: flex; align-items: center">섹션 · MI</span>
+          <span style="padding: 8px; border-radius: 8px; background: #ffffff; border: 1.5px solid #1428a0; font-size: 12px; font-weight: 700; line-height: 1.45">시트 · 시장 규모 · 성장<br><span style="font-weight: 500; color: #596170">“이 시장은 크고, 커지고 있다”</span></span>
+        </div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 4px">
+          <sc-for list="{{tpls}}" as="t" hint-placeholder-count="5">
+            <div style="height: 24px; display: flex; align-items: center; gap: 8px; padding: 0 8px; border-radius: 6px; background: #ffffff; font-size: 11.5px"><span style="width: 36px; font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{t.code}}</span><span style="width: 150px; font-weight: 700">{{t.name}}</span><span style="color: #596170">{{t.when}}</span></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="font-size: 11.5px; color: #596170">코드 = 시트 유형 + 템플릿 (MS-B) · 제품 소개는 제품 수 × 성격 (P3-B)</div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="font-size: 13px; font-weight: 700">자동 추천 규칙</div>
+      <sc-for list="{{rules}}" as="r" hint-placeholder-count="4">
+        <div style="display: flex; gap: 8px; font-size: 11.5px; line-height: 1.45"><span style="width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span><span><b>{{r.head}}</b> {{r.body}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tpls = [
+      ['MS-A', '핵심 수치 4', '지표는 여럿, 연도별 추이는 없을 때'],
+      ['MS-B', '성장 추이', '연도별 규모 데이터가 있을 때'],
+      ['MS-C', 'TAM · SAM · SOM', '노릴 수 있는 몫을 말할 때'],
+      ['MS-D', '세그먼트 규모 × 성장률', '어디가 크고 빠른지 보여줄 때'],
+      ['MS-E', '성장 동인 → 전망', '왜 커지는지 설득할 때']
+    ].map(([code, name, when]) => ({ code, name, when }));
+    const rules = [
+      ['시트는 사람이 고릅니다.', '넣을 역할을 시트 구성 단계에서 선택 · 공간 · 사례는 항목 수만큼 반복.'],
+      ['템플릿은 데이터 모양으로.', '연도별 수치 → 추이 · 부분/전체 → 계층 · 두 축 → 매트릭스 · 비교 → 표 · 흐름 → 타임라인 · 원인 → 트리.'],
+      ['모양이 같으면 메시지로.', '왜 → 동인형 · 얼마나 → 수치형 · 누구 → 사람형.'],
+      ['항목 수는 템플릿 안에서.', '가치 2·3·4 · 제품 1~5 · 6개 이상 분할 · 연속 시트는 같은 템플릿을 피하고 직접 고른 건 고정.']
+    ].map(([head, body], i) => ({ no: i + 1, head, body }));
+    return { tpls, rules };
+  }
+}
+</script>
+</body>
+</html>

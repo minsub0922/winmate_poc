@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-K 공간 조건 → 대응 사양</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 드라이브스루 · 외부</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">드라이브스루는 실내와 조건이 다릅니다 — 다섯 조건, 다섯 대응</div>
+
+  <!-- 열 머리: 조건 (ink) | 대응 (blue) -->
+  <div style="position: absolute; left: 64px; top: 128px; width: 520px; height: 52px; box-sizing: border-box; border-bottom: 2px solid #121417; padding-bottom: 10px; display: flex; align-items: flex-end; justify-content: space-between">
+    <span style="font-size: 14px; font-weight: 800">드라이브스루의 조건</span>
+    <span style="font-size: 11.5px; color: #596170">현장 값 · 실측 후 기입</span>
+  </div>
+  <div style="position: absolute; left: 648px; top: 128px; width: 568px; height: 52px; box-sizing: border-box; border-bottom: 2px solid #1428a0; padding-bottom: 8px; display: flex; align-items: flex-end; justify-content: space-between">
+    <span style="font-size: 14px; font-weight: 800; color: #1428a0; padding-bottom: 2px">OH55C의 대응</span>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div style="width: 64px; height: 36px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417"></div>
+      <span style="font-size: 14px; font-weight: 800">Outdoor Signage OH55C</span>
+      <span style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">×2</span><span style="font-size: 12.5px; color: #596170">/ 매장</span></span>
+    </div>
+  </div>
+
+  <!-- 다섯 줄: 조건 → 대응 -->
+  <div style="position: absolute; left: 64px; top: 196px; width: 1152px; display: flex; flex-direction: column; gap: 12px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+      <div style="display: grid; grid-template-columns: 520px 64px 568px; height: 80px">
+        <div style="height: 80px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 16px">
+          <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.icon}}"/></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex-grow: 1"><span style="font-size: 17px; font-weight: 800">{{r.c}}</span><span style="font-size: 13px; color: #596170">{{r.cs}}</span></div>
+          <span style="flex-shrink: 0; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 20px; font-weight: 800">{{r.v}}</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center">
+          <div style="width: 28px; height: 2px; background: #1428a0"></div>
+          <svg width="10" height="12" viewBox="0 0 10 12" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: -3px"><path d="M2 1l6 5-6 5"/></svg>
+        </div>
+        <div style="height: 80px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 20px; display: flex; align-items: center; gap: 14px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0; flex-grow: 1"><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">{{r.a}}</span><span style="font-size: 13px; color: #596170">{{r.as}}</span></div>
+          <span style="{{r.tagStyle}}">{{r.tag}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const I = {
+      sun: 'M8 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
+      temp: 'M14 14.8V5a2 2 0 0 0-4 0v9.8a4 4 0 1 0 4 0zM12 10v6',
+      drop: 'M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z',
+      clock: 'M3 12a9 9 0 1 0 18 0a9 9 0 1 0-18 0M12 7v5l3 2',
+      eye: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM9 12a3 3 0 1 0 6 0a3 3 0 1 0-6 0'
+    };
+    const tag = (kind) => 'flex-shrink: 0; height: 24px; padding: 0 10px; border-radius: 999px; box-sizing: border-box; font-size: 12px; font-weight: 700; display: flex; align-items: center; color: #1428a0; ' + (kind === '설치 설계' ? 'background: transparent; border: 1px solid #1428a0' : 'background: #ffffff; border: 1px solid #ffffff');
+    // [아이콘, 조건, 조건 설명, 현장 값, 대응, 대응 설명, 구분]
+    const R = [
+      ['sun', '한낮 직사광', '오후 해가 화면 정면으로', '[00,000] lux', '3,000nit + 자동 밝기', '한낮에도 메뉴가 바래 보이지 않게', '제품 사양'],
+      ['temp', '여름 · 겨울 외기', '외벽 복사열 · 새벽 한파', '[00]℃ / -[00]℃', '동작 온도 [-00~00]℃ · 냉각 설계', '폭염 · 한파에도 화면 유지', '제품 사양'],
+      ['drop', '비 · 먼지 · 물보라', '지붕 없는 차로 옆 · 차량 물보라', '상시 노출', 'IP56 방진 · 방수', '비 오는 날도 외벽 그대로 운영', '제품 사양'],
+      ['clock', '24시간 영업', '심야 · 새벽에도 주문', '24h · 365일', '24/7 연속 운영', '끄고 켤 필요 없이 매일', '제품 사양'],
+      ['eye', '운전석에서 보는 거리 · 각도', '차 안, 앉은 눈높이에서', '3–5 m', '55" · 설치 높이 [0.0] m · 틸트 [0]°', '운전석 눈높이에 맞춘 높이 · 각도', '설치 설계']
+    ];
+    return { rows: R.map(([ic, c, cs, v, a, as, t]) => ({ icon: I[ic], c, cs, v, a, as, tag: t, tagStyle: tag(t) })) };
+  }
+}
+</script>
+</body>
+</html>

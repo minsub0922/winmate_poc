@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 유스케이스 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 28px 40px; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+
+  <!-- 제목 · 범례 -->
+  <div style="height: 64px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #1428a0">
+        <span style="width: 20px; height: 20px; border-radius: 6px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 11px; display: flex; align-items: center; justify-content: center">W</span>
+        <span>Winmate · 화면 12개</span>
+      </div>
+      <h1 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">경쟁사 분석 — 유스케이스 맵</h1>
+      <p style="margin: 0; font-size: 13px; color: #596170; white-space: nowrap">들어오는 길부터 결과 활용까지 모든 화면입니다. 칸을 누르면 그 화면으로 이동합니다.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0">
+      <div style="display: flex; gap: 8px">
+        <a href="Main.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">홈</a>
+        <a href="CAR.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center">라우팅 규칙</a>
+        <a href="CA0.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px">작업 목록 CA0 열기<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170">
+        <sc-for list="{{legend}}" as="l" hint-placeholder-count="5">
+          <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="{{l.swatch}}">{{l.label}}</span><span>{{l.desc}}</span></span>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- 흐름 -->
+  <div style="flex-grow: 1; min-height: 0; display: flex; align-items: flex-start; overflow: hidden">
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="5">
+      <div style="width: 248px; flex-shrink: 0; display: flex; flex-direction: column; gap: 10px">
+        <div style="height: 50px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; padding: 0 2px 8px 2px; border-bottom: 2px solid #121417">
+          <div style="display: flex; align-items: baseline; gap: 8px">
+            <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{c.no}}</span>
+            <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{c.title}}</span>
+          </div>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.sub}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{c.nodes}}" as="n" hint-placeholder-count="5">
+            <sc-if value="{{n.isLabel}}" hint-placeholder-val="{{false}}">
+              <div style="height: 20px; display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 600; color: #596170">
+                <span style="white-space: nowrap">{{n.label}}</span>
+                <span style="flex-grow: 1; height: 1px; background: #e2e5ea"></span>
+              </div>
+            </sc-if>
+            <sc-if value="{{n.isNode}}" hint-placeholder-val="{{true}}">
+              <a href="{{n.href}}" style="{{n.style}}">
+                <div style="display: flex; align-items: baseline; gap: 7px; min-width: 0">
+                  <span style="{{n.codeStyle}}">{{n.code}}</span>
+                  <span style="font-size: 13px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.name}}</span>
+                </div>
+                <div style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.desc}}</div>
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; min-width: 0">
+                  <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{n.next}}</span>
+                  <span style="{{n.tagStyle}}">{{n.tag}}</span>
+                </div>
+              </a>
+            </sc-if>
+          </sc-for>
+        </div>
+      </div>
+      <sc-if value="{{c.arrow}}" hint-placeholder-val="{{true}}">
+        <div style="width: 30px; height: 50px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #8a91a0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </div>
+      </sc-if>
+    </sc-for>
+  </div>
+
+  <!-- 기본 흐름 -->
+  <div style="height: 52px; flex-shrink: 0; box-sizing: border-box; display: flex; align-items: center; gap: 12px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1.5px solid #1428a0">
+    <span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">기본 흐름</span>
+    <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+      <sc-for list="{{happy}}" as="h" hint-placeholder-count="6">
+        <a href="{{h.href}}" style="display: flex; align-items: baseline; gap: 6px; height: 32px; padding: 0 10px; border-radius: 8px; background: #eaeefb; color: #121417; white-space: nowrap; align-items: center">
+          <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">{{h.code}}</span>
+          <span style="font-size: 12.5px; font-weight: 600">{{h.name}}</span>
+        </a>
+        <sc-if value="{{h.arrow}}" hint-placeholder-val="{{true}}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </sc-if>
+      </sc-for>
+    </div>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12px; color: #596170; white-space: nowrap">경쟁사 화면 12개 · 기본 흐름 5 · 새 화면 6 · 다른 기능 5</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 다른 캔버스에 있는 화면은 그 캔버스를 새 탭으로 엽니다
+    const EXT = {"PRS7.dc.html": "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe"};
+    const ext = (f) => EXT[f] || f;
+    const KIND = {
+      base: { tag: '기본 흐름', box: 'background: #ffffff; border: 1.5px solid #1428a0;', code: '#1428a0', tagStyle: 'background: #1428a0; color: #ffffff;' },
+      new: { tag: '새 화면', box: 'background: #ffffff; border: 1px solid #e2e5ea; box-shadow: 0 1px 2px rgba(18,20,23,0.04);', code: '#1428a0', tagStyle: 'background: #eaeefb; color: #1428a0;' },
+      exist: { tag: '기존', box: 'background: #ffffff; border: 1px solid #e2e5ea;', code: '#121417', tagStyle: 'background: #f0f2f5; color: #596170;' },
+      ref: { tag: '다시 열기', box: 'background: #f5f6f8; border: 1px solid #e2e5ea;', code: '#3d4452', tagStyle: 'background: #ffffff; color: #596170; border: 1px solid #e2e5ea;' },
+      other: { tag: '다른 기능', box: 'background: #f5f6f8; border: 1px dashed #8a91a0;', code: '#3d4452', tagStyle: 'background: #ffffff; color: #3d4452; border: 1px dashed #8a91a0;' },
+      shared: { tag: '공통', box: 'background: #f5f6f8; border: 1px dashed #8a91a0;', code: '#3d4452', tagStyle: 'background: #ffffff; color: #3d4452; border: 1px dashed #8a91a0;' }
+    };
+    const node = (kind, code, name, desc, next, href) => ({
+      isNode: true, isLabel: false, label: '',
+      code, name, desc, next, href: ext(href || (code + '.dc.html')),
+      tag: KIND[kind].tag,
+      style: 'height: 76px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; padding: 9px 12px; border-radius: 10px; color: #121417; min-width: 0; ' + KIND[kind].box,
+      codeStyle: 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; flex-shrink: 0; color: ' + KIND[kind].code + ';',
+      tagStyle: 'height: 18px; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; box-sizing: border-box; ' + KIND[kind].tagStyle
+    });
+    const label = (t) => ({ isNode: false, isLabel: true, label: t, code: '', name: '', desc: '', next: '', href: '', tag: '', style: '', codeStyle: '', tagStyle: '' });
+
+    const COLS = [
+      ['01', '들어오는 길', '어디서 경쟁사 분석을 시작하나', [
+        node('shared', 'Main', "홈 '경쟁사 분석'", '홈 카드에서 새 분석 시작', '→ CA1'),
+        node('new', 'CA0', '작업 목록', '최근 분석 · 상태 · 업데이트 필요', '→ CA1 · CA2 · CA4'),
+        node('shared', 'Sidebar', '사이드바 작업 내역', '저장된 분석 결과를 바로 열기', '→ CA4', 'CA4.dc.html'),
+        node('other', 'MI2C', "MI '경쟁사 · 비교 기준'에서", 'MI 작업의 경쟁사 후보를 이어받기', '→ CA1 · CA2'),
+        node('other', 'RQ6', '요구사항 정의서에서', '정의서 → 고객사 · 업종 · 장소 · 제품', '→ CA1R')
+      ]],
+      ['02', '입력 방식', '고객 · 업종 · 장소 · 제품을 어떻게 받나', [
+        label('넣기'),
+        node('base', 'CA1', '자유 양식', '한 문단 → 4가지 읽기 · 읽힌 것 칩으로', '→ CA1G'),
+        node('new', 'CA1R', '고객 요구사항에서', '저장된 정의서를 고르면 4가지를 채움', '→ CA1G'),
+        node('new', 'CA2Q', '되묻기 · 고객사 · 장소', '모자랄 때 한 번만 · 건너뛰기 가능', '→ CA1G'),
+        label('기준'),
+        node('new', 'CA3C', '비교 기준 바꾸기', '요구 · 업종 사례 · 기본 기준 켜고 끄기', '→ CA3')
+      ]],
+      ['03', '진행 · 확인 상태', '기다림 · 후보 확인 · 분석 진행', [
+        node('new', 'CA1G', '찾는 중', '입력 읽기 · 업종 사례 · 공개 자료 · 정리', '→ CA2'),
+        node('base', 'CA2', '경쟁사 확인 · 6 후보', '추천 4곳은 켜 둠 · 넣고 빼기 · 익명 안내', '→ CA3'),
+        node('base', 'CA3', '분석 중 · 기준 자동', '비교 기준 6개 자동 · 경쟁사별 진행', '→ CA4')
+      ]],
+      ['04', '편집 · 결과 보기', '한눈에 · 상세 · 고쳐서 다시', [
+        node('base', 'CA4', '결과 · 한눈에', '한 줄 포지셔닝 · 우위 · 비슷 · 열위', '→ CA4D · CA5'),
+        node('new', 'CA4D', '경쟁사 상세', '제품 · 가격대 · 솔루션 · 동향 · 출처', '→ CA5'),
+        node('ref', 'CA2', '경쟁사 넣고 빼기', '직접 추가 · 뺀 곳은 재분석에도 유지', '→ CA3'),
+        node('ref', 'CA3C', '기준 바꿔 다시', '중요도 · 순서를 바꿔 다시 분석', '→ CA3')
+      ]],
+      ['05', '결과 활용', 'MI 작업 · 제안서 · Storyboard 로', [
+        node('new', 'CA5', '저장 · 보내기', 'MI · 제안서 · Storyboard · 리포트', '→ MI3 · PRS7 · SB1Q3'),
+        node('other', 'MI3', 'MI 경쟁사 → 삼성 강점', 'MI 작업의 경쟁사 영역으로 합치기', 'MI 작업'),
+        node('other', 'PRS7', "제안서 'Why Samsung'", '경쟁 비교 시트 · 익명 표기', '제안서 섹션'),
+        node('other', 'SB1Q3', 'Storyboard 비교 기준', '기획 질의 3/3 비교 기준에 채우기', 'Storyboard')
+      ]]
+    ];
+    const cols = COLS.map(([no, title, sub, nodes], i) => ({ no, title, sub, nodes, arrow: i < COLS.length - 1 }));
+
+    const pill = 'height: 18px; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 600; display: flex; align-items: center; box-sizing: border-box; ';
+    const legend = [
+      ['base', '기본 흐름 화면'],
+      ['new', '이번에 추가'],
+      ['ref', '앞 화면을 다시 씀'],
+      ['other', '다른 기능 화면'],
+      ['shared', '공통 화면']
+    ].map(([k, desc]) => ({ label: KIND[k].tag, desc, swatch: pill + KIND[k].tagStyle }));
+
+    const HAPPY = [['Main', '홈'], ['CA1', '넣기'], ['CA2', '경쟁사 확인'], ['CA3', '분석'], ['CA4', '결과'], ['CA5', '보내기']];
+    const happy = HAPPY.map(([code, name], i) => ({ code, name, href: ext(code + '.dc.html'), arrow: i < HAPPY.length - 1 }));
+
+    return { legend, cols, happy };
+  }
+}
+</script>
+</body>
+</html>

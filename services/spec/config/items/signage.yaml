@@ -1,0 +1,125 @@
+# 사이니지 스펙 항목 카탈로그(06-spec §4.14) — SP2 항목 칩 12개 = 시트 행의 원천.
+#
+# key        항목 키(SP2 칩 · sheet_item.item_key)
+# label      SP2 칩 이름(보드 그대로)
+# default    기본 체크(보드 7개)
+# group      단일 제품 시트(SD-A) 그룹(제안)
+# rows       이 항목이 만드는 시트 행(row_key · 한국어 행 이름 · 영문 줄)
+#            영문 · 한/영에서 en_lines 가 둘이면 두 줄로 펼쳐 그린다(행 정체성은 한국어 행 기준).
+# sources    KB 원천(사람이 읽는 설명 — 실제 값 고르기는 rules/values.py)
+category: signage
+items:
+  - key: size_resolution
+    label: 화면 크기 · 해상도
+    default: true
+    group: 디스플레이
+    rows:
+      - row_key: size_resolution
+        label_ko: 화면 크기 · 해상도
+        en_lines: [Screen Size, Resolution]
+    sources: 디스플레이 › 대각선 사이즈 (cm) screen_size_cm · 디스플레이 › 해상도 resolution
+  - key: brightness_contrast
+    label: 밝기 · 명암비
+    default: true
+    group: 디스플레이
+    rows:
+      - row_key: brightness_contrast
+        label_ko: 밝기 · 명암비
+        en_lines: [Brightness, Contrast Ratio]
+    sources: 디스플레이 › 밝기 (Typ) brightness_nit(원문 첫 수) · 디스플레이 › 명암비
+  - key: operation_hours
+    label: 운영 시간
+    default: true
+    group: 디스플레이
+    rows:
+      - row_key: operation_hours
+        label_ko: 운영 시간
+        en_lines: [Operation Hours]
+    sources: 디스플레이 › 제품 사용 시간 operation_hours
+  - key: power
+    label: 소비전력 (일반 · 최대)
+    default: true
+    group: 전원
+    rows:
+      - row_key: power
+        label_ko: 소비전력 (일반 · 최대)
+        en_lines: [Power Consumption (Typ. / Max)]
+    sources: 전원 › 소비전력 (Typical) · 소비전력 (Max) — power_consumption 중 속성 이름으로 고름
+  - key: player_os
+    label: 내장 플레이어 · OS
+    default: true
+    group: 운영 · 관리
+    rows:
+      - row_key: player_os
+        label_ko: 내장 플레이어 · OS
+        en_lines: [Built-in Player · OS]
+    sources: SoC › 운영체제 버전(SoC 그룹이 있으면 내장)
+  - key: magicinfo
+    label: MagicINFO 호환
+    default: true
+    group: 운영 · 관리
+    rows:
+      - row_key: magicinfo
+        label_ko: MagicINFO 호환
+        en_lines: [MagicINFO]
+    sources: 모델 상세 supported_solutions · 제품군 provides(cap_remote_content_mgmt) 근거 문장
+  - key: warranty
+    label: 보증
+    default: true
+    group: 인증 · 보증 · 액세서리
+    rows:
+      - row_key: warranty
+        label_ko: 보증
+        en_lines: [Warranty]
+    sources: 보증 원천(config/warranty.yaml · internal 카탈로그) — KB 에는 보증 연수가 없다
+  - key: io_ports
+    label: 입출력 단자
+    default: false
+    group: 연결성
+    rows:
+      - row_key: io_ports
+        label_ko: 입출력 단자
+        en_lines: [I/O Ports]
+    sources: 연결성 › HDMI 입력 · DP 입력 · USB · RS232 입력 · RS232 출력 · RJ45 입력 · WiFi · Bluetooth
+  - key: size_weight
+    label: 크기 · 무게
+    default: false
+    group: 크기 · 무게
+    rows:
+      - row_key: dimensions
+        label_ko: 크기 (W×H×D)
+        en_lines: [Dimensions (W × H × D)]
+      - row_key: weight
+        label_ko: 무게 (제품 · 포장)
+        en_lines: [Weight (Set / Package)]
+    sources: 크기 › 제품(가로x높이x깊이) · 무게 › 제품 무게 · 무게 (박스 포장)
+  - key: bezel
+    label: 베젤
+    default: false
+    group: 디스플레이
+    rows:
+      - row_key: bezel
+        label_ko: 베젤
+        en_lines: [Bezel]
+    sources: 기구사양 › 베젤 두께
+  - key: certification
+    label: 인증
+    default: false
+    group: 인증 · 보증 · 액세서리
+    rows:
+      - row_key: certification
+        label_ko: 인증
+        en_lines: [Certifications]
+    sources: 상품 기본정보 › KC 인증 필 유무 · 인증정보 › 안전 규격 · EMC
+  - key: accessories
+    label: 액세서리
+    default: false
+    group: 인증 · 보증 · 액세서리
+    rows:
+      - row_key: accessories
+        label_ko: 액세서리
+        en_lines: [Accessories]
+    sources: 추가 기능 › 마운트 · 스탠드
+
+# 단일 제품 시트(SD-A) 그룹 순서(제안)
+groups: [디스플레이, 전원, 크기 · 무게, 연결성, 운영 · 관리, 인증 · 보증 · 액세서리]

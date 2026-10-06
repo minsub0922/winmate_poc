@@ -1,0 +1,54 @@
+# 업종 시드와 세 분류 체계 대응표
+# 출처: samsung.com/sec/business 사이트맵·업종별 제안 메뉴, 고객도입사례 필터, samsung.com/us/business 메뉴, Winmate 16개 업종 세그먼트
+# status: draft 항목은 대시보드 Ontology › 세그먼트 매핑에서 사람이 확인 후 active 로 바꾼다.
+
+kr_verticals:   # KR 사이트 업종별 제안 (하위 업종 포함)
+  - {code: kr_public, name_ko: 공공, children: [{code: kr_public_agency, name_ko: 공공기관, url: https://www.samsung.com/sec/business/government/}, {code: kr_military, name_ko: 군기관, url: https://www.samsung.com/sec/business/military/}]}
+  - {code: kr_manufacturing, name_ko: 제조, url: https://www.samsung.com/sec/business/manufacture/}
+  - {code: kr_finance, name_ko: 금융, url: https://www.samsung.com/sec/business/finance/}
+  - {code: kr_education, name_ko: 교육, children: [{code: kr_school, name_ko: 학교, url: https://www.samsung.com/sec/business/education/}, {code: kr_academy, name_ko: 학원, url: https://www.samsung.com/sec/business/academy/}]}
+  - {code: kr_construction, name_ko: 건설, children: [{code: kr_home, name_ko: 홈, url: https://www.samsung.com/sec/business/construction/}, {code: kr_officetel, name_ko: 오피스텔, url: https://www.samsung.com/sec/business/officetel/}, {code: kr_office, name_ko: 오피스, url: https://www.samsung.com/sec/business/office/}, {code: kr_small_office, name_ko: 중소형 오피스, url: https://www.samsung.com/sec/business/small-medium-office/}]}
+  - {code: kr_retail_fnb, name_ko: 유통/요식, children: [{code: kr_retail, name_ko: 유통, url: https://www.samsung.com/sec/business/transportation/}, {code: kr_fnb, name_ko: 요식, url: https://www.samsung.com/sec/business/restaurant-business/}]}
+  - {code: kr_transport, name_ko: 운송, url: https://www.samsung.com/sec/business/transport/}
+  - {code: kr_medical, name_ko: 의료, children: [{code: kr_hospital, name_ko: 병원, url: https://www.samsung.com/sec/business/hospital/}, {code: kr_clinic, name_ko: 중소형 의원, url: https://www.samsung.com/sec/business/clinic/}]}
+  - {code: kr_hotel, name_ko: 호텔, url: https://www.samsung.com/sec/business/hospitality/}
+  - {code: kr_telecom, name_ko: 통신, url: https://www.samsung.com/sec/business/telecommunication/}
+
+kr_case_study_filters:   # KR 고객도입사례 필터 축 (Deployment 분류 기준으로 그대로 사용)
+  vertical: [공공, 제조, 금융, 교육, 건설, 유통/요식, 운송, 의료, 호텔/서비스, 통신, 기타]
+  product_group: [모바일, 시스템에어컨, 사이니지, TV/음향시스템, 프린팅/IT, 주방가전, 리빙가전]
+  solution_group: [Knox 솔루션, 모바일 솔루션, 프린팅 솔루션, 디스플레이 솔루션, 시스템에어컨 솔루션, IoT 솔루션]
+  service_group: [유지관리, SW/콘텐츠]
+
+us_verticals:   # US 사이트 Integrated Solutions › Verticals + Displays › Industries
+  - {code: us_finance, name_en: Finance}
+  - {code: us_government, name_en: Government}
+  - {code: us_healthcare, name_en: Healthcare}
+  - {code: us_hospitality, name_en: Hospitality}
+  - {code: us_manufacturing, name_en: Manufacturing}
+  - {code: us_public_safety, name_en: Public Safety}
+  - {code: us_retail, name_en: Retail}
+  - {code: us_education, name_en: Education}
+  - {code: us_transportation, name_en: Transportation}
+  - {code: us_corporate, name_en: Corporate}
+  - {code: us_live_events_sports, name_en: Live Events and Sports}
+  - {code: us_qsr, name_en: Food & Beverage (QSR)}
+  - {code: us_cinema, name_en: Cinema}
+
+winmate_segments:   # Winmate 16개 업종 세그먼트와 대응 (draft: 사람 확인 필요)
+  - {code: wm_fnb_cafe, name_ko: 외식·카페, kr: [kr_fnb], us: [us_qsr], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_retail, name_ko: 리테일, kr: [kr_retail], us: [us_retail], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_convenience_unmanned, name_ko: 생활편의·무인매장, kr: ["<<FILL: kr_retail 또는 다른 업종>>"], us: [us_retail], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_hotel_resort, name_ko: 호텔·리조트, kr: [kr_hotel], us: [us_hospitality], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_theme_park, name_ko: 테마파크, kr: ["<<FILL: 고객도입사례 '호텔/서비스' 또는 '기타'>>"], us: ["<<FILL>>"], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_venue, name_ko: 공연장·경기장·영화관, kr: ["<<FILL>>"], us: [us_live_events_sports, us_cinema], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_ooh, name_ko: 옥외광고, kr: ["<<FILL>>"], us: ["<<FILL>>"], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_office, name_ko: 오피스, kr: [kr_office, kr_small_office], us: [us_corporate], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_residential_sales, name_ko: 주거분양, kr: [kr_home, kr_officetel], us: ["<<FILL>>"], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_interior_partner, name_ko: 인테리어파트너, kr: ["<<FILL: kr_construction 하위 또는 별도>>"], us: ["<<FILL>>"], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_education, name_ko: 교육, kr: [kr_school, kr_academy], us: [us_education], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_public, name_ko: 공공, kr: [kr_public_agency, kr_military], us: [us_government, us_public_safety], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_medical_care, name_ko: 의료·요양, kr: [kr_hospital, kr_clinic], us: [us_healthcare], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_manufacturing_logistics, name_ko: 제조·물류, kr: [kr_manufacturing, kr_transport], us: [us_manufacturing, us_transportation], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_finance, name_ko: 금융, kr: [kr_finance], us: [us_finance], catalog_chapter: "<<FILL>>", status: draft}
+  - {code: wm_partner_device, name_ko: 파트너전용단말, kr: ["<<FILL: kr_telecom 등>>"], us: ["<<FILL>>"], catalog_chapter: "<<FILL>>", status: draft}

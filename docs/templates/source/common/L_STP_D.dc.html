@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>STP-D SmartThings Pro 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SmartThings Pro</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SmartThings Pro · 비즈니스 IoT</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">기기는 매장에 두고, 판단은 클라우드에서 합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구성도 · 매장 기기의 상태가 클라우드로 모이고, 제어 · 루틴이 다시 매장으로 내려갑니다</div>
+
+  <!-- 그룹 라벨 -->
+  <div style="position: absolute; left: 64px; top: 166px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #596170">매장 · 사이트 <span style="font-weight: 500; letter-spacing: 0; color: #8a91a0">(사진은 예시 · 고객 매장으로 교체)</span></div>
+  <div style="position: absolute; left: 920px; top: 198px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #596170">사용자 · 웹 / 모바일</div>
+
+  <!-- 날씨 입력 -->
+  <div style="position: absolute; left: 560px; top: 160px; width: 160px; height: 36px; box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 13.5px; font-weight: 800"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z M12 2v2 M12 20v2 M4.9 4.9l1.4 1.4 M17.7 17.7l1.4 1.4 M2 12h2 M20 12h2 M4.9 19.1l1.4-1.4 M17.7 6.3l1.4-1.4"/></svg>날씨 데이터</div>
+  <div style="position: absolute; left: 639px; top: 196px; width: 0; height: 20px; border-left: 2px dashed #8a91a0"></div>
+  <div style="position: absolute; left: 635px; top: 216px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid #8a91a0"></div>
+  <div style="position: absolute; left: 654px; top: 199px; font-size: 11.5px; color: #596170">프리쿨링 · 프리히팅 판단에 사용</div>
+
+  <!-- 매장 카드 — 매장 사진 썸네일 + 연결 기기 -->
+  <sc-for list="{{sites}}" as="s" hint-placeholder-count="3">
+    <div style="position: absolute; {{s.pos}} width: 320px; height: 88px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff">
+      <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; left: 9px; top: 9px; width: 92px; height: 68px; object-fit: cover; object-position: {{s.op}}; border-radius: 8px">
+      <div style="position: absolute; left: 113px; top: 7px; display: flex; align-items: baseline; gap: 6px; white-space: nowrap"><span style="font-size: 15px; font-weight: 800">{{s.name}}</span><span style="font-size: 11px; color: #8a91a0">{{s.sub}}</span></div>
+      <div style="position: absolute; left: 113px; top: 34px; display: flex; gap: 4px">
+        <sc-for list="{{s.devs}}" as="d" hint-placeholder-count="4">
+          <div style="width: 46px; height: 42px; box-sizing: border-box; border-radius: 8px; background: #f5f6f8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{d.icon}}"/></svg><span style="font-size: 10px; color: #3d4452; white-space: nowrap">{{d.name}}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 490px; width: 320px; height: 34px; box-sizing: border-box; border-radius: 12px; border: 1.5px dashed #b8bec8; display: flex; align-items: center; justify-content: center; font-size: 12.5px; color: #596170; white-space: nowrap">+ 매장 <span style="font-family: Manrope, sans-serif; font-weight: 700; margin: 0 3px">[000]</span>곳 · 기기 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0; margin: 0 3px">[0,000]</span>대 — 같은 구성</div>
+
+  <!-- 흐름 선 · 화살촉 -->
+  <sc-for list="{{flows}}" as="f" hint-placeholder-count="16">
+    <div style="{{f.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 384px; top: 305px; width: 110px; text-align: center; font-size: 11.5px; font-weight: 700; color: #1428a0">제어 · 루틴</div>
+  <div style="position: absolute; left: 384px; top: 348px; width: 110px; text-align: center; font-size: 11.5px; color: #596170">상태 · 전력 사용</div>
+  <div style="position: absolute; left: 786px; top: 253px; width: 134px; text-align: center; font-size: 11.5px; font-weight: 700; color: #1428a0">원격 제어</div>
+  <div style="position: absolute; left: 786px; top: 296px; width: 134px; text-align: center; font-size: 11.5px; color: #596170">상태 · 리포트</div>
+
+  <!-- SmartThings Pro Cloud (로고 없음 — 이름 표기) -->
+  <div style="position: absolute; left: 494px; top: 224px; width: 292px; height: 276px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16a4 4 0 0 1 1-7.9A6 6 0 0 1 17 8a4 4 0 0 1 1 8H4z"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em">SmartThings Pro</span><span style="font-size: 12.5px; color: #c8d3ff">클라우드 — 판단이 일어나는 곳</span></div>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <sc-for list="{{brain}}" as="b" hint-placeholder-count="4">
+        <div style="height: 36px; box-sizing: border-box; border-radius: 8px; background: rgba(255,255,255,0.12); padding: 0 12px; display: flex; align-items: center; gap: 8px; font-size: 13px; white-space: nowrap"><span style="width: 6px; height: 6px; flex-shrink: 0; border-radius: 1px; background: #9db4ff"></span><span style="font-weight: 700">{{b.k}}</span><span style="color: #c8d3ff">{{b.v}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 사용자 — 실제 화면 썸네일 -->
+  <sc-for list="{{users}}" as="u" hint-placeholder-count="2">
+    <div style="position: absolute; {{u.pos}} width: 296px; height: 116px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff">
+      <div style="{{u.frame}}">
+        <img src="{{u.src}}" alt="{{u.alt}}" style="position: absolute; object-fit: cover; {{u.img}}">
+      </div>
+      <div style="position: absolute; {{u.text}} display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{u.name}}</span>
+        <span style="font-size: 12px; line-height: 1.5; color: #596170">{{u.desc}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- Enterprise API → 고객 시스템 -->
+  <div style="position: absolute; left: 575px; top: 520px; width: 130px; height: 26px; box-sizing: border-box; border-radius: 999px; border: 1.5px solid #1428a0; background: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">Enterprise API</div>
+  <sc-for list="{{systems}}" as="y" hint-placeholder-count="3">
+    <div style="position: absolute; {{y.pos}} width: 150px; height: 52px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px"><span style="font-size: 14px; font-weight: 800">{{y.name}}</span><span style="font-size: 11.5px; color: #596170">고객 시스템</span></div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 546px; display: flex; flex-direction: column; gap: 9px; font-size: 12px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 2px; background: #1428a0"></span>제어 · 루틴 (클라우드 → 기기)</span>
+    <span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 0; border-top: 2px dashed #8a91a0"></span>상태 · 전력 사용 (기기 → 클라우드)</span>
+    <span style="display: flex; align-items: center; gap: 10px"><span style="width: 26px; height: 0; border-top: 2px dotted #1428a0"></span>Enterprise API 연동</span>
+  </div>
+
+  <!-- 카탈로그 구성도 (참고 인셋) -->
+  <div style="position: absolute; left: 920px; top: 491px; width: 296px; font-size: 11px; color: #596170; white-space: nowrap"><span style="font-weight: 800; color: #3d4452">카탈로그 구성도</span> · SmartThings Pro for Safety (참고)</div>
+  <div style="position: absolute; left: 920px; top: 512px; width: 296px; height: 136px; box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; overflow: hidden; background: #ffffff">
+    <img src="/_blob/0774d5782af1c5451b3befa8291669dd" alt="카탈로그의 SmartThings Pro for Safety 솔루션 구성도" style="position: absolute; left: -1px; top: -13px; width: 296px; height: 153px; object-fit: cover">
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const BLUE = '#1428a0', GRAY = '#8a91a0';
+    const I = {
+      ac: 'M3 5h18v8H3z M7 9h10 M7 17l-1 3 M12 17v3 M17 17l1 3',
+      board: 'M3 4h18v12H3z M8 20h8 M12 16v4',
+      light: 'M9 18h6 M10 21h4 M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z',
+      sensor: 'M12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z M7.8 7.8a6 6 0 0 0 0 8.4 M16.2 7.8a6 6 0 0 1 0 8.4 M4.9 4.9a10 10 0 0 0 0 14.2 M19.1 4.9a10 10 0 0 1 0 14.2'
+    };
+
+    // 매장 카드 — 중심 y 236 / 334 / 432 (클라우드 224–500 안)
+    const devs = [['에어컨', I.ac], ['메뉴보드', I.board], ['조명', I.light], ['센서', I.sensor]].map(([name, icon]) => ({ name, icon }));
+    const siteTops = [192, 290, 388];
+    const S = [
+      ['매장 A', '/_blob/07237b62990f629d9c6de161a76cd37b', '카운터 상단 메뉴보드 사이니지 3면 (예시 사진)', '50% 20%'],
+      ['매장 B', '/_blob/81b89af89b6620bd4871944e66844272', '카페 매장 내부 인테리어 (예시 사진)', '50% 60%'],
+      ['매장 C', '/_blob/e0064f4c1df596dbfda3fe0ecfa7aef0', '드라이브스루 실외 메뉴보드 사이니지 (예시 사진)', '30% 50%']
+    ];
+    const sites = S.map(([name, src, alt, op], i) => ({ name, src, alt, op, sub: '[지역]', devs, pos: 'left: 64px; top: ' + px(siteTops[i]) }));
+
+    // 선 · 화살촉 도우미
+    const solid = (x1, x2, yc, c) => ({ style: A + 'left: ' + px(x1) + 'top: ' + px(yc - 1) + 'width: ' + px(x2 - x1) + 'height: 2px; background: ' + c + ';' });
+    const dashed = (x1, x2, yc, c) => ({ style: A + 'left: ' + px(x1) + 'top: ' + px(yc - 1) + 'width: ' + px(x2 - x1) + 'height: 0; border-top: 2px dashed ' + c + ';' });
+    const headL = (x, yc, c) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(yc - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 8px solid ' + c + ';' });
+    const headR = (x, yc, c) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(yc - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + c + ';' });
+    const vDot = (xc, y1, y2) => ({ style: A + 'left: ' + px(xc - 1) + 'top: ' + px(y1) + 'width: 0; height: ' + px(y2 - y1) + 'border-left: 2px dotted ' + BLUE + ';' });
+
+    const flows = [];
+    // 매장 ↔ 클라우드: 위 = 제어 · 루틴(클라우드 → 매장), 아래 = 상태 · 전력(매장 → 클라우드)
+    siteTops.map((t) => t + 44).forEach((c) => {
+      flows.push(solid(392, 494, c - 8, BLUE), headL(384, c - 8, BLUE));
+      flows.push(dashed(384, 486, c + 8, GRAY), headR(486, c + 8, GRAY));
+    });
+    // 사용자 ↔ 클라우드: 위 = 원격 제어(사용자 → 클라우드), 아래 = 상태 · 리포트(클라우드 → 사용자)
+    const userTops = [224, 356];
+    userTops.map((t) => t + 58).forEach((c) => {
+      flows.push(solid(794, 920, c - 8, BLUE), headL(786, c - 8, BLUE));
+      flows.push(dashed(786, 912, c + 8, GRAY), headR(912, c + 8, GRAY));
+    });
+    // 클라우드 → Enterprise API → 고객 시스템
+    flows.push(vDot(640, 500, 520), vDot(640, 546, 562));
+    flows.push({ style: A + 'left: 474px; top: 561px; width: 334px; height: 0; border-top: 2px dotted ' + BLUE + ';' });
+    [474, 640, 806].forEach((x) => flows.push(vDot(x, 562, 578)));
+
+    // 사용자 카드 — 본사: 대시보드 모니터 화면 / 점장: 휴대폰 앱 화면 (베젤)
+    const users = [
+      {
+        name: '본사 웹 대시보드',
+        desc: '매장 [000]곳의 실시간 상태 · 에너지 리포트를 웹에서 보고 원격 제어',
+        src: '/_blob/37eb6322b0acde024eb630ba187e8fa1', alt: 'SmartThings Pro 대시보드 모니터 화면',
+        frame: A + 'left: 11px; top: 13px; width: 112px; height: 88px; overflow: hidden;',
+        img: 'left: -112px; top: -4px; width: 337px; height: 152px;',
+        text: 'left: 135px; top: 12px; width: 147px;',
+        pos: 'left: 920px; top: ' + px(userTops[0])
+      },
+      {
+        name: '점장 모바일 앱',
+        desc: '우리 매장 기기를 휴대폰으로 원격 제어하고 AI 절약 모드 확인',
+        src: '/_blob/480e3097ff51f6ca5afe88d496b381a5', alt: 'AI 절약 모드 휴대폰 앱 화면',
+        frame: A + 'left: 11px; top: 13px; width: 64px; height: 90px; box-sizing: border-box; border: 3px solid #121417; border-radius: 9px; overflow: hidden; background: #ffffff;',
+        img: 'left: -25px; top: 0px; width: 83px; height: 93px;',
+        text: 'left: 89px; top: 14px; width: 193px;',
+        pos: 'left: 920px; top: ' + px(userTops[1])
+      }
+    ];
+
+    const brain = [
+      { k: 'AI 절약 모드', v: '공조 · 온도 최적화' },
+      { k: '루틴 · 로직', v: '스케줄 · 조건 실행' },
+      { k: '에너지 분석', v: '에너지원별 · 비용' },
+      { k: '대시보드', v: '멀티사이트 · 3D 뷰' }
+    ];
+
+    const systems = ['ERP', 'POS', '[기존 BMS]'].map((name, i) => ({ name, pos: 'left: ' + px(399 + i * 166) + 'top: 578px;' }));
+
+    return { sites, flows, users, brain, systems };
+  }
+}
+</script>
+</body>
+</html>

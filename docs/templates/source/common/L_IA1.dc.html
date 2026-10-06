@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IA-1 업종 분류 — 도입사례 198건 · 16개 업종</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM · 업종 분석 1 / 3</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">도입사례 198건, 16개 업종 — 업종마다 쓰는 제품 · 솔루션이 다릅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1152px; font-size: 15px; color: #596170; white-space: nowrap">업종별 사례 수 · 많이 쓰인 제품과 솔루션 (사례 수) · 고객이 가장 많이 요구한 것 · 대표 고객 — 업종마다 MI · 가치 제안 · 공간 시나리오 템플릿 4장</div>
+
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="16">
+    <div style="{{c.box}}">
+      <div style="height: 20px; display: flex; align-items: center; gap: 7px">
+        <span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">{{c.code}}</span>
+        <span style="flex-grow: 1; min-width: 0; font-size: 13.5px; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.name}}</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; color: #1428a0; white-space: nowrap">{{c.n}}<span style="font-family: 'Noto Sans KR', sans-serif; font-size: 11px; font-weight: 700"> 건</span></span>
+      </div>
+      <div style="height: 3px; margin: 4px 0 5px; border-radius: 2px; background: #eef0f3; position: relative; overflow: hidden"><span style="{{c.bar}}"></span></div>
+      <div style="display: flex; flex-direction: column; gap: 1px">
+        <div style="height: 15px; display: flex; align-items: center"><span style="width: 40px; flex-shrink: 0; font-size: 10px; font-weight: 700; color: #8a91a0">제품</span><span style="font-size: 11px; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.prod}}</span></div>
+        <div style="height: 15px; display: flex; align-items: center"><span style="width: 40px; flex-shrink: 0; font-size: 10px; font-weight: 700; color: #8a91a0">솔루션</span><span style="flex-grow: 1; min-width: 0; font-size: 11px; color: #1428a0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.sol}}</span><span style="{{c.poStyle}}">{{c.po}}</span></div>
+        <div style="height: 15px; display: flex; align-items: center"><span style="width: 40px; flex-shrink: 0; font-size: 10px; font-weight: 700; color: #8a91a0">요구</span><span style="font-size: 11px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.req}}</span></div>
+        <div style="height: 15px; display: flex; align-items: center"><span style="width: 40px; flex-shrink: 0; font-size: 10px; font-weight: 700; color: #8a91a0">고객</span><span style="font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.cus}}</span></div>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 682px; font-size: 11px; color: #8a91a0">출처: 삼성전자 비즈니스 고객 도입사례 (samsung.com/sec/business/insights/case-study) 198건 · 한 사례 = 한 업종 · 분류는 자동 추출, 사람 검토 전 · 제품만 = 솔루션 없이 제품만 도입한 사례</div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">WINMATE · IND 1</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [코드, 업종, 사례 수, 많이 쓰인 제품 (사례 수), 솔루션 (사례 수), 제품만 도입, 고객 요구 상위, 대표 고객, x, y]
+    const C = [
+      ['FB', '외식 · 카페 프랜차이즈', 23, '시스템에어컨 11 · LCD 사이니지 10', '파트너 앱 연동 5', '제품만 10', '디자인 조화 18 · 고객 경험 17', '스타벅스 · 맥도날드 · 커피빈 · 제일제면소', 64, 150],
+      ['RT', '리테일 · 브랜드 플래그십', 16, 'LCD 사이니지 8 · LED 사이니지 3', 'MagicINFO 4', '제품만 8', '브랜드 · 공간 임팩트 14 · 디자인 조화 11', '더현대 서울 · 캐딜락 하우스 · BMW 위례', 355, 150],
+      ['SV', '생활 편의 · 무인 매장', 9, 'TV · 모니터 5 · 디지털 복합기 5', '무인 과금 6 · 파트너 앱 연동 1', '제품만 2', '고객 경험 9 · 업무 효율 6 · 확장성 5', 'CU · 이마트24 · 토즈 · 프린트카페', 646, 150],
+      ['HT', '호텔 · 리조트', 17, '호텔 TV 6 · 시스템에어컨 6 · TV · 모니터 5', '케어 · 유지관리 3', '제품만 8', '고객 경험 13 · 디자인 조화 10', '시그니엘 서울 · 서울신라호텔 · 인스파이어', 937, 150],
+      ['TP', '테마파크 · 관광 · 전시', 12, 'LCD 사이니지 6 · LED 사이니지 4', 'MagicINFO 3 · 전용 에디션 3', '제품만 4', '브랜드 · 공간 임팩트 11 · 고객 경험 10', '에버랜드 · 서울스카이 · 퓌티로스코프', 64, 277],
+      ['VN', '공연장 · 경기장 · 영화관', 18, '하만 프로 오디오 5 · LED 사이니지 4', '케어 · 유지관리 4 · VXT 1', '제품만 10', '고객 경험 11 · 브랜드 · 공간 임팩트 10', '롯데시네마 · CGV · 삼성라이온즈파크', 355, 277],
+      ['AD', '옥외 · 미디어 광고', 6, 'LED 사이니지 4 · LCD 사이니지 2', '케어 · 유지관리 1', '제품만 5', '브랜드 · 공간 임팩트 6 · 현장 내구성 6', '인천국제공항 · 코엑스 SM타운', 646, 277],
+      ['OF', '오피스 · 업무 빌딩', 11, '시스템에어컨 4 · LED 사이니지 3', 'MagicINFO 3', '제품만 4', '원격 통합 관리 7 · 브랜드 · 공간 임팩트 5', 'KT 광화문 · 패스트파이브 · KG그룹', 937, 277],
+      ['RS', '주거 분양 · 주택', 18, '시스템에어컨 10 · 빌트인 주방가전 10', 'SmartThings 7', '제품만 11', '분양 · 자산 가치 14 · 디자인 조화 11', '래미안 블레스티지 · 그란츠 리버파크', 64, 404],
+      ['ID', '인테리어 · 빌트인 파트너', 9, '빌트인 주방가전 8 · 리빙가전 6', 'SmartThings 3', '제품만 6', '디자인 조화 9 · 브랜드 · 공간 임팩트 6', '영림 홈앤리빙 · 현대리바트 · 클린업키친', 355, 404],
+      ['ED', '교육 · 캠퍼스', 13, '시스템에어컨 5 · 갤럭시 탭 5', '무인 과금 3', '제품만 4', '교육 · 학습 환경 8 · 업무 효율 6', '서울대 · 국민대 · 성균관대 · 서울교대', 646, 404],
+      ['PB', '공공 · 교통 인프라', 7, 'LED 사이니지 2 · LCD 사이니지 1', '안전 · 관제 2', '제품만 4', '현장 내구성 5 · 데이터 · 모니터링 4', '서울교통공사 · 경찰청 · 국립공원공단', 937, 404],
+      ['MD', '의료 · 요양 · 케어', 10, '시스템에어컨 7 · 리빙가전 5', 'SmartThings 3', '', '쾌적 · 공기질 8 · 업무 효율 7', '한림대동탄성심병원 · KB 골든라이프케어', 64, 531],
+      ['MF', '제조 · 물류 · 현장', 7, '시스템에어컨 3 · 갤럭시 탭 2', 'Knox · Configure 3', '', '현장 내구성 6 · 업무 효율 4', '포스코 · 아시아나IDT · 아이센스', 355, 531],
+      ['FN', '금융', 5, '갤럭시 탭 3 · LED 사이니지 2', 'Knox · Configure 2', '제품만 1', '고객 경험 3 · 보안 · 기기 통제 3', 'KB국민은행 · 신한은행 · KEB하나은행', 646, 531],
+      ['OE', '파트너 전용 단말 · 에디션', 17, '갤럭시 스마트폰 8 · 갤럭시 탭 7', '파트너 앱 연동 13', '', '맞춤 개발 15 · 시스템 연동 14', 'LG U+ 키즈폰 · SKT 잼 · KB금융그룹', 937, 531]
+    ];
+    const MAXN = 23;
+    const cards = C.map(([code, name, n, prod, sol, po, req, cus, x, y]) => ({
+      code, name, n, prod, sol, po, req, cus,
+      box: 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: 279px; height: 117px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 9px 12px; background: #ffffff;',
+      bar: 'position: absolute; left: 0px; top: 0px; height: 3px; border-radius: 2px; background: #1428a0; width: ' + Math.round(100 * n / MAXN) + '%;',
+      poStyle: po ? 'flex-shrink: 0; margin-left: 6px; height: 15px; padding: 0 5px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 9.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' : 'display: none;'
+    }));
+    return { cards };
+  }
+}
+</script>
+</body>
+</html>

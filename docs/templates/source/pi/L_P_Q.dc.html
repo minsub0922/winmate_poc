@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>P-Q 직무별 기기 키트</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품 — 물류센터 전체</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">기기는 자리가 아니라 사람을 따라갑니다 — 직무별 기기 키트</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">단말 · 액세서리 · 앱을 한 세트로 묶어, 직무마다 지급합니다</div>
+
+  <!-- 키트 묶음 표시: 단말 + 액세서리 + 앱 세 열 위 -->
+  <div style="position: absolute; left: 272px; top: 150px; width: 652px; height: 18px">
+    <div style="position: absolute; left: 0; top: 9px; width: 652px; height: 1px; background: #1428a0"></div>
+    <div style="position: absolute; left: 0; top: 9px; width: 1px; height: 9px; background: #1428a0"></div>
+    <div style="position: absolute; left: 651px; top: 9px; width: 1px; height: 9px; background: #1428a0"></div>
+    <div style="position: absolute; left: 0; top: 0; width: 652px; height: 18px; display: flex; justify-content: center"><span style="padding: 0 12px; background: #ffffff; font-size: 12px; font-weight: 700; line-height: 18px; color: #1428a0">직무별 키트 — 함께 지급</span></div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 176px; width: 1152px; display: flex; flex-direction: column">
+    <!-- 헤더 -->
+    <div style="display: grid; grid-template-columns: 176px 652px 140px 104px; column-gap: 16px; height: 34px; box-sizing: border-box; padding: 0 16px; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170; align-items: center">
+      <span>직무 · 인원</span>
+      <div style="display: grid; grid-template-columns: 210px 196px 186px; column-gap: 16px; padding: 0 14px"><span>기본 단말</span><span>함께 쓰는 것</span><span>앱 · 솔루션</span></div>
+      <span>일하는 곳</span>
+      <span style="text-align: right">수량</span>
+    </div>
+    <!-- 직무 행 -->
+    <sc-for list="{{roles}}" as="r" hint-placeholder-count="5">
+      <div style="display: grid; grid-template-columns: 176px 652px 140px 104px; column-gap: 16px; height: 72px; box-sizing: border-box; padding: 0 16px; border-bottom: 1px solid #e2e5ea; align-items: center">
+        <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
+          <div style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px">
+            <span style="width: 9px; height: 9px; border-radius: 50%; background: #1428a0"></span>
+            <span style="width: 17px; height: 8px; border-radius: 9px 9px 3px 3px; background: #1428a0"></span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+            <span style="font-size: 16px; font-weight: 800; white-space: nowrap">{{r.role}}</span>
+            <span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{r.people}}</span>
+          </div>
+        </div>
+        <div style="height: 60px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 0 14px; display: grid; grid-template-columns: 210px 196px 186px; column-gap: 16px; align-items: center">
+          <div style="display: flex; align-items: center; gap: 12px; min-width: 0">
+            <div style="width: 56px; height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><div style="{{r.dev}}"><div style="{{r.screen}}"></div></div></div>
+            <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+              <span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{r.model}}</span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">{{r.kind}}</span>
+            </div>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{r.acc}}" as="a" hint-placeholder-count="2">
+              <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 12px; display: flex; align-items: center; white-space: nowrap">{{a}}</span>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{r.apps}}" as="a" hint-placeholder-count="2">
+              <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{a}}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="display: flex; align-items: center; gap: 5px; font-size: 14px; font-weight: 700; white-space: nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>{{r.place}}</span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">{{r.placeSub}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 1px">
+          <span style="display: flex; align-items: baseline; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; line-height: 1.1; color: #1428a0">{{r.qty}}</span><span style="font-size: 13px; font-weight: 700; color: #1428a0">대</span></span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">{{r.spare}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 합계 -->
+  <div style="position: absolute; left: 64px; top: 582px; width: 1152px; height: 48px; box-sizing: border-box; border-radius: 10px; background: #eaeefb; padding: 0 20px; display: flex; align-items: center; gap: 20px">
+    <span style="font-size: 15px; font-weight: 800">합계</span>
+    <span style="display: flex; align-items: baseline; gap: 6px"><span style="font-size: 13px; color: #3d4452">단말</span><span style="font-family: Manrope, sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[000]</span><span style="font-size: 14px; font-weight: 700; color: #1428a0">대</span></span>
+    <span style="font-size: 13px; color: #3d4452">교대 공용 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">[00]</span>대 포함</span>
+    <span style="width: 1px; height: 18px; background: #b8c3ee"></span>
+    <span style="font-size: 13px; color: #3d4452"><b>XCover7 Pro</b> <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">[000]</span> · <b>Tab Active5 Pro</b> <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">[00]</span></span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12.5px; color: #596170">전 단말 Knox Suite 등록 · 원격 관리</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 물류센터 · 현장 디지털화 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 비화면 단말 자리표시: 밝은 본체 + 어두운 화면
+    const D = {
+      phone: {
+        dev: 'width: 26px; height: 46px; box-sizing: border-box; border-radius: 6px; background: #ffffff; border: 1px solid #b8bec8; display: flex; justify-content: center; padding-top: 4px',
+        screen: 'width: 18px; height: 32px; border-radius: 2px; background: #1f232a',
+        model: 'XCover7 Pro', kind: 'Galaxy · 러기드 폰'
+      },
+      tablet: {
+        dev: 'width: 54px; height: 38px; box-sizing: border-box; border-radius: 6px; background: #ffffff; border: 1px solid #b8bec8; display: flex; align-items: center; justify-content: center',
+        screen: 'width: 44px; height: 28px; border-radius: 2px; background: #1f232a',
+        model: 'Tab Active5 Pro', kind: 'Galaxy · 러기드 태블릿'
+      }
+    };
+    // [직무, 인원 · 교대, 단말, 액세서리, 앱 · 솔루션, 일하는 곳, 보조 설명, 수량, 예비]
+    const R = [
+      ['입고 검수', '[00]명 · 2교대 공용', 'phone', ['충전 크래들', '핸드 스트랩'], ['Knox Capture', 'WMS 앱'], '입고 도크', '도크 [0]곳 · 박스 검수', '[00]', '예비 [0] 포함'],
+      ['피킹', '[00]명 · 2교대 공용', 'phone', ['핸드 스트랩', '충전 크래들'], ['Knox Capture', 'WMS 앱'], '랙 구역', '[00]열 · 걸으며 스캔', '[00]', '예비 [0] 포함'],
+      ['출고', '[00]명 · 2교대 공용', 'phone', ['충전 크래들'], ['Knox Capture', 'WMS 앱'], '출고장', '상차 · 송장 확인', '[00]', '예비 [0] 포함'],
+      ['현장 관리자', '[0]명 · 주간', 'tablet', ['충전 크래들', '핸드 스트랩'], ['WMS 앱', 'Knox Suite'], '사무실 ↔ 현장', '센터 전 구역 순회', '[0]', '예비 [0] 포함'],
+      ['배송 기사', '[00]명 · 주간', 'phone', ['차량 거치대', '충전 크래들'], ['배송 앱', 'Knox Capture'], '고객 문 앞', '차량 · 하루 [00]곳', '[00]', '예비 [0] 포함']
+    ];
+    const roles = R.map(([role, people, d, acc, apps, place, placeSub, qty, spare]) => ({
+      role, people, acc, apps, place, placeSub, qty, spare,
+      dev: D[d].dev, screen: D[d].screen, model: D[d].model, kind: D[d].kind
+    }));
+    return { roles };
+  }
+}
+</script>
+</body>
+</html>

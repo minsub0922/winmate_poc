@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IA-2 업종 × 제품 — 어느 업종이 어떤 삼성 제품을 썼나</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM · 업종 분석 2 / 3</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">시스템에어컨은 14개 업종, 사이니지 · 모바일 · 가전은 업종을 탑니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1152px; font-size: 15px; color: #596170; white-space: nowrap">도입사례 198건 · 업종(행) × 제품(열) · 칸 = 그 제품을 쓴 사례 수 · 진할수록 그 업종에서 흔함</div>
+  <div style="position: absolute; left: 216px; top: 140px; width: 372px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">디스플레이</div>
+  <div style="position: absolute; left: 592px; top: 140px; width: 137px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">공조</div>
+  <div style="position: absolute; left: 733px; top: 140px; width: 231px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">모바일 · IT</div>
+  <div style="position: absolute; left: 968px; top: 140px; width: 137px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">가전</div>
+  <div style="position: absolute; left: 1109px; top: 140px; width: 90px; height: 18px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 11px; font-weight: 800; color: #121417; display: flex; align-items: flex-start; padding-left: 2px; white-space: nowrap">음향 · 기타</div>
+
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="21">
+    <div style="{{h.style}}">{{h.l1}}<br>{{h.l2}}</div>
+  </sc-for>
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="16">
+    <div style="{{r.style}}">
+      <span style="width: 150px; flex-shrink: 0; display: flex; align-items: center; gap: 6px; padding-right: 8px; box-sizing: border-box"><span style="width: 22px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; color: #1428a0">{{r.code}}</span><span style="flex-grow: 1; min-width: 0; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">{{r.n}}</span></span>
+      <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="21">
+        <span style="{{c.style}}">{{c.v}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 538px; width: 1137px; height: 22px; display: flex; align-items: center; border-top: 1.5px solid #121417">
+    <span style="width: 150px; flex-shrink: 0; font-size: 11.5px; font-weight: 800">전체 198건</span>
+    <sc-for list="{{tots}}" as="c" hint-placeholder-count="21">
+      <span style="{{c.style}}">{{c.v}}</span>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 570px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #596170; white-space: nowrap">
+    <span style="font-weight: 700; color: #3d4452">칸 = 사례 수 · 색 = 그 업종 사례 중 비율</span>
+    <span style="width: 20px; height: 12px; background: #f5f6f8; border: 1px solid #e2e5ea; box-sizing: border-box"></span><span>~9%</span>
+    <span style="width: 20px; height: 12px; background: #dfe5f7"></span><span>10–24</span>
+    <span style="width: 20px; height: 12px; background: #b8c3ee"></span><span>25–39</span>
+    <span style="width: 20px; height: 12px; background: #6f82d6"></span><span>40–54</span>
+    <span style="width: 20px; height: 12px; background: #1428a0"></span><span>55%+</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 594px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0 20px">
+    <sc-for list="{{reads}}" as="r" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 2px; border-left: 2px solid #1428a0; padding-left: 10px"><span style="font-size: 12px; font-weight: 800; white-space: nowrap">{{r.k}}</span><span style="font-size: 11px; line-height: 1.45; color: #3d4452">{{r.v}}</span></div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 682px; font-size: 11px; color: #8a91a0">출처: 삼성전자 비즈니스 고객 도입사례 (samsung.com/sec/business/insights/case-study) 198건 · 한 사례 = 한 업종 · 분류는 자동 추출, 사람 검토 전</div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">WINMATE · IND 2</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [코드, 업종, 사례 수, 열마다 사례 수, 제품만 도입]
+    const R = [
+      ['FB', '외식 · 카페', 23, [0, 0, 10, 0, 0, 0, 0, 2, 11, 0, 0, 5, 0, 1, 1, 0, 1, 5, 0, 0, 0], 0],
+      ['RT', '리테일 · 플래그십', 16, [3, 0, 8, 2, 1, 1, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 1], 0],
+      ['SV', '생활 편의 · 무인', 9, [0, 0, 0, 0, 0, 0, 0, 5, 1, 0, 0, 2, 0, 0, 4, 5, 0, 0, 1, 0, 0], 0],
+      ['HT', '호텔 · 리조트', 17, [2, 0, 4, 0, 0, 0, 6, 5, 6, 2, 0, 2, 0, 0, 1, 0, 2, 2, 1, 1, 0], 0],
+      ['TP', '테마파크 · 전시', 12, [4, 0, 6, 1, 0, 0, 0, 2, 1, 0, 0, 1, 0, 0, 2, 0, 0, 1, 0, 2, 0], 0],
+      ['VN', '공연 · 경기 · 영화관', 18, [4, 3, 3, 0, 0, 0, 0, 2, 4, 2, 1, 1, 0, 1, 1, 0, 1, 2, 0, 5, 1], 0],
+      ['AD', '옥외 광고', 6, [4, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0],
+      ['OF', '오피스', 11, [3, 0, 2, 0, 1, 1, 0, 0, 4, 2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0], 0],
+      ['RS', '주거 분양 · 주택', 18, [0, 0, 0, 0, 0, 0, 0, 2, 10, 1, 2, 0, 0, 0, 0, 0, 10, 6, 0, 0, 1], 0],
+      ['ID', '인테리어 · 빌트인', 9, [0, 0, 0, 0, 0, 0, 0, 3, 4, 2, 0, 0, 0, 0, 0, 0, 8, 6, 0, 0, 0], 0],
+      ['ED', '교육 · 캠퍼스', 13, [1, 0, 1, 0, 3, 1, 0, 1, 5, 0, 0, 5, 0, 0, 5, 3, 0, 2, 0, 0, 2], 0],
+      ['PB', '공공 · 교통', 7, [2, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0], 0],
+      ['MD', '의료 · 요양', 10, [0, 0, 3, 0, 0, 0, 1, 2, 7, 2, 0, 2, 0, 1, 1, 1, 1, 5, 0, 0, 2], 0],
+      ['MF', '제조 · 물류 · 현장', 7, [0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0], 0],
+      ['FN', '금융', 5, [2, 0, 2, 0, 0, 0, 0, 2, 2, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0],
+      ['OE', '파트너 전용 단말', 17, [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 7, 8, 2, 0, 0, 0, 0, 0, 0, 0], 0]
+    ];
+    const HEADS = ['LED|사이니지', '시네마|LED', 'LCD|사이니지', '특수|사이니지', '전자칠판|Flip', '컬러|이페이퍼', '호텔|TV', 'TV ·|모니터', '시스템|에어컨', '공조 ·|환기', 'EHS|히트펌프', '갤럭시|탭', '갤럭시|스마트폰', '워치 ·|태그', 'PC ·|노트북', '디지털|복합기', '빌트인|주방가전', '리빙|가전', '상업용|세탁기', '하만|오디오', '네트워크|· 기타'];
+    const TOTS = [25, 3, 42, 3, 5, 3, 7, 29, 62, 12, 3, 31, 9, 8, 15, 10, 24, 32, 2, 10, 7];
+    const X0 = 214, CW = 47, TOP = 198, RH = 21;
+    const shade = (v, n) => { if (!v) return ['transparent', '#d5d9e0']; const p = v / n; return p >= 0.55 ? ['#1428a0', '#ffffff'] : p >= 0.4 ? ['#6f82d6', '#ffffff'] : p >= 0.25 ? ['#b8c3ee', '#121417'] : p >= 0.1 ? ['#dfe5f7', '#121417'] : ['#f5f6f8', '#596170']; };
+    const cellBase = 'width: ' + (CW - 3) + 'px; height: ' + (RH - 3) + 'px; margin-right: 3px; flex-shrink: 0; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800;';
+    const heads = HEADS.map((h, j) => { const [l1, l2] = h.split('|'); return { l1, l2: l2 || '', style: 'position: absolute; left: ' + (X0 + j * CW) + 'px; top: 162px; width: ' + (CW - 3) + 'px; font-size: 10px; line-height: 1.3; font-weight: 700; color: #3d4452; text-align: center; white-space: nowrap;' }; });
+    const rows = R.map(([code, name, n, vals, ex], i) => ({
+      code, name, n,
+      style: 'position: absolute; left: 64px; top: ' + (TOP + i * RH) + 'px; width: ' + (X0 - 64 + vals.length * CW) + 'px; height: ' + RH + 'px; display: flex; align-items: center;' + (i % 2 ? '' : ' background: #fafbfc;'),
+      cells: vals.map((v) => { const [bg, fg] = shade(v, n); return { v: v ? v : '·', style: cellBase + ' background: ' + bg + '; color: ' + fg + ';' }; })
+    }));
+    const tots = TOTS.map((v) => ({ v, style: 'width: ' + (CW - 3) + 'px; margin-right: 3px; flex-shrink: 0; text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #121417;' }));
+    const reads = [{ k: '시스템에어컨 62건 · 14개 업종', v: '가장 넓게 쓰임 — 외식 11 · 주거 분양 10 · 의료 7 · 호텔 6' }, { k: '사이니지 LCD 42 · LED 25건', v: '외식 · 리테일 · 테마파크 · 옥외 광고 · 경기장 · 호텔에 몰림' }, { k: '갤럭시 탭 31 · 스마트폰 9건', v: '파트너 단말 · 외식(테이블 오더) · 교육 · 금융 · 제조 현장' }, { k: '빌트인 24 · 리빙가전 32건', v: '주거 분양 · 인테리어 파트너가 중심, 의료 · 외식에도' }];
+    return { heads, rows, tots, reads };
+  }
+}
+</script>
+</body>
+</html>

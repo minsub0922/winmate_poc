@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-FB-C 외식 · 카페 프랜차이즈 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">D 다이닝의 하루, 두 번의 피크에도 매장은 흔들리지 않습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">이용(손님 · 외국인 관광객)과 운영(직원 · 점장 · 본사) 두 줄로 본 하루 — 공간 번호는 공간 맵과 같고, 시간은 예시입니다</div>
+
+  <!-- ============ 시간대 머리 ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 30px; display: flex; flex-direction: column; justify-content: center; white-space: nowrap"><span style="font-size: 12px; font-weight: 800; line-height: 15px">역할 · 시간대</span><span style="font-size: 10.5px; line-height: 14px; color: #8a91a0">시간은 예시</span></div>
+  <sc-for list="{{phases}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.style}}"><span style="font-size: 12.5px; font-weight: 800">{{p.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{p.hours}}</span></div>
+  </sc-for>
+
+  <!-- ============ 레인 ============ -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.row}}"></div>
+    <div style="{{l.box}}">
+      <div style="position: absolute; left: 10px; top: 10px; width: 20px; height: 20px">
+        <sc-if value="{{l.i1}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg></sc-if>
+        <sc-if value="{{l.i2}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c3.5 3.5 3.5 14.5 0 18c-3.5-3.5-3.5-14.5 0-18z"></path></svg></sc-if>
+        <sc-if value="{{l.i3}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v5a3 3 0 0 0 6 0V3"></path><path d="M7 3v18"></path><path d="M18 3c-2.5 2-3.5 5-3.5 9h3.5v9"></path></svg></sc-if>
+        <sc-if value="{{l.i4}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"></rect><path d="M12 16v4"></path><path d="M8 20h8"></path></svg></sc-if>
+      </div>
+      <div style="{{l.tag}}">{{l.group}}</div>
+      <div style="position: absolute; left: 10px; top: 38px; font-size: 13.5px; font-weight: 800; line-height: 18px; white-space: nowrap">{{l.name}}</div>
+      <div style="position: absolute; left: 10px; top: 60px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{l.sub}}</div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 393px; width: 1152px; height: 0px; border-top: 1px dashed #b8bec8"></div>
+
+  <!-- ============ 장면 블록 ============ -->
+  <sc-for list="{{blocks}}" as="b" hint-placeholder-count="17">
+    <div style="{{b.style}}">
+      <div style="position: absolute; left: 10px; top: 8px; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">{{b.time}}</div>
+      <div style="position: absolute; right: 8px; top: 8px; height: 18px; box-sizing: border-box; padding: 0 6px 0 2px; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 4px; white-space: nowrap"><span style="min-width: 14px; height: 14px; box-sizing: border-box; padding: 0 3px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{b.n}}</span><span style="font-size: 10.5px; font-weight: 700; color: #121417">{{b.space}}</span></div>
+      <div style="position: absolute; left: 10px; top: 31px; width: 164px; font-size: 12px; line-height: 16px; color: #121417; white-space: nowrap">{{b.a1}}</div>
+      <div style="position: absolute; left: 10px; top: 47px; width: 164px; font-size: 12px; line-height: 16px; color: #121417; white-space: nowrap">{{b.a2}}</div>
+      <div style="position: absolute; left: 10px; top: 66px; width: 164px; font-size: 11.5px; font-weight: 800; line-height: 15px; color: #1428a0; white-space: nowrap">→ {{b.out}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 이어지는 장면 (이용 ↔ 운영) -->
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.line}}"></div>
+    <div style="{{k.from}}"></div>
+    <div style="{{k.dot}}"></div>
+    <div style="{{k.to}}"></div>
+    <div style="{{k.head}}"></div>
+  </sc-for>
+
+  <!-- ============ 비수기 · 특별 일정 ============ -->
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 16px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">비수기 · 특별 일정</span>
+    <sc-for list="{{breaks}}" as="v" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="{{v.badge}}">{{v.n}}</span>{{v.t}}</span>
+    </sc-for>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #3d4452"><span style="width: 0px; height: 16px; border-left: 2px dashed #1428a0"></span>이어지는 장면</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 다이닝 · 매장 디지털 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 격자 — 시간대 5열 (x 188부터 폭 200 · 간격 7), 레인 4줄 (이용 2 · 운영 2)
+    const PX = (i) => 188 + i * 207, PW = 200, BW = 182, BH = 86;
+    const LY = [198, 294, 402, 498], LH = 90;
+
+    const PH = [['오픈 준비', '10–11:30'], ['점심 피크', '11:30–14'], ['브레이크', '14–17'], ['저녁 피크', '17–21'], ['마감', '21–24']];
+    const phases = PH.map(([name, hours], i) => ({
+      name, hours,
+      style: A + box(PX(i), 160, PW, 30) + 'box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; justify-content: space-between; white-space: nowrap;'
+    }));
+
+    const L = [
+      ['손님', '직장인 · 단골 · 가족', '이용'],
+      ['외국인 관광객', '도심 관광 · 단체', '이용'],
+      ['홀 · 주방 직원', '서빙 · 조리 · 카운터', '운영'],
+      ['점장 · 본사', '매장 관리 · 운영팀', '운영']
+    ];
+    const lanes = L.map(([name, sub, group], i) => {
+      const user = i < 2;
+      return {
+        name, sub, group,
+        i1: i === 0, i2: i === 1, i3: i === 2, i4: i === 3,
+        row: A + box(188, LY[i], 1028, LH) + 'border-radius: 10px; background: #f8f9fb;',
+        box: A + box(64, LY[i], 112, LH) + 'border-radius: 10px; background: ' + (user ? '#eaeefb' : '#f5f6f8') + ';',
+        tag: A + 'right: 8px; top: 11px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; ' +
+          (user ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #3d4452;')
+      };
+    });
+
+    // 장면 — [레인, 시간대, 시각, 공간 번호, 공간, 하는 일 1, 하는 일 2, 결과]
+    const B = [
+      [0, 1, '12:10', '3', '홀 테이블', '점심 세트를 탭으로 주문,', '결제도 자리에서 바로', '점심 회전 [00]% ↑'],
+      [0, 2, '15:20', '1', '외부 · 대기', '브레이크 · 저녁 오픈 시각을', '매장 앞 화면에서 확인', '헛걸음 없이 다시 방문'],
+      [0, 3, '18:50', '1', '외부 · 대기', '접수 탭에 번호를 남기고', '차례 알림을 받아 입장', '줄 서는 시간 [00]분 ↓'],
+      [0, 4, '21:00', '6', '겉옷 케어', '맡겨 둔 겉옷을 냄새 없이', '찾아 입고 귀가', '고기 냄새 없는 2차'],
+      [1, 0, '11:20', '1', '외부 · 대기', '대표 메뉴 사진 · 다국어', '안내를 보고 입점 결정', '메뉴를 알고 입장'],
+      [1, 3, '18:30', '3', '홀 테이블', '부위 · 인원별 세트를', '사진으로 비교해 주문', '손짓 설명 없이 주문'],
+      [1, 4, '20:50', '2', '카운터', '해외 카드 · 간편결제로', '카운터 탭에서 바로 계산', '계산 대기 [0]분'],
+      [2, 0, '10:30', '4', '주방', '오늘 품절 메뉴를 주방', '탭에서 등록 — 전 테이블 반영', '품절 주문 [0]건'],
+      [2, 1, '12:15', '3', '홀 테이블', '추가 주문 · 직원 호출을', '카운터 탭 알림으로 바로 서빙', '서빙 대기 [0]분 ↓'],
+      [2, 2, '15:40', '5', '냉장 · 냉동', '재료 입고로 문이 오래', '열리면 주방 탭에 알림', '문 열림 방치 [0]건'],
+      [2, 3, '19:00', '2', '카운터', '대기 호출 · 빈 테이블을', '카운터 탭 한 화면에서', '테이블 회전 [00]% ↑'],
+      [2, 4, '22:30', '4', '주방', '에어컨 · 조명 · 냉장 상태를', '탭으로 확인하고 퇴근', '마감 점검 [00]분 ↓'],
+      [3, 0, '10:00', '7', '본사', '전 매장 외부 화면 · 메뉴에', '오늘 프로모션 일괄 편성', '매장 방문 없이 교체'],
+      [3, 1, '13:10', '7', '본사', '꺼진 메뉴보드는 원격', '알림 · 재시작으로 복구', '화면 공백 [0]분 이내'],
+      [3, 2, '14:30', '1·3', '외부 · 홀', '외부 화면은 브레이크 안내,', '빈 홀 냉난방 · 조명은 절전', '브레이크 전력 [00]% ↓'],
+      [3, 4, '23:30', '7', '본사', '밤사이 냉장 · 냉동 온도를', '기록 · 이탈하면 점장 폰에', '재료 폐기 [00]% ↓']
+    ];
+    const blocks = B.map(([lane, ph, time, n, space, a1, a2, out]) => ({
+      time, n, space, a1, a2, out,
+      style: A + box(PX(ph), LY[lane] + 2, BW, BH) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid ' + (lane < 2 ? '#b8c3ee' : '#d5d9e0') + ';'
+    }));
+
+    // 이어지는 장면 — 시간대 오른쪽 통로(x + 182 … + 200)로 레인 사이를 연결, 화살표는 받는 쪽
+    const K = [[0, 3, 1], [1, 0, 2], [2, 3, 0], [3, 0, 2]]; // [시간대, 보내는 레인, 받는 레인]
+    const links = K.map(([ph, a, b]) => {
+      const cx = PX(ph) + 191;
+      const ya = LY[a] + 2 + BH / 2, yb = LY[b] + 2 + BH / 2;
+      const top = Math.min(ya, yb), h = Math.abs(yb - ya);
+      return {
+        line: A + box(cx - 1, top, 0, h) + 'border-left: 2px dashed #1428a0;',
+        from: A + box(PX(ph) + BW, ya - 1, 9, 2) + 'background: #1428a0;',
+        dot: A + box(cx - 4, ya - 4, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;',
+        to: A + box(PX(ph) + BW + 6, yb - 1, 4, 2) + 'background: #1428a0;',
+        head: A + 'left: ' + px(PX(ph) + BW) + 'top: ' + px(yb - 5) + 'width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid #1428a0;'
+      };
+    });
+
+    // 비수기 · 특별 일정
+    const badge = (n) => 'min-width: 16px; height: 16px; box-sizing: border-box; padding: 0 4px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' +
+      (n ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #1428a0; color: #1428a0;');
+    const V = [['7', '관광 성수기 — 외부 화면 · 탭 메뉴 다국어 비중 확대'], ['4·5', '비수기 — 에어컨 세척 · 냉장 설비 점검'], ['', '새 매장 — 탭 · 화면을 같은 설정으로 개점']];
+    const breaks = V.map(([n, t]) => ({ n: n || '+', t, badge: badge(n) }));
+
+    return { phases, lanes, blocks, links, breaks };
+  }
+}
+</script>
+</body>
+</html>

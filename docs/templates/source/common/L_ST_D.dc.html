@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ST-D 강점 × 증거 사진</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">말 대신 현장으로 보여드리는 세 가지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; line-height: 1.5; color: #596170; white-space: nowrap">P 공항 공사 · 대형 디스플레이 제안</div>
+
+  <!-- 3열: 증거 사진 + 강점 + 수치 -->
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+      <div style="display: flex; flex-direction: column">
+        <div style="position: relative; width: 368px; height: 270px">
+          <dc-import name="Img" kind="{{c.kind}}" origin="official" hint="{{c.hint}}" w="368" h="270" radius="14" credit="bl" hint-size="368px,270px"></dc-import>
+          <span style="position: absolute; right: 12px; top: 12px; height: 26px; padding: 0 10px; border-radius: 999px; background: rgba(255,255,255,0.94); font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h3l2-3h8l2 3h3v13H3z"/><circle cx="12" cy="13" r="4"/></svg>{{c.tag}}</span>
+        </div>
+        <div style="margin-top: 18px; display: flex; align-items: baseline; gap: 10px">
+          <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{c.no}}</span>
+          <span style="font-size: 19px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{c.title}}</span>
+        </div>
+        <div style="margin-top: 14px; padding-top: 16px; border-top: 1px solid #e2e5ea; display: flex; align-items: baseline">
+          <span style="font-family: Manrope, sans-serif; font-size: 40px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{c.num}}</span>
+          <span style="margin-left: 2px; font-size: 22px; font-weight: 800; color: #1428a0; white-space: nowrap">{{c.unit}}</span>
+          <span style="margin-left: 12px; font-size: 14.5px; font-weight: 700; white-space: nowrap">{{c.label}}</span>
+        </div>
+        <span style="margin-top: 12px; height: 44px; font-size: 13.5px; line-height: 1.6; color: #3d4452; word-break: keep-all">{{c.desc}}</span>
+        <div style="margin-top: 14px; height: 30px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/><path d="M9 12h6 M9 16h6"/></svg>
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">근거 자료</span>
+          <span style="font-size: 12px; font-weight: 600; color: #3d4452">{{c.src}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>P 공항 공사 · 대형 디스플레이 제안 · 수치는 공개 자료 확인 후 기입 · 사진 samsung.com 공식</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 27</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 강점 하나 = 증거 사진 하나 + 증거 수치 하나 (수치는 공개 자료로 확인 후 기입)
+    const cols = [
+      ['detail', '24시간 연속 구동 내구 시험실 · 켜진 디스플레이 여러 대', '시험 현장', '24시간 · 365일 설계', '[00,000]', '시간', '연속 구동 시험', '공항처럼 꺼지지 않는 공간을 기준으로 패널 · 전원 · 발열을 장시간 검증합니다', '내구 시험 리포트 · [공개 범위 확인]'],
+      ['people', '서비스 엔지니어가 현장에서 패널 교체 · 공구와 손이 보이게', '서비스 현장', '전국 직영 서비스망', '[000]', '개', '서비스 거점', '장애 접수부터 현장 출동까지 삼성 직영 엔지니어가 맡아 운영 공백을 줄입니다', '서비스 거점 현황 · samsung.com'],
+      ['insitu', '공항 출국장 대형 LED 설치 사례 · 높은 천장 · 승객 동선', '설치 현장', '대형 공간 레퍼런스', '[000]', '곳', '대형 공간 설치', '공항 · 역사 · 전시장처럼 천장이 높고 넓은 공간에 설치한 경험이 쌓여 있습니다', '설치 사례 목록 · 부록 p.[N]']
+    ].map(([kind, hint, tag, title, num, unit, label, desc, src], i) => ({
+      no: String(i + 1).padStart(2, '0'), kind, hint, tag, title, num, unit, label, desc, src
+    }));
+    return { cols };
+  }
+}
+</script>
+</body>
+</html>

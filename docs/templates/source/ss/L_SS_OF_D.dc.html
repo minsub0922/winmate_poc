@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-OF-D 오피스 · 업무 빌딩 · 공간 시나리오 · 로비 · 외벽</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">로비 · 외벽 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">C 빌딩은 거리에서 업무층 입구까지 안내가 끊기지 않습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">④ 로비 · 외벽 · 공용 동선 — 처음 온 방문객이 지나는 다섯 지점, 지점마다 움직이는 화면과 얻는 가치</div>
+
+  <!-- 왼쪽 7열: 건물 단면 + 방문 동선 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 662px; height: 444px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 168px; height: 22px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">4</span><span style="font-size: 14.5px; font-weight: 800; letter-spacing: -0.01em">로비 · 외벽 · 공용 동선</span></div>
+  <div style="position: absolute; right: 574px; top: 171px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">C 빌딩 단면 · 배치는 예시</div>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+  <svg style="position: absolute; left: 86px; top: 436px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="3"></circle><path d="M12 9v7M8 22l4-6 4 6M7 12h10"></path></svg>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="5">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 84px; top: 572px; height: 16px; display: flex; align-items: center; gap: 16px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 0px; border-top: 2px dashed #1428a0"></span>방문객 동선</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>LED · 사이니지</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 2px; border: 2px solid #1428a0; background: #ffffff"></span>컬러 이페이퍼 (무전원)</span>
+    <span>번호 = 오른쪽 순서</span>
+  </div>
+
+  <!-- 오른쪽 5열: 순서 리스트 -->
+  <sc-for list="{{steps}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.line}}"></div>
+    <div style="{{p.badge}}">{{p.n}}</div>
+    <div style="{{p.card}}">
+      <div style="position: absolute; left: 14px; top: 9px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em">{{p.name}}</span><span style="font-size: 11px; line-height: 16px; color: #8a91a0">{{p.at}}</span></div>
+      <div style="position: absolute; left: 14px; top: 32px; font-size: 12.5px; line-height: 18px; color: #3d4452; white-space: nowrap">{{p.mo}}</div>
+      <div style="position: absolute; left: 14px; top: 56px; height: 18px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">{{p.sol}}</span><span style="font-size: 11.5px; color: #596170">{{p.dev}}</span></div>
+      <div style="position: absolute; right: 10px; top: 10px; width: 124px; height: 62px; border-radius: 8px; background: #eaeefb">
+        <div style="position: absolute; left: 10px; top: 9px; font-size: 10.5px; line-height: 14px; color: #596170; white-space: nowrap">{{p.kl}}</div>
+        <div style="position: absolute; left: 10px; top: 29px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap">{{p.kv}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 하단 띠: 동선 전체 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800">동선 전체</span>
+    <span style="font-size: 11.5px; color: #3d4452">행사 전날, 다섯 지점 화면을 MagicINFO 한 곳에서 함께 편성</span>
+    <span style="width: 1px; height: 18px; background: #d5d9e0"></span>
+    <sc-for list="{{totals}}" as="k" hint-placeholder-count="3">
+      <span style="display: flex; align-items: baseline; gap: 6px; margin-right: 8px"><span style="font-size: 11.5px; color: #596170">{{k.l}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{k.v}}</span></span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+    const shapes = [];
+    const r = (x, y, w, h, css, t) => shapes.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const bg = (c) => 'background: ' + c + ';';
+    const lab = (x, y, t, c, w) => shapes.push({ t, style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10.5px; line-height: 14px; font-weight: ' + (w || 700) + '; color: ' + (c || '#3d4452') + '; ' + T });
+    const B = '#1428a0', DK = '#121417';
+
+    // 단면 — 외벽 x 214, 우측 벽 x 704, 업무층 208–286, 중간 층 289–340, 1F 343–462, B1 465–556
+    r(218, 208, 486, 78, bg('#ffffff'));
+    r(218, 289, 438, 51, bg('#eceef2') + 'display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: #8a91a0;', '중간 층');
+    r(218, 343, 486, 119, bg('#ffffff'));
+    r(218, 465, 486, 91, bg('#e6e9ee'));
+    r(330, 465, 100, 91, bg('#ffffff'));
+    [[214, 205, 492], [214, 286, 492], [214, 340, 492], [214, 462, 116], [430, 462, 276], [214, 556, 492]].forEach(([x, y, w]) => r(x, y, w, 3, bg(DK)));
+    r(84, 464, 129, 92, bg('#e6e9ee'));
+    r(84, 462, 130, 2, bg(DK));
+    r(213, 208, 2, 351, bg('#8a91a0'));
+    r(704, 205, 2, 354, bg('#8a91a0'));
+    r(212, 416, 6, 46, bg('#ffffff'));
+    // 엘리베이터 샤프트
+    r(656, 208, 48, 348, 'box-sizing: border-box; border: 1.5px solid #b8bec8; ' + bg('#f8f9fb'));
+    r(655, 420, 4, 42, bg('#ffffff'));
+    r(655, 244, 4, 42, bg('#ffffff'));
+    // 업무층: 책상 · 천장 카세트 · 유리 입구
+    [250, 312, 374, 436].forEach((x) => r(x, 270, 48, 6, 'border-radius: 2px; ' + bg('#d5d9e0')));
+    [352, 446].forEach((x) => r(x, 216, 14, 14, 'box-sizing: border-box; border-radius: 50%; border: 2px solid #6f82d6; ' + bg('#ffffff')));
+    r(560, 246, 2, 40, bg('#6f82d6'));
+    r(590, 236, 26, 15, 'border-radius: 2px; ' + bg(B));
+    // 기기: 외벽 LED · 관통 기둥 LED · 이페이퍼 · 엘리베이터홀 사이니지
+    r(204, 300, 9, 110, 'border-radius: 3px; ' + bg(B));
+    r(372, 346, 16, 210, 'border-radius: 3px; ' + bg(B));
+    r(500, 343, 12, 119, bg('#e2e5ea'));
+    r(496, 382, 20, 26, 'box-sizing: border-box; border-radius: 2px; border: 2px solid ' + B + '; ' + bg('#ffffff'));
+    r(642, 380, 9, 42, 'border-radius: 2px; ' + bg(B));
+    // 라벨
+    lab(226, 214, '[0]F 입주사 업무층');
+    lab(226, 349, '1F 로비');
+    lab(226, 471, 'B1 · 보이드');
+    lab(90, 470, 'GL · 보도', '#596170', 600);
+    lab(224, 424, '정문', '#8a91a0', 600);
+    lab(668, 214, 'EV', '#8a91a0');
+    lab(538, 219, '입구 사이니지', B);
+    lab(150, 300, '외벽 LED', B);
+    lab(394, 350, '관통 기둥 LED', B);
+    lab(482, 412, '이페이퍼', B);
+    lab(568, 364, 'EV홀 사이니지', B);
+    lab(338, 506, '보이드', '#8a91a0', 400);
+    // 동선 — 1F y 446 → 샤프트 x 680 → 업무층 y 266
+    r(108, 445, 572, 0, 'border-top: 2px dashed ' + B + ';');
+    r(679, 268, 0, 178, 'border-left: 2px dashed ' + B + ';');
+    r(572, 265, 108, 0, 'border-top: 2px dashed ' + B + ';');
+    r(264, 441, 0, 0, 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + B + ';');
+    r(675, 340, 0, 0, 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + B + ';');
+    r(564, 261, 0, 0, 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid ' + B + ';');
+
+    const marks = [[150, 446], [334, 446], [470, 446], [614, 446], [606, 266]].map(([cx, cy], i) => ({
+      n: i + 1,
+      style: box(cx - 13, cy - 13, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: ' + B + '; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 순서 리스트 — 지점 · 그 순간 · 솔루션 + 기기 · 가치
+    const S = [
+      ['외벽 · 거리', '건물 밖', '지나는 사람이 오늘의 행사를 먼저 봅니다', 'MagicINFO', '실외 · 곡면 LED 사이니지', '외부 현수막 · 홍보물', '[00]% ↓'],
+      ['로비 · 관통 기둥', '1F – B1 보이드', '들어서면 기둥 LED가 오늘의 손님을 맞습니다', 'MagicINFO', '관통 기둥형 LED 사이니지', '웰컴 화면 준비', '[00]분 → [0]분'],
+      ['로비 길 안내', '1F 기둥 · 벽면', '전원 없는 벽에서도 행사장 가는 길이 보입니다', '콘텐츠 제작 지원', '컬러 이페이퍼 · 착탈 배터리', '종이 안내문', '[000]장 → [0]장'],
+      ['엘리베이터홀', '1F', '기다리는 동안 층별 입주사 · 공지를 봅니다', 'MagicINFO', '스마트 사이니지 QM 시리즈', '층별 공지 게시', '[0]일 → 당일'],
+      ['업무층 입구', '[0]F', '층 입구에서 미팅 장소까지 이어서 안내합니다', 'MagicINFO', '스마트 사이니지 QM43C', '로비 데스크 호출', '[00]% ↓']
+    ];
+    const steps = S.map(([name, at, mo, sol, dev, kl, kv], i) => {
+      const y = 156 + i * 90;
+      return {
+        n: i + 1, name, at, mo, sol, dev, kl, kv,
+        badge: box(750, y + 8, 26, 26) + 'border-radius: 50%; background: ' + B + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        line: box(762, y + 34, 2, i < 4 ? 64 : 0) + bg('#d5d9e0'),
+        card: box(786, y, 430, 82) + 'box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff;'
+      };
+    });
+
+    const totals = [['길 안내 문의', '[00]% ↓'], ['화면 장애 인지', '[00]분 → [0]분']].map(([l, v]) => ({ l, v }));
+
+    return { shapes, marks, steps, totals };
+  }
+}
+</script>
+</body>
+</html>

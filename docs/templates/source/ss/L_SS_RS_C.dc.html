@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RS-C 주거 분양 · 주택 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">R 건설 입주민의 하루, 세대가 먼저 알고 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">맞벌이 가족의 평일 동선 예시 — 입주민 · 세대(삼성 기기 · SmartThings) · 운영 조직이 각자 하는 일, 시간은 예시</div>
+
+  <!-- 시간 · 공간 머리 -->
+  <div style="position: absolute; left: 64px; top: 160px; font-size: 12.5px; line-height: 18px; font-weight: 800; white-space: nowrap">시간 · 공간</div>
+  <div style="position: absolute; left: 64px; top: 180px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">번호 = 공간 맵</div>
+  <div style="position: absolute; left: 176px; top: 169px; width: 1035px; height: 2px; background: #d5d9e0"></div>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="7">
+    <div style="{{c.dot}}"></div>
+    <div style="{{c.timeStyle}}">{{c.time}}</div>
+    <div style="{{c.spacePos}}"><span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.sn}}</span><span>{{c.space}}</span></div>
+  </sc-for>
+
+  <!-- 레인 띠 · 라벨 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="3">
+    <div style="{{l.band}}"></div>
+    <div style="{{l.labelPos}}">
+      <span style="font-size: 13px; line-height: 18px; font-weight: 800; color: {{l.color}}; white-space: nowrap">{{l.role}}</span>
+      <span style="font-size: 11px; line-height: 15px; color: #596170">{{l.sub}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 176px; top: 533px; width: 1035px; height: 0px; border-top: 1px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 640px; top: 525px; height: 16px; padding: 0 8px; background: #f5f6f8; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">평소에는 신호 없음 — 이상이 생길 때만 운영 조직에 알립니다</div>
+
+  <!-- 입주민 -->
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="7">
+    <div style="{{c.userBox}}">
+      <span style="position: absolute; left: 10px; top: 10px; width: 121px; font-size: 12.5px; line-height: 18px; font-weight: 700; color: #121417">{{c.user}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 세대 · 삼성 -->
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="7">
+    <div style="{{c.samBox}}">
+      <span style="position: absolute; left: 10px; top: 10px; font-size: 13px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{c.title}}</span>
+      <span style="position: absolute; left: 10px; top: 32px; width: 121px; font-size: 12px; line-height: 17px; color: #3d4452">{{c.desc}}</span>
+      <span style="position: absolute; left: 10px; top: 88px; width: 121px; font-size: 11px; line-height: 15px; font-weight: 700; color: #596170">{{c.prod}}</span>
+      <span style="position: absolute; left: 10px; top: 124px; width: 121px; height: 1px; background: #e2e5ea"></span>
+      <span style="position: absolute; left: 10px; top: 131px; font-size: 12px; line-height: 17px; font-weight: 800; color: #121417; white-space: nowrap">{{c.out}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 운영 -->
+  <sc-for list="{{ops}}" as="o" hint-placeholder-count="2">
+    <div style="{{o.box}}">
+      <span style="position: absolute; left: 10px; top: 8px; font-size: 12px; line-height: 16px; font-weight: 800; color: #121417; white-space: nowrap">{{o.who}}</span>
+      <span style="position: absolute; left: 10px; top: 27px; width: 121px; font-size: 11.5px; line-height: 16px; color: #3d4452">{{o.desc}}</span>
+      <span style="position: absolute; left: 10px; top: 64px; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0; white-space: nowrap">{{o.out}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 흐름: 입주민 → 세대 → 운영 -->
+  <sc-for list="{{flows}}" as="f" hint-placeholder-count="18">
+    <div style="{{f.style}}"></div>
+  </sc-for>
+
+  <!-- 한 달 결과 -->
+  <div style="position: absolute; left: 64px; top: 592px; width: 1152px; height: 56px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 80px; top: 601px; font-size: 12.5px; line-height: 18px; font-weight: 800; white-space: nowrap">한 달이 쌓이면 · R 건설 KPI</div>
+  <div style="position: absolute; left: 80px; top: 622px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">시간 · 수치는 예시 · 실측 / 시뮬레이션 후 확정</div>
+  <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.pos}}">
+      <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 20px; line-height: 24px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{k.v}}</span>
+      <span style="font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{k.l}}</span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · 아파트 분양 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const colX = (i) => 176 + i * 149; // 7열 · 폭 141
+
+    // 레인 — 위: 사용자, 가운데: 삼성이 하는 일, 아래: 운영 조직
+    const L = [
+      { role: '입주민', sub: '맞벌이 3–4인 가족', y: 208, h: 88, color: '#121417', bg: '#f5f6f8' },
+      { role: '세대 · 삼성', sub: '삼성 기기 · SmartThings가 하는 일', y: 302, h: 174, color: '#1428a0', bg: '#eaeefb' },
+      { role: '운영', sub: 'R 건설 CS · 삼성 서비스', y: 482, h: 102, color: '#121417', bg: '#f5f6f8' }
+    ];
+    const lanes = L.map((l) => ({
+      role: l.role, sub: l.sub, color: l.color,
+      band: A + box(64, l.y, 1152, l.h) + 'border-radius: 12px; background: ' + l.bg + ';',
+      labelPos: A + 'left: 76px; top: ' + px(l.y + 12) + 'width: 90px; display: flex; flex-direction: column; gap: 3px;'
+    }));
+
+    // 하루 — 시간(예시) · 공간 번호(공간 맵) · 입주민 · 삼성이 하는 일 · 제품 · 결과
+    const D = [
+      ['07:00', 3, '침실', '알람이 울리기 전, 방이 먼저 밝아집니다',
+        '기상 모드', '조명 · 커튼 · 에어컨이 정해 둔 순서대로 켜집니다', 'SmartThings 자동화 · 타사 조명 · 커튼', '리모컨 없이 시작'],
+      ['08:30', 5, '현관', '도어락을 잠그고 출근합니다',
+        '외출 모드', '도어락 잠금과 함께 에어컨 · 조명을 한 번에 끕니다', '도어락 연동 · Wi-Fi Kit', '켜 둔 기기 걱정 없음'],
+      ['15:00', 4, '세탁실', '휴대폰 알림을 보고 점검 일정을 고릅니다',
+        '홈케어 진단', '기기 상태를 점검해 이상 징후를 먼저 알립니다', 'SmartThings 홈케어 · 세탁기 · 건조기', '고장 나기 전에 조치'],
+      ['18:30', 2, '거실', '퇴근길에 앱에서 \'귀가\'를 누릅니다',
+        '웰컴 쿨링', '도착 전에 거실 냉방을 미리 시작합니다', '무풍 시스템에어컨 · Wi-Fi Kit', '도착하면 이미 쾌적'],
+      ['19:30', 1, '주방', '인덕션으로 조리하고 식기세척기로 정리합니다',
+        'AI 절약 모드', '거실~주방을 무풍으로 냉방하고 사용량을 맞춰 줄입니다', '빌트인 인덕션 · 무풍 시스템에어컨', '냉방 요금 부담 감소'],
+      ['23:00', 3, '침실', '아이와 함께 잠자리에 듭니다',
+        '수면 · 공기질 케어', '수면 센서로 온도를 맞추고 공기질에 따라 환기합니다', '수면 센서 · 에어모니터 · 청정환기', '잠든 사이 쾌적 유지'],
+      ['월말', 5, '세대 전체', '이번 달 전기 사용량을 확인합니다',
+        '에너지 리포트', '기기별 사용량과 AI 절약 모드 절감량을 보여 줍니다', 'SmartThings 에너지', '사용량이 한눈에']
+    ];
+    const cols = D.map(([time, sn, space, user, title, desc, prod, out], i) => {
+      const x = colX(i);
+      const word = time === '월말';
+      return {
+        time, sn, space, user, title, desc, prod, out,
+        dot: A + box(x, 165, 10, 10) + 'border-radius: 50%; background: #1428a0;',
+        timeStyle: A + 'left: ' + px(x + 16) + 'top: 159px; font-size: 15px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap; font-family: ' + (word ? "'Noto Sans KR', sans-serif" : 'Manrope, sans-serif') + ';',
+        spacePos: A + 'left: ' + px(x) + 'top: 183px; height: 18px; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #3d4452; white-space: nowrap;',
+        userBox: A + box(x, 214, 141, 76) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;',
+        samBox: A + box(x, 312, 141, 156) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #b8c3ee; background: #ffffff;'
+      };
+    });
+
+    // 운영 조직이 신호를 받는 순간만
+    const O = [
+      [2, '삼성 서비스', '진단 정보로 방문 · 부품을 미리 준비', 'CS 민원 접수 감소'],
+      [6, 'R 건설', '만족도 조사를 다음 단지 기획에 반영', '다음 분양 경쟁력']
+    ];
+    const ops = O.map(([i, who, desc, out]) => ({
+      who, desc, out,
+      box: A + box(colX(i), 490, 141, 88) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #d5d9e0; background: #ffffff;'
+    }));
+
+    // 연결선 — 입주민 카드 → 세대 카드 (모든 열), 세대 카드 → 운영 카드 (해당 열)
+    const flows = [];
+    const down = (cx, y1, y2) => {
+      flows.push({ style: A + box(cx - 1, y1, 2, y2 - y1 - 6) + 'background: #1428a0;' });
+      flows.push({ style: A + 'left: ' + px(cx - 5) + 'top: ' + px(y2 - 7) + 'width: 0px; height: 0px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid #1428a0;' });
+    };
+    D.forEach((d, i) => down(colX(i) + 70, 290, 312));
+    O.forEach(([i]) => down(colX(i) + 70, 468, 490));
+
+    // 한 달 결과 KPI — 값은 플레이스홀더
+    const K = [
+      ['[00]% ↓', '세대 냉방 전력'],
+      ['[0.0]일', 'AS 처리 기간'],
+      ['[00]% ↓', '하자 · 민원 접수'],
+      ['[0.0]점', '입주민 만족도']
+    ];
+    const kpis = K.map(([v, l], i) => ({
+      v, l,
+      pos: A + 'left: ' + px(440 + i * 196) + 'top: 600px; height: 40px; display: flex; flex-direction: column; justify-content: center;'
+    }));
+
+    return { lanes, cols, ops, flows, kpis };
+  }
+}
+</script>
+</body>
+</html>

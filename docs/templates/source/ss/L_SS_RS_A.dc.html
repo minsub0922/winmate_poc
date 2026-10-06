@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RS-A 주거 분양 · 주택 · 공간 맵</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">R 건설 분양 세대의 공간마다 삼성이 만드는 가치가 다릅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">세대 평면 예시 위 여섯 공간과 분양 현장 — 공간마다 놓이는 삼성 제품 · 솔루션, 그리고 R 건설이 얻는 가치</div>
+
+  <!-- 왼쪽: 세대 평면 (예시) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 466px; height: 488px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 174px; font-size: 14.5px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">R 건설 <span style="font-family: Manrope, 'Noto Sans KR', sans-serif">[00]</span>㎡ 타입 · 세대 평면 예시</div>
+  <div style="position: absolute; left: 84px; top: 196px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">번호 = 오른쪽 공간 · 실제 타입 평면으로 교체</div>
+  <div style="position: absolute; left: 414px; top: 177px; height: 16px; display: flex; align-items: center; gap: 6px; font-size: 11px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="position: relative; width: 14px; height: 14px; box-sizing: border-box; border: 1.5px solid #6f82d6; border-radius: 2px; background: #eaeefb"><span style="position: absolute; left: 3px; top: 3px; width: 5px; height: 5px; background: #6f82d6"></span></span>천장형 실내기</div>
+
+  <!-- SmartThings 세대 전체 연결 경계 -->
+  <div style="position: absolute; left: 92px; top: 232px; width: 410px; height: 258px; box-sizing: border-box; border: 1.5px dashed #1428a0; border-radius: 12px"></div>
+  <div style="position: absolute; left: 104px; top: 221px; height: 22px; box-sizing: border-box; padding: 0 10px 0 3px; border-radius: 999px; background: #ffffff; border: 1px solid #b8c3ee; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span><span style="font-size: 11.5px; font-weight: 800; color: #1428a0">SmartThings · 세대 전체 연결</span></div>
+  <div style="position: absolute; left: 104px; top: 246px; width: 386px; height: 12px; background: #e2e5ea; font-size: 9px; line-height: 12px; color: #8a91a0; text-align: center">발코니</div>
+
+  <sc-for list="{{rooms}}" as="r" hint-placeholder-count="9">
+    <div style="{{r.box}}">
+      <span style="position: absolute; left: 5px; top: 4px; font-size: 11px; line-height: 15px; font-weight: 700; color: {{r.color}}; white-space: nowrap">{{r.name}}</span>
+    </div>
+  </sc-for>
+  <!-- 주방 가구 · 아일랜드 · 냉장 컬럼 -->
+  <div style="position: absolute; left: 208px; top: 464px; width: 162px; height: 10px; border-radius: 2px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 208px; top: 408px; width: 14px; height: 50px; border-radius: 2px; background: #b8c3ee"></div>
+  <div style="position: absolute; left: 230px; top: 418px; width: 92px; height: 16px; border-radius: 3px; background: #d5d9e0; font-size: 9.5px; line-height: 16px; color: #3d4452; text-align: center">아일랜드</div>
+  <sc-for list="{{acs}}" as="a" hint-placeholder-count="4">
+    <div style="{{a.style}}"><span style="position: absolute; left: 4px; top: 4px; width: 5px; height: 5px; background: #6f82d6"></span></div>
+  </sc-for>
+  <!-- 외벽 · 출입구 -->
+  <div style="position: absolute; left: 104px; top: 258px; width: 386px; height: 220px; box-sizing: border-box; border: 3px solid #121417"></div>
+  <div style="position: absolute; left: 386px; top: 475px; width: 34px; height: 3px; background: #ffffff"></div>
+  <div style="position: absolute; left: 389px; top: 478px; width: 28px; text-align: center; font-size: 9px; line-height: 12px; color: #596170">출입</div>
+  <sc-for list="{{markers}}" as="m" hint-placeholder-count="8">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+
+  <!-- 단지 밖: 모델하우스 -->
+  <div style="position: absolute; left: 84px; top: 504px; width: 426px; height: 128px; box-sizing: border-box; border: 1.5px dashed #b8bec8; border-radius: 12px; background: #ffffff"></div>
+  <div style="position: absolute; left: 98px; top: 495px; height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">단지 밖 · 분양 현장</div>
+  <img src="/_blob/770dbedfe5b1a966cc5ab60f210fc668" alt="모델하우스 거실 — 벽면 TV에 SmartThings 홈 화면을 띄운 스마트홈 시연 (예시 사진)" style="position: absolute; left: 94px; top: 516px; width: 214px; height: 106px; object-fit: cover; object-position: 50% 40%; border-radius: 8px">
+  <div style="position: absolute; left: 100px; top: 600px; height: 16px; box-sizing: border-box; padding: 0 5px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 삼성 도입사례 · 고객 공간으로 교체</div>
+  <div style="position: absolute; left: 322px; top: 518px; height: 22px; display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">7</span><span style="font-size: 14px; font-weight: 800">모델하우스</span></div>
+  <div style="position: absolute; left: 322px; top: 546px; width: 176px; font-size: 11.5px; line-height: 17px; color: #3d4452">세대의 주방 · 거실 · 침실을 실물로 연출 — 방문객이 TV와 휴대폰으로 SmartThings를 직접 조작</div>
+
+  <!-- 오른쪽: 공간별 제품 · 솔루션 · 가치 -->
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="4">
+    <div style="{{h.style}}">{{h.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 554px; top: 182px; width: 662px; height: 2px; background: #121417"></div>
+  <sc-for list="{{rows}}" as="w" hint-placeholder-count="7">
+    <div style="{{w.box}}">
+      <span style="position: absolute; left: 0px; top: 15px; width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{w.n}}</span>
+      <span style="position: absolute; left: 30px; top: 8px; font-size: 13.5px; line-height: 19px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{w.space}}</span>
+      <span style="position: absolute; left: 30px; top: 29px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">{{w.sub}}</span>
+      <span style="position: absolute; left: 146px; top: 9px; width: 236px; font-size: 12px; line-height: 17px; color: #3d4452">{{w.prods}}</span>
+      <sc-for list="{{w.sols}}" as="s" hint-placeholder-count="1">
+        <span style="{{s.style}}">{{s.t}}</span>
+      </sc-for>
+      <span style="position: absolute; left: 532px; top: 9px; width: 130px; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0">{{w.value}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 전체 구성: 제품 → 솔루션 → 기능 -->
+  <div style="position: absolute; left: 554px; top: 578px; width: 662px; height: 70px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 570px; top: 591px; font-size: 12.5px; line-height: 18px; font-weight: 800; white-space: nowrap">전체 구성</div>
+  <div style="position: absolute; left: 570px; top: 612px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">제품 → 솔루션</div>
+  <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.style}}">{{c.t}}</div>
+  </sc-for>
+  <sc-for list="{{wires}}" as="l" hint-placeholder-count="7">
+    <div style="{{l.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 976px; top: 588px; width: 120px; height: 52px; border-radius: 10px; background: #1428a0"></div>
+  <div style="position: absolute; left: 976px; top: 595px; width: 120px; text-align: center; font-size: 13px; line-height: 18px; font-weight: 800; color: #ffffff; white-space: nowrap">SmartThings</div>
+  <div style="position: absolute; left: 976px; top: 616px; width: 120px; text-align: center; font-size: 10px; line-height: 14px; color: #c8d3ff; white-space: nowrap">Wi-Fi · 삼성 계정 하나</div>
+  <sc-for list="{{feats}}" as="f" hint-placeholder-count="3">
+    <div style="{{f.style}}"><span style="width: 5px; height: 5px; border-radius: 1px; background: #1428a0"></span>{{f.t}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · 아파트 분양 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 세대 평면 — 원점 (104, 258), 386 × 220. 방 좌표는 평면 기준 (예시 타입)
+    const PX = 104, PY = 258;
+    const RM = [
+      ['공부방 · 자녀방', 0, 0, 100, 118, '#ffffff'],
+      ['세탁실', 0, 118, 100, 52, '#ffffff'],
+      ['실외기실', 0, 170, 100, 50, '#e2e5ea'],
+      ['거실', 100, 0, 170, 120, '#ffffff'],
+      ['주방 · 식당', 100, 120, 170, 100, '#ffffff'],
+      ['안방', 270, 0, 116, 120, '#ffffff'],
+      ['드레스룸', 270, 120, 116, 40, '#ffffff'],
+      ['현관', 270, 160, 60, 60, '#ffffff'],
+      ['욕실', 330, 160, 56, 60, '#eef0f3']
+    ];
+    const rooms = RM.map(([name, x, y, w, h, bg]) => ({
+      name,
+      color: name === '욕실' ? '#8a91a0' : '#3d4452',
+      box: A + box(PX + x, PY + y, w, h) + 'box-sizing: border-box; border: 1px solid #b8bec8; background: ' + bg + ';'
+    }));
+
+    // 천장형 실내기 표시 (평면 기준 좌상단)
+    const acs = [[72, 92], [244, 12], [358, 12], [244, 128]].map(([x, y]) => ({
+      style: A + box(PX + x, PY + y, 14, 14) + 'box-sizing: border-box; border: 1.5px solid #6f82d6; border-radius: 2px; background: #eaeefb;'
+    }));
+
+    // 번호 마커 (중심 좌표, 평면 기준) — 오른쪽 표의 번호와 같음
+    const MK = [[1, 176, 192], [2, 185, 64], [3, 50, 62], [3, 328, 66], [4, 78, 144], [4, 362, 140], [5, 300, 200], [6, 80, 197]];
+    const markers = MK.map(([n, cx, cy]) => ({
+      n,
+      style: A + box(PX + cx - 12, PY + cy - 12, 24, 24) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 표 머리
+    const H = [['공간', 554], ['삼성 제품', 700], ['솔루션', 948], ['이 공간의 가치', 1086]];
+    const heads = H.map(([t, x]) => ({ t, style: A + 'left: ' + px(x) + 'top: 162px; font-size: 12px; line-height: 18px; font-weight: 800; color: #596170; white-space: nowrap;' }));
+
+    // 공간 행 — 주거 분양 업종에서 반복되는 공간 · 제품 · 요구 기준
+    const W = [
+      [1, '주방 · 아일랜드', 'LDK · 분양의 얼굴',
+        '키친핏 냉장고 (1~4도어 모듈 · 컬러 패널) · 빌트인 인덕션 · 식기세척기 · 오븐',
+        ['SmartThings 홈케어'], '가구와 일체감 + 유상 옵션 매출'],
+      [2, '거실', '주방과 열린 공간',
+        '무풍 시스템에어컨 (천장 매립 · 4계절 공기청정) · 대화면 TV',
+        ['SmartThings', 'AI 절약 모드'], '직바람 없이 거실~주방 균일 냉방'],
+      [3, '침실 · 공부방', '수면 · 학습',
+        '무풍 시스템에어컨 · 시스템 청정환기 · 에어모니터 · 수면 센서',
+        ['SmartThings 자동화'], '잠든 사이 온도 · 공기질 자동 관리'],
+      [4, '세탁실 · 드레스룸', '가사 공간',
+        '빌트인 드럼 세탁기 · 건조기 (직렬 설치) · 에어드레서',
+        ['SmartThings'], '좁은 공간에 맞춘 빌트인 · 가사 부담 감소'],
+      [5, '현관 · 세대 전체', '출입 · 통합 제어',
+        '도어락 · 조명 · 커튼 · 보일러 연동 (타사 기기 포함) · 빅스비 음성 제어',
+        ['SmartThings', '빅스비'], '앱 하나로 귀가 · 외출 · 취침 모드'],
+      [6, '천장 · 실외기실', '설비 · 설계 조건',
+        '시스템에어컨 실외기 · 슬림 실내기 (낮은 천장고) · 전열교환기 (ERV)',
+        ['Wi-Fi Kit', '공조 제어'], '설계 단계에 냉난방 부하 · 천장고 반영'],
+      [7, '모델하우스', '단지 밖 · 분양 현장',
+        '주방 · 거실 · 침실 실물 연출 · TV 화면으로 SmartThings 시연',
+        ['SmartThings 체험'], '청약 결정 순간에 차별점 체감']
+    ];
+    const rows = W.map(([n, space, sub, prods, S, value], i) => {
+      const top = 188 + i * 54;
+      const last = i === W.length - 1;
+      return {
+        n, space, sub, prods, value,
+        box: A + box(554, top, 662, 52) + 'box-sizing: border-box; ' +
+          (last ? 'border-radius: 10px; background: #f5f6f8;' : 'border-bottom: 1px solid #e2e5ea;'),
+        sols: S.map((t, j) => ({
+          t,
+          style: A + 'left: 394px; top: ' + px(S.length === 1 ? 16 : 4 + j * 24) + 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; ' +
+            (j === 0 ? 'background: #1428a0; color: #ffffff;' : 'background: #eaeefb; color: #1428a0;')
+        }))
+      };
+    });
+
+    // 전체 구성 — 제품 칩 (고정 폭)
+    const chip = (x, y, w, bg, fg, bd) => A + box(x, y, w, 22) + 'box-sizing: border-box; border-radius: 999px; background: ' + bg + '; color: ' + fg + '; border: 1px solid ' + bd + '; font-size: 11px; font-weight: 700; line-height: 20px; text-align: center; white-space: nowrap;';
+    const chips = [
+      { t: '시스템에어컨 · 청정환기 · 실외기', style: chip(670, 590, 182, '#ffffff', '#121417', '#d5d9e0') },
+      { t: 'Wi-Fi Kit', style: chip(864, 590, 72, '#eaeefb', '#1428a0', '#b8c3ee') },
+      { t: '빌트인 주방 · 세탁 · TV', style: chip(670, 618, 132, '#ffffff', '#121417', '#d5d9e0') },
+      { t: '도어락 · 조명 · 보일러 (타사)', style: chip(808, 618, 160, '#ffffff', '#596170', '#d5d9e0') }
+    ];
+    const hl = (x, y, w) => ({ style: A + box(x, y, w, 2) + 'background: #1428a0;' });
+    const tip = (x, y) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: 0px; height: 0px; border-top: 4px solid transparent; border-bottom: 4px solid transparent; border-left: 6px solid #1428a0;' });
+    const wires = [
+      hl(852, 600, 6), tip(858, 597),
+      hl(936, 600, 34), tip(970, 597),
+      hl(968, 628, 2), tip(970, 625),
+      hl(1096, 614, 8)
+    ];
+    const feats = ['자동화 루틴 · 모드', 'AI 절약 모드', '홈케어 진단'].map((t, i) => ({
+      t, style: A + 'left: 1108px; top: ' + px(590 + i * 17) + 'height: 16px; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #121417; white-space: nowrap;'
+    }));
+
+    return { rooms, acs, markers, heads, rows, chips, wires, feats };
+  }
+}
+</script>
+</body>
+</html>

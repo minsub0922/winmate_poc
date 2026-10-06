@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-1·1B 한 공간 · 한 솔루션 — 기능 3단 (입고 검수장 × Knox Capture)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 1곳 · 솔루션 1개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">L 물류 입고장은 갤럭시 카메라로 스캔하고, 입력은 저절로 끝납니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">한 공간에 한 솔루션 — Knox Capture가 검수장에서 하는 일을 기능별로</div>
+
+  <!-- ============ 위쪽 띠: 공간 ============ -->
+  <img src="/_blob/fd7152aca97436229470b5ac6ced1ffe" alt="물류창고 선반 앞에서 작업자가 스마트폰으로 박스를 확인 (예시 사진)" style="position: absolute; left: 64px; top: 156px; width: 368px; height: 140px; object-fit: cover; object-position: 50% 40%; border-radius: 12px">
+  <div style="position: absolute; left: 72px; top: 272px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+
+  <div style="position: absolute; left: 456px; top: 158px; font-size: 11.5px; line-height: 16px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0; white-space: nowrap">공간 1곳</div>
+  <div style="position: absolute; left: 456px; top: 176px; font-size: 21px; line-height: 28px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">입고 검수장</div>
+  <sc-for list="{{facts}}" as="f" hint-placeholder-count="3">
+    <div style="{{f.line}}"></div>
+    <div style="{{f.labelS}}">{{f.label}}</div>
+    <div style="{{f.valS}}">{{f.val}}</div>
+  </sc-for>
+
+  <!-- ============ 위쪽 띠: 솔루션 · 기기 ============ -->
+  <div style="position: absolute; left: 750px; top: 156px; width: 466px; height: 140px; border-radius: 14px; background: #f5f6f8"></div>
+  <img src="/_blob/0f2c662780a718693a94f6c0c0c1d18b" alt="갤럭시 탭 액티브5 Pro 앞 · 뒷면과 S펜 (제품 컷)" style="position: absolute; left: 762px; top: 164px; width: 168px; height: 102px; object-fit: contain; mix-blend-mode: multiply">
+  <div style="position: absolute; left: 766px; top: 272px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">제품 사진</div>
+  <div style="position: absolute; left: 946px; top: 170px; font-size: 11.5px; line-height: 16px; font-weight: 800; letter-spacing: 0.04em; color: #596170; white-space: nowrap">솔루션 1개</div>
+  <div style="position: absolute; left: 946px; top: 190px; height: 30px; box-sizing: border-box; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">Knox Capture</div>
+  <div style="position: absolute; left: 946px; top: 226px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">갤럭시 카메라 바코드 · QR 스캔</div>
+  <div style="position: absolute; left: 946px; top: 256px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{devices}}" as="d" hint-placeholder-count="2">
+      <span style="height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11.5px; font-weight: 700; color: #121417; display: flex; align-items: center">{{d.t}}</span>
+    </sc-for>
+  </div>
+
+  <!-- ============ 기능 3단 표 ============ -->
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="3">
+    <div style="{{h.style}}"><span style="font-size: 13px; font-weight: 800; color: {{h.color}}">{{h.t}}</span><span style="font-size: 11.5px; color: #8a91a0">{{h.hint}}</span></div>
+  </sc-for>
+  <sc-for list="{{headArrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.style}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 338px; width: 1152px; height: 2px; background: #121417"></div>
+
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.sep}}"></div>
+    <div style="{{r.badge}}">{{r.n}}</div>
+    <div style="{{r.fT}}">{{r.f}}</div>
+    <div style="{{r.fS}}">{{r.fs}}</div>
+    <div style="{{r.a1}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b8bec8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+    <div style="{{r.pT}}">{{r.p}}</div>
+    <div style="{{r.pS}}">{{r.ps}}</div>
+    <div style="{{r.a2}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b8bec8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+    <div style="{{r.valBox}}">
+      <sc-for list="{{r.kv}}" as="k" hint-placeholder-count="1">
+        <div style="{{k.style}}">
+          <span style="font-size: 12px; line-height: 17px; color: #3d4452">{{k.l}}</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 21px; line-height: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">{{k.v}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <!-- ============ 도입 범위 ============ -->
+  <div style="position: absolute; left: 64px; top: 606px; width: 1152px; height: 46px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 606px; height: 46px; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800; color: #1428a0">도입 범위</span>
+    <span style="width: 1px; height: 18px; background: #d5d9e0"></span>
+    <span style="font-size: 13px; font-weight: 700; color: #121417">검수장 단말 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">[00]</span>대</span>
+    <span style="font-size: 13px; color: #8a91a0">·</span>
+    <span style="font-size: 13px; font-weight: 700; color: #121417">기존 WMS 앱 그대로</span>
+    <span style="font-size: 13px; color: #8a91a0">·</span>
+    <span style="font-size: 13px; font-weight: 500; color: #3d4452">단말 관리는 <span style="font-weight: 700; color: #121417">Knox Suite</span>로 확장 가능</span>
+  </div>
+  <div style="position: absolute; right: 84px; top: 621px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 물류 · 입고 검수 디지털화 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 공간 정보 (x 456–726)
+    const facts = [['검수 담당', '[00]명'], ['하루 입고', '[0,000]박스'], ['사용 앱', '기존 WMS 앱']].map(([label, val], i) => {
+      const y = 214 + i * 28;
+      return {
+        label, val,
+        line: box(456, y, 270, 1) + 'background: #e2e5ea;',
+        labelS: A + 'left: 456px; top: ' + px(y + 5) + 'font-size: 12.5px; line-height: 18px; color: #596170; ' + T,
+        valS: A + 'left: 556px; top: ' + px(y + 4) + 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 14px; line-height: 20px; font-weight: 800; color: #121417; ' + T
+      };
+    });
+
+    const devices = ['갤럭시 XCover', '갤럭시 탭 액티브5 Pro'].map((t) => ({ t }));
+
+    // 표 열: 기능 64–530 · 이 검수장에서 554–922 · 가치 946–1216
+    const C1 = 64, C2 = 570, C3 = 946, CW3 = 270;
+    const heads = [
+      [C1, '기능', 'Knox Capture가 하는 일', '#121417'],
+      [C2, '이 검수장에서', 'L 물류 입고장에서는', '#121417'],
+      [C3, '가치', '기대 효과', '#1428a0']
+    ].map(([x, t, hint, color]) => ({ t, hint, color, style: A + 'left: ' + px(x) + 'top: 312px; display: flex; align-items: baseline; gap: 8px; ' + T }));
+    const headArrows = [534, 926].map((x) => ({ style: A + 'left: ' + px(x) + 'top: 314px; width: 16px; height: 16px;' }));
+
+    const R = [
+      ['카메라로 바코드 · QR 스캔', '갤럭시 카메라가 그대로 스캐너가 됩니다',
+        '전용 스캐너 없이 갤럭시로', '검수 담당자가 들고 있는 갤럭시 XCover로',
+        [['스캐너 구매 · 수리 비용', '[00]% ↓']]],
+      ['스캔 값을 기존 앱에 키보드처럼 입력', '커서가 있는 입력란에 값이 바로 들어갑니다',
+        '지금 쓰는 WMS 앱 그대로', '화면도 절차도 바꾸지 않고 스캔만 더합니다',
+        [['앱 개발 없이 도입', '[0]주 안에']]],
+      ['여러 바코드 동시 스캔 · 형식 규칙 변환', '연속 · 동시 스캔, 값은 정한 형식으로 바꿔 입력',
+        '박스 라벨 여러 개를 한 번에, 필요한 값만', '라벨마다 한 번씩 찍던 일을 한 번에',
+        [['검수 시간', '[00]% ↓'], ['오입력', '[0]건 ↓']]]
+    ];
+    const RY = 350, RH = 76, RS = 82;
+    const rows = R.map(([f, fs, p, ps, kv], i) => {
+      const y = RY + i * RS;
+      return {
+        n: i + 1, f, fs, p, ps,
+        sep: i < R.length - 1 ? box(64, y + RH + 4, 858, 1) + 'background: #e2e5ea;' : box(64, y + RH + 4, 0, 0),
+        badge: box(C1, y + 23, 30, 30) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        fT: A + 'left: ' + px(C1 + 46) + 'top: ' + px(y + 14) + 'font-size: 15.5px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; ' + T,
+        fS: A + 'left: ' + px(C1 + 46) + 'top: ' + px(y + 41) + 'font-size: 12.5px; line-height: 18px; color: #596170; ' + T,
+        a1: box(534, y + 30, 16, 16),
+        pT: A + 'left: ' + px(C2) + 'top: ' + px(y + 14) + 'font-size: 15px; line-height: 22px; font-weight: 700; ' + T,
+        pS: A + 'left: ' + px(C2) + 'top: ' + px(y + 41) + 'font-size: 12.5px; line-height: 18px; color: #596170; ' + T,
+        a2: box(926, y + 30, 16, 16),
+        valBox: box(C3, y, CW3, RH) + 'border-radius: 10px; background: #eaeefb;',
+        kv: kv.map(([l, v], j) => ({
+          l, v,
+          style: A + 'left: ' + px(18 + j * 128) + 'top: 13px; display: flex; flex-direction: column; gap: 3px; ' + T
+        }))
+      };
+    });
+
+    return { facts, devices, heads, headArrows, rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 라우팅 시나리오 12</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#ffffff}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 26px 40px 22px 40px; display: flex; flex-direction: column; gap: 14px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+
+  <div style="height: 70px; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">SCENARIOS · MARKET INTELLIGENCE</span>
+      <h1 style="margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">고객과 입력이 달라지면, 에이전트의 판단과 레이아웃이 이렇게 달라집니다</h1>
+      <p style="margin: 0; font-size: 13.5px; color: #596170; white-space: nowrap">라우팅 규칙을 12개 케이스에 적용한 결과 · 파란 칩은 업종 레이아웃, 흰 칩은 범용 레이아웃 · 화면 코드를 누르면 그 장면으로 갑니다</p>
+    </div>
+    <div style="display: flex; gap: 8px; flex-shrink: 0">
+      <a href="MIR.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">라우팅 규칙</a>
+      <a href="MI0.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">MI 작업 목록</a>
+    </div>
+  </div>
+
+  <div style="flex-shrink: 0; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+    <div style="{{headStyle}}">
+      <span>#</span><span>케이스 · 입력</span><span>업종 판별</span><span>쓰임</span><span>범위</span><span>결과 레이아웃</span><span>사람에게 물은 것</span><span>장면</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="12">
+      <div style="{{r.rowStyle}}">
+        <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #8a91a0">{{r.no}}</span>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+          <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.input}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0">
+          <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%">{{r.ind}}</span>
+          <span style="{{r.mStyle}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span>
+        </div>
+        <span style="font-size: 12px; color: #3d4452; line-height: 1.4; max-height: 34px; overflow: hidden">{{r.use}}</span>
+        <span style="font-size: 12px; color: #3d4452; line-height: 1.4; max-height: 34px; overflow: hidden">{{r.scope}}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 4px; align-content: center; min-width: 0; max-height: 46px; overflow: hidden">
+          <sc-for list="{{r.codes}}" as="c" hint-placeholder-count="3">
+            <span style="{{c.style}}">{{c.t}}</span>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; min-width: 0">
+          <sc-if value="{{r.hasAsk}}" hint-placeholder-val="{{false}}">
+            <span style="{{r.aStyle}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.aIcon}}"/></svg>{{r.aText}}</span>
+          </sc-if>
+          <span style="{{r.askStyle}}">{{r.ask}}</span>
+        </div>
+        <a href="{{r.href}}" style="height: 26px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; border: 1px solid #e2e5ea; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; justify-self: start; white-space: nowrap">{{r.screen}}</a>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{stats}}" as="s" hint-placeholder-count="4">
+      <div style="box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 10px 14px; display: flex; align-items: center; gap: 12px; min-width: 0">
+        <span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; color: #1428a0; flex-shrink: 0">{{s.n}}</span>
+        <span style="font-size: 12px; color: #3d4452; line-height: 1.45">{{s.t}}</span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z'],
+      ask: ['선택 필요', 'background: #121417; color: #ffffff;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 14h2v2h-2zm1-10a4 4 0 0 1 4 4c0 2-3 2.5-3 4h-2c0-2.5 3-3 3-4a2 2 0 0 0-4 0H8a4 4 0 0 1 4-4z'],
+      pin: ['고정', 'background: #f0f2f5; color: #3d4452;', 'M9 2h6l-1 6 3 3v2h-4v7l-1 2-1-2v-7H7v-2l3-3z']
+    };
+    const CHIP = 'height: 20px; padding: 0 7px; border-radius: 999px; box-sizing: border-box; font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; ';
+    const cols = 'display: grid; grid-template-columns: 26px 220px 168px 150px 118px minmax(0, 1fr) 190px 64px; column-gap: 12px; align-items: center; padding: 0 16px;';
+
+    // 코드 앞의 * = 업종 레이아웃, 코드가 아닌 말은 회색 칩
+    const code = (t) => {
+      const ind = t.startsWith('*');
+      const txt = ind ? t.slice(1) : t;
+      const isCode = /^[A-Z]{2}(-[A-Z]{2})?-[A-Z]/.test(txt);
+      return {
+        t: txt,
+        style: 'height: 22px; box-sizing: border-box; padding: 0 7px; border-radius: 6px; font-size: 11px; display: inline-flex; align-items: center; white-space: nowrap; ' +
+          (ind ? 'background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-weight: 800;' : isCode ? 'background: #ffffff; border: 1px solid #d5d9e0; color: #121417; font-family: Manrope, sans-serif; font-weight: 800;' : 'background: #f0f2f5; color: #596170; font-weight: 600;')
+      };
+    };
+    // [케이스, 입력, 업종 판별, 업종 모드, 쓰임, 범위, 레이아웃, 물은 것, 물은 것 모드(없으면 ''), 장면]
+    const R = [
+      ['A 커피 프랜차이즈 메뉴보드', 'Storyboard 연결 · 요구 5', '외식 · 카페 0.94', 'auto', '표준 · MI 3시트', '4개 영역', ['*MI-FB-A', '*MI-FB-B', 'CP-A'], '없음', '', 'MI2A'],
+      ['B 병원 안내 시스템', 'RFP 첨부 · 경쟁 언급 없음', '의료 · 요양 0.88', 'auto', '표준 · 2시트로 줄임', '시장 · 사용자', ['*MI-MD-A', '*MI-MD-C'], '없음', '', 'MI3'],
+      ['C 물류센터 현장 단말', '직접 입력 · 공급사 6곳 지정', '제조 · 물류 0.91', 'auto', '연결 없음 · 내부 리포트', '고객사 · 경쟁', ['*MI-MF-B', 'CP-B'], '없음 · 내부용이라 실명', '', 'MI3P'],
+      ['D 리테일 플래그십 1층 카페', '직접 입력 · 한 문단', '리테일 0.71 · 외식 0.62', 'check', '표준 · MI 3시트', '4개 영역', ['*MI-RT-A', '*MI-RT-B', 'CP-A'], '결과에 업종 확인 칩', 'check', 'MI2A'],
+      ['H 호텔 로비 라운지 카페', '회의록 첨부', '호텔 0.58 · 외식 0.55', 'ask', '표준 · MI 3시트', '4개 영역', ['*MI-HT-A', '*MI-HT-B', '*MI-FB-C'], '업종 1개 · 섞어서 선택', 'ask', 'MI1Q'],
+      ['J 스크린골프장 체인', '한 줄 메모', '16개 업종 밖 → 범용', 'auto', '연결 없음 · 리포트', '시장 · 사용자', ['MS-E', 'US-A'], '없음 · 빈칸은 추론 표시', '', 'MI3P'],
+      ['K 지역 요양병원 (비상장)', '직접 입력 · 공개 자료 2건', '의료 · 요양 0.90', 'auto', '표준 · MI 3시트', '고객사 축소', ['MS-E', 'CB-A', 'CP-A', '확정 필요 4'], '사내 수치 넣을지', 'ask', 'MI3V'],
+      ['E 대학교 캠퍼스 전환', 'Solution형 제안 · RFP', '교육 · 캠퍼스 0.93', 'auto', '대규모 MI · 6시트', '4개 + 트렌드 6', ['*MI-ED-A', 'TR-C', '*MI-ED-B', '*MI-ED-C', 'CP-C', 'IM-A'], '없음', '', 'MI3P'],
+      ['T 은행 지점 리뉴얼 보고', "'경영진 한 장으로' 요청", '금융 0.89', 'auto', '경영진 한 장 + 부록', '4개 영역', ['IM-B', 'MS-A', 'CP-A'], '없음 · 부록 2장 자동', '', 'MI3P'],
+      ['U 통신사 전용폰 퀵윈', '퀵윈 제안 연결', '파트너 전용 단말 0.86', 'auto', '퀵윈 · MI 섹션 없음', '사용자 · 경쟁', ['리포트', 'VP 재료로 넘김'], '없음', '', 'MI4'],
+      ['B 병원 키오스크 비교 v3', '30일 경과 · 신제품 감지', '상속 · 의료 · 요양', 'auto', '표준 · 연결 유지', '경쟁만 다시', ['CP-A 갱신', '고정 2 유지'], '고정 시트 덮어쓸지', 'pin', 'MI0'],
+      ['Q 미디어 옥외 광고 RFP', 'RFP + 시장 리포트 2종', '옥외 광고 0.95', 'auto', '표준 · MI 3시트', '4개 영역', ['*MI-AD-A', '*MI-AD-B', 'CP-B'], '시장 규모 두 출처 34% 차이', 'check', 'MI3S']
+    ];
+    const rows = R.map(([name, input, ind, im, use, scope, codes, ask, am, screen], i) => ({
+      no: i + 1, name, input, ind, use, scope, ask, screen,
+      href: screen + '.dc.html',
+      codes: codes.map(code),
+      mText: MODE[im][0], mIcon: MODE[im][2], mStyle: CHIP + MODE[im][1],
+      hasAsk: am.length > 0,
+      aText: am ? MODE[am][0] : '', aIcon: am ? MODE[am][2] : '', aStyle: am ? CHIP + MODE[am][1] : '',
+      askStyle: 'font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + (am ? 'color: #121417;' : 'color: #8a91a0;'),
+      rowStyle: cols + ' height: 52px; border-top: 1px solid #eef0f3;' + (am === 'ask' ? ' background: #fbfbfc;' : '')
+    }));
+
+    const asked = R.filter((r) => r[8] === 'ask').length;
+    const noAsk = R.filter((r) => r[8] === '').length;
+    const indUsed = R.filter((r) => r[6].some((c) => c.startsWith('*'))).length;
+    const stats = [
+      [noAsk + '/12', '사람에게 아무것도 묻지 않고 끝난 케이스'],
+      [asked + '/12', "'선택 필요'로 멈춘 케이스 — 업종 두 갈래, 대외비 수치"],
+      [indUsed + '/12', '업종 레이아웃을 쓴 케이스 · 나머지는 범용이나 리포트'],
+      ['0', '경쟁 환경에 업종 레이아웃을 쓴 케이스 — 업종 틀에 경쟁 장이 없어요']
+    ].map(([n, t]) => ({ n, t }));
+
+    return { headStyle: cols + ' height: 34px; background: #f5f6f8; font-size: 11.5px; font-weight: 600; color: #596170;', rows, stats };
+  }
+}
+</script>
+</body>
+</html>

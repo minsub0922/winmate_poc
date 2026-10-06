@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BIT-S b.IoT 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · b.IoT</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>b.IoT · 빌딩 에너지 관리</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">쓰는 층은 쾌적하게, 빈 층은 절전으로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">대표 층 × 시간대별 공조 상태 · 스케줄, AI 최적화, 비효율 알림이 함께 움직입니다</div>
+
+  <!-- 층 열 머리 · 사진 안내 -->
+  <div style="position: absolute; left: 72px; top: 172px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; color: #3d4452">층 · 공간</span>
+    <span style="height: 18px; padding: 0 7px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 10px; color: #596170; display: flex; align-items: center">예시 사진 · 고객 공간으로 교체</span>
+  </div>
+
+  <!-- 시간 머리 -->
+  <sc-for list="{{times}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.style}}"><span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; line-height: 1.3">{{t.t}}</span><span style="font-size: 11.5px; color: #596170">{{t.sub}}</span></div>
+  </sc-for>
+
+  <!-- 건물 단면 경계 -->
+  <div style="position: absolute; left: 64px; top: 212px; width: 760px; height: 384px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 80px; top: 202px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">C 오피스 빌딩</div>
+
+  <!-- 층 구분 · 시간 구분 · 지면 -->
+  <sc-for list="{{guides}}" as="g" hint-placeholder-count="8">
+    <div style="{{g}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 782px; top: 473px; font-size: 10.5px; color: #8a91a0">지면</div>
+
+  <!-- 층 머리: 공간 사진 + 층 정보 -->
+  <sc-for list="{{floors}}" as="f" hint-placeholder-count="4">
+    <div style="{{f.style}}"></div>
+    <sc-if value="{{f.hasPhoto}}" hint-placeholder-val="{{true}}">
+      <img src="{{f.src}}" alt="{{f.alt}}" style="position: absolute; left: 80px; top: {{f.imgTop}}px; width: 100px; height: 68px; object-fit: cover; object-position: {{f.pos}}; border-radius: 6px">
+    </sc-if>
+    <sc-if value="{{f.vacant}}" hint-placeholder-val="{{false}}">
+      <div style="{{f.emptyStyle}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5h16v16 M2 21h20 M9 9h2 M13 9h2 M9 13h2 M13 13h2"/></svg><span>공실 · 사진 없음</span></div>
+    </sc-if>
+    <div style="{{f.textStyle}}">
+      <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; line-height: 1.2">{{f.name}}</span>
+      <span style="font-size: 12.5px; font-weight: 700; color: #3d4452; white-space: nowrap">{{f.use}}</span>
+      <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">실내기 ×[00]</span>
+    </div>
+  </sc-for>
+
+  <!-- 상태 셀 -->
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="16">
+    <div style="{{c.style}}">
+      <sc-if value="{{c.mark}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; left: 4px; top: 4px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.no}}</span>
+      </sc-if>
+      <sc-if value="{{c.isChip}}" hint-placeholder-val="{{true}}">
+        <span style="{{c.chip}}"><span>{{c.k}}</span><span style="font-family: Manrope, sans-serif">{{c.v}}</span></span>
+      </sc-if>
+      <sc-if value="{{c.isAlert}}" hint-placeholder-val="{{false}}">
+        <div style="height: 54px; box-sizing: border-box; padding: 0 8px; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; display: flex; align-items: center; gap: 6px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z M10 21h4"/></svg>
+          <div style="display: flex; flex-direction: column; gap: 1px; white-space: nowrap"><span style="font-size: 12px; font-weight: 800">비효율 알림</span><span style="font-size: 11px; color: #596170">창문 개방</span></div>
+        </div>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <!-- 우: 목표 대비 에너지 -->
+  <div style="position: absolute; left: 848px; top: 164px; display: flex; align-items: baseline; gap: 8px"><span style="font-size: 13px; font-weight: 800">목표 대비 에너지</span><span style="font-size: 11.5px; color: #596170">이번 달 · 층별</span></div>
+  <div style="position: absolute; left: 848px; top: 188px; display: flex; align-items: center; gap: 12px; font-size: 11.5px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 8px; border-radius: 2px; background: #d5d9e0"></span>목표</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 8px; border-radius: 2px; background: #1428a0"></span>실제</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 8px; border-radius: 2px; background: #121417"></span>목표 초과</span>
+  </div>
+  <sc-for list="{{energy}}" as="e" hint-placeholder-count="4">
+    <div style="{{e.labelStyle}}">{{e.name}}</div>
+    <div style="{{e.targetBar}}"></div>
+    <div style="{{e.targetText}}">목표 [000] kWh</div>
+    <div style="{{e.actualBar}}"></div>
+    <div style="{{e.actualText}}">실제 [000] kWh</div>
+  </sc-for>
+
+  <!-- 하단: 순서 -->
+  <div style="position: absolute; left: 64px; top: 606px; width: 760px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; gap: 8px">
+        <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+        <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0; line-height: 1.35">{{s.time}}</span><span style="font-size: 12px; line-height: 1.4; white-space: nowrap">{{s.t}}</span></div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 848px; top: 606px; width: 368px; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">건물 합계 · 목표 [0,000] kWh · 실제 [0,000] kWh</span>
+    <span style="font-size: 11.5px; color: #8a91a0">수치는 예시 · 데이터 연결 시 자동 반영</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 에너지 관리 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    // 격자: 층 머리 x 72–296 (사진 100×68 + 층 정보) · 시간 열 x 304 + 128k (폭 128) · 행 높이 84
+    const colX = (k) => 304 + 128 * k;
+    const rowT = [222, 310, 398, 496];
+
+    const times = [['08:00', '출근'], ['12:00', '점심'], ['18:00', '퇴근'], ['21:00', '야간']].map(([t, sub], k) => ({
+      t, sub, style: 'position: absolute; left: ' + px(colX(k)) + 'top: 164px; width: 128px; display: flex; flex-direction: column; align-items: center; gap: 1px;'
+    }));
+
+    const guides = [];
+    [1, 2, 3].forEach((k) => guides.push(A + 'left: ' + px(colX(k)) + 'top: 222px; width: 1px; height: 358px; background: #e2e5ea;'));
+    [307, 395].forEach((y) => guides.push(A + 'left: 72px; top: ' + px(y) + 'width: 744px; height: 1px; background: #e2e5ea;'));
+    guides.push(A + 'left: 64px; top: 488px; width: 760px; height: 2px; background: #121417;');
+    [307, 395, 488].forEach((y) => guides.push(A + 'left: 848px; top: ' + px(y) + 'width: 368px; height: 1px; background: #e2e5ea;'));
+
+    // 층별 공간 사진 (예시) — 공실 층은 사진 없이 점선 칸
+    const PH = {
+      meeting: { src: '/_blob/55f0c575d3a648f72136c8a9083d807b', alt: '회의실 예시 사진', pos: '50% 50%' },
+      work: { src: '/_blob/df8dcc261014c7a63fc870a1890e779c', alt: '사무 공간 예시 사진', pos: '50% 50%' },
+      lobby: { src: '/_blob/b161b65da8ee88741abfa319a4a5d779', alt: '오피스 로비 예시 사진', pos: '45% 60%' }
+    };
+    // 층: 상태 on · eco · off · alert, 번호는 하단 순서와 연결
+    const F = [
+      ['7F', '임대 공실', true, null, [['off'], ['off'], ['off'], ['off']]],
+      ['5F', '회의실층', false, PH.meeting, [['eco'], ['on'], ['alert', 3], ['off']]],
+      ['3F', '사무실', false, PH.work, [['on', 1], ['on', 2], ['eco'], ['off', 4]]],
+      ['B1', '로비', false, PH.lobby, [['on'], ['on'], ['on'], ['eco']]]
+    ];
+    const floors = F.map(([name, use, vacant, ph], i) => ({
+      name, use, vacant,
+      hasPhoto: !!ph,
+      src: ph ? ph.src : '',
+      alt: ph ? ph.alt : '',
+      pos: ph ? ph.pos : '50% 50%',
+      imgTop: rowT[i] + 8,
+      style: A + 'left: 72px; top: ' + px(rowT[i] + 4) + 'width: 224px; height: 76px; border-radius: 10px; ' + (vacant ? 'background: #ffffff; border: 1px dashed #b8bec8;' : 'background: #f5f6f8;'),
+      emptyStyle: A + 'left: 80px; top: ' + px(rowT[i] + 8) + 'width: 100px; height: 68px; border-radius: 6px; border: 1px dashed #b8bec8; background: #f5f6f8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10.5px; color: #8a91a0; white-space: nowrap;',
+      textStyle: 'position: absolute; left: 190px; top: ' + px(rowT[i] + 4) + 'width: 100px; height: 76px; display: flex; flex-direction: column; justify-content: center; gap: 1px;'
+    }));
+
+    const CH = 'height: 34px; box-sizing: border-box; padding: 0 14px; border-radius: 999px; font-size: 13px; display: flex; align-items: center; gap: 5px; white-space: nowrap; ';
+    const S = {
+      on: { k: 'ON', v: '24℃', chip: CH + 'background: #eaeefb; color: #1428a0; font-weight: 800;' },
+      eco: { k: '절전', v: '26℃', chip: CH + 'background: #f5f6f8; border: 1px solid #d5d9e0; color: #3d4452; font-weight: 700;' },
+      off: { k: 'OFF', v: '', chip: CH + 'background: #ffffff; border: 1px solid #b8bec8; color: #8a91a0; font-weight: 700;' }
+    };
+    const cells = [];
+    F.forEach(([, , , , st], i) => st.forEach(([kind, no], k) => {
+      const base = S[kind] || { k: '', v: '', chip: '' };
+      cells.push({
+        style: 'position: absolute; box-sizing: border-box; left: ' + px(colX(k)) + 'top: ' + px(rowT[i]) + 'width: 128px; height: 84px; padding-top: 16px; display: flex; align-items: center; justify-content: center;',
+        mark: !!no, no: no || '',
+        isChip: kind !== 'alert', isAlert: kind === 'alert',
+        k: base.k, v: base.v, chip: base.chip
+      });
+    }));
+
+    // 목표 대비 막대 (예시 형상): 트랙 x 884 · 최대 216
+    const E = [['7F', 60, 24], ['5F', 150, 178], ['3F', 200, 172], ['B1', 130, 116]];
+    const energy = E.map(([name, tw, aw], i) => {
+      const T = rowT[i];
+      const over = aw > tw;
+      return {
+        name,
+        labelStyle: 'position: absolute; left: 848px; top: ' + px(T + 32) + 'width: 32px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; line-height: 20px;',
+        targetBar: 'position: absolute; left: 884px; top: ' + px(T + 24) + 'width: ' + px(tw) + 'height: 12px; border-radius: 3px; background: #d5d9e0;',
+        targetText: 'position: absolute; left: 1108px; top: ' + px(T + 21) + 'font-size: 11.5px; color: #596170; white-space: nowrap; line-height: 18px;',
+        actualBar: 'position: absolute; left: 884px; top: ' + px(T + 48) + 'width: ' + px(aw) + 'height: 12px; border-radius: 3px; background: ' + (over ? '#121417' : '#1428a0') + ';',
+        actualText: 'position: absolute; left: 1108px; top: ' + px(T + 45) + 'font-size: 11.5px; font-weight: 700; color: ' + (over ? '#121417' : '#1428a0') + '; white-space: nowrap; line-height: 18px;'
+      };
+    });
+
+    const steps = [
+      { no: 1, time: '08:00', t: '출근 층만 스케줄로 ON' },
+      { no: 2, time: '12:00', t: 'AI가 쾌적 · 효율 최적화' },
+      { no: 3, time: '18:00', t: '창문 개방 → 관리자 알림' },
+      { no: 4, time: '21:00', t: '일괄 OFF · 로비는 절전' }
+    ];
+    return { times, guides, floors, cells, energy, steps };
+  }
+}
+</script>
+</body>
+</html>

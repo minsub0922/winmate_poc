@@ -1,0 +1,57 @@
+ 
+ B2B 제안서 · 업종 레이아웃 적용 
+ W 
+ 업종을 외식 · 카페 프랜차이즈 로 판단했어요. 이 업종 도입사례 {{cases}}건으로 만든 업종 레이아웃을 MI · Value Props · 공간 시나리오 시트에 먼저 추천할게요. 시트 구성은 그대로 두고 템플릿만 바꿔요. 
+ 외식 · 카페 프랜차이즈 
+ 자동 감지 
+ 근거 · 고객사명 'A 커피 프랜차이즈' · RFP p.2 '커피 전문점''{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+ renderVals() {
+ // data/industry_matrix.json · FB 외식 · 카페 프랜차이즈 (도입사례 23건)
+ const IND = 'FB', CASES = 23;
+ const ST = [
+ ['고객이 요구한 것 · 사례 ' + CASES + '건 중', [['디자인 조화', 18], ['고객 경험', 17], ['쾌적 · 공기질', 10]]],
+ ['쓰인 제품 · 사례 ' + CASES + '건 중', [['시스템에어컨', 11], ['LCD 사이니지', 10], ['갤럭시 탭', 5]]],
+ ['쓰인 솔루션 · 사례 ' + CASES + '건 중', [['파트너 앱 · 주문 결제', 5], ['MagicINFO', 3], ['SmartThings', 3]]]
+ ];
+ const stats = ST.map(([title, items]) => ({
+ title,
+ items: items.map(([label, n]) => ({ label, n, barStyle: '' + Math.round((n / CASES) * 100) + '%;' }))
+ }));
+ // 업종 레이아웃 (SectionStep IROLE와 같은 이름 · 썸네일): 역할 → A/B/C
+ const IROLE = {
+ MI: { A: ['시장 · 트렌드', 'barline'], B: ['고객 비즈니스 · 운영 과제', 'process'], C: ['사용자 여정', 'journey'] },
+ VP: { A: ['과제 → 해법 → 효과', 'indVP'], B: ['이해관계자별 가치', 'persona'], C: ['기대 효과', 'hbars'] },
+ SS: { A: ['공간 맵', 'indMap'], B: ['대표 공간 장면', 'scenes'], C: ['하루 · 동선', 'indDay'] }
+ };
+ // [역할, 행 이름, 시트별로 바꾸기 화면, 카드 상태 {A,B,C} (on 적용 · alt 바꿔 쓰기 · add 시트 추가 시), 매핑 줄 [텍스트, 강조]]
+ const FAM = [
+ ['MI', 'Market Intelligence', 'PRS1LayoutInd.dc.html', { A: 'on', B: 'on', C: 'add' },
+ [['시장 규모 · 성장 ← A', 1], ['고객사 비즈니스 ← B', 1], ['경쟁 환경 · 기본 템플릿', 0]]],
+ ['VP', 'Value Props', 'PRS2LayoutInd.dc.html', { A: 'on', B: 'alt', C: 'add' },
+ [['가치 제안 ← A', 1], ['B · 본사 · 점주 · 손님별', 0], ['기대 효과 넣으면 ← C', 0]]],
+ ['SS', '공간 시나리오', 'PRX3LayoutInd.dc.html', { A: 'on', B: 'add', C: 'add' },
+ [['공간별 제품 · 공간 맵 ← A', 1], ['B · C는 시트 추가 시', 0], ['Solution형은 섹션 전체', 0]]]
+ ];
+ const BADGE = { on: '적용', alt: '바꿔 쓰기', add: '시트 추가 시' };
+ let appliedCount = 0;
+ const fams = FAM.map(([role, name, href, state, maps]) => ({
+ name, href, on: true, switchLabel: name + ' 업종 레이아웃 사용',
+ maps: maps.map(([t, strong]) => ({ t, style: '' + (strong ? '' : '') })),
+ cards: ['A', 'B', 'C'].map((v) => {
+ const st = state[v];
+ if (st === 'on') appliedCount += 1;
+ return {
+ code: role + '-' + IND + '-' + v, name: IROLE[role][v][0], kind: IROLE[role][v][1], n: 3, applied: st === 'on', badge: BADGE[st],
+ badgeStyle: '' + (st === 'on' ? '' : st === 'add' ? '' : ''),
+ cardStyle: '' + (st === 'on' ? '' : st === 'add' ? '' : '')
+ };
+ })
+ }));
+ // 적용 카드 수 = 실제로 바뀌는 시트 수 (MI 2 · VP 1 · 공간 맵 1)
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 3,
+ cases: CASES, stats, fams, appliedCount
+ };
+ }
+}

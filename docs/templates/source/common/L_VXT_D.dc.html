@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VXT-D Samsung VXT 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Samsung VXT</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Samsung VXT · 클라우드 사이니지 CMS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장에는 화면만, 나머지는 클라우드에</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">클라우드 구성도 · 고객사 서버 없이 인터넷으로 연결되고, PC와 휴대폰에서 관리합니다</div>
+
+  <!-- 사용자 (좌) -->
+  <sc-for list="{{users}}" as="u" hint-placeholder-count="2">
+    <div style="{{u.pos}}">
+      <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #121417; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{u.icon}}"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{u.name}}</span><span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{u.via}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- VXT Cloud: 보안 띠 + 점선 경계 + 모듈 3 (실제 화면 썸네일) -->
+  <div style="position: absolute; left: 344px; top: 160px; width: 592px; height: 244px; box-sizing: border-box; border-radius: 20px; background: #eaeefb; border: 1px solid #b8c3ee"></div>
+  <div style="position: absolute; left: 344px; top: 378px; width: 592px; height: 20px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.02em; color: #1428a0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 3v6c0 5-3.5 9-8 11-4.5-2-8-6-8-11V5z"/></svg>보안 · ISO 27701 · Knox · USB · 블루투스 · Wi-Fi 항목별 잠금</div>
+  <div style="position: absolute; left: 360px; top: 176px; width: 560px; height: 196px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1.5px dashed #1428a0"></div>
+  <div style="position: absolute; left: 376px; top: 166px; height: 20px; padding: 0 8px; border-radius: 6px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16a4 4 0 0 1 1-7.9A6 6 0 0 1 17 8a4 4 0 0 1 1 8H4z"/></svg>VXT Cloud</div>
+  <div style="position: absolute; left: 376px; top: 194px; width: 528px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px">
+    <sc-for list="{{modules}}" as="m" hint-placeholder-count="3">
+      <div style="height: 150px; box-sizing: border-box; border-radius: 10px; background: #1428a0; color: #ffffff; padding: 8px 8px 10px; display: flex; flex-direction: column; gap: 6px">
+        <div style="position: relative; width: 148px; height: 80px; flex-shrink: 0; border-radius: 6px; overflow: hidden; background: #ffffff">
+          <img src="{{m.img}}" alt="{{m.alt}}" style="position: absolute; {{m.imgPos}} max-width: none; object-fit: cover">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1px; padding: 0 4px">
+          <span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{m.name}}</span>
+          <span style="font-size: 12px; color: #c8d3ff; white-space: nowrap">{{m.role}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 360px; top: 351px; width: 560px; text-align: center; font-size: 12px; color: #596170">설치할 서버 없음 · PC · 모바일 브라우저로 접속</div>
+
+  <!-- 외부 소스 (우) -->
+  <div style="position: absolute; left: 1004px; top: 196px; width: 212px; height: 132px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; align-items: center; gap: 8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z M8.5 10a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M21 15l-5-5L5 21"/></svg><span style="font-size: 15px; font-weight: 800">외부 소스</span></div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px">
+      <sc-for list="{{sources}}" as="s" hint-placeholder-count="3">
+        <span style="height: 26px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 12px; display: flex; align-items: center; white-space: nowrap">{{s}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 흐름선 · 화살촉 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="16">
+    <div style="{{w.style}}"></div>
+  </sc-for>
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="5">
+    <span style="{{t.style}}">{{t.text}}</span>
+  </sc-for>
+
+  <!-- 새 화면 연결: 6자리 페어링 -->
+  <div style="position: absolute; left: 64px; top: 388px; width: 252px; height: 90px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 72px; top: 396px; width: 124px; height: 74px; border-radius: 6px; overflow: hidden; background: #f5f6f8">
+    <img src="/_blob/8c613d1a80830a58c4b930c4d601fa31" alt="6자리 페어링 코드 등록 화면" style="position: absolute; left: 0px; top: 0px; width: 124px; height: 74px; object-fit: cover; object-position: 50% 50%">
+  </div>
+  <div style="position: absolute; left: 206px; top: 402px; display: flex; flex-direction: column; gap: 2px">
+    <span style="font-size: 13px; font-weight: 800; white-space: nowrap">새 화면 연결</span>
+    <span style="font-size: 12px; line-height: 1.5; color: #596170; white-space: nowrap">6자리 페어링</span>
+    <span style="font-size: 12px; line-height: 1.5; color: #596170; white-space: nowrap">코드로 등록</span>
+  </div>
+
+  <!-- 인터넷 -->
+  <div style="position: absolute; left: 332px; top: 440px; width: 88px; height: 24px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 12px; font-weight: 700; color: #3d4452"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3d4452" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M3 12h18 M12 3c2.5 2.5 3.5 5.5 3.5 9s-1 6.5-3.5 9c-2.5-2.5-3.5-5.5-3.5-9s1-6.5 3.5-9z"/></svg>인터넷</div>
+
+  <!-- 매장 1: 화면만 (사진) -->
+  <div style="position: absolute; left: 64px; top: 482px; width: 636px; height: 134px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 80px; top: 492px; display: flex; align-items: baseline; gap: 8px"><span style="font-size: 15px; font-weight: 800">매장 1</span><span style="font-size: 12px; color: #8a91a0">[지역]</span></div>
+  <div style="position: absolute; left: 404px; top: 495px; width: 280px; text-align: right; font-size: 11px; color: #8a91a0">예시 사진 · 고객 매장으로 교체</div>
+  <div style="position: absolute; left: 80px; top: 518px; width: 150px; height: 70px; border-radius: 6px; overflow: hidden; background: #dfe3ea">
+    <img src="/_blob/07237b62990f629d9c6de161a76cd37b" alt="카운터 상단 메뉴보드 사이니지 3면" style="position: absolute; left: 0px; top: 0px; width: 150px; height: 70px; object-fit: cover; object-position: 50% 15%">
+  </div>
+  <div style="position: absolute; left: 246px; top: 518px; width: 150px; height: 70px; border-radius: 6px; overflow: hidden; background: #dfe3ea">
+    <img src="/_blob/e0064f4c1df596dbfda3fe0ecfa7aef0" alt="매장 외부 옥외 사이니지" style="position: absolute; left: 0px; top: 0px; width: 150px; height: 70px; object-fit: cover; object-position: 50% 35%">
+  </div>
+  <div style="position: absolute; left: 412px; top: 518px; width: 150px; height: 70px; box-sizing: border-box; border-radius: 6px; background: #f5f6f8; border: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: center">
+    <div style="width: 24px; height: 42px; box-sizing: border-box; border-radius: 3px; background: #1f232a; border: 3px solid #121417"></div>
+  </div>
+  <sc-for list="{{nodeLabels}}" as="n" hint-placeholder-count="3">
+    <span style="{{n.style}}"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">{{n.model}}</span>{{n.where}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 578px; top: 518px; width: 106px; height: 70px; box-sizing: border-box; border-radius: 10px; border: 1.5px dashed #b8bec8; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v6H4z M4 14h16v6H4z M3 3l18 18"/></svg>
+    <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">서버 · PC 없음</span>
+  </div>
+
+  <!-- 매장 2 · 매장 3 … 320 (동일 구성) -->
+  <sc-for list="{{stores}}" as="s" hint-placeholder-count="2">
+    <div style="{{s.pos}}">
+      <div style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{s.name}}</span><span style="font-size: 12px; color: #8a91a0; white-space: nowrap">{{s.sub}}</span></div>
+      <div style="display: flex; align-items: flex-end; gap: 6px; height: 22px">
+        <sc-for list="{{s.units}}" as="x" hint-placeholder-count="5">
+          <div style="{{x}}"></div>
+        </sc-for>
+      </div>
+      <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap">QM55C ×3 · OH55C · KM24C</span>
+      <span style="height: 22px; align-self: flex-start; box-sizing: border-box; padding: 0 8px; border-radius: 999px; border: 1px dashed #b8bec8; display: flex; align-items: center; gap: 4px; font-size: 11px; color: #8a91a0; white-space: nowrap"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v6H4z M4 14h16v6H4z M3 3l18 18"/></svg>서버 · PC 없음</span>
+    </div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 628px; display: flex; align-items: center; gap: 20px; font-size: 12px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 2px; background: #1428a0"></span>콘텐츠 게시 (클라우드 → 매장)</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 0; border-top: 2px dashed #8a91a0"></span>원격 모니터링 (매장 → 클라우드)</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 2px; background: #b8bec8"></span>인터넷 연결</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 18px; height: 12px; box-sizing: border-box; border-radius: 3px; background: #eaeefb; border: 1px solid #b8c3ee"></span>보안 영역</span>
+  </div>
+  <div style="position: absolute; right: 64px; top: 628px; font-size: 12px; color: #8a91a0">모듈 썸네일 = 실제 VXT 화면 · 320개 매장 동일 구성</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const r1 = (n) => Math.round(n * 10) / 10;
+    const BLUE = '#1428a0', INK = '#3d4452', GRAY = '#8a91a0', NET = '#b8bec8';
+    const hLine = (x1, x2, y, c) => ({ style: A + 'left: ' + px(x1) + 'top: ' + px(y - 1) + 'width: ' + px(x2 - x1) + 'height: 2px; background: ' + c + ';' });
+    const vLine = (x, y1, y2, c) => ({ style: A + 'left: ' + px(x - 1) + 'top: ' + px(y1) + 'width: 2px; height: ' + px(y2 - y1) + 'background: ' + c + ';' });
+    const vDash = (x, y1, y2) => ({ style: A + 'left: ' + px(x - 1) + 'top: ' + px(y1) + 'width: 0; height: ' + px(y2 - y1) + 'border-left: 2px dashed ' + GRAY + ';' });
+    const head = (dir, tx, ty, c) => {
+      const base = A + 'width: 0; height: 0; ';
+      if (dir === 'R') return { style: base + 'left: ' + px(tx - 8) + 'top: ' + px(ty - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + c + ';' };
+      if (dir === 'L') return { style: base + 'left: ' + px(tx) + 'top: ' + px(ty - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 8px solid ' + c + ';' };
+      if (dir === 'D') return { style: base + 'left: ' + px(tx - 5) + 'top: ' + px(ty - 8) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 8px solid ' + c + ';' };
+      return { style: base + 'left: ' + px(tx - 5) + 'top: ' + px(ty) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid ' + c + ';' };
+    };
+    const tag = (x, y, text, c, w, align) => ({ text, style: A + 'left: ' + px(x) + 'top: ' + px(y) + (w ? 'width: ' + px(w) + 'text-align: ' + align + '; ' : '') + 'font-size: 12px; font-weight: 700; color: ' + c + '; white-space: nowrap;' });
+    // 원본(iw×ih)의 (sx, sy)부터 너비 sw 영역을 썸네일 너비 bw에 맞춤
+    const crop = (iw, ih, sx, sy, sw, bw) => {
+      const s = bw / sw;
+      return 'left: ' + r1(-sx * s) + 'px; top: ' + r1(-sy * s) + 'px; width: ' + r1(iw * s) + 'px; height: ' + r1(ih * s) + 'px;';
+    };
+
+    // 좌표: 사용자 x 64–260 · 클라우드 띠 x 344–936 / y 160–404 · 외부 소스 x 1004–1216
+    //       인터넷 버스 y 452 (x 420–1099) · 매장 y 482–616 (드롭 x 560 / 841 / 1099)
+    const CLOUD_L = 344, CLOUD_R = 936, CLOUD_B = 404, BUS = 452, STORE_T = 482;
+    const userY = [230, 326];
+    const wires = [];
+    userY.forEach((y) => { wires.push(hLine(260, CLOUD_L - 8, y, INK)); wires.push(head('R', CLOUD_L, y, INK)); });
+    wires.push(hLine(CLOUD_R + 8, 1004, 262, INK)); wires.push(head('L', CLOUD_R, 262, INK));
+    // 클라우드 ↔ 인터넷: 게시(파랑 ↓) · 모니터링(회색 점선 ↑)
+    wires.push(vLine(616, CLOUD_B, BUS - 8, BLUE)); wires.push(head('D', 616, BUS, BLUE));
+    wires.push(vDash(664, CLOUD_B + 8, BUS)); wires.push(head('U', 664, CLOUD_B, GRAY));
+    // 인터넷 버스 + 매장 드롭 + 페어링 카드 연결
+    wires.push(hLine(420, 1099, BUS, NET));
+    [560, 841, 1099].forEach((x) => wires.push(vLine(x, BUS, STORE_T, NET)));
+    wires.push(hLine(316, 332, BUS, NET));
+
+    const tags = [
+      tag(268, userY[0] - 22, '제작 · 게시', INK),
+      tag(268, userY[1] - 22, '로컬 프로모션', INK),
+      tag(946, 240, '불러오기', INK),
+      tag(486, 416, '콘텐츠 게시', BLUE, 120, 'right'),
+      tag(674, 416, '원격 모니터링', '#596170')
+    ];
+
+    const users = [
+      ['본사 마케팅', 'PC 브라우저', 'M3 4h18v12H3z M8 20h8 M12 16v4', 196],
+      ['점장', '모바일 · 매장에서', 'M7 2h10v20H7z M11 18h2', 292]
+    ].map(([name, via, icon, top]) => ({
+      name, via, icon,
+      pos: A + 'left: 64px; top: ' + px(top) + 'width: 196px; height: 68px; box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 14px; display: flex; align-items: center; gap: 10px;'
+    }));
+
+    const TW = 148; // 모듈 썸네일 148 × 80
+    const modules = [
+      { name: 'VXT CMS', role: '콘텐츠 · 스케줄', img: '/_blob/1cf2c671fd33e4af83da7cb7292f39f2', alt: 'VXT CMS 대시보드', imgPos: crop(732, 428, 40, 40, 652, TW) },
+      { name: 'VXT Canvas', role: '템플릿 디자인', img: '/_blob/14361cf9121fcf7b49f00e0cec380573', alt: 'VXT Canvas 편집기', imgPos: crop(950, 551, 24, 24, 746, TW) },
+      { name: '원격 관리 RM', role: '모니터링 · 제어', img: '/_blob/b6ae0f52641e7d6c03765b7d2f544e5b', alt: 'VXT 원격 관리 화면', imgPos: crop(920, 608, 186, 6, 720, TW) }
+    ];
+
+    // 매장 1 화면 노드 라벨 (사진 아래)
+    const nodeLabels = [
+      ['QM55C ×3', '카운터 메뉴보드', 80],
+      ['OH55C', '매장 외부', 246],
+      ['KM24C', '키오스크', 412]
+    ].map(([model, where, x]) => ({
+      model, where,
+      style: A + 'left: ' + px(x) + 'top: 594px; width: 150px; display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #596170; white-space: nowrap;'
+    }));
+
+    const scr = (w, h) => 'width: ' + px(w) + 'height: ' + px(h) + 'box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 3px solid #121417;';
+    const units = [scr(28, 16), scr(28, 16), scr(28, 16), scr(28, 16), scr(13, 22)];
+    const stores = [['매장 2', '[지역]', 724], ['매장 3 … 320', '동일 구성', 982]].map(([name, sub, x]) => ({
+      name, sub, units,
+      pos: A + 'left: ' + px(x) + 'top: ' + px(STORE_T) + 'width: 234px; height: 134px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 10px 16px 12px; display: flex; flex-direction: column; gap: 8px;'
+    }));
+
+    return {
+      users, modules, wires, tags, stores, nodeLabels,
+      sources: ['픽사베이 이미지', 'Instagram', '[기타]']
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 부분 재분석 · 대화형 수정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="A 커피 프랜차이즈 시장·경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="A 커피 프랜차이즈 시장·경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <!-- 사용자 요청 -->
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 640px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 12px 16px; font-size: 14.5px; line-height: 1.65"><span style="font-weight: 600">경쟁사 탭</span> · 경쟁사 비교에 유지보수 · AS를 넣고, 저전력은 사내 스펙 기준으로 바꿔줘</div>
+        </div>
+
+        <!-- W 응답 + 바뀐 결과 -->
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">경쟁사 탭만 다시 분석했습니다. 다른 3개 탭은 그대로이고, 바뀐 곳은 파란 표시로 남겨 두었어요.</div>
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="display: flex; border-bottom: 1px solid #e2e5ea; padding: 0 16px; background: #fbfbfc">
+                <span style="height: 42px; padding: 0 12px; display: flex; align-items: center; font-size: 13px; color: #596170; border-bottom: 2px solid transparent; white-space: nowrap">시장조사</span>
+                <span style="height: 42px; padding: 0 12px; display: flex; align-items: center; font-size: 13px; color: #596170; border-bottom: 2px solid transparent; white-space: nowrap">고객사 · 비즈니스</span>
+                <span style="height: 42px; padding: 0 12px; display: flex; align-items: center; font-size: 13px; color: #596170; border-bottom: 2px solid transparent; white-space: nowrap">사용자</span>
+                <span style="height: 42px; padding: 0 12px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: #1428a0; font-weight: 700; border-bottom: 2px solid #1428a0; white-space: nowrap">경쟁사 → 삼성 강점<span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">재분석</span></span>
+              </div>
+              <div style="padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
+                <!-- 변경 요약 -->
+                <div style="display: flex; align-items: center; gap: 8px; height: 30px">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M20 11a8 8 0 1 0-2.3 5.7 M20 4v7h-7"/></svg>
+                  <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap">바뀐 곳 3</span>
+                  <sc-for list="{{changes}}" as="ch" hint-placeholder-count="3">
+                    <span style="height: 24px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{ch}}</span>
+                  </sc-for>
+                  <span style="font-size: 12px; color: #596170; white-space: nowrap">· 출처 +2 · 21초</span>
+                  <span style="flex-grow: 1"></span>
+                  <a href="MI3G.dc.html" style="height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap">전체 다시 분석</a>
+                  <button style="height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; flex-shrink: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-3"/></svg>전부 되돌리기</button>
+                </div>
+
+                <!-- 비교표: 바뀐 칸 표시 -->
+                <div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 0; font-size: 12.5px; border: 1px solid #e2e5ea; border-radius: 10px; overflow: hidden">
+                  <div style="padding: 8px 12px; background: #f5f6f8; color: #596170; font-weight: 600">요구사항 항목</div>
+                  <div style="padding: 8px 12px; background: #f5f6f8; color: #596170; font-weight: 600">경쟁사 A</div>
+                  <div style="padding: 8px 12px; background: #f5f6f8; color: #596170; font-weight: 600">경쟁사 B</div>
+                  <div style="padding: 8px 12px; background: #eaeefb; color: #1428a0; font-weight: 700">삼성</div>
+
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea">본사 원격 통합 관리</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; color: #596170">자체 CMS, 매장 500 이상 시 서버 추가</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; color: #596170">3rd-party CMS 연동</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #f5f7fd; font-weight: 600">MagicINFO 클라우드, 기기 내장 · 별도 서버 불필요</div>
+
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; display: flex; flex-direction: column; gap: 4px">
+                    <span>저전력 운영</span>
+                    <span style="display: flex; align-items: center; gap: 6px; font-size: 11.5px"><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">수정</span><button style="height: 18px; padding: 0; border: none; background: transparent; color: #596170; font-size: 11.5px; font-weight: 600; text-decoration: underline">되돌리기</button></span>
+                  </div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; color: #596170">55" 기준 [경쟁사 수치]</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; color: #596170">[경쟁사 수치]</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #eaeefb; box-shadow: inset 0 0 0 1.5px #1428a0; display: flex; flex-direction: column; gap: 3px">
+                    <span style="font-weight: 600">QM55C [사내 스펙 값] · 자동 밝기·전원 스케줄</span>
+                    <span style="font-size: 11.5px; color: #8a91a0; text-decoration: line-through">[삼성 수치] · 공개 자료</span>
+                  </div>
+
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea">프로모션 교체 속도</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; color: #596170">배포 후 매장 수동 승인</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; color: #596170">지역 단위 배포</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #f5f7fd; font-weight: 600">전 매장 일괄 · 미수신 자동 재전송</div>
+
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #f5f7fd; box-shadow: inset 3px 0 0 #1428a0; display: flex; flex-direction: column; gap: 4px">
+                    <span style="font-weight: 600">유지보수 · AS</span>
+                    <span style="display: flex; align-items: center; gap: 6px; font-size: 11.5px"><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">추가</span><button style="height: 18px; padding: 0; border: none; background: transparent; color: #596170; font-size: 11.5px; font-weight: 600; text-decoration: underline">빼기</button></span>
+                  </div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #f5f7fd; color: #3d4452">[경쟁사 정책] · 공개 자료</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #f5f7fd; color: #3d4452">[경쟁사 정책] · 출처 없음</div>
+                  <div style="padding: 9px 12px; border-top: 1px solid #e2e5ea; background: #eaeefb; font-weight: 600">MagicINFO 원격 상태 확인 · [보증 조건]</div>
+                </div>
+
+                <!-- 강점 문장 변경 -->
+                <div style="display: flex; align-items: center; gap: 10px; box-sizing: border-box; height: 36px; padding: 0 12px; border-radius: 10px; background: #f5f7fd; box-shadow: inset 3px 0 0 #1428a0">
+                  <span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #1428a0; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">수정</span>
+                  <span style="font-size: 12.5px; line-height: 1.5; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 600">강점 · 에너지 자동화</span> — 사내 스펙 기준 소비전력으로 절감 시뮬레이션 제시 가능</span>
+                  <button style="height: 24px; padding: 0 8px; border-radius: 6px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 600; flex-shrink: 0">되돌리기</button>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #596170">
+                  <span style="white-space: nowrap">출처 8건 (+2) · 사내 스펙 1 · 공개 자료 5 · 사내 사례 DB 2 · 경쟁사 B 정책은 출처 없음</span>
+                  <a href="MI3S.dc.html" style="height: 28px; padding: 0 10px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">출처 보기</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span style="font-size: 13px; font-weight: 600; white-space: nowrap">다시 분석할 범위</span>
+            <div role="radiogroup" aria-label="다시 분석할 범위" style="display: flex; gap: 6px">
+              <sc-for list="{{scopes}}" as="sc" hint-placeholder-count="3">
+                <button role="radio" aria-checked="{{sc.on}}" style="{{sc.style}}">{{sc.label}}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display: flex; gap: 6px">
+            <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">더 간결하게</button>
+            <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">경쟁사 B 빼기</button>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">수정 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="fix" placeholder="이어서 수정 요청 (예: 경쟁사 B 정책은 출처 찾아서 채워줘)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #1428a0; color: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="MI3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap">적용 안 함</a>
+          <a href="MI3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+            <span>변경 3건 적용</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = 'height: 30px; padding: 0 11px; border-radius: 999px; font-size: 12.5px; white-space: nowrap;';
+    const scopes = [['경쟁사 탭', true], ['선택한 행 2', false], ['강점 문장만', false]].map(([label, on]) => ({
+      label, on,
+      style: base + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 600;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;')
+    }));
+    return {
+      steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 3,
+      changes: ['행 추가 1', '값 수정 1', '강점 수정 1'],
+      scopes
+    };
+  }
+}
+</script>
+</body>
+</html>

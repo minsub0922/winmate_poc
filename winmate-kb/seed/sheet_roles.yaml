@@ -1,0 +1,67 @@
+# Winmate 시트 역할·템플릿 메타
+# 출처: Winmate 웹앱 캔버스의 시트 유형 정의와 PPT 레이아웃 캔버스(01 MI, 02 Value Props, 03 공간별 가치 제공 시나리오).
+# data_shape 은 질의 패턴 결과로 레이아웃을 고를 때(MI3L·VP3L 적합도, 라우팅) 쓰인다.
+# 아는 범위만 채웠다. 나머지 템플릿 목록과 data_shape 은 캔버스에서 내보내 채운다.
+
+sheet_roles:
+  - {code: MS, name_ko: 시장 규모 · 성장, says_ko: 이 시장은 크고 커지고 있다, section: mi}
+  - {code: TR, name_ko: 산업 트렌드, says_ko: 업계가 이렇게 바뀐다, section: mi}
+  - {code: CB, name_ko: 고객사 비즈니스, says_ko: 고객을 제대로 이해했다, section: mi}
+  - {code: US, name_ko: 사용자 분석, says_ko: 고객의 손님과 직원을 안다, section: mi}
+  - {code: CP, name_ko: 경쟁 환경, says_ko: 시장 판도는 이렇다, section: mi}
+  - {code: IM, name_ko: MI 시사점, says_ko: 그래서 이번 제안은, section: mi}
+  - {code: CH, name_ko: 고객 과제, says_ko: 지금 이런 문제가 있다, section: vp}
+  - {code: VP, name_ko: 가치 제안, says_ko: 우리는 이런 가치를 준다, section: vp}
+  - {code: EF, name_ko: 기대 효과, says_ko: 도입하면 이만큼 좋아진다, section: vp}
+  - {code: BV, name_ko: 공간 전경, says_ko: 완성된 공간을 미리 본다, section: birdseye}
+  - {code: ZP, name_ko: 존별 포인트, says_ko: 공간마다 무엇이 달라지나, section: birdseye}
+  - {code: SM, name_ko: 공간 맵, says_ko: 어디에 무엇을, section: space_products}
+  - {code: PI, name_ko: 공간 제품 소개, says_ko: 이 공간에는 이 제품, section: space_products}
+  - {code: BM, name_ko: 구성 · 수량, says_ko: 무엇을 몇 대, section: space_products}
+  - {code: SA, name_ko: 솔루션 구성도, says_ko: 어떻게 연결되나, section: solution}
+  - {code: OP, name_ko: 운영 시나리오, says_ko: 어떻게 쓰이나, section: solution}
+  - {code: SF, name_ko: 솔루션 상세, says_ko: 이 솔루션은 무엇을 하나, section: solution}
+  - {code: VM, name_ko: 공간 × 솔루션 맵, says_ko: 공간마다 어떤 솔루션이, section: space_scenario}
+  - {code: SS, name_ko: 공간 시나리오, says_ko: 이 공간에서 이렇게 가치가 생긴다, section: space_scenario}
+  - {code: CD, name_ko: 사례 상세, says_ko: 비슷한 고객이 이렇게 성공했다, section: cases}
+  - {code: CL, name_ko: 사례 모음, says_ko: 이미 여러 곳에서 검증됐다, section: cases}
+  - {code: CM, name_ko: 경쟁 비교, says_ko: 경쟁사보다 낫다, section: why}
+  - {code: ST, name_ko: 삼성 강점, says_ko: 삼성이어야 하는 이유, section: why}
+  - {code: SV, name_ko: 지원 체계, says_ko: 도입 후에도 책임진다, section: why}
+  - {code: SC, name_ko: 스펙 비교, says_ko: 제품별 사양 차이, section: spec}
+  - {code: SD, name_ko: 제품 상세, says_ko: 한 제품의 모든 것, section: spec}
+
+proposal_types:
+  standard: {name_ko: 표준 제안서, sections: [mi, vp, birdseye, space_products, solution, cases, why, spec]}
+  quickwin: {name_ko: 퀵윈(제품) 제안서, sections: [vp, space_products, solution, cases, spec]}
+  solution: {name_ko: Solution형 제안서, sections: [big_mi, vp, space_scenario, cases, why]}
+
+# 템플릿별 데이터 모양. 알려진 라우팅 규칙만 채웠다.
+templates:
+  # Value Props (범용)
+  - {code: VP-A, sheet_role: VP, image_based: false, note: 텍스트 전용 폴백}
+  - {code: VP-B2, sheet_role: VP, image_based: false, data_shape: {pillars: 2}, note: Key Message 수 = pillar 수}
+  - {code: VP-B3, sheet_role: VP, image_based: false, data_shape: {pillars: 3}}
+  - {code: VP-B4, sheet_role: VP, image_based: false, data_shape: {pillars: 4}}
+  - {code: VP-C, sheet_role: VP, image_based: false, note: 퀵윈 제안서용 1장 요약}
+  - {code: VP-D, sheet_role: VP, image_based: false, data_shape: {stakeholders_min: 2}, note: 결재자·이해관계자가 여럿일 때}
+  - {code: VP-E, sheet_role: VP, image_based: true, data_shape: {image_slots: [{grade: C, count: "<<FILL>>"}]}, note: 과제 → 제품 → 가치}
+  - {code: VP-F2, sheet_role: VP, image_based: true, data_shape: {pillars: 2, image_slots: [{grade: C, count: 2}]}}
+  - {code: VP-F3, sheet_role: VP, image_based: true, data_shape: {pillars: 3, image_slots: [{grade: C, count: 3}]}}
+  - {code: VP-F4, sheet_role: VP, image_based: true, data_shape: {pillars: 4, image_slots: [{grade: C, count: 4}]}}
+  - {code: VP-G, sheet_role: VP, image_based: true, data_shape: {pillars: 1, image_slots: [{grade: C, count: 1}]}, note: 단일 메시지 + 히어로 제품}
+  - {code: VP-H, sheet_role: VP, image_based: true, data_shape: {stakeholders_min: 2}, note: 이해관계자 × 접점 제품}
+  - {code: VP-I, sheet_role: VP, image_based: true, data_shape: {product_count: 1, features_min: "<<FILL>>"}, note: 단일 제품 기능 콜아웃}
+  - {code: VP-J, sheet_role: VP, image_based: true, data_shape: {image_slots: [{grade: B, count: 1}]}, note: 소프트웨어·솔루션 화면 + 연결 기기 목록}
+  - {code: VP-K, sheet_role: VP, image_based: true, data_shape: {space_count_min: 2}, note: 공간·고객 여정 핀맵}
+  - {code: VP-L, sheet_role: VP, image_based: true, data_shape: {before_after: true, image_slots: [{grade: A, count: 2}]}, note: 같은 장소 교체 전후}
+  - {code: VP-M, sheet_role: VP, image_based: true, data_shape: {product_count_min: 4}, note: 제품 × 가치 매트릭스}
+  - {code: EF-A, sheet_role: EF, data_shape: {numbers_min: 3}, note: 전후 수치 3개 이상}
+  - {code: EF-C, sheet_role: EF, data_shape: {numbers_max: 2}, note: 수치가 3개 미만이면 EF-A 대신}
+  - {code: EF-D, sheet_role: EF, data_shape: {per_product_numbers: true}, note: 제품별 전후 수치}
+  # 공간별 가치 제공 시나리오 범용 VC 시리즈(공간 1곳~다지점 × 솔루션 1~4+ 조합 20종)
+  - {code: "<<FILL: VC 시리즈 코드 목록과 각 space_count·solution_count 범위를 캔버스에서 내보내 채움>>", sheet_role: SS}
+  # MI 업종판(16개 업종 × 3) + 범용 20종
+  - {code: "<<FILL: MI 템플릿 코드 목록과 data_shape 를 캔버스에서 내보내 채움>>", sheet_role: MS}
+  # 공간 시나리오 업종판, 솔루션 전용 템플릿(11개 솔루션 × 소개·구성도·공간 시나리오)
+  - {code: "<<FILL: 나머지 템플릿 코드 목록>>", sheet_role: SA}

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>UX-A 이용자 여정 포토 스트립</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · 사용 장면</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">투숙객의 하루, 다섯 장면에서 삼성 화면을 만납니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">B 비즈니스 호텔 · 투숙객 여정 기준</div>
+
+  <!-- 여정 선 + 단계 점 -->
+  <div style="position: absolute; left: 64px; top: 165px; width: 1146px; height: 2px; background: #e2e5ea"></div>
+  <svg style="position: absolute; left: 1202px; top: 159px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b8bec8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4l8 8-8 8"/></svg>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <span style="{{s.dot}}">{{s.no}}</span>
+  </sc-for>
+
+  <!-- 5장면 -->
+  <div style="position: absolute; left: 64px; top: 196px; width: 1152px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+      <div style="display: flex; flex-direction: column; min-width: 0">
+        <div style="width: 211px; height: 254px"><dc-import name="Img" kind="people" origin="gen" hint="{{s.hint}}" w="211" h="254" radius="12" credit="bl" hint-size="211px,254px"></dc-import></div>
+        <div style="margin-top: 14px; font-size: 16px; font-weight: 800; line-height: 1.4">{{s.name}}</div>
+        <span style="margin-top: 8px; align-self: flex-start; height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.prod}}</span>
+        <div style="margin-top: 10px; font-size: 13px; line-height: 1.5; color: #3d4452; word-break: keep-all">{{s.change}}</div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 고객 관점 효과 -->
+  <div style="position: absolute; left: 64px; top: 588px; width: 1152px; height: 60px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 28px; display: flex; align-items: center">
+    <span style="width: 148px; flex-shrink: 0; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">고객 관점 효과</span>
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+      <div style="flex: 1 1 0; min-width: 0; height: 32px; box-sizing: border-box; padding-left: 24px; border-left: 1px solid #dfe3ea; display: flex; align-items: center">
+        <span style="display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{k.n}}</span><span style="font-size: 13.5px; font-weight: 600; color: #3d4452">{{k.l}}</span></span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 투숙객 경험 제안 · 장면 이미지는 AI 생성 시안 · 실제와 다를 수 있음 · 실제 호텔 사진으로 교체 가능</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 투숙객 여정 5장면 — [단계, 만나는 제품, 바뀌는 점, 장면 이미지 힌트(사람 · AI 생성 시안)]
+    const S = [
+      ['도착', '로비 LED 사이니지', '로비에 들어서는 순간 환영 인사와 오늘의 호텔 소식을 봅니다', '로비에 들어서는 투숙객 · 정면 웰컴 사이니지가 보이게 · 뒷모습'],
+      ['체크인', '체크인 키오스크', '프런트 줄 없이 키오스크에서 체크인하고 객실 키를 받습니다', '키오스크 화면을 터치하는 투숙객 · 옆모습 · 손과 화면'],
+      ['이동', '엘리베이터홀 사이니지', '엘리베이터를 기다리며 층별 시설과 운영 시간을 확인합니다', '엘리베이터홀 세로 사이니지를 보는 투숙객 · 캐리어'],
+      ['객실', '호텔 TV + LYNK Cloud', 'TV 홈 화면에서 룸서비스 주문과 호텔 안내를 한 번에 봅니다', '객실 소파에서 TV 홈 화면을 보는 투숙객 · 화면 정면'],
+      ['체크아웃', '객실 TV 체크아웃', '프런트에 들르지 않고 객실 TV에서 요금 확인과 체크아웃', '객실 TV로 요금을 확인하는 투숙객 · 리모컨 · 화면 보이게']
+    ];
+    const colW = (1152 - 24 * 4) / 5;
+    const steps = S.map(([name, prod, change, hint], i) => {
+      const cx = 64 + i * (colW + 24) + colW / 2;
+      return {
+        no: String(i + 1).padStart(2, '0'), name, prod, change, hint,
+        dot: 'position: absolute; left: ' + (cx - 16) + 'px; top: 150px; width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 0 0 1px #e2e5ea; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center'
+      };
+    });
+    const kpis = [
+      { n: '[00]분 → [0]분', l: '체크인 대기' },
+      { n: '[00]%', l: '프런트 문의 감소' },
+      { n: '[00]%', l: '객실 서비스 주문 증가' }
+    ];
+    return { steps, kpis };
+  }
+}
+</script>
+</body>
+</html>

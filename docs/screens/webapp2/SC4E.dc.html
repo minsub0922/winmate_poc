@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>시나리오 · 장면 편집</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="scenario" current="A 커피 매장 하루 시나리오" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 시나리오 생성" title="A 커피 매장 하루 시나리오" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; gap: 20px; padding: 20px 40px 24px 40px; box-sizing: border-box; overflow: hidden">
+
+      <!-- 장면 목록 -->
+      <div style="width: 272px; flex-shrink: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 14px 12px 12px 12px; display: flex; flex-direction: column; gap: 8px; overflow: hidden">
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 2px 4px 2px">
+          <div style="font-size: 13px; font-weight: 700">장면 <span style="font-family: Manrope, sans-serif; color: #596170; font-weight: 600">4</span></div>
+          <a href="SC2E.dc.html" style="font-size: 12px; font-weight: 600; color: #1428a0; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h6"/></svg>타임라인 편집</a>
+        </div>
+
+        <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+          <div style="{{s.box}}">
+            <div style="display: flex; align-items: center; gap: 7px">
+              <svg width="10" height="14" viewBox="0 0 10 14" fill="#b8bec8" style="flex-shrink: 0"><circle cx="2.5" cy="2.5" r="1.3"/><circle cx="7.5" cy="2.5" r="1.3"/><circle cx="2.5" cy="7" r="1.3"/><circle cx="7.5" cy="7" r="1.3"/><circle cx="2.5" cy="11.5" r="1.3"/><circle cx="7.5" cy="11.5" r="1.3"/></svg>
+              <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #1428a0">{{s.time}}</span>
+              <span style="font-size: 11px; color: #596170">{{s.no}}</span>
+              <span style="flex-grow: 1"></span>
+              <span style="{{s.statStyle}}">{{s.stat}}</span>
+            </div>
+            <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.title}}</div>
+            <div style="display: flex"><span style="max-width: 222px; box-sizing: border-box; font-size: 11px; color: #1428a0; background: #ffffff; border: 1px solid #d3daf3; border-radius: 4px; padding: 1px 7px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.sol}}</span></div>
+          </div>
+        </sc-for>
+
+        <button style="height: 40px; flex-shrink: 0; border-radius: 10px; border: 1px dashed #1428a0; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>장면 추가</button>
+
+        <div style="flex-grow: 1"></div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid #e2e5ea">
+          <a href="SC4G.dc.html" style="height: 38px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 5v6h-6"/></svg>나머지 장면 다시 생성</a>
+          <span style="font-size: 11.5px; color: #596170; text-align: center">직접 고친 장면 2는 그대로 둡니다</span>
+        </div>
+      </div>
+
+      <!-- 편집 영역 -->
+      <div style="width: 808px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; min-height: 0">
+        <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 56px; flex-shrink: 0; box-sizing: border-box; padding: 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e2e5ea">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
+              <span style="height: 26px; padding: 0 9px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; display: flex; align-items: center">11:30</span>
+              <span style="font-size: 12.5px; color: #596170; white-space: nowrap">장면 2</span>
+              <span style="font-size: 15px; font-weight: 700; white-space: nowrap">점심 피크</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+              <span style="height: 26px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 700">v2</span>· 방금 수정 요청 반영</span>
+              <button style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5M4 9h11a5 5 0 0 1 0 10h-3"/></svg>v1로 되돌리기</button>
+              <button aria-label="장면 삭제" style="width: 30px; height: 30px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+            </div>
+          </div>
+
+          <div style="flex-grow: 1; min-height: 0; padding: 16px 18px; display: flex; gap: 20px; overflow: hidden">
+            <!-- 필드 -->
+            <div style="width: 502px; flex-shrink: 0; display: flex; flex-direction: column; gap: 14px; min-width: 0">
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <label for="ttl" style="font-size: 12px; color: #596170">장면 제목</label>
+                <input id="ttl" value="점심 피크 — 줄이 길어지자 키오스크로 주문이 분산된다" style="height: 40px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #ffffff; padding: 0 12px; font-size: 14px; color: #121417; outline: none">
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <div style="display: flex; align-items: center; justify-content: space-between">
+                  <span style="font-size: 12px; color: #596170">이야기</span>
+                  <span style="font-size: 11.5px; color: #1428a0; font-weight: 600; display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #eaeefb; border: 1px solid #b9c4ee"></span>바뀐 곳 1</span>
+                </div>
+                <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; padding: 11px 13px; font-size: 13.5px; line-height: 1.7; color: #121417">손님이 KM24C 키오스크에서 프로모션 음료를 주문하고, 메뉴보드는 대기 손님을 위해 프로모션 슬롯을 크게 띄운다. <span style="background: #eaeefb; box-shadow: inset 0 -2px 0 #1428a0; padding: 1px 2px">점장은 Galaxy Tab Active5로 재고를 확인하고, 품절 메뉴를 메뉴보드에서 바로 내린다.</span></div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <span style="font-size: 12px; color: #596170">등장인물</span>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center">손님 ×</span>
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px">점장 × <span style="font-size: 10.5px; color: #1428a0; background: #ffffff; border-radius: 3px; padding: 0 4px">새로</span></span>
+                  <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 12px; font-weight: 500">+ 추가</button>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <span style="font-size: 12px; color: #596170">솔루션 동작</span>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center">MagicINFO · 시간대 레이아웃 ×</span>
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px">MagicINFO · 즉시 변경 × <span style="font-size: 10.5px; color: #1428a0; background: #ffffff; border-radius: 3px; padding: 0 4px">새로</span></span>
+                  <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 12px; font-weight: 500">+ 솔루션</button>
+                </div>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <span style="font-size: 12px; color: #596170">제품 활용</span>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap">
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #f0f2f5; color: #121417; font-size: 12px; font-weight: 500; display: flex; align-items: center">KM24C ×</span>
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #f0f2f5; color: #121417; font-size: 12px; font-weight: 500; display: flex; align-items: center">QM55C ×</span>
+                  <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #f0f2f5; color: #121417; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 5px">Galaxy Tab Active5 × <span style="font-size: 10.5px; color: #1428a0; background: #eaeefb; border-radius: 3px; padding: 0 4px">새로</span></span>
+                  <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 12px; font-weight: 500">+ 제품</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 장면 이미지 -->
+            <div style="width: 250px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; justify-content: space-between">
+                <span style="font-size: 12px; color: #596170">장면 이미지</span>
+                <span style="font-size: 11.5px; color: #8a91a0">v1 · 이미지 생성 · 어제</span>
+              </div>
+              <div style="position: relative; width: 250px; height: 141px; border-radius: 10px; overflow: hidden; background: #dfe3ea">
+                <img src="/_blob/07237b62990f629d9c6de161a76cd37b" alt="카페 카운터 위 메뉴보드 3면이 켜진 주문 공간" style="width: 250px; height: 141px; object-fit: cover; display: block">
+                <span style="position: absolute; left: 8px; top: 8px; height: 20px; padding: 0 7px; border-radius: 5px; background: rgba(18,20,23,0.72); color: #ffffff; font-size: 10.5px; font-weight: 600; display: flex; align-items: center">16:9</span>
+              </div>
+              <div style="display: flex; gap: 6px; font-size: 12px; line-height: 1.5; color: #3d4452">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 2px"><path d="M12 3l9 16H3l9-16z M12 10v4 M12 17h.01"/></svg>
+                <span>이야기가 바뀌어 이미지와 다를 수 있어요 (태블릿 장면 없음)</span>
+              </div>
+              <a href="IMG2.dc.html" style="height: 38px; border-radius: 10px; border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M9 10.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M20 15l-5-5-8 8"/></svg>이미지 생성에서 다시 만들기</a>
+              <div style="box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 10px 12px; display: flex; flex-direction: column; gap: 5px; font-size: 12px">
+                <span style="font-size: 11.5px; font-weight: 600; color: #596170">이미지 생성으로 넘어가는 것</span>
+                <div style="display: flex; gap: 8px; white-space: nowrap"><span style="width: 28px; flex-shrink: 0; color: #8a91a0">공간</span><span style="overflow: hidden; text-overflow: ellipsis">카페 카운터 · 주문 구역</span></div>
+                <div style="display: flex; gap: 8px; white-space: nowrap"><span style="width: 28px; flex-shrink: 0; color: #8a91a0">장면</span><span style="overflow: hidden; text-overflow: ellipsis">점심 피크, 키오스크 주문 + 재고 확인</span></div>
+                <div style="display: flex; gap: 8px; white-space: nowrap"><span style="width: 28px; flex-shrink: 0; color: #8a91a0">제품</span><span style="overflow: hidden; text-overflow: ellipsis">KM24C · QM55C · Tab Active5</span></div>
+                <div style="display: flex; gap: 8px; white-space: nowrap"><span style="width: 28px; flex-shrink: 0; color: #8a91a0">비율</span><span style="overflow: hidden; text-overflow: ellipsis">16:9 · 제안서 시트용</span></div>
+              </div>
+              <a href="IMG0.dc.html" style="align-self: center; height: 26px; font-size: 12px; font-weight: 600; color: #1428a0; display: flex; align-items: center; gap: 4px">사내 자산 · 내 이미지에서 고르기</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 이 장면만 다시 쓰기 -->
+        <div style="flex-shrink: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+          <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+            <div style="font-size: 13px; font-weight: 600; white-space: nowrap">이 장면만 다시 쓰기 <span style="color: #596170; font-weight: 500">· 다른 장면은 그대로</span></div>
+            <div style="display: flex; gap: 6px">
+              <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">더 짧게</button>
+              <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">점장 시점으로</button>
+              <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">솔루션 동작 더 구체적으로</button>
+            </div>
+          </div>
+          <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+            <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">이 장면 수정 지시</label>
+            <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+              <input id="fix" placeholder="지시문 (예: 키오스크 대기 줄이 줄어드는 순간을 강조)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+              <button aria-label="이 장면 다시 쓰기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+            </div>
+            <a href="SC4.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">취소</a>
+            <a href="SC4.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+              <span>변경 저장</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [시각, 장면 번호, 제목, 대표 솔루션 동작, 상태]
+    const S = [
+      ['07:00', '장면 1', '오픈 — 메뉴보드 아침 점등', 'MagicINFO · 전원 스케줄', '이미지 없음'],
+      ['11:30', '장면 2', '점심 피크 — 키오스크로 주문 분산', 'MagicINFO · 시간대 레이아웃', '편집 중'],
+      ['14:00', '장면 3', '본사 배포 — 320개 매장 프로모션', 'MagicINFO · 원격 배포', '이미지 없음'],
+      ['21:00', '장면 4', '마감 — 화면 OFF · 전력 집계', 'SmartThings Pro · 에너지 리포트', '이미지 없음']
+    ];
+    const scenes = S.map(([time, no, title, sol, stat]) => {
+      const on = stat === '편집 중';
+      return {
+        time, no, title, sol, stat,
+        box: 'flex-shrink: 0; display: flex; flex-direction: column; gap: 5px; box-sizing: border-box; padding: 10px 12px; border-radius: 10px;' + (on ? ' border: 1.5px solid #1428a0; background: #eaeefb;' : ' border: 1px solid #e2e5ea; background: #ffffff;'),
+        statStyle: 'font-size: 10.5px; font-weight: 600; white-space: nowrap;' + (on ? ' color: #ffffff; background: #1428a0; border-radius: 4px; padding: 1px 6px;' : ' color: #8a91a0;')
+      };
+    });
+    return { steps: ['시나리오 유형', '공간 시나리오 입력', '솔루션 · 제품 입력', '시나리오 생성'], cur: 4, scenes };
+  }
+}
+</script>
+</body>
+</html>

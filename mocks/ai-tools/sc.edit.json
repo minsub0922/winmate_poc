@@ -1,0 +1,14 @@
+{
+  "responses": [
+    {"when": {"contains": "#mock:llm-down"}, "error": {"status": 503, "code": "UPSTREAM_UNAVAILABLE", "message": "mock LLM 장애"}},
+    {
+      "when": {"contains": ["수정 요청: 장면 2에 점장이 태블릿으로 재고 확인"]},
+      "json": {"ops": [
+        {"op": "add_beat", "scene": 2, "role": "점장", "text": "태블릿으로 재고 확인"},
+        {"op": "add_product", "scene": 2, "product": "Galaxy Tab Active5"},
+        {"op": "rewrite", "scene": 2, "instruction": "점장이 태블릿으로 재고 확인하는 장면 추가"}
+      ]}
+    },
+    {"json": {"ops": []}}
+  ]
+}

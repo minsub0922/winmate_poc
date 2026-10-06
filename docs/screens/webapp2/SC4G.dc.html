@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>시나리오 · 생성 중</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="scenario" current="A 커피 매장 하루 시나리오" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 시나리오 생성" title="A 커피 매장 하루 시나리오" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">4개 장면으로 시나리오를 쓰고 있어요. 끝난 장면부터 아래에 미리 보여드릴게요.</div>
+
+            <a href="SC4.dc.html" style="display: block; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; color: #121417">
+              <div style="padding: 14px 16px 12px 16px; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #e2e5ea">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+                  <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                    <div style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 7px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z M10 9l5 3-5 3V9z"/></svg></div>
+                    <span style="font-size: 14px; font-weight: 700; white-space: nowrap">시나리오 생성 중</span>
+                    <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">with 솔루션 · MagicINFO · SmartThings Pro · QM55C ×3 · KM24C</span>
+                  </div>
+                  <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; color: #1428a0; white-space: nowrap; flex-shrink: 0">50% · 약 20초 남음</span>
+                </div>
+                <div style="height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="width: 50%; height: 6px; border-radius: 999px; background: #1428a0"></div></div>
+              </div>
+              <div style="padding: 8px 10px 10px 10px; display: flex; flex-direction: column; gap: 2px">
+                <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+                  <div style="{{r.rowStyle}}">
+                    <sc-if value="{{r.isDone}}" hint-placeholder-val="{{false}}">
+                      <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </sc-if>
+                    <sc-if value="{{r.isRun}}" hint-placeholder-val="{{false}}">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="flex-shrink: 0"><circle cx="12" cy="12" r="9" stroke="#d5d9e0" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg>
+                    </sc-if>
+                    <sc-if value="{{r.isWait}}" hint-placeholder-val="{{true}}">
+                      <span style="width: 20px; height: 20px; border-radius: 50%; border: 2px solid #d5d9e0; box-sizing: border-box; flex-shrink: 0"></span>
+                    </sc-if>
+                    <span style="width: 170px; flex-shrink: 0; font-weight: 600; white-space: nowrap">{{r.name}}</span>
+                    <span style="flex-grow: 1; min-width: 0; color: #596170; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.note}}</span>
+                    <span style="{{r.stStyle}}">{{r.st}}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </a>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-top: 2px">
+              <span style="font-size: 12.5px; font-weight: 600; color: #3d4452">미리보기 <span style="color: #596170; font-weight: 500">· 끝난 장면부터</span></span>
+              <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #596170">2 / 4</span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px">
+              <div style="display: flex; align-items: center; gap: 12px; box-sizing: border-box; padding: 10px 14px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea">
+                <div style="width: 54px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #1428a0">07:00</span><span style="font-size: 11px; color: #596170">장면 1</span></div>
+                <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+                  <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">오픈 — 메뉴보드가 아침 메뉴로 스스로 켜진다</div>
+                  <div style="display: flex; gap: 6px; white-space: nowrap"><span style="font-size: 11px; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 2px 7px">MagicINFO · 전원 스케줄</span><span style="font-size: 11px; color: #596170; background: #f0f2f5; border-radius: 4px; padding: 2px 7px">QM55C ×3</span></div>
+                </div>
+                <span style="flex-shrink: 0; font-size: 12px; font-weight: 600; color: #596170; display: flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>완성</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; box-sizing: border-box; padding: 10px 14px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea">
+                <div style="width: 54px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #1428a0">11:30</span><span style="font-size: 11px; color: #596170">장면 2</span></div>
+                <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+                  <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">점심 피크 — 줄이 길어지자 키오스크로 주문이 분산된다</div>
+                  <div style="display: flex; gap: 6px; white-space: nowrap"><span style="font-size: 11px; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 2px 7px">MagicINFO · 시간대 레이아웃</span><span style="font-size: 11px; color: #596170; background: #f0f2f5; border-radius: 4px; padding: 2px 7px">KM24C</span><span style="font-size: 11px; color: #596170; background: #f0f2f5; border-radius: 4px; padding: 2px 7px">QM55C</span></div>
+                </div>
+                <span style="flex-shrink: 0; font-size: 12px; font-weight: 600; color: #596170; display: flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>완성</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; box-sizing: border-box; padding: 10px 14px; border-radius: 12px; background: #ffffff; border: 1.5px solid #1428a0">
+                <div style="width: 54px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #1428a0">14:00</span><span style="font-size: 11px; color: #596170">장면 3</span></div>
+                <div style="display: flex; flex-direction: column; gap: 5px; flex-grow: 1; min-width: 0">
+                  <div style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">본사 배포 — 320개 매장에 오후 프로모션이 걸린다</div>
+                  <div style="display: flex; align-items: center; gap: 2px; font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden"><span>본사 마케팅 담당자가 콘텐츠를 승인하자 전 매장에 배포가 시작되고,</span><span style="width: 2px; height: 14px; background: #1428a0; flex-shrink: 0"></span></div>
+                  <div style="display: flex; gap: 6px"><span style="width: 220px; height: 8px; border-radius: 4px; background: #eef0f3"></span><span style="width: 120px; height: 8px; border-radius: 4px; background: #eef0f3"></span></div>
+                </div>
+                <span style="flex-shrink: 0; font-size: 12px; font-weight: 600; color: #1428a0; display: flex; align-items: center; gap: 5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#d5d9e0" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg>작성 중</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px; box-sizing: border-box; height: 44px; padding: 0 14px; border-radius: 12px; border: 1px dashed #b8bec8">
+                <div style="width: 54px; flex-shrink: 0; display: flex; gap: 6px; align-items: baseline"><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0">21:00</span></div>
+                <div style="flex-grow: 1; min-width: 0; font-size: 13px; color: #8a91a0; white-space: nowrap">장면 4 · 마감</div>
+                <span style="flex-shrink: 0; font-size: 12px; font-weight: 600; color: #8a91a0">대기</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">시나리오 생성 중 <span style="color: #596170; font-weight: 500">· 4 / 4 · 다른 작업을 해도 돼요, 끝나면 알려드릴게요</span></div>
+          <a href="SC0.dc.html" style="height: 26px; padding: 0 4px; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+            <span>작업 목록에서 기다리기</span>
+          </a>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="dir" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">진행 방향 메모</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="dir" placeholder="진행 중에도 방향을 알려주세요 (예: 장면 3은 본사 담당자 시점으로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="SC3.dc.html" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-shrink: 0; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="#121417"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>중지 · 입력 고치기</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [단계, 메모, 상태: done · run · wait]
+    const R = [
+      ['장면 나누기', '오픈 · 점심 피크 · 본사 배포 · 마감', 'done'],
+      ['장면별 이야기 쓰기', '장면 3 · 본사 배포 작성 중 (2 / 4 완료)', 'run'],
+      ['솔루션 동작 · 제품 연결', 'MagicINFO 3장면 · SmartThings Pro 1장면', 'wait'],
+      ['확인 필요 표시', '근거 없는 수치는 [00]으로 두고 표시', 'wait']
+    ];
+    const ST = { done: '완료', run: '진행 중', wait: '대기' };
+    const rows = R.map(([name, note, s]) => ({
+      name, note, st: ST[s],
+      isDone: s === 'done', isRun: s === 'run', isWait: s === 'wait',
+      rowStyle: 'display: flex; align-items: center; gap: 10px; height: 32px; padding: 0 8px; border-radius: 8px; font-size: 13px;' + (s === 'run' ? ' background: #f5f7fd;' : ''),
+      stStyle: 'flex-shrink: 0; font-size: 12px; font-weight: 600; white-space: nowrap;' + (s === 'run' ? ' color: #1428a0;' : s === 'done' ? ' color: #596170;' : ' color: #8a91a0;')
+    }));
+    return { steps: ['시나리오 유형', '공간 시나리오 입력', '솔루션 · 제품 입력', '시나리오 생성'], cur: 4, rows };
+  }
+}
+</script>
+</body>
+</html>

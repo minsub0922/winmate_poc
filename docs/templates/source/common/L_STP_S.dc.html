@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>STP-S SmartThings Pro 공간 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SmartThings Pro</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SmartThings Pro · 비즈니스 IoT</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장의 하루, 에너지는 알아서 관리됩니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">날씨 · 영업시간 · 한산한 시간에 맞춰 루틴과 AI 절약 모드가 사람 손 없이 움직입니다</div>
+
+  <!-- 공간 사진 (예시) -->
+  <sc-for list="{{photos}}" as="p" hint-placeholder-count="2">
+    <img src="{{p.src}}" alt="{{p.alt}}" style="position: absolute; object-fit: cover; border-radius: 12px; {{p.box}}">
+    <div style="position: absolute; {{p.chipPos}} height: 24px; box-sizing: border-box; padding: 0 9px 0 4px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 4px; font-size: 11.5px; font-weight: 800; color: #121417; white-space: nowrap">
+      <sc-for list="{{p.marks}}" as="n" hint-placeholder-count="1">
+        <span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{n}}</span>
+      </sc-for>
+      <span style="margin-left: 2px">{{p.zone}}</span>
+    </div>
+    <div style="position: absolute; {{p.notePos}} height: 18px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+  </sc-for>
+
+  <!-- 매장 평면 (좌 5열, 사진 아래) -->
+  <div style="position: absolute; left: 64px; top: 322px; width: 466px; height: 278px; border-radius: 16px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 80px; top: 332px; height: 22px; padding: 0 10px; border-radius: 999px; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">매장 평면 (예시)</div>
+  <div style="position: absolute; right: 766px; top: 332px; height: 22px; padding: 0 10px 0 3px; border-radius: 999px; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #1428a0; display: flex; align-items: center; gap: 6px"><span style="width: 17px; height: 17px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span>월말 리포트 → 본사</div>
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="3">
+    <div style="{{z.style}}"><span style="position: absolute; left: 12px; top: 5px; font-size: 11.5px; font-weight: 700; color: #596170">{{z.name}}</span></div>
+  </sc-for>
+  <!-- 가구 -->
+  <div style="position: absolute; left: 200px; top: 375px; width: 150px; height: 26px; border-radius: 6px; background: #eef0f3; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8a91a0">작업대</div>
+  <div style="position: absolute; left: 96px; top: 452px; width: 402px; height: 7px; border-radius: 3px; background: #d5d9e0"></div>
+  <sc-for list="{{tables}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 262px; top: 574px; width: 56px; height: 22px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #3d4452; display: flex; align-items: center; justify-content: center">입구</div>
+  <!-- 기기 -->
+  <sc-for list="{{devices}}" as="d" hint-placeholder-count="10">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+  <!-- 이벤트 번호 (오른쪽 타임라인과 대응) -->
+  <sc-for list="{{planMarks}}" as="m" hint-placeholder-count="4">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+  <!-- 평면 범례 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 466px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; background: #ffffff; border: 2px solid #1428a0"></span>에어컨</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 20px; height: 10px; box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 2px solid #121417"></span>메뉴보드</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 11px; height: 11px; box-sizing: border-box; border-radius: 50%; background: #b8c3ee; border: 1.5px solid #6f82d6"></span>조명</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #121417"></span>센서</span>
+    <span style="margin-left: auto; color: #8a91a0">번호 = 오른쪽 이벤트</span>
+  </div>
+
+  <!-- 하루 타임라인 (우 7열) -->
+  <div style="position: absolute; left: 617px; top: 175px; width: 402px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 1019px; top: 175px; width: 134px; height: 0; border-top: 2px dashed #b8bec8"></div>
+  <sc-for list="{{events}}" as="e" hint-placeholder-count="5">
+    <div style="{{e.dot}}">{{e.n}}</div>
+    <div style="{{e.card}}">
+      <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{e.time}}</span>
+      <span style="font-size: 14px; font-weight: 800; line-height: 1.4">{{e.title}}</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px">
+        <sc-for list="{{e.chips}}" as="c" hint-placeholder-count="2">
+          <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 11px; display: flex; align-items: center">{{c}}</span>
+        </sc-for>
+      </div>
+      <span style="font-size: 12px; line-height: 1.5; color: #596170">{{e.desc}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 전력 사용 곡선 (예시) -->
+  <div style="position: absolute; left: 554px; top: 398px; font-size: 12.5px; font-weight: 800; letter-spacing: 0.02em; color: #596170">매장 전력 사용 · 하루</div>
+  <div style="position: absolute; right: 64px; top: 399px; display: flex; align-items: center; gap: 14px; font-size: 11.5px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 2px; background: #8a91a0"></span>기존 운영</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 3px; background: #1428a0"></span>SmartThings Pro</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; background: #eaeefb; border: 1px solid #b8c3ee"></span>절감분</span>
+  </div>
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="4">
+    <div style="{{g.style}}"></div>
+  </sc-for>
+  <svg style="position: absolute; left: 574px; top: 424px" width="512" height="136" viewBox="0 0 512 136">
+    <polygon points="{{area}}" fill="#eaeefb"/>
+    <polyline points="{{gray}}" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linejoin="round"/>
+    <polyline points="{{blue}}" fill="none" stroke="#1428a0" stroke-width="2.5" stroke-linejoin="round"/>
+  </svg>
+  <sc-for list="{{chartMarks}}" as="m" hint-placeholder-count="4">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+  <sc-for list="{{ticks}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.style}}">{{k.label}}</div>
+  </sc-for>
+  <!-- 월말 매장별 리포트 -->
+  <div style="position: absolute; left: 1106px; top: 424px; width: 110px; height: 156px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8">
+    <span style="position: absolute; left: 8px; top: 8px; width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">5</span>
+    <span style="position: absolute; left: 32px; top: 9px; font-size: 11.5px; font-weight: 800">매장별</span>
+    <span style="position: absolute; left: 10px; top: 32px; font-size: 10.5px; color: #8a91a0">kWh · 비용</span>
+    <div style="position: absolute; left: 16px; top: 58px; width: 78px; height: 66px; display: flex; align-items: flex-end; justify-content: space-between">
+      <sc-for list="{{storeBars}}" as="b" hint-placeholder-count="3">
+        <div style="{{b.style}}"></div>
+      </sc-for>
+    </div>
+    <div style="position: absolute; left: 16px; top: 130px; width: 78px; display: flex; justify-content: space-between; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #596170">
+      <span style="width: 18px; text-align: center">A</span><span style="width: 18px; text-align: center">B</span><span style="width: 18px; text-align: center">C</span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 554px; top: 596px; font-size: 11.5px; color: #8a91a0">수치는 예시 · 데이터 연결 시 자동 반영</div>
+  <div style="position: absolute; right: 64px; top: 594px; font-size: 12.5px; font-weight: 800; color: #1428a0">하루 절감 <span style="font-family: Manrope, sans-serif">[00]%</span> · 월 <span style="font-family: Manrope, sans-serif">[000]</span>만 원</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const marker = (x, y, d, n) => ({ n, style: A + box(x, y, d, d) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: ' + (d > 20 ? 12 : 10) + 'px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+
+    // ---- 공간 사진 (예시) — 카운터 · 홀 ----
+    const photos = [
+      { src: '/_blob/07237b62990f629d9c6de161a76cd37b', alt: '카페 카운터 상단 메뉴보드 사이니지 3면 (예시 사진)', zone: '카운터 · 메뉴보드', marks: [2], x: 64, op: '50% 25%' },
+      { src: '/_blob/81b89af89b6620bd4871944e66844272', alt: '카페 매장 홀 · 좌석 공간 (예시 사진)', zone: '홀 · 좌석', marks: [1, 3], x: 305, op: '50% 60%' }
+    ].map((p) => ({
+      src: p.src, alt: p.alt, zone: p.zone, marks: p.marks,
+      box: box(p.x, 160, 225, 150) + 'object-position: ' + p.op + ';',
+      chipPos: 'left: ' + px(p.x + 8) + 'top: 255px;',
+      notePos: 'left: ' + px(p.x + 8) + 'top: 284px;'
+    }));
+
+    // ---- 평면 (사진 아래, y 322–600) ----
+    const zones = [
+      ['주방 · 백룸', 80, 362, 434, 50],
+      ['카운터', 80, 418, 434, 46],
+      ['홀', 80, 470, 434, 114]
+    ].map(([name, x, y, w, h]) => ({ name, style: A + box(x, y, w, h) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #d5d9e0;' }));
+    const tables = [[104, 522], [184, 522], [344, 522], [424, 522]].map(([x, y]) => ({ style: A + box(x, y, 28, 28) + 'border-radius: 6px; background: #eef0f3;' }));
+    const ac = (x, y) => ({ style: A + box(x, y, 26, 26) + 'box-sizing: border-box; border-radius: 6px; background: #ffffff; border: 2px solid #1428a0;' });
+    const board = (x, y) => ({ style: A + box(x, y, 58, 20) + 'box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 2px solid #121417;' });
+    const light = (x, y) => ({ style: A + box(x, y, 12, 12) + 'box-sizing: border-box; border-radius: 50%; background: #b8c3ee; border: 1.5px solid #6f82d6;' });
+    const sensor = (x, y) => ({ style: A + box(x, y, 16, 16) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #121417;' });
+    const devices = [
+      ac(446, 374), sensor(390, 379),
+      board(200, 426), board(270, 426), board(340, 426), light(420, 430),
+      ac(150, 486), ac(390, 486), sensor(270, 491),
+      light(150, 556), light(270, 556), light(390, 556)
+    ];
+    const planMarks = [marker(180, 478, 24, 1), marker(444, 424, 24, 2), marker(420, 478, 24, 3), marker(322, 573, 24, 4)];
+
+    // ---- 이벤트 카드 (가로 타임라인) ----
+    const E = [
+      ['06:30', '날씨 기반 프리쿨링', ['에어컨'], '더운 날은 오픈 전에 미리 냉방'],
+      ['07:00', '오픈 루틴', ['조명', '메뉴보드'], '영업 시작과 함께 한 번에 ON'],
+      ['14:00', '한산 → AI 절약 모드', ['에어컨'], '컴프레서 · 온도를 AI가 조정'],
+      ['22:00', '마감 루틴', ['매장 전체'], '남은 기기까지 일괄 OFF'],
+      ['월말', '매장별 에너지 리포트', ['본사'], '에너지원별 사용 · 비용 비교']
+    ];
+    const events = E.map(([time, title, chips, desc], i) => {
+      const x = 554 + i * 134;
+      return {
+        n: i + 1, time, title, chips, desc,
+        dot: A + box(x + 50, 163, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        card: A + box(x, 198, 126, 182) + 'box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 12px; display: flex; flex-direction: column; gap: 6px;'
+      };
+    });
+
+    // ---- 전력 곡선 (예시 형태) — x: 06~24시, 폭 512 · y: 높이 136 ----
+    const X0 = 574, Y0 = 424, W = 512;
+    const tx = (t) => (t - 6) * W / 18;
+    const vy = (v) => 132 - v * 124;
+    const G = [[6, .40], [7, .40], [7.25, .95], [9, .88], [12, .92], [14, .90], [17, .86], [19, .92], [22, .84], [22.25, .45], [24, .42]];
+    const S = [[6, .10], [6.5, .12], [7, .36], [7.25, .66], [9, .68], [12, .74], [14, .74], [14.25, .52], [17, .52], [17.5, .70], [19, .74], [22, .70], [22.25, .10], [24, .10]];
+    const pt = ([t, v]) => tx(t).toFixed(1) + ',' + vy(v).toFixed(1);
+    const gray = G.map(pt).join(' ');
+    const blue = S.map(pt).join(' ');
+    const area = G.map(pt).concat(S.slice().reverse().map(pt)).join(' ');
+    const grid = [0, 45, 91, 136].map((y, i) => ({ style: A + 'left: ' + px(X0) + 'top: ' + px(Y0 + y - (i === 3 ? 1 : 0)) + 'width: ' + px(W) + 'height: 1px; background: ' + (i === 3 ? '#b8bec8' : '#e2e5ea') + ';' }));
+    const chartMarks = [[6.5, .12, 1], [7, .36, 2], [14.25, .52, 3], [22.25, .10, 4]].map(([t, v, n]) => marker(Math.round(X0 + tx(t) - 9), Math.round(Y0 + vy(v) - 9), 18, n));
+    const ticks = [['06:00', 6], ['12:00', 12], ['18:00', 18], ['24:00', 24]].map(([label, t]) => ({ label, style: A + 'left: ' + px(Math.round(X0 + tx(t) - 20)) + 'top: 566px; width: 40px; text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 600; color: #596170;' }));
+    const storeBars = [[56, '#6f82d6'], [40, '#b8c3ee'], [66, '#1428a0']].map(([h, c]) => ({ style: 'width: 18px; height: ' + px(h) + 'border-radius: 3px 3px 0 0; background: ' + c + ';' }));
+
+    return { photos, zones, tables, devices, planMarks, events, gray, blue, area, grid, chartMarks, ticks, storeBars };
+  }
+}
+</script>
+</body>
+</html>

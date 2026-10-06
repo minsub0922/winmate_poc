@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-4·2 네 공간 · 솔루션 2개 — 사분면 (복합 쇼핑몰)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 4곳 · 솔루션 2개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">U 몰의 네 공간, 보이는 화면은 MagicINFO가 · 보이지 않는 설비는 b.IoT가</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">네 공간 × 두 솔루션 — 공간마다 두 솔루션의 비중이 다릅니다</div>
+
+  <!-- 2×2 사분면 타일 -->
+  <sc-for list="{{tiles}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.box}}"></div>
+    <div style="{{s.photo}}">{{s.photoT}}</div>
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.nameS}}">{{s.name}}</div>
+    <div style="{{s.tagS}}">{{s.tag}}</div>
+    <div style="{{s.chipRow}}">
+      <sc-for list="{{s.chips}}" as="c" hint-placeholder-count="2">
+        <span style="{{c.style}}">{{c.t}}</span>
+      </sc-for>
+    </div>
+    <sc-for list="{{s.roles}}" as="r" hint-placeholder-count="2">
+      <div style="{{r.style}}"><span style="{{r.labS}}">{{r.lab}}</span><span>{{r.t}}</span></div>
+    </sc-for>
+    <div style="{{s.prodS}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg><span>{{s.prod}}</span></div>
+    <div style="{{s.valS}}"><span style="font-size: 12.5px; font-weight: 700; color: #121417">{{s.kpi}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{s.kv}}</span></div>
+  </sc-for>
+
+  <!-- 가운데 원형 범례 -->
+  <div style="position: absolute; left: 562px; top: 302px; width: 156px; height: 156px; border-radius: 50%; background: #ffffff"></div>
+  <div style="position: absolute; left: 570px; top: 310px; width: 140px; height: 140px; box-sizing: border-box; border-radius: 50%; border: 1px solid #d5d9e0; background: #ffffff">
+    <div style="position: absolute; left: 0; top: 24px; width: 140px; text-align: center; font-size: 10.5px; line-height: 14px; font-weight: 700; color: #8a91a0; white-space: nowrap">두 솔루션</div>
+    <div style="position: absolute; left: 0; top: 44px; width: 140px; display: flex; flex-direction: column; align-items: center; gap: 5px">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">MagicINFO</span>
+      <span style="height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">b.IoT</span>
+    </div>
+    <div style="position: absolute; left: 0; top: 98px; width: 140px; display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 10px; line-height: 14px; color: #596170; white-space: nowrap">
+      <span style="width: 14px; height: 8px; border-radius: 999px; background: #3d4452"></span><span>주인공</span>
+      <span style="width: 14px; height: 8px; box-sizing: border-box; border-radius: 999px; border: 1.5px solid #3d4452; margin-left: 4px"></span><span>보조</span>
+    </div>
+  </div>
+
+  <!-- 두 솔루션 정의 띠 -->
+  <div style="position: absolute; left: 64px; top: 614px; width: 1152px; height: 38px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 614px; height: 38px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #3d4452; white-space: nowrap">
+    <span style="height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center">MagicINFO</span>
+    <span>구축형 사이니지 CMS — 콘텐츠 편성 · 원격 관리 · 장애 알림</span>
+    <span style="width: 1px; height: 16px; background: #d5d9e0; margin: 0 10px"></span>
+    <span style="height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center">b.IoT</span>
+    <span>빌딩 IoT 통합 관제 — 공조 · 조명 · 전력 · 설비를 한 화면에서</span>
+  </div>
+  <div style="position: absolute; right: 80px; top: 614px; height: 38px; display: flex; align-items: center; font-size: 11px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>U 몰 · 복합 쇼핑몰 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 사분면: 타일 566×210, 십자 간격 20 (가운데 x 640 · y 380). 사진은 안쪽(십자 쪽)에 둔다.
+    const TW = 566, TH = 210, PW = 196, TXW = 318;
+    const XS = [64, 650], YS = [160, 390];
+    const COL = { M: '#1428a0', B: '#121417' };
+    const NAME = { M: 'MagicINFO', B: 'b.IoT' };
+    const chip = (k, filled) => ({
+      t: NAME[k],
+      style: 'height: 22px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; ' +
+        (filled ? 'background: ' + COL[k] + '; color: #ffffff;' : 'background: #ffffff; color: ' + COL[k] + '; border: 1.5px solid ' + COL[k] + ';')
+    });
+
+    // [이름, 비중 태그, 주인공(M/B/both), 역할 [[솔루션, 내용], ...], 제품, KPI, 값, 사진 라벨]
+    const D = [
+      ['정문 광장', '화면 중심', 'M', [['M', '대형 LED 미디어 파사드 · 행사 영상'], ['B', '광장 야간 조명 일정 관리']], 'LED 사이니지 · 옥외 사이니지 OH55C', '광장 체류', '[00]% ↑', '정문 광장 사진'],
+      ['아트리움', '화면 + 설비', 'both', [['M', '층별 안내 · 브랜드 프로모션'], ['B', '천장 높은 공간의 공조 · 환기']], 'LED 사이니지 · 시스템에어컨', '체감 온도 민원', '[00]% ↓', '아트리움 사진'],
+      ['푸드코트', '화면 중심', 'M', [['M', '메뉴보드 · 주문 번호 호출'], ['B', '주방 배기 · 전력 관제']], '스마트 사이니지 QM55C ×[00]', '주문 대기', '[0]분 ↓', '푸드코트 사진'],
+      ['주차장', '설비 중심', 'B', [['B', '조명 · 환기 · 전력 관제'], ['M', '빈 자리 · 출구 안내 화면']], '스마트 사이니지 · 조명', '주차장 전력', '[00]% ↓', '주차장 사진']
+    ];
+
+    const tiles = D.map(([name, tag, lead, roles, prod, kpi, kv, photoT], i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const x = XS[col], y = YS[row];
+      const photoX = col === 0 ? x + TW - 8 - PW : x + 8;
+      const tx = col === 0 ? x + 22 : x + 8 + PW + 22;
+      const order = lead === 'B' ? ['B', 'M'] : ['M', 'B'];
+      return {
+        n: i + 1, name, tag, prod, kpi, kv, photoT,
+        box: box(x, y, TW, TH) + 'box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; background: #ffffff;',
+        photo: box(photoX, y + 8, PW, TH - 16) + 'border-radius: 10px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0; ' + T,
+        badge: box(tx, y + 20, 24, 24) + 'border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        nameS: A + 'left: ' + px(tx + 32) + 'top: ' + px(y + 20) + 'font-size: 17px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em; ' + T,
+        tagS: A + 'right: ' + px(1280 - tx - TXW) + 'top: ' + px(y + 23) + 'height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; ' + T,
+        chipRow: A + 'left: ' + px(tx) + 'top: ' + px(y + 56) + 'height: 22px; display: flex; gap: 6px; ' + T,
+        chips: order.map((k) => chip(k, lead === 'both' || lead === k)),
+        roles: roles.map(([k, t], j) => ({
+          lab: NAME[k], t,
+          labS: 'display: inline-block; width: 74px; font-size: 12px; font-weight: 800; color: ' + COL[k] + ';',
+          style: A + 'left: ' + px(tx) + 'top: ' + px(y + 90 + j * 22) + 'font-size: 13px; line-height: 20px; color: #3d4452; ' + T
+        })),
+        prodS: A + 'left: ' + px(tx) + 'top: ' + px(y + 140) + 'height: 18px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; ' + T,
+        valS: box(tx, y + 166, TXW, 30) + 'box-sizing: border-box; padding: 0 12px; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: space-between; ' + T
+      };
+    });
+
+    return { tiles };
+  }
+}
+</script>
+</body>
+</html>

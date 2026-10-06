@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>DEX-S-OF Samsung DeX 공간 시나리오 · 오피스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Samsung DeX</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Samsung DeX · 모바일 데스크톱</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">공용 좌석에서도 회의실에서도, 휴대폰 하나로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">C 오피스 빌딩 · 개인 PC 없이 출근해 자리의 모니터, 회의실 디스플레이에 연결 — 업무 기기는 직원의 휴대폰 한 대</div>
+
+  <!-- 공간 타일 4개 (2 × 2) — 사진은 바깥쪽, 설명은 가운데 허브 쪽 -->
+  <sc-for list="{{tiles}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.box}}">
+      <img src="{{t.src}}" alt="{{t.alt}}" style="position: absolute; left: {{t.photoL}}; top: 0px; width: 220px; height: 194px; object-fit: cover; object-position: {{t.pos}}">
+      <span style="{{t.exChip}}">예시 사진 · 고객 공간으로 교체</span>
+      <span style="{{t.placeChip}}">{{t.place}}</span>
+      <div style="{{t.text}}">
+        <div style="height: 26px; display: flex; align-items: center; gap: 8px">
+          <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{t.no}}</span>
+          <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">{{t.time}}</span>
+          <div style="flex-grow: 1"></div>
+          <span style="{{t.linkChip}}"><span style="{{t.linkDot}}"></span>{{t.link}}</span>
+        </div>
+        <span style="margin-top: 10px; font-size: 16px; font-weight: 800; line-height: 1.4; letter-spacing: -0.01em">{{t.act}}</span>
+        <span style="margin-top: 6px; font-size: 12.5px; line-height: 1.55; color: #596170">{{t.detail}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 타일 ↔ 허브 연결 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="8">
+    <div style="{{w.s}}"></div>
+  </sc-for>
+
+  <!-- 가운데 허브: 휴대폰 한 대 -->
+  <div style="position: absolute; left: 554px; top: 160px; width: 172px; height: 408px; box-sizing: border-box; border-radius: 16px; background: #1428a0"></div>
+  <div style="position: absolute; left: 566px; top: 174px; font-size: 12px; color: #b8c3ee">가져오는 건</div>
+  <div style="position: absolute; left: 566px; top: 192px; font-size: 18px; font-weight: 800; color: #ffffff; white-space: nowrap">휴대폰 한 대</div>
+  <img src="/_blob/1ffba96d1cdf896ef565bd9e9931bd96" alt="손에 든 갤럭시 휴대폰과 벽면 화면의 DeX 데스크톱" style="position: absolute; left: 566px; top: 228px; width: 148px; height: 176px; object-fit: cover; object-position: 75% 50%; border-radius: 10px">
+  <div style="position: absolute; left: 566px; top: 410px; font-size: 10.5px; color: #b8c3ee">카탈로그 이미지 · 예시</div>
+  <div style="position: absolute; left: 566px; top: 436px; width: 148px; display: flex; flex-direction: column; gap: 6px">
+    <sc-for list="{{hub}}" as="h" hint-placeholder-count="4">
+      <div style="height: 20px; display: flex; align-items: center; gap: 7px; font-size: 12.5px; font-weight: 700; color: #ffffff; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b8c3ee" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>{{h}}</div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 566px; top: 542px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #ffffff">Samsung DeX</div>
+
+  <!-- 오피스의 고민 → DeX -->
+  <div style="position: absolute; left: 64px; top: 584px; width: 456px; height: 64px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 18px; display: flex; flex-direction: column; justify-content: center; gap: 4px">
+    <div style="display: flex; align-items: center; gap: 8px"><span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">오피스의 고민</span><span style="font-size: 11px; color: #8a91a0">AI 오피스 카탈로그</span></div>
+    <span style="font-size: 15px; font-weight: 800; white-space: nowrap">“회의 준비시간을 아낄 수 있을까요?”</span>
+  </div>
+  <div style="position: absolute; left: 528px; top: 615px; width: 14px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 540px; top: 611px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #1428a0"></div>
+  <div style="position: absolute; left: 552px; top: 584px; width: 664px; height: 64px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 18px; display: flex; flex-direction: column; justify-content: center; gap: 4px">
+    <span style="font-size: 14px; font-weight: 800; white-space: nowrap"><span style="color: #1428a0">DeX</span> — 휴대폰을 회의실 디스플레이에 바로 연결, 노트북 · 케이블 준비 없이 공유</span>
+    <span style="font-size: 11.5px; color: #596170; white-space: nowrap">조명 · 시스템에어컨 · 공기청정기 · 디스플레이 전원 일괄 제어는 SmartThings ‘발표모드’ · 스마트 버튼 (카탈로그)</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 모바일 업무 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    // 그리드: 왼쪽 타일 x 64–530 · 허브 554–726 · 오른쪽 타일 750–1216 / 행 y 160–356 · 372–568
+    const TW = 466, TH = 196, PW = 220, IW = TW - 2, IH = TH - 2;
+    const cols = [64, 750], rows = [160, 372];
+
+    // 연결 상태: wired = 파랑 실선, wireless = 연파랑 점선, none = 회색 점선
+    const LINK = {
+      wired: { chip: 'background: #eaeefb; color: #1428a0;', dot: '#1428a0', line: 'height: 2px; background: #1428a0' },
+      wireless: { chip: 'background: #eaeefb; color: #1428a0;', dot: '#6f82d6', line: 'height: 0; border-top: 2px dashed #6f82d6' },
+      none: { chip: 'background: #ffffff; border: 1px dashed #d5d9e0; color: #8a91a0;', dot: '#d5d9e0', line: 'height: 0; border-top: 2px dashed #b8bec8' }
+    };
+    // 순서: ① 좌상 → ② 우상 → ③ 좌하 → ④ 우하 (읽는 순서)
+    const data = [
+      { no: '1', time: '08:50', place: '입구 · 로비', link: '휴대폰만', kind: 'none',
+        act: '개인 PC 없이 출근',
+        detail: '가방엔 노트북 대신 휴대폰 한 대. 업무 앱과 데이터는 Knox로 보호됩니다',
+        src: '/_blob/a14414799350aa67c39b1ce639897726', alt: '오피스 로비와 유리 회의실', pos: '40% 50%' },
+      { no: '2', time: '09:00', place: '업무공간 · 공용 좌석', link: '유선 · USB-C', kind: 'wired',
+        act: '빈 좌석 모니터에 꽂아 PC처럼',
+        detail: '멀티 윈도우 데스크톱에 키보드 · 마우스, 가상 데스크톱(VDI)으로 사내 업무 환경 접속',
+        src: '/_blob/df8dcc261014c7a63fc870a1890e779c', alt: '대형 디스플레이가 있는 오피스 업무공간', pos: '68% 50%' },
+      { no: '3', time: '14:00', place: '회의공간', link: '무선 DeX', kind: 'wireless',
+        act: '회의실 디스플레이에 무선 DeX로 공유',
+        detail: '노트북 · 케이블 준비 없이 휴대폰 속 자료를 큰 화면에 · 디스플레이 호환 [확인]',
+        src: '/_blob/e625d71cc8d0865bc5e709f4dcecd518', alt: '벽걸이 디스플레이로 발표하는 회의 장면', pos: '50% 30%' },
+      { no: '4', time: '18:00', place: '휴게공간 → 이동', link: '연결 해제', kind: 'none',
+        act: '자리를 떠나도 휴대폰으로 이어서',
+        detail: '메일 · 결재는 휴대폰 화면에서 확인. IT 정책은 어디서나 그대로 적용',
+        src: '/_blob/c9edb7683ec3833d8319b6e53b8555fe', alt: '오피스 팬트리 · 휴게공간', pos: '50% 50%' }
+    ];
+
+    const tiles = data.map((d, i) => {
+      const right = i % 2 === 1;
+      const x = cols[i % 2], y = rows[Math.floor(i / 2)];
+      const photoL = right ? IW - PW : 0;
+      const textL = right ? 0 : PW;
+      const L = LINK[d.kind];
+      return Object.assign({}, d, {
+        box: A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(TW) + 'height: ' + px(TH) +
+          'box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; overflow: hidden',
+        photoL: photoL + 'px',
+        exChip: A + 'left: ' + px(photoL + 8) + 'top: 8px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; color: #596170; font-size: 10px; font-weight: 600; display: flex; align-items: center; white-space: nowrap',
+        placeChip: A + 'left: ' + px(photoL + 8) + 'top: ' + px(IH - 34) + 'height: 26px; padding: 0 10px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap',
+        text: A + 'left: ' + px(textL) + 'top: 0px; width: ' + px(IW - PW) + 'height: ' + px(IH) +
+          'box-sizing: border-box; padding: 16px 18px; display: flex; flex-direction: column',
+        linkChip: 'height: 24px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; ' + L.chip,
+        linkDot: 'width: 6px; height: 6px; border-radius: 50%; background: ' + L.dot
+      });
+    });
+
+    // 타일 가장자리(530 / 750) ↔ 허브(554 / 726), 각 행의 가운데 높이
+    const wires = [];
+    tiles.forEach((t, i) => {
+      const right = i % 2 === 1;
+      const cy = rows[Math.floor(i / 2)] + TH / 2;
+      const x0 = right ? 726 : 530;
+      const L = LINK[data[i].kind];
+      wires.push({ s: A + 'left: ' + px(x0) + 'top: ' + px(cy - 1) + 'width: 24px; ' + L.line });
+      wires.push({ s: A + 'left: ' + px((right ? 750 : 530) - 4) + 'top: ' + px(cy - 4) + 'width: 8px; height: 8px; border-radius: 50%; background: ' + L.dot });
+    });
+
+    const hub = ['멀티 윈도우', '키보드 · 마우스', 'VDI 접속', 'Knox · IT 정책'];
+    return { tiles, wires, hub };
+  }
+}
+</script>
+</body>
+</html>

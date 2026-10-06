@@ -1,0 +1,79 @@
+ 
+ Spec 시트 · 작업 목록 
+ Spec 시트 작업 
+ 제품 스펙 비교표와 단일 제품 시트를 만들고, 제안서 '제품 스펙'으로 보냅니다. 
+ 새 Spec 시트 
+ {{s.title}} 
+ 기본 
+ {{s.desc}} 
+ 사내 카탈로그가 10월 1일 갱신되었습니다. 저장된 시트 2개에서 값이 달라져 다시 확인이 필요해요. 
+ 변경 내용 보기 
+ 작업 검색 
+ {{t.label}} {{t.n}} 
+ 제안서에 쓴 시트만 
+ 최근 수정순 
+ 작업 제품 출력 상태 연결된 제안서 수정 
+ {{r.title}} 
+ {{r.sub}} 
+ {{m.name}} 
+ {{r.out}} 
+ {{r.st}} 
+ {{r.prop}} 
+ {{r.when}} 
+ 작업 6개 · 최근 30일 
+ 열면 마지막 단계에서 이어집니다 보관된 작업 3 
+class Component extends DCLogic {
+ renderVals() {
+ const starts = [
+ { title: '모델명으로 입력', desc: '모델명을 넣으면 카탈로그 스펙을 바로 가져와요', href: 'SP1.dc.html', base: true, icon: 'M4 7h16M4 12h10M4 17h7 M17 14l3 3-3 3' },
+ { title: '제품 탐색에서 고르기', desc: '시리즈 폴더에서 여러 크기를 한 번에 담아요', href: 'SP1Product.dc.html', base: false, icon: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z' },
+ { title: '조건으로 모델 찾기', desc: '크기 · 밝기 · 용도 · 설치 조건으로 후보를 비교해요', href: 'SP1C.dc.html', base: false, icon: 'M4 5h16l-6 7v6l-4 2v-8L4 5z' },
+ { title: '고객 요구 스펙으로 시작', desc: '규격서를 올리면 요구사항 대응표를 만들어요', href: 'SP1R.dc.html', base: false, icon: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13l2 2 4-4' }
+ ];
+ const tabBase = '';
+ const tabs = [['전체', 6, true], ['작성 중', 2, false], ['확인 필요', 3, false], ['완료', 1, false]].map(([label, n, on]) => ({
+ label, n,
+ style: tabBase + (on ? '' : ''),
+ numStyle: '' + (on ? '' : '')
+ }));
+ const cols = '';
+ const headStyle = cols + '';
+ const ICON = {
+ compare: 'M4 5h16v14H4z M10 5v14 M15 5v14 M4 10h16',
+ single: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7',
+ req: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13l2 2 4-4',
+ find: 'M4 5h16l-6 7v6l-4 2v-8L4 5z'
+ };
+ const ST = {
+ done: { box: '', stroke: '', path: 'M5 12l5 5L20 7', text: '' },
+ check: { box: '', stroke: '', path: 'M12 6v8M12 18.5v.5', text: '' },
+ warn: { box: '', stroke: '', path: 'M12 6v8M12 18.5v.5', text: '' },
+ draft: { box: '', stroke: '', path: 'M7 12h10', text: '' }
+ };
+ const DATA = [
+ ['QMC vs QBC 55" 비교', '비교표 · 7개 항목', 'compare', ['QM55C', 'QB55C'], 'XLSX · 한국어', 'done', '완료', 'A 커피 프랜차이즈 메뉴보드 제안', '오늘 10:24', 'SP3.dc.html'],
+ ['The Wall IAB 146" 스펙', '단일 시트 · 12개 항목', 'single', ['The Wall IAB'], 'PDF · English', 'check', '값 확인 필요 2', 'B 병원 안내 시스템 제안', '오늘 09:10', 'SP3G.dc.html'],
+ ['B 병원 로비 요구 스펙 대응표', '요구사항 대응표 · 요구 12개', 'req', ['QM55C', 'QM65C'], 'XLSX · 한국어', 'check', '확인 필요 3', 'B 병원 안내 시스템 제안', '어제', 'SP1R.dc.html'],
+ ['A 커피 드라이브스루 실외 사이니지', '단일 시트 · 9개 항목', 'single', ['OH55C'], 'PPT · 한국어', 'warn', '카탈로그 변경 1', 'A 커피 프랜차이즈 메뉴보드 제안', '9월 26일', 'SP3W.dc.html'],
+ ['Flip Pro WA75D 스펙', '단일 시트 · 항목 · 형식 고르는 중', 'single', ['WA75D'], '정하지 않음', 'draft', '작성 중 2/3', '', '어제', 'SP2.dc.html'],
+ ['C 물류센터 관제실 후보 비교', '조건 검색 · 후보 4개', 'find', ['QH55C', 'QM55C', '+2'], '정하지 않음', 'draft', '작성 중 1/3', '', '9월 29일', 'SP1C.dc.html']
+ ];
+ const rows = DATA.map(([title, sub, type, models, out, st, stLabel, prop, when, href]) => {
+ const s = ST[st];
+ return {
+ title, sub, out, when, href,
+ typeIcon: ICON[type],
+ models: models.map((name) => ({ name })),
+ outStyle: '' + (out === '정하지 않음' ? '' : ''),
+ stBox: '' + s.box,
+ stStroke: s.stroke, stPath: s.path,
+ stText: '' + s.text,
+ st: stLabel,
+ prop: prop || '연결 안 됨',
+ propStyle: '' + (prop ? '' : ''),
+ rowStyle: cols + ''
+ };
+ });
+ return { hasTask: false, starts, tabs, headStyle, rows };
+ }
+}

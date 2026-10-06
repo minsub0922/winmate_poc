@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>STP-S-HT SmartThings Pro 공간 시나리오 · 비즈니스 호텔</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SmartThings Pro</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SmartThings Pro · 비즈니스 IoT</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">QR 한 번이면 객실이 투숙객 취향대로 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">프론트/로비 → 객실 → 레스토랑 — 객실은 투숙객이 휴대폰으로, 공용 공간은 운영시간 루틴으로 움직입니다</div>
+
+  <!-- 객실 큰 사진 + 사진 위 번호 콜아웃 -->
+  <img src="/_blob/11573ada5b0ddf0663de21373794907a" alt="호텔 객실 — 천장형 시스템에어컨, QR이 표시된 객실 TV, SmartThings Pro 객실 웹 대시보드 화면" style="position: absolute; left: 64px; top: 160px; width: 760px; height: 324px; object-fit: cover; border-radius: 16px">
+  <sc-for list="{{callouts}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.dot}}">{{c.n}}</div>
+    <div style="position: absolute; {{c.chipPos}} height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; font-size: 11.5px; font-weight: 800; color: #121417; white-space: nowrap">{{c.label}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 76px; top: 456px; height: 18px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+  <div style="position: absolute; left: 610px; top: 456px; height: 18px; padding: 0 7px; border-radius: 999px; background: #ffffff; color: #3d4452; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">SmartThings Pro 객실 대시보드 · 카탈로그</div>
+
+  <!-- 오른쪽: 객실의 시간순 단계 -->
+  <div style="position: absolute; left: 848px; top: 160px; width: 368px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 10.5px; font-weight: 800; color: #3d4452; display: flex; align-items: center">고민</span>
+    <span style="font-size: 12px; color: #596170">투숙객이 원하는 대로 객실을 맞춤 세팅할 수 있을까요?</span>
+  </div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+    <div style="position: absolute; {{s.pos}} width: 368px; height: 72px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8">
+      <span style="position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 46px; top: 9px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 13.5px; font-weight: 800">{{s.title}}</span></div>
+      <div style="position: absolute; left: 46px; top: 33px; {{s.descW}} font-size: 12px; line-height: 1.5; color: #596170">{{s.desc}}</div>
+      <sc-if value="{{s.thumb}}" hint-placeholder-val="{{false}}">
+        <div style="position: absolute; left: 244px; top: 8px; width: 112px; height: 56px; border-radius: 6px; overflow: hidden; background: #121417">
+          <img src="/_blob/fbe2451cc1f7391ce9f48659e20c2839" alt="SmartThings Pro 객실 웹 대시보드 화면 (TV · 공기청정기 · 커튼 · 에어컨 · 조명)" style="position: absolute; left: -6px; top: -3px; width: 123px; height: 60px; object-fit: cover">
+        </div>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <!-- 아래: 공간 순서 레일 — 프론트/로비 → 객실 → 레스토랑 -->
+  <sc-for list="{{rail}}" as="r" hint-placeholder-count="3">
+    <div style="position: absolute; {{r.pos}} width: 284px; height: 148px; box-sizing: border-box; border-radius: 14px; {{r.frame}}">
+      <img src="{{r.src}}" alt="{{r.alt}}" style="position: absolute; left: 10px; top: 10px; width: 108px; height: 124px; object-fit: cover; object-position: {{r.op}}; border-radius: 8px">
+      <div style="position: absolute; left: 16px; top: 112px; height: 16px; padding: 0 5px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 사진</div>
+      <div style="position: absolute; left: 130px; top: 10px; width: 140px; display: flex; flex-direction: column; gap: 3px">
+        <span style="font-size: 12px; font-weight: 800; color: #1428a0; white-space: nowrap">{{r.space}}</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{r.time}}</span>
+        <span style="font-size: 12px; line-height: 1.5; color: #3d4452">{{r.desc}}</span>
+      </div>
+    </div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="4">
+    <div style="{{a.style}}"></div>
+  </sc-for>
+
+  <!-- 오픈 API -->
+  <div style="position: absolute; left: 984px; top: 500px; width: 232px; height: 148px; box-sizing: border-box; border-radius: 14px; background: #eaeefb">
+    <div style="position: absolute; left: 16px; top: 14px; font-size: 14px; font-weight: 800; color: #1428a0; white-space: nowrap">호텔 앱 · 시스템과 연동</div>
+    <div style="position: absolute; left: 16px; top: 40px; width: 200px; font-size: 12px; line-height: 1.5; color: #3d4452">호텔 전용 앱 · [PMS] 등 3rd party 플랫폼에서 같은 객실 기기를 제어</div>
+    <div style="position: absolute; left: 16px; top: 100px; display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; font-weight: 700; white-space: nowrap">
+      <span style="color: #3d4452">SmartThings 오픈 API</span>
+      <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">STP Enterprise API</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 비즈니스 호텔 · 객실 경험 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 사진 위 콜아웃 — 원본(1600×683)을 0.475배로 (64,160)에 배치한 좌표
+    const C = [
+      [1, 700, 289, 'TV · QR코드', 730, 291],
+      [2, 420, 343, '웹 대시보드', 450, 345],
+      [3, 562, 189, '시스템에어컨 · 무풍', 592, 191],
+      [4, 150, 336, '조명 · 블라인드', 180, 338]
+    ];
+    const callouts = C.map(([n, x, y, label, cx, cy]) => ({
+      n, label,
+      dot: A + box(x, y, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+      chipPos: 'left: ' + px(cx) + 'top: ' + px(cy)
+    }));
+
+    // 객실 단계 — 체크인 날 → 밤 → 다음 날 아침
+    const S = [
+      ['15:20', 'QR코드 스캔', '휴대폰으로 스캔 → 숙박 기간 동안 웹 대시보드 사용', true],
+      ['15:21', '객실 기기 제어', 'TV · 공기청정기 · 커튼 · 에어컨 · 조명을 투숙객 휴대폰 화면에서', false],
+      ['23:00', '취침 — 무풍모드', '블라인드가 닫히고 시스템에어컨은 무풍모드로 · SmartThings 객실 자동화', false],
+      ['07:00', '아침 기상', '블라인드가 열리고 조명 · 에어컨이 켜집니다 · SmartThings 객실 자동화', false]
+    ];
+    const steps = S.map(([time, title, desc, thumb], i) => ({
+      n: i + 1, time, title, desc, thumb,
+      descW: 'width: ' + px(thumb ? 188 : 310),
+      pos: 'left: 848px; top: ' + px(186 + i * 76)
+    }));
+
+    // 공간 레일
+    const R = [
+      ['프론트 / 로비', '15:00', '체크인 · 운영팀은 객실 상태와 공기질을 대시보드 한 화면에서', '/_blob/70c2af7dd8001ce4a8db53f71003ae34', '프론트데스크 · 로비 — 벽면 LED 사이니지 (예시 사진)', '40% 50%', false],
+      ['객실', '15:20 → 07:00', 'QR 스캔부터 취침 · 기상까지 — 위 사진 1–4', '/_blob/025a0a090d09a9c62536b558c29698c3', '객실 — 침대 옆 공기청정기 (예시 사진)', '40% 50%', true],
+      ['레스토랑 · 피트니스', '06:30 · 22:00', '운영시간 루틴 — 오픈 전 ON, 마감 후 자동 OFF (SmartThings 자동화 루틴)', '/_blob/94000251b94c4ce1bf67eebd306e7a35', '레스토랑 — 벽면 비즈니스 TV 메뉴 디스플레이 (예시 사진)', '50% 50%', false]
+    ];
+    const rail = R.map(([space, time, desc, src, alt, op, focus], i) => ({
+      space, time, desc, src, alt, op,
+      pos: 'left: ' + px(64 + i * 308) + 'top: 500px;',
+      frame: focus ? 'border: 2px solid #1428a0; background: #ffffff;' : 'border: 1px solid #e2e5ea; background: #ffffff;'
+    }));
+    // 레일 사이 화살표 (카드 간격 24px 가운데)
+    const arrows = [];
+    [348, 656].forEach((x) => {
+      arrows.push({ style: A + box(x + 5, 573, 9, 2) + 'background: #1428a0;' });
+      arrows.push({ style: A + 'left: ' + px(x + 13) + 'top: 569px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1428a0;' });
+    });
+    arrows.push({ style: A + box(969, 573, 6, 2) + 'background: #b8c3ee;' });
+
+    return { callouts, steps, rail, arrows };
+  }
+}
+</script>
+</body>
+</html>

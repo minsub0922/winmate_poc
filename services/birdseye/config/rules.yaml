@@ -1,0 +1,135 @@
+# 공간 조감도(BE) 배치 엔진 · 검증 파라미터 — 08-birdseye §10.3
+# 모두 draft(사람 승인 전). KB placement_rule 이 active 이고 params 가 숫자면 그 값이 우선한다(engine.rules()).
+engine_version: be-engine/1
+
+grid_m: 0.1                 # 점유 격자 · 좌표 반올림(0.01 m) · 각도 반올림(0.1°)
+
+walkway:
+  rule_id: be_walkway_min_clear
+  expr: "bottleneck_width_m < {min_m}"
+  min_m: 1.2                # 보드 「권장 1.2 m 이상」
+  person_half_m: 0.25       # 지나갈 수 있는 최소 폭의 반(경로 탐색)
+  param_status: draft
+
+viewing_angle:
+  rule_id: pr_warn_viewing_angle
+  expr: "abs(viewer_angle_deg) > {max_angle_deg}"
+  max_angle_deg: 45
+  param_status: draft
+
+viewing_distance:
+  rule_id: pr_signage_size_by_distance
+  expr: "diagonal_inch < viewing_distance_m * {inch_per_m_min} or diagonal_inch > viewing_distance_m * {inch_per_m_max}"
+  inch_per_m_min: 15.75
+  inch_per_m_max: 26.25
+  param_status: draft
+
+seat_distance_factor: 1.5   # 좌석 시청 거리 = ceil_0.5(대각 m × 1.5) — 146" → 6.0 m
+min_view_factor: 1.5        # 크기 선택: 최소 시청 거리 = 대각 m × 1.5
+
+power:
+  rule_id: pr_warn_power_distance
+  expr: "distance_to_power_m > {max_m}"
+  max_m: 3.0
+  memo_text: 바닥 배선 필요
+  param_status: draft
+
+mount_height:
+  rule_id: pr_warn_mount_height
+  expr: "bottom_edge_height_m < {min_m} or bottom_edge_height_m > {max_m}"
+  min_m: 0.8
+  max_m: 2.6
+  param_status: draft
+  show: false               # 보드에 없어 화면에 보이지 않게(§11-2)
+
+menuboard_qty:
+  rule_id: pr_menuboard_qty_by_counter
+  expr: "qty = ceil(counter_width_m / {panel_width_m})"
+
+door_clear_depth_m: 1.2      # 문 앞 여유 = 문 폭 × 1.2 m
+wall_side_margin_m: 0.5      # 크기 선택 — 앵커 벽 양옆 여유
+window_standoff_m: 0.4       # 창 사이니지 — 창 안쪽 면에서 화면 중심까지
+group_gap_m: 0.1             # 창 사이니지 등간격 = 패널 폭 + 0.1 m
+seat_pitch_m: 0.6            # 좌석 간격
+row_pitch_m: 0.9             # 열 간격
+near_gap_m: 1.0              # near:<target> — 대상과 떨어진 거리
+window_area_gap_m: 3.2       # 창 쪽 빈 영역(라운지 · 테이블) — 창 안쪽 면에서 가구 앞 모서리까지
+side_gap_m: 0.6              # entrance — 문 가장자리와 데스크 사이
+wall_item_gap_m: 0.3         # 같은 벽의 벽걸이 제품 사이 여유
+wall_near_block_m: 1.0       # 벽에서 이 거리 안의 기둥 · 코어는 그 벽 구간을 막는다
+entrance_depth_m: 2.0        # entrance — 주출입구에서 안쪽 거리
+collision:
+  step_m: 0.1
+  max_m: 3.0
+cluster_radius_m: 2.5        # 존 군집 근접 병합
+
+questions:
+  dim_mismatch_ratio: 0.01   # |표기−환산|/표기 > 1% → 치수 질문
+  door_confidence_min: 0.6   # 문 종류 신뢰도 < 0.6 → 질문
+  default_door: passable     # 미응답 문 = 출입 가능한 문(앞 1.2 m 비움)
+  default_dim: annotated     # 미응답 치수 = 표기값
+
+# 공간 유형 칩 → KB 공간 코드 · 기본값(estimated)
+space_chips:
+  store_lobby:      {label: 매장 · 로비,    space_types: [sales_floor, lobby],      ceiling_m: 3.0, area_pyeong: 30, space_label: 매장 로비}
+  meeting_office:   {label: 회의실 · 오피스, space_types: [meeting_room, open_office], ceiling_m: 2.7, area_pyeong: 15, space_label: 회의실}
+  classroom:        {label: 강의실,         space_types: [classroom],               ceiling_m: 3.0, area_pyeong: 20, space_label: 강의실}
+  hospital_waiting: {label: 병원 대기실,     space_types: [waiting_area],            ceiling_m: 2.7, area_pyeong: 25, space_label: 병원 대기실}
+  hotel_room:       {label: 호텔 객실,       space_types: [guest_room],              ceiling_m: 2.6, area_pyeong: 10, space_label: 호텔 객실}
+  control_room:     {label: 관제실,         space_types: [control_room],            ceiling_m: 3.2, area_pyeong: 40, space_label: 관제실}
+
+rect_aspect: 1.5             # 도면 · 사진이 없으면 가로 : 세로 = 1.5 : 1
+multi_room_wall_m: 0.2       # 여러 줄 = 여러 공간, 사이 벽 0.2 m · 연결 문 1개
+ceiling_range_m: [1.8, 20.0]
+
+photo_quality:
+  dark_mean: 0.22            # 휘도 평균 < 0.22 → 어두움
+  bright_thr: 0.85           # 밝은 영역 = 휘도 > 0.85
+  bright_ratio: 0.25         # 밝은 영역 비율 > 25% 이고
+  backlit_rest_mean: 0.30    # 그 밖 평균 < 0.30 → 역광
+  blur_var: 50               # 라플라시안 분산 < 50 → 흐림
+
+upload:
+  plan_mimes: [application/pdf, image/png, image/jpeg]
+  photo_mimes: [image/jpeg, image/png, image/heic, image/heif]
+  max_mb: 20
+  max_photos: 12
+  token_minutes: 30
+
+auto_extra_cuts:
+  enabled: true              # AUTO_EXTRA_CUTS(.env 가 우선)
+  max: 2
+  night_words: [저녁, 야간, 밤, 외부 노출, 외부에서]
+  before_words: [전후, 도입 전, 비교]
+
+render:
+  aspect: "16:9"
+  target: uhd
+  resolution: "3840×2160"
+  draft_w: 1024
+  draft_h: 576
+  eta_ema_alpha: 0.3
+  default_stage_s: {structure: 1, products: 1, furniture: 2, render: 45, qc: 3}
+
+tones:
+  warm_wood:    {label: 웜 우드,    swatch: "#d9c3a5", floor: "#d9c3a5", wall: "#efe6da", accent: "#b48b5e", material_ko: 따뜻한 원목 마감과 베이지 톤 벽}
+  modern_white: {label: 모던 화이트, swatch: "#eeeeee", floor: "#e9e9e9", wall: "#f7f7f7", accent: "#c9c9c9", material_ko: 밝은 화이트 마감과 매끈한 석재 바닥}
+  dark_metal:   {label: 다크 메탈,   swatch: "#2b2f36", floor: "#3a3f47", wall: "#4b5059", accent: "#2b2f36", material_ko: 어두운 금속 마감과 짙은 회색 바닥}
+
+lights:
+  day:     {label: 주간, desc: 주간 자연광}
+  evening: {label: 저녁, desc: 저녁 노을빛 실내 조명}
+  night:   {label: 야간, desc: 야간 실내 조명}
+
+views:
+  aerial45:      {label: 조감 45°,  phrase: 45° 조감}
+  entrance:      {label: 입구 시점, phrase: 입구}
+  product_front: {label: "{target} 정면", phrase: "{target} 정면"}
+  top:           {label: 탑뷰,     phrase: 탑뷰}
+  custom:        {label: 사용자 시점, phrase: 사용자 지정}
+
+zones:
+  name_max: 14
+  text_max: 60
+  callout_ratio: 0.03
+  callout_color: "#1428a0"

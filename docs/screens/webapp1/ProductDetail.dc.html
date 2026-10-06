@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>제품 상세 보기 컴포넌트</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button{font-family:inherit}
+</style>
+</helmet>
+<div role="dialog" aria-label="QM55C 제품 상세" style="width: 1200px; height: 828px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 24px 64px rgba(18,20,23,0.28); display: flex; flex-direction: column; overflow: hidden; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+
+  <!-- 머리 -->
+  <header style="height: 64px; flex-shrink: 0; box-sizing: border-box; padding: 0 20px 0 24px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 14px">
+    <a href="HomeProduct.dc.html" style="height: 34px; padding: 0 12px 0 8px; border-radius: 9px; border: 1px solid #e2e5ea; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>제품 탐색</a>
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #596170; white-space: nowrap; flex-grow: 1; min-width: 0">
+      <span>디스플레이</span><span>›</span><span>스마트 사이니지</span><span>›</span><span>QMC Series</span><span>›</span><span style="color: #121417; font-weight: 700">QM55C</span>
+    </div>
+    <a href="https://www.samsung.com/sec/business/smart-signage/qmc-series/LH55QMCEBGCXKR/" target="_blank" rel="noopener" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap">samsung.com 제품 페이지<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6 M20 4l-9 9 M18 14v6H4V6h6"/></svg></a>
+    <a href="HomeProduct.dc.html" aria-label="상세 닫기" style="width: 34px; height: 34px; border-radius: 9px; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+  </header>
+
+  <div style="flex-grow: 1; min-height: 0; display: flex">
+
+    <!-- 왼쪽: 대표 이미지 · 정체 -->
+    <aside style="width: 392px; flex-shrink: 0; box-sizing: border-box; padding: 20px 24px; border-right: 1px solid #e2e5ea; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="position: relative; width: 344px; height: 229px; flex-shrink: 0; border-radius: 12px; background: #f5f6f8; overflow: hidden">
+        <img src="/_blob/e61ddf0971f25799b7b4da96ba076716" alt="QM55C 정면 — 삼성전자 공식 제품 이미지" style="width: 344px; height: 229px; object-fit: contain; display: block">
+        <span style="position: absolute; left: 8px; bottom: 8px; height: 20px; padding: 0 7px; border-radius: 5px; background: #ffffff; border: 1px solid #c9d0e6; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">1 / 8 · 정면 · 삼성 공식</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; flex-shrink: 0">
+        <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="8">
+          <a href="HomeProductImages.dc.html" aria-label="{{t.aria}}" style="{{t.style}}"><img src="{{t.src}}" alt="{{t.label}}" style="width: 100%; height: 100%; object-fit: contain; display: block"></a>
+        </sc-for>
+      </div>
+      <a href="HomeProductImages.dc.html" style="font-size: 11.5px; color: #596170; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5 M12 8h.01"/></svg>이미지 출처 · samsung.com 제품 페이지 · 2026-10-02 수집</a>
+      <div style="height: 1px; background: #e2e5ea; flex-shrink: 0"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <div style="display: flex; align-items: baseline; gap: 10px"><span style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">QM55C</span><span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; color: #596170">LH55QMCEBGCXKR</span></div>
+        <span style="font-size: 14.5px; font-weight: 600">단독형 UHD M 시리즈 138.7 cm (55형)</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{keys}}" as="k" hint-placeholder-count="5">
+            <span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{k}}</span>
+          </sc-for>
+        </div>
+        <span style="font-size: 12px; color: #596170">출시 2024년 9월 · 제조국 베트남 · 동작 0~40 ℃</span>
+      </div>
+      <div style="flex-shrink: 0; box-sizing: border-box; padding: 10px 12px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 10px">
+        <div style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 12.5px; font-weight: 700">CMS — MagicINFO · VXT 지원</span>
+          <span style="font-size: 11.5px; color: #596170">CMS는 별도 구매 · 공식 페이지 기준</span>
+        </div>
+        <a href="HomeSolutionDetail.dc.html" style="font-size: 12px; font-weight: 700; white-space: nowrap">MagicINFO 상세 →</a>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; gap: 8px; flex-shrink: 0">
+        <a href="SP1.dc.html" style="flex-grow: 1; height: 44px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px">Spec 시트 만들기</a>
+        <button disabled title="진행 중인 작업이 없습니다" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e9ebef; background: #f5f6f8; color: #9aa1ad; font-size: 13px; font-weight: 600; cursor: not-allowed">현재 작업에 추가</button>
+      </div>
+    </aside>
+
+    <!-- 오른쪽: 탭 -->
+    <section style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column">
+      <nav role="tablist" aria-label="상세 항목" style="height: 52px; flex-shrink: 0; box-sizing: border-box; padding: 0 28px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: stretch; gap: 4px">
+        <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="3">
+          <a role="tab" aria-selected="{{tb.on}}" href="{{tb.href}}" style="{{tb.style}}">{{tb.label}}<span style="font-family: Manrope, sans-serif; font-weight: 800; margin-left: 5px">{{tb.n}}</span></a>
+        </sc-for>
+        <span style="flex-grow: 1"></span>
+        <span style="align-self: center; font-size: 11.5px; color: #8a91a0; white-space: nowrap">공식 정보 확인 2026-10-02</span>
+      </nav>
+
+      <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 16px 28px 18px 28px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+
+        <!-- 스펙 · 자료 -->
+        <sc-if value="{{isSpec}}" hint-placeholder-val="{{true}}">
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span style="font-size: 14px; font-weight: 700">핵심 스펙</span>
+            <span style="font-size: 12px; color: #596170">공식 스펙 표에서 제안에 자주 쓰는 항목 · 값은 원문 그대로</span>
+            <span style="flex-grow: 1"></span>
+            <a href="https://www.samsung.com/sec/business/smart-signage/qmc-series/LH55QMCEBGCXKR/" target="_blank" rel="noopener" style="height: 24px; padding: 0 8px; border-radius: 6px; background: #f5f6f8; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">출처 samsung.com 스펙 ↗</a>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; flex-shrink: 0">
+            <sc-for list="{{specCols}}" as="col" hint-placeholder-count="2">
+              <div style="display: flex; flex-direction: column; min-width: 0">
+                <sc-for list="{{col.groups}}" as="g" hint-placeholder-count="3">
+                  <div style="height: 30px; box-sizing: border-box; display: flex; align-items: flex-end; padding-bottom: 4px; font-size: 12px; font-weight: 700; color: #1428a0; border-bottom: 1px solid #e2e5ea">{{g.name}}</div>
+                  <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="4">
+                    <div style="display: flex; align-items: center; height: 23px; border-bottom: 1px solid #f0f2f5; font-size: 12.5px; min-width: 0">
+                      <span style="width: 112px; flex-shrink: 0; color: #596170">{{r.k}}</span>
+                      <span style="flex-grow: 1; min-width: 0; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.v}}</span>
+                    </div>
+                  </sc-for>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex-shrink: 0; display: flex; flex-direction: column">
+            <div style="height: 28px; display: flex; align-items: flex-end; gap: 8px; padding-bottom: 4px; border-bottom: 1px solid #e2e5ea">
+              <span style="font-size: 12px; font-weight: 700; color: #1428a0">공식 자료 6</span>
+              <span style="font-size: 11.5px; color: #8a91a0">제품 페이지 '매뉴얼' 기준</span>
+            </div>
+            <sc-for list="{{docs}}" as="d" hint-placeholder-count="4">
+              <div style="display: grid; grid-template-columns: minmax(0, 1fr) 96px 64px 84px 84px 92px; align-items: center; height: 27px; border-bottom: 1px solid #f0f2f5; font-size: 12px; column-gap: 8px">
+                <span style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}}</span>
+                <span style="color: #596170; white-space: nowrap">{{d.ver}}</span>
+                <span style="color: #596170; white-space: nowrap">{{d.lang}}</span>
+                <span style="color: #596170; white-space: nowrap; text-align: right">{{d.size}}</span>
+                <span style="color: #596170; white-space: nowrap">{{d.date}}</span>
+                <a href="{{d.href}}" target="_blank" rel="noopener" style="font-weight: 600; white-space: nowrap; text-align: right">{{d.cta}} ↗</a>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <!-- 이미지 -->
+        <sc-if value="{{isImages}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span style="font-size: 14px; font-weight: 700">이미지 8</span>
+            <span style="font-size: 12px; color: #596170">모두 삼성전자 공식 제품 이미지 · 원본은 공식 페이지에 그대로 있습니다</span>
+            <span style="flex-grow: 1"></span>
+            <button style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600">8장 대화에 첨부</button>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; flex-shrink: 0">
+            <sc-for list="{{gallery}}" as="g" hint-placeholder-count="8">
+              <button aria-label="{{g.aria}}" aria-pressed="{{g.focusStr}}" style="{{g.style}}">
+                <span style="display: block; height: 108px; border-radius: 7px; background: #f5f6f8; overflow: hidden"><img src="{{g.src}}" alt="{{g.label}}" style="width: 100%; height: 108px; object-fit: contain; display: block"></span>
+                <span style="font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{g.label}}</span>
+                <span style="font-size: 11px; color: #596170; white-space: nowrap">{{g.meta}}</span>
+              </button>
+            </sc-for>
+          </div>
+          <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+            <div style="display: flex; align-items: center; gap: 8px">
+              <span style="font-size: 11.5px; font-weight: 700; color: #596170">선택한 이미지</span>
+              <span style="font-size: 13px; font-weight: 700">{{fm.label}}</span>
+              <span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">삼성 공식 · 제품 이미지</span>
+              <span style="flex-grow: 1"></span>
+              <a href="{{fm.fileHref}}" target="_blank" rel="noopener" style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #e2e5ea; font-size: 12px; font-weight: 600; display: flex; align-items: center">원본 열기 ↗</a>
+              <button disabled title="진행 중인 작업이 없습니다" style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid #e9ebef; background: #f5f6f8; color: #9aa1ad; font-size: 12px; font-weight: 600; cursor: not-allowed">작업에 추가</button>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 24px">
+              <sc-for list="{{fm.rows}}" as="r" hint-placeholder-count="10">
+                <div style="display: flex; gap: 10px; min-width: 0; font-size: 12px; line-height: 1.45">
+                  <span style="width: 74px; flex-shrink: 0; color: #8a91a0">{{r.k}}</span>
+                  <sc-if value="{{r.isLink}}" hint-placeholder-val="{{false}}">
+                    <a href="{{r.href}}" target="_blank" rel="noopener" style="min-width: 0; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.v}} ↗</a>
+                  </sc-if>
+                  <sc-if value="{{r.isText}}" hint-placeholder-val="{{true}}">
+                    <span style="min-width: 0; color: #121417">{{r.v}}</span>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- 활용 사례 -->
+        <sc-if value="{{isCases}}" hint-placeholder-val="{{false}}">
+          <div style="flex-shrink: 0; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; background: #f5f6f8; display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 13.5px; font-weight: 700">QM55C · QMC 시리즈가 본문에 나오는 도입사례는 아직 없습니다</span>
+            <span style="font-size: 12px; color: #3d4452; line-height: 1.5">삼성 고객 도입사례 198건(본문 있는 사례, 2026-10-02 확인)을 모델 · 시리즈명으로 찾았습니다. 같은 용도(매장 메뉴보드)로 쓰인 사례 3건을 대신 보여 주고, 제안서에는 '유사 용도 사례'로 표기됩니다.</span>
+            <div style="display: flex; gap: 6px">
+              <sc-for list="{{matchChips}}" as="m" hint-placeholder-count="3">
+                <span style="{{m.style}}">{{m.label}}<span style="font-family: Manrope, sans-serif; font-weight: 800; margin-left: 4px">{{m.n}}</span></span>
+              </sc-for>
+            </div>
+          </div>
+          <sc-for list="{{pcases}}" as="c" hint-placeholder-count="3">
+            <div style="flex-shrink: 0; display: flex; gap: 14px; box-sizing: border-box; padding: 10px; border: 1px solid #e2e5ea; border-radius: 12px">
+              <span style="position: relative; display: block; width: 196px; height: 124px; flex-shrink: 0; border-radius: 8px; overflow: hidden; background: #f5f6f8">
+                <img src="{{c.img}}" alt="{{c.alt}}" style="{{c.imgStyle}}">
+                <span style="position: absolute; left: 6px; bottom: 6px; height: 18px; padding: 0 6px; border-radius: 4px; background: rgba(18,20,23,0.78); color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">도입사례 사진</span>
+              </span>
+              <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px">
+                <div style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                  <span style="height: 20px; padding: 0 7px; border-radius: 5px; border: 1px dashed #8a91a0; color: #3d4452; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">용도 일치 · 매장 메뉴보드</span>
+                  <span style="font-size: 13.5px; font-weight: 700; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.title}}</span>
+                  <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{c.date}}</span>
+                </div>
+                <span style="font-size: 12px; color: #3d4452; line-height: 1.5; height: 36px; overflow: hidden">{{c.desc}}</span>
+                <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">원문에 나온 제품 · {{c.used}}</span>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: auto; min-width: 0">
+                  <a href="{{c.url}}" target="_blank" rel="noopener" style="flex-grow: 1; min-width: 0; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.urlText}}</a>
+                  <a href="{{c.url}}" target="_blank" rel="noopener" style="height: 26px; padding: 0 9px; border-radius: 6px; border: 1px solid #e2e5ea; color: #121417; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">원문 열기 ↗</a>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+          <span style="font-size: 11.5px; color: #8a91a0; flex-shrink: 0">사례 내용 · 사진 출처: 삼성전자 고객 도입사례 (samsung.com) · 요약은 원문을 줄여 쓴 것</span>
+        </sc-if>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["spec","images","cases"],"default":"spec"},"$preview":{"width":1200,"height":828}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const tab = this.props.tab ?? 'spec';
+    const PAGE = 'https://www.samsung.com/sec/business/smart-signage/qmc-series/LH55QMCEBGCXKR/';
+    const G = 'https://images.samsung.com/kdp/goods/2023/08/29/';
+    // 공식 제품 이미지 8 — [이름, 저장 자산, 원본 파일, 원본(가로, 세로, 형식, KB), 저장본(가로, 세로, KB)]
+    const IM = [
+      ['정면', '/_blob/e61ddf0971f25799b7b4da96ba076716', 'cc897d99-d2e6-48e0-90eb-d4fb8c532e6e', [900, 600, 'PNG', 723], [900, 600, 129]],
+      ['후면', '/_blob/969f7e49f2102902cd8ef9fab7000b48', '144f0a37-a05b-45df-88cf-4bece13ae705', [1920, 1280, 'PNG', 1529], [960, 640, 57]],
+      ['옆면', '/_blob/545577861b25acbc6387cbf9f406d7cc', '1542379b-ea48-4365-b7de-3732de9495e0', [1920, 1280, 'PNG', 80], [960, 640, 7]],
+      ['우측 45도', '/_blob/dccc40ee2c04ffa21a5e989648979abc', 'e0dddc7d-0e49-45ff-9fd3-41328befe913', [1920, 1280, 'PNG', 3092], [960, 640, 137]],
+      ['우측 70도', '/_blob/cab29b9433a5ff3a3baaa1c13de8d861', 'a60e28a6-c5ce-415c-9e37-3d71c01bcdfb', [1920, 1280, 'PNG', 1136], [960, 640, 58]],
+      ['후면 포트 정면', '/_blob/3256763f62b4aab6a3fa4494ce53e92d', 'd3b1bb89-0e16-4c03-b694-92e48da509d3', [1920, 1280, 'PNG', 2005], [960, 640, 65]],
+      ['후면 포트 측면', '/_blob/e60f6ef99a35461db295663750529e69', '2128e906-5cd5-4f39-9158-36625f4f3b58', [1920, 1280, 'PNG', 2050], [960, 640, 67]],
+      ['후면 하단 측면', '/_blob/89d97dbf4a02b7db48ca185b3dbcb3d9', 'df48664d-5b94-4709-81be-ef02bf542a94', [1920, 1280, 'PNG', 1798], [960, 640, 61]]
+    ];
+    const FOCUS = 0;
+    const kb = (n) => n.toLocaleString('en-US') + ' KB';
+    const thumbs = IM.map(([label, src], i) => ({
+      label, src, aria: label + ' 이미지 보기',
+      style: 'display: block; height: 54px; box-sizing: border-box; border-radius: 7px; background: #f5f6f8; overflow: hidden;' + (i === FOCUS ? ' border: 2px solid #1428a0;' : ' border: 1px solid #e2e5ea;')
+    }));
+    const gallery = IM.map(([label, src, , o], i) => ({
+      label, src, focusStr: String(i === FOCUS), aria: label + ' — 원본 ' + o[0] + '×' + o[1] + ' ' + o[2],
+      meta: o[0] + ' × ' + o[1] + ' ' + o[2] + ' · ' + kb(o[3]),
+      style: 'box-sizing: border-box; border-radius: 10px; padding: 6px; display: flex; flex-direction: column; gap: 4px; font-family: inherit; text-align: left; background: #ffffff;' + (i === FOCUS ? ' border: 2px solid #1428a0;' : ' border: 2px solid #eef0f3;')
+    }));
+    const f = IM[FOCUS];
+    const fm = {
+      label: f[0], fileHref: G + f[2] + '.png',
+      rows: [
+        ['이미지명', '단독형 UHD M 시리즈 ' + f[0] + ' (원문 대체 텍스트)', ''],
+        ['출처 유형', '삼성전자 공식 · 제품 갤러리', ''],
+        ['출처 페이지', 'samsung.com · LH55QMCEBGCXKR', PAGE],
+        ['원본 파일', 'images.samsung.com/kdp/goods/2023/08/29/' + f[2].slice(0, 8) + '….png', G + f[2] + '.png'],
+        ['원본', f[3][0] + ' × ' + f[3][1] + ' · ' + f[3][2] + ' · ' + kb(f[3][3]), ''],
+        ['저장본', f[4][0] + ' × ' + f[4][1] + ' · JPG · ' + kb(f[4][2]), ''],
+        ['원본 등록', '2023-08-29 (파일 경로 기준)', ''],
+        ['수집', '2026-10-02 · 공식 페이지에서 수집', ''],
+        ['사용 조건', '삼성전자 저작물 · 대외 사용 범위 확인 필요', ''],
+        ['사용 이력', 'Winmate 제안서 0건', '']
+      ].map(([k, v, href]) => ({ k, v, href, isLink: !!href, isText: !href }))
+    };
+
+    // 스펙 — samsung.com 제품 스펙 표 원문 값
+    const S = [
+      [['디스플레이', [['대각선', '138.7 cm (55형)'], ['패널', 'VA'], ['해상도', '3,840 × 2,160'], ['픽셀 피치', '0.315 × 0.315 mm'], ['밝기 (Typ)', '500 nit'], ['명암비', '4,000:1'], ['시야각', '178 / 178'], ['응답속도', '8 ms'], ['헤이즈', '25 %'], ['사용 시간', '24/7']]],
+       ['전원', [['정격 입력', 'AC 100–240 V 50/60 Hz'], ['소비전력', '154 W · 대기 0.5 W']]],
+       ['크기 · 무게', [['제품 크기', '1237.9 × 708.8 × 28.5 mm'], ['무게', '15.7 kg · 포장 19.9 kg'], ['VESA', '200 × 200 mm'], ['베젤', '11.5 mm (균일)']]]],
+      [['연결성', [['HDMI', '입력 3 · 버전 2 · HDCP 2.2'], ['DP', '입력 1 · 버전 1.2'], ['USB', '2'], ['RS232', '입력 · 출력 있음'], ['네트워크', 'RJ45 · Wi-Fi · Bluetooth'], ['오디오', '출력 Stereo Mini Jack']]],
+       ['운영 · 환경', [['운영체제', 'Tizen 7.0'], ['저장 공간', '16 GB'], ['동작 온도', '0 ~ 40 ℃'], ['동작 습도', '10 ~ 80 % (비응결)']]],
+       ['인증 · 액세서리', [['KC 인증', 'R-R-SEC-LH55QMCE'], ['안전 규격', '60950-1, 62368-1'], ['EMC', 'Class B'], ['마운트', 'WMN-B50SC'], ['스탠드', 'STN-L4355C']]]]
+    ];
+    const specCols = S.map((groups) => ({ groups: groups.map(([name, rows]) => ({ name, rows: rows.map(([k, v]) => ({ k, v })) })) }));
+    const DC = 'https://downloadcenter.samsung.com/content/';
+    const docs = [
+      ['사용자 매뉴얼', 'ver.2609180', '한국어', '3.11 MB', '2026-09-20', DC + 'UM/202609/20260920040952001/BN81-24537G-14_WEB_QBC%20QBC-N%20QBC-T%20QHC%20QMC%20SHC_KR_KOR_260918.0.pdf', 'PDF'],
+      ['Quick Setup Guide', 'ver.2306120', '한국어', '3.07 MB', '2023-08-27', DC + 'EM/202308/20230827033145001/BN68-16544G-01_QSG_QMC_KR_KOR_230612.0.pdf', 'PDF'],
+      ['펌웨어 Upgrade File (USB · BEM)', 'ver.1210.9', '다국어', '1,344.9 MB', '2026-09-20', PAGE, '페이지'],
+      ['소프트웨어 MDC · Color Expert Pro PC', 'ver.1.0 · 1150', '영어', '15.39 · 37.56 MB', '2024', PAGE, '페이지']
+    ].map(([name, ver, lang, size, date, href, cta]) => ({ name, ver, lang, size, date, href, cta }));
+
+    // 활용 사례 — 모델 · 시리즈 일치가 없어 용도 일치만
+    const CS = 'https://www.samsung.com/sec/business/insights/case-study/';
+    const pcases = [
+      ['맥도날드 고양삼송DT점 – 삼성 스마트 사이니지', '2020-11-12', '매장 안쪽 메뉴보드는 세부 메뉴 정보를 보여 주고, 전면 양면형 사이니지가 밖의 고객을 맞습니다. 소재 교체는 MagicINFO Player로 원격 처리.', '실외용 OMN-D 시리즈(양면형) · MagicINFO Player', 'reference-MCDONALDSsamsong', '/_blob/1735a54b56a764dc68453f56212cd99e', '매장 내부 메뉴보드', '50% 45%'],
+      ['커피빈 학동역 DT점, 서초역 1번출구점 – 삼성 스마트 사이니지', '2018-03-07', '서초역점은 카운터에 슬림 베젤 메뉴보드를 원목 인테리어에 맞춰 걸었고, 학동 DT점은 실외용 사이니지를 세로로 돌려 메뉴판으로 씁니다.', '실외용 OMD-K 시리즈 · 메뉴보드 사이니지 · 시스템에어컨 360', 'reference-coffeebean', '/_blob/9af0bd3a06cfd81eaca31ca17f506ceb', '서초역점 카운터 메뉴보드', '30% 50%'],
+      ['밀키프레소 - 삼성 VXT 솔루션 + 스마트 사이니지', '2026-02-06', '카운터 상단 메뉴보드 콘텐츠를 본사가 VXT로 관리하고, 시간대별 고객층에 맞춰 재생 목록을 바꿔 프로모션을 돌립니다.', '스마트 사이니지 · Samsung VXT', 'milky_presso', '/_blob/c51f3663782a0286579b4060f6707f11', '매장 카운터 상단 사이니지', '50% 6%']
+    ].map(([title, date, desc, used, slug, img, alt, pos]) => ({
+      title, date, desc, used, img, alt, url: CS + slug + '/', urlText: 'samsung.com/sec/business/insights/case-study/' + slug,
+      imgStyle: 'width: 196px; height: 124px; object-fit: cover; object-position: ' + pos + '; display: block;'
+    }));
+    const chip = 'height: 24px; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap;';
+    const matchChips = [['모델 일치', 0, false], ['시리즈 일치', 0, false], ['용도 일치', 3, true]].map(([label, n, on]) => ({
+      label, n, style: chip + (on ? ' background: #121417; color: #ffffff;' : ' background: #ffffff; border: 1px solid #e2e5ea; color: #596170;')
+    }));
+
+    const T = [['spec', '스펙 · 자료', '', 'HomeProductDetail.dc.html'], ['images', '이미지', '8', 'HomeProductImages.dc.html'], ['cases', '활용 사례', '3', 'HomeProductCases.dc.html']];
+    const tabs = T.map(([key, label, n, href]) => ({
+      label, n, href, on: String(key === tab),
+      style: 'display: flex; align-items: center; padding: 0 14px; font-size: 13.5px; white-space: nowrap; border-bottom: 2px solid ' + (key === tab ? '#1428a0; color: #1428a0; font-weight: 700;' : 'transparent; color: #596170; font-weight: 500;')
+    }));
+    return {
+      tabs, isSpec: tab === 'spec', isImages: tab === 'images', isCases: tab === 'cases',
+      thumbs, keys: ['4K UHD', '500 nit', '24/7', '두께 28.5 mm', 'Tizen 7.0'],
+      specCols, docs, gallery, fm, pcases, matchChips
+    };
+  }
+}
+</script>
+</body>
+</html>

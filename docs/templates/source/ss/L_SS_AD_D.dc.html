@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-AD-D 옥외 · 미디어 광고 · 공간 시나리오 · 지하철 환승통로</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">지하철 환승통로 · 단계별 도입</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">환승통로 기둥, 한 역에서 검증하고 노선 전체로 넓힙니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">④ 지하철 환승통로 기둥 — 시범 → 확대 → 전 매체 통합, 단계마다 운영 지표를 확인하고 넘어갑니다</div>
+
+  <!-- ============ 위 띠: 통로 그림 (4열) ============ -->
+  <sc-for list="{{art}}" as="g" hint-placeholder-count="30">
+    <div style="{{g.s}}">{{g.t}}</div>
+  </sc-for>
+
+  <!-- ============ 위 띠: 왜 단계적으로 (8열) ============ -->
+  <div style="position: absolute; left: 456px; top: 158px; height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="width: 22px; height: 22px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">4</span>
+    <span style="font-size: 17px; font-weight: 800; letter-spacing: -0.01em">지하철 환승통로 기둥</span>
+    <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; border: 1px solid #d5d9e0; font-size: 11px; color: #596170; display: flex; align-items: center">환승객 · 송출 관제실 · 현장 유지보수</span>
+  </div>
+  <div style="position: absolute; left: 456px; top: 194px; font-size: 11px; line-height: 15px; font-weight: 800; color: #1428a0; white-space: nowrap">왜 단계적으로 가나</div>
+  <div style="position: absolute; left: 456px; top: 212px; font-size: 13px; line-height: 19px; color: #3d4452; white-space: nowrap">역마다 통로 폭 · 기둥 규격 · 전원이 달라, 한 역에서 설치 높이와 4면 송출을 먼저 맞춥니다.</div>
+  <div style="position: absolute; left: 456px; top: 231px; font-size: 13px; line-height: 19px; color: #3d4452; white-space: nowrap">검증한 구성을 노선에 그대로 옮기고, 마지막에 다른 매체와 편성 · 리포트를 합칩니다.</div>
+  <div style="position: absolute; left: 456px; top: 262px; height: 22px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <span style="font-size: 11px; font-weight: 800; color: #596170; margin-right: 4px">지금</span>
+    <sc-for list="{{now}}" as="c" hint-placeholder-count="3">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #f5f6f8; border: 1px solid #d5d9e0; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">{{c.t}}</span>
+    </sc-for>
+  </div>
+
+  <!-- ============ 3단계 로드맵 ============ -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.box}}">
+      <div style="position: absolute; left: 18px; top: 16px; height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="{{s.noS}}">{{s.no}}</span>
+        <span style="font-size: 16px; font-weight: 800; letter-spacing: -0.01em">{{s.name}}</span>
+      </div>
+      <div style="{{s.perS}}">{{s.per}}</div>
+      <div style="{{s.lab1}}">범위</div>
+      <div style="{{s.txt1}}">{{s.scope}}</div>
+      <sc-for list="{{s.mini}}" as="m" hint-placeholder-count="8">
+        <div style="{{m.s}}">{{m.t}}</div>
+      </sc-for>
+      <div style="{{s.rule}}"></div>
+      <div style="{{s.rule2}}"></div>
+      <div style="{{s.lab2}}">더하는 것</div>
+      <div style="position: absolute; left: 96px; top: 112px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+        <sc-for list="{{s.sols}}" as="c" hint-placeholder-count="2">
+          <span style="{{c.s}}">{{c.t}}</span>
+        </sc-for>
+      </div>
+      <div style="{{s.txt2}}">{{s.add}}</div>
+      <div style="{{s.lab3}}">달라지는 운영</div>
+      <div style="{{s.txt3}}">{{s.op1}}</div>
+      <div style="{{s.txt4}}">{{s.op2}}</div>
+      <div style="{{s.gate}}">
+        <div style="{{s.gLab}}">{{s.gl}}</div>
+        <div style="position: absolute; left: 12px; top: 26px; height: 20px; display: flex; align-items: center; gap: 7px; white-space: nowrap">
+          <span style="{{s.ckS}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="{{s.ckC}}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg></span>
+          <span style="{{s.gTxt}}">{{s.gate1}}</span>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.s}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M12 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- ============ 하단: 전체 일정 ============ -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 40px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 623px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">전체 일정</div>
+  <sc-for list="{{bar}}" as="b" hint-placeholder-count="3">
+    <div style="{{b.s}}"><span style="font-weight: 800">{{b.a}}</span><span style="{{b.cs}}">{{b.c}}</span></div>
+  </sc-for>
+  <div style="position: absolute; right: 80px; top: 624px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치 · 기간은 예시</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>J 미디어 · 옥외 미디어 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // ---- 통로 입면 그림 (x 64–432 · y 156–286) — 사각기둥 4면 사이니지, 그림은 예시
+    const art = [];
+    const r = (x, y, w, h, c, t) => art.push({ s: box(x, y, w, h) + c, t: t || '' });
+    r(64, 156, 368, 130, 'border-radius: 14px; background: #f5f6f8;');
+    r(64, 156, 368, 26, 'border-radius: 14px 14px 0 0; background: #e2e5ea;');
+    r(64, 258, 368, 28, 'border-radius: 0 0 14px 14px; background: #e2e5ea;');
+    [0, 1, 2, 3].forEach((k) => {
+      const x = 92 + k * 76;
+      r(x, 182, 38, 76, 'background: #d5d9e0;');
+      r(x + 38, 182, 11, 76, 'background: #b8bec8;');
+      r(x + 6, 192, 26, 46, 'border-radius: 2px; background: ' + (k === 1 ? '#1428a0' : '#3b4fb8') + ';');
+      r(x + 40, 194, 6, 42, 'border-radius: 1px; background: #6f82d6;');
+      r(x + 10, 200, 14, 4, 'border-radius: 1px; background: #c8d3ff;');
+    });
+    // 눈높이 설치선
+    r(72, 214, 324, 0, 'border-top: 1px dashed #121417;');
+    r(402, 207, 26, 14, 'font-size: 10px; line-height: 14px; font-weight: 700; color: #121417; ' + T, '눈높이');
+    // 환승 동선
+    r(84, 271, 236, 0, 'border-top: 2px dashed #1428a0;');
+    art.push({ s: A + 'left: 320px; top: 266px; width: 0px; height: 0px; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 9px solid #1428a0;', t: '' });
+    r(336, 264, 80, 14, 'font-size: 10.5px; line-height: 14px; font-weight: 700; color: #1428a0; ' + T, '환승 방향');
+    r(72, 161, 150, 16, 'box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; ' + T, '그림은 예시 · 현장 사진으로 교체');
+    r(296, 161, 128, 16, 'font-size: 10px; line-height: 16px; color: #596170; text-align: right; ' + T, '기둥 1개 · 네 면 송출');
+
+    const now = ['역마다 기기 · 소재 제각각', '소재 교체는 현장 방문', '송출 확인은 사진 · 수기'].map((t) => ({ t }));
+
+    // ---- 3단계 카드 (각 4열 · y 300–600)
+    const ST = [
+      { no: '1단계', name: '시범 · 환승역 한 곳', per: '[0]개월',
+        scope: '환승역 1곳 · [00]기둥 · 사이니지 [000]대',
+        sols: ['MagicINFO'], add: '기둥 4면 동시 송출 · 세로 피봇 설치',
+        op1: '소재 교체를 관제실에서 원격으로,', op2: '꺼진 화면은 알림으로 먼저 압니다',
+        gl: '다음 단계로 가는 기준', gate1: '소재 교체 [0]일 → [0]시간 확인' },
+      { no: '2단계', name: '확대 · 노선 전체', per: '[0]개월',
+        scope: '노선 [00]개 역 · 사이니지 [0,000]대',
+        sols: ['MagicINFO', '케어 · 유지관리'], add: '노선 묶음 편성 · 지하 환경 정기 점검',
+        op1: '역마다 같은 시각에 노선 묶음 광고,', op2: '점검 · 세척은 막차 이후로 묶어서',
+        gl: '다음 단계로 가는 기준', gate1: '장애 출동 [00]% ↓ 확인' },
+      { no: '3단계', name: '전 매체 통합 편성', per: '[0]개월',
+        scope: '여섯 매체 ①–⑥ · 관제실 한 곳',
+        sols: ['MagicINFO 통합 편성', '송출 리포트'], add: '외벽 · 광장 · 미디어폴 · 입국장과 한 편성표',
+        op1: '광고주 캠페인을 매체 묶음으로 편성,', op2: '송출 리포트는 광고주별로 자동 정리',
+        gl: '운영 목표', gate1: '송출 증빙 수작업 → 자동' }
+    ];
+    // 범위 미니 그림 — 1단계 역 한 곳 · 2단계 노선 전체 · 3단계 여섯 매체
+    const mini = (i, dark) => {
+      const out = [], line = dark ? '#6f82d6' : '#b8bec8', on = dark ? '#ffffff' : '#1428a0';
+      if (i < 2) {
+        out.push({ s: box(96, 81, 230, 3) + 'border-radius: 2px; background: ' + (i === 1 ? '#6f82d6' : line) + ';', t: '' });
+        [0, 1, 2, 3, 4, 5, 6].forEach((k) => {
+          const hit = i === 1 || k === 3;
+          out.push({ s: box(96 + k * 36 + (k === 3 && i === 0 ? -3 : 0), 76 + (k === 3 && i === 0 ? -3 : 0), k === 3 && i === 0 ? 19 : 13, k === 3 && i === 0 ? 19 : 13) + 'box-sizing: border-box; border-radius: 50%; background: ' + (hit ? on : '#ffffff') + '; border: 2px solid ' + (hit ? on : line) + ';', t: '' });
+        });
+      } else {
+        [1, 2, 3, 4, 5, 6].forEach((n, k) => out.push({ s: box(96 + k * 30, 73, 22, 22) + 'border-radius: 50%; background: ' + (n === 4 ? '#ffffff' : '#3b4fb8') + '; color: ' + (n === 4 ? '#1428a0' : '#ffffff') + '; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;', t: String(n) }));
+        out.push({ s: box(278, 76, 72, 16) + 'font-size: 10.5px; line-height: 16px; color: #c8d3ff; text-align: right; ' + T, t: '한 편성표' });
+      }
+      return out;
+    };
+    const steps = ST.map((s, i) => {
+      const dark = i === 2, tint = i === 1;
+      const ink = dark ? '#ffffff' : '#121417', sub = dark ? '#ffffff' : '#3d4452', lab = dark ? '#c8d3ff' : '#596170';
+      const L = (y) => box(18, y, 76, 17) + 'font-size: 11px; line-height: 17px; font-weight: 800; color: ' + lab + '; ' + T;
+      const X = (y, w) => box(96, y, 254, 17) + 'font-size: 12.5px; line-height: 17px; color: ' + (w ? ink : sub) + '; ' + (w ? 'font-weight: 700; ' : '') + T;
+      return {
+        no: s.no, name: s.name, per: s.per, scope: s.scope, add: s.add, op1: s.op1, op2: s.op2, gl: s.gl, gate1: s.gate1,
+        box: box(64 + i * 392, 300, 368, 300) + 'box-sizing: border-box; border-radius: 14px; color: ' + ink + '; ' +
+          (dark ? 'background: #1428a0;' : tint ? 'background: #eaeefb;' : 'background: #ffffff; border: 1px solid #d5d9e0;'),
+        noS: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 14px; font-weight: 800; color: ' + (dark ? '#c8d3ff' : '#1428a0') + ';',
+        perS: A + 'right: 16px; top: 18px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; ' + T +
+          (dark ? 'background: #ffffff; color: #1428a0;' : tint ? 'background: #ffffff; color: #1428a0;' : 'background: #eaeefb; color: #1428a0;'),
+        lab1: L(52), txt1: X(52, true), mini: mini(i, dark),
+        rule: box(18, 100, 332, 1) + 'background: ' + (dark ? '#3b4fb8' : tint ? '#c8d3ff' : '#e2e5ea') + ';',
+        rule2: box(18, 166, 332, 1) + 'background: ' + (dark ? '#3b4fb8' : tint ? '#c8d3ff' : '#e2e5ea') + ';',
+        lab2: L(113), txt2: X(138),
+        lab3: L(178), txt3: X(178), txt4: X(196),
+        sols: s.sols.map((t) => ({ t, s: 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; ' + (dark ? 'background: #ffffff; color: #1428a0;' : 'background: #1428a0; color: #ffffff;') })),
+        gate: box(10, 228, 348, 62) + 'border-radius: 10px; background: ' + (dark ? '#3b4fb8' : tint ? '#ffffff' : '#f5f6f8') + ';',
+        gLab: box(12, 8, 300, 15) + 'font-size: 10.5px; line-height: 15px; font-weight: 800; color: ' + (dark ? '#c8d3ff' : '#596170') + '; ' + T,
+        ckS: 'width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: ' + (dark ? '#ffffff' : '#1428a0') + ';',
+        ckC: dark ? '#1428a0' : '#ffffff',
+        gTxt: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 15px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em; color: ' + (dark ? '#ffffff' : '#1428a0') + ';'
+      };
+    });
+    const arrows = [0, 1].map((i) => ({
+      s: box(64 + i * 392 + 368 - 6, 434, 36, 36) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // ---- 전체 일정 바
+    const BX = [176, 432, 712], BWD = [248, 272, 352];
+    const bar = [['1단계 · 시범', '[0]개월'], ['2단계 · 노선 확대', '[0]개월'], ['3단계 · 전 매체 통합', '[0]개월']].map(([a, c], i) => ({
+      a, c,
+      s: box(BX[i], 620, BWD[i], 24) + 'box-sizing: border-box; padding: 0 10px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; font-size: 11.5px; ' + T +
+        (i === 2 ? 'background: #1428a0; color: #ffffff;' : i === 1 ? 'background: #c8d3ff; color: #121417;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #121417;'),
+      cs: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-weight: 800; color: ' + (i === 2 ? '#ffffff' : '#1428a0') + ';'
+    }));
+
+    return { art, now, steps, arrows, bar };
+  }
+}
+</script>
+</body>
+</html>

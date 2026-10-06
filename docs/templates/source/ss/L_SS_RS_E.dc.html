@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RS-E 주거 분양 · 주택 · 공간 시나리오 · 모델하우스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">모델하우스 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">R 건설 모델하우스, 둘러본 경험이 그대로 옵션 계약으로 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">⑦ 모델하우스 — 방문객이 입구에서 상담석까지 지나는 다섯 지점, 지점마다 직접 겪는 것과 R 건설이 얻는 가치</div>
+
+  <!-- 왼쪽 7열: 홍보관 평면 + 관람 동선 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 662px; height: 444px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 84px; top: 168px; height: 22px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">7</span><span style="font-size: 14.5px; font-weight: 800; letter-spacing: -0.01em">모델하우스</span><span style="font-size: 11.5px; color: #596170">단지 밖 · 분양 현장</span></div>
+  <div style="position: absolute; right: 574px; top: 171px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">홍보관 평면 · 배치는 예시</div>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="5">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 84px; top: 572px; height: 16px; display: flex; align-items: center; gap: 16px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 0px; border-top: 2px dashed #1428a0"></span>관람 동선</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>화면 · 탭</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 2px; border: 1.5px solid #6f82d6; background: #eaeefb"></span>천장형 실내기</span>
+    <span>유닛 = <span style="font-family: Manrope, sans-serif">[00]</span>㎡ 타입 실물 · 번호 = 오른쪽 순서</span>
+  </div>
+
+  <!-- 오른쪽 5열: 순서 리스트 -->
+  <sc-for list="{{steps}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.line}}"></div>
+    <div style="{{p.badge}}">{{p.n}}</div>
+    <div style="{{p.card}}">
+      <div style="position: absolute; left: 14px; top: 9px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; line-height: 20px; font-weight: 800; letter-spacing: -0.01em">{{p.name}}</span><span style="font-size: 11px; line-height: 16px; color: #8a91a0">{{p.at}}</span></div>
+      <div style="position: absolute; left: 14px; top: 32px; font-size: 12.5px; line-height: 18px; color: #3d4452; white-space: nowrap">{{p.mo}}</div>
+      <div style="position: absolute; left: 14px; top: 56px; height: 18px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">{{p.sol}}</span><span style="font-size: 11.5px; color: #596170">{{p.dev}}</span></div>
+      <div style="position: absolute; right: 10px; top: 10px; width: 124px; height: 62px; border-radius: 8px; background: #eaeefb">
+        <div style="position: absolute; left: 10px; top: 9px; font-size: 10.5px; line-height: 14px; color: #596170; white-space: nowrap">{{p.kl}}</div>
+        <div style="position: absolute; left: 10px; top: 29px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0; white-space: nowrap">{{p.kv}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 하단 띠: 동선 전체 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800">동선 전체</span>
+    <span style="font-size: 11.5px; color: #3d4452">분양 일정에 맞춰 화면은 VXT로, 상담 탭은 Knox로 원격 교체</span>
+    <span style="width: 1px; height: 18px; background: #d5d9e0"></span>
+    <sc-for list="{{totals}}" as="k" hint-placeholder-count="3">
+      <span style="display: flex; align-items: baseline; gap: 6px; margin-right: 8px"><span style="font-size: 11.5px; color: #596170">{{k.l}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{k.v}}</span></span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · 아파트 분양 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+    const shapes = [];
+    const r = (x, y, w, h, css, t) => shapes.push({ style: box(x, y, w, h) + css, t: t || '' });
+    const bg = (c) => 'background: ' + c + ';';
+    const lab = (x, y, t, c, w) => shapes.push({ t, style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10.5px; line-height: 14px; font-weight: ' + (w || 700) + '; color: ' + (c || '#3d4452') + '; ' + T });
+    const B = '#1428a0', G = '#d5d9e0';
+    const room = (x, y, w, h, c) => r(x, y, w, h, 'box-sizing: border-box; border: 1px solid #b8bec8; ' + bg(c || '#ffffff'));
+    const ac = (x, y) => r(x, y, 14, 14, 'box-sizing: border-box; border: 1.5px solid #6f82d6; border-radius: 2px; ' + bg('#eaeefb'));
+
+    // 평면 — 외곽 (96, 206) 608 × 350. 위 줄 = 세대 유닛, 아래 = 로비 · 단지 모형, 오른쪽 = 상담석
+    room(96, 206, 160, 180); room(256, 206, 150, 180); room(406, 206, 150, 180);
+    room(96, 386, 160, 170); room(256, 386, 300, 170, '#eceef2'); room(556, 206, 148, 350);
+    r(96, 206, 460, 180, 'box-sizing: border-box; border: 1.5px dashed #6f82d6;');
+    r(96, 206, 608, 350, 'box-sizing: border-box; border: 3px solid #121417;');
+    r(150, 553, 52, 3, bg('#f5f6f8'));
+    lab(208, 534, '출입', '#596170', 600);
+    // 문 (내부)
+    r(160, 384, 34, 4, bg('#ffffff'));
+    r(554, 314, 4, 32, bg('#ffffff'));
+    // 1 로비: 웰컴 사이니지 · 안내 데스크
+    r(101, 412, 8, 62, 'border-radius: 2px; ' + bg(B));
+    lab(114, 436, '사이니지', B);
+    r(200, 490, 44, 14, 'border-radius: 2px; ' + bg(G));
+    // 2 거실: TV · 소파 · 실내기
+    r(132, 212, 90, 7, 'border-radius: 2px; ' + bg(B));
+    lab(140, 223, 'TV 시연', B);
+    r(138, 276, 80, 16, 'border-radius: 3px; ' + bg(G));
+    ac(232, 238);
+    // 3 주방: 키친핏 컬럼 · 카운터 · 아일랜드
+    r(300, 212, 82, 10, 'border-radius: 2px; ' + bg(G));
+    r(384, 212, 16, 46, 'border-radius: 2px; ' + bg('#b8c3ee'));
+    lab(344, 262, '키친핏', B);
+    r(282, 280, 90, 18, 'border-radius: 3px; ' + bg(G) + 'font-size: 9.5px; line-height: 18px; color: #3d4452; text-align: center;', '아일랜드');
+    // 4 침실 · 공부방: 침대 · 책상 · 무풍 · 환기
+    r(414, 232, 58, 52, 'border-radius: 3px; ' + bg(G));
+    r(498, 212, 50, 12, 'border-radius: 2px; ' + bg(G));
+    ac(510, 248);
+    r(484, 290, 22, 4, bg('#6f82d6'));
+    lab(478, 270, '무풍', B);
+    lab(474, 296, '환기', B);
+    // 5 상담석: 테이블 + 탭
+    [234, 272, 382, 420, 458].forEach((y) => {
+      r(574, y, 96, 24, 'border-radius: 4px; ' + bg(G));
+      r(616, y + 7, 14, 10, 'border-radius: 2px; ' + bg(B));
+    });
+    lab(574, 500, '상담석 [0]석 · 탭', B);
+    // 단지 모형
+    r(306, 420, 200, 100, 'box-sizing: border-box; border: 1.5px dashed #b8bec8; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8a91a0;', '단지 모형');
+    // 방 이름
+    [[101, 210, '거실'], [261, 210, '주방'], [411, 210, '침실 · 공부방'], [101, 390, '입구 · 로비'], [261, 390, '전시'], [561, 210, '상담']].forEach(([x, y, t]) => lab(x, y, t, '#121417', 800));
+    // 동선 — 출입 (176, 552) → (176, 330) → (630, 330)
+    r(175, 342, 0, 210, 'border-left: 2px dashed ' + B + ';');
+    r(176, 329, 440, 0, 'border-top: 2px dashed ' + B + ';');
+    r(171, 404, 0, 0, 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + B + ';');
+    r(254, 325, 0, 0, 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + B + ';');
+    r(406, 325, 0, 0, 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + B + ';');
+    r(560, 325, 0, 0, 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + B + ';');
+
+    const marks = [[176, 476], [176, 330], [331, 330], [481, 330], [630, 330]].map(([cx, cy], i) => ({
+      n: i + 1,
+      style: box(cx - 13, cy - 13, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: ' + B + '; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 순서 리스트 — 지점 · 그 순간 · 솔루션 + 기기 · 가치
+    const S = [
+      ['입구 · 로비', '홍보관 입구', '대기 줄에서 단지 · 타입 소개를 먼저 봅니다', 'Samsung VXT', '스마트 사이니지 QM 시리즈', '대기 중 안내 문의', '[00]% ↓'],
+      ['거실 시연', '유닛 · 거실', 'TV 화면에서 귀가 · 외출 모드를 직접 눌러 봅니다', 'SmartThings', 'TV · 무풍 · 조명 · 커튼 연동', '스마트홈 시연 참여', '[00]%'],
+      ['주방', '유닛 · 주방', '도어 조합 · 컬러를 바꿔 보며 오븐을 앱으로 켭니다', 'SmartThings', '키친핏 냉장고 · 빌트인 오븐', '주방 옵션 관심 표시', '[00]%'],
+      ['침실 · 공부방', '유닛 · 침실', '직바람 없이 시원하고, 공기질 수치가 보입니다', 'SmartThings', '무풍 · 청정환기 · 에어모니터', '무풍 옵션 선택률', '[00]%'],
+      ['상담석', '홍보관 안쪽', '본 그대로 탭에서 옵션을 고르고 금액을 확인합니다', 'Knox Suite', '갤럭시 탭 S · 옵션 앱만', '옵션 상담 시간', '[00]분 → [00]분']
+    ];
+    const steps = S.map(([name, at, mo, sol, dev, kl, kv], i) => {
+      const y = 156 + i * 90;
+      return {
+        n: i + 1, name, at, mo, sol, dev, kl, kv,
+        badge: box(750, y + 8, 26, 26) + 'border-radius: 50%; background: ' + B + '; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        line: box(762, y + 34, 2, i < 4 ? 64 : 0) + bg('#d5d9e0'),
+        card: box(786, y, 430, 82) + 'box-sizing: border-box; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff;'
+      };
+    });
+
+    const totals = [['옵션 계약 전환', '[00]%'], ['관람 → 상담 대기', '[00]분 → [0]분']].map(([l, v]) => ({ l, v }));
+
+    return { shapes, marks, steps, totals };
+  }
+}
+</script>
+</body>
+</html>

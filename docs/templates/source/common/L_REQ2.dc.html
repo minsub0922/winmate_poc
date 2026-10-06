@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>요건 커버리지 2 — 업종 · 제품</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">LAYOUT SYSTEM · 요건 커버리지 2 / 3</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">업종마다 빈칸이 다릅니다 — 건설 · 공공 · 제조 · 교육이 가장 약함</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170">왼쪽: 필요한 콘텐츠를 지금 템플릿이 모두 갖춘 사례 비율 · 오른쪽: 제품군별로 각 빈 콘텐츠가 필요했던 사례 비율</div>
+
+  <!-- 왼쪽: 업종 -->
+  <div style="position: absolute; left: 64px; top: 158px; width: 466px; height: 18px; display: flex; align-items: center; font-size: 11px; font-weight: 700; color: #8a91a0">
+    <span style="width: 88px">업종</span><span style="width: 52px">사례</span><span style="width: 250px">모두 갖춘 사례 비율</span><span>업종 버전</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 178px; width: 466px; height: 1px; background: #e2e5ea"></div>
+  <sc-for list="{{inds}}" as="d" hint-placeholder-count="10">
+    <div style="{{d.rowStyle}}">
+      <span style="width: 88px; flex-shrink: 0; font-size: 13px; font-weight: 700; white-space: nowrap">{{d.name}}</span>
+      <span style="width: 52px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #596170">{{d.n}}</span>
+      <span style="width: 200px; flex-shrink: 0; height: 12px; border-radius: 3px; background: #eef0f3; position: relative; overflow: hidden"><span style="{{d.barStyle}}"></span></span>
+      <span style="width: 50px; flex-shrink: 0; padding-left: 8px; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: {{d.pctColor}}">{{d.pct}}%</span>
+      <span style="{{d.chipStyle}}">{{d.ver}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 580px; width: 466px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 10px 14px; display: flex; flex-direction: column; gap: 3px">
+    <span style="font-size: 12px; font-weight: 800">업종 버전이 없는 곳</span>
+    <span style="font-size: 11.5px; line-height: 1.5; color: #3d4452">건설(분양) · 공공 · 통신 · 의료 · 금융 — 기본 시나리오로 대신 나가 업종 사진 · 고민이 빠집니다</span>
+  </div>
+
+  <!-- 오른쪽: 제품군 × 빈 콘텐츠 -->
+  <div style="position: absolute; left: 578px; top: 158px; width: 638px; height: 34px; display: flex; align-items: flex-end">
+    <span style="width: 126px; flex-shrink: 0; font-size: 11px; font-weight: 700; color: #8a91a0">제품군 · 사례</span>
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="8">
+      <span style="width: 64px; flex-shrink: 0; font-size: 10.5px; font-weight: 700; line-height: 1.3; color: #3d4452; text-align: center">{{c}}</span>
+    </sc-for>
+  </div>
+  <sc-for list="{{prods}}" as="p" hint-placeholder-count="6">
+    <div style="{{p.rowStyle}}">
+      <span style="width: 126px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1px"><span style="font-size: 13px; font-weight: 700; white-space: nowrap">{{p.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 11px; color: #8a91a0">{{p.n}}건</span></span>
+      <sc-for list="{{p.cells}}" as="c" hint-placeholder-count="8">
+        <span style="{{c.style}}">{{c.v}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 704px; top: 470px; display: flex; align-items: center; gap: 6px; font-size: 11px; color: #596170">
+    <span>필요했던 사례 비율</span>
+    <span style="width: 22px; height: 12px; background: #f5f6f8; border: 1px solid #e2e5ea; box-sizing: border-box"></span><span>0–9%</span>
+    <span style="width: 22px; height: 12px; background: #dfe5f7"></span><span>10–24</span>
+    <span style="width: 22px; height: 12px; background: #b8c3ee"></span><span>25–39</span>
+    <span style="width: 22px; height: 12px; background: #6f82d6"></span><span>40–54</span>
+    <span style="width: 22px; height: 12px; background: #1428a0"></span><span>55%+</span>
+  </div>
+  <div style="position: absolute; left: 578px; top: 498px; width: 638px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px">
+    <sc-for list="{{reads}}" as="r" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12px; font-weight: 800">{{r.k}}</span><span style="font-size: 11.5px; color: #3d4452; white-space: nowrap">{{r.v}}</span></div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 578px; top: 600px; width: 638px; height: 46px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; padding: 0 14px; display: flex; align-items: center; gap: 10px">
+    <span style="font-size: 12px; font-weight: 800; white-space: nowrap">제품 소개 템플릿</span>
+    <span style="font-size: 11.5px; color: #3d4452; line-height: 1.45">20종 모두 화면 제품 모양 — 시스템에어컨 61 · 모바일 46 · 가전 33 · 음향 25건엔 맞는 모양이 없습니다</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 682px; font-size: 11px; color: #8a91a0">출처: 삼성전자 비즈니스 고객 도입사례 198건 · 한 사례가 여러 업종 · 제품에 걸치면 각각 셈 · 분류는 자동 추출, 사람 검토 전</div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">WINMATE · REQ 2</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [업종, 사례 수, 모두 갖춘 비율 %, 업종 버전]
+    const I = [
+      ['유통 · 요식', 55, 33, '매장 · 카페'], ['호텔 · 서비스', 46, 35, '호텔 · 골프'], ['건설', 36, 14, ''], ['공공', 14, 7, ''],
+      ['제조', 14, 14, '제조 현장'], ['교육', 13, 15, '학원'], ['통신', 8, 38, ''], ['의료', 7, 29, ''], ['운송 · 물류', 6, 0, '물류'], ['금융', 6, 17, '']
+    ];
+    const inds = I.map(([name, n, pct, ver], i) => ({
+      name, n: n + '건', pct, ver: ver || '없음',
+      pctColor: pct < 20 ? '#121417' : '#1428a0',
+      rowStyle: 'position: absolute; left: 64px; top: ' + (186 + i * 38) + 'px; width: 466px; height: 30px; display: flex; align-items: center;',
+      barStyle: 'position: absolute; left: 0px; top: 0px; height: 12px; border-radius: 3px; background: #1428a0; width: ' + Math.max(2, Math.round(200 * pct / 100)) + 'px;',
+      chipStyle: 'flex-shrink: 0; height: 20px; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + (ver ? 'background: #eaeefb; color: #1428a0;' : 'background: #ffffff; border: 1.5px solid #121417; color: #121417; box-sizing: border-box;')
+    }));
+
+    const cols = ['디자인 · 인테리어', '용량 산정', '설치 · 시공', '시스템 연동', '견적 · 옵션', '맞춤 사양', '보안 · 규제', '분양 가치'];
+    // 제품군별: 각 빈 콘텐츠가 필요했던 사례 비율 (%)
+    const P = [
+      ['사이니지', 62, [35, 47, 37, 15, 10, 6, 5, 3]],
+      ['시스템에어컨', 61, [46, 36, 34, 15, 16, 5, 5, 15]],
+      ['모바일', 46, [7, 7, 2, 52, 17, 43, 33, 2]],
+      ['TV · 음향', 25, [32, 48, 16, 12, 16, 8, 4, 4]],
+      ['주방 · 리빙가전', 33, [64, 9, 36, 9, 18, 3, 0, 30]],
+      ['프린팅 · IT', 14, [7, 7, 0, 29, 43, 14, 36, 7]]
+    ];
+    const shade = (v) => v >= 55 ? ['#1428a0', '#ffffff'] : v >= 40 ? ['#6f82d6', '#ffffff'] : v >= 25 ? ['#b8c3ee', '#121417'] : v >= 10 ? ['#dfe5f7', '#121417'] : ['#f5f6f8', '#8a91a0'];
+    const prods = P.map(([name, n, vals], i) => ({
+      name, n,
+      rowStyle: 'position: absolute; left: 578px; top: ' + (198 + i * 44) + 'px; width: 638px; height: 42px; display: flex; align-items: center;',
+      cells: vals.map((v) => { const [bg, fg] = shade(v); return { v: v + '%', style: 'width: 62px; height: 38px; margin-right: 2px; flex-shrink: 0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; background: ' + bg + '; color: ' + fg + ';' }; })
+    }));
+
+    const reads = [
+      { k: '사이니지 · 시스템에어컨', v: '용량 산정 · 설치 시공 · 인테리어가 3대 빈칸' },
+      { k: '모바일', v: '기존 시스템 연동 · 맞춤 사양 · 보안 규제' },
+      { k: '주방 · 리빙가전 (빌트인)', v: '인테리어 일체감 · 분양 가치' },
+      { k: '프린팅 · IT', v: '견적 · 과금 방식 · 보안' }
+    ];
+    return { inds, cols, prods, reads };
+  }
+}
+</script>
+</body>
+</html>

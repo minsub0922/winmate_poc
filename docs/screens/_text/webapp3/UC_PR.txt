@@ -1,0 +1,162 @@
+ 
+ B2B 제안서 · 유스케이스 맵 
+ WINMATE 웹앱 · 화면 지도 
+ B2B 제안서 생성 — 유스케이스 맵 
+ 들어오는 길부터 결과 활용까지 제안서 기능의 화면 {{totalCount}}개 · 칸을 누르면 그 화면으로 이동해요 
+ {{lg.label}} {{lg.n}} 
+ 기본 흐름 
+ {{f.code}} 
+ {{f.name}} 
+ 딸깍 
+ 어느 단계에서든 나머지 자동 
+ {{c.no}} 
+ {{c.name}} 
+ {{c.desc}} 
+ {{b.text}} 
+ {{b.code}} 
+ {{b.name}} 
+ 새 
+ {{b.title}} 
+ {{b.count}} 
+ {{b.note}} 
+ {{rw.code}} {{rw.label}} 
+ {{ch.label}} 
+class Component extends DCLogic {
+ renderVals() {
+ // 다른 캔버스에 있는 화면은 그 캔버스를 새 탭으로 엽니다
+ const EXT = {"BE1.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "BE6.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "IMG1.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "IMG4.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "MI4.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk", "Main.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk", "SB4.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk", "SC5.dc.html": "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX", "SP1.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk", "SP4.dc.html": "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk"};
+ const ext = (f) => EXT[f] || f;
+ // 칸 종류: base 기본 흐름 · aux 기존 보조 화면 · new 새 화면 · other 다른 기능 화면
+ const KIND = {
+ base: { box: '', code: '' },
+ aux: { box: '', code: '' },
+ new: { box: '', code: '' },
+ other: { box: '', code: '' }
+ };
+ const seen = { base: new Set(), aux: new Set(), new: new Set(), other: new Set() };
+ const mark = (code, kind) => { if (code !== 'Main') seen[kind].add(code); };
+ const codeBase = '';
+ const chipStyle = (kind, w) => codeBase + (w ? ' width: ' + w + '' : '') + KIND[kind].code;
+ const L = (text) => ({ isLabel: true, isNode: false, isGroup: false, text });
+ const N = (code, name, kind, tip) => {
+ mark(code, kind);
+ return {
+ isLabel: false, isNode: true, isGroup: false, code, name, tip: tip || code + ' · ' + name, href: ext(code + '.dc.html'), isNew: kind === 'new',
+ style: '' + KIND[kind].box,
+ codeStyle: codeBase + KIND[kind].code
+ };
+ };
+ // 그룹: rows = [[행 코드, 행 라벨, [[칩 라벨, 화면 코드, 설명, 종류?]]]]
+ const G = (title, kind, note, rows, chipW) => {
+ let n = 0;
+ const R = rows.map(([code, label, chips]) => ({
+ hasLabel: !!label, code: code || '', label: label || '',
+ chips: chips.map(([lab, scr, tip, k]) => { n += 1; mark(scr, k || kind); return { label: lab, href: ext(scr + '.dc.html'), tip: scr + ' · ' + tip, style: chipStyle(k || kind, chipW) }; })
+ }));
+ return {
+ isLabel: false, isNode: false, isGroup: true, title, note: note || '', hasNote: !!note, rows: R, count: '화면 ' + n,
+ style: '' + KIND[kind].box
+ };
+ };
+ const secChips = (prefix, names, kind) => names.map((nm, i) => [String(i + 1), prefix + (i + 1), nm, kind]);
+ const C = [
+ ['들어오는 길', '어디서 제안서를 시작하나', [
+ L('홈 · 목록'),
+ N('Main', '홈 · B2B 제안서 생성 버튼', 'base', '홈 그리드의 B2B 제안서 생성 → PR1'),
+ N('PR0', '제안서 목록 · 상태 · 마감', 'new'),
+ L('다른 기능에서 넘겨받기'),
+ G('결과를 제안서로 보내기', 'other', '보낸 결과가 맞는 섹션에 채워진 채 시작', [
+ [null, null, [['SB4', 'SB4', 'Storyboard → 제안서 생성 시작'], ['MI4', 'MI4', 'MI → 제안서 MI 섹션'], ['BE6', 'BE6', '조감도 → 제안서로 보내기']]],
+ [null, null, [['SC5', 'SC5', '시나리오 → 공간별 가치 제공 시나리오'], ['SP4', 'SP4', 'Spec 시트 → 제품 스펙'], ['IMG4', 'IMG4', '이미지 → 제안서에 넣기']]]
+ ], 52),
+ L('이어 쓰기 · 검토하러'),
+ N('PRS4', '작성 중이던 섹션 바로 열기', 'base', 'PRS4 · 목록 · 사이드바에서 이어서 작성'),
+ N('PR7C', '검토 요청 받고 바로 열기', 'new', 'PR7C · 검토자에게 온 요청에서'),
+ L('기존 제안서로'),
+ G('기존 제안서 활용 · PRU', 'new', '목록 · PPTX · PDF → 9기준 분석 · 확인 → 활용 계획', [
+ [null, null, [['시작', 'PR1C', '기존 제안서로 시작 · 목록 · 파일 올리기 · 활용 방식'], ['분석 확인', 'PRU2', '기준별 분석 결과 · 9기준 · 필수 확인 3'], ['흐름 상세', 'PRU2F', '논리 흐름 · 시트별 역할 태깅 · 유저 수정']]],
+ [null, null, [['개선 · 수정', 'PRU3A', '활용 계획 · 기반으로 개선 · 수정 · 시트별 판정'], ['흐름 차용', 'PRU3B', '활용 계획 · 논리 흐름만 차용 · 흐름 → 시트 구성']]]
+ ])
+ ]],
+ ['입력 방식', '무엇을 넣어 채우나', [
+ L('시작 정보'),
+ N('PR1', '고객 · 프로젝트 직접 입력', 'base'),
+ N('PR1F', 'RFP 파일 → 자동 채움 확인', 'new'),
+ N('PR1L', '기존 작업 연결 · SB · MI · 조감도', 'new'),
+ N('PR1C', '기존 제안서 · 목록 · PPTX · PDF 파일', 'new', 'PR1C · 기존 제안서로 시작 — 내 제안서 목록 또는 파일 올리기 → 분석'),
+ L('구성'),
+ N('PR2', '제안서 유형 · 표준 · 퀵윈 · Solution', 'base'),
+ G('시트 구성', 'aux', null, [
+ [null, null, [['PR3', 'PR3', '시트 구성 · 표준 (MI 펼침)', 'base'], ['PR3SolOpen', 'PR3SolOpen', '표준 · 솔루션 제안 펼침']]],
+ [null, null, [['PR3Quick', 'PR3Quick', '퀵윈(제품)'], ['PR3Solution', 'PR3Solution', 'Solution형']]]
+ ]),
+ L('섹션 작성 · 끌어오기'),
+ G('섹션 작성 · 유형별', 'aux', null, [
+ ['PRS', '표준', secChips('PRS', ['Market Intelligence', 'Value Props', '조감도', '공간별 제품', '솔루션 제안', '유관 사례', 'Why Samsung', '제품 스펙'], 'base')],
+ ['PRQ', '퀵윈', secChips('PRQ', ['Value Props', '공간별 제품', '솔루션 제안', '유관 사례', '제품 스펙'])],
+ ['PRX', '솔루션형', secChips('PRX', ['대규모 MI', 'Value Props', '공간별 가치 제공 시나리오', '유관 사례', 'Why Samsung'])]
+ ], 18),
+ G('끌어 놓기 · DnD_', 'aux', '사이드바 작업 · 상단 팝업 항목을 섹션에', [
+ [null, null, [['MISidebar', 'DnD_MISidebar', '사이드바 MI 작업 → MI 섹션'], ['Product', 'DnD_Product', '제품 팝업 → 공간별 제품']]],
+ [null, null, [['Case', 'DnD_Case', '유관 사례 팝업 → 유관 사례'], ['Solution', 'DnD_Solution', '솔루션 팝업 → 공간별 가치 제공 시나리오']]]
+ ])
+ ]],
+ ['진행 · 확인 상태', '기다리고, 맞는지 확인하는 순간', [
+ L('자동으로 채운 것 확인'),
+ N('PR3I', '업종 감지 → 업종 레이아웃 적용', 'new'),
+ N('PRU2', '기존 제안서 9기준 분석 확인', 'new', 'PRU2 · 구조 · 흐름 · 메시지 · 맥락 · 제품 · 수치 · 이미지 · 템플릿 · 비복제'),
+ N('DnD_MIExtract', 'MI 추출 결과 확인', 'aux'),
+ N('DnD_ProductDropped', '추가됨 · 실행 취소', 'aux'),
+ L('딸깍 · 나머지 자동 완성'),
+ N('OneClickEarly', '유형 고르기 전에 누름', 'aux'),
+ N('OneClickConfirm', '확정 · 추론할 것 확인', 'aux'),
+ N('OneClickGen', '생성 중 · 중지 · 메모', 'aux'),
+ N('OneClickDone', '완성 · 검토 필요 3곳', 'aux'),
+ L('생성 결과 확인'),
+ N('PR7', 'PPTX 생성 완료 · 21장', 'base'),
+ N('PR7Q', '사실 확인 필요 · 바로 고치기', 'new')
+ ]],
+ ['편집 · 버전', '고치고, 바꾸고, 되돌리기', [
+ L('시트 템플릿'),
+ G('템플릿 고르기', 'aux', '자동 추천 · 직접 선택 · 업종 · 솔루션 버전', [
+ [null, null, [['PRS1Layout', 'PRS1Layout', '시장 규모 · 성장 · 자동 추천'], ['PRS1LayoutInd', 'PRS1LayoutInd', '고객사 비즈니스 · 업종 MI-FB-B']]],
+ [null, null, [['PRS2LayoutInd', 'PRS2LayoutInd', 'Value Props · 업종 레이아웃'], ['PRS4Layout', 'PRS4Layout', '공간 제품 소개 · P3-C']]],
+ [null, null, [['PRS5Layout', 'PRS5Layout', 'MagicINFO 구성도 · MGI-D'], ['PRS5LayoutInd', 'PRS5LayoutInd', 'SmartThings Pro · STP-S-HT']]],
+ [null, null, [['PRS7Layout', 'PRS7Layout', '경쟁 비교 · CM-B'], ['PRX3LayoutInd', 'PRX3LayoutInd', '공간 시나리오 · 업종 SX-FB-A']]]
+ ]),
+ N('PR6', '디자인 템플릿 · 로고 · 컬러', 'base'),
+ L('생성 후 편집'),
+ N('PR7P', '미리보기 · 시트 편집 · 재생성', 'new'),
+ N('PR7V', '버전 · 변경 이력 · 되돌리기', 'new'),
+ L('원본 보며 쓰기'),
+ N('PRU4', '원본 대조 작성 · 유지 · 갱신 · 신규', 'new', 'PRU4 · 개선 · 수정 모드 — 원본 시트와 새 시트 나란히'),
+ N('PRU4B', '흐름 가이드 작성 · 역할만 참고', 'new', 'PRU4B · 흐름 차용 모드 — 원본 내용 없이 이 자리의 역할만'),
+ L('함께 검토'),
+ N('PR7C', '검토 요청 · 시트별 코멘트 · 승인', 'new')
+ ]],
+ ['결과 활용', '내보내고, 넘기고, 다시 쓰기', [
+ L('내보내기'),
+ N('PR7X', '내보내기 옵션 · PPTX · PDF · 영문', 'new'),
+ N('PR7', 'PPTX 다운로드 · 팀에 공유', 'base'),
+ L('공유 · 관리'),
+ N('PR7C', '공유 링크 · 승인 받기', 'new'),
+ N('PR0', '상태 · 마감 · 담당 관리', 'new'),
+ L('다시 쓰기'),
+ N('PRU5', '원본 대비 변경 요약 · 흔적 남김', 'new', 'PRU5 · 유지 · 갱신 · 재작성 · 신규 · 제외 · 시트 노트 · 버전 이력'),
+ N('PR1C', '다음 제안서의 바탕으로 쓰기', 'new', 'PR1C · 이 제안서를 기존 제안서로 가져와 개선 · 수정 또는 흐름 차용'),
+ G('다른 기능에서 다시 만들어 넣기', 'other', '시트 이미지 · 조감도 · 스펙을 고쳐 다시 끌어 놓기', [
+ [null, null, [['IMG1', 'IMG1', '이미지 생성 → IMG4로 돌아오기'], ['BE1', 'BE1', '공간 조감도 → BE6로 돌아오기'], ['SP1', 'SP1', 'Spec 시트 → SP4로 돌아오기']]]
+ ], 52)
+ ]]
+ ];
+ const cols = C.map(([name, desc, blocks], i) => ({ no: i + 1, name, desc, blocks, notLast: i ({ code: code === 'PRS1' ? 'PRS' : code, name, href: ext(code + '.dc.html'), notLast: i !seen.base.has(c)).length, newN = seen.new.size, otherN = seen.other.size;
+ const sw = (k) => '' + KIND[k].box;
+ const legend = [
+ { label: '기본 흐름', n: baseN, sw: sw('base') },
+ { label: '기존 보조 화면', n: auxN, sw: sw('aux') },
+ { label: '새 화면', n: newN, sw: sw('new') },
+ { label: '다른 기능 화면', n: otherN, sw: sw('other') }
+ ];
+ return { cols, flow, legend, totalCount: baseN + auxN + newN };
+ }
+}

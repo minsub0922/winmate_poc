@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>KCP-D Knox Capture 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · Knox Capture</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>Knox Capture · 모바일 바코드 스캔</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">스캔한 값이 기존 앱까지 가는 길</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">Knox Capture 구성도 · 스캔 → 정리 → 키 입력, 앱을 고치지 않고 기존 업무 흐름으로 들어갑니다</div>
+
+  <!-- 기기 경계 -->
+  <div style="position: absolute; left: 64px; top: 184px; width: 936px; height: 292px; box-sizing: border-box; border: 2px dashed #b8bec8; border-radius: 16px"></div>
+  <div style="position: absolute; left: 84px; top: 173px; height: 22px; padding: 0 10px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; color: #3d4452"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3d4452" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z M11 18h2"/></svg>갤럭시 기기 한 대 안에서</div>
+
+  <!-- 처리 주체 괄호: Knox Capture(1–4) / 기존 앱(5) -->
+  <div style="position: absolute; left: 80px; top: 214px; width: 716px; height: 10px; box-sizing: border-box; border-top: 2px solid #1428a0; border-left: 2px solid #1428a0; border-right: 2px solid #1428a0; border-radius: 4px 4px 0 0"></div>
+  <div style="position: absolute; left: 80px; top: 204px; width: 716px; display: flex; justify-content: center"><span style="height: 20px; padding: 0 10px; background: #ffffff; font-size: 12px; font-weight: 800; color: #1428a0; display: flex; align-items: center">Knox Capture가 처리</span></div>
+  <div style="position: absolute; left: 832px; top: 214px; width: 152px; height: 10px; box-sizing: border-box; border-top: 2px solid #b8bec8; border-left: 2px solid #b8bec8; border-right: 2px solid #b8bec8; border-radius: 4px 4px 0 0"></div>
+  <div style="position: absolute; left: 832px; top: 204px; width: 152px; display: flex; justify-content: center"><span style="height: 20px; padding: 0 8px; background: #ffffff; font-size: 12px; font-weight: 700; color: #596170; display: flex; align-items: center">기존 앱 · 수정 없음</span></div>
+
+  <!-- 파이프라인 연결 화살표 -->
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="8">
+    <div style="{{a.s}}"></div>
+  </sc-for>
+
+  <!-- 5단계 파이프라인 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.box}}">
+      <span style="{{s.num}}">{{s.no}}</span>
+      <span style="margin-top: 10px; font-size: 15.5px; font-weight: 800; white-space: nowrap">{{s.t}}</span>
+      <span style="margin-top: 4px; font-size: 12.5px; line-height: 1.5; color: #596170">{{s.d}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="{{s.art}}">
+        <sc-if value="{{s.isPhoto}}" hint-placeholder-val="{{false}}">
+          <img src="/_blob/62d2ee82dd744e8b8356ed6c27b94834" alt="Knox Capture 앱 화면으로 택배 라벨 바코드를 비추는 갤럭시" style="position: absolute; left: -48px; top: -40px; width: 219px; height: 217px; object-fit: cover; display: block">
+          <span style="position: absolute; left: 5px; bottom: 5px; height: 17px; padding: 0 5px; border-radius: 4px; background: #ffffff; font-size: 10px; font-weight: 700; color: #1428a0; display: flex; align-items: center; white-space: nowrap">Knox Capture 화면</span>
+        </sc-if>
+        <sc-if value="{{s.isRaw}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+            <span style="font-size: 10.5px; color: #8a91a0">읽은 값</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; color: #121417; white-space: nowrap">[00][00000000]</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{s.isRule}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+            <span style="font-size: 10.5px; color: #8a91a0">정리된 값</span>
+            <div style="display: flex; gap: 2px; font-family: Manrope, sans-serif; font-size: 12.5px; white-space: nowrap"><span style="font-weight: 600; color: #b8bec8; text-decoration: line-through">[00]</span><span style="font-weight: 800; color: #1428a0">[00000000]</span></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{s.isKeys}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 3px">
+            <span style="font-size: 10.5px; color: #8a91a0">키 입력</span>
+            <div style="display: flex; gap: 4px">
+              <sc-for list="{{keys}}" as="k" hint-placeholder-count="5">
+                <span style="width: 18px; height: 20px; box-sizing: border-box; border: 1.5px solid #b8c3ee; border-radius: 4px; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #1428a0; display: flex; align-items: center; justify-content: center">{{k}}</span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{s.isPos}}" hint-placeholder-val="{{false}}">
+          <img src="/_blob/1fa2f2035cc98e6cf2753e26012c5886" alt="매장 계산대의 탭 액티브 POS 화면" style="position: absolute; left: -44px; top: -82px; width: 186px; height: 184px; object-fit: cover; display: block">
+          <span style="position: absolute; left: 5px; top: 5px; height: 16px; padding: 0 5px; border-radius: 4px; background: #121417; font-size: 10px; font-weight: 700; color: #ffffff; display: flex; align-items: center; white-space: nowrap">예: POS</span>
+          <div style="position: absolute; left: 5px; bottom: 5px; height: 19px; box-sizing: border-box; border: 1px solid #d5d9e0; border-radius: 4px; background: #ffffff; padding: 0 5px; display: flex; align-items: center; gap: 1px"><span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #121417">[00000000]</span><span style="width: 2px; height: 11px; background: #1428a0"></span></div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 기존 전송 → 업무 서버 -->
+  <div style="position: absolute; left: 986px; top: 350px; width: 56px; display: flex; justify-content: center"><span style="padding: 0 3px; background: #ffffff; font-size: 11px; color: #8a91a0">기존 전송</span></div>
+  <div style="position: absolute; left: 1048px; top: 244px; width: 168px; height: 200px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+    <div style="width: 36px; height: 36px; border-radius: 10px; background: #121417; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v6H4z M4 14h16v6H4z M8 7h.01 M8 17h.01"/></svg></div>
+    <span style="font-size: 16px; font-weight: 800">업무 서버</span>
+    <span style="font-size: 12.5px; line-height: 1.5; color: #596170">POS · 재고 · WMS 백엔드</span>
+    <div style="flex-grow: 1"></div>
+    <span style="align-self: flex-start; height: 24px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; border: 1px dashed #b8bec8; font-size: 11.5px; color: #596170; display: flex; align-items: center">[기존 시스템]</span>
+    <span style="font-size: 12px; font-weight: 700; color: #596170">변경 없음</span>
+  </div>
+
+  <!-- 관리 레인: 관리자 콘솔 → 스캔 설정 일괄 배포 -->
+  <div style="position: absolute; left: 64px; top: 510px; width: 248px; height: 96px; box-sizing: border-box; border-radius: 14px; background: #1428a0; color: #ffffff; padding: 0 16px; display: flex; align-items: center; gap: 12px">
+    <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: rgba(255,255,255,0.14); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4 M8 10l2 2 4-4"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+      <span style="align-self: flex-start; height: 20px; padding: 0 6px; border-radius: 5px; background: #f0f1f3; display: flex; align-items: center"><img src="/_blob/59bbd4ce085f2c58346de014d06e5481" alt="SAMSUNG Knox 워드마크" style="width: 82px; height: 12px; object-fit: contain; display: block"></span>
+      <span style="font-size: 15.5px; font-weight: 800; white-space: nowrap">관리자 콘솔</span>
+      <span style="font-size: 12px; color: #c8d3ff; white-space: nowrap">스캔 설정 작성 · 기기 배포</span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 312px; top: 557px; width: 409px; height: 0; border-top: 2px dashed #6f82d6"></div>
+  <sc-for list="{{ups}}" as="u" hint-placeholder-count="3">
+    <div style="{{u.line}}"></div>
+    <div style="{{u.head}}"></div>
+    <span style="{{u.chip}}">{{u.t}}</span>
+  </sc-for>
+  <div style="position: absolute; left: 330px; top: 568px; font-size: 12.5px; font-weight: 800; color: #1428a0">스캔 설정 일괄 배포 · 매장 · 창고 기기 [000]대</div>
+
+  <!-- 스캔하는 갤럭시 (실제 제품 컷) -->
+  <div style="position: absolute; left: 776px; top: 510px; width: 440px; height: 96px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 14px 18px 8px; display: flex; align-items: flex-end; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+      <img src="/_blob/4af0d48d891be9a7ff27c471ef581e7e" alt="갤럭시 엑스커버7 프로 전면" style="width: 24px; height: 48px; object-fit: contain; display: block">
+      <span style="font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap">엑스커버7 프로</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+      <img src="/_blob/0f2c662780a718693a94f6c0c0c1d18b" alt="갤럭시 탭 액티브5 프로 앞뒷면과 S펜" style="width: 50px; height: 48px; object-fit: contain; display: block">
+      <span style="font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap">탭 액티브5 프로</span>
+    </div>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 4px">
+      <div style="position: relative; width: 72px; height: 48px; overflow: hidden; border-radius: 6px; background: #f4f4f4"><img src="/_blob/4db86a0bd06c8e7a3a7d58c80e15072c" alt="탭 액티브5 프로 측면의 Active Key" style="position: absolute; left: -33px; top: -180px; width: 125px; height: 258px; object-fit: cover; display: block"></div>
+      <span style="font-size: 11.5px; font-weight: 700; color: #1428a0; white-space: nowrap">Active Key · 스캔 즉시 실행</span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 792px; top: 502px; height: 16px; padding: 0 6px; background: #ffffff; font-size: 11px; font-weight: 700; color: #596170; display: flex; align-items: center">스캔하는 갤럭시 · 예시</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 622px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #8a91a0">
+    <span style="width: 24px; height: 2px; background: #1428a0"></span><span>스캔 데이터</span>
+    <span style="width: 24px; height: 0; border-top: 2px dashed #6f82d6; margin-left: 12px"></span><span>설정 배포</span>
+    <span style="width: 24px; height: 2px; background: #596170; margin-left: 12px"></span><span>기존 전송</span>
+    <span style="width: 22px; height: 14px; box-sizing: border-box; border: 1.5px dashed #b8bec8; border-radius: 4px; margin-left: 12px"></span><span>기기 경계</span>
+  </div>
+  <div style="position: absolute; right: 64px; top: 622px; font-size: 12px; color: #8a91a0">지원 바코드 형식 · 규칙 항목은 [기능 확인]</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 리테일 체인 · 매장 재고 관리 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 단계 카드: x = 80 + i*188, 폭 152, y 232–456 (중심 y 344)
+    const L0 = 80, W = 152, P = 188, TOP = 232, H = 224, CY = 344;
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+
+    const S = [
+      ['카메라 스캔', '갤럭시 카메라로 바코드를 비춥니다', 'photo'],
+      ['인식 · 해석', '바코드 형식을 알아보고 값을 읽습니다', 'raw'],
+      ['데이터 규칙', '앞자리 · 형식을 업무 규칙대로 정리', 'rule'],
+      ['키 입력으로 전달', '키보드로 친 것처럼 입력란에 넣습니다', 'keys'],
+      ['기존 업무 앱', 'POS · 재고 · WMS 앱을 그대로 사용', 'pos']
+    ];
+    const stages = S.map(([t, d, kind], i) => {
+      const knox = i < 4;
+      return {
+        no: String(i + 1), t, d,
+        box: A + 'left: ' + px(L0 + i * P) + 'top: ' + px(TOP) + 'width: ' + px(W) + 'height: ' + px(H) +
+          'box-sizing: border-box; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; ' +
+          (knox ? 'background: #eaeefb;' : 'background: #ffffff; border: 1.5px solid #121417;'),
+        num: 'width: 24px; height: 24px; border-radius: 50%; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; background: ' + (knox ? '#1428a0' : '#121417'),
+        art: 'position: relative; overflow: hidden; height: 72px; flex-shrink: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center; background: ' + (knox ? '#ffffff' : '#f5f6f8'),
+        isPhoto: kind === 'photo', isRaw: kind === 'raw', isRule: kind === 'rule', isKeys: kind === 'keys', isPos: kind === 'pos'
+      };
+    });
+
+    // 단계 사이 화살표 (1→2 … 4→5 파랑) + 5→서버 (회색, 기존 전송)
+    const arrows = [];
+    const arrow = (x1, x2, color) => {
+      arrows.push({ s: A + 'left: ' + px(x1) + 'top: ' + px(CY - 1) + 'width: ' + px(x2 - 10 - x1) + 'height: 2px; background: ' + color });
+      arrows.push({ s: A + 'left: ' + px(x2 - 10) + 'top: ' + px(CY - 5) + 'width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid ' + color });
+    };
+    for (let i = 0; i < 4; i++) arrow(L0 + i * P + W + 2, L0 + (i + 1) * P, '#1428a0');
+    arrow(L0 + 4 * P + W + 2, 1048, '#596170');
+
+    const keys = ['0', '0', '0', '0', '0'];
+
+    // 관리 레인에서 2 · 3 · 4단계로 올라가는 설정 배포선 (y 557 → 카드 하단 456)
+    const ups = [['인식 형식', 1], ['데이터 규칙', 2], ['전달 방식', 3]].map(([t, i]) => {
+      const x = L0 + i * P + W / 2;
+      return {
+        t,
+        line: A + 'left: ' + px(x - 1) + 'top: 466px; width: 0; height: 91px; border-left: 2px dashed #6f82d6',
+        head: A + 'left: ' + px(x - 5) + 'top: 457px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #6f82d6',
+        chip: A + 'left: ' + px(x - 46) + 'top: 484px; width: 92px; height: 22px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #b8c3ee; font-size: 11.5px; font-weight: 700; color: #1428a0; display: flex; align-items: center; justify-content: center'
+      };
+    });
+
+    return { stages, arrows, keys, ups };
+  }
+}
+</script>
+</body>
+</html>

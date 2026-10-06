@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-MD-B 의료 · 요양 · 케어 · 고객 비즈니스 · 운영 과제</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">W 요양병원의 매출은 병상에서, 비용은 24시간 병동에서 나옵니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">병상 운영 구조와 단계별 KPI · 운영 과제 — 파란 표시는 삼성 제품 · 솔루션이 함께할 수 있는 지점입니다</div>
+
+  <!-- 매출 구조 (8열) -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">매출 구조</span>
+    <span style="font-size: 13px; font-weight: 800">병상이 매출을 만듭니다</span>
+  </div>
+  <sc-for list="{{rev}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.box}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-size: 11.5px; line-height: 15px; white-space: nowrap; color: {{r.lc}}">{{r.label}}</div>
+      <div style="position: absolute; left: 12px; top: 25px; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; white-space: nowrap; color: {{r.vc}}">{{r.val}}</div>
+      <div style="position: absolute; left: 12px; top: 48px; font-size: 10.5px; line-height: 13px; white-space: nowrap; color: {{r.sc}}">{{r.sub}}</div>
+    </div>
+  </sc-for>
+  <sc-for list="{{ops}}" as="o" hint-placeholder-count="3">
+    <div style="{{o.pos}}">{{o.t}}</div>
+  </sc-for>
+
+  <!-- 비용 구조 (4열, 표본 비율) -->
+  <div style="position: absolute; left: 784px; top: 160px; height: 20px; display: flex; align-items: center; gap: 10px; white-space: nowrap">
+    <span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">비용 구조</span>
+    <span style="font-size: 13px; font-weight: 800">24시간 병동이 비용을 만듭니다</span>
+  </div>
+  <div style="position: absolute; left: 1116px; top: 163px; width: 100px; text-align: right; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시</div>
+  <sc-for list="{{costs}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.bar}}"></div>
+    <div style="{{c.lab}}">{{c.label}}</div>
+    <div style="{{c.num}}">{{c.val}}</div>
+  </sc-for>
+
+  <!-- 운영 단계 체인 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.head}}">
+      <div style="position: absolute; left: 14px; top: 7px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{s.no}}</span><span style="font-size: 15px; font-weight: 800; line-height: 20px">{{s.name}}</span></div>
+      <div style="position: absolute; left: 14px; top: 29px; font-size: 11.5px; line-height: 14px; color: #596170; white-space: nowrap">{{s.where}}</div>
+    </div>
+    <sc-for list="{{s.kpis}}" as="k" hint-placeholder-count="2">
+      <div style="{{k.row}}"><span style="font-size: 12px; color: #3d4452">{{k.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{k.val}}</span></div>
+    </sc-for>
+    <div style="{{s.kpiEnd}}"></div>
+    <div style="{{s.stem}}"></div>
+    <sc-for list="{{s.pins}}" as="p" hint-placeholder-count="2">
+      <div style="{{p.dot}}"></div>
+      <div style="{{p.card}}">
+        <div style="position: absolute; left: 12px; top: 10px; width: 220px; font-size: 13px; font-weight: 700; line-height: 19px; color: #121417">{{p.issue}}</div>
+        <div style="position: absolute; left: 0; top: 56px; width: 242px; height: 44px; background: {{p.stripBg}}"></div>
+        <div style="position: absolute; left: 12px; top: 62px; width: 220px; font-size: 11.5px; line-height: 16px; font-weight: {{p.fw}}; color: {{p.fc}}"><span style="display: inline-block; height: 16px; padding: 0 6px; margin-right: 6px; border-radius: 999px; font-size: 10px; font-weight: 800; line-height: 16px; vertical-align: top; background: {{p.chipBg}}; color: {{p.chipFg}}">{{p.chip}}</span>{{p.act}}</div>
+      </div>
+    </sc-for>
+  </sc-for>
+  <sc-for list="{{chev}}" as="v" hint-placeholder-count="3">
+    <div style="{{v.style}}"></div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 626px; width: 1152px; height: 18px; display: flex; align-items: center; gap: 20px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; background: #121417; border: 2px solid #ffffff; box-shadow: 0 0 0 1px #121417"></span>운영 과제 — 걸리는 단계에 고정</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="height: 16px; padding: 0 6px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 10px; font-weight: 800; display: flex; align-items: center">삼성</span>삼성 제품 · 솔루션이 함께할 지점</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="height: 16px; padding: 0 6px; border-radius: 999px; background: #d5d9e0; color: #3d4452; font-size: 10px; font-weight: 800; display: flex; align-items: center">고객</span>W 요양병원 내부 과제 · 삼성은 간접 지원</span>
+    <span style="margin-left: auto; color: #8a91a0">[ ] 는 W 요양병원 데이터로 채울 값</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 요양병원 · 케어 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 매출 구조 — 연 가동 병상일 × 병상 1일 수익 + 재활 · 프로그램 = 연 매출
+    const R = [
+      ['연 가동 병상일', '[00,000]일', '병상 수 × 가동률 × 365', false],
+      ['병상 1일 수익', '[00]만 원', '다인실 · 1인실 · VIP 가중', false],
+      ['재활 · 프로그램', '[0]억 원', '부가 서비스', false],
+      ['연 매출', '[00]억 원', 'W 요양병원 실적 입력', true]
+    ];
+    const RW = [170, 160, 140, 154], OPW = 24, RY = 190, RH = 66;
+    let x = 64;
+    const rev = [], ops = [];
+    const OPS = ['×', '+', '='];
+    R.forEach(([label, val, sub, total], i) => {
+      rev.push({
+        label, val, sub,
+        lc: total ? '#ffffff' : '#596170', vc: total ? '#ffffff' : '#1428a0', sc: total ? '#b8c3ee' : '#8a91a0',
+        box: A + box(x, RY, RW[i], RH) + 'border-radius: 10px; background: ' + (total ? '#1428a0' : '#f5f6f8') + ';'
+      });
+      x += RW[i];
+      if (i < OPS.length) {
+        ops.push({ t: OPS[i], pos: A + box(x, RY + 20, OPW, 26) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; line-height: 26px; color: #121417;' });
+        x += OPW;
+      }
+    });
+
+    // 비용 구조 — 표본 비율 (파랑 = 삼성이 관리를 돕는 비용)
+    const CS = [
+      ['간호 · 요양 인력', '[00]%', 0.40, '#6f82d6', '#1428a0'],
+      ['냉난방 · 공조 에너지', '[00]%', 0.27, '#1428a0', '#1428a0'],
+      ['시설 · 위생', '[00]%', 0.18, '#b8bec8', '#596170'],
+      ['식사 · 기타', '[00]%', 0.15, '#d5d9e0', '#596170']
+    ];
+    const CX = 784, CW = 432;
+    let acc = 0;
+    const costs = CS.map(([label, val, r, col, vc]) => {
+      const cx = CX + Math.round(acc * CW);
+      const w = Math.round(r * CW) - 3;
+      acc += r;
+      return {
+        label, val,
+        bar: A + box(cx, 196, w, 16) + 'border-radius: 3px; background: ' + col + ';',
+        lab: A + box(cx, 220, w + 3, 15) + 'font-size: 11px; line-height: 15px; color: #3d4452; white-space: nowrap;',
+        num: A + box(cx, 236, w + 3, 18) + 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; line-height: 18px; color: ' + vc + '; white-space: nowrap;'
+      };
+    });
+
+    // 운영 단계 4 — KPI (자리표시자) + 운영 과제 핀
+    const SAM = 'samsung', CUS = 'customer';
+    const ST = [
+      ['01', '입원 상담 · 병실 배정', '상담실 · 원무 · 병실',
+        [['병상 가동률', '[00]%'], ['1인실 · VIP 비중', '[00]%']],
+        [['보호자는 병실의 공기 · 온도 · 청결을 보고 병원을 고릅니다', SAM, '무풍 시스템에어컨 · 공기청정기 · 에어모니터 플러스'],
+         ['1인실 · VIP는 객실 수준의 실내 환경 · TV를 기대합니다', SAM, '호텔 TV · 무풍 1Way · 원형 360 디자인 패널']]],
+      ['02', '치료 · 재활 · 생활', '병실 · 재활센터 · 식당',
+        [['평균 재원일수', '[000]일'], ['재활 프로그램 참여율', '[00]%']],
+        [['환자 상태마다 적정 온도가 다르고, 직바람은 피해야 합니다', SAM, '무풍 시스템에어컨 · 병실별 온도 개별 제어'],
+         ['식당 · 재활센터는 운영 시간과 부하가 병실과 다릅니다', SAM, 'DVM S 개별 공조 · PM1.0 필터 FCU로 공간별 운전']]],
+      ['03', '병동 간호 · 돌봄', '간호스테이션 · 병실 · 복도',
+        [['간호 인력 1인당 병상', '[0.0]'], ['호출 응답 시간', '[00]초']],
+        [['한정된 간호 · 요양 인력으로 24시간 병동을 지킵니다', CUS, '삼성은 점검 · 호출 자동화로 부담 경감을 지원'],
+         ['호실 순회 점검 · 호출 응대 · 동의서 처리로 동선이 깁니다', SAM, 'SmartThings 원격 점검 · 병상 태블릿 · 갤럭시 북 전자서명']]],
+      ['04', '시설 · 에너지 · 행정', '시설팀 · 기계실 · 원무',
+        [['병상당 월 에너지 비용', '[00]만 원'], ['피크 전력', '[000] kW']],
+        [['24시간 냉난방으로 전기요금 · 피크 전력 부담이 큽니다', SAM, 'DMS 2.5 피크 전력 제어 · DVM 칠러 심야 축열 운전'],
+         ['수백 대 실내기 · 가전을 층마다 사람이 따로 관리합니다', SAM, 'DMS 2.5 실내기 통합 제어 · SmartThings Pro 대시보드']]]
+    ];
+    const SW = 270, SG = 24, HY = 286, HH = 48, KY = 342, KH = 22, PY = [398, 510], PH = 100;
+    const stages = ST.map(([no, name, where, k, p], i) => {
+      const sx = 64 + i * (SW + SG);
+      return {
+        no, name, where,
+        head: A + box(sx, HY, SW, HH) + 'border-radius: 10px; background: #f5f6f8;',
+        kpis: k.map(([label, val], j) => ({
+          label, val,
+          row: A + box(sx, KY + j * KH, SW, KH) + 'box-sizing: border-box; border-top: 1px solid ' + (j === 0 ? '#121417' : '#e2e5ea') + '; padding: 0 2px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap;'
+        })),
+        kpiEnd: A + box(sx, KY + 2 * KH, SW, 1) + 'background: #e2e5ea;',
+        stem: A + box(sx + 9, KY + 2 * KH + 6, 2, PY[1] + PH / 2 - (KY + 2 * KH + 6)) + 'background: #d5d9e0;',
+        pins: p.map(([issue, kind, act], j) => {
+          const sam = kind === SAM;
+          return {
+            issue, act,
+            chip: sam ? '삼성' : '고객',
+            chipBg: sam ? '#1428a0' : '#d5d9e0', chipFg: sam ? '#ffffff' : '#3d4452',
+            stripBg: sam ? '#eaeefb' : '#f5f6f8',
+            fc: sam ? '#1428a0' : '#3d4452', fw: sam ? 700 : 500,
+            dot: A + box(sx + 4, PY[j] + PH / 2 - 6, 12, 12) + 'box-sizing: border-box; border-radius: 50%; background: #121417; border: 2px solid #ffffff; box-shadow: 0 0 0 1px #121417;',
+            card: A + box(sx + 26, PY[j], 244, PH) + 'box-sizing: border-box; border-radius: 12px; border: 1px solid ' + (sam ? '#d3daf5' : '#e2e5ea') + '; background: #ffffff; overflow: hidden;'
+          };
+        })
+      };
+    });
+    const chev = [];
+    [0, 1, 2].forEach((i) => {
+      const gx = 64 + SW + i * (SW + SG);
+      chev.push({ style: A + 'left: ' + px(gx + 8) + 'top: ' + px(HY + HH / 2 - 6) + 'width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 8px solid #1428a0;' });
+    });
+
+    return { rev, ops, costs, stages, chev };
+  }
+}
+</script>
+</body>
+</html>

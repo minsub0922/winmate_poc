@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-AD-C 옥외 · 미디어 광고 · 사용자 · 이해관계자 여정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">시민이 Q 미디어 화면 앞을 지나는 몇 초가 곧 광고 상품입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">보는 사람(시민 · 관광객 · 운전자)과 사는 사람(광고주)의 여정 — 파란 칩은 삼성 제품 · 솔루션이 개입하는 지점</div>
+
+  <!-- 보는 사람 · 유동인구 구성 (구성비는 자리표시, 막대 폭은 표본) -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 18px; font-size: 13px; font-weight: 800; line-height: 18px; white-space: nowrap">보는 사람 · 유동인구 구성</div>
+  <div style="position: absolute; left: 524px; top: 161px; width: 300px; height: 16px; font-size: 11.5px; line-height: 16px; color: #8a91a0; text-align: right; white-space: nowrap">일 유동인구 [00]만 명 · 구성비는 예시</div>
+  <sc-for list="{{personas}}" as="ps" hint-placeholder-count="3">
+    <div style="{{ps.barStyle}}"></div>
+    <div style="{{ps.boxStyle}}">
+      <div style="position: absolute; left: 0; top: 2px; width: 18px; height: 18px">
+        <sc-if value="{{ps.iWalk}}" hint-placeholder-val="{{true}}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"></circle><path d="M5 21v-2a7 7 0 0 1 14 0v2"></path></svg>
+        </sc-if>
+        <sc-if value="{{ps.iCam}}" hint-placeholder-val="{{false}}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"></rect><circle cx="12" cy="13.5" r="3.5"></circle><path d="M8 7l2-3h4l2 3"></path></svg>
+        </sc-if>
+        <sc-if value="{{ps.iCar}}" hint-placeholder-val="{{false}}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16v-4l2-5h14l2 5v4z"></path><circle cx="7.5" cy="16.5" r="1.5"></circle><circle cx="16.5" cy="16.5" r="1.5"></circle></svg>
+        </sc-if>
+      </div>
+      <div style="position: absolute; left: 24px; top: 0; height: 22px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap">
+        <span style="font-size: 15px; font-weight: 800; line-height: 22px">{{ps.name}}</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; line-height: 22px; color: #1428a0">{{ps.share}}</span>
+      </div>
+      <div style="{{ps.descStyle}}">{{ps.desc}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 사는 사람 · 광고주 -->
+  <div style="position: absolute; left: 848px; top: 160px; width: 368px; height: 102px; box-sizing: border-box; border-radius: 14px; border: 1px solid #121417; background: #ffffff">
+    <span style="position: absolute; left: 14px; top: 12px; height: 20px; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">사는 사람</span>
+    <span style="position: absolute; right: 14px; top: 14px; height: 16px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">캠페인 <b style="font-family: Manrope, sans-serif; color: #1428a0">[0]주</b> · 재집행률 <b style="font-family: Manrope, sans-serif; color: #1428a0">[00]%</b></span>
+    <span style="position: absolute; left: 14px; top: 38px; font-size: 15px; font-weight: 800; line-height: 22px; white-space: nowrap">광고주 · 대행사 마케터</span>
+    <div style="position: absolute; left: 14px; top: 64px; width: 340px; font-size: 12px; line-height: 16px; color: #596170">신제품 런칭 · 브랜드 캠페인 — 화제성과 노출 증빙을 원합니다</div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 278px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+
+  <!-- 보는 사람의 여정 — 주목도 곡선 · 결정적 순간 · 삼성 개입 -->
+  <div style="position: absolute; left: 64px; top: 290px; height: 20px; font-size: 14.5px; font-weight: 800; line-height: 20px; white-space: nowrap">보는 사람의 여정 — 화면 앞 몇 초</div>
+  <div style="position: absolute; left: 816px; top: 292px; width: 400px; height: 16px; display: flex; justify-content: flex-end; align-items: center; gap: 14px; font-size: 11.5px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1428a0"></span>결정적 순간</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; border: 2px solid #8a91a0; background: #ffffff"></span>불편 · 이탈</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #eaeefb; border: 1px solid #b8c3ee; box-sizing: border-box"></span>삼성 개입</span>
+  </div>
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.headStyle}}">
+      <span style="position: absolute; left: 0; top: 2px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 16px; color: #1428a0">{{s.n}}</span>
+      <span style="position: absolute; left: 24px; top: 0; font-size: 14.5px; font-weight: 800; line-height: 20px; white-space: nowrap">{{s.name}}</span>
+      <span style="position: absolute; left: 0; top: 22px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">{{s.ctx}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 362px; height: 14px; font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">주목도 · 곡선은 예시</div>
+  <svg style="position: absolute; left: 64px; top: 362px" width="1152" height="56" viewBox="0 0 1152 56" fill="none">
+    <path d="M0 52H1152" stroke="#d5d9e0" stroke-width="1" stroke-dasharray="4 4"></path>
+    <path d="M0 46C54 46 54 34 108 34C225 34 225 17 342 17C459 17 459 8 576 8C693 8 693 41 810 41C927 41 927 24 1044 24C1098 24 1098 30 1152 30L1152 52L0 52Z" fill="#eaeefb" stroke="none"></path>
+    <path d="M0 46C54 46 54 34 108 34C225 34 225 17 342 17C459 17 459 8 576 8C693 8 693 41 810 41C927 41 927 24 1044 24C1098 24 1098 30 1152 30" stroke="#1428a0" stroke-width="2" stroke-linecap="round"></path>
+  </svg>
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.dotStyle}}"></div>
+    <div style="{{s.bodyStyle}}">
+      <span style="{{s.tagStyle}}">{{s.tag}}</span>
+      <div style="position: absolute; left: 0; top: 26px; width: 216px; font-size: 12.5px; line-height: 18px; color: #3d4452">{{s.text}}</div>
+      <div style="position: absolute; left: 0; top: 70px; height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #eaeefb; border: 1px solid #b8c3ee; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #1428a0; white-space: nowrap"><span style="width: 7px; height: 7px; border-radius: 2px; background: #1428a0"></span>{{s.sam}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 사는 사람의 여정 — 광고주 캠페인 -->
+  <div style="position: absolute; left: 64px; top: 548px; height: 20px; font-size: 14.5px; font-weight: 800; line-height: 20px; white-space: nowrap">사는 사람의 여정 — 캠페인 <span style="font-family: Manrope, sans-serif; color: #1428a0">[0]</span>주</div>
+  <div style="position: absolute; left: 916px; top: 550px; width: 300px; height: 16px; font-size: 11.5px; line-height: 16px; color: #8a91a0; text-align: right; white-space: nowrap">광고주가 사는 것은 위의 몇 초입니다</div>
+  <sc-for list="{{buys}}" as="b" hint-placeholder-count="4">
+    <div style="{{b.style}}">
+      <span style="position: absolute; left: 12px; top: 10px; width: 20px; height: 20px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{b.n}}</span>
+      <span style="position: absolute; left: 40px; top: 10px; font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap">{{b.name}}</span>
+      <span style="position: absolute; left: 12px; top: 34px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{b.text}}</span>
+      <span style="{{b.flagStyle}}"><span style="{{b.markStyle}}"></span>{{b.flag}}</span>
+    </div>
+  </sc-for>
+  <sc-for list="{{buyArrows}}" as="a" hint-placeholder-count="3">
+    <div style="{{a.style}}"></div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>Q 옥외 미디어 · 랜드마크 LED 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const BLUE = '#1428a0';
+
+    // 보는 사람 세그먼트 — 막대 폭은 표본(42 · 33 · 25), 값은 자리표시
+    const PS = [
+      ['walk', '출퇴근 · 생활 보행자', '매일 같은 길에서 반복해서 봅니다 · 걸으며 [0]초 주목', 316, BLUE],
+      ['cam', '관광객 · 방문객', '랜드마크를 찾아와 멈추고, 찍어서 공유합니다 · 다국어 안내', 248, '#6f82d6'],
+      ['car', '운전자 · 야간 통행', '멀리서 짧게 봅니다 · 야간 눈부심에 민감', 188, '#b8c3ee']
+    ];
+    let x = 64;
+    const personas = PS.map(([ic, name, desc, w, c]) => {
+      const p = {
+        name, desc, share: '[00]%',
+        iWalk: ic === 'walk', iCam: ic === 'cam', iCar: ic === 'car',
+        barStyle: A + box(x, 186, w, 10) + 'border-radius: 2px; background: ' + c + ';',
+        boxStyle: A + box(x, 204, w, 58),
+        descStyle: 'position: absolute; left: 24px; top: 26px; width: ' + px(w - 30) + 'font-size: 12px; line-height: 16px; color: #596170;'
+      };
+      x += w + 4;
+      return p;
+    });
+
+    // 보는 사람의 여정 — 5단계, 열 x = 64 + i*234 (폭 216) · 곡선 y는 svg 경로와 같은 값
+    const ST = [
+      ['멀리서 발견', '횡단보도 · 차 안 · 한낮 직사광선', false, 34, '햇빛에 바랜 화면은 광고로 인식되지 않고 그냥 지나칩니다.', '고휘도 실외 LED · IP66'],
+      ['시선이 멈춤', '광장 · 보도 · [0]초', true, 17, '건물 전체가 끊김 없이 하나로 움직일 때 발걸음이 멈춥니다.', '모듈형 곡면 · L자 LED'],
+      ['찍고 공유', '스마트폰 촬영 · SNS', true, 8, '화면이 깜빡임 없이 또렷하게 찍혀야 사진과 영상이 퍼집니다.', '7,680Hz 고주사율 화질'],
+      ['밤의 거리', '야간 · 주변 상가 · 운전자', false, 41, '과한 밝기는 눈부심 민원과 운전자 안전 문제가 됩니다.', 'UL 안전 규격 · 시간대 밝기 설정'],
+      ['다시 마주침', '매일 · 같은 길 · 같은 시간', true, 24, '도시 소식 · 재난 경보까지 전하는 화면은 도시의 일부가 됩니다.', '네트워크 실시간 송출 · 무중단']
+    ];
+    const stages = ST.map(([name, ctx, mot, cy, text, sam], i) => {
+      const x0 = 64 + i * 234, cx = x0 + 108;
+      return {
+        n: '0' + (i + 1), name, ctx, text, sam,
+        tag: mot ? '결정적 순간' : '불편 · 이탈',
+        headStyle: A + box(x0, 318, 216, 38),
+        dotStyle: A + box(cx - 7, 362 + cy - 7, 14, 14) + 'box-sizing: border-box; border-radius: 50%; ' + (mot ? 'background: ' + BLUE + '; border: 3px solid #ffffff;' : 'background: #ffffff; border: 3px solid #8a91a0;'),
+        bodyStyle: A + box(x0, 428, 216, 94),
+        tagStyle: 'position: absolute; left: 0; top: 0; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; ' + (mot ? 'background: ' + BLUE + '; color: #ffffff;' : 'background: #ffffff; border: 1px solid #8a91a0; color: #596170;')
+      };
+    });
+
+    // 사는 사람의 여정 — 4단계, 폭 276 · 간격 16
+    const B = [
+      ['매체 선택', '랜드마크 · 화제성 · 유동인구를 비교합니다', false, 'Q 미디어 영역 · 매체 소개 · 유동인구 자료'],
+      ['소재 제작', '곡면 · 세로형 비율 소재 제작이 부담입니다', true, '콘텐츠 제작 지원 · AI 업스케일링'],
+      ['송출 · 현장 확인', '정시 송출과 화면 상태를 현장에서 확인합니다', true, '무중단 송출 체계 · 케어 · 유지관리'],
+      ['성과 · 재집행', '노출 · SNS 확산 증빙이 재집행을 정합니다', false, 'Q 미디어 · 파트너 영역 · 노출 측정 리포트']
+    ];
+    const buys = B.map(([name, text, sam, flag], i) => ({
+      n: String(i + 1), name, text, flag: sam ? '삼성 · ' + flag : flag,
+      style: A + box(64 + i * 292, 576, 276, 72) + 'box-sizing: border-box; border-radius: 12px; ' + (sam ? 'background: #f5f6f8;' : 'background: #ffffff; border: 1px dashed #b8bec8;'),
+      flagStyle: 'position: absolute; left: 12px; top: 52px; height: 14px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 14px; white-space: nowrap; ' + (sam ? 'font-weight: 700; color: ' + BLUE + ';' : 'color: #596170;'),
+      markStyle: 'width: 7px; height: 7px; border-radius: 2px; box-sizing: border-box; ' + (sam ? 'background: ' + BLUE + ';' : 'background: #ffffff; border: 1px solid #8a91a0;')
+    }));
+    const buyArrows = [0, 1, 2].map((i) => ({
+      style: A + 'left: ' + px(64 + i * 292 + 281) + 'top: 607px; width: 0; height: 0; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #121417;'
+    }));
+
+    return { personas, stages, buys, buyArrows };
+  }
+}
+</script>
+</body>
+</html>

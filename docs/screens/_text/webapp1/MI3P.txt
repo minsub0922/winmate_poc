@@ -1,0 +1,50 @@
+ 
+ Market Intelligence · 결과 → 슬라이드 구성 (레이아웃 자동 선택) 
+ W 
+ 분석 결과의 데이터 모양을 보고 시트마다 레이아웃을 골랐어요. 업종 레이아웃이 있으면 그것부터, 없으면 데이터 모양과 메시지로 골랐습니다. 
+ 슬라이드 구성 
+ 표준 MI 섹션 3시트 + 넣으면 좋은 시트 1 
+ 업종 레이아웃 2 · 범용 1 
+ {{r.sheet}} 
+ {{r.src}} 
+ {{r.mText}} 
+ {{r.code}} 
+ {{r.name}} 
+ 업종 
+ {{r.why}} 
+ 데이터 적합 {{r.fit}}% 
+ 대안 
+ {{a.code}} 
+ {{a.v}} 
+ 고르는 순서 
+ {{o.n}} {{o.t}} 
+ 슬라이드 구성 · 3시트 · 넣으면 좋은 시트 1 · 자동 4 · 확인 권장 1 
+ 레이아웃 바꾸기 
+ 출처 보기 
+ 구성 요청 
+ 결과로 
+ 제안서로 보내기 
+class Component extends DCLogic {
+ renderVals() {
+ const MODE = {
+ auto: ['자동', '', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+ check: ['확인 권장', '', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+ };
+ const CHIP = '';
+ // 시트: [포함, 시트, 결과 출처, 코드, 템플릿 이름, 썸네일, 업종판, 이유(데이터 모양 → 메시지), 적합도, 대안[[코드, 적합도|불가]], 모드]
+ const R = [
+ [true, '시장 · 트렌드', 'MI 결과 · 시장조사', 'MI-FB-A', '외식 · 카페 · 시장 · 트렌드', 'barline', true, '업종 레이아웃 우선 · 연도별 시장 규모 6개년과 트렌드 4개가 이 틀에 그대로 들어가요', 96, [['MS-B', 92], ['TR-B', 84]], 'auto'],
+ [true, '고객 비즈니스', 'MI 결과 · 고객사', 'MI-FB-B', '외식 · 카페 · 운영 과제', 'process', true, '본사 → 가맹점 → 손님 구조와 운영 단계별 과제 6개가 업종 틀과 같아요', 94, [['CB-C', 90], ['CB-B', 61]], 'auto'],
+ [true, '경쟁 환경', 'MI 결과 · 경쟁사', 'CP-A', '비교표', 'table', false, '업종 틀엔 경쟁 장이 없어 범용 · 경쟁사 3곳 × 요구 기준 5개라 표가 가장 정확해요', 96, [['CP-B', 58], ['CP-C', -1]], 'auto'],
+ [false, '사용자 여정', 'MI 결과 · 사용자', 'MI-FB-C', '외식 · 카페 · 사용자 여정', 'journey', true, '섹션엔 없지만 손님 여정 5단계가 있어요 · 넣으면 Value Props 근거가 강해져요', 91, [['US-B', 88], ['US-A', 80]], 'check'],
+ [false, 'MI 시사점', '3개 탭 종합', 'IM-A', '발견 → 시사점 → 방향', 'funnel', false, '표준은 3시트라 뺐어요 · Solution형이거나 경영진 보고면 자동으로 넣어요', 70, [['IM-B', 66]], 'auto']
+ ];
+ const rows = R.map(([on, sheet, src, code, name, kind, ind, why, fit, alts, m]) => ({
+ on, sheet, src, code, name, kind, ind, why, fit, n: 3,
+ aria: sheet + ' 시트 넣기',
+ mText: MODE[m][0], mIcon: MODE[m][2], mStyle: CHIP + MODE[m][1],
+ rowStyle: '' + (on ? '' : ''),
+ thumbBox: '' + (on ? '' : ' opacity: 0.6;'),
+ fitBar: 'width: ' + fit + '' + (fit >= 85 ? '' : '') + ';',
+ alts: alts.map(([c, v]) => ({
+ code: c, v: v ({ n: i + 1, t, arrow: i 

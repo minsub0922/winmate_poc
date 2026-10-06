@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-M 제품 × 가치 매트릭스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 900px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">다섯 가지 제품이 네 가지 가치를 나눠 맡습니다</div>
+  <div style="position: absolute; right: 64px; top: 80px; display: flex; align-items: center; gap: 16px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; border-radius: 50%; background: #1428a0"></span>핵심으로 만듦</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; border: 3px solid #1428a0"></span>함께 기여</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 2px; background: #b8bec8"></span>해당 없음</span>
+  </div>
+
+  <!-- 머리: 제품 이미지 -->
+  <div style="position: absolute; left: 64px; top: 128px; width: 1152px; display: grid; grid-template-columns: 260px repeat(5, minmax(0, 1fr)); column-gap: 12px; align-items: end">
+    <div style="padding-bottom: 12px; font-size: 13px; font-weight: 800; color: #596170; letter-spacing: 0.04em">가치 ＼ 제품 · 솔루션</div>
+    <sc-for list="{{prods}}" as="p" hint-placeholder-count="5">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0">
+        <dc-import name="Prod" kind="{{p.kind}}" w="164" h="100" bg="soft" zoom="{{p.zoom}}" hint-size="164px,100px"></dc-import>
+        <span style="font-size: 14px; font-weight: 800; white-space: nowrap">{{p.name}}</span>
+        <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{p.type}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 가치 행 -->
+  <div style="position: absolute; left: 64px; top: 296px; width: 1152px; display: flex; flex-direction: column; border-top: 2px solid #121417">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div style="display: grid; grid-template-columns: 260px repeat(5, minmax(0, 1fr)); column-gap: 12px; align-items: center; height: 84px; border-bottom: 1px solid #e2e5ea">
+        <div style="display: flex; gap: 12px; min-width: 0">
+          <span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0; line-height: 1.2">{{r.no}}</span>
+          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+            <span style="font-size: 16px; font-weight: 800">{{r.value}}</span>
+            <span style="font-size: 12.5px; color: #596170">{{r.desc}}</span>
+          </div>
+        </div>
+        <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="5">
+          <div style="{{c.box}}">
+            <span style="{{c.mark}}"></span>
+            <span style="{{c.noteStyle}}">{{c.note}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 제품 이미지는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 10</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const prods = [
+      ['menuboard3', true, 'QM55C × 3', '카운터 메뉴보드'],
+      ['outdoor', true, 'OH55C', '옥외 · 드라이브스루'],
+      ['kiosk', true, 'KM24C', '셀프 주문'],
+      ['cms', true, 'MagicINFO', '콘텐츠 관리'],
+      ['energy', true, 'SmartThings Pro', '에너지 관리']
+    ].map(([kind, zoom, name, type]) => ({ kind, zoom, name, type }));
+    // H 핵심 · S 함께 · N 없음 — 핵심 칸에는 한 줄 근거
+    const R = [
+      ['본사에서 한 번에 운영', '전 매장 같은 화면 · 같은 날', [['S', ''], ['S', ''], ['S', ''], ['H', '배포 · 승인 · 확인'], ['S', '']]],
+      ['프로모션을 몇 분 만에', '예약 · 자동 전환', [['H', '시간대 메뉴'], ['H', 'DT 시즌 메뉴'], ['S', ''], ['H', '예약 배포'], ['N', '']]],
+      ['피크 시간 줄 줄이기', '주문 분산 · 픽업 안내', [['S', ''], ['S', ''], ['H', '셀프 주문 · 결제'], ['N', ''], ['N', '']]],
+      ['저전력 자동 운영', '영업시간에만, 필요한 만큼', [['S', '자동 밝기'], ['N', ''], ['N', ''], ['S', ''], ['H', '전원 · 냉난방 스케줄']]]
+    ];
+    const MARK = {
+      H: 'width: 22px; height: 22px; border-radius: 50%; background: #1428a0;',
+      S: 'width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 3px solid #1428a0;',
+      N: 'width: 16px; height: 2px; background: #b8bec8;'
+    };
+    const rows = R.map(([value, desc, cells], i) => ({
+      no: String(i + 1).padStart(2, '0'), value, desc,
+      cells: cells.map(([m, note]) => ({
+        mark: MARK[m], note,
+        box: 'height: 84px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;' + (m === 'H' ? ' background: #f5f7fd;' : ''),
+        noteStyle: 'font-size: 11.5px; font-weight: 700; color: #1428a0; white-space: nowrap;' + (note ? '' : ' display: none;')
+      }))
+    }));
+    return { prods, rows };
+  }
+}
+</script>
+</body>
+</html>

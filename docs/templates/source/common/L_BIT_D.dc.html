@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BIT-D b.IoT 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · b.IoT</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>b.IoT · 빌딩 에너지 관리</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">층마다의 설비가 하나의 관리 화면으로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구성도 · 층별 설비 → 게이트웨이 → b.IoT → 관리자 화면 · 제어는 내려가고, 사용량과 상태는 올라옵니다</div>
+
+  <!-- 옥상: 실외기 DVM S2 -->
+  <div style="position: absolute; left: 64px; top: 186px; font-size: 12.5px; font-weight: 700; color: #596170">옥상</div>
+  <div style="position: absolute; left: 124px; top: 186px; width: 206px; text-align: right; font-size: 12.5px; font-weight: 700; white-space: nowrap">실외기 · DVM S2 ×[0]</div>
+  <sc-for list="{{outdoor}}" as="o" hint-placeholder-count="3">
+    <div style="{{o}}"><div style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 2px solid #121417"></div></div>
+  </sc-for>
+
+  <!-- 건물 경계 -->
+  <div style="position: absolute; left: 116px; top: 222px; width: 464px; height: 378px; box-sizing: border-box; border-radius: 12px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 128px; top: 212px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">C 오피스 빌딩</div>
+
+  <!-- 층 띠 -->
+  <sc-for list="{{floors}}" as="f" hint-placeholder-count="6">
+    <div style="{{f.labelStyle}}">{{f.name}}</div>
+    <div style="{{f.bandStyle}}">
+      <span style="width: 72px; flex-shrink: 0; font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap">{{f.use}}</span>
+      <sc-for list="{{f.chips}}" as="c" hint-placeholder-count="3">
+        <span style="{{c.style}}"><span style="{{c.dot}}"></span>{{c.t}}</span>
+      </sc-for>
+      <sc-if value="{{f.collapsed}}" hint-placeholder-val="{{false}}">
+        <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{f.note}}</span>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <!-- 지면 -->
+  <div style="position: absolute; left: 64px; top: 513px; width: 576px; height: 2px; background: #121417"></div>
+  <div style="position: absolute; left: 600px; top: 496px; font-size: 10.5px; color: #8a91a0">지면</div>
+
+  <!-- 라이저 · 연결선 · 화살표 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="24">
+    <div style="{{w.style}}"></div>
+  </sc-for>
+  <sc-for list="{{flowLabels}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.style}}">{{l.t}}</div>
+  </sc-for>
+
+  <!-- 게이트웨이 -->
+  <div style="position: absolute; left: 700px; top: 520px; width: 180px; height: 80px; box-sizing: border-box; border-radius: 12px; border: 1.5px solid #121417; background: #ffffff; padding: 0 14px; display: flex; align-items: center; gap: 10px">
+    <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h18v6H3z M7 17h.01 M11 17h.01 M12 14V10 M8.5 7.5a5 5 0 0 1 7 0 M6 5a8.5 8.5 0 0 1 12 0"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 800">게이트웨이</span><span style="font-size: 11.5px; color: #596170">B1 기계실</span></div>
+  </div>
+
+  <!-- b.IoT (로고 칩) -->
+  <div style="position: absolute; left: 700px; top: 340px; width: 516px; height: 120px; box-sizing: border-box; border-radius: 16px; background: #1428a0"></div>
+  <div style="position: absolute; left: 720px; top: 354px; width: 178px; height: 44px; box-sizing: border-box; border-radius: 10px; background: #ffffff"></div>
+  <img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 로고" style="position: absolute; left: 732px; top: 363px; width: 154px; height: 26px; object-fit: contain; border-radius: 0px">
+  <div style="position: absolute; left: 912px; top: 357px; display: flex; flex-direction: column; gap: 1px; color: #ffffff"><span style="font-size: 15px; font-weight: 800; line-height: 1.3">공조 중심 통합 빌딩 관리</span><span style="font-size: 12px; color: #c8d3ff; white-space: nowrap">DVM S2 중심 · 센서 · 조명 · 전력 · 설비</span></div>
+  <div style="position: absolute; left: 720px; top: 414px; display: flex; gap: 6px; color: #ffffff">
+    <sc-for list="{{modules}}" as="m" hint-placeholder-count="4">
+      <span style="height: 26px; padding: 0 10px; border-radius: 7px; background: rgba(255,255,255,0.14); font-size: 12px; display: flex; align-items: center; white-space: nowrap">{{m}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 관리자 화면: 대시보드 (실제 화면) · 모바일 · 알림 -->
+  <div style="position: absolute; left: 700px; top: 160px; width: 246px; height: 144px; box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff"></div>
+  <div style="position: absolute; left: 712px; top: 172px; width: 222px; height: 76px; border-radius: 8px; overflow: hidden; background: #f2f3f5">
+    <img src="/_blob/5a4ac42a10af63328d12de232610e2d7" alt="b.IoT 통합 모니터링 대시보드 화면" style="position: absolute; left: -8px; top: -10px; width: 400px; height: 188px; object-fit: cover; border-radius: 0px">
+  </div>
+  <div style="position: absolute; left: 712px; top: 254px; display: flex; flex-direction: column; gap: 2px; white-space: nowrap"><span style="font-size: 14.5px; font-weight: 800; line-height: 1.35">관리자 대시보드</span><span style="font-size: 11.5px; color: #596170">PC · 층별 현황 · 제어</span></div>
+  <sc-for list="{{outputs}}" as="o" hint-placeholder-count="2">
+    <div style="{{o.style}}">
+      <div style="width: 30px; height: 30px; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{o.icon}}"/></svg></div>
+      <div style="display: flex; flex-direction: column; gap: 2px; white-space: nowrap"><span style="font-size: 14.5px; font-weight: 800; line-height: 1.35">{{o.t}}</span><span style="font-size: 11.5px; color: #596170">{{o.d}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- 관리 범위 요약 + 도면 관제 화면 -->
+  <div style="position: absolute; left: 904px; top: 476px; width: 312px; height: 116px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 916px; top: 488px; width: 132px; height: 92px; border-radius: 8px; overflow: hidden; background: #f2f3f5">
+    <img src="/_blob/d0808414679c457969944638289f2c11" alt="b.IoT 도면 기반 존별 실내기 관제 화면" style="position: absolute; left: -34px; top: -40px; width: 264px; height: 161px; object-fit: cover; border-radius: 0px">
+    <div style="position: absolute; left: 6px; top: 68px; height: 18px; padding: 0 6px; border-radius: 999px; background: #ffffff; font-size: 10px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">도면 관제 화면</div>
+  </div>
+  <div style="position: absolute; left: 1062px; top: 486px; font-size: 12px; font-weight: 800; color: #596170; white-space: nowrap">한 화면에서 보는 범위</div>
+  <div style="position: absolute; left: 1062px; top: 508px; width: 142px; display: grid; grid-template-columns: 70px 70px; row-gap: 4px; column-gap: 2px">
+    <sc-for list="{{scope}}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 0px"><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; color: #1428a0; letter-spacing: -0.02em; line-height: 1.3">{{s.n}}</span><span style="font-size: 11px; color: #596170; white-space: nowrap">{{s.l}}</span></div>
+    </sc-for>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 904px; top: 606px; display: flex; align-items: center; gap: 14px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 24px; height: 2px; background: #1428a0"></span>제어 · 스케줄 (내려감)</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 24px; height: 0; border-top: 2px dashed #8a91a0"></span>사용량 · 상태 (올라옴)</span>
+  </div>
+
+  <!-- 건물 외관 (예시 사진) + 주석 -->
+  <div style="position: absolute; left: 64px; top: 606px; width: 96px; height: 40px; border-radius: 6px; overflow: hidden; background: #dfe3ea">
+    <img src="/_blob/f9c7419f1a0c38a2dcf07dbeaaee728a" alt="오피스 빌딩 외관 예시 사진" style="position: absolute; left: -30px; top: -40px; width: 140px; height: 103px; object-fit: cover; border-radius: 0px">
+  </div>
+  <div style="position: absolute; left: 172px; top: 606px; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="font-size: 12px; font-weight: 700; color: #3d4452">C 오피스 빌딩</span><span style="height: 18px; padding: 0 7px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 10px; color: #596170; display: flex; align-items: center">예시 사진 · 고객 건물로 교체</span></div>
+  <div style="position: absolute; left: 172px; top: 629px; font-size: 12px; color: #8a91a0; white-space: nowrap">4F – 2F는 같은 구성으로 생략 · 기기 수는 도면 확인 후 반영</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 에너지 관리 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const BLUE = '#1428a0', GRAY = '#8a91a0', INK = '#3d4452';
+    const h = (x1, x2, y, c, dash) => ({ style: A + 'left: ' + px(Math.min(x1, x2)) + 'top: ' + px(y - 1) + 'width: ' + px(Math.abs(x2 - x1)) + (dash ? 'height: 0px; border-top: 2px dashed ' + c + ';' : 'height: 2px; background: ' + c + ';') });
+    const v = (x, y1, y2, c, dash) => ({ style: A + 'left: ' + px(x - 1) + 'top: ' + px(Math.min(y1, y2)) + 'height: ' + px(Math.abs(y2 - y1)) + (dash ? 'width: 0px; border-left: 2px dashed ' + c + ';' : 'width: 2px; background: ' + c + ';') });
+    const ar = (x, y, dir, c) => {
+      const s = 'position: absolute; width: 0px; height: 0px; ';
+      if (dir === 'r') return { style: s + 'left: ' + px(x - 7) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + c + ';' };
+      if (dir === 'l') return { style: s + 'left: ' + px(x) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid ' + c + ';' };
+      if (dir === 'd') return { style: s + 'left: ' + px(x - 5) + 'top: ' + px(y - 7) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid ' + c + ';' };
+      return { style: s + 'left: ' + px(x - 5) + 'top: ' + px(y) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + c + ';' };
+    };
+
+    // 옥상 실외기 3대 (x 340 · 416 · 492)
+    const outdoor = [0, 1, 2].map((i) => A + 'left: ' + px(340 + i * 76) + 'top: 176px; width: 64px; height: 40px; border-radius: 4px; border: 1.5px solid #121417; background: #ffffff; display: flex; align-items: center; justify-content: center;');
+
+    // 층 띠: 띠 x 124–548 · 라이저 x 566
+    const chip = (t, hvac) => ({
+      t,
+      style: 'height: 26px; box-sizing: border-box; padding: 0 7px; border-radius: 6px; font-size: 11.5px; display: flex; align-items: center; gap: 5px; white-space: nowrap; flex-shrink: 0; ' + (hvac ? 'background: #eaeefb; color: #1428a0; font-weight: 700;' : 'background: #ffffff; border: 1px solid #e2e5ea; color: #3d4452;'),
+      dot: 'width: 7px; height: 7px; border-radius: 2px; background: ' + (hvac ? '#1428a0' : '#8a91a0') + ';'
+    });
+    const F = [
+      ['7F', '임대 공실', 236, 52, [['실내기 ×[00]', 1], ['조명', 0], ['센서', 0]]],
+      ['6F', '사무실', 294, 52, [['실내기 ×[00]', 1], ['조명', 0], ['전력 미터', 0]]],
+      ['5F', '회의실층', 352, 52, [['실내기 ×[00]', 1], ['조명', 0], ['센서', 0]]],
+      ['4F–2F', '사무실', 410, 40, null],
+      ['1F', '공용부', 456, 52, [['실내기 ×[00]', 1], ['조명', 0], ['센서', 0]]],
+      ['B1', '로비 · 기계실', 522, 66, [['실내기 ×[00]', 1], ['전력 미터', 0], ['기계 설비', 0], ['센서', 0]]]
+    ];
+    const floors = F.map(([name, use, top, hh, chips]) => {
+      const collapsed = !chips;
+      const small = name.length > 2;
+      return {
+        name, use, collapsed,
+        note: '같은 구성 · 층당 실내기 ×[00] · 조명 · 전력 미터',
+        chips: collapsed ? [] : chips.map(([t, hv]) => chip(t, hv)),
+        labelStyle: 'position: absolute; left: 64px; top: ' + px(top + hh / 2 - 10) + 'width: 44px; height: 20px; line-height: 20px; font-family: Manrope, sans-serif; font-weight: 800; font-size: ' + (small ? '12px' : '15px') + '; color: ' + (small ? '#596170' : '#121417') + ';',
+        bandStyle: A + 'left: 124px; top: ' + px(top) + 'width: 424px; height: ' + px(hh) + 'border-radius: 8px; padding: 0 12px; display: flex; align-items: center; gap: 6px; overflow: hidden; ' + (collapsed ? 'background: #ffffff; border: 1px dashed #d5d9e0;' : 'background: #f5f6f8;')
+      };
+    });
+
+    const wires = [];
+    // 라이저 (옥상 → B1)
+    wires.push(v(566, 195, 574, '#121417'));
+    wires.push(h(556, 566, 196, '#121417'));
+    // 층 → 라이저 연결점
+    F.forEach(([, , top, hh]) => {
+      const cy = top + Math.round(hh / 2);
+      wires.push(h(548, 565, cy, '#b8bec8'));
+      wires.push({ style: A + 'left: 561px; top: ' + px(cy - 5) + 'width: 10px; height: 10px; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff;' });
+    });
+    // 건물 ↔ 게이트웨이
+    wires.push(h(567, 700, 540, BLUE), ar(567, 540, 'l', BLUE));
+    wires.push(h(567, 693, 574, GRAY, true), ar(700, 574, 'r', GRAY));
+    // 게이트웨이 ↔ b.IoT
+    wires.push(v(776, 460, 513, BLUE), ar(776, 520, 'd', BLUE));
+    wires.push(v(804, 467, 520, GRAY, true), ar(804, 460, 'u', GRAY));
+    // b.IoT ↔ 관리자 화면 (대시보드 · 모바일은 양방향, 알림은 수신) · 카드 하단 y 304
+    [823, 1025].forEach((cx) => {
+      wires.push(v(cx - 10, 304, 333, BLUE), ar(cx - 10, 340, 'd', BLUE));
+      wires.push(v(cx + 12, 311, 340, GRAY, true), ar(cx + 12, 304, 'u', GRAY));
+    });
+    wires.push(v(1160, 311, 340, GRAY, true), ar(1160, 304, 'u', GRAY));
+
+    const lab = (l, t, txt, c, w) => ({ t: txt, style: 'position: absolute; left: ' + px(l) + 'top: ' + px(t) + (w ? 'width: ' + px(w) + 'text-align: right; ' : '') + 'font-size: 11.5px; font-weight: 700; line-height: 1.4; white-space: nowrap; color: ' + c + ';' });
+    const flowLabels = [
+      lab(592, 519, '제어 · 스케줄', BLUE),
+      lab(592, 580, '사용량 · 상태', INK),
+      lab(708, 482, '제어', BLUE, 60),
+      lab(814, 482, '사용량 · 상태', INK)
+    ];
+
+    // 모바일 · 알림 카드 (대시보드 카드는 실제 화면 썸네일로 별도 마크업)
+    const card = (l, w) => A + 'left: ' + px(l) + 'top: 160px; width: ' + px(w) + 'height: 144px; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;';
+    const outputs = [
+      { t: '모바일', d: '어디서나 조회 · 제어', icon: 'M7 2h10v20H7z M11 18h2', style: card(958, 134) },
+      { t: '알림', d: '비효율 사용 알림', icon: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z M10 21h4', style: card(1104, 112) }
+    ];
+    const modules = ['AI 공조 최적화', '에너지 모니터링', '중앙 제어 · 스케줄', '비효율 알림'];
+    const scope = [
+      { n: '[0]', l: '층 수' },
+      { n: '[000]', l: '실내기' },
+      { n: '[00]', l: '조명 회로' },
+      { n: '[00]', l: '전력 미터' }
+    ];
+    return { outdoor, floors, wires, flowLabels, outputs, modules, scope };
+  }
+}
+</script>
+</body>
+</html>

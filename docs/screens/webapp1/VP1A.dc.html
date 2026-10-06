@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition — 재료 자동 수집 · 충돌 정리</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="A 커피 메뉴보드 가치 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="A 커피 메뉴보드 가치 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="display: flex; align-items: center; gap: 8px; max-width: 600px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px">
+            <span style="font-weight: 600">자료 연결</span><span style="color: #596170">· Storyboard 1 · MI 1 · RFP 1 (A커피_디지털메뉴보드_RFP.pdf)</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.6">세 자료에서 재료 14개를 뽑아 4축으로 정리했어요. 같은 말은 합치고, 부딪치는 건 고쳐 썼어요. 확인이 필요한 건 하나뿐이에요.</div>
+
+            <!-- 4축 추출 결과 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="height: 42px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <span style="font-size: 13px; font-weight: 700; white-space: nowrap">뽑은 재료 <span style="color: #596170; font-weight: 500">· 4축 · 14개</span></span>
+                <span style="flex-grow: 1"></span>
+                <sc-for list="{{srcLegend}}" as="l" hint-placeholder-count="4">
+                  <span style="display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #596170; white-space: nowrap"><span style="{{l.style}}">{{l.k}}</span>{{l.name}}</span>
+                </sc-for>
+              </div>
+              <sc-for list="{{axes}}" as="a" hint-placeholder-count="4">
+                <div style="display: flex; align-items: flex-start; gap: 12px; padding: 9px 16px; border-top: 1px solid #f0f2f5">
+                  <span style="width: 74px; flex-shrink: 0; font-size: 12.5px; font-weight: 700; line-height: 26px; white-space: nowrap">{{a.k}}</span>
+                  <div style="display: flex; flex-wrap: wrap; gap: 6px; flex-grow: 1; min-width: 0">
+                    <sc-for list="{{a.items}}" as="it" hint-placeholder-count="3">
+                      <span style="{{it.style}}">{{it.t}}<sc-for list="{{it.src}}" as="s" hint-placeholder-count="1"><span style="{{s.style}}">{{s.k}}</span></sc-for></span>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- 에이전트가 정리한 것 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="height: 40px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <span style="font-size: 13px; font-weight: 700; white-space: nowrap">에이전트가 정리한 것 <span style="color: #596170; font-weight: 500">· 3</span></span>
+              </div>
+              <sc-for list="{{fixes}}" as="f" hint-placeholder-count="3">
+                <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 84px 130px; column-gap: 10px; align-items: center; height: 46px; padding: 0 16px; border-top: 1px solid #f0f2f5">
+                  <span style="font-size: 12px; font-weight: 700; color: #3d4452; white-space: nowrap">{{f.k}}</span>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                    <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.from}}</span>
+                    <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">→ {{f.to}}</span>
+                  </div>
+                  <span style="{{f.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{f.mIcon}}"/></svg>{{f.mText}}</span>
+                  <div style="display: flex; gap: 4px; justify-content: flex-end">
+                    <sc-if value="{{f.ask}}" hint-placeholder-val="{{false}}">
+                      <button style="height: 28px; padding: 0 9px; border-radius: 7px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; white-space: nowrap">원래대로</button>
+                      <button style="height: 28px; padding: 0 9px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 600; white-space: nowrap">좋아요</button>
+                    </sc-if>
+                    <sc-if value="{{f.noAsk}}" hint-placeholder-val="{{true}}">
+                      <button style="height: 28px; padding: 0 9px; border-radius: 7px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 600; white-space: nowrap">되돌리기</button>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">재료 확인 <span style="color: #596170; font-weight: 500">· 1 / 3 · 자동 정리 2 · 확인 권장 1 — 답이 없으면 고쳐 쓴 문장으로 진행</span></div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">재료에 덧붙일 말</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="재료에 덧붙일 말 (예: 손님 관점은 빼고 본사 기준으로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="VP1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">이전</a>
+          <a href="VP2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>가치 구조로</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 출처 표시: SB = Storyboard · MI · RFP · 사례
+    const SRC = { SB: 'Storyboard', MI: 'MI', RFP: 'RFP', CS: '유관 사례' };
+    const tag = (k) => ({ k, style: 'height: 17px; padding: 0 5px; border-radius: 4px; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: inline-flex; align-items: center; ' + (k === 'RFP' ? 'background: #121417; color: #ffffff;' : k === 'SB' ? 'background: #1428a0; color: #ffffff;' : 'background: #d5dcf5; color: #1428a0;') });
+    const srcLegend = ['SB', 'MI', 'RFP'].map((k) => ({ ...tag(k), name: SRC[k] }));
+    // 항목: [문장, 출처들, 상태(n 새로 · m 합침 · e 고쳐 씀 · r 다시 찾음)]
+    const AX = [
+      ['과제', [['메뉴 바뀔 때마다 인쇄 · 배송', ['MI', 'RFP'], ''], ['매장마다 다른 가격 표기', ['MI'], ''], ['피크 주문 대기', ['MI'], ''], ['늘어나는 매장 전기료', ['SB', 'MI'], 'm']]],
+      ['가치', [['본사에서 한 번에 운영', ['SB'], ''], ['승인은 본사, 반영은 몇 분', ['SB', 'RFP'], 'e'], ['저전력 자동 운영', ['SB'], '']]],
+      ['근거 수치', [['매장 320', ['RFP'], ''], ['인쇄 · 배송비 연 [00]억', ['RFP'], ''], ['프로모션 교체 [0]일', ['MI'], ''], ['프랜차이즈 도입률 [00]%', ['MI'], 'r']]],
+      ['이해관계자', [['본사 운영본부 · 결재', ['RFP'], ''], ['점장 · 직원', ['MI'], ''], ['손님', ['MI'], '']]]
+    ];
+    const itemStyle = (st) => 'height: 26px; box-sizing: border-box; padding: 0 4px 0 9px; border-radius: 7px; font-size: 12px; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; ' +
+      (st === 'e' ? 'background: #f5f7fd; border: 1.5px solid #1428a0; color: #121417; font-weight: 600;' : st ? 'background: #eaeefb; border: 1px solid #b8c3ee; color: #121417;' : 'background: #f5f6f8; border: 1px solid #e2e5ea; color: #121417;');
+    const axes = AX.map(([k, items]) => ({ k, items: items.map(([t, src, st]) => ({ t, src: src.map(tag), style: itemStyle(st) })) }));
+
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; justify-self: start; ';
+    const F = [
+      ['합침', "'전기료 절감'(Storyboard) = '에너지 비용 부담'(MI)", "'늘어나는 매장 전기료' 하나로", 'auto'],
+      ['고쳐 씀', "Key Message ② '프로모션을 몇 분 만에' ↔ RFP '본사 승인 절차 유지'", "'승인은 본사, 반영은 몇 분'", 'check'],
+      ['다시 찾음', "MI 수치 '프랜차이즈 도입률' 출처가 26개월 지남", '최신 리포트 [기관, 연도]로 교체', 'auto']
+    ];
+    const fixes = F.map(([k, from, to, m]) => ({ k, from, to, ask: m === 'check', noAsk: m !== 'check', mText: MODE[m][0], mIcon: MODE[m][2], mStyle: CHIP + MODE[m][1] }));
+    return { steps: ['재료', '가치 구조', '결과'], cur: 1, srcLegend, axes, fixes };
+  }
+}
+</script>
+</body>
+</html>

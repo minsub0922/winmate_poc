@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-MAP 조합 지도 — 공간 수 × 솔루션 수로 레이아웃 고르기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오 · 조합 지도</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">에이전트 선택 기준</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">공간 수와 솔루션 조합이 정해지면, 레이아웃은 에이전트가 고릅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">조감도 존 · 요구사항의 공간 목록에서 공간 수를, Storyboard · 제안 솔루션에서 조합을 읽고 — 빈 칸은 가장 가까운 칸으로</div>
+
+  <!-- ============ 매트릭스 바탕 ============ -->
+  <div style="{{frame}}">
+    <div style="{{headBg}}"></div>
+    <div style="{{colBg}}"></div>
+  </div>
+  <sc-for list="{{hlines}}" as="l" hint-placeholder-count="5">
+    <div style="{{l.style}}"></div>
+  </sc-for>
+  <sc-for list="{{vlines}}" as="l" hint-placeholder-count="12">
+    <div style="{{l.style}}"></div>
+  </sc-for>
+
+  <!-- 머리 -->
+  <div style="{{corner}}"><span>공간 수</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"></path></svg><span>솔루션</span><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.style}}"><span style="font-size: 11px; color: #8a91a0">솔루션</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 800; color: #ffffff">{{c.t}}</span></div>
+  </sc-for>
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+    <div style="{{r.labelS}}">{{r.label}}</div>
+    <div style="{{r.subS}}">{{r.sub}}</div>
+  </sc-for>
+
+  <!-- 칸 — 세 줄 항목 -->
+  <sc-for list="{{entries}}" as="e" hint-placeholder-count="14">
+    <div style="{{e.style}}">
+      <div style="height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="{{e.chipS}}">{{e.code}}</span><span style="font-size: 12.5px; font-weight: 800; letter-spacing: -0.01em">{{e.name}}</span></div>
+      <div style="margin-top: 3px; font-size: 12px; line-height: 15px; color: #3d4452; white-space: nowrap">{{e.desc}}</div>
+      <div style="font-size: 10.5px; line-height: 14px; color: #8a91a0; white-space: nowrap">{{e.sample}}</div>
+    </div>
+  </sc-for>
+  <!-- 칸 — 넓은 행 두 줄 항목 -->
+  <sc-for list="{{wides}}" as="e" hint-placeholder-count="4">
+    <div style="{{e.style}}">
+      <div style="height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="{{e.chipS}}">{{e.code}}</span><span style="font-size: 12.5px; font-weight: 800; letter-spacing: -0.01em">{{e.name}}</span><span style="font-size: 10.5px; color: #8a91a0">{{e.sample}}</span></div>
+      <div style="margin-top: 3px; font-size: 12px; line-height: 16px; color: #3d4452; white-space: nowrap">{{e.desc}}</div>
+    </div>
+  </sc-for>
+  <sc-for list="{{dividers}}" as="d" hint-placeholder-count="2">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+
+  <!-- 3곳 × 2개 — 기존 템플릿 -->
+  <div style="{{legacy}}">
+    <sc-for list="{{legacyChips}}" as="k" hint-placeholder-count="2">
+      <span style="display: flex; align-items: center; gap: 4px"><span style="height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 999px; background: #ffffff; border: 1px solid #8a91a0; color: #121417; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">{{k.code}}</span><span style="font-size: 11px; color: #596170">{{k.t}}</span></span>
+    </sc-for>
+  </div>
+
+  <!-- 4–5곳 × 1~2 병합 표시 -->
+  <div style="{{mergeTag}}">1개 · 2개 함께</div>
+  <!-- 4–5곳 × 4개 이상 → VC-6·4 -->
+  <div style="{{goto}}">
+    <div style="height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M6 14l6 6 6-6"></path></svg><span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center">VC-6·4</span><span style="font-size: 12.5px; font-weight: 800">사용</span></div>
+    <div style="margin-top: 3px; font-size: 12px; line-height: 16px; color: #3d4452; white-space: nowrap">공간이 많으면 히트맵으로</div>
+  </div>
+
+  <!-- 표 아래 메모 -->
+  <div style="position: absolute; left: 64px; top: 638px; height: 18px; display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">VC</span><span>이번 VC 시리즈 · 조합별</span>
+    <span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #8a91a0; color: #121417; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">VM</span><span>기존 범용 · 업종 템플릿</span>
+    <span style="width: 1px; height: 14px; background: #d5d9e0; margin: 0 6px"></span>
+    <span>조감도가 있으면 공간 수와 상관없이</span>
+    <span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #8a91a0; color: #121417; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center">VM-C</span><span><span style="font-weight: 700; color: #121417">조감도 위 핀</span>도 후보</span>
+  </div>
+
+  <!-- ============ 판단 순서 ============ -->
+  <div style="{{panel}}"></div>
+  <div style="position: absolute; left: 1032px; top: 170px; font-size: 15px; line-height: 20px; font-weight: 800; white-space: nowrap">판단 순서</div>
+  <div style="position: absolute; left: 1032px; top: 192px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">시트마다 에이전트가 이 순서로</div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.rail}}"></div>
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.titleS}}">{{s.title}}</div>
+    <div style="{{s.d1S}}">{{s.d1}}</div>
+    <div style="{{s.d2S}}">{{s.d2}}</div>
+    <div style="{{s.chipRow}}">
+      <sc-for list="{{s.modes}}" as="m" hint-placeholder-count="1">
+        <span style="{{m.style}}">{{m.t}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>Winmate 템플릿 안내 · 고객에게 나가지 않는 시트</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 표: x 64–996 · 행 머리 104 · 열 4 × 207
+    const TX = 64, TY = 156, TW = 932, HH = 28, RW = 104, CX = TX + RW;
+    const CW = [207, 207, 207, 207];
+    const cx = (c) => CX + CW.slice(0, c).reduce((a, b) => a + b, 0);
+    const RH = [118, 62, 106, 62, 48, 48];
+    const ry = (r) => TY + HH + RH.slice(0, r).reduce((a, b) => a + b, 0);
+    const TH = HH + RH.reduce((a, b) => a + b, 0);
+
+    const frame = box(TX, TY, TW, TH) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; overflow: hidden;';
+    const headBg = box(0, 0, TW, HH) + 'background: #121417;';
+    const colBg = box(0, HH, RW, TH - HH) + 'background: #f5f6f8;';
+
+    const hlines = [1, 2, 3, 4, 5].map((r) => ({ style: box(TX + 1, ry(r), TW - 2, 1) + 'background: #e2e5ea;' }));
+    // 세로선: 행마다 (병합 칸 제외)
+    const V = [[0, [1, 2, 3, 4]], [1, [1, 2, 3, 4]], [2, [1, 2, 3, 4]], [3, [2, 3, 4]], [4, [4]], [5, [4]]];
+    const vlines = [];
+    V.forEach(([r, cs]) => cs.forEach((c) => vlines.push({ style: box(cx(c) - (c === 4 ? 0 : 0), ry(r) + (r === 0 ? 0 : 1), 1, RH[r] - (r === 0 ? 0 : 1)) + 'background: #e2e5ea;' })));
+    vlines.push({ style: box(CX, TY + HH, 1, TH - HH - 1) + 'background: #e2e5ea;' });
+
+    const corner = A + 'left: ' + px(TX + 12) + 'top: ' + px(TY) + 'height: ' + px(HH) + 'display: flex; align-items: center; gap: 3px; font-size: 10.5px; color: #8a91a0; ' + T;
+    const cols = ['1개 · 단독', '2개', '3개', '4개 이상'].map((t, c) => ({ t, style: A + 'left: ' + px(cx(c) + 12) + 'top: ' + px(TY) + 'height: ' + px(HH) + 'display: flex; align-items: center; gap: 6px; ' + T }));
+    const rows = [['1곳', '한 공간'], ['2곳', '두 공간'], ['3곳', '세 공간'], ['4–5곳', '네 · 다섯 공간'], ['6곳 이상', '공간이 많을 때'], ['지점 여러 곳', '본사 + 지점']].map(([label, sub], r) => ({
+      label, sub,
+      labelS: A + 'left: ' + px(TX + 14) + 'top: ' + px(ry(r) + 7) + "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 20px; font-weight: 800; " + T,
+      subS: A + 'left: ' + px(TX + 14) + 'top: ' + px(ry(r) + 27) + 'font-size: 10.5px; line-height: 14px; color: #596170; ' + T
+    }));
+
+    const chipCB = 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center;';
+    const chipOld = 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #ffffff; border: 1px solid #8a91a0; color: #121417; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center;';
+
+    // [행, 열, 칸 안 순서, 코드, 이름, 설명, 샘플]
+    const E = [
+      [0, 0, 0, 'VC-1·1A', '집중', '한 솔루션을 깊게', '옥외 전광판 · MagicINFO'],
+      [0, 0, 1, 'VC-1·1B', '기능 3단', '기능별로 펼침', '입고장 · Knox Capture'],
+      [0, 1, 0, 'VC-1·2', '역할 분담', '보는 화면 · 손에 드는 기기', '민원실 · VXT + Knox Suite'],
+      [0, 2, 0, 'VC-1·3', '레이어 스택', '같은 공간에 층처럼', '신선 코너 · 솔루션 3개'],
+      [0, 3, 0, 'VC-1·4', '허브', '한 매장을 넷이 나눠 맡음', '카페 · 솔루션 4개'],
+      [0, 3, 1, 'VC-1·Z', '존 분할', '큰 공간을 구역으로', '플래그십 · 존 4'],
+      [1, 0, 0, 'VC-2·1', '미러', '같은 솔루션, 다른 쓰임', '지점 · 현장 · DeX'],
+      [1, 1, 0, 'VC-2·2', '연결', 'A 공간의 일이 B 공간으로', '프런트 → 객실'],
+      [1, 2, 0, 'VC-2·3', '공유 + 전용', '공간마다 전용 + 함께 쓰는 것', '교실 · 교무실'],
+      [1, 3, 0, 'VC-2·4', '2열 비교', '같은 솔루션도 공간마다 다르게', '상온 · 저온 창고'],
+      [2, 0, 0, 'VC-3·1', '흐름', '동선 따라 한 솔루션', '테마파크'],
+      [2, 1, 0, 'VC-3·2', '사진 3 + 솔루션 띠', '세 공간을 띠 두 줄이 관통', '무인 매장 3종'],
+      [2, 2, 0, 'VC-3·3', '1:1', '공간마다 솔루션 하나', '리빙 매장'],
+      [2, 3, 0, 'VC-3·4', '공통 기반 + 추가', '기반 하나 위에 공간별로 얹음', '컨벤션'],
+      [3, 0, 0, 'VC-4·2', '사분면', '공간마다 두 솔루션의 비중', '쇼핑몰'],
+      [3, 2, 0, 'VC-4·3', '평면도 위 범위', '솔루션마다 맡는 구역', '푸드홀']
+    ];
+    const entries = E.map(([r, c, k, code, name, desc, sample]) => ({
+      code, name, desc, sample, chipS: chipCB,
+      style: A + 'left: ' + px(cx(c) + 12) + 'top: ' + px(ry(r) + 8 + k * 58) + T
+    }));
+    const dividers = [0, 3].map((c) => ({ style: box(cx(c) + 12, ry(0) + 62, CW[c] - 24, 0) + 'border-top: 1px dashed #d5d9e0;' }));
+
+    // 넓은 행 (열 전체)
+    const SPAN = (TW - RW) / 3;
+    const W = [
+      [4, 0, '업종 ① 공간 맵', '지도 위 공간 카드', '기존 · 업종 9종', true],
+      [4, 1, 'VC-J', '동선 × 솔루션 레인', '동선 순서대로 바통을 넘길 때', false],
+      [4, 2, 'VC-6·4', '히트맵', '칸의 진하기로 공간별 비중', false],
+      [5, 0, 'VC-N', '본사 + 지점 유형', '본사가 한 번에, 점포는 유형별 조합만', false]
+    ];
+    const wides = W.map(([r, k, code, name, desc, old]) => {
+      const sample = r === 5 ? '편의점' : (k === 0 ? '' : (k === 1 ? '영화관' : '리조트'));
+      return {
+        code, name: old ? '' : name, desc: old ? name + ' — ' + desc : desc, sample: old ? desc : sample,
+        chipS: old ? chipOld : chipCB,
+        style: A + 'left: ' + px(Math.round(CX + 12 + k * SPAN)) + 'top: ' + px(ry(r) + 6) + T
+      };
+    });
+    wides[0].desc = '지도 위 공간 카드 · 업종 9종';
+    wides[0].sample = '';
+
+    const legacy = A + 'left: ' + px(cx(1) + 12) + 'top: ' + px(ry(2) + 62) + 'display: flex; flex-direction: column; gap: 4px; ' + T;
+    const legacyChips = [['VM-A', '매트릭스'], ['VM-B', '3개 나란히']].map(([code, t]) => ({ code, t }));
+
+    const mergeTag = A + 'right: ' + px(1280 - (cx(2) - 12)) + 'top: ' + px(ry(3) + 9) + 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; ' + T;
+    const goto = A + 'left: ' + px(cx(3) + 12) + 'top: ' + px(ry(3) + 8) + T;
+
+    // 판단 순서 패널 x 1016–1216
+    const panel = box(1016, TY, 200, TH) + 'border-radius: 14px; background: #f5f6f8;';
+    const mode = {
+      auto: 'height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center;',
+      check: 'height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #1428a0; color: #1428a0; font-size: 11px; font-weight: 800; display: flex; align-items: center;',
+      lock: 'height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center;'
+    };
+    const ST = [
+      ['공간 수', '조감도 존 · 요구사항의', '공간 목록에서 → 행', [['자동', 'auto']]],
+      ['솔루션 수와 관계', '같음 · 다름 · 공유+전용 ·', '데이터 연결 → 열', [['자동', 'auto']]],
+      ['메시지', '집중 · 흐름 · 비교로 고르고', '두 칸에 걸치면 확인', [['자동', 'auto'], ['확인 권장', 'check']]],
+      ['사용자 고정', '사용자가 고정한 시트는', '다시 고르지 않습니다', [['고정', 'lock']]]
+    ];
+    const SY = 224, SS = 98;
+    const steps = ST.map(([title, d1, d2, modes], i) => {
+      const y = SY + i * SS;
+      return {
+        n: i + 1, title, d1, d2,
+        modes: modes.map(([t, k]) => ({ t, style: mode[k] })),
+        rail: i < ST.length - 1 ? box(1042, y + 24, 2, SS - 26) + 'background: #d5d9e0;' : box(1042, y, 0, 0),
+        badge: box(1032, y, 22, 22) + 'border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        titleS: A + 'left: 1062px; top: ' + px(y + 1) + 'font-size: 13.5px; line-height: 20px; font-weight: 800; ' + T,
+        d1S: A + 'left: 1062px; top: ' + px(y + 26) + 'font-size: 11.5px; line-height: 16px; color: #3d4452; ' + T,
+        d2S: A + 'left: 1062px; top: ' + px(y + 42) + 'font-size: 11.5px; line-height: 16px; color: #3d4452; ' + T,
+        chipRow: A + 'left: 1062px; top: ' + px(y + 64) + 'display: flex; gap: 5px; ' + T
+      };
+    });
+
+    return { frame, headBg, colBg, hlines, vlines, corner, cols, rows, entries, wides, dividers, legacy, legacyChips, mergeTag, goto, panel, steps };
+  }
+}
+</script>
+</body>
+</html>

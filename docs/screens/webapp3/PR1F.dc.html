@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 · RFP로 시작</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="새 제안서" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.65">RFP를 읽고 고객 · 프로젝트 정보를 채웠어요. 원문에서 찾은 곳에 번호를 달아 두었으니 맞는지 확인해 주세요. 원문에 없는 2개 항목은 비워 두었어요.</div>
+
+          <!-- 올린 파일 · 읽기 진행 -->
+          <div style="height: 56px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 12px">
+            <div style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 8px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h5"/></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+              <span style="font-size: 13.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">A커피_디지털메뉴보드_RFP.pdf</span>
+              <span style="font-size: 12px; color: #596170">PDF · 24쪽 · 방금 올림</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0">
+              <sc-for list="{{phases}}" as="ph" hint-placeholder-count="3">
+                <span style="display: flex; align-items: center; gap: 4px; height: 24px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 600; white-space: nowrap"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{{ph}}</span>
+              </sc-for>
+            </div>
+            <span style="width: 1px; height: 24px; background: #e2e5ea; flex-shrink: 0"></span>
+            <button style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; flex-shrink: 0; white-space: nowrap">회의록 추가</button>
+            <button style="height: 30px; padding: 0 8px; border-radius: 8px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600; flex-shrink: 0; white-space: nowrap">다른 파일</button>
+          </div>
+
+          <!-- 원문 하이라이트 ↔ 자동 채움 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: grid; grid-template-columns: 318px minmax(0, 1fr)">
+            <div style="border-right: 1px solid #e2e5ea; background: #fbfbfc; display: flex; flex-direction: column">
+              <div style="height: 40px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e5ea">
+                <span style="font-size: 12.5px; font-weight: 700">원문</span>
+                <span style="font-size: 11.5px; color: #596170">찾은 곳 {{foundCount}}</span>
+              </div>
+              <div style="padding: 10px 14px 12px 14px; display: flex; flex-direction: column; gap: 8px; overflow: hidden">
+                <sc-for list="{{pages}}" as="pg" hint-placeholder-count="4">
+                  <div style="display: flex; flex-direction: column; gap: 4px">
+                    <span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; color: #8a91a0">{{pg.p}}</span>
+                    <div style="font-size: 12px; line-height: 1.75; color: #3d4452">
+                      <sc-for list="{{pg.parts}}" as="pt" hint-placeholder-count="3">
+                        <span style="{{pt.style}}"><sc-if value="{{pt.hasNo}}" hint-placeholder-val="{{false}}"><span style="{{pt.noStyle}}">{{pt.no}}</span></sc-if>{{pt.t}}</span>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: column; min-width: 0">
+              <div style="height: 40px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e5ea">
+                <span style="font-size: 12.5px; font-weight: 700">자동으로 채운 항목</span>
+                <span style="font-size: 11.5px; color: #596170">누르면 원문 위치로 이동</span>
+              </div>
+              <div style="padding: 4px 8px 8px 8px; display: flex; flex-direction: column">
+                <sc-for list="{{fields}}" as="f" hint-placeholder-count="9">
+                  <div style="{{f.rowStyle}}">
+                    <span style="{{f.noStyle}}">{{f.no}}</span>
+                    <span style="font-size: 12px; color: #596170; white-space: nowrap">{{f.label}}</span>
+                    <span style="{{f.valStyle}}">{{f.val}}</span>
+                    <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0; text-align: right; white-space: nowrap">{{f.src}}</span>
+                    <span style="{{f.stateStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="{{f.stateIcon}}"/></svg>{{f.state}}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">RFP에서 채운 고객 · 프로젝트 정보 <span style="color: #596170; font-weight: 500">· 1 / 6</span></div>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{tally}}" as="ty" hint-placeholder-count="3">
+              <span style="{{ty.style}}">{{ty.label}} <span style="font-family: Manrope, sans-serif; font-weight: 800">{{ty.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 0 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label for="budget" style="font-size: 12px; color: #596170">⑧ 예산 범위 <span style="color: #8a91a0">· 원문에 없음</span></label>
+            <div style="height: 38px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; background: #ffffff; display: flex; align-items: center; padding: 0 12px"><input id="budget" placeholder="예) [00]억 원 이내 · 모르면 비워 두기" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13.5px; color: #121417; outline: none"></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label for="who" style="font-size: 12px; color: #596170">⑨ 의사결정자 · 청중 <span style="color: #8a91a0">· 원문에 없음</span></label>
+            <div style="height: 38px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; background: #ffffff; display: flex; align-items: center; padding: 0 12px"><input id="who" placeholder="예) 운영본부장, 마케팅팀장, IT팀" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13.5px; color: #121417; outline: none"></div>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12px; line-height: 1.5; color: #596170">요구사항 5건은 시트 구성 추천과 섹션 작성에 그대로 쓰여요.</span>
+          <div style="display: flex; gap: 8px; flex-shrink: 0">
+            <a href="PR1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">직접 입력으로</a>
+            <a href="PR2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+              <span>확인 · 다음: 제안서 유형</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const NUM = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨'];
+    // 원문 발췌: [쪽, [[텍스트, 항목 번호(0 = 하이라이트 없음)]]]
+    const P = [
+      ['p.1 · 표지', [['', 0], ['A 커피 프랜차이즈', 1], [' — ', 0], ['전국 매장 디지털 메뉴보드 전환', 2], [' 제안 요청서', 0]]],
+      ['p.2 · 사업 개요', [['당사는 ', 0], ['커피 전문점', 3], [' 브랜드로 전국 ', 0], ['320개 직영 · 가맹 매장', 4], ['을 운영합니다.', 0]]],
+      ['p.5 · 요구 사항', [['', 0], ['본사에서 전 매장 콘텐츠를 일괄 배포', 5], ['하고, 프로모션 교체 주기를 줄일 방안을 제안해 주십시오.', 0]]],
+      ['p.11 · 일정', [['제안서 제출 ', 0], ['2026년 10월 15일', 6], [', 제안 설명회 ', 0], ['10월 22일 (발표 20분)', 7]]]
+    ];
+    const hl = 'background: #eaeefb; color: #121417; border-radius: 3px; padding: 1px 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone;';
+    const pages = P.map(([p, parts]) => ({
+      p,
+      parts: parts.filter(([t]) => t).map(([t, n]) => ({
+        t, hasNo: n > 0, no: n > 0 ? NUM[n - 1] : '',
+        style: n > 0 ? hl + ' font-weight: 600;' : '',
+        noStyle: 'color: #1428a0; font-weight: 700; margin-right: 2px;'
+      }))
+    }));
+
+    // 자동 채움: [라벨, 값, 출처, 상태(ok · guess · none)]
+    const F = [
+      ['고객사', 'A 커피 프랜차이즈', 'p.1', 'ok'],
+      ['프로젝트명', '전국 매장 디지털 메뉴보드 전환', 'p.1', 'ok'],
+      ['업종', '외식 · 카페 프랜차이즈', 'p.2', 'guess'],
+      ['규모', '320개 매장 (직영 · 가맹)', 'p.2', 'ok'],
+      ['요구사항', '5건 · 콘텐츠 일괄 배포 외 4', 'p.5–7', 'ok'],
+      ['제안 제출일', '2026-10-15', 'p.11', 'ok'],
+      ['제안 설명회', '2026-10-22 · 발표 20분', 'p.11', 'ok'],
+      ['예산 범위', '원문에 없음', '—', 'none'],
+      ['의사결정자', '원문에 없음', '—', 'none']
+    ];
+    const STATE = {
+      ok: ['찾음', 'M5 12l5 5L20 7', ' color: #1428a0; background: #eaeefb;'],
+      guess: ['추정', 'M12 8v5 M12 16.5v.5', ' color: #121417; background: #ffffff; border: 1px solid #121417;'],
+      none: ['비어 있음', 'M6 12h12', ' color: #596170; background: #f0f2f5;']
+    };
+    const fields = F.map(([label, val, src, st], i) => ({
+      no: NUM[i], label, val, src, state: STATE[st][0], stateIcon: STATE[st][1],
+      noStyle: 'font-size: 12.5px; font-weight: 700;' + (st === 'none' ? ' color: #8a91a0;' : ' color: #1428a0;'),
+      valStyle: 'font-size: 13px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (st === 'none' ? ' color: #8a91a0;' : ' color: #121417; font-weight: 600;'),
+      stateStyle: 'justify-self: end; height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 3px; white-space: nowrap;' + STATE[st][2],
+      rowStyle: 'display: grid; grid-template-columns: 16px 64px minmax(0, 1fr) 40px 74px; gap: 0 8px; align-items: center; height: 32px; padding: 0 6px; border-radius: 8px;' + (i === 2 ? ' background: #f5f7fd;' : '') + (i < F.length - 1 ? ' border-bottom: 1px solid #f0f2f5;' : '')
+    }));
+    const n = (k) => F.filter((f) => f[3] === k).length;
+    const tally = [['찾음', n('ok'), ' color: #1428a0; background: #eaeefb;'], ['추정', n('guess'), ' color: #121417; background: #ffffff; border: 1px solid #121417;'], ['비어 있음', n('none'), ' color: #596170; background: #f0f2f5;']]
+      .map(([label, c, s]) => ({ label, n: c, style: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;' + s }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+      phases: ['읽기', '항목 찾기', '채우기'], pages, fields, tally, foundCount: F.length - n('none')
+    };
+  }
+}
+</script>
+</body>
+</html>

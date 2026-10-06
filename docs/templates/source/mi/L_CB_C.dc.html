@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CB-C 운영 흐름 속 페인포인트</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">메뉴가 바뀌는 날, 매장까지 다섯 단계를 거칩니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">현재 메뉴 교체 프로세스 · 인터뷰 기반</div>
+
+  <!-- 프로세스 5단계 + 쉐브론 -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.cardStyle}}">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; color: #1428a0">STEP {{s.no}}</span>
+      <span style="margin-top: 6px; font-size: 18px; font-weight: 800">{{s.name}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 12px; border-top: 1px solid #e2e5ea">
+        <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 12px; color: #8a91a0">담당</span><span style="font-size: 13.5px; color: #3d4452">{{s.owner}}</span></div>
+        <div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 12px; color: #8a91a0">소요</span><span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800">{{s.days}}</span></div>
+      </div>
+    </div>
+    <sc-if value="{{s.hasNext}}" hint-placeholder-val="{{true}}">
+      <svg style="{{s.chevStyle}}" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>
+    </sc-if>
+  </sc-for>
+
+  <!-- 페인포인트 콜아웃 (해당 단계 아래) -->
+  <sc-for list="{{pains}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.lineStyle}}"></div>
+    <div style="{{p.boxStyle}}">
+      <span style="width: 24px; height: 24px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.no}}</span>
+      <span style="margin-top: 10px; font-size: 15px; font-weight: 800; line-height: 1.4">{{p.title}}</span>
+      <span style="margin-top: 6px; font-size: 12.5px; line-height: 1.5; color: #596170">{{p.detail}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 하단 합계 바 -->
+  <div style="position: absolute; left: 64px; top: 568px; width: 1152px; height: 72px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 28px; display: flex; align-items: center">
+    <span style="width: 250px; flex-shrink: 0; font-size: 15px; font-weight: 800">메뉴 1회 교체에 드는 것</span>
+    <sc-for list="{{totals}}" as="t" hint-placeholder-count="3">
+      <div style="flex-grow: 1; height: 40px; border-left: 1px solid #d5d9e0; padding-left: 24px; display: flex; align-items: center; gap: 12px">
+        <span style="font-size: 13px; color: #596170">{{t.k}}</span>
+        <span style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 24px; font-weight: 800; letter-spacing: -0.02em">{{t.v}}</span><span style="font-size: 14px; font-weight: 700">{{t.u}}</span></span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 9</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 카드 200 × 168, 간격 38(쉐브론 칸) → 5 × 200 + 4 × 38 = 1152
+    const CW = 200, CH = 168, SLOT = 38, TOP = 176;
+    const x = (i) => 64 + i * (CW + SLOT);
+    const S = [
+      ['본사 기획', '본사 마케팅'],
+      ['디자인 제작', '디자인 대행사'],
+      ['인쇄 · 배송', '인쇄소 · 물류사'],
+      ['매장 교체', '매장 점주 · 직원'],
+      ['가격 확인', '가맹 운영팀']
+    ];
+    const steps = S.map(([name, owner], i) => ({
+      no: '0' + (i + 1), name, owner, days: '[0]일', hasNext: i < S.length - 1,
+      cardStyle: 'position: absolute; left: ' + x(i) + 'px; top: ' + TOP + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 20px; display: flex; flex-direction: column;',
+      chevStyle: 'position: absolute; left: ' + (x(i) + CW + 5) + 'px; top: ' + (TOP + CH / 2 - 14) + 'px;'
+    }));
+    // 문제가 생기는 단계: 디자인 제작(1) · 인쇄 · 배송(2) · 가격 확인(4)
+    const P = [
+      { at: 1, title: '인쇄물 재제작 월 [00]건', detail: '오탈자 · 가격 수정 때마다 다시 인쇄' },
+      { at: 2, title: '배송 누락 · 지연', detail: '교체일을 넘겨 받는 매장 [00]곳' },
+      { at: 4, title: '매장별 가격 표기 불일치', detail: '점검 매장의 [00]%에서 발견' }
+    ];
+    const pTop = TOP + CH + 32;
+    const pains = P.map((p, i) => ({
+      no: String(i + 1), title: p.title, detail: p.detail,
+      lineStyle: 'position: absolute; left: ' + (x(p.at) + CW / 2 - 1) + 'px; top: ' + (TOP + CH) + 'px; width: 2px; height: 32px; background: #121417;',
+      boxStyle: 'position: absolute; left: ' + x(p.at) + 'px; top: ' + pTop + 'px; width: ' + CW + 'px; height: 156px; box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1.5px solid #121417; padding: 16px; display: flex; flex-direction: column; align-items: flex-start;'
+    }));
+    const totals = [
+      { k: '총 소요', v: '[00]', u: '일' },
+      { k: '매장당 연간 작업', v: '[00]', u: '시간' },
+      { k: '인쇄비 (연)', v: '[0.0]', u: '억 원' }
+    ];
+    return { steps, pains, totals };
+  }
+}
+</script>
+</body>
+</html>

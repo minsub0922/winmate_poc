@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VS03 공간 3개 한 장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">세 공간, 세 가지 가치</div>
+
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{spaces}}" as="s" hint-placeholder-count="3">
+      <div style="height: 512px; box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; overflow: hidden; display: flex; flex-direction: column">
+        <div style="position: relative; height: 190px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">{{s.space}} 이미지<span style="position: absolute; left: 14px; top: 14px; height: 28px; padding: 0 10px; border-radius: 8px; background: #121417; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center">{{s.space}}</span></div>
+        <div style="padding: 20px 22px; display: flex; flex-direction: column; gap: 12px; flex-grow: 1">
+          <span style="font-size: 19px; font-weight: 800; line-height: 1.4">{{s.title}}</span>
+          <div style="display: flex; flex-direction: column; gap: 8px; font-size: 13.5px">
+            <div style="display: flex; gap: 10px"><span style="width: 52px; flex-shrink: 0; color: #596170">솔루션</span><span style="font-weight: 700; color: #1428a0">{{s.sol}}</span></div>
+            <div style="display: flex; gap: 10px"><span style="width: 52px; flex-shrink: 0; color: #596170">제품</span><span>{{s.dev}}</span></div>
+          </div>
+          <div style="flex-grow: 1"></div>
+          <div style="border-radius: 10px; background: #eaeefb; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 11.5px; font-weight: 800; color: #1428a0; letter-spacing: 0.04em">제공 가치</span><span style="font-size: 15px; font-weight: 700; line-height: 1.45">{{s.value}}</span></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { spaces: [
+      { space: '본사 운영실', title: '320개 매장을 한 화면에서', sol: 'MagicINFO', dev: '운영 대시보드', value: '배포 · 점검 업무 시간 [00]% 단축' },
+      { space: '매장 카운터', title: '메뉴가 스스로 바뀌는 카운터', sol: 'MagicINFO · SmartThings Pro', dev: 'QM55C ×3 · KM24C', value: '주문 대기 감소 · 표기 오류 0' },
+      { space: '매장 외부', title: '거리에서 먼저 보이는 매장', sol: 'MagicINFO', dev: 'OH55C ×2', value: '유입 증가 · 외부 프로모션 상시' }
+    ] };
+  }
+}
+</script>
+</body>
+</html>

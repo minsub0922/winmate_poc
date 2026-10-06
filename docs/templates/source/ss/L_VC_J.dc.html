@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-J 공간 동선 × 솔루션 레인 (멀티플렉스 영화관)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 6곳 · 솔루션 4개 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">HH 시네마의 관객 동선 여섯 곳, 네 솔루션이 차례로 바통을 넘깁니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">공간을 동선 순서로 — 열은 관객이 지나가는 곳, 줄은 그 순간 움직이는 솔루션</div>
+
+  <!-- ============ 모서리 ============ -->
+  <div style="position: absolute; left: 64px; top: 164px; display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap"><span>관객 동선</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+  <div style="position: absolute; left: 64px; top: 194px; display: flex; align-items: center; gap: 6px; font-size: 12px; line-height: 17px; font-weight: 700; color: #596170; white-space: nowrap"><span>솔루션 레인</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"></path></svg></div>
+
+  <!-- ============ 동선 머리 ============ -->
+  <sc-for list="{{track}}" as="k" hint-placeholder-count="5">
+    <div style="{{k.line}}"></div>
+    <div style="{{k.head}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4l8 8-8 8"></path></svg></div>
+  </sc-for>
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.ico}}"></div>
+    <div style="{{c.badge}}">{{c.n}}</div>
+    <div style="{{c.nameS}}">{{c.name}}</div>
+  </sc-for>
+  <svg style="position: absolute; left: 294px; top: 165px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18v3a2 2 0 0 0 0 4v3H3v-3a2 2 0 0 0 0-4z"></path><path d="M15 7v10"></path></svg>
+  <svg style="position: absolute; left: 452px; top: 165px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12l-1.5 11h-9z"></path><path d="M7 9a2.5 2.5 0 0 1 3.5-3 2.5 2.5 0 0 1 3 0A2.5 2.5 0 0 1 17 9"></path><path d="M10.5 12.5l.5 5M13.5 12.5l-.5 5"></path></svg>
+  <svg style="position: absolute; left: 610px; top: 165px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"></path><path d="M3 13a2 2 0 0 1 4 0v2h10v-2a2 2 0 0 1 4 0v4H3z"></path><path d="M5 17v2M19 17v2"></path></svg>
+  <svg style="position: absolute; left: 768px; top: 165px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4h12v17"></path><path d="M3 21h18"></path><path d="M14.5 12.5v.01"></path></svg>
+  <svg style="position: absolute; left: 926px; top: 165px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="1.5"></rect><path d="M8 5v14M16 5v14M4 9.5h4M4 14.5h4M16 9.5h4M16 14.5h4"></path></svg>
+  <svg style="position: absolute; left: 1084px; top: 165px" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4H5v16h5"></path><path d="M14 8l4 4-4 4"></path><path d="M18 12H9"></path></svg>
+
+  <!-- ============ 레인 머리 ============ -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.box}}">
+      <span style="{{l.chip}}">{{l.name}}</span>
+      <div style="position: absolute; left: 12px; top: 38px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{l.def}}</div>
+      <div style="position: absolute; left: 12px; top: 56px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">{{l.prod}}</div>
+    </div>
+  </sc-for>
+
+  <!-- ============ 레인 연결선 ============ -->
+  <sc-for list="{{joins}}" as="j" hint-placeholder-count="4">
+    <div style="{{j.style}}"></div>
+  </sc-for>
+
+  <!-- ============ 격자 칸 ============ -->
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="24">
+    <div style="{{c.style}}">
+      <div style="{{c.aS}}">{{c.a}}</div>
+      <div style="position: absolute; left: 12px; top: 38px; font-size: 12px; line-height: 17px; color: #121417; white-space: nowrap">{{c.b}}</div>
+    </div>
+  </sc-for>
+  <sc-for list="{{ends}}" as="e" hint-placeholder-count="8">
+    <div style="{{e.style}}"></div>
+  </sc-for>
+
+  <!-- ============ 동선 전체 가치 ============ -->
+  <div style="position: absolute; left: 64px; top: 586px; width: 1152px; height: 66px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 597px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">동선 전체 가치</div>
+  <div style="position: absolute; left: 80px; top: 619px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+  <sc-for list="{{vals}}" as="v" hint-placeholder-count="3">
+    <div style="{{v.div}}"></div>
+    <div style="{{v.top}}">
+      <span style="font-size: 12.5px; font-weight: 700; color: #3d4452">{{v.t}}</span>
+      <sc-for list="{{v.at}}" as="a" hint-placeholder-count="2">
+        <span style="width: 16px; height: 16px; border-radius: 50%; background: #ffffff; border: 1px solid #b8c3ee; box-sizing: border-box; color: #1428a0; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{a.n}}</span>
+      </sc-for>
+    </div>
+    <div style="{{v.numS}}">{{v.num}}</div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>HH 시네마 · 멀티플렉스 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 격자: 레인 머리 64–276 · 칸 x 288 + i*158, 폭 138 (→ 1216) · 레인 y 234 + j*86, 높이 78
+    const CX = 288, STEP = 158, CW = 138, RY = 234, RSTEP = 86, RH = 78;
+    const colX = (i) => CX + i * STEP;
+    const rowY = (j) => RY + j * RSTEP;
+
+    // 동선 머리 (아이콘 칸 30 · 번호 · 이름)
+    const NAMES = ['매표 · 키오스크', '매점', '로비 대기', '상영관 입구', '상영관', '퇴장 · 출구'];
+    const cols = NAMES.map((name, i) => ({
+      n: i + 1, name,
+      ico: box(colX(i), 160, 32, 30) + 'border-radius: 8px; background: #eaeefb;',
+      badge: box(colX(i), 200, 20, 20) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+      nameS: A + 'left: ' + px(colX(i) + 27) + 'top: 199px; font-size: 13.5px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; ' + T
+    }));
+    const track = [0, 1, 2, 3, 4].map((i) => ({
+      line: box(colX(i) + 40, 174, STEP - 52, 2) + 'background: #b8c3ee;',
+      head: box(colX(i + 1) - 16, 170, 10, 10) + 'display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 레인 (솔루션 4) — ① #1428a0 ② #121417 ③ #6f82d6 ④ 흰 바탕 + #1428a0 테두리
+    const L = [
+      { name: 'MagicINFO', def: '콘텐츠 제작 · 편성 · 원격 관리', prod: '키오스크 KM24C · 스마트 사이니지 · LED',
+        chip: 'background: #1428a0; color: #ffffff;', line: '2px solid #1428a0', dot: '#1428a0',
+        cells: [['상영 시간표', '잔여 좌석 표시'], ['메뉴보드', '콤보 프로모션'], ['예고편 · 광고', '편성 송출'], null, null, ['다음 상영 ·', '이벤트 안내']] },
+      { name: 'Knox Capture', def: '갤럭시 카메라로 바코드 · QR 스캔', prod: '갤럭시 스마트폰',
+        chip: 'background: #121417; color: #ffffff;', line: '2px solid #121417', dot: '#121417',
+        cells: [null, ['매점 픽업 번호', '스캔'], null, ['직원 갤럭시로', '모바일 티켓 QR 스캔'], null, null] },
+      { name: 'SmartThings Pro', def: '조명 · 냉난방 자동화 루틴', prod: '조명 · 시스템에어컨',
+        chip: 'background: #6f82d6; color: #121417;', line: '2px solid #6f82d6', dot: '#6f82d6',
+        cells: [null, null, ['대기 인원 따라', '냉난방 조절'], null, ['상영 시작 · 종료에', '맞춰 조명 · 공조'], ['퇴장 동선 조명', '']] },
+      { name: 'b.IoT', def: '건물 공조 · 전력 · 설비 관제', prod: '건물 설비',
+        chip: 'background: #ffffff; color: #1428a0; border: 1.5px solid #1428a0;', line: '2px dashed #1428a0', dot: '#1428a0',
+        cells: [null, null, ['로비 환기 ·', '공기질 관리'], null, ['상영관 전력 ·', '설비 이상 알림'], ['마지막 회차 후', '건물 일괄 절전']] }
+    ];
+    const lanes = L.map((l, j) => ({
+      name: l.name, def: l.def, prod: l.prod,
+      box: box(64, rowY(j), 212, RH) + 'border-radius: 10px; background: #f5f6f8;',
+      chip: A + 'left: 12px; top: 10px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; ' + T + l.chip
+    }));
+
+    const cells = [], joins = [], ends = [];
+    L.forEach((l, j) => {
+      const y = rowY(j);
+      l.cells.forEach((c, i) => {
+        const on = !!c;
+        cells.push({
+          a: on ? c[0] : '', b: on ? c[1] : '',
+          aS: A + 'left: 12px; top: ' + px(on && !c[1] ? 30 : 21) + 'font-size: 12px; line-height: 17px; color: #121417; ' + T,
+          style: box(colX(i), y, CW, RH) + 'box-sizing: border-box; border-radius: 10px; ' +
+            (on ? 'background: #eaeefb;' : 'border: 1px dashed #dfe2e7; background: #ffffff;')
+        });
+        if (on && i < 5 && l.cells[i + 1]) {
+          const x0 = colX(i) + CW, cy = y + RH / 2;
+          joins.push({ style: A + 'left: ' + px(x0) + 'top: ' + px(cy - 1) + 'width: ' + px(STEP - CW) + 'height: 0; border-top: ' + l.line + ';' });
+          [x0, x0 + STEP - CW].forEach((x) => ends.push({ style: box(x - 4, cy - 4, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: ' + l.dot + '; border: 1.5px solid #ffffff;' }));
+        }
+      });
+    });
+
+    // 동선 전체 가치 3
+    const VX = [288, 604, 920];
+    const vals = [
+      ['입장 대기', '[0]분 ↓', [1, 4]],
+      ['매점 객단가', '[00]% ↑', [2]],
+      ['비상영 시간 전력', '[00]% ↓', [5, 6]]
+    ].map(([t, num, at], i) => ({
+      t, num, at: at.map((n) => ({ n })),
+      div: box(VX[i] - 12, 598, 1, 42) + 'background: #d5d9e0;',
+      top: A + 'left: ' + px(VX[i] + 4) + 'top: 597px; height: 18px; display: flex; align-items: center; gap: 4px; ' + T,
+      numS: A + 'left: ' + px(VX[i] + 4) + 'top: 617px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 22px; line-height: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; ' + T
+    }));
+
+    return { cols, track, lanes, cells, joins, ends, vals };
+  }
+}
+</script>
+</body>
+</html>

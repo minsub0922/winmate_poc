@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-E 과제 → 제품 → 가치</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">세 가지 과제를, 세 가지 제품 · 솔루션으로 풉니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">과제마다 그것을 해결하는 제품과, 그래서 A 커피가 얻는 가치를 한 줄로</div>
+
+  <div style="position: absolute; left: 64px; top: 156px; width: 1152px; display: grid; grid-template-columns: 340px 40px 360px 40px minmax(0, 1fr); font-size: 13px; font-weight: 800; letter-spacing: 0.04em">
+    <span style="color: #596170">고객 과제</span><span></span><span style="color: #121417">해결하는 제품 · 솔루션</span><span></span><span style="color: #1428a0">얻는 가치</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 186px; width: 1152px; display: flex; flex-direction: column; gap: 12px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="display: grid; grid-template-columns: 340px 40px 360px 40px minmax(0, 1fr); height: 144px">
+        <div style="box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 20px 22px; display: flex; gap: 14px">
+          <span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; color: #8a91a0; line-height: 1.2">{{r.no}}</span>
+          <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+            <span style="font-size: 17.5px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.35">{{r.pain}}</span>
+            <span style="font-size: 13.5px; line-height: 1.55; color: #596170">{{r.painDesc}}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div style="box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; padding: 11px; display: flex; align-items: center; gap: 14px">
+          <dc-import name="Prod" kind="{{r.kind}}" w="168" h="120" bg="soft" zoom="{{r.zoom}}" hint-size="168px,120px"></dc-import>
+          <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+            <span style="align-self: flex-start; height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{r.cat}}</span>
+            <span style="font-size: 16.5px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3">{{r.prod}}</span>
+            <span style="font-size: 12.5px; line-height: 1.5; color: #596170">{{r.role}}</span>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div style="box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 20px 22px; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em">{{r.value}}</span>
+          <span style="font-size: 13.5px; line-height: 1.55; color: #3d4452">{{r.valueDesc}}</span>
+          <div style="flex-grow: 1"></div>
+          <span style="align-self: flex-start; height: 28px; padding: 0 12px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap">{{r.kpiK}}<span style="font-family: Manrope, sans-serif; font-weight: 800">{{r.kpiV}}</span></span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 제품 이미지는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [과제, 과제 설명, 이미지 슬롯, 확대, 분류, 제품 · 솔루션, 맡는 역할, 가치, 가치 설명, KPI 이름, KPI 값]
+    const R = [
+      ['매장마다 제각각인 메뉴 관리', '매장별 수동 교체로 표기 · 가격 오류가 반복', 'cms', true, '솔루션', 'MagicINFO', '본사에서 전 매장 콘텐츠를 만들고 · 승인하고 · 배포', '본사에서 한 번에 운영', '한 번 승인으로 [000]개 매장에 동시 배포', '배포', '[0]분'],
+      ['느린 프로모션 교체', '공문 → 인쇄 → 배송 → 교체까지 [0]일', 'menuboard3', true, '제품', 'Smart Signage QM55C × 3', '카운터 상단 메인 메뉴보드 — 시간대 · 시즌 자동 전환', '프로모션을 몇 분 만에', '예약해 두면 정해진 시각에 전 매장이 바뀝니다', '교체', '[00]분'],
+      ['늘어나는 매장 전기료', '영업시간 외에도 켜진 화면 · 조명 · 냉난방', 'energy', true, '솔루션', 'SmartThings Pro', '화면 · 에어컨 · 조명을 영업 스케줄로 자동 제어', '저전력 자동 운영', '필요한 시간에, 필요한 만큼만 켭니다', '전력', '[00]% ↓']
+    ];
+    return { rows: R.map(([pain, painDesc, kind, zoom, cat, prod, role, value, valueDesc, kpiK, kpiV], i) => ({ no: String(i + 1).padStart(2, '0'), pain, painDesc, kind, zoom, cat, prod, role, value, valueDesc, kpiK, kpiV })) };
+  }
+}
+</script>
+</body>
+</html>

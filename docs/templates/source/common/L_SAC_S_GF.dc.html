@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SAC-S-GF 시스템에어컨 제어 공간 시나리오 · 스크린골프장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · SAC 제어 시스템</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>SAC 제어 · 시스템에어컨 제어 시스템</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">고객은 타석에서 조절하고, 빈 타석은 알아서 멈춥니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">J 스크린골프 매장 예시 · 타석마다 실내기 + 유선리모컨, 카운터에 On/Off 제어기, 여러 매장은 링크 컨트롤러 → b.IoT Cloud</div>
+
+  <!-- 고객 동선 1: 입구 · 카운터 → 라운지 -->
+  <img src="/_blob/f776b977d365544508b3551d3c201756" alt="스크린골프장 입구 엘리베이터 홀의 세로형 사이니지" style="position: absolute; left: 64px; top: 160px; width: 176px; height: 128px; object-fit: cover; object-position: 50% 50%; border-radius: 12px">
+  <img src="/_blob/77e1f0e42f3aabddf3e9dd475b3f8b23" alt="스크린골프장 입구 카운터와 상단 사이니지" style="position: absolute; left: 248px; top: 160px; width: 176px; height: 128px; object-fit: cover; object-position: 50% 30%; border-radius: 12px">
+  <div style="position: absolute; left: 430px; top: 214px; width: 16px; height: 20px; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  <img src="/_blob/b10a86fd399695c624597afbb51e2e2e" alt="스크린골프장 라운지 — 대형 TV가 있는 휴게 공간" style="position: absolute; left: 452px; top: 160px; width: 340px; height: 128px; object-fit: cover; object-position: 50% 25%; border-radius: 12px">
+
+  <!-- 고객 동선 2: 타석 (큰 사진 + 번호 콜아웃) -->
+  <img src="/_blob/6b3d09de83c32fe7c7045d7f2e782f5b" alt="스크린골프 타석 — 스윙하는 고객, 스크린, 천장 실내기" style="position: absolute; left: 64px; top: 302px; width: 728px; height: 260px; object-fit: cover; object-position: 50% 0%; border-radius: 14px">
+  <div style="position: absolute; left: 281px; top: 302px; width: 150px; height: 22px; box-sizing: border-box; border: 2px solid #1428a0; border-top: 0; border-radius: 0 0 6px 6px"></div>
+  <div style="position: absolute; left: 290px; top: 330px; height: 22px; padding: 0 8px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>타석마다 천장 실내기</div>
+
+  <!-- 공간 칩 · 예시 사진 표시 -->
+  <sc-for list="{{spaces}}" as="sp" hint-placeholder-count="3">
+    <div style="{{sp.style}}"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span>{{sp.t}}</div>
+  </sc-for>
+  <sc-for list="{{tinies}}" as="tn" hint-placeholder-count="3">
+    <div style="{{tn}}">예시 사진 · 고객 공간으로 교체</div>
+  </sc-for>
+
+  <!-- 카운터: On/Off 제어기 인셋 -->
+  <div style="position: absolute; left: 358px; top: 234px; width: 60px; height: 48px; border-radius: 8px; background: #ffffff">
+    <img src="/_blob/760a1087c670c4364c202a1415aa46ed" alt="On/Off 제어기 ACM-A202DN" style="position: absolute; left: 8px; top: 8px; width: 44px; height: 32px; object-fit: contain">
+  </div>
+
+  <!-- ③ 타석 유선리모컨 콜아웃 -->
+  <div style="position: absolute; left: 112px; top: 362px; width: 200px; height: 70px; box-sizing: border-box; border-radius: 10px; background: #ffffff">
+    <img src="/_blob/99bb1b59cc337f7f8d2eed6fed537a92" alt="통합 유선리모컨 AWR-WE13N" style="position: absolute; left: 10px; top: 11px; width: 44px; height: 47px; object-fit: contain">
+    <div style="position: absolute; left: 62px; top: 10px; display: flex; flex-direction: column; white-space: nowrap">
+      <span style="font-size: 12.5px; font-weight: 800; line-height: 18px">경기 중 · 고객이 조절</span>
+      <span style="font-size: 11px; font-weight: 700; line-height: 16px; color: #1428a0">상 · 하한 [00]~[00]℃</span>
+      <span style="font-size: 10.5px; line-height: 15px; color: #596170">타석 유선리모컨</span>
+    </div>
+  </div>
+  <!-- ④ 빈 타석 자동 정지 콜아웃 -->
+  <div style="position: absolute; left: 548px; top: 334px; width: 230px; height: 64px; box-sizing: border-box; border-radius: 10px; background: #ffffff; padding: 0 12px 0 22px; display: flex; flex-direction: column; justify-content: center; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; line-height: 18px">예약 없는 타석 · 사용 없음</span>
+    <span style="font-size: 11px; font-weight: 700; line-height: 16px; color: #1428a0">설정 시간 지나면 자동 운전 정지</span>
+    <span style="font-size: 10.5px; line-height: 15px; color: #596170">유선리모컨 · 설정 [00]분</span>
+  </div>
+
+  <!-- 사진 위 단계 번호 -->
+  <sc-for list="{{pins}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.style}}">{{p.n}}</div>
+  </sc-for>
+
+  <!-- 업종 고민 → SAC의 답 -->
+  <sc-for list="{{worries}}" as="w" hint-placeholder-count="2">
+    <div style="{{w.style}}">
+      <div style="height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+        <span style="height: 18px; padding: 0 6px; border-radius: 5px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 10px; font-weight: 700; color: #596170; display: flex; align-items: center">고민</span>
+        <span style="font-size: 11px; color: #596170">{{w.q}}</span>
+      </div>
+      <div style="height: 22px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+        <span style="height: 18px; padding: 0 6px; border-radius: 5px; background: #1428a0; font-size: 10px; font-weight: 800; color: #ffffff; display: flex; align-items: center">SAC</span>
+        <span style="font-size: 13px; font-weight: 800">{{w.a}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 우: 영업 흐름 (시간 순서) -->
+  <div style="position: absolute; left: 816px; top: 160px; font-size: 15px; font-weight: 800; line-height: 22px; white-space: nowrap">영업 흐름</div>
+  <div style="position: absolute; right: 64px; top: 163px; font-size: 11.5px; line-height: 18px; color: #8a91a0; white-space: nowrap">시간은 예시</div>
+  <div style="position: absolute; left: 829px; top: 204px; width: 2px; height: 312px; background: #d5d9e0"></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.dot}}">{{s.no}}</div>
+    <div style="{{s.card}}">
+      <div style="height: 20px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="min-width: 48px; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{s.time}}</span>
+        <span style="font-size: 13.5px; font-weight: 800">{{s.title}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 10.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">{{s.space}}</span>
+      </div>
+      <span style="font-size: 11.5px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.desc}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 여러 매장 → 링크 컨트롤러 → b.IoT Cloud -->
+  <div style="position: absolute; left: 816px; top: 536px; width: 400px; height: 112px; border-radius: 14px; background: #eaeefb"></div>
+  <div style="position: absolute; left: 830px; top: 546px; font-size: 13.5px; font-weight: 800; line-height: 20px; white-space: nowrap">여러 매장은 한 화면에서</div>
+  <div style="position: absolute; left: 830px; top: 574px; width: 76px; height: 40px; box-sizing: border-box; border-radius: 8px; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; white-space: nowrap"><span style="font-size: 11px; font-weight: 800; line-height: 15px">J 매장</span><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; line-height: 15px; color: #596170">×[00]</span></div>
+  <div style="position: absolute; left: 910px; top: 586px; width: 16px; height: 16px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  <div style="position: absolute; left: 930px; top: 574px; width: 116px; height: 40px; border-radius: 8px; background: #ffffff">
+    <img src="/_blob/5750215a6f546f3b2d1f1ef4e0ee1dbe" alt="링크 컨트롤러 AIM-B30N" style="position: absolute; left: 6px; top: 7px; width: 34px; height: 26px; object-fit: contain">
+    <div style="position: absolute; left: 44px; top: 5px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 10px; font-weight: 800; line-height: 15px">링크 컨트롤러</span><span style="font-family: Manrope, sans-serif; font-size: 10px; font-weight: 700; line-height: 14px; color: #596170">AIM-B30N</span></div>
+  </div>
+  <div style="position: absolute; left: 1050px; top: 586px; width: 16px; height: 16px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  <div style="position: absolute; left: 1070px; top: 574px; width: 132px; height: 40px; border-radius: 8px; background: #ffffff">
+    <img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 로고" style="position: absolute; left: 12px; top: 5px; width: 108px; height: 19px; object-fit: contain">
+    <span style="position: absolute; left: 12px; top: 24px; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; line-height: 12px; color: #1428a0; white-space: nowrap">Cloud · 본사 원격 관리</span>
+  </div>
+  <div style="position: absolute; left: 830px; top: 622px; font-size: 10.5px; line-height: 16px; color: #596170; white-space: nowrap">링크 컨트롤러 1대당 실내기 최대 <span style="font-family: Manrope, sans-serif; font-weight: 700">128</span>대 · 본사 PC · 모바일 · [이용 조건 확인]</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>J 스크린골프 체인 · 냉난방 제어 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // ---- 공간 칩 (고객 동선 순서) · 예시 사진 칩 ----
+    const chip = (t, x, y) => ({ t, style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'height: 24px; padding: 0 9px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; white-space: nowrap;' });
+    const spaces = [chip('입구 · 카운터', 72, 168), chip('라운지', 460, 168), chip('타석 ×[00]', 74, 312)];
+    const tiny = (x, y) => A + box(x, y, 140, 18) + 'border-radius: 999px; background: rgba(18,20,23,0.72); color: #ffffff; font-size: 9.5px; display: flex; align-items: center; justify-content: center; white-space: nowrap;';
+    const tinies = [tiny(72, 262), tiny(460, 262), tiny(74, 536)];
+
+    // ---- 사진 위 단계 번호 (오른쪽 영업 흐름과 같은 번호) ----
+    const pin = (n, x, y) => ({ n, style: A + box(x, y, 24, 24) + 'border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+    const pins = [
+      pin(1, 760, 168),   // 라운지 그룹 ON
+      pin(2, 346, 224),   // 카운터 On/Off 제어기
+      pin(5, 394, 168),   // 마감 · 카운터
+      pin(3, 102, 352),   // 타석 유선리모컨
+      pin(4, 538, 324)    // 빈 타석 자동 정지
+    ];
+
+    // ---- 업종 고민 → SAC의 답 ----
+    const W = [
+      ['“경기를 하다 보면 점점 더워져요”', '타석 유선리모컨으로 바로 조절 · 상 · 하한 제한'],
+      ['“경기가 끝난 후 기기를 다 끄지 않아 에너지가 낭비돼요”', '사용 없으면 자동 정지 · 마감은 그룹 OFF']
+    ];
+    const worries = W.map(([q, a], i) => ({
+      q, a,
+      style: A + box(64 + i * 370, 574, 358, 74) + 'border-radius: 12px; background: #f5f6f8; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 6px;'
+    }));
+
+    // ---- 영업 흐름 5단계 ----
+    const S = [
+      ['13:50', '오픈 준비', '라운지', '카운터 On/Off 제어기로 라운지 · 카운터 그룹 ON'],
+      ['14:00', '입장 · 타석 배정', '카운터', '배정 타석 그룹 버튼 ON · 최대 16 그룹 · 실내기 128대'],
+      ['14:05', '경기 중', '타석', '타석 유선리모컨 · 희망온도 상 · 하한 [00]~[00]℃ 제한'],
+      ['+[00]분', '빈 타석', '타석', '예약 없이 사용이 없으면 설정 [00]분 뒤 자동 운전 정지'],
+      ['24:00', '마감', '카운터', '카운터에서 전 그룹 OFF · 본사는 b.IoT Cloud로 확인']
+    ];
+    const steps = S.map(([time, title, space, desc], i) => {
+      const top = 190 + i * 68;
+      return {
+        no: i + 1, time, title, space, desc,
+        dot: A + box(818, top + 19, 24, 24) + 'border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        card: A + box(852, top, 364, 62) + 'border-radius: 10px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 4px; background: #f5f6f8;'
+      };
+    });
+
+    return { spaces, tinies, pins, worries, steps };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+ 
+ 기존 제안서 · 활용 계획 · 논리 흐름만 차용 
+ W 
+ 분석 결과 활용 방식으로 논리 흐름만 차용 을 추천해요 — 다른 고객(B 베이커리) 제안서라 내용은 쓰지 않고 설득 구조만 가져옵니다. 원본의 흐름 8단계를 이번 요구사항 5건에 맞춰 시트 구성으로 바꿨어요. 다르게 하려면 바꿔 주세요. 
+ {{md.label}} 
+ 추천 · 다른 고객 
+ 원본 흐름 
+ B 베이커리 · 24장 · 외부 파일 
+ {{s.name}} 
+ {{s.sub}} 
+ 이번 제안서 시트 구성 
+ 표준 · A 커피 프랜차이즈 · 전국 매장 디지털 메뉴보드 전환 
+ {{lg.label}} 
+ {{d.kind}} 
+ {{d.name}} 
+ {{d.note}} 
+ {{q}} 
+ {{d.n}} 
+ 가져오는 것 / 안 가져오는 것 
+ 흐름 차용 규칙 · 고정 
+ {{g.title}} 
+ {{g.n}} 
+ {{it.label}} {{it.sub}} 
+ 안 가져오는 항목은 섹션 작성의 '원본 대조' 보기에서도 숨겨져요. 역할 태그와 구조만 '흐름 가이드'로 보여요. 
+ 시트 구성 초안 · {{secCount}}섹션 · {{sheetCount}}시트 · 원본 내용 0줄 사용 · 1 / 6 
+ {{ty.label}} {{ty.n}} 
+ 확정하면 시트 구성(3단계)이 이 초안으로 채워지고, 섹션 작성에서는 원본 역할만 '흐름 가이드'로 보여요. 
+ 이전 
+ 시트 구성에서 다듬기 
+ 확정 · 섹션 작성 시작 
+class Component extends DCLogic {
+ renderVals() {
+ // 활용 방식 세그먼트 (B 선택)
+ const modes = [['기반으로 개선 · 수정', false], ['논리 흐름만 차용', true]].map(([label, on]) => ({
+ label, on,
+ style: '' + (on ? '' : '')
+ }));
+ // 원본 단계 색 (PRU2 · PRU2F 와 동일)
+ const COLOR = {
+ '문제 제기': '', '시장 변화': '', '고객 과제': '', '가치 제안': '',
+ '솔루션 구성': '', '도입 사례': '', '제품 스펙': '', '견적 · 일정': ''
+ };
+ const dot = (c) => '' + c + ';';
+ // 매핑 행 10개: [원본 단계, 원본 장수, 원본 쪽 범위, 종류(flow · new · drop), 새 시트 이름, 메모, 요구사항, 새 장수]
+ const MAP = [
+ ['문제 제기', 1, 'p.2', 'flow', '표지 · 제안 배경 1장', '신규 작성 · 이번 프로젝트 배경으로', [], 2],
+ ['시장 변화', 3, 'p.3–4', 'flow', 'Market Intelligence 3장', '시장 규모 · 성장 / 고객사 비즈니스 / 경쟁 환경 — 수치는 MI 작업으로 새로 조사', [], 3],
+ ['고객 과제', 3, 'p.5–6', 'flow', "Value Props 안 '과제' 1장", 'R1 · R2 · R3에서 추출 · 점주 인터뷰 대신 요구사항이 근거', ['R1', 'R2', 'R3'], 1],
+ ['가치 제안', 4, 'p.7–10', 'flow', 'Value Props 3장', '흐름 유지 · Key Message는 A 커피 톤(본사 통제 · 교체 주기)으로', ['R1', 'R2'], 3],
+ ['솔루션 구성', 5, 'p.11–15', 'flow', '솔루션 제안 3장 + 공간별 제품 4장', 'MagicINFO 전용 소개 · 구성도 · 공간 시나리오 / 공간 맵 · 카운터 · 대기 · 픽업', ['R1', 'R5'], 7],
+ ['도입 사례', 3, 'p.16–18', 'flow', '유관 사례 2장', '외식 · 카페 사례로 교체 · B 베이커리 사례 사용 안 함', [], 2],
+ ['제품 스펙', 2, 'p.19–20', 'flow', '제품 스펙 1장', 'Spec 시트 작업으로 생성 · QM55C · OM46C', [], 1],
+ ['견적 · 일정', 3, 'p.21–24', 'drop', '제외', '비복제 · 가격 · 견적 · 일정은 가져오지 않아요', [], 0],
+ ['Why Samsung', 0, '원본에 없음', 'new', 'Why Samsung 2장', '경쟁 비교 · R5 POS 연동 신뢰 근거', ['R5'], 2],
+ ['단계 도입', 0, '원본에 없음', 'new', '단계 도입 로드맵 1장', 'R4 320개 매장 · 권역별 3단계', ['R4'], 1]
+ ];
+ const KIND = {
+ flow: ['흐름', ''],
+ new: ['신규', ''],
+ drop: ['제외', '']
+ };
+ const ROW_H = 38;
+ const src = MAP.map(([name, n, range, kind]) => {
+ const dashed = kind === 'new';
+ const drop = kind === 'drop';
+ return {
+ name, dashed, hasDot: !dashed,
+ sub: dashed ? '원본에 없음 → 추가 제안' : (n + '장 · ' + range),
+ dotStyle: dot(COLOR[name] || ''),
+ nameStyle: '' + (drop ? '' : dashed ? '' : ''),
+ subStyle: '' + (dashed ? '' : ''),
+ style: 'height: ' + ROW_H + '' + (dashed ? '' : drop ? '' : ''),
+ arrowBox: 'height: ' + ROW_H + '',
+ arrowColor: drop ? '' : dashed ? '' : '',
+ arrowStyle: drop ? 'opacity: 0.6;' : dashed ? 'opacity: 0.9;' : ''
+ };
+ });
+ const dst = MAP.map(([name, n0, range, kind, sheet, note, reqs, n]) => {
+ const drop = kind === 'drop';
+ const isNew = kind === 'new';
+ return {
+ kind: KIND[kind][0], name: sheet, note, reqs, n: drop ? '0장' : n + '장',
+ kindStyle: '' + KIND[kind][1],
+ nameStyle: '' + (drop ? '' : ''),
+ nStyle: '' + (drop ? '' : isNew ? '' : ''),
+ style: 'height: ' + ROW_H + '' + (isNew ? '' : drop ? '' : '')
+ };
+ });
+ const legend = [['흐름', KIND.flow[1]], ['신규', KIND.new[1]], ['제외', KIND.drop[1]]].map(([label, s]) => ({
+ label, style: '' + s
+ }));
+ // 가져오는 것 / 안 가져오는 것
+ const G = [
+ ['가져오는 것', 'M5 12l5 5L20 7', '', '', [
+ ['단계 순서', '8단계 → 8섹션'], ['시트 역할', '24장 역할 태그'], ['주장 → 근거 구조', '11개 연결'], ['템플릿 유형', '매핑 성공 21장'], ['톤', '운영 효율 중심']
+ ]],
+ ['안 가져오는 것', 'M6 6l12 12M18 6L6 18', '', '', [
+ ['고객 정보', 'B 베이커리 · 180개 매장'], ['매장 사진 9장', '사용 불가'], ['수치', '시장 · 효과 수치 7건'], ['견적 · 일정', '비복제 3장'], ['B 베이커리 사례', '도입 사례 3장'], ['출처 미상 이미지 8개', '분류 보류']
+ ]]
+ ];
+ const groups = G.map(([title, icon, iconS, titleColor, items]) => ({
+ title, icon, n: items.length,
+ items: items.map(([label, sub]) => ({ label, sub })),
+ titleStyle: '' + titleColor,
+ iconStyle: '' + iconS,
+ itemStyle: '' + (title === '가져오는 것' ? '' : '')
+ }));
+ // 집계: 8섹션 · 22시트 · 신규 3장 · 제외 3장
+ const sheetCount = MAP.reduce((a, r) => a + r[7], 0);
+ const newCount = MAP.filter((r) => r[3] === 'new').reduce((a, r) => a + r[7], 0);
+ const dropCount = MAP.filter((r) => r[3] === 'drop').reduce((a, r) => a + r[1], 0);
+ const flowCount = MAP.filter((r) => r[3] === 'flow').reduce((a, r) => a + r[7], 0);
+ const tally = [['흐름 차용', flowCount, KIND.flow[1]], ['신규', newCount, KIND.new[1]], ['제외', dropCount, KIND.drop[1]]]
+ .map(([label, c, s]) => ({ label, n: c + '장', style: '' + s }));
+ return {
+ steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+ modes, src, dst, legend, groups, tally, secCount: 8, sheetCount
+ };
+ }
+}

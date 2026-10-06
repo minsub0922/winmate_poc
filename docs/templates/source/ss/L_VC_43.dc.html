@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-4·3 네 공간 · 솔루션 3개 — 평면도 위 범위 (푸드홀)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 4곳 · 솔루션 3개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">E 푸드홀 평면 위에 그린 세 솔루션의 범위 — 겹치는 곳이 가장 바쁜 곳입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">네 공간 × 세 솔루션 — 대기 · 홀 · 주방 · 냉장 창고, 솔루션마다 맡는 구역</div>
+
+  <!-- ============ 평면도 (7열) ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">E 푸드홀 평면 · 솔루션 범위</span><span style="font-size: 11.5px; color: #8a91a0">배치는 예시 · 매장 도면으로 교체</span></div>
+  <div style="position: absolute; left: 64px; top: 186px; width: 662px; height: 462px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 94px; top: 204px; width: 602px; height: 404px; box-sizing: border-box; border: 2px solid #b8bec8; background: #ffffff"></div>
+  <sc-for list="{{decor}}" as="d" hint-placeholder-count="12">
+    <div style="{{d.style}}"></div>
+  </sc-for>
+  <sc-for list="{{walls}}" as="w" hint-placeholder-count="6">
+    <div style="{{w.style}}"></div>
+  </sc-for>
+
+  <!-- 솔루션 범위 윤곽 -->
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="3">
+    <div style="{{z.style}}"></div>
+  </sc-for>
+
+  <!-- 방 이름 -->
+  <sc-for list="{{rooms}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.style}}"><span style="width: 22px; height: 22px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.n}}</span><span style="font-size: 14px; font-weight: 800; letter-spacing: -0.01em">{{r.name}}</span><span style="{{r.cntS}}">{{r.cnt}}</span></div>
+  </sc-for>
+
+  <!-- 기기 마커 -->
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="8">
+    <div style="{{m.style}}"><span style="{{m.dot}}"></span><span>{{m.t}}</span></div>
+  </sc-for>
+
+  <!-- 범위 태그 -->
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="3">
+    <div style="{{t.style}}">{{t.t}}</div>
+  </sc-for>
+
+  <!-- 출입 -->
+  <sc-for list="{{doors}}" as="o" hint-placeholder-count="2">
+    <div style="{{o.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"></path></svg><span>{{o.t}}</span></div>
+  </sc-for>
+
+  <!-- ============ 범례 카드 (5열) ============ -->
+  <div style="position: absolute; left: 750px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">솔루션 3개 · 맡는 구역</span></div>
+  <div style="position: absolute; right: 64px; top: 162px; font-size: 11px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.box}}">
+      <div style="{{c.swatch}}"></div>
+      <div style="position: absolute; left: 58px; top: 14px; font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{c.name}}</div>
+      <div style="position: absolute; left: 16px; top: 46px; font-size: 12.5px; line-height: 19px; color: #3d4452; white-space: nowrap">{{c.d1}}</div>
+      <div style="position: absolute; left: 16px; top: 65px; font-size: 12.5px; line-height: 19px; color: #3d4452; white-space: nowrap">{{c.d2}}</div>
+      <div style="position: absolute; left: 16px; top: 94px; height: 18px; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg><span>{{c.prod}}</span></div>
+      <div style="position: absolute; right: 12px; top: 12px; width: 118px; height: 102px; border-radius: 10px; background: #f5f6f8">
+        <div style="position: absolute; left: 12px; top: 10px; display: flex; gap: 4px">
+          <sc-for list="{{c.zs}}" as="n" hint-placeholder-count="2">
+            <span style="{{n.style}}">{{n.n}}</span>
+          </sc-for>
+        </div>
+        <div style="position: absolute; left: 12px; top: 44px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{c.kpi}}</div>
+        <div style="position: absolute; left: 12px; top: 62px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 19px; line-height: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{c.kv}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 겹침 한 줄 -->
+  <div style="position: absolute; left: 750px; top: 596px; width: 466px; height: 52px; border-radius: 12px; background: #eaeefb"></div>
+  <div style="position: absolute; left: 766px; top: 604px; display: flex; align-items: center; gap: 8px; font-size: 13px; line-height: 18px; font-weight: 800; color: #121417; white-space: nowrap"><span style="height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 10.5px; display: flex; align-items: center">겹침</span><span>② 홀과 ③ 주방은 두 솔루션이 함께 맡습니다</span></div>
+  <div style="position: absolute; left: 766px; top: 626px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap">② VXT + 통합공조 · ③ 통합공조 + 콜드체인 — 손님과 조리가 몰리는 곳</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 푸드홀 · 매장 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 건물 94–696 × 204–608. 열 경계 x 466, 행 경계 y 456.
+    // ② 홀(좌상) · ③ 주방(우상) / ① 입구 · 대기(좌하) · ④ 냉장 창고(우하)
+    const V = '#1428a0', C = '#121417', H = '#6f82d6';
+    const WALL = 'background: #b8bec8;';
+    const walls = [
+      [96, 455, 110, 2], [336, 455, 130, 2],      // ①|② (가운데 트인 통로)
+      [465, 206, 2, 92], [465, 382, 2, 74],       // ②|③ (픽업 카운터)
+      [465, 456, 2, 150],                         // ①|④
+      [466, 455, 92, 2], [622, 455, 72, 2]        // ③|④ (문)
+    ].map(([x, y, w, h]) => ({ style: box(x, y, w, h) + WALL }));
+
+    // 바닥 집기 (장식) — 홀 테이블, 주방 조리대, 창고 선반, 대기 줄
+    const F = 'border-radius: 5px; background: #eef0f3;';
+    const decor = [];
+    [0, 1, 2, 3].forEach((c) => [0, 1].forEach((r) => decor.push(box(146 + c * 62, 330 + r * 52, 38, 28) + F)));
+    decor.push(box(550, 340, 96, 18) + F, box(550, 368, 96, 18) + F);
+    decor.push(box(484, 500, 16, 90) + F, box(510, 500, 16, 90) + F);
+    decor.push(box(330, 488, 116, 14) + F, box(330, 512, 116, 14) + F, box(330, 536, 116, 14) + F);
+    const decorL = decor.map((style) => ({ style }));
+
+    // 솔루션 범위 (겹치는 윤곽)
+    const zones = [
+      { style: box(104, 212, 354, 388) + 'box-sizing: border-box; border-radius: 12px; border: 2px solid ' + V + '; background: rgba(20, 40, 160, 0.05);' },
+      { style: box(474, 212, 214, 388) + 'box-sizing: border-box; border-radius: 12px; border: 2px dashed ' + C + ';' },
+      { style: box(122, 268, 548, 172) + 'box-sizing: border-box; border-radius: 14px; border: 3px dashed ' + H + ';' }
+    ];
+
+    const room = (n, name, x, y, cnt, two) => ({
+      n, name, cnt,
+      style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'height: 22px; display: flex; align-items: center; gap: 7px; ' + T,
+      cntS: 'height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; ' +
+        (two ? 'background: #1428a0; color: #ffffff;' : 'background: #f5f6f8; color: #596170;')
+    });
+    const rooms = [
+      room(2, '홀 · 좌석', 118, 226, '솔루션 2', true),
+      room(3, '주방', 488, 226, '솔루션 2', true),
+      room(1, '입구 · 대기', 118, 470, '솔루션 1', false),
+      room(4, '냉장 창고', 488, 470, '솔루션 1', false)
+    ];
+
+    const mark = (t, col, x, y) => ({
+      t,
+      style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'height: 22px; box-sizing: border-box; padding: 0 8px 0 6px; border-radius: 6px; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #3d4452; ' + T,
+      dot: 'width: 8px; height: 8px; border-radius: 2px; background: ' + col + ';'
+    });
+    const marks = [
+      mark('360 카세트 ×[0]', H, 146, 290),
+      mark('메뉴보드 QM55C', V, 330, 290),
+      mark('DVM S · 환기', H, 490, 296),
+      mark('주방 냉장고 온도 센서', C, 490, 404),
+      mark('키오스크 KM24C', V, 118, 508),
+      mark('대기 번호 QM55C', V, 118, 538),
+      mark('워크인 냉장', C, 540, 508),
+      mark('온도 센서', C, 540, 538)
+    ];
+
+    const tag = (t, col, css) => ({ t, style: A + css + 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: ' + col + '; color: #ffffff; font-size: 11px; font-weight: 800; display: flex; align-items: center; ' + T });
+    const tags = [
+      tag('Samsung VXT', V, 'left: 118px; top: 570px; '),
+      tag('삼성 콜드체인', C, 'right: 604px; top: 570px; '),
+      tag('삼성 통합공조', H, 'left: 424px; top: 258px; ')
+    ];
+
+    const doors = [['입구', 252], ['반입', 568]].map(([t, x]) => ({
+      t, style: A + 'left: ' + px(x) + 'top: ' + px(614) + 'height: 18px; display: flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; color: #596170; ' + T
+    }));
+
+    // 범례 카드 (x 750, 폭 466)
+    const zn = (n, col) => ({ n, style: 'width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid ' + col + '; color: ' + col + '; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+    const D = [
+      ['Samsung VXT', V, 'border: 2px solid ' + V + '; background: rgba(20, 40, 160, 0.08);', [1, 2], '대기 번호 · 메뉴보드 · 품절 표시', '매장 화면 콘텐츠를 웹에서 바로 교체', '스마트 사이니지 QM55C ×[0] · 키오스크 KM24C', '주문 대기', '[0]분 ↓'],
+      ['삼성 통합공조', H, 'border: 3px dashed ' + H + ';', [2, 3], '조리 열기가 홀로 번지지 않게 냉방 · 환기', '홀과 주방을 한 시스템으로 설계 · 운영', 'DVM S · 360 카세트', '홀 체감 온도 민원', '[00]% ↓'],
+      ['삼성 콜드체인', C, 'border: 2px dashed ' + C + ';', [3, 4], '주방 냉장고 · 워크인 냉장 온도 실시간 감시', '이탈 시 알림 · 온도 기록 자동 보관', '워크인 냉장 · 온도 센서', '식재료 폐기', '[00]% ↓']
+    ];
+    const cards = D.map(([name, col, sw, zs, d1, d2, prod, kpi, kv], i) => ({
+      name, d1, d2, prod, kpi, kv,
+      zs: zs.map((n) => zn(n, col)),
+      box: box(750, 186 + i * 136, 466, 126) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff;',
+      swatch: box(16, 17, 32, 16) + 'box-sizing: border-box; border-radius: 5px; ' + sw
+    }));
+
+    return { decor: decorL, walls, zones, rooms, marks, tags, doors, cards };
+  }
+}
+</script>
+</body>
+</html>

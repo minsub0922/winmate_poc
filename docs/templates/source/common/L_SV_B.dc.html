@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SV-B 서비스 커버리지 + SLA</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">전국 어디서나 같은 기준으로 지원합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">서비스 거점 커버리지 · 장애 대응 기준 (SLA)</div>
+
+  <!-- 커버리지 지도 5열 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 466px; height: 488px; border-radius: 16px; background: #eef0f3; overflow: hidden">
+    <div style="position: absolute; right: 18px; top: 16px; font-size: 13px; color: #8a91a0">국내 지도</div>
+    <div style="position: absolute; left: 20px; top: 16px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #3d4452">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1428a0"></span>서비스 거점</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; border-radius: 50%; background: rgba(20,40,160,0.12)"></span>대응 권역</span>
+    </div>
+    <sc-for list="{{sites}}" as="s" hint-placeholder-count="10">
+      <div>
+        <div style="{{s.area}}"></div>
+        <div style="{{s.dot}}"></div>
+        <div style="{{s.lab}}">{{s.name}}</div>
+      </div>
+    </sc-for>
+    <div style="position: absolute; left: 16px; top: 404px; width: 434px; height: 68px; box-sizing: border-box; border-radius: 12px; background: #ffffff; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: center">
+      <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px"><span style="font-size: 13px; color: #596170">거점</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[000]</span><span style="font-size: 13px; color: #596170">곳</span></div>
+      <div style="display: flex; align-items: baseline; justify-content: center; gap: 8px; border-left: 1px solid #e2e5ea"><span style="font-size: 13px; color: #596170">엔지니어</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0">[000]</span><span style="font-size: 13px; color: #596170">명</span></div>
+    </div>
+  </div>
+
+  <!-- SLA 표 7열 -->
+  <div style="position: absolute; left: 554px; top: 160px; width: 662px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 178px 232px minmax(0, 1fr); column-gap: 16px; height: 44px; align-items: center; border-bottom: 2px solid #121417; font-size: 13px; color: #596170">
+      <span style="padding-left: 4px">항목</span><span>기준</span><span>범위</span>
+    </div>
+    <sc-for list="{{sla}}" as="r" hint-placeholder-count="5">
+      <div style="position: relative; display: grid; grid-template-columns: 178px 232px minmax(0, 1fr); column-gap: 16px; height: 80px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <div style="{{r.line}}"></div>
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="{{r.node}}">{{r.no}}</span>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 15.5px; font-weight: 700">{{r.k}}</span>
+            <span style="font-size: 11.5px; color: #8a91a0">{{r.stage}}</span>
+          </div>
+        </div>
+        <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; line-height: 1.4; color: #1428a0">{{r.v}}</span>
+        <span style="font-size: 13.5px; line-height: 1.5; color: #3d4452">{{r.scope}}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 554px; top: 620px; width: 662px; font-size: 12px; color: #8a91a0">SLA는 계약 조건에 따라 확정 · 도서 지역은 별도 협의</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 25</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 지도 상자(466×488) 안 좌표 — 거점 위치는 예시
+    const SITES = [
+      ['서울', 190, 96], ['춘천', 252, 80], ['강릉', 322, 94], ['청주', 234, 176], ['대전', 212, 212],
+      ['전주', 184, 258], ['광주', 154, 308], ['대구', 298, 246], ['부산', 336, 306], ['제주', 150, 372]
+    ];
+    const AREA = 88;
+    const sites = SITES.map(([name, x, y]) => ({
+      name,
+      area: 'position: absolute; left: ' + (x - AREA / 2) + 'px; top: ' + (y - AREA / 2) + 'px; width: ' + AREA + 'px; height: ' + AREA + 'px; border-radius: 50%; background: rgba(20,40,160,0.08)',
+      dot: 'position: absolute; left: ' + (x - 7) + 'px; top: ' + (y - 7) + 'px; width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2.5px solid #ffffff',
+      lab: 'position: absolute; left: ' + (x + 11) + 'px; top: ' + (y - 9) + 'px; font-size: 11px; font-weight: 600; color: #596170'
+    }));
+    // 장애 대응 1–4단계는 세로선으로 연결, 정기 점검은 예방 관리
+    const S = [
+      ['장애 접수', '대응 1단계', '24시간 · 365일', '콜센터 · 원격 모니터링 자동 감지'],
+      ['원격 조치', '대응 2단계', '[0]시간 이내', 'MagicINFO 원격 진단 · 재부팅 · 콘텐츠 복구'],
+      ['현장 방문', '대응 3단계', '수도권 [0]시간 · 지방 [00]시간', '전 매장 대상 엔지니어 직접 방문'],
+      ['부품 교체', '대응 4단계', '[0]영업일 이내', '보증 기간 내 무상 · 거점별 주요 부품 재고'],
+      ['정기 점검', '예방 관리', '연 [0]회', '전 매장 방문 점검 · 점검 리포트 제공']
+    ];
+    const CHAIN = 4, H = 80, NX = 11;
+    const node = (filled) => 'position: relative; width: 24px; height: 24px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; ' +
+      (filled ? 'background: #1428a0; color: #ffffff' : 'background: #ffffff; color: #1428a0; border: 2px solid #1428a0');
+    const line = (i) => {
+      if (i >= CHAIN) return 'display: none';
+      const top = i === 0 ? H / 2 : 0;
+      const h = i === 0 || i === CHAIN - 1 ? H / 2 : H;
+      return 'position: absolute; left: ' + NX + 'px; top: ' + top + 'px; width: 2px; height: ' + h + 'px; background: #b8c3ee';
+    };
+    return {
+      sites,
+      sla: S.map(([k, stage, v, scope], i) => ({ k, stage, v, scope, no: String(i + 1), node: node(i < CHAIN), line: line(i) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

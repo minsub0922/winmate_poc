@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CS01 사례 1 상세</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">06 · 유관 사례</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">B 베이커리 체인 — 메뉴보드 전환 후 6개월</div>
+
+  <div style="position: absolute; left: 64px; top: 136px; width: 568px; height: 512px; border-radius: 16px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #8a91a0">
+    사례 현장 이미지
+    <div style="position: absolute; left: 18px; bottom: 18px; display: flex; gap: 6px">
+      <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #ffffff; color: #121417; font-size: 12px; font-weight: 700; display: flex; align-items: center">식음료 · 프랜차이즈</span>
+      <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #ffffff; color: #121417; font-size: 12px; font-weight: 700; display: flex; align-items: center">국내 · 180개 매장</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 656px; top: 136px; width: 560px; height: 512px; display: flex; flex-direction: column; gap: 18px">
+    <div style="display: flex; flex-direction: column; gap: 14px">
+      <sc-for list="{{story}}" as="s" hint-placeholder-count="2">
+        <div style="display: flex; gap: 16px">
+          <span style="width: 56px; flex-shrink: 0; font-size: 13px; font-weight: 800; color: #1428a0; padding-top: 2px">{{s.k}}</span>
+          <span style="font-size: 15.5px; line-height: 1.6">{{s.v}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px; padding-left: 72px">
+      <sc-for list="{{tags}}" as="t" hint-placeholder-count="3">
+        <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 12px; display: flex; align-items: center">{{t}}</span>
+      </sc-for>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #596170">성과</span>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+        <div style="height: 132px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 18px; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-family: Manrope, sans-serif; font-size: 34px; font-weight: 800; color: #1428a0; letter-spacing: -0.02em">{{k.n}}</span>
+          <span style="font-size: 13px; line-height: 1.45; color: #3d4452">{{k.l}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <span style="font-size: 11.5px; color: #8a91a0">출처 · 삼성 B2B 사례 [링크] · 수치는 고객 공개 범위 내</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 22</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      story: [
+        { k: '과제', v: '인쇄 메뉴판 교체에 매달 [00]일, 매장마다 가격 표기가 달라 고객 문의가 잦았습니다.' },
+        { k: '해결', v: 'QM 시리즈 메뉴보드와 MagicINFO로 180개 매장 콘텐츠를 본사에서 일괄 관리.' }
+      ],
+      tags: ['QM55C', 'MagicINFO', '원격 관리'],
+      kpis: [
+        { n: '[00]%', l: '메뉴 교체 비용 절감' },
+        { n: '[00]일→[0]분', l: '신메뉴 반영 시간' },
+        { n: '[00]%', l: '추가 주문 비율 증가' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

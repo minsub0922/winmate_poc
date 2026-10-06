@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SA-D 화면 → 현장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">메뉴 하나를 바꾸면, 매장 세 곳의 화면이 함께 바뀝니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">Samsung VXT CMS · A 커피 매장에 같은 구성</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 154px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">본사 관리 화면</span><span style="font-size: 12px; color: #8a91a0">Samsung VXT CMS · 메뉴 템플릿 편집</span></div>
+  <div style="position: absolute; left: 760px; top: 154px; display: flex; align-items: baseline; gap: 10px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">매장 현장 화면</span><span style="font-size: 12px; color: #8a91a0">유사 구성 도입사례 사진</span></div>
+
+  <!-- 노트북 프레임 -->
+  <div style="position: absolute; left: 64px; top: 186px; width: 560px; height: 322px; box-sizing: border-box; border-radius: 14px; background: #121417; padding: 10px">
+    <dc-import name="Img" pid="ui.cms" w="540" h="302" radius="4" credit="br" hint-size="540px,302px"></dc-import>
+  </div>
+  <div style="position: absolute; left: 40px; top: 508px; width: 608px; height: 14px; border-radius: 0 0 12px 12px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 304px; top: 508px; width: 80px; height: 5px; border-radius: 0 0 5px 5px; background: #bfc5cf"></div>
+
+  <!-- 화면 위 번호 마커 -->
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="3">
+    <div style="{{m.frame}}"></div>
+    <span style="{{m.badge}}">{{m.no}}</span>
+  </sc-for>
+
+  <!-- 작업 3단계 -->
+  <div style="position: absolute; left: 64px; top: 548px; width: 560px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{marks}}" as="m" hint-placeholder-count="3">
+      <div style="height: 72px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 12px 14px; display: flex; flex-direction: column; gap: 5px">
+        <span style="display: flex; align-items: center; gap: 8px"><span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{m.no}}</span><span style="font-size: 14px; font-weight: 800; white-space: nowrap">{{m.name}}</span></span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">{{m.desc}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 연결선: 배포 1회 → 3곳 -->
+  <div style="position: absolute; left: 624px; top: 401px; width: 78px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 700px; top: 247px; width: 2px; height: 312px; background: #1428a0"></div>
+  <div style="position: absolute; left: 700px; top: 247px; width: 46px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 700px; top: 557px; width: 46px; height: 2px; background: #1428a0"></div>
+  <span style="position: absolute; left: 618px; top: 396px; width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff"></span>
+  <span style="position: absolute; left: 636px; top: 391px; height: 22px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px solid #1428a0; color: #1428a0; font-size: 11px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">배포 1회</span>
+
+  <!-- 현장 3행 -->
+  <sc-for list="{{sites}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.imgBox}}">
+      <dc-import name="Img" pid="{{r.pid}}" w="220" h="124" radius="10" pos="{{r.pos}}" credit="off" hint-size="220px,124px"></dc-import>
+    </div>
+    <span style="{{r.badge}}">{{r.no}}</span>
+    <div style="{{r.textBox}}">
+      <span style="font-size: 15px; font-weight: 800; line-height: 1.35; white-space: nowrap">{{r.place}}</span>
+      <span style="font-size: 13px; line-height: 1.5; color: #3d4452; word-break: keep-all">{{r.change}}</span>
+      <span style="align-self: flex-start; margin-top: 2px; height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span style="font-family: Manrope, 'Noto Sans KR', sans-serif">{{r.time}}</span></span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0; white-space: nowrap"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>현장 사진 · 삼성 도입사례(맥도날드 코리아), 유사 구성 예시 · 외부 제출 전 확인 · 화면 samsung.com</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 왼쪽 화면(ui.cms 원본 732×409)을 540×302 cover로 (74, 196)에 배치 → 배율 0.7384, x 보정 -0.25
+    const S = { x: 74 - 0.25, y: 196, s: 0.7384 };
+    // [단계, 한 줄, 원본 영역 u0 v0 u1 v1, 배지 위치(tl: 영역 왼쪽 위 / l: 영역 왼쪽)]
+    const M = [
+      ['템플릿 선택', 'QSR 메뉴 템플릿 고르기', [44, 126, 152, 200], 'tl'],
+      ['가격 수정', '메뉴명 · 가격 칸만 고치기', [294, 110, 384, 212], 'tl'],
+      ['배포 예약', '적용 매장 · 시각 지정', [529, 4, 579, 25], 'l']
+    ];
+    const badge = 'width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center';
+    const marks = M.map(([name, desc, [u0, v0, u1, v1], at], i) => {
+      const x = Math.round(S.x + u0 * S.s) - 3, y = Math.round(S.y + v0 * S.s) - 3;
+      const w = Math.round((u1 - u0) * S.s) + 6, h = Math.round((v1 - v0) * S.s) + 6;
+      const bx = at === 'l' ? x - 32 : x - 14, by = at === 'l' ? y + Math.round(h / 2) - 14 : y - 14;
+      return {
+        no: i + 1, name, desc,
+        frame: 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border: 2px solid #1428a0; border-radius: 6px; background: rgba(20,40,160,0.08)',
+        badge: 'position: absolute; left: ' + bx + 'px; top: ' + by + 'px; ' + badge
+      };
+    });
+    // 오른쪽 현장 3행: 이미지 220×124, 행 간격 154, 첫 행 top 186
+    const R = [
+      ['case.mcd.menuboard', '50% 18%', '카운터 메뉴보드', '수정한 가격이 메뉴보드 전 면에 같은 시각 적용', '[0]분 내 반영'],
+      ['case.mcd.dt', '36% 55%', '드라이브스루 주문대', '옥외 메뉴보드도 같은 가격 · 같은 사진으로', '[0]분 내 반영'],
+      ['case.mcd.seat', '6% 40%', '좌석 공간 사이니지', '프로모션 화면이 새 메뉴 · 가격으로 교체', '[0]분 내 반영']
+    ];
+    // 현장 배지는 A · B · C (왼쪽 ①②③ 작업 단계와 구분)
+    const sites = R.map(([pid, pos, place, change, time], i) => {
+      const top = 186 + i * 154;
+      return {
+        no: 'ABC'[i], pid, pos, place, change, time,
+        imgBox: 'position: absolute; left: 760px; top: ' + top + 'px; width: 220px; height: 124px',
+        badge: 'position: absolute; left: 746px; top: ' + (top + 48) + 'px; ' + badge,
+        textBox: 'position: absolute; left: 1000px; top: ' + (top + 6) + 'px; width: 216px; display: flex; flex-direction: column; gap: 6px'
+      };
+    });
+    return { marks, sites };
+  }
+}
+</script>
+</body>
+</html>

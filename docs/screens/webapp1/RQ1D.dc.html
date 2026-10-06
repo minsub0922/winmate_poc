@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>요구사항 · 파일 끌어다 놓기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+input::placeholder,textarea::placeholder{color:#a3a9b5}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="requirements" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="고객 요구사항" title="새 요구사항" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="position: relative; width: 1180px; height: 780px; box-sizing: border-box; padding: 24px 40px 24px 40px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="flex-shrink: 0; height: 120px; box-sizing: border-box; border: 1.5px dashed #b8c2e6; border-radius: 16px; background: #fbfbfc; display: flex; align-items: center; justify-content: center; gap: 16px">
+        <span style="width: 46px; height: 46px; border-radius: 14px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4 M7 9l5-5 5 5 M4 15v5h16v-5"/></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 15px; font-weight: 700">파일을 끌어다 놓으면 폼이 채워져요</span>
+          <span style="font-size: 12.5px; color: #8a91a0">PPTX · PDF · DOCX · TXT · 메일</span>
+        </span>
+        <button style="height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4 M7 9l5-5 5 5 M4 15v5h16v-5"/></svg>파일 첨부</button>
+      </div>
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 380px minmax(0, 1fr); gap: 20px">
+    <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; min-height: 0">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <label for="f-proj" style="font-size: 13px; font-weight: 600; color: #3d4452">프로젝트명</label>
+        <div style="position: relative"><input id="f-proj" value="" placeholder="예) 용산 업무시설 재개발 제안" style="width: 100%; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; padding: 0 12px 0 12px; font-size: 14px; color: #121417; background: #ffffff; outline: none"></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <label for="f-cust" style="font-size: 13px; font-weight: 600; color: #3d4452">고객사</label>
+        <div style="position: relative"><input id="f-cust" value="" placeholder="예) E 자산운용" style="width: 100%; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; padding: 0 12px 0 12px; font-size: 14px; color: #121417; background: #ffffff; outline: none"></div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <label for="f-to" style="font-size: 13px; font-weight: 600; color: #3d4452">최종 제안대상</label>
+        <div style="position: relative"><input id="f-to" value="" placeholder="예) 대표이사" style="width: 100%; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; padding: 0 12px 0 12px; font-size: 14px; color: #121417; background: #ffffff; outline: none"></div>
+      </div>
+      <div style="height: 1px; background: #f0f2f5; flex-shrink: 0"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-height: 0">
+        <label for="f-note" style="font-size: 13px; font-weight: 600; color: #3d4452; display: flex; align-items: center; gap: 6px">제작자 의견<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><title>고객 문서 제외</title><path d="M5 11h14v10H5z M8 11V7a4 4 0 0 1 8 0v4"/></svg></label>
+        <div style="position: relative; flex-grow: 1; min-height: 0; display: flex"><textarea id="f-note" placeholder="제안 방향 · 강조할 점" style="width: 100%; box-sizing: border-box; resize: none; border: 1px solid #e2e5ea; border-radius: 10px; padding: 11px 12px; font-size: 14px; line-height: 1.6; color: #121417; background: #ffffff; outline: none"></textarea></div>
+      </div>
+    </div>
+    <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow: hidden">
+      <span style="font-size: 15px; font-weight: 700; flex-shrink: 0; height: 32px; display: flex; align-items: center">키맨별 요구사항</span>
+      <div style="flex-shrink: 0; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 1.5px dashed #c9d0e6"></span>
+          <label for="km1" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">키맨</label>
+          <input id="km1" placeholder="키맨 (예: 대표이사)" style="flex-grow: 1; min-width: 0; height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 9px; padding: 0 12px; font-size: 14px; color: #121417; outline: none">
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; padding-left: 38px">
+          <label for="km1r1" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">요구사항 1</label>
+          <input id="km1r1" placeholder="요구사항" style="flex-grow: 1; min-width: 0; height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 9px; padding: 0 12px; font-size: 14px; color: #121417; outline: none">
+        </div>
+        <button style="align-self: flex-start; margin-left: 38px; height: 26px; padding: 0; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600">+ 요구사항</button>
+      </div>
+      <button style="flex-shrink: 0; height: 46px; border-radius: 12px; border: 1.5px dashed #c9d0e6; background: #fbfbfc; color: #1428a0; font-size: 13.5px; font-weight: 600">+ 키맨 추가</button>
+    </div>
+      </div>
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <span></span>
+        <span style="flex-grow: 1"></span>
+        <a href="RQ4.dc.html" style="height: 48px; padding: 0 18px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 14px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">바로 저장</a>
+        <a href="RQ3.dc.html" style="height: 48px; padding: 0 22px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z M19 15l.9 2.1 2.1.9-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>심층 작성</a>
+      </div>
+      <div role="region" aria-label="여기에 놓기" style="position: absolute; top: 24px; left: 40px; right: 40px; bottom: 24px; box-sizing: border-box; border: 2px dashed #1428a0; border-radius: 18px; background: rgba(234, 238, 251, 0.9); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; z-index: 3">
+        <span style="width: 64px; height: 64px; border-radius: 18px; background: #1428a0; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 28px rgba(20,40,160,0.25)"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4 M7 9l5-5 5 5 M4 15v5h16v-5"/></svg></span>
+        <span style="font-size: 20px; font-weight: 700; color: #1428a0">놓으면 폼을 채워요</span>
+        <span style="font-size: 13.5px; color: #3d4452">파일 2개</span>
+        <div style="position: absolute; left: 600px; top: 470px; display: flex; flex-direction: column; gap: 6px; transform: rotate(-3deg)">
+          <span style="height: 36px; box-sizing: border-box; padding: 0 12px 0 8px; border-radius: 9px; border: 1px solid #c9d0e6; background: #ffffff; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 12px 28px rgba(18,20,23,0.18)"><span style="height: 18px; box-sizing: border-box; padding: 0 5px; border-radius: 4px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; flex-shrink: 0;">PPTX</span>제안지원요청서_용산 업무시설 재개발.pptx</span>
+          <span style="height: 36px; box-sizing: border-box; padding: 0 12px 0 8px; border-radius: 9px; border: 1px solid #c9d0e6; background: #ffffff; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 12px 28px rgba(18,20,23,0.18); margin-left: 18px"><span style="height: 18px; box-sizing: border-box; padding: 0 5px; border-radius: 4px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; flex-shrink: 0;">TXT</span>고객 미팅 메모_11월 4일.txt</span>
+        </div>
+        <svg width="22" height="22" viewBox="0 0 24 24" style="position: absolute; left: 588px; top: 456px"><path d="M4 2l15 10-7 1.5L8.5 21z" fill="#121417" stroke="#ffffff" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const steps = ["입력", "심층 작성", "저장"];
+    return { yes: true, steps, cur: 1,};
+  }
+}
+</script>
+</body>
+</html>

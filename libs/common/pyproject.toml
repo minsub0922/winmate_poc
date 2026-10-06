@@ -1,0 +1,29 @@
+[project]
+name = "winmate-common"
+version = "0.1.0"
+description = "Winmate 서비스 공통 라이브러리 — 설정 · 앱 팩토리 · 계약 검증 클라이언트 · Redis 잡 큐 · 문서 저장소 · LangGraph 도우미"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.142",
+  "uvicorn[standard]>=0.54",
+  "pydantic>=2.13",
+  "httpx>=0.28",
+  "python-dotenv>=1.2",
+  "pyyaml>=6.0",
+  "redis>=8.1",
+  "jsonschema>=4.26",
+  "referencing>=0.37",
+  "sse-starlette>=3.5",
+  "python-multipart>=0.0.32",
+  "langgraph>=1.2",
+  "langgraph-checkpoint-sqlite>=3.1",
+  "aiosqlite>=0.22",
+  "orjson>=3.12",
+]
+
+[build-system]
+requires = ["hatchling>=1.32"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/winmate_common"]

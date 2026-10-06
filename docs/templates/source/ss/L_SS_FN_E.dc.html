@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-FN-E 금융 · 공간 시나리오 · 방문 상담 · 현장 영업</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">방문 상담 · 현장 영업 · 단계별 도입</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">T 은행 방문 상담, 시범부터 확인하며 전 영업점으로 넓힙니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">⑥ 방문 상담 · 현장 영업 — 시범 지점 → 전 영업점 → 전 상품, 단계마다 기준을 확인하고 다음으로 넘어갑니다</div>
+
+  <!-- 위 띠: 사진 + 왜 단계적으로 · 지금 상태 -->
+  <img src="/_blob/92b3b2eb11d84a41c0861675aec307bb" alt="직원이 고객 앞에서 태블릿 화면의 차트를 가리키며 상품을 설명하는 모습" style="position: absolute; left: 64px; top: 156px; width: 368px; height: 130px; object-fit: cover; object-position: 50% 40%; border-radius: 14px">
+  <div style="position: absolute; left: 76px; top: 168px; height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #1428a0">⑥</span><span style="font-size: 12px; font-weight: 800">방문 상담 · 현장 영업</span></div>
+  <div style="position: absolute; left: 76px; top: 258px; height: 18px; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+
+  <div style="position: absolute; left: 456px; top: 156px; width: 760px; height: 130px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 476px; top: 168px; height: 16px; font-size: 10.5px; font-weight: 800; line-height: 16px; letter-spacing: 0.04em; color: #8a91a0; white-space: nowrap">왜 단계적으로 가나</div>
+  <div style="position: absolute; left: 476px; top: 188px; width: 720px; height: 20px; font-size: 14px; font-weight: 700; line-height: 20px; white-space: nowrap">금융 보안 점검 · 직원 적응 · 상품별 서식 전환을 한 번에 하면 현장 영업이 멈춥니다</div>
+  <div style="position: absolute; left: 476px; top: 210px; width: 720px; height: 20px; font-size: 13.5px; line-height: 20px; color: #3d4452; white-space: nowrap">시범 지점에서 보안과 가입 흐름을 검증하고, 기준을 넘을 때만 범위를 넓힙니다</div>
+  <div style="position: absolute; left: 476px; top: 246px; height: 24px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <span style="width: 64px; font-size: 11px; font-weight: 700; color: #596170">지금 상태</span>
+    <sc-for list="{{now}}" as="c" hint-placeholder-count="3">
+      <span style="height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; font-size: 12px; font-weight: 700; color: #3d4452; display: flex; align-items: center">{{c.t}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 본문: 3단계 로드맵 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.box}}"></div>
+    <div style="{{s.stepStyle}}">{{s.step}}</div>
+    <div style="{{s.nameStyle}}">{{s.name}}</div>
+    <div style="{{s.periodStyle}}">{{s.period}}</div>
+    <sc-for list="{{s.rows}}" as="r" hint-placeholder-count="3">
+      <div style="{{r.rule}}"></div>
+      <div style="{{r.labStyle}}">{{r.lab}}</div>
+    </sc-for>
+    <div style="{{s.scopeStyle}}">{{s.scope}}</div>
+    <div style="{{s.solRow}}">
+      <sc-for list="{{s.sols}}" as="c" hint-placeholder-count="2">
+        <span style="{{c.style}}">{{c.t}}</span>
+      </sc-for>
+    </div>
+    <div style="{{s.addStyle}}">{{s.add}}</div>
+    <div style="{{s.op1Style}}">{{s.op1}}</div>
+    <div style="{{s.op2Style}}">{{s.op2}}</div>
+    <div style="{{s.critBox}}"></div>
+    <div style="{{s.critLab}}">{{s.critTitle}}</div>
+    <sc-for list="{{s.crit}}" as="k" hint-placeholder-count="2">
+      <div style="{{k.style}}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"></path></svg>
+        <span>{{k.t}}</span>
+      </div>
+    </sc-for>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.style}}">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13"></path><path d="M13 6l6 6-6 6"></path></svg>
+    </div>
+  </sc-for>
+
+  <!-- 하단 띠: 전체 일정 -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; border-radius: 10px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 621px; height: 20px; font-size: 13px; font-weight: 800; line-height: 20px; white-space: nowrap">전체 일정</div>
+  <sc-for list="{{plan}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.style}}">{{p.t}}</div>
+  </sc-for>
+  <div style="position: absolute; right: 82px; top: 624px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치 · 기간은 예시</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const B = '#1428a0';
+    const NW = 'white-space: nowrap; ';
+
+    const now = ['종이 서식을 들고 방문', '서명 후 영업점에서 재입력', '단말 · 보안 기준 제각각'].map((t) => ({ t }));
+
+    // 단계 [단계, 이름, 기간, 범위, 솔루션 칩, 더하는 것, 운영 1, 운영 2, 기준 제목, 기준 2개]
+    const S = [
+      ['1단계', '시범 지점', '[0]개월', '지점 [0]곳 · 상담 직원 [00]명 · 탭 [00]대',
+        ['Knox 업무 영역'], '업무 앱 · 보안 정책을 시범 단말에 먼저 적용',
+        '대출 · 예금 [0]개 상품을 탭으로 현장 가입', '서명은 S펜으로, 영업점 재입력 없이',
+        '다음 단계로 가는 기준', ['현장 가입 완료율 [00]% 확인', '정보보호 점검 통과 · 보안 사고 0건']],
+      ['2단계', '전 영업점', '[0]개월', '영업점 [000]곳 · 갤럭시 탭 [000]대',
+        ['Knox Configure'], '전원만 켜면 T 은행 설정 · 홈화면이 자동으로',
+        '본점 IT가 지점 방문 없이 배포 · OS 업데이트', '분실 단말은 원격 잠금, 지점은 신고만',
+        '다음 단계로 가는 기준', ['단말 준비 [0]일 → [0]시간 확인', '지점당 현장 가입 [00]건 / 월 이상']],
+      ['3단계', '전 상품 · 전자서식', '[0]개월', '방문 상담 상품 [00]종 · 서식 전부 전자로',
+        ['전자서식 연동', 'Samsung DeX'], '복귀 후 탭을 모니터에 연결해 DeX로 마감',
+        '상품 구분 없이 방문 한 번에 가입까지', '종이 서식 · 스캔 · 보관 업무가 사라짐',
+        '정착 확인', ['종이 서식 [000]장 → 0', '방문 상담 고객 만족 [00]점 이상']]
+    ];
+    const RL = [['범위', 54], ['더하는 것', 94], ['달라지는 운영', 156]];
+    const stages = S.map(([step, name, period, scope, sols, add, op1, op2, critTitle, crit], i) => {
+      const x = 64 + i * 392, y = 300, w = 368, cx = x + 98, cw = 252;
+      const blue = i === 2, tint = i === 1;
+      const ink = blue ? '#ffffff' : '#121417';
+      const sub = blue ? '#c8d3ff' : '#596170';
+      const body = blue ? '#ffffff' : '#3d4452';
+      return {
+        step, name, period, scope, add, op1, op2, critTitle,
+        box: box(x, y, w, 300) + 'box-sizing: border-box; border-radius: 14px; '
+          + (blue ? 'background: ' + B + ';' : tint ? 'background: #eaeefb;' : 'background: #ffffff; border: 1px solid #d5d9e0;'),
+        stepStyle: box(x + 18, y + 17, 50, 22) + 'border-radius: 6px; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' + NW
+          + (blue ? 'background: #ffffff; color: ' + B + ';' : 'background: ' + B + '; color: #ffffff;'),
+        nameStyle: box(x + 76, y + 15, 200, 26) + 'font-size: 17px; font-weight: 800; line-height: 26px; letter-spacing: -0.01em; color: ' + ink + '; ' + NW,
+        periodStyle: A + 'right: ' + px(1280 - (x + w - 18)) + 'top: ' + px(y + 17) + 'height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; ' + NW
+          + (blue ? 'border: 1px solid #6f82d6; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #121417;'),
+        rows: RL.map(([lab, dy]) => ({
+          lab,
+          rule: box(x + 18, y + dy - 6, w - 36, 1) + 'background: ' + (blue ? '#6f82d6' : tint ? '#c8d3ff' : '#e2e5ea') + ';',
+          labStyle: box(x + 18, y + dy + 3, 76, 16) + 'font-size: 10.5px; font-weight: 700; line-height: 16px; color: ' + (blue ? '#c8d3ff' : '#8a91a0') + '; ' + NW
+        })),
+        scopeStyle: box(cx, y + 54, cw, 20) + 'font-size: 12.5px; font-weight: 700; line-height: 20px; color: ' + ink + '; ' + NW,
+        solRow: box(cx, y + 94, cw, 20) + 'display: flex; align-items: center; gap: 4px; ' + NW,
+        sols: sols.map((t) => ({
+          t, style: 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; '
+            + (blue || tint ? 'background: #ffffff; color: ' + B + ';' : 'background: #eaeefb; color: ' + B + ';')
+        })),
+        addStyle: box(cx, y + 118, cw, 18) + 'font-size: 12px; line-height: 18px; color: ' + body + '; ' + NW,
+        op1Style: box(cx, y + 157, cw, 18) + 'font-size: 12.5px; line-height: 18px; color: ' + ink + '; ' + NW,
+        op2Style: box(cx, y + 176, cw, 18) + 'font-size: 12.5px; line-height: 18px; color: ' + ink + '; ' + NW,
+        critBox: box(x + 10, y + 210, w - 20, 80) + 'border-radius: 10px; background: ' + (i === 0 ? '#f5f6f8' : '#ffffff') + ';',
+        critLab: box(x + 22, y + 219, 200, 15) + 'font-size: 10.5px; font-weight: 700; line-height: 15px; color: #596170; ' + NW,
+        crit: crit.map((t, j) => ({
+          t, style: box(x + 22, y + 239 + j * 23, w - 44, 20) + 'display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 800; line-height: 20px; color: #121417; ' + NW
+        }))
+      };
+    });
+    const arrows = [0, 1].map((i) => ({
+      style: box(64 + 368 + i * 392 - 4, 434, 32, 32) + 'box-sizing: border-box; border-radius: 50%; border: 3px solid #ffffff; background: ' + B + '; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 전체 일정 바 (x 170 – 1060)
+    const PL = [['1단계 · 시범 [0]개월', '#ffffff', '#121417', 'border: 1px solid #b8bec8;'], ['2단계 · 전 영업점 [0]개월', '#eaeefb', B, 'border: 1px solid #c8d3ff;'], ['3단계 · 전 상품 · 전자서식 [0]개월', B, '#ffffff', '']];
+    const PW = [240, 300, 340];
+    let px0 = 166;
+    const plan = PL.map(([t, bg, col, bd], i) => {
+      const st = box(px0, 620, PW[i] - 4, 22) + 'box-sizing: border-box; border-radius: ' + (i === 0 ? '999px 4px 4px 999px' : i === 2 ? '4px 999px 999px 4px' : '4px') + '; background: ' + bg + '; ' + bd + ' color: ' + col + '; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' + NW;
+      px0 += PW[i];
+      return { t, style: st };
+    });
+
+    return { now, stages, arrows, plan };
+  }
+}
+</script>
+</body>
+</html>

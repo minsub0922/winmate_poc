@@ -1,0 +1,87 @@
+ 
+ Market Intelligence · 분석 작업 목록 
+ Market Intelligence 작업 
+ 분석 {{total}}건 · 업데이트 필요 {{updCount}}건 · 확정 필요 수치가 남은 작업 1건 
+ 업종 인사이트로 시작 
+ 새 분석 
+ 작업 검색 
+ {{f.label}} {{f.n}} 
+ 업종 전체 
+ 최근 수정순 
+ 2건은 다시 분석을 권해요. 분석한 지 30일이 지났고, 그사이 경쟁사 신제품 발표와 시장 리포트 개정이 확인됐어요. 
+ 바뀐 자료 보기 
+ 2건 다시 분석 
+ 작업 업종 분석 범위 상태 연결된 제안서 
+ {{r.title}} 
+ {{r.ver}} 
+ {{r.sub}} 
+ {{r.ind}} 
+ {{r.scope}} 
+ {{r.stText}} 
+ {{r.note}} 
+ {{r.prop}} 
+ 아직 없음 
+ {{r.act}} 
+ 바뀐 자료 2건 
+ 경쟁사 A 신제품 발표 · 시장 리포트 개정 [기관, 연도] 
+ {{m.label}} 
+ {{m.hint}} 
+ 업종 인사이트로 시작 
+ 삼성 도입사례 198건 기준 
+ {{i.name}} {{i.n}} 
+ 16개 업종 모두 
+class Component extends DCLogic {
+ renderVals() {
+ // 작업: 제목 · 버전 · 담당/시점 · 업종 · 범위 · 상태(done 완료 · upd 업데이트 필요 · run 진행 중 · draft 작성 중) · 상태 메모 · 연결 제안서 · 주 동작
+ const R = [
+ ['A 커피 프랜차이즈 시장·경쟁사 분석', 'v2', '최민섭 · 2시간 전 수정', '외식 · 카페', '시장 · 고객 · 사용자 · 경쟁', 'done', '출처 18곳 · 확정 필요 수치 3', 'A 커피 프랜차이즈 메뉴보드 제안', ['수치 확정', 'MI3V.dc.html'], 'MI3.dc.html'],
+ ['B 병원 환자 동선 분석', 'v1', '최민섭 · 9월 1일 분석', '의료 · 요양', '시장 · 사용자', 'upd', '분석 30일 경과 · 자료 갱신 2건', 'B 병원 안내 시스템 제안', ['다시 분석', 'MI3G.dc.html'], 'MI3.dc.html'],
+ ['C 물류센터 경쟁사 벤치마크', 'v1', '최민섭 · 방금 시작', '제조 · 물류', '고객 · 경쟁', 'run', '정리 중 · 출처 24곳 확인', '', ['진행 보기', 'MI3G.dc.html'], 'MI3G.dc.html'],
+ ['D 대학 강의동 협업 공간 시장 분석', '', '최민섭 · 어제 저장', '교육 · 캠퍼스', '범위 선택 전', 'draft', '고객 요구사항까지 입력', '', ['이어서', 'MI2.dc.html'], 'MI2.dc.html'],
+ ['B 병원 경쟁사 키오스크 비교', 'v3', '최민섭 · 8월 20일 분석', '의료 · 요양', '경쟁', 'upd', '경쟁사 신제품 감지 1건', 'B 병원 안내 시스템 제안', ['다시 분석', 'MI3G.dc.html'], 'MI3.dc.html']
+ ];
+ const ST = { done: '완료', upd: '업데이트 필요', run: '진행 중', draft: '작성 중' };
+ const CHIP = {
+ done: '',
+ upd: '',
+ run: '',
+ draft: ''
+ };
+ const cols = '';
+ const MENU_ROW = 1;
+ const rows = R.map(([title, ver, sub, ind, scope, s, note, prop, act, open], i) => ({
+ title, ver, hasVer: ver.length > 0, sub, ind, scope, note, prop, open,
+ hasProp: prop.length > 0, noProp: prop.length === 0,
+ stText: ST[s], isDone: s === 'done', isUpd: s === 'upd', isRun: s === 'run', isDraft: s === 'draft',
+ act: act[0], actHref: act[1], menu: i === MENU_ROW,
+ moreLabel: title + ' 메뉴',
+ rowStyle: 'display: grid; ' + cols + '' + (i === MENU_ROW ? '' : ''),
+ scopeStyle: '' + (s === 'draft' ? '' : ''),
+ chipStyle: '' + CHIP[s],
+ actStyle: '' + (s === 'upd' ? '' : ''),
+ moreStyle: '' + (i === MENU_ROW ? '' : '')
+ }));
+ const count = (s) => R.filter((r) => r[5] === s).length;
+ const F = [['전체', R.length, true], ['진행 중', count('run'), false], ['완료', count('done'), false], ['업데이트 필요', count('upd'), false], ['작성 중', count('draft'), false]];
+ const filters = F.map(([label, n, on]) => ({
+ label, n, on,
+ style: '' + (on ? '' : '')
+ }));
+ const M = [
+ ['바뀐 부분만 다시 분석', '시장 · 경쟁 · 약 1분', 'MI3G.dc.html', true],
+ ['전체 다시 분석', 'v2로 저장 · v1 보관', 'MI3G.dc.html', false],
+ ['지난 결과 열기', 'v1 · 9월 1일', 'MI3.dc.html', false],
+ ['제안서 MI 섹션으로 보내기', 'B 병원 제안', 'MI4.dc.html', false],
+ ['복제해서 새 분석', '범위 그대로', 'MI1.dc.html', false]
+ ];
+ const menu = M.map(([label, hint, href, hi]) => ({
+ label, hint, href,
+ style: '' + (hi ? '' : '')
+ }));
+ const inds = [['외식 · 카페', 23], ['의료 · 요양', 10], ['교육 · 캠퍼스', 13], ['제조 · 물류', 7], ['호텔 · 리조트', 17], ['오피스', 11]].map(([name, n]) => ({ name, n: n + '건' }));
+ return {
+ rows, filters, menu, inds, total: R.length, updCount: count('upd'),
+ headStyle: 'display: grid; ' + cols + ''
+ };
+ }
+}

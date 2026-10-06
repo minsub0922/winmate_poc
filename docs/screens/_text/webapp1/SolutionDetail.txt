@@ -1,0 +1,154 @@
+ 
+ 솔루션 상세 보기 컴포넌트 
+ 솔루션 탐색 
+ 디스플레이 솔루션 › 사이니지 CMS › MagicINFO 
+ 견적 문의 페이지 ↗ 
+ samsung.com 소개 페이지 ↗ 
+ 1 / 5 · 공식 연출 이미지 
+ 이미지 출처 · samsung.com MagicINFO 소개 · 2026-10-02 수집 
+ MagicINFO MagicINFO™ 8 
+ 삼성 스마트 사이니지 콘텐츠 관리 솔루션 (CMS) 
+ {{k}} 
+ 별도 구매 · 견적 문의 (BW-MIP70PA) · 라이선스 단가 [견적 확인] 
+ 지원 기기 — 삼성 스마트 사이니지 
+ 예: QMC 시리즈 (제품 페이지에 지원 명시) 
+ QM55C 상세 → 
+ 견적 문의 페이지 열기 ↗ 
+ 현재 작업에 추가 
+ {{tb.label}} {{tb.n}} 
+ 공식 정보 확인 2026-10-02 
+ 콘텐츠를 만들고 예약해 배포하는 일, 사이니지 기기를 원격으로 살피는 일, 외부 데이터를 화면에 연결하는 일을 한 서버에서 하는 삼성 사이니지 CMS입니다. 
+ {{p.name}} 
+ {{it}} 
+ 구성 요소 
+ {{c.name}} 
+ {{c.does}} 
+ {{d.name}} 
+ {{d.desc}} 
+ 근거 · {{d.src}} 
+ 기기 관리 기능 
+ {{x}} 
+ 출처 · samsung.com MagicINFO 소개 페이지 · 견적 페이지 · 도입사례 2건 (2026-10-02 확인) · 설명은 원문을 줄여 쓴 것 
+ 이미지 9 
+ 공식 소개 이미지 5 · 도입사례 사진 4 — 모두 samsung.com 게시물 
+ {{gr.name}} 
+ {{g.label}} 
+ {{g.meta}} 
+ 선택한 이미지 
+ {{fm.label}} 
+ 삼성 공식 · 솔루션 소개 이미지 
+ 원본 열기 ↗ 
+ {{r.k}} 
+ {{r.v}} ↗ 
+ {{r.v}} 
+ 본문에 MagicINFO가 나오는 도입사례 17건 
+ 삼성 고객 도입사례 198건(본문 있는 사례, 2026-10-02 확인)에서 찾았습니다 · 제목에 명시 3건 · 본문 언급 14건 
+ 도입사례 목록 ↗ 
+ 도입사례 사진 
+ 제목에 명시 
+ {{c.title}} 
+ {{c.date}} 
+ {{c.desc}} 
+ {{c.urlText}} 
+ 원문 열기 ↗ 
+ 본문 언급 14 
+ 사진은 아직 가져오지 않았어요 · 원문에서 확인 
+ {{m.title}} 
+ {{m.date}} 
+ ↗ 
+class Component extends DCLogic {
+ renderVals() {
+ const tab = this.props.tab ?? 'overview';
+ const MI = 'https://www.samsung.com/sec/business/display-solutions/magicinfo/';
+ const CMS = 'https://images.samsung.com/kdp/cms_contents/102341/';
+ const CS = 'https://www.samsung.com/sec/business/insights/case-study/';
+ // [이름, 자산, 원본 파일 URL, 원본(가로, 세로, 형식, KB), 저장본(가로, 세로, KB), 출처 페이지, 출처 이름]
+ const OFF = [
+ ['대표 이미지', '/_blob/25569e79c0b4832bac077d2baf6b2a65', CMS + 'f5676817-cb4c-4163-8e96-7007fc6996c1.jpg', [1440, 680, 'JPG', 669], [1100, 519, 159]],
+ ['콘텐츠 · 디바이스 · 데이터 관리', '/_blob/470ac28985515732b0568c170026823d', CMS + 'e246975f-653c-49c8-beb8-0fc862f4375b.jpg', [1440, 680, 'JPG', 485], [1100, 519, 86]],
+ ['Author 제작 기능', '/_blob/01ff54248588da561adfcc64088607cd', CMS + 'e7369246-6232-45a1-bf1b-ab3470ef8155.jpg', [720, 850, 'WEBP', 112], [720, 850, 82]],
+ ['Server 재생 목록 · 그룹 · 태그', '/_blob/7be08e000ddd1f4afafce1fc991d689d', CMS + 'fbea044f-8d58-4ce7-9a4e-c1999ac755fa.jpg', [720, 677, 'WEBP', 163], [720, 677, 99]],
+ ['디바이스 관리', '/_blob/ca631457a44777cc7532d44d949e3bcc', CMS + '0356dfaf-c009-4e4c-8158-e4f3f46b9d0b.jpg', [720, 456, 'WEBP', 116], [720, 456, 66]]
+ ];
+ const CASEIMG = [
+ ['NFT아트갤러리 청담', '/_blob/2105991c8ec5facbf1932970bf342ab4', [1340, 642, 'JPG', 225]],
+ ['NH농협은행 본사 로비', '/_blob/fe142f33ed70141d96954e01ca716dd7', [1340, 720, 'JPG', 329]],
+ ['쉐라톤 서울 디큐브시티', '/_blob/287db751ccd9a51013d36d5f9d824bd0', [1340, 1226, 'JPG', 676]],
+ ['맥도날드 고양삼송DT점', '/_blob/1735a54b56a764dc68453f56212cd99e', [1340, 820, 'JPG', 368]]
+ ];
+ const FOCUS = 1;
+ const kb = (n) => n.toLocaleString('en-US') + ' KB';
+ const tile = (on) => '' + (on ? '' : '');
+ const thumbs = OFF.map(([label, src], i) => ({ label, src, aria: label + ' 이미지 보기', style: '' + (i === 0 ? '' : '') }));
+ const groups = [
+ { name: '공식 소개 이미지 5 · samsung.com MagicINFO 소개', items: OFF.map(([label, src, , o], i) => ({ label, src, focusStr: String(i === FOCUS), aria: label + ' — 원본 ' + o[0] + '×' + o[1] + ' ' + o[2], meta: o[0] + '×' + o[1] + ' ' + o[2] + ' · ' + kb(o[3]), style: tile(i === FOCUS) })) },
+ { name: '도입사례 사진 4 · samsung.com 고객 도입사례', items: CASEIMG.map(([label, src, o]) => ({ label, src, focusStr: 'false', aria: label + ' 도입사례 사진', meta: o[0] + '×' + o[1] + ' ' + o[2] + ' · ' + kb(o[3]), style: tile(false) })) }
+ ];
+ const f = OFF[FOCUS];
+ const fm = {
+ label: f[0], fileHref: f[2],
+ rows: [
+ ['이미지명', '콘텐츠 · 디바이스 · 데이터 관리 3분할 구성도 (원문 대체 텍스트 요약)', ''],
+ ['출처 유형', '삼성전자 공식 · 솔루션 소개 이미지', ''],
+ ['출처 페이지', 'samsung.com · 사이니지 콘텐츠관리 MagicINFO', MI],
+ ['원본 파일', 'images.samsung.com/kdp/cms_contents/102341/e246975f….jpg', f[2]],
+ ['원본', f[3][0] + ' × ' + f[3][1] + ' · ' + f[3][2] + ' · ' + kb(f[3][3]), ''],
+ ['저장본', f[4][0] + ' × ' + f[4][1] + ' · JPG · ' + kb(f[4][2]), ''],
+ ['수집', '2026-10-02 · 공식 페이지에서 수집', ''],
+ ['원문 표기', '이해를 돕기 위한 연출 이미지', ''],
+ ['사용 조건', '삼성전자 저작물 · 대외 사용 범위 확인 필요', ''],
+ ['사용 이력', 'Winmate 제안서 0건', '']
+ ].map(([k, v, href]) => ({ k, v, href, isLink: !!href, isText: !href }))
+ };
+ const pillars = [
+ { name: '콘텐츠 관리', items: ['제작', '스케줄링', '배포'] },
+ { name: '디바이스 관리', items: ['모니터링', '제어', '알림'] },
+ { name: '데이터 관리', items: ['자동화', '분석', '시각화'] }
+ ];
+ const parts = [
+ ['MagicINFO Author', '템플릿 · 클립아트 · 시각 효과를 조합해 콘텐츠를 만들고, HTML · CSS · JS 요소도 코딩 없이 넣습니다.'],
+ ['MagicINFO Server', '재생 목록에 담아 날짜 · 시간별로 예약 배포하고, 연결된 기기를 실시간 모니터링 · 원격 제어하며 통계를 봅니다.'],
+ ['MagicINFO Player', '8K 화질과 멀티스크린 동시 재생을 지원하고, 거의 모든 웹 표준 콘텐츠를 재생합니다.'],
+ ['MagicINFO Datalink', '외부 데이터를 콘텐츠에 연결하는 기능 (공식 기능 목록 기준).']
+ ].map(([name, does]) => ({ name, does }));
+ const deploy = [
+ { name: '설치형 — 고객사 서버', desc: '웹으로 MagicINFO 서버에 접속해 네트워크의 모든 디스플레이를 원격 관리합니다.', src: '쉐라톤 서울 디큐브시티 사례 (2017-10-19)' },
+ { name: '클라우드형 — 월 구독', desc: '별도 서버 구축 없이 월 구독으로 씁니다. 일반 기업 첫 도입 사례로 소개됨.', src: 'NH농협은행 사례 (2022-02-25)' }
+ ];
+ const scases = [
+ ['NFT아트갤러리 청담 – 스마트 사이니지 + MagicINFO 솔루션', '2023-01-30', '수십 대의 LCD 사이니지를 MagicINFO로 한 번에 원격 관리하고, 스케줄링으로 작품 송출 순서 · 시간 · 반복 주기를 미리 정해 둡니다.', 'NFT_artgallary', '/_blob/2105991c8ec5facbf1932970bf342ab4', '전시 공간 사이니지', '50% 50%'],
+ ['NH농협은행 - 스마트 LED 사이니지 + MagicINFO솔루션', '2022-02-25', '본사 로비 LED 사이니지에 홍보 콘텐츠를 반복 노출합니다. 별도 서버가 필요 없는 월 구독형 MagicINFO 클라우드형을 도입했습니다.', 'reference-smartsignage-solution', '/_blob/fe142f33ed70141d96954e01ca716dd7', '본사 로비 LED 사이니지', '50% 40%'],
+ ['쉐라톤 서울 디큐브시티 호텔 – 삼성 스마트 사이니지(홍보용), 매직인포(MagicINFO) 솔루션', '2017-10-19', '로비부터 고층부까지 사이니지 콘텐츠를 웹으로 원격 수정하고, 연회 · 웨딩 일정에 맞춰 이벤트 스케줄로 미리 예약합니다.', 'reference-sheraton', '/_blob/287db751ccd9a51013d36d5f9d824bd0', '로비 · 리셉션 사이니지', '50% 12%']
+ ].map(([title, date, desc, slug, img, alt, pos]) => ({
+ title, date, desc, img, alt, url: CS + slug + '/', urlText: 'samsung.com/sec/business/insights/case-study/' + slug,
+ imgStyle: '' + pos + '; display: block;'
+ }));
+ const more = [
+ ['맥도날드 고양삼송DT점', '2020-11-12', 'reference-MCDONALDSsamsong'],
+ ['팩토리얼 성수 - AI 오피스', '2024-12-02', 'factorial_seongsu'],
+ ['이트너스 - AI 오피스', '2024-09-26', 'etners_ai_office'],
+ ['룰루레몬 파르나스몰 스토어', '2022-01-10', 'Lululemon-parnasmall_Signage'],
+ ['에버랜드 – 스마트 LED 사이니지', '2021-05-25', 'reference-EverlandSmartLED1'],
+ ['SKT - 삼성 스마트 사이니지', '2020-04-09', 'reference-SKT'],
+ ['커피빈 학동역 DT점 · 서초역 1번출구점', '2018-03-07', 'reference-coffeebean'],
+ ['이가자헤어비스', '2017-11-27', 'reference-leekaja'],
+ ['현대백화점 판교점', '2017-11-27', 'hyundai-pankyo'],
+ ['한국IBM', '2017-11-27', 'korea-ibm'],
+ ['말리커피', '2017-11-27', 'marley-coffee'],
+ ['제주 유민 미술관', '2017-10-25', 'reference-yumin'],
+ ['인천SK행복드림구장', '2017-10-12', 'reference-incheonsk-bigboard'],
+ ['크라운 파크 호텔 서울', '2017-09-28', 'crownparkhotel']
+ ].map(([title, date, slug]) => ({ title, date, url: CS + slug + '/' }));
+ const T = [['overview', '개요 · 구성', '', 'HomeSolutionDetail.dc.html'], ['images', '이미지', '9', 'HomeSolutionImages.dc.html'], ['cases', '활용 사례', '17', 'HomeSolutionCases.dc.html']];
+ const tabs = T.map(([key, label, n, href]) => ({
+ label, n, href, on: String(key === tab),
+ style: '' + (key === tab ? '' : '')
+ }));
+ return {
+ tabs, isOverview: tab === 'overview', isImages: tab === 'images', isCases: tab === 'cases',
+ thumbs, keys: ['Author · Server · Player', '설치형', '클라우드형 (월 구독)'],
+ pillars, parts, deploy, deviceFx: ['보안 제어', '원격 펌웨어 업데이트', '기기 상태', '메일 알림'],
+ groups, fm, scases, more
+ };
+ }
+}

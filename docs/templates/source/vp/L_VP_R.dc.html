@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-R 실사 동선 투어 — 손님이 지나가는 순서대로</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1100px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">손님이 지나가는 순서대로, 실제 모습으로 보면</div>
+
+  <div style="position: absolute; left: 64px; top: 136px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+      <div style="position: relative; display: flex; flex-direction: column; gap: 10px; min-width: 0">
+        <div style="position: relative; width: 270px; height: 300px">
+          <dc-import name="Photo" pid="{{s.pid}}" w="270" h="300" radius="14" pos="{{s.pos}}" hint-size="270px,300px"></dc-import>
+          <span style="position: absolute; left: 12px; top: 12px; width: 32px; height: 32px; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-sizing: border-box; color: #ffffff; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+          <span style="position: absolute; left: 12px; bottom: 12px; height: 24px; padding: 0 10px; border-radius: 999px; background: rgba(18,20,23,0.78); color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.prod}}</span>
+        </div>
+        <sc-if value="{{s.arrow}}" hint-placeholder-val="{{true}}">
+          <span style="position: absolute; left: 273px; top: 138px; width: 18px; height: 24px; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+        </sc-if>
+        <span style="font-size: 12px; font-weight: 700; color: #596170">{{s.where}}</span>
+        <span style="font-size: 18px; font-weight: 800; letter-spacing: -0.01em; line-height: 1.35">{{s.value}}</span>
+        <span style="font-size: 13px; line-height: 1.55; color: #3d4452">{{s.desc}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 46px; box-sizing: border-box; border-radius: 12px; background: #f5f7fd; padding: 0 18px; display: flex; align-items: center; gap: 12px">
+    <span style="font-size: 13px; font-weight: 800; color: #1428a0; white-space: nowrap">매장 앞부터 좌석까지</span>
+    <span style="font-size: 13.5px; color: #121417; white-space: nowrap">화면 콘텐츠는 MagicINFO, 전력 · 냉난방은 SmartThings Pro — 본사 한 곳에서 같은 날 같은 메뉴</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 사진은 samsung.com 공식 이미지 · A 커피 매장 사진이 있으면 그 사진으로 바꿈</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [실사, 초점, 어디서, 제품, 가치, 설명]
+    const S = [
+      ['life.oh55a.dt', '50% 50%', '매장 앞 · 드라이브스루', 'OH55A-S 옥외 사이니지', '지나가며 읽히는 첫 메뉴판', '햇빛 아래서도 또렷하게 · 아침 · 점심 · 저녁 메뉴로 자동 전환'],
+      ['life.km24c.bakery', '58% 50%', '주문', 'KM24C 키오스크', '피크 시간 줄이 둘로', '주문 · 결제를 키오스크가 나눠 받고 카운터는 픽업에 집중'],
+      ['life.qm55c.coffee', '30% 50%', '메뉴 보기', 'QM55C 메뉴보드', '본사가 몇 분 만에 바꾸는 메뉴', '세로 · 가로판 모두 같은 콘텐츠 · 품절은 화면에서 바로'],
+      ['life.ac360.store', '50% 30%', '머무는 시간', '360 카세트', '오래 앉아도 쾌적한 좌석', '천장에서 사방으로 고른 바람 · 영업시간에만 자동 운전']
+    ];
+    const steps = S.map(([pid, pos, where, prod, value, desc], i) => ({ no: i + 1, pid, pos, where, prod, value, desc, arrow: i < S.length - 1 }));
+    return { steps };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>HVC-D 삼성 통합공조 구성도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안 · 삼성 통합공조</div>
+  <div style="position: absolute; right: 64px; top: 36px; height: 26px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>삼성 통합공조 · 개별 + 중앙 + b.IoT</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">열원에서 실내까지, 모든 설비가 b.IoT로</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">중앙공조는 냉수 배관으로, 개별공조는 냉매 배관으로 — 제어와 상태 데이터는 모두 b.IoT 한 곳으로</div>
+
+  <!-- 상단 띠: b.IoT (로고) + 라인업 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 824px; height: 72px; box-sizing: border-box; border-radius: 14px; background: #1428a0; color: #ffffff; padding: 0 16px; display: flex; align-items: center; gap: 12px">
+    <div style="position: relative; width: 150px; height: 44px; flex-shrink: 0; border-radius: 10px; background: #ffffff; overflow: hidden">
+      <img src="/_blob/561ead118f464e454dcdbef428578acc" alt="SAMSUNG b.IoT 로고" style="position: absolute; left: 10px; top: 10px; width: 130px; height: 24px; object-fit: contain; object-position: 50% 50%">
+    </div>
+    <sc-for list="{{tiers}}" as="t" hint-placeholder-count="3">
+      <div style="width: 200px; height: 48px; flex-shrink: 0; box-sizing: border-box; border-radius: 10px; background: rgba(255,255,255,0.14); padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: nowrap">
+        <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; line-height: 1.3">{{t.name}}</span>
+        <span style="font-size: 11.5px; color: #c8d3ff">{{t.d}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 우: 관리자 · 시설팀 -->
+  <div style="position: absolute; left: 928px; top: 160px; width: 288px; height: 34px; box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 12px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg>
+    <span style="font-size: 13px; font-weight: 800">관리자</span>
+    <span style="font-size: 12px; color: #596170">중앙 관제실 PC</span>
+    <span style="margin-left: auto; font-size: 11.5px; color: #8a91a0">통합 관제</span>
+  </div>
+  <div style="position: absolute; left: 928px; top: 198px; width: 288px; height: 34px; box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; padding: 0 12px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 2h10v20H7z M11 18h2"/></svg>
+    <span style="font-size: 13px; font-weight: 800">시설팀</span>
+    <span style="font-size: 12px; color: #596170">모바일</span>
+    <span style="margin-left: auto; font-size: 11.5px; color: #8a91a0">원격 유지관리</span>
+  </div>
+
+  <!-- 범례 (우상단) -->
+  <div style="position: absolute; left: 928px; top: 248px; width: 288px; display: grid; grid-template-columns: 144px 144px; gap: 4px 0px; font-size: 11.5px; color: #596170; white-space: nowrap">
+    <sc-for list="{{legend}}" as="lg" hint-placeholder-count="4">
+      <span style="height: 18px; display: flex; align-items: center; gap: 8px"><span style="{{lg.swatch}}"></span>{{lg.t}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 경계: 열원 -->
+  <div style="position: absolute; left: 88px; top: 292px; width: 440px; height: 208px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 112px; top: 282px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center">열원</div>
+  <div style="position: absolute; left: 560px; top: 292px; font-size: 12.5px; font-weight: 800; color: #1428a0; white-space: nowrap">중앙공조</div>
+
+  <!-- 경계: 개별공조 -->
+  <div style="position: absolute; left: 64px; top: 520px; width: 980px; height: 120px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 96px; top: 510px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">개별공조 · 시스템에어컨 DVM</div>
+
+  <!-- 배관 · 제어선 · 화살표 -->
+  <sc-for list="{{wires}}" as="w" hint-placeholder-count="30">
+    <div style="{{w}}"></div>
+  </sc-for>
+
+  <!-- 열원 설비 (제품 사진) -->
+  <div style="position: absolute; left: 108px; top: 316px; width: 188px; height: 60px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; overflow: hidden">
+    <img src="/_blob/58aba2e1a632c1eccb668d53157237c3" alt="공조용 패키지 냉각탑" style="position: absolute; left: 5px; top: 5px; width: 47px; height: 47px; object-fit: cover; object-position: 50% 50%; border-radius: 6px">
+    <span style="position: absolute; left: 62px; top: 9px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">냉각탑</span>
+    <span style="position: absolute; left: 62px; top: 31px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">CTI 인증 · 백연 저감</span>
+  </div>
+  <div style="position: absolute; left: 162px; top: 390px; width: 44px; text-align: center; font-size: 11px; font-weight: 700; color: #596170">냉각수</div>
+  <div style="position: absolute; left: 108px; top: 420px; width: 188px; height: 64px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; overflow: hidden">
+    <img src="/_blob/27c8ea7502518a3762fc3904afcf6667" alt="마그네틱 베어링 터보 냉동기" style="position: absolute; left: 4px; top: 5px; width: 62px; height: 51px; object-fit: contain; object-position: 50% 50%">
+    <span style="position: absolute; left: 74px; top: 11px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">냉동기 · 터보</span>
+    <span style="position: absolute; left: 74px; top: 33px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">무급유 · 인버터</span>
+  </div>
+  <div style="position: absolute; left: 302px; top: 336px; width: 32px; height: 20px; box-sizing: border-box; border-radius: 999px; border: 1px solid #d5d9e0; background: #ffffff; font-size: 11px; font-weight: 700; color: #596170; display: flex; align-items: center; justify-content: center">또는</div>
+  <div style="position: absolute; left: 340px; top: 316px; width: 176px; height: 116px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; overflow: hidden">
+    <img src="/_blob/25ab6b54f02ac769ef4d6a60e91f09e2" alt="DVM Chiller 공랭식 히트펌프 정면" style="position: absolute; left: 7px; top: 8px; width: 54px; height: 97px; object-fit: cover; object-position: 12% 50%; border-radius: 4px">
+    <span style="position: absolute; left: 70px; top: 13px; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">DVM Chiller</span>
+    <span style="position: absolute; left: 70px; top: 35px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">옥상 · 기계실 없이</span>
+    <div style="position: absolute; left: 70px; top: 57px; height: 16px; display: flex; align-items: center; gap: 4px">
+      <sc-for list="{{modules}}" as="md" hint-placeholder-count="3">
+        <span style="width: 16px; height: 13px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #121417; background: #eaeefb"></span>
+      </sc-for>
+      <span style="margin-left: 4px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800">×[0]</span>
+    </div>
+    <span style="position: absolute; left: 70px; top: 79px; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap">최대 16대 조합</span>
+  </div>
+  <div style="position: absolute; left: 536px; top: 478px; display: flex; align-items: baseline; gap: 4px; font-size: 11.5px; font-weight: 800; color: #1428a0; white-space: nowrap">냉수<span style="font-family: Manrope, sans-serif">5~7℃</span></div>
+
+  <!-- 부하측: AHU · FCU (제품 사진) -->
+  <div style="position: absolute; left: 560px; top: 316px; width: 232px; height: 88px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; overflow: hidden">
+    <img src="/_blob/0b4922f74b77869bfecff63806cd9ed9" alt="설치된 공조기 AHU" style="position: absolute; left: 6px; top: 6px; width: 104px; height: 73px; object-fit: cover; object-position: 50% 50%; border-radius: 6px">
+    <span style="position: absolute; left: 120px; top: 6px; font-size: 15px; font-weight: 800; line-height: 21px; white-space: nowrap">공조기 AHU</span>
+    <span style="position: absolute; left: 120px; top: 28px; font-size: 12.5px; line-height: 17px; color: #3d4452; white-space: nowrap">대강당 · 로비</span>
+    <span style="position: absolute; left: 120px; top: 47px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">UV LED 항균 필터</span>
+    <span style="position: absolute; left: 120px; top: 63px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">내식 · 내염해 코일</span>
+  </div>
+  <div style="position: absolute; left: 812px; top: 316px; width: 232px; height: 88px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; overflow: hidden">
+    <img src="/_blob/32f45fb432862afe6a58d479993eafdb" alt="FCU 360 카세트" style="position: absolute; left: 4px; top: 6px; width: 88px; height: 73px; object-fit: contain; object-position: 50% 50%">
+    <span style="position: absolute; left: 102px; top: 6px; font-size: 15px; font-weight: 800; line-height: 21px; white-space: nowrap">FCU <span style="font-family: Manrope, sans-serif">×[00]</span></span>
+    <span style="position: absolute; left: 102px; top: 28px; font-size: 12.5px; line-height: 17px; color: #3d4452; white-space: nowrap">강의실</span>
+    <span style="position: absolute; left: 102px; top: 47px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">무풍 1Way · 4Way</span>
+    <span style="position: absolute; left: 102px; top: 63px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">360 카세트</span>
+  </div>
+
+  <!-- 개별공조: 실외기 → 실내기 -->
+  <div style="position: absolute; left: 104px; top: 548px; width: 168px; height: 64px; box-sizing: border-box; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; white-space: nowrap">
+    <span style="font-size: 14px; font-weight: 800; line-height: 1.35">DVM 실외기 <span style="font-family: Manrope, sans-serif">×[0]</span></span>
+    <span style="font-size: 11.5px; color: #596170">연구동 · 기숙사 옥상</span>
+  </div>
+  <div style="position: absolute; left: 286px; top: 560px; font-size: 11px; font-weight: 700; color: #121417">냉매</div>
+  <sc-for list="{{indoor}}" as="u" hint-placeholder-count="3">
+    <div style="{{u.style}}">
+      <span style="font-size: 13.5px; font-weight: 800; line-height: 1.35">실내기 <span style="font-family: Manrope, sans-serif">×[00]</span></span>
+      <span style="font-size: 12px; color: #596170">{{u.room}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 제어선 라벨 -->
+  <div style="position: absolute; left: 452px; top: 250px; font-size: 12px; font-weight: 700; color: #1428a0; white-space: nowrap">제어 ↓ · 상태 · 에너지 데이터 ↑</div>
+
+  <!-- 카탈로그 구성도 (인셋) -->
+  <div style="position: absolute; left: 1068px; top: 316px; font-size: 11.5px; font-weight: 800; line-height: 16px; color: #596170; white-space: nowrap">카탈로그 구성도</div>
+  <div style="position: absolute; left: 1068px; top: 336px; width: 148px; height: 88px; box-sizing: border-box; border-radius: 8px; border: 1px solid #e2e5ea; overflow: hidden">
+    <img src="/_blob/e8a97b1e6ddf919a04c782b0c7fbf766" alt="카탈로그 구성도 — 개별공조와 중앙공조 빌딩 단면" style="position: absolute; left: 0px; top: 0px; width: 146px; height: 86px; object-fit: cover; object-position: 50% 50%">
+  </div>
+  <div style="position: absolute; left: 1068px; top: 430px; font-size: 10.5px; line-height: 15px; color: #8a91a0; white-space: nowrap">개별 + 중앙 빌딩 단면 · 카탈로그</div>
+  <div style="position: absolute; left: 1068px; top: 490px; font-size: 11px; color: #8a91a0; white-space: nowrap">대수는 설계 후 확정</div>
+
+  <!-- 관제 대상 -->
+  <div style="position: absolute; left: 1068px; top: 520px; width: 148px; height: 120px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px">
+    <span style="font-size: 12px; font-weight: 800; line-height: 17px; color: #596170">관제 대상</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 8px">
+      <sc-for list="{{scope}}" as="s" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; line-height: 19px; letter-spacing: -0.02em; color: #1428a0">{{s.n}}</span><span style="font-size: 11px; line-height: 15px; color: #596170">{{s.l}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 통합공조 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; box-sizing: border-box; ';
+    const BLUE = '#1428a0', GRAY = '#8a91a0', INK = '#121417';
+    // 실선 · 점선 조각 (x, y = 선 중심)
+    const hl = (x1, x2, y, c, w) => A + 'left: ' + px(x1) + 'top: ' + px(y - w / 2) + 'width: ' + px(x2 - x1) + 'height: ' + px(w) + 'background: ' + c + ';';
+    const vl = (x, y1, y2, c, w) => A + 'left: ' + px(x - w / 2) + 'top: ' + px(y1) + 'width: ' + px(w) + 'height: ' + px(y2 - y1) + 'background: ' + c + ';';
+    const hd = (x1, x2, y, c, w) => A + 'left: ' + px(x1) + 'top: ' + px(y - w / 2) + 'width: ' + px(x2 - x1) + 'height: 0px; border-top: ' + w + 'px dashed ' + c + ';';
+    const vd = (x, y1, y2, c, w) => A + 'left: ' + px(x - w / 2) + 'top: ' + px(y1) + 'width: 0px; height: ' + px(y2 - y1) + 'border-left: ' + w + 'px dashed ' + c + ';';
+    const ar = (x, y, dir, c) => {
+      const s = 'position: absolute; width: 0px; height: 0px; ';
+      if (dir === 'r') return s + 'left: ' + px(x - 7) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid ' + c + ';';
+      if (dir === 'l') return s + 'left: ' + px(x) + 'top: ' + px(y - 5) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid ' + c + ';';
+      if (dir === 'd') return s + 'left: ' + px(x - 5) + 'top: ' + px(y - 7) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 7px solid ' + c + ';';
+      return s + 'left: ' + px(x - 5) + 'top: ' + px(y) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 7px solid ' + c + ';';
+    };
+    const dot = (x, y) => A + 'left: ' + px(x - 5) + 'top: ' + px(y - 5) + 'width: 10px; height: 10px; border-radius: 50%; background: ' + BLUE + '; border: 2px solid #ffffff;';
+
+    const BAND = 232; // b.IoT 띠 밑변
+    const wires = [];
+    // 냉각수 루프: 냉각탑 (y 316–376) ↔ 냉동기 (y 420–484)
+    wires.push(vl(150, 376, 413, GRAY, 2), ar(150, 420, 'd', GRAY));
+    wires.push(vl(218, 383, 420, GRAY, 2), ar(218, 376, 'u', GRAY));
+    // 냉수 헤더 (굵은 파랑): 냉동기 → AHU · FCU, DVM Chiller 합류
+    wires.push(hl(296, 930, 470, BLUE, 4));
+    wires.push(vl(428, 432, 468, BLUE, 3));
+    wires.push(vl(700, 411, 468, BLUE, 3), ar(700, 404, 'u', BLUE));
+    wires.push(vl(928, 411, 468, BLUE, 3), ar(928, 404, 'u', BLUE));
+    // 냉매 (잉크 점선): 실외기 → 실내기 3곳 (상자 아래로 지나감)
+    wires.push(hd(272, 900, 580, INK, 2));
+    // 제어 · 데이터 (얇은 파랑 점선) → b.IoT 띠
+    wires.push(vd(230, BAND, 316, BLUE, 1.5));                                 // 냉각탑
+    wires.push(hd(98, 108, 452, BLUE, 1.5), vd(98, BAND, 452, BLUE, 1.5));     // 냉동기 (좌측으로 우회)
+    wires.push(vd(428, BAND, 316, BLUE, 1.5));                                 // DVM Chiller
+    wires.push(vd(760, BAND, 316, BLUE, 1.5));                                 // AHU
+    wires.push(vd(870, BAND, 316, BLUE, 1.5));                                 // FCU
+    wires.push(hd(76, 104, 572, BLUE, 1.5), vd(76, BAND, 572, BLUE, 1.5));     // 개별공조 (DVM 실외기)
+    [76, 98, 230, 428, 760, 870].forEach((x) => wires.push(dot(x, BAND + 1)));
+    // b.IoT ↔ 관리자 · 시설팀
+    [177, 215].forEach((y) => wires.push(hl(895, 921, y, BLUE, 2), ar(888, y, 'l', BLUE), ar(928, y, 'r', BLUE)));
+
+    const tiers = [
+      { name: 'Enterprise', d: '기계설비 · 조명 · 전력 통합' },
+      { name: 'Energy', d: '원격검침 · 에너지 관리' },
+      { name: 'Cloud', d: '원격 유지관리' }
+    ];
+    const modules = [1, 2, 3];
+    const indoor = [['연구실', 344], ['교수실', 568], ['기숙사', 792]].map(([room, x]) => ({
+      room,
+      style: A + 'left: ' + px(x) + 'top: 552px; width: 200px; height: 56px; border-radius: 10px; border: 1.5px solid #121417; background: #ffffff; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 1px; white-space: nowrap;'
+    }));
+    const legend = [
+      { t: '냉수', swatch: 'width: 24px; height: 4px; border-radius: 2px; background: ' + BLUE + ';' },
+      { t: '냉각수', swatch: 'width: 24px; height: 2px; background: ' + GRAY + ';' },
+      { t: '냉매', swatch: 'width: 24px; height: 0px; border-top: 2px dashed ' + INK + ';' },
+      { t: '제어 · 데이터', swatch: 'width: 24px; height: 0px; border-top: 1.5px dashed ' + BLUE + ';' }
+    ];
+    const scope = [
+      { n: '[0]', l: '열원 설비' },
+      { n: '[0]', l: 'AHU' },
+      { n: '[00]', l: 'FCU' },
+      { n: '[000]', l: '실내기' }
+    ];
+    return { wires, tiers, modules, indoor, legend, scope };
+  }
+}
+</script>
+</body>
+</html>

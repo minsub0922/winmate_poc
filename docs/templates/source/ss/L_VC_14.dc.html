@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-1·4 한 공간 · 솔루션 4개 — 허브형 (카페 한 매장 × 4 솔루션)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 1곳 · 솔루션 4개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">F 베이커리 카페 한 매장, 손님 화면부터 진열장 온도까지 넷이 나눠 맡습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">한 공간에 네 솔루션 — 매장 평면 위 어디에서 무엇이 일하는지</div>
+
+  <!-- ============ 가운데: 매장 평면도 ============ -->
+  <div style="position: absolute; left: 430px; top: 158px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800">매장 평면</span><span style="font-size: 11px; color: #8a91a0">위에서 본 배치 · 예시</span></div>
+  <div style="position: absolute; right: 430px; top: 161px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+  <div style="position: absolute; left: 430px; top: 184px; width: 420px; height: 364px; border-radius: 14px; background: #e9ecf0"></div>
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="5">
+    <div style="{{z.style}}"></div>
+    <div style="{{z.lab}}">{{z.t}}</div>
+  </sc-for>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="20">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+
+  <!-- 연결선 (카드 → 기기 마커) -->
+  <sc-for list="{{links}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.line}}"></div>
+    <div style="{{l.dot}}"></div>
+  </sc-for>
+  <!-- 기기 마커 -->
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="8">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+
+  <!-- ============ 네 모서리: 솔루션 카드 ============ -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.box}}">
+      <span style="{{c.badge}}">{{c.n}}</span>
+      <div style="position: absolute; left: 52px; top: 17px; font-size: 17px; line-height: 26px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{c.name}}</div>
+      <div style="position: absolute; right: 16px; top: 20px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #f5f6f8; color: #596170; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c.zone}}</div>
+      <div style="position: absolute; left: 18px; top: 56px; font-size: 13px; line-height: 19px; color: #3d4452; white-space: nowrap">{{c.d1}}</div>
+      <div style="position: absolute; left: 18px; top: 75px; font-size: 13px; line-height: 19px; color: #3d4452; white-space: nowrap">{{c.d2}}</div>
+      <div style="position: absolute; left: 18px; top: 104px; height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; border: 1px solid #d5d9e0; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; white-space: nowrap"><span style="font-size: 10.5px; font-weight: 800; color: #8a91a0">제품</span><span>{{c.prod}}</span></div>
+      <div style="position: absolute; left: 10px; top: 138px; width: 278px; height: 38px; border-radius: 10px; background: #f5f6f8">
+        <div style="position: absolute; left: 12px; top: 10px; font-size: 12px; line-height: 18px; font-weight: 600; color: #596170; white-space: nowrap">{{c.kl}}</div>
+        <div style="position: absolute; right: 12px; top: 5px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{c.kv}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- ============ 하단: 매장의 하루 ============ -->
+  <div style="position: absolute; left: 64px; top: 564px; width: 1152px; height: 84px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 82px; top: 580px; font-size: 14px; line-height: 20px; font-weight: 800; white-space: nowrap">매장의 하루</div>
+  <div style="position: absolute; left: 82px; top: 604px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">시간대마다 움직이는 솔루션</div>
+  <div style="position: absolute; left: 262px; top: 590px; width: 930px; height: 0; border-top: 1px dashed #b8bec8"></div>
+  <sc-for list="{{day}}" as="d" hint-placeholder-count="4">
+    <div style="{{d.dot}}"></div>
+    <div style="{{d.head}}"><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{d.time}}</span><span style="font-size: 13px; font-weight: 700">{{d.t}}</span></div>
+    <div style="{{d.row}}">
+      <sc-for list="{{d.chips}}" as="k" hint-placeholder-count="2">
+        <span style="{{k.style}}">{{k.t}}</span>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>F 베이커리 카페 · 매장 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 솔루션 4색: ① VXT ② SmartThings Pro ③ Knox Suite ④ 콜드체인
+    const K = [
+      { fill: '#1428a0', ink: '#ffffff', bd: '#1428a0' },
+      { fill: '#121417', ink: '#ffffff', bd: '#121417' },
+      { fill: '#6f82d6', ink: '#121417', bd: '#6f82d6' },
+      { fill: '#ffffff', ink: '#1428a0', bd: '#1428a0' }
+    ];
+
+    // 평면도 존 (평면 x 430–850, y 184–548)
+    const Z = [
+      ['카운터', 438, 192, 196, 112, 448, 282],
+      ['진열장', 438, 312, 196, 76, 448, 362],
+      ['입구', 438, 396, 196, 144, 448, 514],
+      ['좌석', 642, 192, 200, 232, 652, 400],
+      ['주방', 642, 432, 200, 108, 652, 514]
+    ];
+    const zones = Z.map(([t, x, y, w, h, lx, ly]) => ({
+      t, style: box(x, y, w, h) + 'border-radius: 8px; background: #ffffff;',
+      lab: A + 'left: ' + px(lx) + 'top: ' + px(ly) + 'font-size: 11.5px; line-height: 16px; font-weight: 800; color: #596170; ' + T
+    }));
+
+    const sh = (x, y, w, h, css, t) => ({ style: box(x, y, w, h) + css, t: t || '' });
+    const cap = (x, y, t) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10.5px; line-height: 14px; color: #596170; ' + T, t });
+    const mid = 'display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: #3d4452; ' + T;
+    const shapes = [
+      // 카운터: 메뉴보드 3면 · 카운터 바 · POS
+      sh(480, 209, 40, 8, 'border-radius: 2px; background: #121417;'),
+      sh(526, 209, 40, 8, 'border-radius: 2px; background: #121417;'),
+      sh(572, 209, 40, 8, 'border-radius: 2px; background: #121417;'),
+      cap(480, 223, '메뉴보드 QM55C ×3'),
+      sh(448, 252, 176, 22, 'border-radius: 4px; background: #e9ecf0;'),
+      cap(458, 256, 'POS 태블릿'),
+      sh(570, 257, 16, 12, 'border-radius: 2px; background: #3d4452;'),
+      // 진열장: 케이크 쇼케이스
+      sh(448, 324, 140, 28, 'box-sizing: border-box; border-radius: 4px; border: 2px solid #121417; background: #ffffff;'),
+      cap(500, 363, '케이크 쇼케이스'),
+      // 입구: 주문 태블릿 · 간판 조명 · 문
+      sh(480, 410, 14, 22, 'border-radius: 3px; background: #3d4452;'),
+      cap(502, 414, '주문 태블릿'),
+      sh(480, 455, 22, 12, 'border-radius: 2px; background: #c8d3ff;'),
+      cap(510, 454, '간판 · 조명'),
+      sh(536, 536, 72, 12, 'background: #ffffff;'),
+      sh(536, 546, 72, 2, 'background: #8a91a0;'),
+      // 좌석: 시스템에어컨 · 테이블
+      sh(764, 204, 30, 30, 'box-sizing: border-box; border-radius: 4px; border: 2px solid #8a91a0; background: #ffffff;'),
+      sh(773, 213, 12, 12, 'border-radius: 50%; background: #c8d3ff;'),
+      cap(748, 240, '시스템에어컨'),
+      // 주방: 오븐 · 워크인 냉장
+      sh(654, 446, 56, 40, 'border-radius: 4px; background: #e9ecf0; ' + mid, '오븐'),
+      sh(720, 446, 80, 52, 'box-sizing: border-box; border-radius: 4px; border: 2px solid #121417; background: #ffffff; ' + mid, '워크인 냉장')
+    ];
+    [0, 1, 2, 3].forEach((i) => shapes.push(sh(456 + i * 32, 331, 22, 14, 'border-radius: 7px; background: #dfe3ea;')));
+    [670, 726, 782].forEach((x) => [276, 334].forEach((y) => {
+      shapes.push(sh(x, y, 34, 34, 'border-radius: 50%; background: #e9ecf0;'));
+    }));
+    shapes.push(cap(548, 522, '출입문'));
+
+    // 기기 마커 (번호 = 카드)
+    const mk = (n, x, y) => ({ n, style: box(x, y, 22, 22) + 'box-sizing: border-box; border-radius: 50%; background: ' + K[n - 1].fill + '; border: 2px solid ' + K[n - 1].bd + '; color: ' + K[n - 1].ink + '; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+    const marks = [mk(1, 448, 202), mk(3, 596, 252), mk(4, 596, 327), mk(3, 448, 410), mk(2, 448, 450), mk(2, 798, 208), mk(4, 808, 460)];
+
+    // 카드 (네 모서리) + 연결선
+    const CX = [64, 916, 64, 916], CY = [160, 160, 362, 362], CW = 300, CH = 186;
+    const C = [
+      ['Samsung VXT', '카운터 벽면', '메뉴보드 · 신메뉴 · 품절 표시를', '웹에서 바로 바꿉니다', 'QM55C ×3', '메뉴 교체', '[0]시간 → [0]분'],
+      ['SmartThings Pro', '좌석 · 입구', '영업시간에 맞춰 조명 · 에어컨 · 간판', '자동 운영, 전력 사용 확인', '시스템에어컨 · 조명 · 스마트 플러그', '영업 외 전력', '[00]% ↓'],
+      ['Knox Suite', '카운터 · 입구', '주문 · POS 태블릿은 매장 앱만,', '원격 업데이트 · 분실 잠금', '갤럭시 탭 ×[0]', '기기 장애 출동', '[0]회 ↓'],
+      ['삼성 콜드체인', '진열장 · 주방', '케이크 쇼케이스 · 워크인 냉장 온도', '실시간 감시, 이탈 시 알림', '냉장 쇼케이스 · 온도 센서', '폐기', '[00]% ↓']
+    ];
+    const cards = C.map(([name, zone, d1, d2, prod, kl, kv], i) => ({
+      n: i + 1, name, zone, d1, d2, prod, kl, kv,
+      box: box(CX[i], CY[i], CW, CH) + 'box-sizing: border-box; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff;',
+      badge: box(17, 17, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: ' + K[i].fill + '; border: 2px solid ' + K[i].bd + '; color: ' + K[i].ink + '; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    const line = (a, b, css) => {
+      const dx = b[0] - a[0], dy = b[1] - a[1];
+      const len = Math.round(Math.sqrt(dx * dx + dy * dy));
+      const deg = (Math.atan2(dy, dx) * 180 / Math.PI).toFixed(2);
+      return A + 'left: ' + px(a[0]) + 'top: ' + px(a[1] - 1) + 'width: ' + px(len) + 'height: 0; border-top: ' + css + '; transform-origin: 0 1px; transform: rotate(' + deg + 'deg);';
+    };
+    const L = [
+      [[364, 213], [448, 213], '2px solid #1428a0'],
+      [[916, 219], [820, 219], '2px solid #121417'],
+      [[364, 421], [448, 421], '2px solid #6f82d6'],
+      [[916, 471], [830, 471], '2px dashed #1428a0']
+    ];
+    const links = L.map(([a, b, css], i) => ({
+      line: line(a, b, css),
+      dot: box(a[0] - 6, a[1] - 6, 12, 12) + 'box-sizing: border-box; border-radius: 50%; background: ' + K[i].bd + '; border: 2px solid #ffffff;'
+    }));
+
+    // 매장의 하루
+    const chip = (i, t) => ({ t, style: 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: ' + K[i].fill + '; color: ' + K[i].ink + '; border: 1px solid ' + K[i].bd + '; font-size: 11px; font-weight: 700; display: flex; align-items: center;' });
+    const D = [
+      ['06:30', '오픈 준비', [chip(1, 'SmartThings Pro'), chip(3, '콜드체인')]],
+      ['12:00', '피크', [chip(0, 'VXT'), chip(2, 'Knox Suite')]],
+      ['15:00', '신메뉴 전환', [chip(0, 'VXT')]],
+      ['22:00', '마감', [chip(1, 'SmartThings Pro'), chip(3, '콜드체인')]]
+    ];
+    const day = D.map(([time, t, chips], i) => {
+      const x = 262 + i * 236;
+      return {
+        time, t, chips,
+        dot: box(x, 585, 10, 10) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;',
+        head: A + 'left: ' + px(x + 14) + 'top: 579px; height: 22px; padding: 0 8px 0 4px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; ' + T,
+        row: box(x + 18, 607, 210, 20) + 'display: flex; gap: 5px; ' + T
+      };
+    });
+
+    return { zones, shapes, marks, cards, links, day };
+  }
+}
+</script>
+</body>
+</html>

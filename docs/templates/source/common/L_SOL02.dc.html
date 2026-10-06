@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SOL02 운영 시나리오 단계</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">05 · 솔루션 제안</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">신메뉴 출시 하루, 솔루션은 이렇게 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">운영 시나리오 · 단계별 솔루션 동작과 함께 쓰는 제품</div>
+
+  <div style="position: absolute; left: 110px; top: 206px; width: 1060px; height: 2px; background: #1428a0"></div>
+  <div style="position: absolute; left: 64px; top: 186px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{steps}}" as="s" hint-placeholder-count="4">
+      <div style="display: flex; flex-direction: column; gap: 14px">
+        <span style="width: 42px; height: 42px; border-radius: 50%; background: #1428a0; color: #ffffff; border: 4px solid #ffffff; box-sizing: content-box; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin-left: 24px">{{s.no}}</span>
+        <div style="height: 380px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 22px 20px; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{s.time}}</span>
+          <span style="font-size: 18px; font-weight: 800; line-height: 1.4">{{s.title}}</span>
+          <span style="font-size: 14px; line-height: 1.6; color: #596170">{{s.desc}}</span>
+          <div style="flex-grow: 1"></div>
+          <div style="display: flex; flex-direction: column; gap: 6px; border-top: 1px solid #e2e5ea; padding-top: 12px">
+            <span style="font-size: 12px; font-weight: 700; color: #1428a0">{{s.sol}}</span>
+            <span style="font-size: 12px; color: #596170">{{s.dev}}</span>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 20</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const S = [
+      ['D-3', '본사가 콘텐츠를 예약', '신메뉴 메뉴판 · 프로모션 영상을 출시 시각에 맞춰 전 매장 예약 배포', 'MagicINFO · 예약 배포', '전 매장 메뉴보드'],
+      ['D-Day 07:00', '매장이 스스로 바뀜', '오픈과 동시에 메뉴보드 · 외부 사이니지가 신메뉴로 자동 전환', 'MagicINFO · 스케줄', 'QM55C · OH55C'],
+      ['D-Day 11:30', '피크에 맞춰 강조', '점심 피크에는 신메뉴 슬롯을 키우고, 품절 시 자동으로 대체 메뉴 표시', 'MagicINFO · 조건부 재생', 'QM55C · KM24C'],
+      ['D-Day 21:00', '마감과 리포트', '영업 종료 후 화면 · 조명 자동 소등, 매장별 노출 · 전력 리포트 전송', 'SmartThings Pro · 에너지', '전 매장 디스플레이']
+    ];
+    return { steps: S.map(([time, title, desc, sol, dev], i) => ({ no: i + 1, time, title, desc, sol, dev })) };
+  }
+}
+</script>
+</body>
+</html>

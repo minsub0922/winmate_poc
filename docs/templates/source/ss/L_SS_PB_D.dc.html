@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-PB-D 공공 · 교통 인프라 · 공간 시나리오 · 역사 · 정류장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">역사 · 정류장 · 문제 → 해결</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">S 지자체 역 · 정류장, 안내는 늘 보이고 늘 켜져 있습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">역사 · 정류장에서 매일 생기는 세 가지 문제 — 지금의 방식, 삼성이 바꾸는 것, 달라지는 지표</div>
+
+  <!-- 왼쪽: 공간 패널 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 270px; height: 494px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 76px; top: 168px; width: 246px; height: 160px; border-radius: 12px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0">역사 · 정류장 사진</div>
+  <div style="position: absolute; left: 80px; top: 341px; height: 22px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+    <span style="font-size: 16px; font-weight: 800; line-height: 22px">역사 · 정류장</span>
+  </div>
+  <sc-for list="{{who}}" as="w" hint-placeholder-count="2">
+    <div style="{{w.pos}}"><span style="width: 30px; font-size: 11px; font-weight: 700; color: #8a91a0">{{w.k}}</span><span>{{w.t}}</span></div>
+  </sc-for>
+  <div style="position: absolute; left: 80px; top: 418px; width: 238px; height: 1px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 80px; top: 428px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">놓는 제품</div>
+  <sc-for list="{{prods}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.pos}}">
+      <sc-if value="{{p.scr}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 2h10v15H7z M12 17v4 M9 21h6"></path></svg></sc-if>
+      <sc-if value="{{p.out}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h16v10H4z M12 13v8 M8 21h8 M8 7h8"></path></svg></sc-if>
+      <sc-if value="{{p.tch}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v12H3z M12 9v12 M9 18l3 3 3-3"></path></svg></sc-if>
+      <sc-if value="{{p.mon}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"></path></svg></sc-if>
+      <span style="font-size: 12.5px; font-weight: 700; color: #121417">{{p.t}}</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 11px; color: #8a91a0">{{p.at}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 80px; top: 570px; font-size: 11px; font-weight: 800; line-height: 14px; color: #8a91a0; white-space: nowrap">솔루션 · 서비스</div>
+  <div style="position: absolute; left: 80px; top: 588px; width: 238px; display: flex; flex-wrap: wrap; gap: 4px 6px">
+    <sc-for list="{{lsols}}" as="s" hint-placeholder-count="3">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.t}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 오른쪽: 열 머리 -->
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="3">
+    <div style="{{h.pos}}">{{h.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 358px; top: 182px; width: 858px; height: 1px; background: #e2e5ea"></div>
+
+  <!-- 세 문제 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.pBox}}">
+      <div style="position: absolute; left: 16px; top: 16px; height: 24px; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+        <span style="width: 24px; height: 24px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8; background: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #596170; display: flex; align-items: center; justify-content: center">{{r.n}}</span>
+        <span style="font-size: 11px; color: #8a91a0">{{r.loc}}</span>
+      </div>
+      <div style="position: absolute; left: 16px; top: 50px; font-size: 15px; font-weight: 800; line-height: 21px; white-space: nowrap">{{r.title}}</div>
+      <div style="position: absolute; left: 16px; top: 78px; font-size: 12.5px; line-height: 18px; color: #596170; white-space: nowrap">{{r.now1}}</div>
+      <div style="position: absolute; left: 16px; top: 96px; font-size: 12.5px; line-height: 18px; color: #596170; white-space: nowrap">{{r.now2}}</div>
+    </div>
+    <div style="{{r.a1}}">→</div>
+    <div style="{{r.sBox}}">
+      <div style="position: absolute; left: 16px; top: 14px; display: flex; gap: 6px; white-space: nowrap">
+        <sc-for list="{{r.sols}}" as="s" hint-placeholder-count="2">
+          <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{s.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 16px; top: 46px; font-size: 13px; font-weight: 700; line-height: 19px; white-space: nowrap">{{r.act1}}</div>
+      <div style="position: absolute; left: 16px; top: 65px; font-size: 13px; font-weight: 700; line-height: 19px; white-space: nowrap">{{r.act2}}</div>
+      <div style="position: absolute; left: 16px; top: 96px; height: 18px; display: flex; align-items: center; gap: 7px; font-size: 12px; color: #3d4452; white-space: nowrap"><span style="font-size: 10.5px; font-weight: 800; color: #6f82d6">기기</span><span>{{r.dev}}</span></div>
+    </div>
+    <div style="{{r.a2}}">→</div>
+    <div style="{{r.vBox}}">
+      <div style="position: absolute; left: 16px; top: 15px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{r.kl}}</div>
+      <div style="position: absolute; left: 16px; top: 34px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 24px; font-weight: 800; line-height: 30px; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{r.kv}}</div>
+      <div style="position: absolute; left: 16px; top: 76px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{r.vd1}}</div>
+      <div style="position: absolute; left: 16px; top: 93px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{r.vd2}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 하단: 한 공간 표준 구성 -->
+  <div style="position: absolute; left: 358px; top: 612px; width: 858px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; margin-right: 4px">한 공간 표준 구성</span>
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="4">
+      <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #b8bec8; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>S 지자체 · 공공 인프라 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = (t) => ({ t });
+
+    // 왼쪽 패널 — 이용 · 운영, 놓는 제품, 솔루션
+    const who = [['이용', '시민 · 외국인 방문객 · 교통약자'], ['운영', '역무 · 상황실 · 상주 유지보수']].map(([k, t], i) => ({
+      k, t, pos: A + box(80, 370 + i * 20, 238, 18) + 'display: flex; align-items: center; gap: 4px; font-size: 12px; color: #3d4452; white-space: nowrap;'
+    }));
+    const P = [
+      ['scr', '고휘도 스마트 사이니지', '출입구'],
+      ['out', '실외용 사이니지 OH 시리즈', '정류장'],
+      ['tch', '터치형 안내 사이니지', '대합실'],
+      ['scr', '스마트 사이니지 QM 시리즈', '승강장'],
+      ['mon', '모니터 · 관리 PC', '역무실']
+    ];
+    const prods = P.map(([k, t, at], i) => ({
+      t, at, scr: k === 'scr', out: k === 'out', tch: k === 'tch', mon: k === 'mon',
+      pos: A + box(80, 446 + i * 23, 238, 20) + 'display: flex; align-items: center; gap: 8px; white-space: nowrap;'
+    }));
+    const lsols = ['MagicINFO 원격 관리', '종합안내 앱 · 파트너', '상주 유지보수'].map(T);
+
+    // 열 — 문제 358(250) · 해결 636(340) · 가치 1004(212)
+    const PX = 358, PW = 250, SX = 636, SW = 340, VX = 1004, VW = 212;
+    const HD = [[PX, '지금의 문제', '#121417'], [SX, '솔루션이 하는 일', '#1428a0'], [VX, '가치', '#1428a0']];
+    const heads = HD.map(([x, t, c]) => ({
+      t, pos: A + 'left: ' + px(x) + 'top: 158px; font-size: 13px; font-weight: 800; line-height: 18px; color: ' + c + '; white-space: nowrap;'
+    }));
+
+    const R = [
+      {
+        loc: '출입구 · 버스 정류장', title: '햇빛 · 먼지에 묻히는 안내',
+        now: ['한낮엔 화면이 반사돼 안 보이고', '먼지 낀 안내도는 손으로 닦습니다'],
+        sols: ['MagicINFO'],
+        act: ['출입구 · 정류장엔 고휘도 · 실외용 사이니지,', '시간대별 도착 · 혼잡 콘텐츠는 원격 편성'],
+        dev: '고휘도 스마트 사이니지 · OH 시리즈',
+        kl: '안내가 안 보인다는 민원', kv: '[00]% ↓', vd: ['햇빛 · 비 · 먼지 속에서도', '도착 · 혼잡 정보가 읽힙니다']
+      },
+      {
+        loc: '대합실 · 환승 통로', title: '외국인 · 교통약자의 길 찾기',
+        now: ['역무실 문의와 종이 안내도에 기대고', '엘리베이터 위치는 직접 찾습니다'],
+        sols: ['종합안내 앱 · 파트너'],
+        act: ['터치 안내도에서 환승 · 출구를 다국어로,', '엘리베이터 동선 · 외국어 음성 안내까지'],
+        dev: '터치형 안내 사이니지 · 스마트 사이니지',
+        kl: '역무실 길 문의', kv: '[00]% ↓', vd: ['말이 통하지 않아도,', '휠체어로도 혼자 찾아갑니다']
+      },
+      {
+        loc: '역사 전체 · 정류장', title: '장애를 시민이 먼저 발견',
+        now: ['민원 · 순찰로 알고 나서야', '장비를 들고 현장으로 갑니다'],
+        sols: ['MagicINFO', '상주 유지보수'],
+        act: ['화면이 꺼지거나 멈추면 바로 장애 알림,', '원격 점검 후 상주 엔지니어가 조치'],
+        dev: 'MagicINFO 서버 · 역무실 모니터',
+        kl: '장애 인지', kv: '[00]분 → [0]분', vd: ['시민이 꺼진 화면을', '보기 전에 고칩니다']
+      }
+    ];
+    const RH = 130;
+    const ARW = 'font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; line-height: 24px; color: #6f82d6; text-align: center;';
+    const rows = R.map((r, i) => {
+      const y = 190 + i * (RH + 10);
+      return {
+        n: i + 1, loc: r.loc, title: r.title, now1: r.now[0], now2: r.now[1],
+        sols: r.sols.map(T), act1: r.act[0], act2: r.act[1], dev: r.dev,
+        kl: r.kl, kv: r.kv, vd1: r.vd[0], vd2: r.vd[1],
+        pBox: A + box(PX, y, PW, RH) + 'border-radius: 12px; background: #f5f6f8;',
+        sBox: A + box(SX, y, SW, RH) + 'border-radius: 12px; background: #eaeefb;',
+        vBox: A + box(VX, y, VW, RH) + 'box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #d5d9e0;',
+        a1: A + box(PX + PW, y + RH / 2 - 12, SX - PX - PW, 24) + ARW,
+        a2: A + box(SX + SW, y + RH / 2 - 12, VX - SX - SW, 24) + ARW
+      };
+    });
+
+    const kit = ['고휘도 사이니지 [0]면', '실외용 사이니지 [0]면', '터치형 안내 [0]면', '승강장 사이니지 [00]면'].map(T);
+
+    return { who, prods, lsols, heads, rows, kit };
+  }
+}
+</script>
+</body>
+</html>

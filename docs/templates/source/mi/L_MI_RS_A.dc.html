@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-RS-A 주거 분양 · 주택 · 시장 · 트렌드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">R 건설의 다음 분양은 세대 안의 사양으로 경쟁합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">공동주택 분양 물량과 가전 · 공조 옵션 시장, 그리고 R 건설의 다음 분양에 닿는 네 가지 흐름</div>
+
+  <!-- 왼쪽: 시장 규모 · 성장 (6열) — 막대 = 분양 물량, 선 = 세대 가전 · 공조 옵션 시장 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 564px; height: 488px; border-radius: 16px; background: #f5f6f8">
+    <div style="position: absolute; left: 24px; top: 20px; font-size: 16px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">국내 공동주택 분양 시장</div>
+    <div style="position: absolute; left: 24px; top: 44px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">연간 분양 물량 (만 세대) · 세대 가전 · 공조 옵션 시장 (억 원)</div>
+
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+      <div style="{{k.box}}">
+        <span style="position: absolute; left: 0px; top: 0px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 24px; line-height: 30px; font-weight: 800; letter-spacing: -0.02em; color: {{k.color}}; white-space: nowrap">{{k.v}}</span>
+        <span style="position: absolute; left: 0px; top: 32px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{k.l}}</span>
+      </div>
+    </sc-for>
+    <sc-for list="{{kpiSeps}}" as="s" hint-placeholder-count="2">
+      <div style="{{s.style}}"></div>
+    </sc-for>
+
+    <div style="position: absolute; left: 24px; top: 150px; width: 516px; height: 240px">
+      <div style="position: absolute; left: 0px; top: 0px; width: 516px; height: 1px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 0px; top: 60px; width: 516px; height: 1px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 0px; top: 120px; width: 516px; height: 1px; background: #e2e5ea"></div>
+      <div style="position: absolute; left: 0px; top: 180px; width: 516px; height: 1px; background: #e2e5ea"></div>
+      <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+        <div style="{{b.style}}"></div>
+      </sc-for>
+      <div style="position: absolute; left: 0px; top: 239px; width: 516px; height: 1px; background: #b8bec8"></div>
+      <svg width="516" height="240" viewBox="0 0 516 240" style="position: absolute; left: 0px; top: 0px; overflow: visible"><polyline points="43,170 129,148 215,128 301,100 387,72 473,36" fill="none" stroke="#1428a0" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline></svg>
+      <sc-for list="{{dots}}" as="d" hint-placeholder-count="6">
+        <div style="{{d.style}}"></div>
+      </sc-for>
+      <div style="position: absolute; left: 433px; top: 86px; width: 80px; text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; line-height: 16px; font-weight: 800; color: #596170; white-space: nowrap">[00]만</div>
+      <div style="position: absolute; left: 423px; top: 10px; width: 100px; text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 16px; font-weight: 800; color: #1428a0; white-space: nowrap">[0,000]억</div>
+    </div>
+    <sc-for list="{{years}}" as="y" hint-placeholder-count="6">
+      <div style="{{y.style}}">{{y.t}}</div>
+    </sc-for>
+
+    <div style="position: absolute; left: 24px; top: 428px; height: 18px; display: flex; align-items: center; gap: 18px; font-size: 12px; line-height: 18px; color: #3d4452; white-space: nowrap">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 2px; background: #cfd5df"></span>분양 물량 (만 세대)</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="position: relative; width: 22px; height: 12px"><span style="position: absolute; left: 0px; top: 5px; width: 22px; height: 2px; background: #1428a0"></span><span style="position: absolute; left: 7px; top: 2px; width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span></span>세대 가전 · 공조 옵션 시장 (억 원)</span>
+    </div>
+    <div style="position: absolute; left: 24px; top: 456px; font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">수치는 예시 · 조사 / 실측 후 반영 · 출처: [조사 기관]</div>
+  </div>
+
+  <!-- 오른쪽: 네 가지 흐름 → 그래서 R 건설에게 -->
+  <div style="position: absolute; left: 652px; top: 160px; font-size: 16px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">시장을 움직이는 네 가지 흐름</div>
+  <div style="position: absolute; left: 976px; top: 162px; height: 20px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; line-height: 20px; font-weight: 800; color: #1428a0; white-space: nowrap"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>그래서 R 건설에게</div>
+  <sc-for list="{{trends}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.box}}">
+      <span style="position: absolute; left: 0px; top: 14px; width: 24px; height: 24px; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{t.n}}</span>
+      <span style="position: absolute; left: 34px; top: 14px; font-size: 16px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{t.title}}</span>
+      <span style="position: absolute; left: 34px; top: 41px; width: 266px; font-size: 12.5px; line-height: 18px; color: #3d4452">{{t.desc}}</span>
+      <span style="position: absolute; left: 306px; top: 46px; width: 0px; height: 0px; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 8px solid #1428a0"></span>
+      <div style="position: absolute; left: 324px; top: 12px; width: 240px; height: 84px; box-sizing: border-box; border-radius: 12px; background: #eaeefb">
+        <span style="position: absolute; left: 14px; top: 12px; font-size: 13.5px; line-height: 19px; font-weight: 800; color: #1428a0; white-space: nowrap">{{t.lead}}</span>
+        <span style="position: absolute; left: 14px; top: 35px; width: 212px; font-size: 12.5px; line-height: 18px; color: #121417">{{t.body}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · 아파트 분양 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 4</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 차트 카드(64,160) 안쪽 좌표. 값은 모두 플레이스홀더 — 막대 · 선 높이는 예시 형태.
+    const K = [
+      ['[00]만 세대', '2026E 분양 물량', '#121417'],
+      ['[0,000]억 원', '세대 가전 · 공조 옵션 시장', '#1428a0'],
+      ['[0.0]%', '옵션 시장 연평균 성장률', '#1428a0']
+    ];
+    const kpis = K.map(([v, l, color], i) => ({ v, l, color, box: A + box(24 + i * 176, 76, 160, 50) }));
+    const kpiSeps = [1, 2].map((i) => ({ style: A + box(24 + i * 176 - 14, 80, 1, 42) + 'background: #d5d9e0;' }));
+
+    // 플롯(516×240): 6칸, 칸 폭 86, 막대 폭 40
+    const BH = [168, 150, 112, 124, 118, 132];
+    const bars = BH.map((h, i) => ({
+      style: A + box(i * 86 + 23, 240 - h, 40, h) + 'border-radius: 4px 4px 0 0; background: ' + (i === 5 ? '#b8bec8' : '#cfd5df') + ';'
+    }));
+    const LV = [170, 148, 128, 100, 72, 36];
+    const dots = LV.map((y, i) => {
+      const s = i === 5 ? 14 : 10;
+      const cx = i * 86 + 43;
+      return { style: A + box(cx - s / 2, y - s / 2, s, s) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff;' };
+    });
+    const Y = ['2021', '2022', '2023', '2024', '2025', '2026E'];
+    const years = Y.map((t, i) => ({
+      t,
+      style: A + box(24 + i * 86, 398, 86, 18) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 12.5px; line-height: 18px; ' + (i === 5 ? 'font-weight: 800; color: #1428a0;' : 'font-weight: 600; color: #596170;')
+    }));
+
+    // 업종 흐름 — 주거 분양 업종에서 실제로 반복되는 요구에서 도출
+    const T = [
+      ['가전 · 공조의 분양 옵션화',
+        '빌트인 주방가전 · 시스템에어컨이 유상 옵션으로 묶이고, 컬러 · 조합 선택권이 분양 평가 요소가 됩니다',
+        '옵션 라인업이 곧 청약 경쟁력', '기본 제공 · 유상 옵션 구성을 상품기획 단계에서 함께 설계'],
+      ['빌트인 일체감 · 하이엔드화',
+        '가구장 라인에 맞춘 냉장고, 천장에 묻힌 실내기 — \'보이지 않는 가전\'이 단지의 품격을 정합니다',
+        '설계 조건부터 가전에 맞춤', '가구장 깊이 · 천장고에 맞는 빌트인 · 매립형 사양을 초기에 확정'],
+      ['스마트홈 · AI 에너지',
+        '앱 하나로 가전 · 조명 · 도어락을 제어하고 AI 절약 모드로 전기요금을 관리하는 집이 차별화 포인트가 됩니다',
+        '단일 앱 경험을 브랜드 사양으로', 'Wi-Fi · 계정 연동과 타사 기기 연동을 세대 설계에 반영'],
+      ['공기질 · 건강한 집',
+        '직바람 없는 냉방, 미세먼지와 무관한 실내 공기, 잠든 사이 자동 관리 — 아이 있는 가족일수록 민감합니다',
+        '\'건강한 집\'을 분양 메시지로', '청정환기(ERV) · 공조 · 공기질 센서를 한 시스템으로 설계']
+    ];
+    const trends = T.map(([title, desc, lead, body], i) => ({
+      n: i + 1, title, desc, lead, body,
+      box: A + box(652, 192 + i * 114, 564, 104) + 'box-sizing: border-box; border-top: 1px solid #e2e5ea;'
+    }));
+
+    return { kpis, kpiSeps, bars, dots, years, trends };
+  }
+}
+</script>
+</body>
+</html>

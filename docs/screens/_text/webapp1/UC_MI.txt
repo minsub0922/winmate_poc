@@ -1,0 +1,63 @@
+ 
+ Market Intelligence · 유스케이스 맵 
+ USE CASE MAP · MI 
+ Market Intelligence — 유스케이스 맵 
+ 가운데 굵은 줄이 기본 흐름(MI1 → MI2 → MI3 → 제안서)입니다. 위아래 가지가 새 화면이고, 칸을 누르면 그 화면으로 이동합니다. 
+ {{st.n}} 
+ {{st.label}} 
+ {{ln.no}} 
+ {{ln.title}} 
+ {{ln.desc}} 
+ 분석 시작 · 약 3분 
+ MI3G를 거쳐 결과로 
+ 제안서 MI 섹션으로 
+ MI3의 기본 버튼 
+ 다시 분석 
+ 경쟁사 고르면 
+ 매핑해 보내기 
+ 끌어 놓기 
+ 출처 보기 
+ {{n.code}} 
+ {{n.tag}} 
+ {{n.name}} 
+ {{n.desc}} 
+ {{n.next}} 
+ 업종에서 바로 시작 
+ MI0의 업종 칩을 누르면 MI1I가 그 업종을 고른 채 열립니다. 
+ 입력이 이어지는 방식 
+ MI1I에서 고른 요구 항목은 MI1의 요구사항과 MI2C의 비교 기준으로 함께 들어갑니다. 경쟁사 영역을 빼면 MI2C는 건너뜁니다. 
+ 기본 흐름 (기존 MI1 · MI2 · MI3) 
+ 추가 화면 
+ 다른 기능 화면 
+ 기본 흐름 
+ 갈래 
+ 되돌아가기 
+ → MI2 이어지는 화면 
+ MI 작업 목록 열기 
+class Component extends DCLogic {
+ renderVals() {
+ // 레인: [번호, 이름, 설명, x, 폭] — 2 · 3번 레인은 두 칸 (기본 흐름 줄 + 갈래)
+ const LANES = [["01", "들어오는 길", "어디서 분석을 시작하나", 48, 186], ["02", "입력 방식", "요구사항 · 업종 · 범위 · 경쟁사", 246, 368], ["03", "진행 · 확인 상태", "분석 대기 · 결과 · 근거", 626, 368], ["04", "편집 · 버전", "수치 확정 · 부분 수정 · 다시 분석", 1006, 186], ["05", "결과 활용", "내보내기 · 제안서 MI 섹션", 1204, 186]];
+ const lanes = LANES.map(([no, title, desc, x, w]) => ({
+ no, title, desc,
+ style: 'position: absolute; left: ' + x + '' + w + ''
+ }));
+ // 화면: [x, y, 종류, 코드, 링크, 이름, 설명, 다음] (3행 = 기본 흐름 줄)
+ const N = [[58, 212, "new", "MI0", "MI0.dc.html", "분석 작업 목록", "상태 · 업데이트 필요 표시, 업종으로 시작", "MI1 · MI1I · MI3G"], [58, 372, "home", "Main", "Main.dc.html", "홈 · MI 카드", "홈 메인 카드 · 사이드바에서 새 분석", "MI1"], [58, 532, "other", "SB4", "SB4.dc.html", "Storyboard에서 시작", "요구사항 · Key Message를 넘겨 받아 시작", "MI1"], [256, 212, "new", "MI1I", "MI1I.dc.html", "업종 인사이트 프리셋", "16개 업종 · 도입사례 기준 요구 · 제품 · 솔루션", "MI2"], [256, 372, "base", "MI1", "MI1.dc.html", "고객 요구사항", "직접 입력 · Storyboard 가져오기 · RFP 첨부", "MI2 · MI1I"], [438, 212, "new", "MI2C", "MI2C.dc.html", "경쟁사 · 비교 기준", "경쟁사 추가 · 익명 표기 · 기준 가중치", "MI3G"], [438, 372, "base", "MI2", "MI2.dc.html", "분석 범위", "시장 · 고객사 · 사용자 · 경쟁사 중 고르기", "MI3G · MI2C"], [636, 212, "new", "MI3G", "MI3G.dc.html", "분석 진행 중", "검색 → 정리 → 작성 · 확인한 출처 수 · 중지", "MI3 · MI3S · MI2C"], [818, 372, "base", "MI3", "MI3.dc.html", "분석 결과", "4개 영역 탭 · 경쟁사 비교표 → 삼성 강점", "MI3S · MI3V · MI3R"], [818, 532, "new", "MI3S", "MI3S.dc.html", "출처 · 근거 패널", "주장마다 출처 · 확인 필요 표시", "MI3V · MI3R"], [1016, 212, "new", "MI3R", "MI3R.dc.html", "부분 재분석 · 수정", "영역 · 문단만 다시 분석, 대화로 고치기", "MI3G · MI3"], [1016, 532, "new", "MI3V", "MI3V.dc.html", "확정 필요 수치", "검증 목록 · 값 입력 · 사내 자료 업로드", "MI3 · MI4"], [1016, 672, "new", "MI0", "MI0.dc.html", "업데이트 → 다시 분석", "30일 경과 · 자료 변경 감지, 새 버전으로 저장", "MI3G"], [1214, 212, "new", "MI4", "MI4.dc.html", "내보내기 · 제안서로", "시트 매핑 미리보기 · PDF · 공유", "PRS1 · PR1L"], [1214, 372, "other", "PRS1", "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "제안서 MI 섹션", "분석 결과가 MI 시트 근거로 들어갑니다", "PRS2"], [1214, 532, "other", "DnD_MIExtract", "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "MI 작업 끌어 놓기", "사이드바 MI 작업을 MI 섹션에 끌어 놓아 추출", "PRS1"], [1214, 672, "other", "PR1L", "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe", "기존 작업에서 시작", "새 제안서를 이 MI 작업과 연결해 시작", "PR2"]];
+ const KIND = {
+ base: { box: '', code: '', tag: '기본 흐름', tagC: '' },
+ new: { box: '', code: '', tag: '추가 화면', tagC: '' },
+ home: { box: '', code: '', tag: '기존 화면', tagC: '' },
+ other: { box: '', code: '', tag: '다른 기능', tagC: '' }
+ };
+ const nodes = N.map(([x, y, kind, code, href, name, desc, next]) => ({
+ code, href, name, desc, next, tag: KIND[kind].tag,
+ style: 'position: absolute; left: ' + x + '' + y + '' + KIND[kind].box,
+ codeStyle: '' + KIND[kind].code,
+ tagStyle: '' + KIND[kind].tagC
+ }));
+ const S = [['3', '기존 화면', ''], ['8', '추가 화면', ''], ['5', '연결된 다른 화면', '']];
+ const stats = S.map(([n, label, color]) => ({ n, label, numStyle: '' + color + ';' }));
+ return { lanes, nodes, stats };
+ }
+}

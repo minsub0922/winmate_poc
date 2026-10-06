@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-ED-B 교육 · 캠퍼스 · 대표 공간 장면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">E 대학교 강의실은 수업 전 · 중 · 후를 스스로 맞춥니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">대표 공간 · AI 강의실 — 75분 한 차시를 네 장면으로: 순간 → 움직이는 솔루션 → 제품 → 가치 (시간은 예시)</div>
+
+  <!-- ============ 강의실 사진 + 기기 콜아웃 (7열) ============ -->
+  <img src="/_blob/63585062805dbaad5afe600b39c4e854" alt="강의실 — 벽면 전자칠판과 공기청정기, 창가 블라인드 (예시 사진)" style="position: absolute; left: 64px; top: 160px; width: 662px; height: 224px; object-fit: cover; object-position: 50% 40%; border-radius: 16px">
+  <sc-for list="{{callouts}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.dot}}"></div>
+    <div style="{{c.chip}}">{{c.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 76px; top: 356px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+  <div style="position: absolute; left: 520px; top: 356px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 10px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">강의실 [00]실 · 같은 구성으로 확대</div>
+
+  <!-- ============ 수업 모드 시나리오 (5열) ============ -->
+  <div style="position: absolute; left: 750px; top: 160px; width: 466px; height: 224px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 770px; top: 174px; font-size: 14px; font-weight: 800; line-height: 20px; white-space: nowrap">수업 모드 — 교수용 탭에서 한 번</div>
+  <div style="position: absolute; left: 770px; top: 197px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">SmartThings Pro 자동화 시나리오 · 설정은 예시</div>
+  <img src="/_blob/5db6fb702daefbf1fdfcf38c08e047cf" alt="갤럭시 탭 S11 울트라 앞 · 뒷면과 S펜 (제품 컷)" style="position: absolute; left: 1110px; top: 168px; width: 96px; height: 70px; object-fit: contain; mix-blend-mode: multiply">
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="5">
+    <div style="{{h.style}}">{{h.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 770px; top: 262px; width: 426px; height: 1px; background: #d5d9e0"></div>
+  <sc-for list="{{modes}}" as="m" hint-placeholder-count="4">
+    <div style="{{m.label}}">{{m.name}}</div>
+    <sc-for list="{{m.cells}}" as="c" hint-placeholder-count="5">
+      <div style="{{c.style}}">{{c.t}}</div>
+    </sc-for>
+  </sc-for>
+
+  <!-- ============ 한 차시 바 ============ -->
+  <sc-for list="{{periods}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.style}}"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{p.time}}</span><span style="font-weight: 800">{{p.name}}</span></div>
+  </sc-for>
+
+  <!-- ============ 네 장면 ============ -->
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.style}}">
+      <span style="position: absolute; left: 14px; top: 12px; width: 20px; height: 20px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.n}}</span>
+      <div style="position: absolute; left: 42px; top: 11px; height: 22px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 14.5px; font-weight: 800">{{s.title}}</span></div>
+      <div style="position: absolute; left: 14px; top: 40px; width: 248px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap"><span style="font-weight: 800; color: #3d4452">지금 · </span>{{s.now1}}</div>
+      <div style="position: absolute; left: 14px; top: 57px; width: 248px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">{{s.now2}}</div>
+      <div style="position: absolute; left: 14px; top: 82px; height: 20px; display: flex; gap: 5px; white-space: nowrap">
+        <sc-for list="{{s.chips}}" as="k" hint-placeholder-count="3">
+          <span style="{{k.style}}">{{k.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 14px; top: 108px; width: 248px; font-size: 12.5px; line-height: 17px; color: #121417; white-space: nowrap">{{s.act1}}</div>
+      <div style="position: absolute; left: 14px; top: 125px; width: 248px; font-size: 12.5px; line-height: 17px; color: #121417; white-space: nowrap">{{s.act2}}</div>
+      <div style="position: absolute; left: 8px; top: 144px; width: 254px; height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">가치 · {{s.value}}</div>
+    </div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="6">
+    <div style="{{a.style}}"></div>
+  </sc-for>
+
+  <!-- ============ 수업 내내 — 쾌적 (상시) ============ -->
+  <div style="position: absolute; left: 64px; top: 616px; width: 1152px; height: 32px; box-sizing: border-box; padding: 0 8px 0 16px; border-radius: 10px; background: #1428a0; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800; color: #ffffff">수업 내내 · 쾌적</span>
+    <span style="width: 1px; height: 14px; background: #6f82d6"></span>
+    <span style="font-size: 12px; color: #dfe6ff">에어모니터가 온도 · 공기질을 읽고 → 공기청정기 · 시스템에어컨 360이 자동 조절, 원형 전방향 기류로 자리마다 고르게</span>
+    <span style="margin-left: auto; height: 20px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">장시간 수업 체감 <span style="font-family: Manrope, sans-serif; margin-left: 4px">[0.0]</span>점 ↑</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 스마트 교육 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 사진 콜아웃 — 원본(874×316)을 0.757배로 (64,160)에 배치, 세로 크롭 6px
+    const s = 662 / 874, oy = 6;
+    const C = [
+      [436, 172, '전자칠판 · 무선 공유'],
+      [440, 250, '공기청정기 · 에어모니터'],
+      [60, 95, '블라인드 · 조명']
+    ];
+    const callouts = C.map(([ix, iy, t]) => {
+      const x = Math.round(64 + ix * s), y = Math.round(160 + iy * s - oy);
+      return {
+        t,
+        dot: A + box(x - 7, y - 7, 14, 14) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff;',
+        chip: A + 'left: ' + px(x + 11) + 'top: ' + px(y - 11) + 'height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; color: #121417; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap;'
+      };
+    });
+
+    // 수업 모드 표 — 열: 기기, 행: 모드 (on = 켜짐 · 동작, off = 꺼짐)
+    const COLX = (j) => 846 + j * 71;
+    const heads = ['화면', '조명', '블라인드', '에어컨', '공기청정기'].map((t, j) => ({
+      t, style: A + box(COLX(j), 244, 66, 16) + 'text-align: center; font-size: 11px; line-height: 16px; color: #596170; white-space: nowrap;'
+    }));
+    const M = [
+      ['강의', [['칠판 ON', 1], ['앞 낮춤', 1], ['닫힘', 1], ['자동', 1], ['자동', 1]]],
+      ['모둠', [['칠판 · 무빙', 1], ['밝게', 1], ['열림', 1], ['자동', 1], ['자동', 1]]],
+      ['시험', [['OFF', 0], ['밝게', 1], ['열림', 1], ['무풍', 1], ['저소음', 1]]],
+      ['퇴실 후', [['OFF', 0], ['OFF', 0], ['닫힘', 1], ['OFF', 0], ['OFF', 0]]]
+    ];
+    const modes = M.map(([name, cells], r) => {
+      const y = 270 + r * 28;
+      return {
+        name,
+        label: A + box(770, y, 70, 22) + 'font-size: 12.5px; font-weight: 800; line-height: 22px; white-space: nowrap; color: ' + (r === 3 ? '#596170' : '#121417') + ';',
+        cells: cells.map(([t, on], j) => ({
+          t,
+          style: A + box(COLX(j), y, 66, 22) + 'box-sizing: border-box; border-radius: 6px; font-size: 10.5px; display: flex; align-items: center; justify-content: center; white-space: nowrap; ' +
+            (on ? 'background: #eaeefb; color: #1428a0; font-weight: 800;' : 'background: #ffffff; border: 1px solid #d5d9e0; color: #8a91a0; font-weight: 600;')
+        }))
+      };
+    });
+
+    // 한 차시 바 — 장면 카드와 같은 열 (폭 270 + 간격 24)
+    const P = [['08:50 – 09:00', '수업 전', 0], ['09:00 – 09:40', '강의', 1], ['09:40 – 10:05', '모둠 · 피드백', 1], ['10:05 –', '퇴실 후', 0]];
+    const periods = P.map(([time, name, on], i) => {
+      const w = i < 3 ? 292 : 270;
+      const rad = i === 0 ? 'border-radius: 8px 0 0 8px;' : (i === 3 ? 'border-radius: 0 8px 8px 0;' : '');
+      return {
+        time, name,
+        style: A + box(64 + i * 294, 400, w, 26) + 'box-sizing: border-box; padding: 0 12px; display: flex; align-items: center; gap: 8px; font-size: 12px; white-space: nowrap; ' + rad +
+          (on ? 'background: #1428a0; color: #ffffff;' : 'background: #d5d9e0; color: #121417;')
+      };
+    });
+
+    // 장면 — 순간 → 솔루션 → 제품 → 가치 (k: 1 = 솔루션 · 기능, 0 = 제품)
+    const chip = (k) => 'height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 11px; display: flex; align-items: center; ' +
+      (k ? 'background: #1428a0; color: #ffffff; font-weight: 700;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #121417; font-weight: 600;');
+    const S = [
+      ['08:50', '수업 준비', '강의실마다 기기 · 연결 방식이 달라', '수업 시작이 늦어집니다', [['SmartThings Pro', 1], ['갤럭시 탭', 0]], '탭에서 \'강의 모드\' 한 번이면 조명 ·', '블라인드 · 에어컨 · 화면이 함께 준비', '수업 준비 [0]분 → [0]분'],
+      ['09:00', '강의 · 판서', '뒷자리는 자료가 작게 보이고,', '화면 연결을 기다립니다', [['무선 미러링', 1], ['Flip Pro', 0], ['LED 사이니지', 0]], '교수 · 학생 화면을 전자칠판에 바로 공유', '(최대 50대 연결), 정밀 자료는 대형 LED로', '화면 연결 대기 [0]분 → [0]분'],
+      ['09:40', '모둠 · 피드백', '모둠 결과 공유가 늦고, 질문은', '수업이 끝날 때까지 묻힙니다', [['Knox', 1], ['갤럭시 탭', 0], ['무빙스타일', 0]], '탭 · 좌석 PC로 질문과 모둠 결과를 공유', '발표는 무빙스타일로, 탭은 수업 앱만', '수업 참여율 [00]% ↑'],
+      ['10:15', '퇴실 후', '빈 강의실에 냉난방 · 조명이', '켜진 채 남아 있습니다', [['SmartThings Pro', 1], ['재실 센서', 0]], '재실 센서가 빈 강의실을 감지해 전원 OFF,', '시설팀은 강의실 밖 대시보드로 상태 확인', '빈 강의실 전력 [00]% 절감']
+    ];
+    const scenes = S.map(([time, title, now1, now2, chips, act1, act2, value], i) => ({
+      n: i + 1, time, title, now1, now2, act1, act2, value,
+      chips: chips.map(([t, k]) => ({ t, style: chip(k) })),
+      style: A + box(64 + i * 294, 436, 270, 168) + 'border-radius: 14px; background: #f5f6f8;'
+    }));
+    const arrows = [];
+    [0, 1, 2].forEach((i) => {
+      const x = 334 + i * 294;
+      arrows.push({ style: A + box(x + 5, 519, 8, 2) + 'background: #1428a0;' });
+      arrows.push({ style: A + 'left: ' + px(x + 12) + 'top: 515px; width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 7px solid #1428a0;' });
+    });
+
+    return { callouts, heads, modes, periods, scenes, arrows };
+  }
+}
+</script>
+</body>
+</html>

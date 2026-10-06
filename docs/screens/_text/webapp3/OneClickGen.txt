@@ -1,0 +1,39 @@
+ 
+ 딸깍 — 제안서 생성 중 
+ 딸깍 · 조감도부터 나머지 자동 완성 
+ W 
+ 남은 6개 섹션과 템플릿을 추론해 제안서를 만들고 있어요. 확정해 두신 MI · Value Props는 그대로 쓰고, 추론으로 채운 시트에는 표시와 근거 노트를 남깁니다. 
+ 제안서 생성 중 
+ 표준 제안서 · 21장 
+ 45% · 약 1분 남음 
+ {{r.name}} 
+ {{r.note}} 
+ {{r.st}} 
+ 딸깍 진행 중 · 다른 작업을 해도 돼요, 끝나면 알려드릴게요 
+ 진행 방향 메모 
+ 중지 
+class Component extends DCLogic {
+ renderVals() {
+ // [섹션, 근거, 상태: done(확정) · auto(추론 완료) · run(생성 중) · wait(대기)]
+ const R = [
+ ['Market Intelligence', '직접 작성 · 3시트', 'done'],
+ ['Value Props', '직접 작성 · 2시트', 'done'],
+ ['조감도', '작성 중이던 내용 + 조감도 작업으로 완성', 'auto'],
+ ['공간별 제품', '조감도 배치안 · 요구사항에서 제품 추론', 'run'],
+ ['솔루션 제안', '연결된 솔루션 2개 · 시나리오로 작성', 'wait'],
+ ['유관 사례', '유사도 상위 사례 자동 선택', 'wait'],
+ ['Why Samsung', 'MI 경쟁사 분석으로 비교표 작성', 'wait'],
+ ['제품 스펙', '공간별 제품 모델로 비교표 생성', 'wait'],
+ ['디자인 템플릿', '삼성 B2B 표준 (기본값)', 'wait'],
+ ['PPTX 조립', '표지 · 목차 · 섹션 구분 포함', 'wait']
+ ];
+ const ST = { done: '확정', auto: '추론 완료', run: '생성 중', wait: '대기' };
+ const rows = R.map(([name, note, s]) => ({
+ name, note, st: ST[s],
+ isDone: s === 'done', isAuto: s === 'auto', isRun: s === 'run', isWait: s === 'wait',
+ rowStyle: '' + (s === 'run' ? '' : ''),
+ stStyle: '' + (s === 'run' ? '' : s === 'auto' ? '' : s === 'done' ? '' : '')
+ }));
+ return { steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], rows };
+ }
+}

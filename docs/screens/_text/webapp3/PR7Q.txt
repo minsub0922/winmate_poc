@@ -1,0 +1,62 @@
+ 
+ B2B 제안서 · 확정 필요 목록 
+ W 
+ 제안서 24시트에서 사실 확인이 필요한 곳 7곳을 모았어요. 값을 넣거나 근거를 붙이면 그 값이 쓰인 시트에 모두 반영되고, 확정하지 않은 곳은 내보낼 때 표시를 남길 수 있어요. 
+ 확정 필요 7곳 
+ 2곳 확정 · 5곳 남음 
+ 남은 곳 5 
+ 확정 2 
+ 전체 7 
+ {{r.no}} 
+ {{r.pre}} {{r.mark}} {{r.post}} 
+ {{r.sub}} 
+ {{r.tag}} 
+ {{r.act}} 
+ {{r.act}} 
+ {{r.fixLabel}} 
+ 카운터마다 메뉴보드 3대씩, 전국 
+ 매장 수 
+ 개 매장에 설치합니다. 
+ 합계 = 매장 수 × 3대 
+ 같이 바뀌는 시트 
+ {{l.no}} {{l.name}} 
+ 근거 붙이기 
+ 고객에게 물을 문장 복사 
+ 모르면 노트로 옮기기 
+ 섹션 열기 
+ 확정 
+ 확정한 곳 2 
+ 03 경쟁 환경 · 공개 자료 링크 첨부 · 22 삼성 강점 · 사내 자료로 확정 
+ 펼치기 
+ 확정 필요 · 5곳 남음 · 확정한 값은 버전 기록에 남아요 
+ 남은 수치 W가 다시 찾기 
+ 남은 곳 노트로 옮기기 
+ 요청 
+ 미리보기 
+ 검토 요청 
+ 내보내기 
+class Component extends DCLogic {
+ renderVals() {
+ // 남은 확정 필요 5곳 (시트 순). act: [종류 link|btn, 라벨, 링크]
+ const ITEMS = [
+ { no: '01', pre: '2028년 국내 디지털 메뉴보드 시장 ', mark: '[00]억 원', post: '', sub: '시장 규모 · 성장 · MI 작업의 추정치 — 출처 확인 필요', tag: '수치', act: ['link', 'MI에서 확인', 'https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk'] },
+ { no: '09', pre: '전국 ', mark: '[00]개', post: ' 매장 × 카운터 3대', sub: '카운터 · 메뉴보드 · 매장 수를 아직 받지 못했어요', tag: '고객 확인', act: ['link', '시트에서 보기', 'PR7P.dc.html'], open: true },
+ { no: '19', pre: '고객사명 · 성과 수치 ', mark: '공개 가능 여부', post: '', sub: '사례 · 커피 프랜차이즈 · 사례 자료가 내부용으로 표시돼 있어요', tag: '공개 여부', act: ['btn', '익명으로 바꾸기', ''] },
+ { no: '21', pre: '유지보수 응답 시간 ', mark: '[00]시간', post: ' · 삼성 · 경쟁사 A · B', sub: '경쟁 비교 · 방금 추가한 행 — 공개 자료를 찾지 못했어요', tag: '수치', act: ['link', '시트에서 보기', 'PR7P.dc.html'] },
+ { no: '23', pre: 'OH55C 밝기 ', mark: '[00] nit', post: ' — Spec 시트와 다름', sub: '스펙 비교 · 제안서 값과 Spec 시트 작업의 값이 달라요', tag: '값 불일치', act: ['link', 'Spec 시트에서 보기', 'https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk'] }
+ ];
+ const items = ITEMS.map((it) => {
+ const open = !!it.open;
+ return {
+ no: it.no, pre: it.pre, mark: it.mark, post: it.post, sub: it.sub, tag: it.tag, open,
+ act: it.act[1], href: it.act[2] || '#', hasLink: it.act[0] === 'link', hasBtn: it.act[0] === 'btn',
+ fixLabel: open ? '접기' : '고치기',
+ fixStyle: '' + (open ? '' : ''),
+ wrapStyle: '' + (open ? '' : '')
+ };
+ });
+ // 09의 매장 수가 쓰이는 시트
+ const linked = [['08', '공간 맵'], ['09', '카운터 · 메뉴보드'], ['11', '주문 · 대기 공간']].map(([no, name]) => ({ no, name }));
+ return { steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 6, items, linked };
+ }
+}

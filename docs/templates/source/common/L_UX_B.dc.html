@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>UX-B 한 장면 + 한 마디</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <!-- 전면 장면 -->
+  <div style="position: absolute; left: 0px; top: 0px; width: 700px; height: 720px">
+    <dc-import name="Img" pid="life.window" w="700" h="720" pos="73% 50%" credit="bl" hint-size="700px,720px"></dc-import>
+  </div>
+
+  <!-- 한 마디 -->
+  <div style="position: absolute; left: 756px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · 사용 장면</div>
+  <div style="position: absolute; left: 752px; top: 92px; height: 56px; font-family: Manrope, sans-serif; font-size: 72px; font-weight: 800; line-height: 1; color: #1428a0">“</div>
+  <div style="position: absolute; left: 756px; top: 156px; width: 460px; font-size: 24px; font-weight: 700; line-height: 1.5; letter-spacing: -0.02em; white-space: nowrap">쇼윈도 앞에서 발걸음이 멈춰요.<br>들어가기 전에 오늘 뭐가<br>새로 나왔는지 알 수 있으니까요.</div>
+  <div style="position: absolute; left: 756px; top: 282px; font-size: 13px; color: #8a91a0">— 고객 인터뷰 예시 · 20대 방문 고객</div>
+
+  <!-- KPI -->
+  <div style="position: absolute; left: 756px; top: 334px; width: 460px; height: 1px; background: #121417"></div>
+  <div style="position: absolute; left: 756px; top: 335px; width: 460px; display: flex; flex-direction: column">
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+      <div style="{{k.row}}">
+        <span style="width: 150px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 34px; font-weight: 800; line-height: 1; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{k.n}}</span>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+          <span style="font-size: 15px; font-weight: 700; line-height: 1.4">{{k.l}}</span>
+          <span style="font-size: 12.5px; line-height: 1.5; color: #8a91a0">{{k.d}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 756px; top: 668px; width: 460px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 756px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 패션 · 쇼윈도 사이니지 · 사진 samsung.com 공식</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 9</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 사람의 경험 한 마디(예시 인용) + 그 경험을 숫자로 보여줄 KPI 3개 (값은 자리표시)
+    const K = [
+      ['[00]%', '쇼윈도 앞 체류 시간', '도입 전 대비 · 매장 앞 통행 측정 기준'],
+      ['[00]%', '입점 전환', '쇼윈도 앞 통행객 중 매장에 들어온 비율'],
+      ['[N]회', '하루 콘텐츠 교체', '시간대 · 날씨에 맞춰 본사 스케줄로 자동 전환']
+    ];
+    const kpis = K.map(([n, l, d], i) => ({
+      n, l, d,
+      row: 'height: 104px; box-sizing: border-box; display: flex; align-items: center; gap: 16px;' + (i < K.length - 1 ? ' border-bottom: 1px solid #e2e5ea;' : '')
+    }));
+    return { kpis };
+  }
+}
+</script>
+</body>
+</html>

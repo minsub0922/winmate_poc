@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-PB-A 공공 · 교통 인프라 · 시장 · 트렌드</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">S 지자체가 놓인 시장은 관제 · 안내 · 안전 투자로 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">지자체 스마트 인프라 투자 규모와 이를 움직이는 네 가지 흐름 — 흐름마다 S 지자체에 주는 시사점</div>
+
+  <!-- 왼쪽 6열: 영역별 투자 규모 (누적 막대, 표본 형상) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 564px; height: 488px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 178px; font-size: 16px; font-weight: 800; line-height: 22px; white-space: nowrap">지자체 스마트 인프라 투자</div>
+  <div style="position: absolute; left: 88px; top: 203px; font-size: 12px; line-height: 17px; color: #596170; white-space: nowrap">전국 지자체 · 영역별 · 단위: 억 원 · 출처: [조사 기관, 연도]</div>
+  <div style="position: absolute; left: 88px; top: 230px; height: 24px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700; color: #121417; white-space: nowrap"><span style="width: 6px; height: 6px; border-radius: 50%; background: #121417"></span>이 중 S 지자체 [000]억 원 · 비중 [0.0]%</div>
+  <div style="position: absolute; left: 444px; top: 180px; width: 160px; text-align: right; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">2023→2028E 연평균</div>
+  <div style="position: absolute; left: 444px; top: 198px; width: 160px; text-align: right; font-family: Manrope, sans-serif; font-size: 36px; font-weight: 800; line-height: 40px; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">[00]%</div>
+
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="5">
+    <div style="{{g.style}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 432px; top: 268px; width: 0; height: 292px; border-left: 1px dashed #b8bec8"></div>
+  <div style="position: absolute; left: 438px; top: 268px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">전망</div>
+  <sc-for list="{{segs}}" as="s" hint-placeholder-count="24">
+    <div style="{{s.style}}"></div>
+  </sc-for>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="6">
+    <span style="{{b.totalStyle}}">{{b.total}}</span>
+    <span style="{{b.yearStyle}}">{{b.year}}</span>
+  </sc-for>
+  <sc-for list="{{legend}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.pos}} display: flex; align-items: center; gap: 7px; font-size: 12px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="width: 10px; height: 10px; border-radius: 2px; background: {{l.color}}"></span>{{l.name}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 88px; top: 628px; font-size: 11px; line-height: 14px; color: #8a91a0; white-space: nowrap">수치는 예시 · 조사 / 실측 후 반영</div>
+
+  <!-- 오른쪽 6열: 네 가지 흐름 → 그래서 S 지자체에게 -->
+  <sc-for list="{{trends}}" as="t" hint-placeholder-count="4">
+    <div style="position: absolute; left: 652px; top: {{t.top}}; width: 564px; height: 113px">
+      <span style="position: absolute; left: 0px; top: 0px; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; line-height: 20px; color: #1428a0">{{t.num}}</span>
+      <div style="position: absolute; left: 28px; top: 0px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: #3d4452; white-space: nowrap">
+        <sc-for list="{{t.sw}}" as="w" hint-placeholder-count="1">
+          <span style="width: 8px; height: 8px; border-radius: 2px; background: {{w.c}}"></span>
+        </sc-for>
+        <span>{{t.seg}}</span>
+      </div>
+      <span style="position: absolute; left: 0px; top: 27px; width: 280px; font-size: 17px; font-weight: 800; line-height: 24px; letter-spacing: -0.01em; white-space: nowrap">{{t.title}}</span>
+      <span style="position: absolute; left: 0px; top: 56px; width: 276px; font-size: 12.5px; line-height: 19px; color: #596170">{{t.ev}}</span>
+      <div style="position: absolute; left: 287px; top: 50px; width: 0; height: 0; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-left: 7px solid #b8bec8"></div>
+      <div style="position: absolute; left: 300px; top: 4px; width: 264px; height: 105px; box-sizing: border-box; border-radius: 10px; background: #eaeefb">
+        <span style="position: absolute; left: 14px; top: 11px; font-size: 11.5px; font-weight: 800; line-height: 16px; color: #1428a0; white-space: nowrap">그래서 S 지자체에게</span>
+        <span style="position: absolute; left: 14px; top: 33px; width: 236px; font-size: 13.5px; font-weight: 700; line-height: 20px; color: #121417">{{t.impl}}</span>
+      </div>
+    </div>
+  </sc-for>
+  <sc-for list="{{rules}}" as="r" hint-placeholder-count="3">
+    <div style="{{r.style}}"></div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>S 지자체 · 공공 인프라 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 4</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 차트 좌표: 기준선 y 560, 플롯 x 88–604, 6개 슬롯(86px), 막대 폭 46
+    const BASE = 560, X0 = 88, SLOT = 86, BW = 46;
+    const grid = [290, 358, 425, 492].map((y) => ({ style: A + box(X0, y, 516, 1) + 'background: #e2e5ea;' }))
+      .concat([{ style: A + box(X0, BASE, 516, 1) + 'background: #b8bec8;' }]);
+
+    // 영역 (위 → 아래): 교통 관제 · 시민 안내 · 현장 안전 · 공공시설 — 표본 형상(예시)
+    const SEG = [
+      ['교통 관제 · 상황실', '#1428a0'],
+      ['시민 안내 · 역사 · 정류장', '#6f82d6'],
+      ['현장 안전 · 재난 대응', '#b8c3ee'],
+      ['공공시설 · 행정', '#d5d9e0']
+    ];
+    const S0 = [0.22, 0.20, 0.13, 0.45], S1 = [0.31, 0.25, 0.24, 0.20];
+    const YEARS = ['2023', '2024', '2025', '2026', '2027E', '2028E'];
+    const TOT = [118, 140, 166, 196, 230, 268];
+    const segs = [];
+    const bars = YEARS.map((year, i) => {
+      const x = X0 + i * SLOT + 20;
+      const total = TOT[i];
+      const t = i / (YEARS.length - 1);
+      let y = BASE - total;
+      let used = 0;
+      SEG.forEach(([, color], k) => {
+        const share = S0[k] + (S1[k] - S0[k]) * t;
+        const h = k === SEG.length - 1 ? total - used : Math.round(total * share);
+        used += h;
+        const radius = k === 0 ? 'border-radius: 4px 4px 0 0;' : '';
+        segs.push({ style: A + box(x, y, BW, Math.max(h - 1, 1)) + 'background: ' + color + '; ' + radius });
+        y += h;
+      });
+      const last = i === YEARS.length - 1;
+      const fc = i >= 4;
+      return {
+        year, total: '[0,000]',
+        totalStyle: A + 'left: ' + px(x - 20) + 'top: ' + px(BASE - total - 20) + 'width: ' + px(BW + 40) + 'text-align: center; font-family: Manrope, sans-serif; line-height: 16px; white-space: nowrap; ' + (last ? 'font-size: 13px; font-weight: 800; color: #1428a0;' : 'font-size: 12px; font-weight: 700; color: #596170;'),
+        yearStyle: A + 'left: ' + px(x - 20) + 'top: ' + px(BASE + 8) + 'width: ' + px(BW + 40) + 'text-align: center; font-family: Manrope, sans-serif; font-size: 12px; line-height: 16px; white-space: nowrap; ' + (fc ? 'font-weight: 800; color: #1428a0;' : 'font-weight: 600; color: #596170;')
+      };
+    });
+    const legend = SEG.map(([name, color], k) => ({
+      name, color,
+      pos: A + 'left: ' + px(X0 + (k % 2) * 258) + 'top: ' + px(590 + Math.floor(k / 2) * 19)
+    }));
+
+    // 네 가지 흐름 — 행 높이 113, 간격 12
+    const T = [
+      [[0], '교통 관제 · 상황실', '관제는 한 화면으로 모입니다',
+        '수십 대 모니터 → 단일 대형 상황판, 24시간 교대 관제 · CCTV · 교통 데이터를 한눈에',
+        '교통정보센터 상황판을 모듈러 LED로 — 필요한 크기로 시작해 단계적으로 넓힙니다'],
+      [[1], '시민 안내 · 역사 · 정류장', '시민 안내는 디지털 · 다국어로',
+        '아날로그 종합안내도 → 위치별 디지털 안내, 터치 길찾기 · 외국어 음성 · 광고 수입',
+        '역사 · 정류장 안내를 원격 관리 사이니지로 바꾸고, 광고 부대 수입 [00]억 원을 검토합니다'],
+      [[2], '현장 안전 · 재난 대응', '현장 안전은 골든타임 경쟁입니다',
+        '웨어러블 낙상 감지 · SOS · 심박 모니터링, 재난안전통신망(PS-LTE) 단말과 PTT',
+        '순찰 · 구조 직원과 탐방객을 워치 · 러기드폰으로 관제와 바로 연결합니다'],
+      [[0, 1, 2, 3], '공통 · 전 영역', '조달 기준은 내구성 · 보안 · AS',
+        '먼지 · 충격 · 직사광 · 혹한 · 혹서 속 24시간 가동, 정보 유출 방지, 상주 유지보수',
+        '제안 단계부터 방수 · 방진 등급, Knox 보안, 상주 AS 조건을 규격서에 맞춥니다']
+    ];
+    const trends = T.map(([sw, seg, title, ev, impl], i) => ({
+      num: '0' + (i + 1), seg, title, ev, impl,
+      sw: sw.map((k) => ({ c: SEG[k][1] })),
+      top: px(160 + i * 125).replace('; ', '')
+    }));
+    const rules = [0, 1, 2].map((i) => ({ style: A + box(652, 160 + i * 125 + 118, 564, 1) + 'background: #e2e5ea;' }));
+
+    return { grid, segs, bars, legend, trends, rules };
+  }
+}
+</script>
+</body>
+</html>

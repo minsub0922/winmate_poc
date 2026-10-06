@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>B2B 제안서 · 기존 작업에서 시작</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="proposal" current="A 커피 프랜차이즈 메뉴보드 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="B2B 제안서 생성" title="새 제안서" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" one-click="{{true}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.65">A 커피 프랜차이즈와 이어진 작업 {{workCount}}건을 찾았어요. 연결하면 고객 정보는 Storyboard에서 채우고, 각 작업 결과는 맞는 섹션에 미리 넣어 둡니다. 연결은 섹션 작성 중에도 바꿀 수 있어요.</div>
+
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 248px; gap: 12px; align-items: start">
+            <!-- 연결할 작업 -->
+            <div role="group" aria-label="연결할 작업" style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+              <div style="height: 42px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <span style="font-size: 12.5px; font-weight: 700">연결할 작업 <span style="color: #1428a0; font-family: Manrope, sans-serif; font-weight: 800">{{onCount}}</span><span style="color: #596170; font-weight: 500"> / {{workCount}}</span></span>
+                <div role="radiogroup" aria-label="고객 범위" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #f0f2f5">
+                  <button role="radio" aria-checked="true" style="height: 24px; padding: 0 9px; border: none; border-radius: 6px; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 700; box-shadow: 0 1px 2px rgba(18,20,23,0.12)">A 커피 작업</button>
+                  <button role="radio" aria-checked="false" style="height: 24px; padding: 0 9px; border: none; border-radius: 6px; background: transparent; color: #596170; font-size: 11.5px; font-weight: 500">모든 고객</button>
+                </div>
+              </div>
+              <sc-for list="{{works}}" as="w" hint-placeholder-count="6">
+                <label style="{{w.rowStyle}}">
+                  <input type="checkbox" checked="{{w.on}}" aria-label="{{w.title}}" style="width: 16px; height: 16px; margin: 0; accent-color: #1428a0; flex-shrink: 0">
+                  <span style="{{w.iconBox}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="{{w.iconColor}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{w.icon}}"/></svg></span>
+                  <span style="display: flex; flex-direction: column; gap: 1px; min-width: 0; flex-grow: 1">
+                    <span style="font-size: 11px; color: #596170; white-space: nowrap">{{w.tool}} · {{w.meta}}</span>
+                    <span style="{{w.titleStyle}}">{{w.title}}</span>
+                  </span>
+                  <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; width: 140px">
+                    <span style="font-size: 10.5px; color: #8a91a0">넣을 곳</span>
+                    <span style="{{w.toStyle}}">{{w.to}}</span>
+                  </span>
+                </label>
+              </sc-for>
+              <div style="height: 40px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #e2e5ea; font-size: 12px; color: #596170">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>
+                <span style="flex-grow: 1">사이드바의 작업을 이 목록에 끌어 놓아도 연결돼요</span>
+                <a href="DnD_MISidebar.dc.html" style="font-weight: 600; white-space: nowrap">끌어 놓기 보기</a>
+              </div>
+            </div>
+
+            <!-- 연결하면 채워지는 것 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+              <span style="font-size: 12.5px; font-weight: 700">연결하면 채워지는 것</span>
+              <div style="display: flex; flex-direction: column; gap: 4px; padding: 9px 10px; border-radius: 10px; background: #f5f6f8">
+                <span style="font-size: 11px; color: #596170">고객 · 프로젝트 · Storyboard에서</span>
+                <span style="font-size: 12.5px; font-weight: 600; line-height: 1.5">A 커피 프랜차이즈 · 외식 · 카페 · 320개 매장 · 요구사항 5건</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 10px; border: 1px solid #1428a0; background: #f5f7fd">
+                <span style="font-size: 11px; color: #596170; flex-shrink: 0">추천 유형</span>
+                <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">표준 제안서</span>
+              </div>
+              <span style="font-size: 11px; color: #596170; line-height: 1.45">조감도 · 시나리오가 있어 공간 섹션까지 채울 수 있어요.</span>
+              <div style="display: flex; flex-direction: column">
+                <sc-for list="{{fill}}" as="fl" hint-placeholder-count="8">
+                  <div style="display: flex; align-items: center; gap: 8px; height: 27px; border-bottom: 1px solid #f0f2f5">
+                    <span style="{{fl.dotStyle}}"></span>
+                    <span style="font-size: 12px; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{fl.sec}}</span>
+                    <span style="{{fl.stateStyle}}">{{fl.state}}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display: flex; gap: 10px; font-size: 11px; color: #596170">
+                <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span>채움</span>
+                <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 2px solid #1428a0; background: #eaeefb"></span>일부</span>
+                <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid #b8bec8"></span>새로 작성</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">기존 작업에서 시작 <span style="color: #596170; font-weight: 500">· 작업 {{onCount}}건 연결 · 1 / 6</span></div>
+          <span style="font-size: 12px; color: #596170">채움 {{nFull}} · 일부 {{nPart}} · 새로 작성 {{nNew}}</span>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="find" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">작업 찾기</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <input id="find" placeholder="다른 작업 찾기 (작업 이름 · 고객사)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+          </div>
+          <a href="PR1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap">직접 입력으로</a>
+          <a href="PR2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>연결 · 다음: 제안서 유형</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const ICON = {
+      storyboard: 'M4 5h16v14H4z M4 11h16 M10 11v8',
+      market: 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2',
+      birdseye: 'M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z M12 12l8-4.5 M12 12v9 M12 12L4 7.5',
+      scenario: 'M4 6h16v12H4z M10 9l5 3-5 3V9z',
+      image: 'M4 5h16v14H4z M20 15l-5-5-8 8',
+      spec: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7'
+    };
+    // [기능, 아이콘, 작업, 요약 · 언제, 넣을 섹션, 연결]
+    const W = [
+      ['Storyboard', 'storyboard', 'A 커피 프랜차이즈 매장 리뉴얼', 'Key Message 4 · 어제', '고객 정보 · Value Props', true],
+      ['Market Intelligence', 'market', 'A 커피 프랜차이즈 시장·경쟁사 분석', '분석 완료 · 3일 전', 'MI · Why Samsung', true],
+      ['공간 조감도', 'birdseye', '강남 플래그십 1층 로비', '존 4 · 지난주', '조감도 · 공간별 제품', true],
+      ['공간 시나리오', 'scenario', 'A 커피 매장 하루 시나리오', '장면 6 · 지난주', '솔루션 제안', true],
+      ['이미지 생성', 'image', '카페 매장 메뉴보드 시안', '이미지 4장 · 지난주', '공간별 제품 이미지', false],
+      ['Spec 시트', 'spec', 'QMC vs QBC 55" 비교', '시트 1 · 2주 전', '제품 스펙', false]
+    ];
+    const works = W.map(([tool, ic, title, meta, to, on], i) => ({
+      tool, title, meta, to, on, icon: ICON[ic], iconColor: on ? '#1428a0' : '#596170',
+      iconBox: 'width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #eaeefb;' : ' background: #f0f2f5;'),
+      titleStyle: 'font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (on ? ' color: #121417;' : ' color: #596170;'),
+      toStyle: 'max-width: 140px; box-sizing: border-box; height: 20px; padding: 0 7px; border-radius: 999px; font-size: 11px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (on ? ' background: #eaeefb; color: #1428a0;' : ' border: 1px dashed #b8bec8; color: #596170;'),
+      rowStyle: 'display: flex; align-items: center; gap: 10px; height: 54px; box-sizing: border-box; padding: 0 14px; cursor: pointer;' + (i < W.length - 1 ? ' border-bottom: 1px solid #f0f2f5;' : '') + (on ? '' : ' background: #fbfbfc;')
+    }));
+    // 섹션별 채움: [섹션, 상태(2 채움 · 1 일부 · 0 새로), 출처]
+    const F = [
+      ['Market Intelligence', 2, 'MI 작업'], ['Value Props', 2, 'Storyboard'], ['조감도', 2, '조감도'],
+      ['공간별 제품', 1, '조감도 배치안'], ['솔루션 제안', 1, '시나리오'], ['유관 사례', 0, '새로 찾기'],
+      ['Why Samsung', 1, 'MI 경쟁사'], ['제품 스펙', 0, '새로 작성']
+    ];
+    const fill = F.map(([sec, st, src]) => ({
+      sec, state: src,
+      dotStyle: 'width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box;' + (st === 2 ? ' background: #1428a0;' : st === 1 ? ' border: 2px solid #1428a0; background: #eaeefb;' : ' border: 1.5px solid #b8bec8;'),
+      stateStyle: 'font-size: 11px; white-space: nowrap; flex-shrink: 0;' + (st === 0 ? ' color: #8a91a0;' : ' color: #1428a0; font-weight: 600;')
+    }));
+    return {
+      steps: ['고객 · 프로젝트', '제안서 유형', '시트 구성', '섹션 작성', '디자인 템플릿', 'PPTX 생성'], cur: 1,
+      works, fill, workCount: W.length, onCount: W.filter((w) => w[5]).length,
+      nFull: F.filter((f) => f[1] === 2).length, nPart: F.filter((f) => f[1] === 1).length, nNew: F.filter((f) => f[1] === 0).length
+    };
+  }
+}
+</script>
+</body>
+</html>

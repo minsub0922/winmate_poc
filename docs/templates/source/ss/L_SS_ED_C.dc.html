@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-ED-C 교육 · 캠퍼스 · 하루 · 동선 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">E 대학교의 하루, 운영팀은 학생보다 한발 먼저 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">이용(학생 · 교수)과 운영(시설팀 · 정보화팀 · 생협) 두 줄로 본 하루 — 공간 번호는 공간 맵과 같고, 시간은 예시입니다</div>
+
+  <!-- ============ 시간대 머리 ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 30px; display: flex; flex-direction: column; justify-content: center; white-space: nowrap"><span style="font-size: 12px; font-weight: 800; line-height: 15px">역할 · 시간대</span><span style="font-size: 10.5px; line-height: 14px; color: #8a91a0">시간은 예시</span></div>
+  <sc-for list="{{phases}}" as="p" hint-placeholder-count="5">
+    <div style="{{p.style}}"><span style="font-size: 12.5px; font-weight: 800">{{p.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{p.hours}}</span></div>
+  </sc-for>
+
+  <!-- ============ 레인 ============ -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.row}}"></div>
+    <div style="{{l.box}}">
+      <div style="position: absolute; left: 10px; top: 10px; width: 20px; height: 20px">
+        <sc-if value="{{l.i1}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5-10-5z"></path><path d="M6 11v5c2 2 10 2 12 0v-5"></path></svg></sc-if>
+        <sc-if value="{{l.i2}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"></rect><path d="M8 20l4-4 4 4"></path></svg></sc-if>
+        <sc-if value="{{l.i3}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3"></path><path d="M12 19v3"></path><path d="M2 12h3"></path><path d="M19 12h3"></path><path d="M4.9 4.9l2.1 2.1"></path><path d="M17 17l2.1 2.1"></path><path d="M4.9 19.1l2.1-2.1"></path><path d="M17 7l2.1-2.1"></path></svg></sc-if>
+        <sc-if value="{{l.i4}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"></rect><path d="M12 16v4"></path><path d="M8 20h8"></path></svg></sc-if>
+      </div>
+      <div style="{{l.tag}}">{{l.group}}</div>
+      <div style="position: absolute; left: 10px; top: 38px; font-size: 13.5px; font-weight: 800; line-height: 18px; white-space: nowrap">{{l.name}}</div>
+      <div style="position: absolute; left: 10px; top: 60px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{l.sub}}</div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 393px; width: 1152px; height: 0px; border-top: 1px dashed #b8bec8"></div>
+
+  <!-- ============ 장면 블록 ============ -->
+  <sc-for list="{{blocks}}" as="b" hint-placeholder-count="17">
+    <div style="{{b.style}}">
+      <div style="position: absolute; left: 10px; top: 8px; font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">{{b.time}}</div>
+      <div style="position: absolute; right: 8px; top: 8px; height: 18px; box-sizing: border-box; padding: 0 6px 0 2px; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 4px; white-space: nowrap"><span style="min-width: 14px; height: 14px; box-sizing: border-box; padding: 0 3px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{b.n}}</span><span style="font-size: 10.5px; font-weight: 700; color: #121417">{{b.space}}</span></div>
+      <div style="position: absolute; left: 10px; top: 31px; width: 164px; font-size: 12px; line-height: 16px; color: #121417; white-space: nowrap">{{b.a1}}</div>
+      <div style="position: absolute; left: 10px; top: 47px; width: 164px; font-size: 12px; line-height: 16px; color: #121417; white-space: nowrap">{{b.a2}}</div>
+      <div style="position: absolute; left: 10px; top: 66px; width: 164px; font-size: 11.5px; font-weight: 800; line-height: 15px; color: #1428a0; white-space: nowrap">→ {{b.out}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 이어지는 장면 (이용 ↔ 운영) -->
+  <sc-for list="{{links}}" as="k" hint-placeholder-count="4">
+    <div style="{{k.line}}"></div>
+    <div style="{{k.from}}"></div>
+    <div style="{{k.dot}}"></div>
+    <div style="{{k.to}}"></div>
+    <div style="{{k.head}}"></div>
+  </sc-for>
+
+  <!-- ============ 방학 · 학기 사이 ============ -->
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 44px; box-sizing: border-box; padding: 0 16px; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 16px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">방학 · 학기 사이</span>
+    <sc-for list="{{breaks}}" as="v" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #3d4452"><span style="{{v.badge}}">{{v.n}}</span>{{v.t}}</span>
+    </sc-for>
+    <span style="margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: #3d4452"><span style="width: 0px; height: 16px; border-left: 2px dashed #1428a0"></span>이어지는 장면</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 캠퍼스 · 스마트 교육 환경 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+
+    // 격자 — 시간대 5열 (x 188부터 폭 200 · 간격 7), 레인 4줄 (이용 2 · 운영 2)
+    const PX = (i) => 188 + i * 207, PW = 200, BW = 182, BH = 86;
+    const LY = [198, 294, 402, 498], LH = 90;
+
+    const PH = [['등교 · 수업 전', '07–09'], ['오전 수업', '09–12'], ['점심 · 쉬는 시간', '12–13'], ['오후 수업 · 시험', '13–18'], ['저녁 · 야간', '18–24']];
+    const phases = PH.map(([name, hours], i) => ({
+      name, hours,
+      style: A + box(PX(i), 160, PW, 30) + 'box-sizing: border-box; padding: 0 10px; border-radius: 8px; background: #f5f6f8; display: flex; align-items: center; justify-content: space-between; white-space: nowrap;'
+    }));
+
+    const L = [
+      ['학생', '학부생 · 유학생', '이용'],
+      ['교수 · 강사', '강의 · 모둠 · 실습', '이용'],
+      ['시설팀', '공조 · 에너지 · 설비', '운영'],
+      ['정보화팀', '생협 · PC · 출력', '운영']
+    ];
+    const lanes = L.map(([name, sub, group], i) => {
+      const user = i < 2;
+      return {
+        name, sub, group,
+        i1: i === 0, i2: i === 1, i3: i === 2, i4: i === 3,
+        row: A + box(188, LY[i], 1028, LH) + 'border-radius: 10px; background: #f8f9fb;',
+        box: A + box(64, LY[i], 112, LH) + 'border-radius: 10px; background: ' + (user ? '#eaeefb' : '#f5f6f8') + ';',
+        tag: A + 'right: 8px; top: 11px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; ' +
+          (user ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #3d4452;')
+      };
+    });
+
+    // 장면 — [레인, 시간대, 시각, 공간 번호, 공간, 하는 일 1, 하는 일 2, 결과]
+    const B = [
+      [0, 0, '08:40', '1', '대형 강의실', '들어서면 냉방 · 화면이', '이미 준비되어 있습니다', '첫 수업부터 쾌적'],
+      [0, 1, '10:00', '2', '미래교실', '모둠 자료를 탭으로 나누고', '질문은 실시간으로', '수업 참여 [00]% ↑'],
+      [0, 2, '12:10', '4', '출력 거점', 'NFC · 교통 · 해외카드로', '바로 결제하고 출력', '충전 · 줄 없이 [0]분'],
+      [0, 3, '14:00', '3', '고사장', '탭으로 응시 — 글씨는 확대,', '마킹 실수 걱정 없이', '시험지 인쇄 [0,000]장 ↓'],
+      [0, 4, '19:30', '5', '중앙도서관', '비디오월 · 키오스크에서', '빈 좌석 · 다국어 공지 확인', '자리 찾는 시간 [0]분 ↓'],
+      [1, 0, '08:50', '2', '미래교실', '탭에서 \'강의 모드\' 한 번 —', '조명 · 블라인드 · 화면 준비', '수업 준비 [0]분 → [0]분'],
+      [1, 1, '09:30', '1', '대형 강의실', '자료를 전자칠판 · LED에', '무선으로 바로 띄움', '뒷자리까지 선명'],
+      [1, 3, '15:00', '3', '전산실', '실습 중 PC 오류가 나도', '백업 시점으로 바로 복원', '실습 중단 [00]분 이내'],
+      [1, 4, '18:10', '1', '대형 강의실', '마지막 수업 후 그냥 퇴실 —', '끄는 일은 강의실이 알아서', '끄고 나갈 일 없음'],
+      [2, 0, '07:30', '7', '운영실', '시간표 · 날씨에 맞춰 첫 수업', '강의실만 미리 냉난방', '필요한 곳만 미리 가동'],
+      [2, 1, '11:00', '7', '운영실', '강의실 밖에서 온도 · 공기질 ·', '설비 이상을 대시보드로', '현장 순회 [00]회 ↓'],
+      [2, 3, '16:00', '6', '생활관', '공용 공간 공기질 · 에어컨', '상태를 원격으로 확인', '공기질 민원 [00]건 ↓'],
+      [2, 4, '18:30', '1·2', '강의동', '재실 센서가 빈 강의실을', '감지해 냉난방 · 조명 OFF', '전기요금 [00]% ↓'],
+      [3, 0, '08:00', '3', '전산실', '공용 PC를 지정한 백업', '시점으로 일괄 복원', '어느 자리든 같은 상태'],
+      [3, 2, '12:15', '4', '출력 거점', '복합기 용지 · 토너 · 오류를', '원격으로 실시간 확인', '쉬는 시간 장애 [0]건'],
+      [3, 3, '13:30', '3', '고사장', '시험용 탭을 Knox로 일괄', '설정 · 시험 앱만 열리게', '보안 시험 운영'],
+      [3, 4, '23:00', '4', '출력 거점', '24시간 무인 운영 — 출력한', '개인 파일은 자동 삭제', '무인 운영 · 개인정보 보호']
+    ];
+    const blocks = B.map(([lane, ph, time, n, space, a1, a2, out]) => ({
+      time, n, space, a1, a2, out,
+      style: A + box(PX(ph), LY[lane] + 2, BW, BH) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid ' + (lane < 2 ? '#b8c3ee' : '#d5d9e0') + ';'
+    }));
+
+    // 이어지는 장면 — 시간대 오른쪽 통로(x + 182 … + 200)로 레인 사이를 연결, 화살표는 받는 쪽
+    const K = [[0, 2, 0], [2, 0, 3], [3, 3, 0], [4, 1, 2]]; // [시간대, 보내는 레인, 받는 레인]
+    const links = K.map(([ph, a, b]) => {
+      const cx = PX(ph) + 191;
+      const ya = LY[a] + 2 + BH / 2, yb = LY[b] + 2 + BH / 2;
+      const top = Math.min(ya, yb), h = Math.abs(yb - ya);
+      return {
+        line: A + box(cx - 1, top, 0, h) + 'border-left: 2px dashed #1428a0;',
+        from: A + box(PX(ph) + BW, ya - 1, 9, 2) + 'background: #1428a0;',
+        dot: A + box(cx - 4, ya - 4, 8, 8) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2px solid #1428a0;',
+        to: A + box(PX(ph) + BW + 6, yb - 1, 4, 2) + 'background: #1428a0;',
+        head: A + 'left: ' + px(PX(ph) + BW) + 'top: ' + px(yb - 5) + 'width: 0px; height: 0px; border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-right: 7px solid #1428a0;'
+      };
+    });
+
+    // 방학 · 학기 사이
+    const badge = (n) => 'min-width: 16px; height: 16px; box-sizing: border-box; padding: 0 4px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' +
+      (n ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #1428a0; color: #1428a0;');
+    const V = [['6', '생활관 에어컨 종합세척 · 표준 공정 · 당일 검수'], ['3', '시험용 탭 · 보관 · 충전함 장기 유지보수'], ['', '다음 학기 — 신축 · 공용 강의실로 확대']];
+    const breaks = V.map(([n, t]) => ({ n: n || '+', t, badge: badge(n) }));
+
+    return { phases, lanes, blocks, links, breaks };
+  }
+}
+</script>
+</body>
+</html>

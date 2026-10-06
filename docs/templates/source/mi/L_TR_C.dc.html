@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>TR-C 영향도 × 시급성</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">지금 대응해야 할 변화는 두 가지입니다</div>
+
+  <!-- 좌측 7열: 2×2 매트릭스 -->
+  <div style="position: absolute; left: 64px; top: 136px; font-size: 13px; font-weight: 700; color: #596170">A 커피 영향도 ↑</div>
+  <div style="position: absolute; left: 64px; top: 164px; width: 60px; text-align: right; font-size: 12px; color: #8a91a0">높음</div>
+  <div style="position: absolute; left: 64px; top: 596px; width: 60px; text-align: right; font-size: 12px; color: #8a91a0">낮음</div>
+  <div style="position: absolute; left: 136px; top: 164px; width: 520px; height: 452px">
+    <sc-for list="{{quads}}" as="q" hint-placeholder-count="4">
+      <div style="{{q.tile}}"></div>
+      <div style="{{q.labelStyle}}">{{q.name}}</div>
+    </sc-for>
+    <sc-for list="{{dots}}" as="d" hint-placeholder-count="6">
+      <div style="{{d.style}}">{{d.no}}</div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 136px; top: 624px; font-size: 12px; color: #8a91a0">낮음</div>
+  <div style="position: absolute; left: 136px; top: 623px; width: 520px; text-align: center; font-size: 13px; font-weight: 700; color: #596170">시급성 →</div>
+  <div style="position: absolute; left: 596px; top: 624px; width: 60px; text-align: right; font-size: 12px; color: #8a91a0">높음</div>
+
+  <!-- 우측 5열: 번호순 목록 -->
+  <div style="position: absolute; left: 750px; top: 136px; width: 466px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #596170"><span style="font-weight: 800; color: #1428a0">변화 목록</span><span style="font-size: 12px">번호는 왼쪽 매트릭스의 점과 같습니다</span></div>
+  <div style="position: absolute; left: 750px; top: 164px; width: 466px; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+      <div style="{{r.rowStyle}}">
+        <span style="{{r.badge}}">{{r.no}}</span>
+        <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15.5px; font-weight: 700">{{r.name}}</span>
+          <span style="font-size: 12.5px; color: #596170">{{r.note}}</span>
+        </div>
+        <span style="{{r.chip}}">{{r.quad}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 매트릭스 520 × 452, 타일 256 × 222, 간격 8
+    const tw = 256, th = 222, g = 8;
+    const Q = [
+      { name: '준비', col: 0, row: 0, bg: '#f5f6f8', color: '#596170', corner: 'left: 16px; top: 14px;' },
+      { name: '지금 대응', col: 1, row: 0, bg: '#eaeefb', color: '#1428a0', corner: 'right: 16px; top: 14px;' },
+      { name: '관찰', col: 0, row: 1, bg: '#f5f6f8', color: '#596170', corner: 'left: 16px; bottom: 14px;' },
+      { name: '빠르게 확인', col: 1, row: 1, bg: '#f5f6f8', color: '#596170', corner: 'right: 16px; bottom: 14px;' }
+    ];
+    const quads = Q.map((q) => ({
+      name: q.name,
+      tile: 'position: absolute; left: ' + (q.col * (tw + g)) + 'px; top: ' + (q.row * (th + g)) + 'px; width: ' + tw + 'px; height: ' + th + 'px; border-radius: 12px; background: ' + q.bg + ';',
+      labelStyle: 'position: absolute; ' + q.corner + ' font-size: 14px; font-weight: 800; color: ' + q.color + ';'
+    }));
+    // 점 위치는 예시 (x → 시급성, y ↓ → 영향도 낮아짐)
+    const P = [[400, 74], [330, 150], [150, 96], [410, 320], [170, 300], [84, 372]];
+    const hot = (i) => i < 2;
+    const dotBase = 'width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;';
+    const dotLook = (i) => hot(i) ? ' background: #1428a0; color: #ffffff;' : ' background: #ffffff; color: #121417; border: 2px solid #121417;';
+    const dots = P.map(([x, y], i) => ({
+      no: String(i + 1),
+      style: 'position: absolute; left: ' + (x - 14) + 'px; top: ' + (y - 14) + 'px; ' + dotBase + dotLook(i)
+    }));
+    const R = [
+      ['셀프 주문 확산', '키오스크 주문 비중 [00]%', '지금 대응'],
+      ['시간대별 메뉴 운영', '연간 신메뉴 [00]회 출시', '지금 대응'],
+      ['매장 에너지 관리 강화', '운영비 중 전력비 [00]%', '준비'],
+      ['모바일 선주문 · 픽업', '픽업 주문 [00]% 증가', '빠르게 확인'],
+      ['매장 내 리테일 미디어', '도입 브랜드 [0]곳', '관찰'],
+      ['무인 · 하이브리드 매장', '무인 운영 매장 [00]개', '관찰']
+    ];
+    const rows = R.map(([name, note, quad], i) => ({
+      no: String(i + 1), name, note, quad,
+      rowStyle: 'height: 68px; box-sizing: border-box; border-radius: 12px; padding: 0 16px; display: flex; align-items: center; gap: 14px; ' + (hot(i) ? 'background: #eaeefb;' : 'background: #ffffff; border: 1px solid #e2e5ea;'),
+      badge: dotBase + dotLook(i),
+      chip: 'height: 26px; padding: 0 12px; flex-shrink: 0; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; ' + (hot(i) ? 'background: #1428a0; color: #ffffff;' : 'background: #f5f6f8; color: #3d4452;')
+    }));
+    return { quads, dots, rows };
+  }
+}
+</script>
+</body>
+</html>

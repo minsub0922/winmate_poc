@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition 2/3 — 가치 구조</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="A 커피 메뉴보드 가치 제안" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="A 커피 메뉴보드 가치 제안" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.6">재료를 보고 메시지 구조와 시트를 정했어요. 표준 제안서 Value Props 섹션에 맞춘 3장이고, 바꾸고 싶은 것만 고르면 됩니다.</div>
+
+          <!-- 메시지 구조 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+            <div style="height: 42px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+              <span style="font-size: 13px; font-weight: 700; white-space: nowrap">메시지 구조 · 과제 → 가치 → 효과</span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">RFP가 과제를 직접 말하고 있어 과제부터 시작해요</span>
+              <span style="flex-grow: 1"></span>
+              <a href="VP3L.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap">레이아웃 전체 보기</a>
+            </div>
+            <div style="padding: 12px 14px; display: flex; align-items: stretch; gap: 0">
+              <sc-for list="{{spine}}" as="s" hint-placeholder-count="3">
+                <div style="flex: 1 1 0; min-width: 0; box-sizing: border-box; padding: 10px; border-radius: 12px; background: #f5f6f8; display: flex; flex-direction: column; gap: 6px">
+                  <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
+                    <span style="font-size: 12px; font-weight: 700; color: #3d4452; white-space: nowrap">{{s.step}}</span>
+                    <span style="{{s.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{s.mIcon}}"/></svg>{{s.mText}}</span>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <div style="width: 120px; height: 68px; flex-shrink: 0; background: #ffffff; border-radius: 6px"><dc-import name="Thumb" kind="{{s.kind}}" n="{{s.n}}" hint-size="120px,68px"></dc-import></div>
+                    <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                      <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; white-space: nowrap">{{s.code}}</span>
+                      <span style="font-size: 11.5px; font-weight: 600; color: #3d4452; line-height: 1.35">{{s.name}}</span>
+                    </div>
+                  </div>
+                  <span style="font-size: 12px; color: #121417; line-height: 1.45; height: 35px; overflow: hidden">{{s.content}}</span>
+                  <span style="font-size: 11.5px; color: #1428a0; line-height: 1.4; font-weight: 600">{{s.why}}</span>
+                </div>
+                <sc-if value="{{s.arrow}}" hint-placeholder-val="{{true}}">
+                  <div style="width: 22px; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+                </sc-if>
+              </sc-for>
+            </div>
+          </div>
+
+          <!-- 그 밖에 정한 것 -->
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+            <div style="height: 38px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+              <span style="font-size: 13px; font-weight: 700; white-space: nowrap">그 밖에 정한 것 <span style="color: #596170; font-weight: 500">· 7</span></span>
+              <a href="VPR.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap">판단 규칙</a>
+            </div>
+            <sc-for list="{{log}}" as="r" hint-placeholder-count="7">
+              <div style="display: grid; grid-template-columns: 96px 200px minmax(0, 1fr) 84px; column-gap: 10px; align-items: center; height: 32px; padding: 0 16px; border-top: 1px solid #f0f2f5">
+                <span style="font-size: 12px; font-weight: 600; color: #596170; white-space: nowrap">{{r.k}}</span>
+                <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.v}}</span>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.why}}</span>
+                <span style="{{r.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">가치 구조 <span style="color: #596170; font-weight: 500">· 2 / 3</span></div>
+          <div style="display: flex; gap: 6px; min-width: 0">
+            <sc-for list="{{alts}}" as="a" hint-placeholder-count="4">
+              <a href="{{a.href}}" title="{{a.tip}}" style="display: inline-flex; align-items: center; gap: 6px; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{a.code}}</span>{{a.t}}</a>
+            </sc-for>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">구조 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="구조 요청 (예: 기대 효과는 투자 회수로 보여줘)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="VP1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">이전</a>
+          <a href="VP3G.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>3장 만들기 (약 1분)</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; justify-self: start; ';
+    const md = (k) => ({ mText: MODE[k][0], mIcon: MODE[k][2], mStyle: CHIP + MODE[k][1] });
+
+    // 시트: [단계, 코드, 이름, 썸네일, n, 들어갈 내용, 고른 이유, 모드]
+    const S = [
+      ['고객 과제', 'CH-A', '과제 3 + 영향', 'pillars', 3, '인쇄 · 배송 / 매장의 교체 시간 / 가격 오표기', '과제 3개 모두 비용 수치가 있어요', 'auto'],
+      ['가치 제안', 'VP-F·3', '가치 기둥 3 · 제품 이미지', 'cards3img', 3, '본사에서 한 번에 · 승인은 본사, 반영은 몇 분 · 저전력 자동', 'Key Message 3 → 기둥 3 + 제품', 'auto'],
+      ['기대 효과', 'EF-A', 'KPI 전 → 후', 'hbars', 3, '교체 리드타임 · 가격 오표기 · 주문 대기 · 전력', '전 → 후 수치 4개 중 3개 확보', 'auto']
+    ];
+    const spine = S.map(([step, code, name, kind, n, content, why, m], i) => ({ step, code, name, kind, n, content, why, arrow: i < S.length - 1, ...md(m) }));
+
+    const L = [
+      ['업종', '외식 · 카페', '연결한 MI v2에서 상속', 'auto'],
+      ['업종 레이아웃', '범용 (VP-FB 제작 중)', '업종판이 나오면 3장을 바꿀지 물어볼게요', 'auto'],
+      ['이해관계자형', '쓰지 않음', '결재자 1 — 본사 운영본부 (RFP)', 'auto'],
+      ['시트 수', '3장', '표준 제안서 Value Props 기본 구성', 'auto'],
+      ['추정 값', "1개 · '교체 리드타임'", '사례 2건의 범위로 넣고 [추정] 표시', 'check'],
+      ['이미지', '공식 실사 우선', '기둥마다 그 가치를 만드는 제품 · 솔루션 → 삼성 공식 컷 · 화면 → 없으면 일러스트', 'auto'],
+      ['톤', '고객사명 사용 · 경쟁사 언급 없음', 'RFP에 경쟁 비교 요청이 없어요', 'auto']
+    ];
+    const log = L.map(([k, v, why, m]) => ({ k, v, why, ...md(m) }));
+
+    // 다른 구조로 바꾸면 무엇이 달라지는지 (툴팁)
+    const alts = [
+      ['VP-G', '한 문장형', '경영진 결재용 1장 — 메뉴보드 사진과 근거 3 · 과제 · 효과 시트는 부록으로', 'VP3L.dc.html'],
+      ['VP-H', '이해관계자형', '본사 · 점장 · 손님에게 각각 다른 가치 — 각자 쓰는 제품과 함께', 'VP3L.dc.html'],
+      ['VP-B·3', '이미지 없이', '같은 기둥 3개 · 제품 이미지만 빼요', 'VP3L.dc.html'],
+      ['EF-B', '투자 회수', '견적이 연결돼야 해요 — 연결하면 바로 바뀝니다', 'VP3N.dc.html']
+    ].map(([code, t, tip, href]) => ({ code, t, tip, href }));
+    return { steps: ['재료', '가치 구조', '결과'], cur: 2, spine, log, alts };
+  }
+}
+</script>
+</body>
+</html>

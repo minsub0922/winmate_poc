@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VC-3·3 세 공간 · 솔루션 3개 — 1:1 대응 (리빙 매장)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">공간 3곳 · 솔루션 3개</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">T 리빙 매장은 공간마다 꼭 맞는 솔루션 하나씩 — 셋이 이어져 하루가 돕니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">세 공간 · 세 솔루션이 하나씩 짝을 이룰 때 — 백룸 · 매장 · 쇼윈도</div>
+
+  <!-- 세로 카드 3장 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.card}}">
+      <span style="position: absolute; left: 18px; top: 18px; width: 40px; height: 40px; border-radius: 50%; background: #f5f6f8; border: 1px solid #d5d9e0; box-sizing: border-box; color: #121417; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.n}}</span>
+      <div style="position: absolute; left: 70px; top: 17px; font-size: 19px; line-height: 24px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{c.space}}</div>
+      <div style="position: absolute; left: 70px; top: 42px; font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{c.where}}</div>
+      <div style="{{c.band}}"><span style="font-size: 15px; font-weight: 800">{{c.sol}}</span><span style="{{c.roleS}}">{{c.role}}</span></div>
+      <div style="position: absolute; left: 16px; top: 118px; width: 334px; height: 100px; border-radius: 10px; background: #dfe3ea; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0; white-space: nowrap"><sc-if value="{{c.noImg}}" hint-placeholder-val="{{true}}"><span>{{c.phT}}</span></sc-if></div>
+      <sc-if value="{{c.hasImg}}" hint-placeholder-val="{{true}}">
+        <img src="{{c.src}}" alt="{{c.alt}}" style="position: absolute; left: 16px; top: 118px; width: 334px; height: 100px; object-fit: cover; object-position: 50% 45%; border-radius: 10px">
+        <div style="position: absolute; left: 24px; top: 192px; height: 18px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; white-space: nowrap">예시 사진 · 고객 공간으로 교체</div>
+      </sc-if>
+      <div style="position: absolute; left: 18px; top: 232px; font-size: 11px; line-height: 15px; font-weight: 800; color: #8a91a0; white-space: nowrap">이 공간에서 하는 일</div>
+      <div style="position: absolute; left: 18px; top: 250px; font-size: 13px; line-height: 20px; color: #3d4452; white-space: nowrap">{{c.d1}}</div>
+      <div style="position: absolute; left: 18px; top: 270px; font-size: 13px; line-height: 20px; color: #3d4452; white-space: nowrap">{{c.d2}}</div>
+      <div style="position: absolute; left: 18px; top: 298px; height: 22px; display: flex; align-items: center; gap: 5px; white-space: nowrap">
+        <sc-for list="{{c.prods}}" as="p" hint-placeholder-count="3">
+          <span style="height: 22px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{p.t}}</span>
+        </sc-for>
+      </div>
+      <div style="position: absolute; left: 8px; top: 330px; width: 350px; height: 54px; border-radius: 10px; background: #eaeefb">
+        <div style="position: absolute; left: 12px; top: 9px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">가치</div>
+        <div style="position: absolute; left: 12px; top: 26px; font-size: 13px; line-height: 18px; font-weight: 800; color: #121417; white-space: nowrap">{{c.kpiL}}</div>
+        <div style="position: absolute; right: 14px; top: 13px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 22px; line-height: 28px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{c.kpi}}</div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 운영 흐름 띠 -->
+  <div style="position: absolute; left: 64px; top: 588px; width: 1152px; height: 60px; border-radius: 12px; background: #f5f6f8"></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+    <span style="{{s.badge}}">{{s.n}}</span>
+    <div style="{{s.t1}}">{{s.title}}</div>
+    <div style="{{s.t2}}">{{s.sub}}</div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 569px; font-size: 11px; line-height: 15px; font-weight: 800; color: #596170; white-space: nowrap">하루 운영 흐름 — 상품이 들어와 손님 눈에 닿기까지</div>
+  <div style="position: absolute; right: 64px; top: 569px; font-size: 11px; line-height: 15px; color: #8a91a0; white-space: nowrap">수치는 예시 · 유사 사례 기준</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 리빙 · 가전 · 리빙 매장 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 14</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    // 4열 × 3 카드 (x 64 · 456 · 848, 폭 368), 운영 순서대로 왼쪽 → 오른쪽
+    const X = [64, 456, 848], W = 368, TOP = 158, H = 392;
+    const C = [
+      { space: '백룸 창고', where: '입고 · 보관 · 직원 전용',
+        sol: 'Knox Capture', role: '갤럭시 카메라 스캔', fill: '#1428a0', ink: '#ffffff', sub: '#c8d3ff',
+        d1: '입고 상자 바코드를 갤럭시로 연속 스캔', d2: '스캔 값은 지금 쓰는 앱 입력란에 그대로',
+        prods: ['갤럭시 XCover'], kpiL: '입고 처리 시간', kpi: '[00]% ↓',
+        src: '/_blob/fd7152aca97436229470b5ac6ced1ffe', alt: '물류창고 선반 앞에서 작업자가 스마트폰으로 박스를 확인 (예시 사진)', ph: '백룸 창고 사진' },
+      { space: '매장 플로어', where: '전시 · 체험 · 상담',
+        sol: 'SmartThings Pro', role: '공간 · 기기 제어', fill: '#121417', ink: '#ffffff', sub: '#b8bec8',
+        d1: '전시 가전 · 조명 · 냉난방을 한 화면에서', d2: '개점 · 폐점 루틴으로 한 번에 켜고 끄기',
+        prods: ['전시 가전', '시스템에어컨', '조명'], kpiL: '개점 준비', kpi: '[00]분 → [0]분',
+        src: '', alt: '', ph: '매장 플로어 사진' },
+      { space: '쇼윈도', where: '거리 쪽 유리면',
+        sol: 'MagicINFO', role: '구축형 사이니지 CMS', fill: '#6f82d6', ink: '#121417', sub: '#121417',
+        d1: '신상품 · 기획전 영상을 시간대별로 편성', d2: '영업 후에도 밝게, 화면은 원격으로 관리',
+        prods: ['윈도 디스플레이(고휘도)'], kpiL: '매장 유입', kpi: '[00]% ↑',
+        src: '', alt: '', ph: '쇼윈도 사진' }
+    ];
+
+    const cards = C.map((c, i) => ({
+      n: i + 1, space: c.space, where: c.where, sol: c.sol, role: c.role,
+      d1: c.d1, d2: c.d2, kpiL: c.kpiL, kpi: c.kpi, phT: c.ph,
+      hasImg: !!c.src, noImg: !c.src, src: c.src || '/_blob/fd7152aca97436229470b5ac6ced1ffe', alt: c.alt || c.ph,
+      prods: c.prods.map((t) => ({ t })),
+      card: box(X[i], TOP, W, H) + 'box-sizing: border-box; border-radius: 16px; border: 1px solid #e2e5ea; background: #ffffff;',
+      band: box(8, 70, W - 18, 38) + 'box-sizing: border-box; padding: 0 12px; border-radius: 10px; background: ' + c.fill + '; color: ' + c.ink + '; display: flex; align-items: center; justify-content: space-between; ' + T,
+      roleS: 'font-size: 11.5px; font-weight: 700; color: ' + c.sub + ';'
+    }));
+
+    // 운영 흐름 — 카드 열에 맞춘 3단계
+    const S = [
+      ['백룸 입고 스캔', '상자가 들어오는 즉시 수량 입력'],
+      ['매장 진열 · 재고', '개점 루틴 뒤 진열 · 전시 가전 점검'],
+      ['쇼윈도 프로모션', '들어온 신상품을 거리 쪽 화면으로']
+    ];
+    const FY = 588;
+    const steps = S.map(([title, sub], i) => ({
+      n: i + 1, title, sub,
+      badge: box(X[i] + 18, FY + 18, 24, 24) + 'border-radius: 50%; background: ' + C[i].fill + '; color: ' + C[i].ink + '; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+      t1: box(X[i] + 52, FY + 10, 300, 20) + 'font-size: 14px; line-height: 20px; font-weight: 800; color: #121417; ' + T,
+      t2: box(X[i] + 52, FY + 31, 300, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + T
+    }));
+    const arrows = [0, 1].map((i) => ({
+      style: box(X[i] + W + 12 - 14, FY + 16, 28, 28) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    return { cards, steps, arrows };
+  }
+}
+</script>
+</body>
+</html>

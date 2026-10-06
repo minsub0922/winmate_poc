@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-VN-E 공연장 · 경기장 · 영화관 · 공간 시나리오 · 컨코스 · 매점</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; right: 64px; top: 40px; height: 26px; box-sizing: border-box; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">컨코스 · 매점 · 동선 순서</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">B 볼파크 매점, 이닝 사이에 사 먹고 다음 이닝 전에 돌아옵니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">④ 컨코스 · 매점 — 게이트에서 좌석 복귀까지 관중이 지나는 다섯 지점, 지점마다 움직이는 솔루션 · 기기</div>
+
+  <!-- ============ 평면 ============ -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 20px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">④ 컨코스 · 매점 · 평면</span><span style="font-size: 11px; color: #8a91a0">배치는 예시 · 구장 도면으로 교체</span></div>
+  <div style="position: absolute; left: 446px; top: 160px; width: 280px; height: 20px; display: flex; align-items: center; justify-content: flex-end; gap: 12px; font-size: 10.5px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 20px; height: 0px; border-top: 2px dashed #1428a0"></span>관중 동선</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #1428a0"></span>지점</span>
+    <span style="display: flex; align-items: center; gap: 5px"><span style="width: 14px; height: 5px; border-radius: 1px; background: #121417"></span>화면</span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 186px; width: 662px; height: 410px; border-radius: 16px; background: #e9ecf0"></div>
+  <sc-for list="{{shapes}}" as="s" hint-placeholder-count="40">
+    <div style="{{s.style}}">{{s.t}}</div>
+  </sc-for>
+  <sc-for list="{{path}}" as="p" hint-placeholder-count="10">
+    <div style="{{p.style}}"></div>
+  </sc-for>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="5">
+    <div style="{{m.style}}">{{m.n}}</div>
+  </sc-for>
+
+  <!-- ============ 지점 리스트 ============ -->
+  <div style="position: absolute; left: 750px; top: 160px; width: 466px; height: 20px; display: flex; align-items: baseline; justify-content: space-between; white-space: nowrap"><span style="font-size: 14px; font-weight: 800">지나는 순서 · 지점마다 움직이는 것</span><span style="font-size: 11px; color: #8a91a0">오른쪽 = 그 지점의 가치</span></div>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.conn}}"></div>
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.nameS}}">{{s.name}}</div>
+    <div style="{{s.momS}}">{{s.mom}}</div>
+    <div style="{{s.solS}}">
+      <sc-for list="{{s.chips}}" as="c" hint-placeholder-count="1">
+        <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{c.t}}</span>
+      </sc-for>
+      <span style="font-size: 12px; font-weight: 700; color: #3d4452">{{s.dev}}</span>
+    </div>
+    <div style="{{s.valS}}"><span style="font-size: 10.5px; line-height: 14px; color: #596170">{{s.kl}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; line-height: 20px; font-weight: 800; color: #1428a0">{{s.kv}}</span></div>
+    <div style="{{s.sep}}"></div>
+  </sc-for>
+
+  <!-- ============ 동선 전체 ============ -->
+  <div style="position: absolute; left: 64px; top: 612px; width: 1152px; height: 38px; box-sizing: border-box; padding: 0 16px; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <span style="font-size: 13px; font-weight: 800">동선 전체</span>
+    <sc-for list="{{totals}}" as="t" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 6px; height: 6px; border-radius: 50%; background: #1428a0"></span><span style="font-size: 12px; color: #3d4452">{{t.k}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{t.v}}</span></span>
+    </sc-for>
+    <span style="margin-left: auto; font-size: 10.5px; color: #8a91a0">수치는 예시 · 유사 사례 기준</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 볼파크 · 경기장 경험 · 운영 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap; ';
+
+    const sh = (x, y, w, h, css, t) => ({ style: box(x, y, w, h) + css, t: t || '' });
+    const cap = (x, y, t, css) => ({ style: A + 'left: ' + px(x) + 'top: ' + px(y) + 'font-size: 10.5px; line-height: 14px; color: #596170; ' + T + (css || ''), t });
+    const lab = (x, y, t) => cap(x, y, t, 'font-size: 11.5px; line-height: 16px; font-weight: 800; color: #3d4452;');
+
+    // 평면 (x 64–726, y 186–596): 관중석 196–250 · 컨코스 262–500 · 게이트 벽 500–510 · 광장 510–586
+    const shapes = [
+      sh(74, 196, 642, 54, 'border-radius: 10px 10px 4px 4px; background: #d5d9e0;'),
+      lab(86, 202, '관중석 · 3루 내야'),
+      cap(86, 222, '[0]구역 ~ [0]구역'),
+      sh(74, 262, 642, 238, 'border-radius: 10px 10px 0 0; background: #ffffff;'),
+      sh(630, 246, 60, 20, 'background: #ffffff;'),
+      cap(560, 222, '관중석 입구', 'font-weight: 700; color: #121417;'),
+      // 화장실
+      sh(84, 274, 140, 56, 'border-radius: 6px; background: #e2e5ea; display: flex; align-items: center; justify-content: center; font-size: 10.5px; color: #596170;', '화장실 · 수유실'),
+      // 매점: 메뉴보드 · 카운터 · 픽업
+      sh(290, 274, 312, 56, 'border-radius: 6px; background: #f5f6f8;'),
+      sh(300, 280, 64, 7, 'border-radius: 1px; background: #121417;'),
+      sh(370, 280, 64, 7, 'border-radius: 1px; background: #121417;'),
+      sh(440, 280, 64, 7, 'border-radius: 1px; background: #121417;'),
+      cap(300, 290, '메뉴보드 QM55C ×3'),
+      sh(300, 308, 204, 16, 'border-radius: 3px; background: #d5d9e0; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #3d4452;', '매점 카운터'),
+      sh(516, 280, 78, 44, 'box-sizing: border-box; border-radius: 5px; background: #eaeefb; border: 1px solid #6f82d6;'),
+      sh(526, 285, 58, 6, 'border-radius: 1px; background: #121417;'),
+      cap(530, 297, '픽업 화면', 'font-size: 10.5px; font-weight: 700; color: #1428a0;'),
+      cap(530, 309, '주문 번호', 'font-size: 10px; color: #596170;'),
+      // 키오스크
+      sh(318, 340, 12, 16, 'border-radius: 2px; background: #3d4452;'),
+      sh(338, 340, 12, 16, 'border-radius: 2px; background: #3d4452;'),
+      sh(358, 340, 12, 16, 'border-radius: 2px; background: #3d4452;'),
+      cap(400, 341, '키오스크 KM24C'),
+      // 기둥 안내 화면
+      sh(250, 404, 24, 24, 'border-radius: 3px; background: #b8bec8;'),
+      sh(246, 398, 32, 6, 'border-radius: 1px; background: #121417;'),
+      cap(130, 400, '기둥 안내 화면', 'font-weight: 700; color: #121417;'),
+      cap(110, 416, '매점 · 화장실 · 구역'),
+      sh(492, 404, 26, 26, 'border-radius: 50%; background: #e2e5ea;'),
+      sh(548, 404, 26, 26, 'border-radius: 50%; background: #e2e5ea;'),
+      sh(604, 404, 26, 26, 'border-radius: 50%; background: #e2e5ea;'),
+      cap(520, 436, '스탠딩 테이블'),
+      { style: A + 'right: 574px; top: 474px; font-size: 11.5px; line-height: 16px; font-weight: 800; color: #3d4452; ' + T, t: '컨코스 · 1층 3루측' },
+      // 게이트 벽 · 광장
+      sh(74, 500, 52, 10, 'background: #596170;'),
+      sh(174, 500, 542, 10, 'background: #596170;'),
+      sh(126, 502, 4, 6, 'background: #121417;'),
+      sh(170, 502, 4, 6, 'background: #121417;'),
+      cap(182, 482, '게이트 3 · 모바일 티켓'),
+      sh(74, 510, 642, 76, 'border-radius: 0 0 10px 10px; background: #f8f9fb;'),
+      lab(186, 530, '외부 광장'),
+      cap(186, 550, '게이트 요원 · 갤럭시 XCover'),
+      sh(470, 532, 8, 30, 'border-radius: 1px; background: #121417;'),
+      sh(482, 532, 8, 30, 'border-radius: 1px; background: #121417;'),
+      cap(500, 532, '광장 화면 · 실외용 사이니지', 'font-weight: 700; color: #121417;'),
+      cap(500, 548, '경기 정보 · 게이트별 입장 안내')
+    ];
+
+    // 동선 — 점선 구간 + 화살촉
+    const dash = 'border-color: #1428a0; border-style: dashed; border-width: 0;';
+    const hseg = (x1, x2, y) => ({ style: box(x1, y - 1, x2 - x1, 0) + dash + 'border-top-width: 2px;' });
+    const vseg = (x, y1, y2) => ({ style: box(x - 1, y1, 0, y2 - y1) + dash + 'border-left-width: 2px;' });
+    const up = (x, y) => ({ style: box(x - 5, y, 0, 0) + 'border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 8px solid #1428a0;' });
+    const right = (x, y) => ({ style: box(x, y - 5, 0, 0) + 'border-top: 5px solid transparent; border-bottom: 5px solid transparent; border-left: 8px solid #1428a0;' });
+    const path = [
+      vseg(150, 452, 576), hseg(150, 380, 452), vseg(380, 372, 452), hseg(380, 660, 372), vseg(660, 236, 372),
+      up(150, 468), right(320, 452), up(380, 404), right(474, 372), up(660, 300)
+    ];
+
+    const mk = (n, x, y) => ({ n, style: box(x - 13, y - 13, 26, 26) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' });
+    const marks = [mk(1, 150, 505), mk(2, 262, 452), mk(3, 380, 372), mk(4, 556, 372), mk(5, 660, 236)];
+
+    // 지점 리스트 — [이름, 그 순간, 솔루션 칩, 기기, 가치 라벨, 가치]
+    const S = [
+      ['게이트 · 티켓 스캔', '모바일 티켓 QR을 요원 폰 카메라로 바로 읽음', ['Knox Capture'], '갤럭시 XCover · Knox Suite', '입장 대기', '[0]분 ↓'],
+      ['컨코스 안내 화면', '가까운 매점 · 화장실 · 내 구역을 기둥 화면에서', ['MagicINFO'], '스마트 사이니지 QM55C', '길 묻는 문의', '[00]% ↓'],
+      ['매점 메뉴보드 · 키오스크', '메뉴보드로 고르고 줄 대신 키오스크로 결제', ['VXT'], '메뉴보드 QM55C · 키오스크 KM24C', '주문 대기', '[0]분 → [0]분'],
+      ['픽업', '주문 번호가 화면에 뜨면 바로 받아 감', ['주문 결제 앱 · 파트너'], '픽업 화면 QM43C', '픽업대 혼잡', '[00]% ↓'],
+      ['좌석 복귀', '리본보드에서 다음 이닝 시작을 보고 자리로', ['MagicINFO'], '리본보드 · 구역 안내 화면', '자리 비운 시간', '[0]분 ↓']
+    ];
+    const Y0 = 188, IH = 82;
+    const steps = S.map(([name, mom, chips, dev, kl, kv], i) => {
+      const y = Y0 + i * IH;
+      return {
+        n: i + 1, name, mom, dev, kl, kv,
+        chips: chips.map((t) => ({ t })),
+        badge: box(750, y + 1, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        conn: i < S.length - 1 ? box(762, y + 29, 2, IH - 30) + 'background: #c8d3ff;' : box(762, y, 0, 0),
+        nameS: box(788, y + 3, 300, 22) + 'font-size: 14.5px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em; ' + T,
+        momS: box(788, y + 27, 320, 18) + 'font-size: 12.5px; line-height: 18px; color: #3d4452; ' + T,
+        solS: box(788, y + 50, 320, 20) + 'display: flex; align-items: center; gap: 7px; ' + T,
+        valS: box(1110, y + 6, 106, 38) + 'display: flex; flex-direction: column; align-items: flex-end; ' + T,
+        sep: i < S.length - 1 ? box(788, y + IH - 5, 428, 1) + 'background: #e2e5ea;' : box(788, y, 0, 0)
+      };
+    });
+
+    const totals = [['게이트 → 좌석 복귀', '[00]분 → [00]분'], ['이닝당 매점 주문', '[00]% ↑'], ['화면 편성 · 메뉴 변경', '원격 한 번']].map(([k, v]) => ({ k, v }));
+
+    return { shapes, path, marks, steps, totals };
+  }
+}
+</script>
+</body>
+</html>

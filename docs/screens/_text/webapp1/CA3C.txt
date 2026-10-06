@@ -1,0 +1,50 @@
+ 
+ 경쟁사 분석 · 비교 기준 바꾸기 
+ 필요할 때 
+ 무엇을 기준으로 비교할까요? 
+ 요구사항에서 뽑은 기준이 위에 있어요. 끄거나 더할 수 있고, 순서는 중요도예요. 
+ {{k.label}} 
+ {{k.src}} 
+ {{k.w}} 
+ 기준 직접 추가 
+ 추천 
+ + {{g.name}} {{g.n}} 
+ 뒤로 
+ 켜진 기준 {{onCount}} / 6 
+ 이 기준으로 분석 
+class Component extends DCLogic {
+ renderVals() {
+ const st = this.state || {};
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ // 기준: 이름 · 출처 · 중요도(1–5) — 요구사항에서 뽑은 것이 위
+ const K = [
+ ['본사 일괄 배포', '요구', 5],
+ ['매장별 가격 차등', '요구', 4],
+ ['전기료', '요구', 4],
+ ['디자인 조화', '업종 사례 23건', 3],
+ ['가격대', '기본', 3],
+ ['레퍼런스 · AS', '기본', 2]
+ ];
+ const w = Array.isArray(st.w) ? st.w : K.map((k) => k[2]);
+ const on = Array.isArray(st.on) ? st.on : K.map(() => true);
+ const srcBase = '';
+ const srcColor = (src) => src === '요구' ? '' : src === '기본' ? '' : '';
+ const crit = K.map(([label, src], i) => {
+ const isOn = !!on[i];
+ return {
+ label, src, w: w[i], on: isOn,
+ groupLabel: label + ' 중요도 ' + w[i] + ' / 5',
+ switchLabel: label + (isOn ? ' 끄기' : ' 켜기'),
+ toggle: () => { const n = on.slice(); n[i] = !n[i]; this.setState({ on: n }); },
+ row: '' + (i > 0 ? '' : ''),
+ name: '' + (isOn ? '' : ''),
+ srcStyle: srcBase + (isOn ? srcColor(src) : ''),
+ num: '' + (isOn ? '' : ''),
+ blocks: [1, 2, 3, 4, 5].map((lv) => ({
+ label: label + ' 중요도 ' + lv,
+ set: () => { const nw = w.slice(); nw[i] = lv; this.setState({ w: nw }); },
+ style: '' + (lv ({ name, n }));
+ const onCount = on.filter(Boolean).length;
+ return { steps, cur: 3, crit, sugg, onCount };
+ }
+}

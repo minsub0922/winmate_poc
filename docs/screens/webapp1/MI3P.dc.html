@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 결과 → 슬라이드 구성 (레이아웃 자동 선택)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="A 커피 프랜차이즈 시장·경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="A 커피 프랜차이즈 시장·경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" complete="{{done}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; gap: 12px">
+        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+          <div style="font-size: 14.5px; line-height: 1.6">분석 결과의 데이터 모양을 보고 시트마다 레이아웃을 골랐어요. 업종 레이아웃이 있으면 그것부터, 없으면 데이터 모양과 메시지로 골랐습니다.</div>
+
+          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
+            <div style="height: 44px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg>
+              <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">슬라이드 구성</span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">표준 MI 섹션 3시트 + 넣으면 좋은 시트 1</span>
+              <span style="flex-grow: 1"></span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap">업종 레이아웃 <span style="font-weight: 700; color: #1428a0">2</span> · 범용 <span style="font-weight: 700; color: #121417">1</span></span>
+            </div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+              <div style="{{r.rowStyle}}">
+                <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                  <label style="display: flex; align-items: center; gap: 7px; min-width: 0; cursor: pointer">
+                    <input type="checkbox" checked="{{r.on}}" aria-label="{{r.aria}}" style="accent-color: #1428a0; margin: 0; flex-shrink: 0">
+                    <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.sheet}}</span>
+                  </label>
+                  <span style="font-size: 11px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 20px">{{r.src}}</span>
+                  <span style="padding-left: 20px; display: flex"><span style="{{r.mStyle}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd"><path d="{{r.mIcon}}"/></svg>{{r.mText}}</span></span>
+                </div>
+                <div style="{{r.thumbBox}}"><dc-import name="Thumb" kind="{{r.kind}}" n="{{r.n}}" hint-size="120px,68px"></dc-import></div>
+                <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+                  <div style="display: flex; align-items: baseline; gap: 7px; min-width: 0">
+                    <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #121417; white-space: nowrap">{{r.code}}</span>
+                    <span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                    <sc-if value="{{r.ind}}" hint-placeholder-val="{{false}}">
+                      <span style="font-size: 10.5px; font-weight: 700; color: #1428a0; background: #eaeefb; border-radius: 999px; padding: 1px 7px; white-space: nowrap; flex-shrink: 0">업종</span>
+                    </sc-if>
+                  </div>
+                  <span style="font-size: 12px; color: #3d4452; line-height: 1.45; height: 35px; overflow: hidden">{{r.why}}</span>
+                  <div style="display: flex; align-items: center; gap: 8px">
+                    <div style="width: 110px; height: 5px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="{{r.fitBar}}"></div></div>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap">데이터 적합 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{r.fit}}%</span></span>
+                  </div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                  <span style="font-size: 11px; font-weight: 600; color: #8a91a0">대안</span>
+                  <sc-for list="{{r.alts}}" as="a" hint-placeholder-count="2">
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px; height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; background: #f5f6f8">
+                      <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #3d4452; white-space: nowrap">{{a.code}}</span>
+                      <span style="{{a.style}}">{{a.v}}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- 고르는 순서 -->
+          <div style="height: 40px; box-sizing: border-box; padding: 0 14px; border-radius: 12px; background: #eaeefb; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #121417; min-width: 0">
+            <span style="font-weight: 700; color: #1428a0; white-space: nowrap; margin-right: 2px">고르는 순서</span>
+            <sc-for list="{{order}}" as="o" hint-placeholder-count="4">
+              <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{o.n}}</span>{{o.t}}</span>
+              <sc-if value="{{o.arrow}}" hint-placeholder-val="{{true}}">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg>
+              </sc-if>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">슬라이드 구성 <span style="color: #596170; font-weight: 500">· 3시트 · 넣으면 좋은 시트 1 · 자동 4 · 확인 권장 1</span></div>
+          <div style="display: flex; gap: 6px">
+            <a href="MI3L.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">레이아웃 바꾸기</a>
+            <a href="MI3S.dc.html" style="display: inline-flex; align-items: center; box-sizing: border-box; height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">출처 보기</a>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">구성 요청</label>
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="q" placeholder="구성 요청 (예: 경쟁 환경은 포지셔닝 맵으로)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; flex-shrink: 0; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="MI3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">결과로</a>
+          <a href="MI4.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
+            <span>제안서로 보내기</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const MODE = {
+      auto: ['자동', 'background: #eaeefb; color: #1428a0;', 'M13 2L4 14h7l-1 8 9-12h-7l1-8z'],
+      check: ['확인 권장', 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;', 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v7h-2zm0 9h2v2h-2z']
+    };
+    const CHIP = 'height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; ';
+    // 시트: [포함, 시트, 결과 출처, 코드, 템플릿 이름, 썸네일, 업종판, 이유(데이터 모양 → 메시지), 적합도, 대안[[코드, 적합도|불가]], 모드]
+    const R = [
+      [true, '시장 · 트렌드', 'MI 결과 · 시장조사', 'MI-FB-A', '외식 · 카페 · 시장 · 트렌드', 'barline', true, '업종 레이아웃 우선 · 연도별 시장 규모 6개년과 트렌드 4개가 이 틀에 그대로 들어가요', 96, [['MS-B', 92], ['TR-B', 84]], 'auto'],
+      [true, '고객 비즈니스', 'MI 결과 · 고객사', 'MI-FB-B', '외식 · 카페 · 운영 과제', 'process', true, '본사 → 가맹점 → 손님 구조와 운영 단계별 과제 6개가 업종 틀과 같아요', 94, [['CB-C', 90], ['CB-B', 61]], 'auto'],
+      [true, '경쟁 환경', 'MI 결과 · 경쟁사', 'CP-A', '비교표', 'table', false, '업종 틀엔 경쟁 장이 없어 범용 · 경쟁사 3곳 × 요구 기준 5개라 표가 가장 정확해요', 96, [['CP-B', 58], ['CP-C', -1]], 'auto'],
+      [false, '사용자 여정', 'MI 결과 · 사용자', 'MI-FB-C', '외식 · 카페 · 사용자 여정', 'journey', true, '섹션엔 없지만 손님 여정 5단계가 있어요 · 넣으면 Value Props 근거가 강해져요', 91, [['US-B', 88], ['US-A', 80]], 'check'],
+      [false, 'MI 시사점', '3개 탭 종합', 'IM-A', '발견 → 시사점 → 방향', 'funnel', false, '표준은 3시트라 뺐어요 · Solution형이거나 경영진 보고면 자동으로 넣어요', 70, [['IM-B', 66]], 'auto']
+    ];
+    const rows = R.map(([on, sheet, src, code, name, kind, ind, why, fit, alts, m]) => ({
+      on, sheet, src, code, name, kind, ind, why, fit, n: 3,
+      aria: sheet + ' 시트 넣기',
+      mText: MODE[m][0], mIcon: MODE[m][2], mStyle: CHIP + MODE[m][1],
+      rowStyle: 'display: grid; grid-template-columns: 140px 120px minmax(0, 1fr) 124px; column-gap: 12px; align-items: center; box-sizing: border-box; height: 84px; padding: 0 16px; border-top: 1px solid #f0f2f5;' + (on ? '' : ' background: #fbfbfc;'),
+      thumbBox: 'width: 120px; height: 68px;' + (on ? '' : ' opacity: 0.6;'),
+      fitBar: 'width: ' + fit + '%; height: 5px; border-radius: 999px; background: ' + (fit >= 85 ? '#1428a0' : '#8a91a0') + ';',
+      alts: alts.map(([c, v]) => ({
+        code: c, v: v < 0 ? '불가' : v + '%',
+        style: 'font-size: 11.5px; white-space: nowrap; ' + (v < 0 ? 'color: #8a91a0;' : 'font-family: Manrope, sans-serif; font-weight: 700; color: #596170;')
+      }))
+    }));
+    const O = ['고정한 시트는 그대로', '업종 레이아웃', '데이터 모양', '메시지 (왜 · 얼마나 · 누구)'];
+    const order = O.map((t, i) => ({ n: i + 1, t, arrow: i < O.length - 1 }));
+    return { steps: ['고객 요구사항', '분석 범위', '분석 결과'], cur: 3, done: true, rows, order };
+  }
+}
+</script>
+</body>
+</html>

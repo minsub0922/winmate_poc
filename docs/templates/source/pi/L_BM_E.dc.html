@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BM-E 지역별 물량</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">04 · 공간별 제품</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">전국 320개 매장 — 권역별 설치 물량과 일정</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">매장당 사이니지 7대 · 키오스크 1대 기준 · 권역마다 설치 팀을 나눠 동시에 진행</div>
+
+  <!-- 왼쪽: 타일 지도 (x 64–500, y 164–590) — 타일 위치는 renderVals의 열 · 행 -->
+  <div style="position: absolute; left: 64px; top: 164px; width: 436px; height: 426px">
+    <sc-for list="{{tiles}}" as="t" hint-placeholder-count="11">
+      <div style="{{t.style}}">
+        <span style="{{t.nameStyle}}">{{t.name}}</span>
+        <span style="display: flex; align-items: baseline; gap: 2px"><span style="font-family: Manrope, sans-serif; font-size: 24px; font-weight: 800; line-height: 1; letter-spacing: -0.02em">{{t.n}}</span><span style="font-size: 12px; font-weight: 700">곳</span></span>
+      </div>
+    </sc-for>
+  </div>
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 608px; height: 20px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170">
+    <span style="font-weight: 700; color: #121417">매장 수</span>
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="{{l.sw}}"></span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif">{{l.t}}</span></span>
+    </sc-for>
+  </div>
+
+  <!-- 오른쪽: 권역별 표 (x 540–1216) -->
+  <div style="position: absolute; left: 540px; top: 160px; width: 676px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 176px 118px repeat(4, minmax(0, 1fr)); column-gap: 12px; align-items: center; height: 36px; box-sizing: border-box; padding: 0 14px; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span>권역</span><span>매장 수</span><span style="text-align: right">사이니지 ×7</span><span style="text-align: right">키오스크 ×1</span><span style="text-align: right">설치 팀</span><span style="text-align: right">기간</span>
+    </div>
+    <sc-for list="{{regions}}" as="r" hint-placeholder-count="6">
+      <div style="display: grid; grid-template-columns: 176px 118px repeat(4, minmax(0, 1fr)); column-gap: 12px; align-items: center; height: 58px; box-sizing: border-box; padding: 0 14px; border-bottom: 1px solid #e2e5ea">
+        <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+          <span style="font-size: 15px; font-weight: 800">{{r.name}}</span>
+          <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{r.sub}}</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span style="width: 36px; flex-shrink: 0; text-align: right; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800">{{r.n}}</span>
+          <span style="{{r.bar}}"></span>
+        </div>
+        <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">{{r.sig}}</span>
+        <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">{{r.kio}}</span>
+        <span style="text-align: right; font-size: 13px; color: #596170"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; color: #121417">[0]</span>팀</span>
+        <span style="text-align: right; font-size: 13px; color: #596170"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; color: #121417">[0]</span>주</span>
+      </div>
+    </sc-for>
+    <div style="display: grid; grid-template-columns: 176px 118px repeat(4, minmax(0, 1fr)); column-gap: 12px; align-items: center; height: 50px; box-sizing: border-box; padding: 0 14px; border-radius: 0 0 10px 10px; background: #eaeefb">
+      <span style="font-size: 15px; font-weight: 800">전국</span>
+      <span style="display: flex; align-items: baseline; gap: 2px; padding-left: 4px"><span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; color: #1428a0">{{stores}}</span><span style="font-size: 13px; font-weight: 700; color: #1428a0">곳</span></span>
+      <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">{{sig}}</span>
+      <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">{{kio}}</span>
+      <span style="text-align: right; font-size: 13px; color: #1428a0"><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">[00]</span>팀</span>
+      <span style="text-align: right; font-size: 13px; color: #1428a0"><span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">[00]</span>주</span>
+    </div>
+  </div>
+  <div style="position: absolute; right: 64px; top: 608px; font-size: 12px; line-height: 20px; color: #596170">매장 수는 예시 · 설치 팀 · 기간은 권역별 현장 실사 후 확정</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const fmt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const SIG = 7; // 매장당 사이니지 (QM55C 3 · OH55C 2 · QM65C 1 · QM43C 1)
+    const KIO = 1; // 매장당 키오스크 KM24C
+    // 타일: [지역, 매장 수(예시), 권역, 열, 행, 열 폭, 행 높이] — 3열 × 6행 격자, 대략 지리 배치
+    const T = [
+      ['인천', 20, '수도권', 0, 0, 1, 1],
+      ['서울', 92, '수도권', 1, 0, 1, 1],
+      ['강원', 10, '강원', 2, 0, 1, 2],
+      ['경기', 78, '수도권', 0, 1, 2, 1],
+      ['충남 · 대전 · 세종', 24, '충청', 0, 2, 1, 1],
+      ['충북', 9, '충청', 1, 2, 1, 1],
+      ['경북 · 대구', 22, '영남', 2, 2, 1, 2],
+      ['전북', 10, '호남', 0, 3, 2, 1],
+      ['전남 · 광주', 16, '호남', 0, 4, 1, 1],
+      ['경남 · 부산 · 울산', 32, '영남', 1, 4, 2, 1],
+      ['제주', 7, '제주', 0, 5, 1, 1]
+    ];
+    const CW = 140, RH = 68, GAP = 8, JEJU_H = 46;
+    // 3단 색: 50곳 이상 · 20–49곳 · 20곳 미만
+    const tier = (n) => (n >= 50 ? 0 : n >= 20 ? 1 : 2);
+    const FILL = ['#1428a0', '#6f82d6', '#b8c3ee'];
+    const INK = ['#ffffff', '#ffffff', '#121417'];
+    const tiles = T.map(([name, n, , c, r, cs, rs]) => {
+      const k = tier(n);
+      const left = c * (CW + GAP);
+      const top = r * (RH + GAP);
+      const w = cs * CW + (cs - 1) * GAP;
+      const h = name === '제주' ? JEJU_H : rs * RH + (rs - 1) * GAP;
+      const flat = name === '제주';
+      return {
+        name, n: String(n),
+        style: 'position: absolute; left: ' + left + 'px; top: ' + top + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border-radius: 12px; padding: ' +
+          (flat ? '0 14px' : '10px 12px 10px 14px') + '; background: ' + FILL[k] + '; color: ' + INK[k] +
+          '; display: flex; ' + (flat ? 'align-items: center; justify-content: space-between' : 'flex-direction: column; justify-content: space-between'),
+        nameStyle: 'font-size: 13px; font-weight: ' + (k === 2 ? 700 : 800) + '; white-space: nowrap'
+      };
+    });
+    const legend = [
+      { t: '50곳 이상', sw: 'width: 14px; height: 14px; border-radius: 4px; background: ' + FILL[0] },
+      { t: '20–49곳', sw: 'width: 14px; height: 14px; border-radius: 4px; background: ' + FILL[1] },
+      { t: '20곳 미만', sw: 'width: 14px; height: 14px; border-radius: 4px; background: ' + FILL[2] }
+    ];
+    // 권역 합산 (타일 데이터에서 계산)
+    const R = ['수도권', '강원', '충청', '호남', '영남', '제주'];
+    const sums = R.map((g) => T.filter((t) => t[2] === g).reduce((a, t) => a + t[1], 0));
+    const max = Math.max(...sums);
+    const BAR = 70;
+    const regions = R.map((g, i) => {
+      const members = T.filter((t) => t[2] === g).map((t) => t[0]).join(' · ');
+      const n = sums[i];
+      return {
+        name: g,
+        sub: members === g ? '도 전역' : members,
+        n: String(n),
+        sig: fmt(n * SIG),
+        kio: fmt(n * KIO),
+        bar: 'width: ' + Math.max(3, Math.round((n / max) * BAR)) + 'px; height: 8px; border-radius: 4px; background: ' + (i === 0 ? '#1428a0' : '#6f82d6')
+      };
+    });
+    const total = sums.reduce((a, b) => a + b, 0);
+    return { tiles, legend, regions, stores: fmt(total), sig: fmt(total * SIG), kio: fmt(total * KIO) };
+  }
+}
+</script>
+</body>
+</html>

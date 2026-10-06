@@ -1,0 +1,34 @@
+# 분류별 모델 목록 열 (갭 G-PRD-4, 00-shell §9.4 [제안]). 값은 KB spec_value 정규 키에서 온다.
+# 위에서부터 처음 맞는 프로필을 쓴다(l2 우선 → l1 → 마지막 기본).
+columns:
+  size: {label: 크기, norm_key: screen_size_cm}
+  brightness: {label: 밝기, norm_key: brightness_nit}
+  resolution: {label: 해상도, norm_key: resolution}
+  pixel_pitch: {label: 픽셀 피치, norm_key: pixel_pitch_mm}
+  panel: {label: 패널, norm_key: panel_type}
+  cooling: {label: 냉방 능력, norm_key: cooling_capacity_kw}
+  heating: {label: 난방 능력, norm_key: heating_capacity_kw}
+  power: {label: 소비전력, norm_key: power_consumption}
+  capacity: {label: 용량, norm_key: capacity_l}
+  energy: {label: 에너지 등급, norm_key: energy_grade}
+  weight: {label: 무게, norm_key: weight_kg}
+  os: {label: 운영체제, norm_key: os}
+  cpu: {label: CPU, norm_key: cpu}
+  release: {label: 출시, norm_key: release_ym}
+
+profiles:
+  - {id: signage_led, l2: [cat_led-signage], columns: [size, brightness, pixel_pitch]}
+  - {id: signage, l1: [top_display], columns: [size, brightness, resolution]}
+  - {id: display, l2: [cat_tvs, cat_hotel-tvs, cat_monitors, cat_notebook, cat_desktop, cat_chromebooks], columns: [size, resolution, panel]}
+  - {id: hvac, l1: [top_hvac], columns: [cooling, heating, power]}
+  - {id: appliance, l1: [top_living, top_kitchen], columns: [capacity, energy, weight]}
+  - {id: mobile, l1: [top_mobile], columns: [os, cpu, weight]}
+  - {id: other, columns: [release, weight]}
+
+# 값이 여럿인 정규 키에서 고를 속성 이름(앞쪽 우선). 06-spec §4.15.4 와 같은 원칙.
+prefer_attrs:
+  brightness_nit: ["밝기 (Typ)", "밝기", "밝기 (Typical)"]
+  weight_kg: ["제품 무게", "무게", "본체 무게", "제품 중량"]
+  power_consumption: ["소비전력 (Typical)", "소비전력 (On Mode)", "소비전력", "정격 소비전력"]
+  screen_size_cm: ["대각선 사이즈 (cm)", "화면크기"]
+  resolution: ["해상도", "해상도 (Main Display)"]

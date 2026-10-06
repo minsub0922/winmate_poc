@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-OF-B 오피스 · 업무 빌딩 · 대표 공간 장면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">C 빌딩의 회의실은 예약부터 뒷정리까지 저절로 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">입주사 만족이 갈리는 대표 공간 — 회의 한 번을 네 장면으로: 순간 → 솔루션 → 제품 → 가치</div>
+
+  <!-- 행 라벨 (거터 x 64–136) -->
+  <div style="position: absolute; left: 64px; top: 226px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">장면</div>
+  <div style="position: absolute; left: 64px; top: 330px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">순간</div>
+  <div style="position: absolute; left: 64px; top: 398px; width: 72px; display: flex; flex-direction: column; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0; white-space: nowrap"><span>솔루션이</span><span>하는 일</span></div>
+  <div style="position: absolute; left: 64px; top: 471px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">제품</div>
+  <div style="position: absolute; left: 64px; top: 536px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">가치</div>
+
+  <!-- 네 장면 -->
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <!-- 장면 사진 -->
+    <img src="{{s.src}}" alt="{{s.alt}}" style="position: absolute; {{s.imgPos}} width: 258px; height: 156px; object-fit: cover; object-position: {{s.op}}; border-radius: 12px">
+    <div style="{{s.chip}}">{{s.chipT}}</div>
+    <!-- 순간 -->
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.head}}"><span style="font-family: Manrope, sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{s.title}}</span></div>
+    <div style="{{s.ctxS}}">{{s.ctx}}</div>
+    <!-- 솔루션이 하는 일 -->
+    <div style="{{s.solBox}}">
+      <div style="position: absolute; left: 12px; top: 10px; font-size: 12.5px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{s.sol}}</div>
+      <div style="position: absolute; left: 12px; top: 32px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d1}}</div>
+      <div style="position: absolute; left: 12px; top: 49px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d2}}</div>
+    </div>
+    <!-- 제품 -->
+    <div style="{{s.prodBox}}">
+      <svg style="position: absolute; left: 12px; top: 12px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+      <div style="position: absolute; left: 36px; top: 10px; font-size: 12.5px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{s.prod}}</div>
+    </div>
+    <!-- 가치 -->
+    <div style="{{s.valBox}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-size: 12.5px; line-height: 18px; font-weight: 600; color: #121417; white-space: nowrap">{{s.val}}</div>
+      <div style="position: absolute; left: 12px; top: 33px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.kpi}}</div>
+      <div style="position: absolute; left: 12px; top: 48px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{s.kv}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 장면 사이 화살표 -->
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="3">
+    <div style="{{a.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- 회의실 1실 표준 구성 -->
+  <div style="position: absolute; left: 64px; top: 594px; width: 1152px; height: 54px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 601px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">회의실 1실 표준 구성</div>
+  <div style="position: absolute; left: 80px; top: 623px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">× C 빌딩 회의실 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">[00]</span>실 · 같은 구성으로 확장</div>
+  <div style="position: absolute; left: 330px; top: 604px; width: 1px; height: 34px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 346px; top: 601px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="5">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 346px; top: 626px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0">운영</span><span>회의실 예약 솔루션 (구독형 · 초기 비용 부담 낮음) · Knox Configure (탭 일괄 원격 설정) · SmartThings (자동화 루틴)</span></div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 오피스 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 장면 열: x 148 + i*270, 폭 258 (→ 마지막 1216)
+    const X0 = 148, STEP = 270, W = 258;
+    const S = [
+      { time: '09:50', title: '문 앞에서 예약 확인', ctx: '회의 10분 전 · 회의실 출입문',
+        sol: '회의실 예약 솔루션 · Knox Configure', d1: '예약 · 현황을 문 앞 탭에 실시간 표시,', d2: '탭 화면은 C 빌딩 테마로 원격 설정',
+        prod: '갤럭시 탭 · 출입문 거치대',
+        val: '빈 방 찾기 · 중복 예약이 사라집니다', kpi: '회의실 가동률', kv: '[00]%',
+        src: '/_blob/e1267785cfcfbe4d1acc41d69769f4c1', alt: '회의실 예약 화면이 띄워진 거치형 태블릿 (도입사례 예시 사진)', op: '50% 45%',
+        chipT: '예시 사진 · 삼성 도입사례 · 고객 공간으로 교체' },
+      { time: '10:00', title: '버튼 하나로 회의 모드', ctx: '입실 · 회의 주최자 · 회의실 내부',
+        sol: 'SmartThings 자동화 루틴', d1: '스마트 버튼 \'회의 · PT 모드\' 한 번에', d2: '조명 · 블라인드 · 냉난방이 함께 전환',
+        prod: '시스템에어컨 · 조명 · 블라인드',
+        val: '준비하던 시간이 회의로 돌아갑니다', kpi: '회의 준비 시간', kv: '[0]분 → [0]분',
+        src: '/_blob/a14414799350aa67c39b1ce639897726', alt: '천장형 시스템에어컨과 유리 회의실 (예시 사진)', op: '50% 12%',
+        chipT: '예시 사진 · 고객 공간으로 교체' },
+      { time: '10:10', title: '쓰고, 띄우고, 바로 공유', ctx: '회의 중 · 참석자와 외부 방문객',
+        sol: '삼성 Flip 협업 · 화면 공유', d1: '손 필기를 디지털로 편집 · 공유하고', d2: '노트북 화면 미러링, 비밀번호 잠금',
+        prod: '삼성 Flip · 이동식 스탠드',
+        val: '자료 연결에 새던 시간이 줄어듭니다', kpi: '화면 연결 · 공유 대기', kv: '[0]분 → [0]분',
+        src: '/_blob/e625d71cc8d0865bc5e709f4dcecd518', alt: '벽걸이 전자칠판으로 발표하는 회의 (예시 사진)', op: '50% 35%',
+        chipT: '예시 사진 · 고객 공간으로 교체' },
+      { time: '11:00', title: '비면 스스로 정리', ctx: '회의 종료 · 빈 회의실 · 관리실',
+        sol: '재실 센서 · SmartThings · 예약 데이터', d1: '사람이 없으면 냉난방 · 조명 OFF,', d2: '회의실 사용 패턴은 데이터로 축적',
+        prod: '열림 · 재실 센서 · 갤럭시 탭',
+        val: '빈 방의 에너지와 배치를 데이터로 관리', kpi: '빈 회의실 냉난방 · 조명', kv: '[00]% 절감',
+        src: '/_blob/55f0c575d3a648f72136c8a9083d807b', alt: '회의가 끝난 빈 회의실과 문 앞 예약 태블릿 (예시 사진)', op: '50% 55%',
+        chipT: '예시 사진 · 고객 공간으로 교체' }
+    ];
+
+    const scenes = S.map((s, i) => {
+      const x = X0 + i * STEP;
+      return {
+        n: i + 1, time: s.time, title: s.title, ctx: s.ctx, sol: s.sol, d1: s.d1, d2: s.d2, prod: s.prod,
+        val: s.val, kpi: s.kpi, kv: s.kv, src: s.src, alt: s.alt, op: s.op, chipT: s.chipT,
+        imgPos: 'left: ' + px(x) + 'top: 160px;',
+        chip: A + 'left: ' + px(x + 8) + 'top: 292px; height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; ' + T,
+        badge: box(x, 326, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        head: box(x + 34, 324, W - 34, 22) + 'display: flex; align-items: center; gap: 8px; ' + T,
+        ctxS: box(x + 34, 348, W - 34, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + T,
+        solBox: box(x, 378, W, 74) + 'border-radius: 10px; background: #eaeefb;',
+        prodBox: box(x, 460, W, 40) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;',
+        valBox: box(x, 508, W, 74) + 'border-radius: 10px; background: #f5f6f8;'
+      };
+    });
+
+    // 사진 사이 화살표 (간격 12px 가운데)
+    const arrows = [0, 1, 2].map((i) => ({
+      style: box(X0 + i * STEP + W + 6 - 12, 226, 24, 24) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    // 회의실 1실 표준 구성
+    const kit = ['갤럭시 탭 1', '삼성 Flip 1', '스마트 버튼 1', '열림 · 재실 센서', '시스템에어컨 · 조명 · 블라인드 연동'].map((t) => ({ t }));
+
+    return { scenes, arrows, kit };
+  }
+}
+</script>
+</body>
+</html>

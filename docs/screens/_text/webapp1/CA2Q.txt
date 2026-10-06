@@ -1,0 +1,27 @@
+ 
+ 경쟁사 분석 · 되묻기 
+ 질문 1 / 1 
+ 어느 고객사, 어느 지역인가요? 
+ 입력에서 업종(외식 · 카페)과 제품(메뉴보드 사이니지)은 읽었지만 고객사와 장소가 없어요. 알려 주면 지역 경쟁사까지 찾아요. 
+ 입력에서 읽은 것 
+ {{c.k}} · {{c.v}} 
+ 일부 
+ {{foundCount}} 
+ 고객사 
+ 지역 · 장소 
+ 고객사 · 업종 · 장소 · 제품까지 알려 주면 경쟁사를 훨씬 잘 찾아요. 업종만 있어도 찾긴 하지만 후보가 넓어져요. 
+ 뒤로 
+ 건너뛰기 — 업종 기준으로 찾기 
+ 후보가 넓어져요 
+ 답하고 찾기 
+class Component extends DCLogic {
+ renderVals() {
+ const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+ // 입력 "카페 메뉴보드 사이니지" 에서 읽은 것: 업종 찾음 · 제품 일부 · 고객사 · 장소 비어 있음(점선)
+ const chip = (found) => '' + (found ? '' : '');
+ const C = [['업종', '외식 · 카페', true, false], ['제품', '메뉴보드 사이니지', true, true], ['고객사', '', false, false], ['장소', '', false, false]];
+ const chips = C.map(([k, v, found, partial]) => ({ k, v: found ? v : '비어 있음', found, partial, style: chip(found) }));
+ const n = chips.filter((c) => c.found).length;
+ return { steps, cur: 1, chips, foundCount: n + ' / ' + chips.length };
+ }
+}

@@ -1,0 +1,66 @@
+ 
+ 이미지 생성 · 현장 사진 제품 합성 
+ W 
+ 카운터 위 흰 벽면을 설치 가능한 면으로 인식하고 QM55C 3대를 올려두었습니다. 끌어서 위치를, 모서리로 크기를 맞춰 주세요. 실제 치수를 하나 알려주시면 비율을 정확히 맞춥니다. 
+ {{ph.label}} 
+ {{ph.status}} 
+ 사진 추가 
+ 촬영 가이드 · 다시 인식 
+ 인식된 벽면 · 설치 가능 
+ QM55C ×3 · 가로 3연 
+ 가로 약 [00] mm · 바닥에서 [00] mm 
+ 배치 편집 
+ 원본 사진 
+ 끌어서 이동 · 모서리로 크기 조절 
+ − 
+ 100% 
+ + 
+ 제품 배치 · 현장 사진 합성 · 2 / 3 
+ 제품 추가 
+ Smart Signage QM55C ×3 
+ 배열 
+ {{o.label}} 
+ 설치 
+ {{o.label}} 
+ 기준 치수 
+ {{d.label}} 
+ mm 
+ {{tg}} 
+ 치수를 모르면 비워 두세요. 사진 속 비율로 추정합니다 
+ 이전 
+ 합성 이미지 4장 생성 
+class Component extends DCLogic {
+ renderVals() {
+ const tab = '';
+ const stBase = '';
+ const photos = [
+ { label: '카운터 벽면', status: '벽면 인식 완료', src: '/_blob/32ff0c99abf13faa018e854421553cc7', alt: '카운터 벽면 현장 사진', pos: '45% 40%',
+ stIcon: 'M5 12l5 5L20 7', stStyle: stBase + '',
+ style: tab + '' },
+ { label: '매장 안쪽', status: '어두워 인식 어려움 · 다시 촬영 권장', src: '/_blob/81b89af89b6620bd4871944e66844272', alt: '조명이 어두운 매장 안쪽 현장 사진', pos: '50% 50%',
+ stIcon: 'M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M12 11v5 M12 8h.01', stStyle: stBase + '',
+ style: tab + '' }
+ ];
+ // 3연 메뉴보드: 96×54 (16:9) 화면 3대, 간격 8px
+ const heroes = ['', '', ''];
+ const screens = [0, 1, 2].map((i) => ({
+ hero: heroes[i],
+ style: 'position: absolute; left: ' + (56 + i * 104) + ''
+ }));
+ const hx = [52, 208, 364], hy = [92, 123, 154];
+ const handles = [];
+ hy.forEach((y, yi) => hx.forEach((x, xi) => {
+ if (yi === 1 && xi === 1) return;
+ handles.push('position: absolute; left: ' + (x - 4) + '' + (y - 4) + '');
+ }));
+ const seg = (labels, active) => labels.map((label, i) => ({
+ label,
+ style: '' + (label === active ? '' : '') + (i > 0 ? '' : '')
+ }));
+ const arrange = seg(['가로 3연', '세로 3연', '따로 배치'], '가로 3연');
+ const mount = seg(['벽 부착', '천장 매달기'], '벽 부착');
+ const dims = [{ id: 'dw', label: '카운터 폭' }, { id: 'dh', label: '설치 높이' }];
+ const toggles = ['원근 · 조명 맞춤', '화면에 메뉴 넣기'];
+ return { steps: ['이미지 유형', '상세 조건', '생성 결과'], cur: 2, photos, screens, handles, arrange, mount, dims, toggles };
+ }
+}

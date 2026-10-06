@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-RT-B 리테일 · 브랜드 플래그십 · 대표 공간 장면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em; white-space: nowrap">H 백화점 VMD존, 상품 옆 화면과 공기가 하루 종일 알아서 바뀝니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; white-space: nowrap">대표 공간 ③ 층별 VMD존 · 미디어 칼럼의 하루를 네 장면으로: 순간 → 솔루션이 하는 일 → 제품 → 가치</div>
+
+  <!-- 행 라벨 (x 64–136) -->
+  <div style="position: absolute; left: 64px; top: 162px; width: 72px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; line-height: 17px; font-weight: 800; color: #596170">순간</span><span style="font-size: 10.5px; line-height: 14px; color: #8a91a0">시간은 예시</span></div>
+  <div style="position: absolute; left: 64px; top: 262px; width: 72px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; line-height: 17px; font-weight: 800; color: #596170">장면</span><span style="font-size: 10.5px; line-height: 14px; color: #8a91a0">예시 사진</span></div>
+  <div style="position: absolute; left: 64px; top: 376px; width: 72px; display: flex; flex-direction: column; font-size: 12px; line-height: 17px; font-weight: 800; color: #1428a0; white-space: nowrap"><span>솔루션이</span><span>하는 일</span></div>
+  <div style="position: absolute; left: 64px; top: 451px; width: 72px; font-size: 12px; line-height: 17px; font-weight: 800; color: #596170; white-space: nowrap">제품</div>
+  <div style="position: absolute; left: 64px; top: 504px; width: 72px; display: flex; flex-direction: column; white-space: nowrap"><span style="font-size: 12px; line-height: 17px; font-weight: 800; color: #596170">가치</span><span style="font-size: 10.5px; line-height: 14px; color: #8a91a0">수치는 예시</span></div>
+
+  <!-- 네 장면 -->
+  <sc-for list="{{scenes}}" as="s" hint-placeholder-count="4">
+    <div style="{{s.badge}}">{{s.n}}</div>
+    <div style="{{s.head}}"><span style="font-family: Manrope, sans-serif; font-size: 14px; line-height: 22px; font-weight: 800; color: #1428a0">{{s.time}}</span><span style="font-size: 15px; line-height: 22px; font-weight: 800; letter-spacing: -0.01em">{{s.title}}</span></div>
+    <div style="{{s.ctxS}}">{{s.ctx}}</div>
+    <sc-if value="{{s.hasImg}}" hint-placeholder-val="{{true}}">
+      <img src="{{s.src}}" alt="{{s.alt}}" style="{{s.imgS}}">
+      <div style="{{s.chip}}">{{s.chipT}}</div>
+    </sc-if>
+    <sc-if value="{{s.noImg}}" hint-placeholder-val="{{false}}">
+      <div style="{{s.ph}}">{{s.phT}}</div>
+    </sc-if>
+    <div style="{{s.solBox}}">
+      <div style="position: absolute; left: 12px; top: 10px; font-size: 12.5px; line-height: 18px; font-weight: 800; color: #1428a0; white-space: nowrap">{{s.sol}}</div>
+      <div style="position: absolute; left: 12px; top: 32px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d1}}</div>
+      <div style="position: absolute; left: 12px; top: 49px; font-size: 12px; line-height: 17px; color: #3d4452; white-space: nowrap">{{s.d2}}</div>
+    </div>
+    <div style="{{s.prodBox}}">
+      <svg style="position: absolute; left: 12px; top: 11px" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8M12 16v4"></path></svg>
+      <div style="position: absolute; left: 36px; top: 8px; font-size: 12.5px; line-height: 20px; font-weight: 700; color: #121417; white-space: nowrap">{{s.prod}}</div>
+    </div>
+    <div style="{{s.valBox}}">
+      <div style="position: absolute; left: 12px; top: 9px; font-size: 12.5px; line-height: 18px; font-weight: 600; color: #121417; white-space: nowrap">{{s.val}}</div>
+      <div style="position: absolute; left: 12px; top: 36px; right: 12px; height: 1px; background: #dfe3ea"></div>
+      <div style="position: absolute; left: 12px; top: 45px; font-size: 11px; line-height: 15px; color: #596170; white-space: nowrap">{{s.kpi}}</div>
+      <div style="position: absolute; right: 12px; top: 41px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 17px; line-height: 22px; font-weight: 800; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{s.kv}}</div>
+    </div>
+  </sc-for>
+
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="3">
+    <div style="{{a.style}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg></div>
+  </sc-for>
+
+  <!-- VMD존 한 층 표준 구성 -->
+  <div style="position: absolute; left: 64px; top: 584px; width: 1152px; height: 64px; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 80px; top: 595px; font-size: 13px; line-height: 18px; font-weight: 800; white-space: nowrap">VMD존 한 층 표준 구성</div>
+  <div style="position: absolute; left: 80px; top: 619px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">× H 백화점 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">[0]</span>개 층 · 같은 구성으로 확장</div>
+  <div style="position: absolute; left: 300px; top: 597px; width: 1px; height: 38px; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 316px; top: 595px; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+    <sc-for list="{{kit}}" as="k" hint-placeholder-count="5">
+      <span style="height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11px; font-weight: 700; color: #121417; display: flex; align-items: center">{{k.t}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 316px; top: 621px; display: flex; align-items: center; gap: 6px; font-size: 11.5px; line-height: 16px; color: #3d4452; white-space: nowrap"><span style="font-weight: 800; color: #1428a0">운영</span><span>MagicINFO (전 층 화면 통합 편성 · 원격 관리) · SAC 제어 시스템 (구역 스케줄) · 콘텐츠 제작 지원 · 케어 서비스</span></div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 백화점 · 플래그십 점포 공간 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 12</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const T = 'white-space: nowrap;';
+
+    // 장면 열: x 148 + i*270, 폭 258
+    const X0 = 148, STEP = 270, W = 258, IY = 210, IH = 148;
+    const S = [
+      { time: '09:30', title: '시즌 캠페인 한 번에 교체', ctx: '개점 1시간 전 · VMD팀 · 전 층 화면',
+        sol: 'MagicINFO 통합 편성', d1: '미디어 칼럼 · 비디오월 · 층 안내에', d2: '새 시즌 캠페인을 예약 시각에 일괄 송출',
+        prod: '스마트 LED 사이니지 · 비디오월',
+        val: '층마다 돌며 바꾸던 일이 사라집니다', kpi: '캠페인 교체 시간', kv: '[0]시간 → [0]분',
+        src: '/_blob/53a44d3bb2995d64d3d26471f1554b63', alt: '매장 벽면 · 천장형 사이니지 (예시 사진)', op: '50% 45%', fit: 'cover', chipT: '예시 사진 · 고객 공간으로 교체' },
+      { time: '14:00', title: '브랜드 이벤트 연출', ctx: '신상품 런칭 · 미디어 칼럼 앞 진열',
+        sol: 'MagicINFO 스케줄 · 콘텐츠 제작 지원', d1: '이벤트 시각에 칼럼 [0]면을 한 영상으로', d2: '이어 붙여 진열 상품 옆에서 재생',
+        prod: '미디어 칼럼 LED · 곡면 LED',
+        val: '진열 상품과 영상이 함께 말합니다', kpi: '이벤트 존 체류 시간', kv: '[00]% ↑',
+        src: '', ph: '미디어 칼럼 사진', chipT: '' },
+      { time: '16:00', title: '오래 머무는 동선은 시원하게', ctx: '오후 혼잡 · 이벤트 존 앞 대기 줄',
+        sol: 'SAC 제어 시스템', d1: '이벤트 구역만 스케줄로 냉방을 높이고,', d2: '설정 온도 범위는 중앙에서 제한',
+        prod: '시스템에어컨 360 카세트 · DMS',
+        val: '직바람 없이 고르게, 더 오래 둘러봅니다', kpi: '냉방 관련 민원', kv: '[00]% ↓',
+        src: '/_blob/4e4fd3e034845eb1928daa8637fdf04c', alt: '쇼핑 공간 천장의 원형 360 카세트 에어컨 (예시 사진)', op: '50% 30%', fit: 'cover', chipT: '예시 사진 · 고객 공간으로 교체' },
+      { time: '20:40', title: '폐점 후 원격 점검', ctx: '폐점 직후 · 시설팀 · 방재 · 관리실',
+        sol: 'MagicINFO 원격 관리 · 케어 서비스', d1: '꺼진 화면 · 재생 오류는 장애 알림으로,', d2: '다음 개점 전에 전담 엔지니어가 조치',
+        prod: '관리실 모니터 · 갤럭시 탭',
+        val: '꺼진 화면으로 개점하지 않습니다', kpi: '장애 발견 → 조치', kv: '[0]시간 → [0]분',
+        src: '/_blob/354dabcbf57ff57d9161e3db80cd40d2', alt: 'MagicINFO 웹 콘솔 (예시 화면)', op: '50% 0%', fit: 'contain', chipT: '예시 화면' }
+    ];
+
+    const scenes = S.map((s, i) => {
+      const x = X0 + i * STEP;
+      const hasImg = !!s.src;
+      return {
+        n: i + 1, time: s.time, title: s.title, ctx: s.ctx, sol: s.sol, d1: s.d1, d2: s.d2, prod: s.prod,
+        val: s.val, kpi: s.kpi, kv: s.kv, chipT: s.chipT,
+        hasImg, noImg: !hasImg, src: s.src || '/_blob/53a44d3bb2995d64d3d26471f1554b63', alt: s.alt || '', phT: s.ph || '',
+        imgS: box(x, IY, W, IH) + 'object-fit: ' + (s.fit || 'cover') + '; object-position: ' + (s.op || '50% 50%') + '; border-radius: 12px;' + (s.fit === 'contain' ? ' background: #ffffff; mix-blend-mode: multiply; box-sizing: border-box; border: 1px solid #e2e5ea;' : ''),
+        ph: box(x, IY, W, IH) + 'border-radius: 12px; background: #dfe3ea; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #8a91a0; ' + T,
+        chip: A + 'left: ' + px(x + 8) + 'top: ' + px(IY + IH - 24) + 'height: 16px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 9.5px; display: flex; align-items: center; ' + T,
+        badge: box(x, 160, 26, 26) + 'border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        head: box(x + 34, 162, W - 34, 22) + 'display: flex; align-items: center; gap: 8px; ' + T,
+        ctxS: box(x + 34, 184, W - 34, 18) + 'font-size: 12px; line-height: 18px; color: #596170; ' + T,
+        solBox: box(x, 368, W, 74) + 'border-radius: 10px; background: #eaeefb;',
+        prodBox: box(x, 448, W, 38) + 'box-sizing: border-box; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff;',
+        valBox: box(x, 494, W, 74) + 'border-radius: 10px; background: #f5f6f8;'
+      };
+    });
+
+    const arrows = [0, 1, 2].map((i) => ({
+      style: box(X0 + i * STEP + W + 6 - 12, IY + IH / 2 - 12, 24, 24) + 'box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center;'
+    }));
+
+    const kit = ['미디어 칼럼 LED [0]면', '비디오월 1식', '층 안내 사이니지 [0]', '360 카세트 [00]대', 'DMS 연동'].map((t) => ({ t }));
+
+    return { scenes, arrows, kit };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI-VN-B 공연장 · 경기장 · 영화관 · 고객 비즈니스 · 운영 과제</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">V 경기장의 매출은 경기일 다섯 단계에서 나고, 과제도 거기 있습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">관중이 모이고 · 머물고 · 소비하고 · 다시 오는 다섯 단계의 매출과 KPI, 그 단계에서 막히는 운영 과제</div>
+
+  <!-- 열 머리 -->
+  <div style="position: absolute; left: 64px; top: 160px; height: 16px; font-size: 12px; font-weight: 700; line-height: 16px; color: #8a91a0; white-space: nowrap">경기일 단계 · 공간 · KPI</div>
+  <div style="position: absolute; left: 300px; top: 160px; height: 16px; display: flex; align-items: baseline; gap: 6px; font-size: 12px; font-weight: 700; line-height: 16px; color: #8a91a0; white-space: nowrap">매출 · 누가 내나<span style="font-size: 11px; font-weight: 400">비중은 예시</span></div>
+  <div style="position: absolute; left: 524px; top: 159px; height: 18px; display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; line-height: 16px; color: #8a91a0; white-space: nowrap">운영 과제
+    <span style="display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 400; color: #596170"><span style="width: 10px; height: 10px; border-radius: 3px; background: #1428a0"></span>삼성이 해결할 수 있는 과제</span>
+    <span style="display: flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 400; color: #596170"><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 3px; border: 1px solid #b8bec8"></span>V 경기장 영역</span>
+  </div>
+  <div style="position: absolute; left: 984px; top: 160px; height: 16px; font-size: 12px; font-weight: 700; line-height: 16px; color: #8a91a0; white-space: nowrap">시즌 내내 · 무대 뒤</div>
+
+  <!-- 단계 척추 -->
+  <div style="position: absolute; left: 81px; top: 210px; width: 2px; height: 368px; background: #d5d9e0"></div>
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+    <div style="{{r.circle}}">{{r.n}}</div>
+    <div style="{{r.namePos}}">{{r.name}}</div>
+    <div style="{{r.spacePos}}">{{r.space}}</div>
+    <div style="{{r.kpiPos}}"><span style="font-size: 11.5px; color: #596170">{{r.kpi}}</span><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{r.kpiVal}}</span></div>
+
+    <div style="{{r.revBox}}">
+      <span style="position: absolute; left: 16px; top: 12px; font-size: 13.5px; font-weight: 800; line-height: 18px; white-space: nowrap; color: {{r.revColor}}">{{r.rev}}</span>
+      <span style="position: absolute; left: 16px; top: 33px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap">{{r.payer}}</span>
+      <sc-if value="{{r.hasShare}}" hint-placeholder-val="{{true}}">
+        <div style="position: absolute; left: 16px; top: 64px; width: 132px; height: 8px; border-radius: 4px; background: #e2e5ea"></div>
+        <div style="{{r.shareFill}}"></div>
+        <span style="position: absolute; left: 156px; top: 59px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; line-height: 18px; color: #1428a0; white-space: nowrap">[00]%</span>
+      </sc-if>
+      <sc-if value="{{r.isCost}}" hint-placeholder-val="{{false}}">
+        <span style="position: absolute; left: 16px; top: 59px; height: 18px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">비용 구간</span>
+      </sc-if>
+    </div>
+    <div style="{{r.link}}"></div>
+
+    <sc-for list="{{r.pins}}" as="p" hint-placeholder-count="2">
+      <div style="{{p.box}}">
+        <span style="position: absolute; left: 12px; top: 10px; width: 188px; font-size: 12.5px; line-height: 1.5; color: #121417">{{p.text}}</span>
+        <span style="{{p.chip}}">{{p.flag}}</span>
+      </div>
+    </sc-for>
+    <div style="{{r.tick}}"></div>
+  </sc-for>
+
+  <!-- 무대 뒤: 모든 단계를 받치는 설비 · 인력 -->
+  <div style="position: absolute; left: 971px; top: 228px; width: 2px; height: 370px; background: #b8bec8"></div>
+  <div style="position: absolute; left: 973px; top: 412px; width: 11px; height: 2px; background: #b8bec8"></div>
+  <div style="position: absolute; left: 984px; top: 184px; width: 232px; height: 456px; border-radius: 14px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 1000px; top: 198px; width: 200px; display: flex; flex-direction: column; gap: 6px">
+    <sc-for list="{{opsKpi}}" as="k" hint-placeholder-count="2">
+      <div style="display: flex; align-items: baseline; gap: 8px; white-space: nowrap"><span style="font-size: 11.5px; color: #596170">{{k.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">{{k.val}}</span><span style="font-size: 11.5px; color: #596170">{{k.per}}</span></div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 1000px; top: 252px; width: 200px; height: 1px; background: #d5d9e0"></div>
+  <sc-for list="{{ops}}" as="o" hint-placeholder-count="4">
+    <div style="{{o.pos}}">
+      <span style="position: absolute; left: 0px; top: 0px; width: 200px; font-size: 12.5px; line-height: 1.5; color: #121417">{{o.text}}</span>
+      <span style="position: absolute; left: 0px; top: 46px; height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{o.flag}}</span>
+    </div>
+    <sc-if value="{{o.line}}" hint-placeholder-val="{{true}}">
+      <div style="{{o.linePos}}"></div>
+    </sc-if>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>V 스포츠 경기장 · 관람 경험 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const px = (n) => n + 'px; ';
+    const A = 'position: absolute; ';
+    const box = (x, y, w, h) => 'left: ' + px(x) + 'top: ' + px(y) + 'width: ' + px(w) + 'height: ' + px(h);
+    const Y0 = 184, PITCH = 92, H = 88;
+
+    // 경기일 다섯 단계 — 매출 · 누가 내나 · KPI(자리표시자) · 운영 과제(삼성 / V 경기장 영역)
+    // share = 비중 막대의 표본 길이(px, 트랙 132px), null = 직접 매출 없는 비용 구간
+    const R = [
+      ['예매 · 집객', '구단 앱 · 예매 · 경기장 외관', '좌석 점유율', '[00]%', '입장권 · 시즌권', '관중 · 시즌권 회원', 62,
+        [['팀 성적 · 티켓 가격에 흔들리는 집객', null], ['성적과 무관하게 찾아올 이유 — 경기장 자체의 볼거리', '삼성 · LED 전광판']]],
+      ['도착 · 입장', '매표소 · 게이트 · 대기 공간', '입장 대기', '[00]분', '직접 매출 없음', '인력 · 대기 시간만 드는 구간', null,
+        [['경기 시작 직전, 매표 · 입장 줄이 한꺼번에 몰림', '삼성 · 키오스크'], ['멀리서도 보이는 게이트 · 좌석 안내, 변경은 실시간으로', '삼성 · 사이니지 · VXT']]],
+      ['관람 · 경기', '객석 · 외야 전광판 · 컨트롤룸', '관람 만족도', '[0.0]점', '광고 · 스폰서십', '기업 · 광고주 · 전광판 노출', 36,
+        [['외야 · 상단석까지 선명한 화면, 기록 · 리플레이는 즉시', '삼성 · LED 전광판'], ['함성 속에서도 또렷한 장내 방송, 구역마다 고른 음향', '삼성 · 하만 프로 오디오']]],
+      ['소비 · 체류', '매점 · 스카이박스 · 스윗박스', '1인당 지출', '[00,000]원', 'F&B · MD · 프리미엄석', '관중 · 기업 고객', 48,
+        [['휴식 시간에 매점 주문이 한꺼번에 몰림', '삼성 · 키오스크 · 메뉴보드'], ['프리미엄석은 집처럼 조용하고 쾌적해야', '삼성 · 시스템에어컨 · 가전']]],
+      ['재방문 · 대관', '공연 · 행사 · 비시즌 대관', '재방문율', '[00]%', '대관료 · 비시즌 행사', '공연 · 행사 주최사', 20,
+        [['공연 · 행사마다 달라지는 화면 · 음향 구성', '삼성 · 모듈러 LED · 프로 오디오'], ['시즌권 혜택 · 가격 설계', null]]]
+    ];
+    const chipStyle = (samsung, x, y) => A + 'left: ' + px(x) + 'top: ' + px(y) + 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' +
+      (samsung ? 'background: #1428a0; color: #ffffff;' : 'background: #ffffff; border: 1px solid #b8bec8; color: #596170;');
+    const rows = R.map(([name, space, kpi, kpiVal, rev, payer, share, P], i) => {
+      const top = Y0 + i * PITCH, cost = share === null;
+      return {
+        n: i + 1, name, space, kpi, kpiVal, rev, payer,
+        circle: A + box(64, top + 8, 36, 36) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;',
+        namePos: A + box(110, top + 8, 172, 22) + 'font-size: 15.5px; font-weight: 800; line-height: 22px; letter-spacing: -0.01em; white-space: nowrap;',
+        spacePos: A + box(110, top + 32, 172, 16) + 'font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap;',
+        kpiPos: A + box(110, top + 56, 172, 22) + 'display: flex; align-items: baseline; gap: 6px; white-space: nowrap;',
+        revBox: A + box(300, top, 204, H) + 'box-sizing: border-box; border-radius: 10px; ' + (cost ? 'background: #ffffff; border: 1px dashed #b8bec8;' : 'background: #f5f6f8;'),
+        revColor: cost ? '#596170' : '#121417',
+        hasShare: !cost, isCost: cost,
+        shareFill: A + box(16, 64, cost ? 0 : share, 8) + 'border-radius: 4px; background: #1428a0;',
+        link: A + box(504, top + H / 2, 20, 1) + 'background: #d5d9e0;',
+        tick: A + box(960, top + H / 2, 11, 1) + 'background: #b8bec8;',
+        pins: P.map(([text, flag], j) => ({
+          text, flag: flag || 'V 경기장 영역',
+          box: A + box(524 + j * 224, top, 212, H) + 'box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid ' + (flag ? '#d5d9e0' : '#e2e5ea') + ';',
+          chip: chipStyle(!!flag, 12, 56)
+        }))
+      };
+    });
+
+    // 무대 뒤 — 시즌 내내 모든 단계를 받치는 설비 · 인력
+    const opsKpi = [
+      { label: '설비 다운타임', val: '[00]시간', per: '/ 시즌' },
+      { label: '에너지 비용', val: '[00]억 원', per: '/ 년' }
+    ];
+    const O = [
+      ['시즌 중 이어지는 경기 — 설비 이상은 바로 복구돼야', '삼성 · 케어 서비스'],
+      ['경기 유무 · 계절마다 크게 다른 냉난방 부하', '삼성 · 공조 통합 제어'],
+      ['라커룸 · 체력단련실 등 선수 공간의 세밀한 온도', '삼성 · 시스템에어컨 개별 제어'],
+      ['적은 인력으로 업무 분배 · 호출 벨 대응', '삼성 · 갤럭시 워치']
+    ];
+    const ops = O.map(([text, flag], i) => ({
+      text, flag,
+      pos: A + box(1000, 266 + i * 92, 200, 66),
+      line: i < O.length - 1,
+      linePos: A + box(1000, 266 + i * 92 + 80, 200, 1) + 'background: #d5d9e0;'
+    }));
+
+    return { rows, opsKpi, ops };
+  }
+}
+</script>
+</body>
+</html>

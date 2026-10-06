@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-N 실사 히어로 + 가치 3</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <!-- 실사 히어로 -->
+  <div style="position: absolute; left: 0; top: 0; width: 660px; height: 720px"><dc-import name="Photo" pid="case.mcd.counter" w="660" h="720" pos="62% 50%" hint-size="660px,720px"></dc-import></div>
+  <div style="position: absolute; left: 28px; bottom: 28px; width: 420px; box-sizing: border-box; border-radius: 14px; background: rgba(18,20,23,0.78); color: #ffffff; padding: 14px 18px; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 11.5px; font-weight: 700; color: #9db4ff; letter-spacing: 0.04em">도입 후 모습 · 유사 사례</span>
+    <span style="font-size: 15px; font-weight: 700">맥도날드 코리아 고양삼송 DT</span>
+    <span style="font-size: 12px; color: #d5d9e0">카운터 메뉴보드 · 창가 · 좌석 사이니지를 한 곳에서 운영 — 삼성 공식 성공 사례</span>
+  </div>
+
+  <!-- 가치 -->
+  <div style="position: absolute; left: 716px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 716px; top: 66px; width: 500px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">A 커피 매장도 이렇게 운영됩니다</div>
+  <div style="position: absolute; left: 716px; top: 112px; width: 500px; font-size: 15px; line-height: 1.5; color: #596170">같은 문제를 먼저 푼 매장의 실제 모습 — 화면은 본사가 바꾸고, 매장은 손님에게 집중합니다</div>
+
+  <div style="position: absolute; left: 716px; top: 192px; width: 500px; display: flex; flex-direction: column; gap: 16px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="height: 124px; display: flex; gap: 18px; align-items: center; border-top: 1px solid #e2e5ea; padding-top: 14px; box-sizing: border-box">
+        <dc-import name="Photo" pid="{{r.pid}}" w="128" h="104" bg="soft" radius="12" hint-size="128px,104px"></dc-import>
+        <div style="display: flex; flex-direction: column; gap: 5px; min-width: 0; flex-grow: 1">
+          <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{r.no}}</span><span style="font-size: 19px; font-weight: 800; letter-spacing: -0.01em">{{r.value}}</span></span>
+          <span style="font-size: 13.5px; line-height: 1.5; color: #3d4452">{{r.desc}}</span>
+          <span style="align-self: flex-start; height: 22px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{r.prod}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 716px; top: 668px; width: 500px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 716px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 · 메뉴보드 제안 · 사진은 삼성 공식 이미지</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 7</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 왼쪽은 도입 후 모습(설치 사례 실사), 오른쪽은 가치마다 그 가치를 만드는 제품 컷
+    const rows = [
+      ['qm55c.persp', '본사에서 한 번에 운영', '전 매장 메뉴판을 같은 날, 같은 화면으로 — 인쇄 · 배송 · 교체가 사라집니다', 'QM55C × 3 · MagicINFO'],
+      ['km24c.persp', '피크 시간 줄이 둘로', '주문 · 결제는 키오스크가 나눠 받고, 카운터는 픽업에 집중합니다', 'KM24C 키오스크'],
+      ['oh55a.persp', '드라이브스루 첫 메뉴판', '햇빛 아래서도 읽히는 옥외 메뉴 — 시간대별 메뉴로 자동 전환', 'OH55A-S 옥외 사이니지']
+    ].map(([pid, value, desc, prod], i) => ({ no: String(i + 1).padStart(2, '0'), pid, value, desc, prod }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

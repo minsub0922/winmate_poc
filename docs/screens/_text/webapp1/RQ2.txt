@@ -1,0 +1,40 @@
+ 
+ 요구사항 · 채워진 폼 
+ PPTX 제안지원요청서_용산 업무시설 재개발.pptx 
+ TXT 고객 미팅 메모_11월 4일.txt 
+ 파일 첨부 
+ 프로젝트명 
+ PPTX 
+ 고객사 
+ PPTX 
+ 최종 제안대상 
+ 제작자 의견 
+ 설계 단계 스펙인이 목표. 성수 오피스 대비 '최초 AI Ready'를 강조. TXT 
+ 키맨별 요구사항 
+ {{kmCount}} 
+ + 키맨 
+ 가중치 
+ {{k.w}}% 
+ 균등 
+ {{k.init}} 
+ {{k.name}} 
+ − 
+ {{k.w}}% 
+ + 
+ + 요구사항 
+ {{r.n}} 
+ {{r.t}} 
+ {{r.src}} 
+ 바로 저장 
+ 심층 작성 
+ 1;
+ const keymen = K.map(([name, w, reqs], i) => ({
+ name, w, multi, init: name.slice(0, 1), minus: name + ' 가중치 낮추기', plus: name + ' 가중치 높이기',
+ av: '' + COL[i][0] + '; color: ' + COL[i][1] + ';',
+ seg: 'flex: ' + w + '' + COL[i][0] + '; color: ' + COL[i][1] + ';',
+ reqs: reqs.map(([t, src], j) => ({ n: j + 1, t: t || '', src: src || '', shim: t === null, txt: t !== null, badge,
+ shimStyle: '' + (j % 2 ? '44%' : '62%') + ';' }))
+ }));
+ return { yes: true, steps, cur: 1, keymen, multi, kmCount: K.length + '명', wDefault: true };
+ }
+}
