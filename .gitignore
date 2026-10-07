@@ -1,36 +1,65 @@
-# 비밀·로컬 상태
-.env
-data/
-models/
-.sync/
+# Winmate .gitignore
+# 원칙: 코드 · 설정 · 문서 · 재현의 출발점(winmate-kb/raw)은 올린다.
+#       비밀 · 실행 데이터 · 다시 만들 수 있는 산출물은 올리지 않는다.
+# 주의: 디렉터리 이름만 쓰면(data/) 어느 깊이에서든 걸린다. 저장소 루트 것만 뺄 때는 앞에 / 를 붙인다.
 
-# 파이썬
+# ── 비밀 · 실행 데이터 ─────────────────────────────────────
+.env
+.env.*
+!.env.example
+# 서비스 데이터(DocStore · 업로드 파일 · 로그 · 서비스 간 토큰 · 세션 키) — 루트 data/ 만
+/data/
+# 로컬 모델 가중치(선택 기능: 로컬 임베딩 · 업스케일러)
+/models/
+# 맥 ↔ 컨테이너 동기화용 git 번들
+/.sync/
+
+# ── OS · 편집기 ───────────────────────────────────────────
+.DS_Store
+._*
+Thumbs.db
+.idea/
+*.swp
+*.swo
+
+# ── 파이썬 ────────────────────────────────────────────────
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
 *.egg-info/
+.coverage
+htmlcov/
 
-# 노드
+# ── 노드 · 웹 ─────────────────────────────────────────────
 node_modules/
 web/dist/
 web/test-results/
 web/playwright-report/
-
-# 로그
-*.log
-
-# winmate-kb 대용량 데이터(사용자 폴더에 이미 있음)
-winmate-kb/kb/*.sqlite
-winmate-kb/kb/models/
-winmate-kb/kb/_parts*/
-winmate-kb/raw/
-winmate-kb/dashboard/build/
-winmate-kb/dashboard/thumb_select.json
-
+web/tsconfig.tsbuildinfo
 # e2e 결과 · 화면 캡처(시험이 다시 만든다)
 web/e2e/**/__screens__/
 web/e2e/**/.results/
 web/e2e/**/.dist/
-web/tsconfig.tsbuildinfo
+
+# ── 로그 ──────────────────────────────────────────────────
+*.log
+
+# ── winmate-kb ─────────────────────────────────────────────
+# 다시 만드는 법: winmate-kb/docs/REPRODUCE.md
+# raw/(수집 원본, 26 MB)는 올린다. 사이트가 바뀌어 다시 수집해도 같은 값이 나오지 않으므로 재현의 출발점이다.
+# 지식 DB · 벡터 모델 — raw/ + seed/ 로 bash build/run_all.sh 가 같은 바이트로 다시 만든다
+winmate-kb/kb/*.sqlite
+winmate-kb/kb/*.sqlite-*
+winmate-kb/kb/models/
+# 브라우저 → 빌드 환경 전송 조각(DB · 대시보드 묶음)
+winmate-kb/kb/_parts*/
+# 대시보드 산출물(dashboard/run.sh 가 다시 만든다). 단 썸네일 묶음은 브라우저 탭에서만 만들 수 있어 올린다
+winmate-kb/dashboard/build/*
+!winmate-kb/dashboard/build/thumbs_pack*.bin
+winmate-kb/dashboard/site/
+# DB 에서 다시 뽑는 썸네일 우선 목록(python dashboard/thumb_select.py)
+winmate-kb/dashboard/thumb_select.json
+winmate-kb/dashboard/thumb_hashes.txt

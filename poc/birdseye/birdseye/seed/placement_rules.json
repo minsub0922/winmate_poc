@@ -1,0 +1,149 @@
+{
+ "about": "PlacementRule — winmate-kb kickoff(config/ontology/placement_rules.yaml) 형식을 따른다. KB 시드에서 빈칸(<<FILL>>)이던 파라미터는 PoC 임시값으로 채웠고 status 는 draft 다. 화면에서 값을 바꿔 결과를 비교해 볼 수 있다.",
+ "rules": [
+  {
+   "id": "pr_window_signage_qty", "kind": "quantity", "space": "*", "category": "window_signage",
+   "expression": "qty_per_window = floor((L - 2*{{edge_margin_mm}} + {{min_gap_mm}}) / (w + {{min_gap_mm}}))",
+   "params": {"edge_margin_mm": 600, "min_gap_mm": 3000, "glass_offset_mm": 200, "bottom_mm": 2200},
+   "param_notes": {"edge_margin_mm": "창틀·멀리언 여유", "min_gap_mm": "도로에서 화면이 겹쳐 보이지 않을 최소 간격", "glass_offset_mm": "유리에서 화면 앞면까지", "bottom_mm": "화면 하단 높이"},
+   "explanation_ko": "창 길이 L, 제품 폭 w, 최소 간격으로 창마다 대수를 정하고 그룹을 창 가운데에 맞춘다. 화면은 도로를 향한다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_pillar_wrap_qty", "kind": "quantity", "space": "*", "category": "signage",
+   "expression": "qty = Σ pillars count(face ∈ {{faces}} and face_width >= w_portrait)",
+   "params": {"faces": ["front", "back"], "bottom_mm": 900},
+   "param_notes": {"faces": "주 동선이 보는 면(정면·후면)", "bottom_mm": "화면 하단 높이"},
+   "explanation_ko": "기둥마다 주 동선이 보는 면에 세로형으로 한 대씩. 면 폭이 화면 폭보다 좁으면 그 면은 뺀다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_mediawall_position", "kind": "position", "space": "*", "category": "led_allinone",
+   "expression": "wall = 입구 맞은편 벽; x = 벽의 빈 구간 가운데; bottom = min({{bottom_mm}}, ceiling - h - {{top_clear_mm}})",
+   "params": {"bottom_mm": 900, "top_clear_mm": 300, "side_clear_mm": 1000, "wall_offset_mm": 50},
+   "param_notes": {"bottom_mm": "화면 하단 높이", "top_clear_mm": "천장까지 최소 여유", "side_clear_mm": "문·모서리와 띄울 거리", "wall_offset_mm": "벽에서 띄우는 거리"},
+   "explanation_ko": "입구에서 정면으로 보이는 벽 가운데에 한 대. 문·모서리에서 띄우고 층고 안에 들어가는지 본다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_signage_size_by_distance", "kind": "size", "space": "*", "category": "signage",
+   "expression": "diagonal_inch_min = viewing_distance_m * {{inch_per_m_min}}; diagonal_inch_max = viewing_distance_m * {{inch_per_m_max}}",
+   "params": {"inch_per_m_min": 10, "inch_per_m_max": 30},
+   "param_notes": {"inch_per_m_min": "PoC 임시값", "inch_per_m_max": "PoC 임시값"},
+   "explanation_ko": "시청거리로 권장 화면 크기 범위 산정 (KB 시드 룰, 계수는 PoC 임시값)",
+   "status": "draft", "origin": "KB seed"
+  },
+  {
+   "id": "pr_stand_display_qty", "kind": "quantity", "space": "*", "category": "flip",
+   "expression": "qty = {{per_zone}} (상담·시연 존마다); position = 콘센트가 가장 가까운 벽, 콘센트 옆 {{outlet_side_mm}}",
+   "params": {"per_zone": 1, "outlet_side_mm": 300, "wall_offset_mm": 150},
+   "param_notes": {"per_zone": "상담석 1곳 기준", "outlet_side_mm": "콘센트와 스탠드 끝 사이", "wall_offset_mm": "벽에서 띄우는 거리"},
+   "explanation_ko": "상담·시연 존마다 한 대를 콘센트 옆 벽 앞에 둔다. 이동형이라 위치는 바뀔 수 있다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_videowall_grid", "kind": "quantity", "space": "*", "category": "videowall",
+   "expression": "cols = floor((wall_free - 2*{{side_margin_mm}}) / w); rows = min({{max_rows}}, floor((ceiling - {{bottom_mm}} - {{top_clear_mm}}) / h)); qty = cols × rows",
+   "params": {"side_margin_mm": 600, "max_rows": 3, "bottom_mm": 800, "top_clear_mm": 300, "max_cols": 8},
+   "param_notes": {"side_margin_mm": "벽 양끝 여유", "max_rows": "시청 높이 한계", "bottom_mm": "아랫단 하단 높이", "top_clear_mm": "천장 여유", "max_cols": "PoC 상한"},
+   "explanation_ko": "상황판 벽의 빈 폭과 층고로 가로·세로 장수를 정한다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_led_cabinet_grid", "kind": "quantity", "space": "*", "category": "led_cabinet",
+   "expression": "cols = floor(wall_free * {{fill_ratio}} / w); rows = min(floor((ceiling - {{bottom_mm}} - {{top_clear_mm}}) / h), round(cols * 9/16)); qty = cols × rows",
+   "params": {"fill_ratio": 0.45, "bottom_mm": 700, "top_clear_mm": 300},
+   "param_notes": {"fill_ratio": "벽 폭 대비 화면 폭", "bottom_mm": "하단 높이", "top_clear_mm": "천장 여유"},
+   "explanation_ko": "LED 캐비닛을 16:9 비율에 가깝게 쌓아 벽의 일부를 채운다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_wall_display_by_seats", "kind": "quantity", "space": "*", "category": "signage",
+   "expression": "qty = max(1, ceil(seats / {{seats_per_display}})) — 좌석이 없으면 max(1, ceil(area_m2 / {{m2_per_display}}))",
+   "params": {"seats_per_display": 24, "m2_per_display": 80, "bottom_mm": 1500, "wall_offset_mm": 50},
+   "param_notes": {"seats_per_display": "PoC 임시값", "m2_per_display": "PoC 임시값", "bottom_mm": "화면 하단 높이", "wall_offset_mm": "벽에서 띄우는 거리"},
+   "explanation_ko": "대기 좌석이 바라보는 벽에 좌석 수만큼 나눠 단다.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_wall_rhythm_qty", "kind": "quantity", "space": "*", "category": "spatial",
+   "expression": "qty = floor((wall_free - 2*{{side_clear_mm}} + {{gap_mm}}) / (w + {{gap_mm}}))",
+   "params": {"side_clear_mm": 1000, "gap_mm": 2400, "wall_offset_mm": 100},
+   "param_notes": {"side_clear_mm": "모서리·문과 거리", "gap_mm": "작품처럼 띄우는 간격", "wall_offset_mm": "벽에서 띄우는 거리"},
+   "explanation_ko": "가장 긴 옆벽을 따라 같은 간격으로 세운다(갤러리 리듬).",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_epaper_wayfinding", "kind": "quantity", "space": "*", "category": "epaper",
+   "expression": "qty = 출입구·문 수; position = 문 옆 {{door_side_mm}}, 하단 {{bottom_mm}}",
+   "params": {"door_side_mm": 500, "bottom_mm": 1200},
+   "param_notes": {"door_side_mm": "문틀에서 거리", "bottom_mm": "하단 높이"},
+   "explanation_ko": "드나드는 곳마다 안내판 한 대.",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_hvac_capacity_by_area", "kind": "capacity", "space": "*", "category": "hvac_cassette",
+   "expression": "required_kw = area_m2 * {{kw_per_m2}} * {{usage_factor}}; qty = ceil(required_kw / unit_kw)",
+   "params": {"kw_per_m2": 0.15, "usage_factor": 1.0},
+   "param_notes": {"kw_per_m2": "용도별 단위면적당 부하 — PoC 임시값(설계값 아님)", "usage_factor": "PoC 임시값"},
+   "explanation_ko": "면적과 용도로 필요 냉방 용량 산정 (KB 시드 룰, 계수는 PoC 임시값). 정격 냉방(KB 스펙)으로 나눠 대수를 정하고 천장에 고르게 배치한다.",
+   "status": "draft", "origin": "KB seed"
+  },
+  {
+   "id": "pr_warn_viewing_angle", "kind": "warning", "space": "*", "category": "signage",
+   "expression": "abs(viewer_angle_deg) > {{max_angle_deg}}",
+   "params": {"max_angle_deg": 40, "max_view_m": 12},
+   "param_notes": {"max_angle_deg": "PoC 임시값", "max_view_m": "이보다 먼 좌석은 관람석으로 보지 않음"},
+   "explanation_ko": "주 관람석에서 보는 각도가 기준을 넘으면 경고 (KB 시드 룰)",
+   "status": "draft", "origin": "KB seed"
+  },
+  {
+   "id": "pr_warn_power_distance", "kind": "warning", "space": "*", "category": "*",
+   "expression": "distance_to_power_m > {{max_m}}",
+   "params": {"max_m": 2.0},
+   "param_notes": {"max_m": "PoC 임시값 — 배선 경로(직각 거리) 기준"},
+   "explanation_ko": "가장 가까운 콘센트까지 배선 거리가 기준을 넘으면 경고 (KB 시드 룰)",
+   "status": "draft", "origin": "KB seed"
+  },
+  {
+   "id": "pr_warn_mount_height", "kind": "warning", "space": "*", "category": "signage",
+   "expression": "bottom_edge_height_m < {{min_m}}(설치 방식별) or top_edge_height_m > ceiling_m - {{top_clear_m}}",
+   "params": {"min_m": {"ceiling_hang": 2.1, "wall": 0.6, "pillar_wrap": 0.6, "floor_stand": 0.0, "stand": 0.0, "floor_lean": 0.0, "ceiling": 0.0}, "top_clear_m": 0.1},
+   "param_notes": {"min_m": "행잉은 머리 닿지 않는 높이", "top_clear_m": "천장 여유"},
+   "explanation_ko": "화면 하단·상단 높이가 설치 방식별 기준을 벗어나면 경고 (KB 시드 룰)",
+   "status": "draft", "origin": "KB seed"
+  },
+  {
+   "id": "pr_warn_aisle_width", "kind": "warning", "space": "*", "category": "*",
+   "expression": "clear_width_along_flow_mm < {{min_mm}}",
+   "params": {"min_mm": 1200},
+   "param_notes": {"min_mm": "주 동선 권장 폭 — PoC 임시값"},
+   "explanation_ko": "주 동선을 따라 양옆 장애물 사이 폭이 기준보다 좁으면 경고",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_warn_door_clearance", "kind": "warning", "space": "*", "category": "*",
+   "expression": "obstacle ∩ door_zone(width = door, depth = {{depth_mm}}) ≠ ∅",
+   "params": {"depth_mm": 1200},
+   "param_notes": {"depth_mm": "문 안쪽으로 비워 둘 깊이"},
+   "explanation_ko": "출입구·문 안쪽 여유 공간에 집기가 있으면 경고",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_warn_overlap", "kind": "warning", "space": "*", "category": "*",
+   "expression": "footprint_a ∩ footprint_b ≠ ∅ and height_band_a ∩ height_band_b ≠ ∅",
+   "params": {"tol_mm": 5},
+   "param_notes": {"tol_mm": "맞닿음 허용 오차"},
+   "explanation_ko": "같은 높이대에서 바닥 점유가 겹치면 경고",
+   "status": "draft", "origin": "PoC"
+  },
+  {
+   "id": "pr_warn_mount_support", "kind": "warning", "space": "*", "category": "*",
+   "expression": "wall/pillar mount: gap_to_surface > {{max_gap_mm}}; window: gap_to_glass > {{window_max_mm}}",
+   "params": {"max_gap_mm": 200, "window_max_mm": 800},
+   "param_notes": {"max_gap_mm": "벽·기둥 면과 떨어져도 되는 거리", "window_max_mm": "창면 사이니지가 유리에서 떨어져도 되는 거리"},
+   "explanation_ko": "벽부형·기둥 랩핑·창면 제품이 붙을 면에서 떨어져 있으면 경고",
+   "status": "draft", "origin": "PoC"
+  }
+ ]
+}

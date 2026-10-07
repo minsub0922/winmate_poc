@@ -45,6 +45,7 @@ build/
   query.py                 질의 패턴 라이브러리 + CLI
   qa.py                    DR 커버리지·시나리오 상태·품질 프로브 → docs/BUILD_REPORT.md
   sql.py                   간단한 SQL 실행기
+  compare_db.py            두 DB 를 표 단위로 비교(재현 확인)
   run_all.sh               전체 재빌드
 dashboard/                 검증 대시보드(정적 페이지 + 브라우저 질의 엔진, dashboard/README.md)
 tests/
@@ -58,6 +59,7 @@ docs/
   BUILD_REPORT.md          적재 건수·DR 커버리지·시나리오 상태·프로브(자동 생성)
   SCENARIO_TEST_REPORT.md  시나리오 테스트 결과와 출력 예시(자동 생성)
   CURATION_GUIDE.md        사람이 고치는 곳과 검수 우선순위
+  REPRODUCE.md             재현 가이드: raw → 단계별 정제 → 표, 같은 바이트로 다시 빌드·확인하는 법(코드 에이전트용)
 ```
 
 ## 바로 써 보기
@@ -82,7 +84,7 @@ r = kb.S1("매장 입구 쇼윈도에 햇빛에서도 잘 보이는 사이니지
 r["result"]["by_space"][0]["families"][0]["reasons"]
 ```
 
-다시 빌드: `bash build/run_all.sh` (약 2분).
+다시 빌드: `bash build/run_all.sh` (약 2분). 같은 raw/ 로 같은 바이트의 DB 가 나온다 — 확인 방법과 단계별 설명은 [`docs/REPRODUCE.md`](docs/REPRODUCE.md).
 
 - 벡터 모델은 scikit-learn 1.9 로 저장했다. 다른 버전에서도 동작하지만(1.7.2 에서 시나리오 테스트 통과 확인), 버전 경고가 신경 쓰이면 `python build/index_kb.py` 로 다시 만든다.
 
