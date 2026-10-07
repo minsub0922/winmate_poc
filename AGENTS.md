@@ -56,7 +56,7 @@ make health                        # 전체 상태
 
 - 기능 화면은 `web/src/features/<서비스>/` 에만 둔다. `index.tsx` 에서 `export default feature({...})` — 셸이 자동 등록.
 - 화면은 `useShellPage({...})` 로 상단바 제목·스텝바·딸깍·추가 핸들러를 셸에 넘긴다(`web/src/shell/types.ts`).
-- UI 는 `@/ui` 키트와 `var(--wm-*)` 토큰만 쓴다. 디자인 원본: `docs/screens/` (INDEX.md), 수용 기준: `docs/scenarios/`.
+- UI 는 `@/ui` 키트와 `var(--wm-*)` 토큰만 쓴다. 디자인 원본: `docs/screens/`(README.md · INDEX.md — 그린 화면 `_rendered/<webapp>/<보드>.jpg · .txt`, claude.ai 아티팩트 링크는 열지 않는다), 수용 기준: `docs/scenarios/`.
 - API 는 `@/api/client` 의 `api.<서비스>`(contracts 에서 생성한 타입) 또는 fetch(`/api/<서비스>/...`). 잡 진행은 `@/api/jobs` 의 `useJob`.
 
 ## 5. 완료의 정의

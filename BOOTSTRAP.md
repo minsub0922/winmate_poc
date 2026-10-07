@@ -259,7 +259,7 @@ MODEL_MODE=live uv run python services/ai-tools/scripts/live_check.py     # 7개
 
 서비스 하나를 맡은 세션처럼 일한다. 서브에이전트를 쓸 수 있으면 서비스마다 하나씩 맡겨도 된다. 단, 같은 공용 파일(`uv.lock` · `web/package-lock.json` · `libs/common`)을 동시에 고치지 않는다.
 
-1. `services/<x>/AGENTS.md` 와 소비하는 서비스의 `contracts/*.json` 을 읽는다. 해당 `docs/scenarios/<번호>-<x>.md` · `docs/screens/` 원본도 읽는다.
+1. `services/<x>/AGENTS.md` 와 소비하는 서비스의 `contracts/*.json` 을 읽는다. 해당 `docs/scenarios/<번호>-<x>.md` 와 보드(`docs/screens/README.md` — 그린 화면 `docs/screens/_rendered/<webapp>/<보드>.jpg · .txt`)도 본다. claude.ai 아티팩트 링크는 열지 않는다(사내망에서 인증서 오류).
 2. 띄운다: `make dev-bg SERVICE=<x>`(API 리로드 + 워커).
 3. 백엔드를 고친다 → `make test SERVICE=<x>`.
 4. API 가 바뀌면 `make contracts SERVICE=<x>` 를 돌린다.
