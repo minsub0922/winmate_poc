@@ -457,7 +457,10 @@ def list_segments() -> dict[str, Any]:
 
 class ReqType(BaseModel):
     code: str
-    label: str | None = Field(description="R01~R24 한국어 이름표 — KB 에 코드표가 없어 항상 null(데이터 공백, 지어내지 않음)")
+    label: str | None = Field(description=(
+        "R01~R24 한국어 이름표 — 코드표(winmate-kb/raw/prior_case_studies.json meta.taxonomy, T5 · 사람 검토 전) 원문. 코드표에 없는 코드면 null"))
+    description: str | None = Field(default=None, description="추가 — 코드표 이름표 뒤 괄호 설명(원문, 예 R01 `콘텐츠/기기를 본사·관리실에서 일괄`). 없으면 null")
+    label_source: str | None = Field(default=None, description="추가 — `codebook`(코드표) · null(이름표 없음)")
     n: int
     examples: list[str] = Field(description="이 태그가 붙은 사례들의 요구 문장 상위 3(빈도순, 이름표 아님 · 태그끼리 겹칠 수 있음)")
     examples_specific: list[str] = Field(default_factory=list, description=(
@@ -493,6 +496,32 @@ class SegmentInsights(BaseModel):
 def get_segment_insights(code: str, top_req: int = Query(6, ge=1, le=24), top_items: int = Query(4, ge=1, le=20)) -> dict[str, Any]:
     """업종 인사이트(03-mi MI1I): 요구 유형 상위 · 많이 쓰인 제품 · 솔루션. code = FB … 또는 wm_…"""
     return segments.insights(code, top_req, top_items)
+
+
+class ReqTagEntry(BaseModel):
+    code: str = Field(description="R01~R24")
+    label: str
+    description: str | None = Field(default=None, description="이름표 뒤 괄호 설명(원문). 없으면 null")
+
+
+class ProposalContentEntry(BaseModel):
+    code: str = Field(description="P01~P22")
+    label: str
+
+
+class ReqTagCodebook(BaseModel):
+    source: str | None = Field(description="원문 위치 — winmate-kb/raw/prior_case_studies.json#meta.taxonomy")
+    source_tier: str | None = Field(description="T5_llm_extracted — 이전 세션 사례 구조화 때 쓴 코드표, 사람 검토 전")
+    collected: str | None
+    status: str | None
+    req_tags: list[ReqTagEntry]
+    proposal_contents: list[ProposalContentEntry]
+
+
+@router.get("/req-tags", response_model=ReqTagCodebook, tags=["internal"])
+def get_req_tags() -> dict[str, Any]:
+    """요구 태그(R01~R24) · 제안 콘텐츠(P01~P22) 코드표. 사례 `deployment_need` 의 코드를 이름으로 바꿀 때 쓴다."""
+    return segments.req_tag_codebook()
 
 
 class ClassifyIn(BaseModel):

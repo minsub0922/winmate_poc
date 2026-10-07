@@ -283,7 +283,7 @@ async def test_segments_mapping_observed(client, ok):
 
 async def test_req_types_specific_examples(client, ok):
     fb = ok(await client.get("/v1/segments/FB/insights"))
-    assert fb["req_types"] and all(t["label"] is None for t in fb["req_types"])
+    assert fb["req_types"] and all(t["label"] for t in fb["req_types"])
     seen: set[str] = set()
     for t in fb["req_types"]:
         assert len(t["examples_specific"]) <= 3 and len(t["hint_terms"]) <= 5

@@ -981,6 +981,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/req-tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Req Tags
+         * @description 요구 태그(R01~R24) · 제안 콘텐츠(P01~P22) 코드표. 사례 `deployment_need` 의 코드를 이름으로 바꿀 때 쓴다.
+         */
+        get: operations["get_req_tags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/segments": {
         parameters: {
             query?: never;
@@ -2815,6 +2835,16 @@ export interface components {
             /** Items */
             items: components["schemas"]["ProductSearchItem"][];
         };
+        /** ProposalContentEntry */
+        ProposalContentEntry: {
+            /**
+             * Code
+             * @description P01~P22
+             */
+            code: string;
+            /** Label */
+            label: string;
+        };
         /** Purchase */
         Purchase: {
             /** Label */
@@ -2822,10 +2852,51 @@ export interface components {
             /** Site Code */
             site_code: string | null;
         };
+        /** ReqTagCodebook */
+        ReqTagCodebook: {
+            /** Collected */
+            collected: string | null;
+            /** Proposal Contents */
+            proposal_contents: components["schemas"]["ProposalContentEntry"][];
+            /** Req Tags */
+            req_tags: components["schemas"]["ReqTagEntry"][];
+            /**
+             * Source
+             * @description 원문 위치 — winmate-kb/raw/prior_case_studies.json#meta.taxonomy
+             */
+            source: string | null;
+            /**
+             * Source Tier
+             * @description T5_llm_extracted — 이전 세션 사례 구조화 때 쓴 코드표, 사람 검토 전
+             */
+            source_tier: string | null;
+            /** Status */
+            status: string | null;
+        };
+        /** ReqTagEntry */
+        ReqTagEntry: {
+            /**
+             * Code
+             * @description R01~R24
+             */
+            code: string;
+            /**
+             * Description
+             * @description 이름표 뒤 괄호 설명(원문). 없으면 null
+             */
+            description?: string | null;
+            /** Label */
+            label: string;
+        };
         /** ReqType */
         ReqType: {
             /** Code */
             code: string;
+            /**
+             * Description
+             * @description 추가 — 코드표 이름표 뒤 괄호 설명(원문, 예 R01 `콘텐츠/기기를 본사·관리실에서 일괄`). 없으면 null
+             */
+            description?: string | null;
             /**
              * Examples
              * @description 이 태그가 붙은 사례들의 요구 문장 상위 3(빈도순, 이름표 아님 · 태그끼리 겹칠 수 있음)
@@ -2843,9 +2914,14 @@ export interface components {
             hint_terms?: string[];
             /**
              * Label
-             * @description R01~R24 한국어 이름표 — KB 에 코드표가 없어 항상 null(데이터 공백, 지어내지 않음)
+             * @description R01~R24 한국어 이름표 — 코드표(winmate-kb/raw/prior_case_studies.json meta.taxonomy, T5 · 사람 검토 전) 원문. 코드표에 없는 코드면 null
              */
             label: string | null;
+            /**
+             * Label Source
+             * @description 추가 — `codebook`(코드표) · null(이름표 없음)
+             */
+            label_source?: string | null;
             /** N */
             n: number;
         };
@@ -5577,6 +5653,44 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Envelope"];
+                };
+            };
+        };
+    };
+    get_req_tags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReqTagCodebook"];
                 };
             };
         };

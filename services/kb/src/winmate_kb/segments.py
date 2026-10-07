@@ -151,7 +151,21 @@ def list_out() -> dict[str, Any]:
                                    "mapping_basis=observed_cases 는 분류된 사례의 사이트 업종 필터에서 본 대응(계산값) — 시드 대응을 사람이 채우기 전 참고용"]}
 
 
-# ── 요구 태그(R01~R24): 이름표는 KB 에 없다 → 태그에 두드러진 낱말 · 문장(계산값) ──
+# ── 요구 태그(R01~R24) · 제안 콘텐츠(P01~P22) 코드표 ──
+# 이름표는 curation/req_tags.yaml(원문 winmate-kb/raw/prior_case_studies.json meta.taxonomy, T5 — scripts/make_req_tags.py 가 만든다).
+# examples_specific · hint_terms 는 태그에 두드러진 낱말 · 문장(계산값)이다.
+
+def req_tag_codebook() -> dict[str, Any]:
+    """코드표 전체 — {source, source_tier, collected, status, req_tags[{code, label, description}], proposal_contents[{code, label}]}."""
+    d = curation.load("req_tags")
+    return {"source": d.get("source"), "source_tier": d.get("source_tier"), "collected": d.get("collected"),
+            "status": d.get("status"), "req_tags": list(d.get("req_tags") or []),
+            "proposal_contents": list(d.get("proposal_contents") or [])}
+
+
+def req_tag(code: str) -> dict[str, Any] | None:
+    return next((r for r in req_tag_codebook()["req_tags"] if r.get("code") == code), None)
+
 
 _TOKEN = re.compile(r"[0-9A-Za-z가-힣][0-9A-Za-z가-힣·+]*")
 _PARTICLES = ("으로", "와", "과", "을", "를", "은", "는", "의", "에", "로", "도")
@@ -255,7 +269,10 @@ def insights(code: str, top_req: int = 6, top_items: int = 4) -> dict[str, Any]:
         cands = sorted(need_by_tag[t].items(), key=lambda x: (-_specific_score(x[0], t, st), -x[1], x[0]))
         spec = [s for s, _ in cands if s not in used and _specific_score(s, t, st) > 0][:3]
         used.update(spec)
-        req_types.append({"code": t, "label": None, "n": n, "examples": [x for x, _ in need_by_tag[t].most_common(3)],
+        tag = req_tag(t) or {}
+        req_types.append({"code": t, "label": tag.get("label"), "description": tag.get("description"),
+                          "label_source": "codebook" if tag.get("label") else None, "n": n,
+                          "examples": [x for x, _ in need_by_tag[t].most_common(3)],
                           "examples_specific": spec, "hint_terms": st["hint"].get(t, [])})
     return {
         "code": seg["code"], "id": seg["id"], "name": seg["name"], "full": seg["full"], "short": seg["short"],
@@ -264,8 +281,8 @@ def insights(code: str, top_req: int = 6, top_items: int = 4) -> dict[str, Any]:
         "products": [item(kd, i, n) for (kd, i), n in products.most_common(top_items)],
         "solutions": [item(kd, i, n) for (kd, i), n in sols.most_common(top_items)],
         "method": "rule_segment_v1", "tier": "T5_rule_draft",
-        "gaps": [("요구 태그 R01~R24 의 한국어 이름표(코드표)가 KB 에 없음 — 이전 세션 LLM 추출(raw/prior_case_studies.json, KB 미포함)의 코드만 남음 "
-                  "→ label=null. examples 는 같은 사례의 요구 문장, examples_specific · hint_terms 는 태그에 두드러진 문장 · 낱말(계산값, 이름표 아님)")],
+        "gaps": [("요구 태그 이름표(label · description)는 이전 세션 사례 구조화 때 쓴 코드표(raw/prior_case_studies.json meta.taxonomy, T5 · 사람 검토 전)다. "
+                  "examples 는 같은 사례의 요구 문장, examples_specific · hint_terms 는 태그에 두드러진 문장 · 낱말(계산값)")],
     }
 
 

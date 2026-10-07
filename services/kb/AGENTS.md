@@ -41,7 +41,10 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
 - **A3 보강**: 입력 순서로 짝짓기, `55형이상 · 55” · 55'' · 55 inch` 인식, 이름이 인치인데 값이 cm 면 cm 로, 이름을 몰라도 크기 낱말 · 빈 이름 + 인치 값이면 inch,
   `unit_basis`(value · name · default) · `value_cm` · `value_inch` · `mapped_by`.
 - **업종**: `/v1/segments` 항목에 `mapping` · `mapping_basis` · `kr_vertical_ids_observed` · `observed_kr_verticals` · `case_basis`.
-  `/v1/segments/{code}/insights` 의 `req_types[]` 에 `examples_specific` · `hint_terms`(이름표 아님, `label` 은 계속 null).
+  `/v1/segments/{code}/insights` 의 `req_types[]` 에 `examples_specific` · `hint_terms`(계산값).
+- **요구 태그 코드표**: `req_types[].label` · `description` · `label_source=codebook` 을 `curation/req_tags.yaml` 에서 채운다.
+  원문은 `winmate-kb/raw/prior_case_studies.json` meta.taxonomy(R01~R24 · P01~P22, T5)이고 `scripts/make_req_tags.py` 가 만든다(`--check` 로 원문과 대조).
+  코드표 전체는 `GET /v1/req-tags`(internal).
 - **배치 규칙**: `param_status`(unfilled · draft · approved) · `param_values`(빈칸 null) · `missing_params` · `param_notes` · `explanation_ko` · `category_ids` · `source_tier`.
   `category=` 에 KB 분류 id · 시드 하위 코드도 받는다.
 - **계약 설명**: `sale_status_code`(ModelDetail · FamilyItem · Lifecycle)에 관측값 표(17 · 15, 뜻 미확인)를 적었다.
@@ -163,8 +166,9 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
 - `GET /v1/segments` — 03-mi · 04-competitor Winmate 16업종과 업종별 사례 수. 규칙 초안(`rule_segment_v1`)으로 나눈다.
   - `mapping_basis=observed_cases`: 시드 대응이 빈 업종(SV · TP · VN · ID · OE)은 분류된 사례의 사이트 업종 필터(2건 이상 · 절반 이상)를 관측 대응으로 준다.
     AD 는 2건이 갈려 대응 없음. 관측 대응은 사례 분류 prior · classify 에 되먹이지 않는다(분류 · 사례 수 그대로).
-- `GET /v1/segments/{code}/insights?top_req=6&top_items=4` — 03-mi 업종 인사이트. 요구 유형 상위(R코드, `label`=null) · 제품 · 솔루션.
+- `GET /v1/segments/{code}/insights?top_req=6&top_items=4` — 03-mi 업종 인사이트. 요구 유형 상위(R코드 · 코드표 `label` · `description`) · 제품 · 솔루션.
   - `examples_specific`: 요구 문장 낱말의 태그 lift 합 순 상위 3(같은 응답의 앞 태그가 쓴 문장은 뺌). `hint_terms`: 태그 lift 낱말(3건 이상) 최대 5.
+- `GET /v1/req-tags` — 요구 태그 R01~R24(`label` · `description`) · 제안 콘텐츠 P01~P22 코드표(T5, `curation/req_tags.yaml`).
 - `POST /v1/segments/classify {text}` — 03-mi §7.3 업종 판별 근거. 16업종마다 `kb_score` · `clue_score` · `clues` · `similar_case_ids` 를 준다.
 - `GET /v1/entities/{kind}/{id}` — 엔티티 통합 보기. 봉투로 주고, 없으면 404.
 - `GET /v1/spec/attributes?category_id=&q=` — 06-spec 스펙 속성 사전. 그룹 · 이름 · 정규 키 · 단위를 준다.
@@ -228,6 +232,7 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
   - 업종마다 코드 · 이름 · 별칭 · 단서 사전 · KR 업종 대응.
   - 분류 규칙: 사전 가중 0.3, 최소 점수 0.4.
 - `image_samples.yaml` — 보드 표본 이미지 21장의 원본 크기 · 형식. G-IMG-1 의 근거로 쓴다.
+- `req_tags.yaml` — 요구 태그 R01~R24 · 제안 콘텐츠 P01~P22 코드표. `scripts/make_req_tags.py` 가 raw 원문에서 만든다(손으로 고치지 않는다).
 
 ### 알려진 공백 (요청한 문서)
 00-shell
@@ -254,7 +259,7 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
   - `소비전력 (Typical)` 은 LCD 사이니지 14개 모델(BEH · BEF · BED · WMF)에만 있다. `(Max)` 는 LCD 사이니지에 없고 LED 는 ㎡당 값(9개)이다.
     QMC 등은 On Mode · Sleep 뿐이라 `power.typical=null` 이다.
 - **03-mi · 04-competitor**
-  - 요구 태그 R01~R24 의 한국어 이름(코드표)이 winmate-kb 어디에도 없다(`label=null`). 코드표 파일을 받으면 `curation/req_tags.yaml` 로 붙인다.
+  - 요구 태그 이름표는 이전 세션 사례 구조화 때 쓴 코드표(T5, 사람 검토 전)다. KB DB 에는 코드만 있다.
   - 사례 → 업종 분류는 규칙 초안(T5)이다.
   - 16업종 중 6개(SV · TP · VN · AD · ID · OE)는 시드 KR 업종 대응이 없다. 5개는 관측 대응(`observed_cases`)을 주고, AD 는 그것도 없다.
 - **08-birdseye**
@@ -271,7 +276,7 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
 
 ### 확인 방법
 ```bash
-UV_SYSTEM_CERTS=1 uv run pytest services/kb -q        # = make test SERVICE=kb, 87개, 실제 KB 파일로
+UV_SYSTEM_CERTS=1 uv run pytest services/kb -q        # = make test SERVICE=kb, 90개, 실제 KB 파일로
 UV_SYSTEM_CERTS=1 uv run python scripts/contracts.py export kb && (cd web && node scripts/gen-api.mjs kb)
 WINMATE_ONLY=kb ops/node_modules/.bin/pm2 start ops/pm2/ecosystem.config.cjs   # 처음(또는 make up)
 ops/node_modules/.bin/pm2 restart kb                                           # 코드를 바꾼 뒤
@@ -294,6 +299,7 @@ curl -s -o /dev/null -w '%{content_type}\n' localhost:5000/api/kb/v1/images/img_
 - `test_requests_1007.py`(2026-10-07 요청 14개)
   - / 든 모델코드(상세 · 하위 자원 · %2F · 검색), LED 크기 · 피치 · `led`, 치수 정규화(파서 단위 시험 포함).
   - 보증 · 생애주기 successors · sale_status_code 설명 · A3 단위 · 소비전력 모드 · 배치 규칙 파라미터 · 업종 관측 대응 · 요구 태그 lift.
+- `test_req_tags.py` — 코드표 엔드포인트 · 인사이트 이름표 · yaml 이 raw 원문과 같은지.
 - `test_basics.py`
 
 200 응답은 모두 계약 스키마로 검증한다(`conftest.ok`).

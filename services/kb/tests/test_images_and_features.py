@@ -63,7 +63,7 @@ async def test_segments(client, ok):
     assert body["tier"] == "T5_rule_draft"
     fb = ok(await client.get("/v1/segments/FB/insights"))
     assert fb["cases"] > 0 and len(fb["req_types"]) <= 6 and len(fb["products"]) <= 4 and len(fb["solutions"]) <= 4
-    assert all(t["label"] is None and t["code"].startswith("R") for t in fb["req_types"])
+    assert all(t["label"] and t["label_source"] == "codebook" and t["code"].startswith("R") for t in fb["req_types"])
     assert ok(await client.get("/v1/segments/wm_hotel_resort/insights"))["code"] == "HT"
     assert (await client.get("/v1/segments/XX/insights")).status_code == 404
     cl = ok(await client.post("/v1/segments/classify", json={"text": "A 커피 프랜차이즈 매장 메뉴보드를 디지털로 바꾸고 음료 피크타임에 대응"}), "POST")

@@ -70,3 +70,13 @@
   덮어쓰기는 `param_status == 'approved'` 일 때 `param_values` 로만. `category=` 는 이제 KB 분류 id(cat_smart-signage · top_display · …__videowall) · 시드 하위 코드(signage_lcd)도 받는다(전에는 `signage` 만 맞아 빈 응답이 났다).
 - 상태(kb · 2026-10-07) ↑ birdseye 필요 4: 완료 — 모델 상세 `dims_mm {w, h, d, unit:'mm', raw, attr, kind, order, order_basis}`(body → 스탠드 제외 순, 없으면 null) · `dims_all[]`(스탠드 포함 · 포장 · 실내기 · 액티브 디스플레이 …).
   축 순서는 속성 이름으로 정한다(가로x높이x깊이 = W×H×D, 프린터 가로x세로x높이 = W×D×H, 휴대폰 세로x가로x두께 = H×W×D). `POST /v1/spec/table` `derived[code].dims_mm` 도 같다(예전 `dimensions_mm` 은 그대로).
+
+## 요구 태그 R01~R24 · 제안 콘텐츠 P01~P22 코드표가 있다 — 플랫폼 · 2026-10-07
+- 무엇이: 위 mi · competitor 요청의 「코드표가 winmate-kb 어디에도 없다」는 컨테이너에 `winmate-kb/raw/` 가 없어서였다. 이제 `raw/` 가 git 에 있고,
+  `winmate-kb/raw/prior_case_studies.json` 의 `meta.taxonomy.req_tags`(24개, 예 `"R01 다지점·원격 통합 관리 (콘텐츠/기기를 본사·관리실에서 일괄)"`) ·
+  `meta.taxonomy.proposal_content`(P01~P22, 한 문자열) 에 원문이 있다. 빌드(`build_kb.py`)는 이 코드표를 DB 에 싣지 않는다(`deployment_need` 에는 코드만).
+- 원하는 것: `req_types[].label` 을 이 원문으로 채운다(앞 코드 · 뒤 괄호 설명을 나눠 `label` · `description`), 출처는 `raw/prior_case_studies.json#meta.taxonomy`(T5 — 이전 세션 정의).
+  같은 방식으로 P01~P22 이름표를 쓸 곳이 있으면 함께. 자세한 raw 구조는 `winmate-kb/docs/REPRODUCE.md` §2.1.
+- 상태(kb · 2026-10-07) ↑ 완료 — `curation/req_tags.yaml`(scripts/make_req_tags.py 가 raw 에서 만든다, `--check` 로 대조) → `/v1/segments/{code}/insights` 의 `req_types[]` 에
+  `label`(예 R01 `다지점·원격 통합 관리`) · `description`(괄호 설명) · `label_source=codebook`. 코드표 전체는 `GET /v1/req-tags`(internal, R 24 · P 22). 계약은 더한 필드 · 경로뿐.
+  mi `req_labels` · competitor `req_type_name` 은 이미 `label` 을 먼저 쓴다 → 이제 `label_basis=kb`(사례 문장 대신 코드표 이름). pytest kb 90 · mi · competitor, e2e MI 10 · CA 14 · 통합 25 통과.

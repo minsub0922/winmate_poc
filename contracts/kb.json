@@ -1845,6 +1845,48 @@
         }
       }
     },
+    "/v1/req-tags": {
+      "get": {
+        "tags": [
+          "internal"
+        ],
+        "summary": "Get Req Tags",
+        "description": "요구 태그(R01~R24) · 제안 콘텐츠(P01~P22) 코드표. 사례 `deployment_need` 의 코드를 이름으로 바꿀 때 쓴다.",
+        "operationId": "get_req_tags",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReqTagCodebook"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/segments/classify": {
       "post": {
         "tags": [
@@ -8306,6 +8348,25 @@
         ],
         "title": "ProductSearchOut"
       },
+      "ProposalContentEntry": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "P01~P22"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "label"
+        ],
+        "title": "ProposalContentEntry"
+      },
       "Purchase": {
         "properties": {
           "site_code": {
@@ -8332,6 +8393,111 @@
         ],
         "title": "Purchase"
       },
+      "ReqTagCodebook": {
+        "properties": {
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source",
+            "description": "원문 위치 — winmate-kb/raw/prior_case_studies.json#meta.taxonomy"
+          },
+          "source_tier": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Tier",
+            "description": "T5_llm_extracted — 이전 세션 사례 구조화 때 쓴 코드표, 사람 검토 전"
+          },
+          "collected": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Collected"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "req_tags": {
+            "items": {
+              "$ref": "#/components/schemas/ReqTagEntry"
+            },
+            "type": "array",
+            "title": "Req Tags"
+          },
+          "proposal_contents": {
+            "items": {
+              "$ref": "#/components/schemas/ProposalContentEntry"
+            },
+            "type": "array",
+            "title": "Proposal Contents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "source_tier",
+          "collected",
+          "status",
+          "req_tags",
+          "proposal_contents"
+        ],
+        "title": "ReqTagCodebook"
+      },
+      "ReqTagEntry": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "R01~R24"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "이름표 뒤 괄호 설명(원문). 없으면 null"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "label"
+        ],
+        "title": "ReqTagEntry"
+      },
       "ReqType": {
         "properties": {
           "code": {
@@ -8348,7 +8514,31 @@
               }
             ],
             "title": "Label",
-            "description": "R01~R24 한국어 이름표 — KB 에 코드표가 없어 항상 null(데이터 공백, 지어내지 않음)"
+            "description": "R01~R24 한국어 이름표 — 코드표(winmate-kb/raw/prior_case_studies.json meta.taxonomy, T5 · 사람 검토 전) 원문. 코드표에 없는 코드면 null"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "추가 — 코드표 이름표 뒤 괄호 설명(원문, 예 R01 `콘텐츠/기기를 본사·관리실에서 일괄`). 없으면 null"
+          },
+          "label_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label Source",
+            "description": "추가 — `codebook`(코드표) · null(이름표 없음)"
           },
           "n": {
             "type": "integer",
