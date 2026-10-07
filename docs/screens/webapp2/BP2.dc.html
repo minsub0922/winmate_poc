@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>2D 조감도 2/4 — 제품 · 수량</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="birdseye" current="강남 플래그십 1층 로비 · 2D" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 조감도 생성" title="강남 플래그십 1층 로비 · 2D 조감도" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 12px 16px; font-size: 14.5px; line-height: 1.65; white-space: nowrap">24.0 × 16.5 m · 층고 4.5 m · 유리창 2 · 기둥 2 · 콘센트 6</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">공간 치수로 권장 수량을 계산했어요. 근거를 보고 수량을 확정해 주세요. 예를 들어 유리창 A 10.2 m에는 OH55C 2대(간격 3.0 m), 기둥 2개 × 앞뒤에는 QM43C 4대예요.</div>
+
+            <!-- 제품 · 수량 표 -->
+            <div style="width: 760px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column">
+              <div style="height: 40px; flex-shrink: 0; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <span style="font-size: 13px; font-weight: 600">제품 · 수량</span>
+                  <span style="font-size: 12px; color: #596170; white-space: nowrap">공간 치수 기준 권장값 · 크기 단위 mm</span>
+                </div>
+                <button style="height: 28px; padding: 0 8px; border-radius: 6px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 500; display: flex; align-items: center; gap: 5px">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v5h5"/></svg>
+                  <span>권장값으로 되돌리기</span>
+                </button>
+              </div>
+
+              <div style="height: 28px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; font-size: 11px; color: #596170; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
+                <span style="width: 216px; flex-shrink: 0">제품</span>
+                <span style="width: 88px; flex-shrink: 0">설치 방식</span>
+                <span style="width: 100px; flex-shrink: 0">위치</span>
+                <span style="width: 100px; flex-shrink: 0; text-align: center">수량</span>
+                <span style="flex-grow: 1; min-width: 0">근거</span>
+              </div>
+
+              <!-- OH55C -->
+              <div style="height: 50px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f2f5">
+                <div style="width: 216px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <div aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; box-sizing: border-box; border-radius: 8px; background: #f0f2f5; position: relative">
+                    <span style="position: absolute; left: 11px; top: 6px; width: 1px; height: 6px; background: #8a91a0"></span>
+                    <span style="position: absolute; left: 22px; top: 6px; width: 1px; height: 6px; background: #8a91a0"></span>
+                    <span style="position: absolute; left: 6px; top: 12px; width: 22px; height: 13px; border-radius: 1.5px; background: #2b2f36"></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Outdoor Signage OH55C</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">55" · 1,240 × 720</span>
+                  </div>
+                </div>
+                <span style="width: 88px; flex-shrink: 0; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">천장 행잉</span>
+                <span style="width: 100px; flex-shrink: 0; font-size: 12.5px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">유리창 A 2 · B 1</span>
+                <div style="width: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+                  <button aria-label="OH55C 한 대 줄이기" onClick="{{dec0}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 8px 0 0 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                  <span aria-label="OH55C 수량" style="width: 36px; height: 32px; box-sizing: border-box; border-top: 1px solid #e2e5ea; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{n0}}</span>
+                  <button aria-label="OH55C 한 대 늘리기" onClick="{{inc0}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 0 8px 8px 0; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+                <span style="flex-grow: 1; min-width: 0; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">A 10.2 m에 2대 · 간격 3.0 m</span>
+              </div>
+
+              <!-- QM43C -->
+              <div style="height: 50px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f2f5">
+                <div style="width: 216px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <div aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; box-sizing: border-box; border-radius: 8px; background: #f0f2f5; position: relative">
+                    <span style="position: absolute; left: 11px; top: 6px; width: 12px; height: 22px; border-radius: 1.5px; background: #2b2f36"></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Smart Signage QM43C</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">43" 세로형 · 560 × 970</span>
+                  </div>
+                </div>
+                <span style="width: 88px; flex-shrink: 0; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">기둥 랩핑</span>
+                <span style="width: 100px; flex-shrink: 0; font-size: 12.5px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">기둥 1 · 2 앞뒤</span>
+                <div style="width: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+                  <button aria-label="QM43C 한 대 줄이기" onClick="{{dec1}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 8px 0 0 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                  <span aria-label="QM43C 수량" style="width: 36px; height: 32px; box-sizing: border-box; border-top: 1px solid #e2e5ea; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{n1}}</span>
+                  <button aria-label="QM43C 한 대 늘리기" onClick="{{inc1}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 0 8px 8px 0; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+                <span style="flex-grow: 1; min-width: 0; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">기둥 2개 × 앞뒤 = 4대</span>
+              </div>
+
+              <!-- The Wall -->
+              <div style="height: 50px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f2f5">
+                <div style="width: 216px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <div aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; box-sizing: border-box; border-radius: 8px; background: #f0f2f5; position: relative">
+                    <span style="position: absolute; left: 4px; top: 10px; width: 26px; height: 15px; border-radius: 1px; background: #1428a0"></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">The Wall IAB 146"</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">All-in-One · 3,240 × 1,820</span>
+                  </div>
+                </div>
+                <span style="width: 88px; flex-shrink: 0; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">벽부형</span>
+                <span style="width: 100px; flex-shrink: 0; font-size: 12.5px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">후면 벽 중앙</span>
+                <div style="width: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+                  <button aria-label="The Wall 한 대 줄이기" onClick="{{dec2}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 8px 0 0 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                  <span aria-label="The Wall 수량" style="width: 36px; height: 32px; box-sizing: border-box; border-top: 1px solid #e2e5ea; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{n2}}</span>
+                  <button aria-label="The Wall 한 대 늘리기" onClick="{{inc2}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 0 8px 8px 0; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+                <span style="flex-grow: 1; min-width: 0; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">하단 900 · 층고 4,500 안에 맞음</span>
+              </div>
+
+              <!-- Flip Pro -->
+              <div style="height: 50px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e2e5ea">
+                <div style="width: 216px; flex-shrink: 0; display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <div aria-hidden="true" style="width: 34px; height: 34px; flex-shrink: 0; box-sizing: border-box; border-radius: 8px; background: #f0f2f5; position: relative">
+                    <span style="position: absolute; left: 7px; top: 7px; width: 20px; height: 12px; border-radius: 1.5px; background: #2b2f36"></span>
+                    <span style="position: absolute; left: 16.5px; top: 19px; width: 1px; height: 8px; background: #596170"></span>
+                    <span style="position: absolute; left: 11px; top: 27px; width: 12px; height: 1.5px; background: #596170"></span>
+                  </div>
+                  <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+                    <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Flip Pro WA75D</span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">75" · 폭 1,710</span>
+                  </div>
+                </div>
+                <span style="width: 88px; flex-shrink: 0; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">이동형 스탠드</span>
+                <span style="width: 100px; flex-shrink: 0; font-size: 12.5px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">측벽 · 상담 존</span>
+                <div style="width: 100px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+                  <button aria-label="Flip Pro 한 대 줄이기" onClick="{{dec3}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 8px 0 0 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                  <span aria-label="Flip Pro 수량" style="width: 36px; height: 32px; box-sizing: border-box; border-top: 1px solid #e2e5ea; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{n3}}</span>
+                  <button aria-label="Flip Pro 한 대 늘리기" onClick="{{inc3}}" style="width: 32px; height: 32px; box-sizing: border-box; border-radius: 0 8px 8px 0; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+                <span style="flex-grow: 1; min-width: 0; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">상담석 1곳 · 콘센트 C3 옆</span>
+              </div>
+
+              <!-- 합계 -->
+              <div style="height: 40px; flex-shrink: 0; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; gap: 10px; background: #fbfbfc">
+                <span style="width: 216px; flex-shrink: 0; font-size: 12.5px; font-weight: 600">합계 <span style="font-family: Manrope, sans-serif; font-weight: 800">{{kinds}}</span>종</span>
+                <span style="width: 88px; flex-shrink: 0"></span>
+                <span style="width: 100px; flex-shrink: 0"></span>
+                <span style="width: 100px; flex-shrink: 0; text-align: center; font-size: 13px; font-weight: 600"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">{{total}}</span>대</span>
+                <span style="flex-grow: 1; min-width: 0; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">이 수량이 3단계 배치에 그대로 놓여요</span>
+              </div>
+
+              <!-- AI 추천 -->
+              <div style="padding: 10px 16px 12px 16px; border-top: 1px solid #e2e5ea">
+                <div style="height: 44px; box-sizing: border-box; border: 1px dashed #1428a0; border-radius: 10px; background: #eaeefb; padding: 0 8px 0 12px; display: flex; align-items: center; gap: 10px">
+                  <span style="flex-shrink: 0; font-size: 11px; font-weight: 700; color: #ffffff; background: #1428a0; border-radius: 4px; padding: 2px 7px">추천</span>
+                  <span style="flex-grow: 1; min-width: 0; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 600">키오스크 KM24C 1대</span><span style="color: #596170"> — 안내 데스크 옆 대기 주문</span></span>
+                  <button style="height: 30px; padding: 0 12px; border-radius: 8px; border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 600; flex-shrink: 0; display: flex; align-items: center; gap: 4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>추가</button>
+                  <button style="height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 500; flex-shrink: 0">넘기기</button>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 6px; height: 18px; font-size: 12px; color: #596170">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+              <span style="white-space: nowrap">집기(소파 · 벤치 등)는 3단계에서 동선 검토용 블록으로만 들어가요 — 인테리어는 3D 조감도에서</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">제품 · 수량 <span style="color: #596170; font-weight: 500">· {{kinds}}종 {{total}}대 · 2 / 4</span></div>
+          <button style="height: 28px; padding: 0 10px; border-radius: 6px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+            <span>제품 탐색에서 고르기</span>
+          </button>
+        </div>
+
+        <div style="padding: 12px 18px 0 18px">
+          <div style="height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #ffffff; padding: 0 8px 0 12px; display: flex; align-items: center; gap: 6px; overflow: hidden">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-right: 2px"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <span style="display: flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">OH55C</span>
+            <span style="display: flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">QM43C</span>
+            <span style="display: flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">The Wall IAB 146"</span>
+            <span style="display: flex; align-items: center; height: 28px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap; flex-shrink: 0">Flip Pro WA75D</span>
+            <label for="pq" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">제품 추가 검색</label>
+            <input id="pq" placeholder="모델명 · 제품군으로 추가 (예: 키오스크)" style="flex-grow: 1; min-width: 120px; height: 30px; border: none; background: transparent; font-size: 13.5px; color: #121417; outline: none">
+          </div>
+        </div>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="font-size: 12.5px; color: #596170; white-space: nowrap">수량은 여기서 확정해요 · 배치에서 바꾸면 이 표도 같이 바뀌어요</span>
+          <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <a href="BP1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+            <a href="BP3.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+              <span>배치 · 동선으로</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const base = [3, 4, 1, 1];
+    const n = (this.state && this.state.n) || base;
+    const set = (i, d) => () => {
+      const next = n.slice();
+      next[i] = Math.max(0, Math.min(20, next[i] + d));
+      this.setState({ n: next });
+    };
+    const total = n.reduce((a, b) => a + b, 0);
+    const kinds = n.filter((x) => x > 0).length;
+    return {
+      steps: ['공간 · 치수', '제품 · 수량', '배치 · 동선', '2D 조감도 완성'], cur: 2,
+      n0: n[0], n1: n[1], n2: n[2], n3: n[3],
+      dec0: set(0, -1), inc0: set(0, 1),
+      dec1: set(1, -1), inc1: set(1, 1),
+      dec2: set(2, -1), inc2: set(2, 1),
+      dec3: set(3, -1), inc3: set(3, 1),
+      total: total, kinds: kinds
+    };
+  }
+}
+</script>
+</body>
+</html>

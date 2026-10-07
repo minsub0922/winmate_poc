@@ -2,6 +2,10 @@
 
 오프라인으로 보는 법 · 그린 화면(`_rendered/`)은 [README.md](README.md).
 
+> **조감도(birdseye) 최신안은 `BP*`(2D 조감도 4단계 + 내보내기) · `BR*`(3D 조감도 3단계 + 내보내기)** 다(2026-10-07 아티팩트 기준).
+> 옛 `BE1`–`BE6` 흐름은 아티팩트에서 빠졌지만 참고용으로 남겨 둔다 — 새로 만들거나 고칠 때는 BP · BR 을 따른다. `BE0`(작업 목록 · 2D/3D 유형 선택) · `UC_BE` 는 그대로 쓴다.
+> 웹앱 ③ 의 PRQ · PRS · PRX · *Layout* 보드와 `Stepper` · `Thumb` 는 이제 각자 `.dc.html` 파일로 있다(전에는 다른 파일 안의 변형).
+
 | 웹앱 | 보드 | 제목 | 페이지 | 기능(서비스) |
 |---|---|---|---|---|
 | webapp1 | `Main` | 홈 |  | shell |
@@ -137,6 +141,19 @@
 | webapp2 | `BE5V` | 조감도 · 시점 · 조명 바꾸기 | 웹앱 · 공간 조감도 생성 | birdseye |
 | webapp2 | `BE5Z` | 조감도 · 존 포인트 지정 | 웹앱 · 공간 조감도 생성 | birdseye |
 | webapp2 | `BE6` | 조감도 · 내보내기 · 보내기 | 웹앱 · 공간 조감도 생성 | birdseye |
+| webapp2 | `BP1` | 2D 조감도 1/4 · 공간 · 치수 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BP2` | 2D 조감도 2/4 · 제품 · 수량 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BP3` | 2D 조감도 3/4 · 배치 · 동선 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BP4` | 2D 조감도 4/4 · 완성 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BP5` | 2D 조감도 · 내보내기 · 보내기 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BP1D` | 2D 조감도 · 도면 인식 확인 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BP3Z` | 2D 조감도 · 존 구획 · 동선 순서 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BR1` | 3D 조감도 1/3 · 요구사항 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BR2` | 3D 조감도 2/3 · AI 구성 · 렌더링 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BR3` | 3D 조감도 3/3 · 결과 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BR4` | 3D 조감도 · 내보내기 · 보내기 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BR1P` | 3D 조감도 · 현장 사진으로 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BR3V` | 3D 조감도 · 시점 · 조명 컷 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
 | webapp2 | `UC_IMG` | 이미지 생성 · 유스케이스 맵 | 웹앱 · 이미지 생성 | image |
 | webapp2 | `IMG0` | 이미지 생성 · 작업 목록 · 갤러리 | 웹앱 · 이미지 생성 | image |
 | webapp2 | `IMG1` | 이미지 생성 1/3 · 이미지 유형 | 웹앱 · 이미지 생성 | image |
@@ -235,4 +252,4 @@
 | webapp3 | `Thumb` | 컴포넌트 · 템플릿 썸네일 (kind · n) | 공통 컴포넌트 (웹앱 ①과 같은 파일) | shell |
 | webapp3 | `Guide` | Winmate 캔버스 안내 | 안내 · 캔버스 8개 | shell |
 
-기능별 보드 수: birdseye 14, competitor 13, image 12, mi 18, proposal 63, requirements 15, scenario 13, shell 29, spec 13, storyboard 26, vp 14
+기능별 보드 수: birdseye 27, competitor 13, image 12, mi 18, proposal 63, requirements 15, scenario 13, shell 29, spec 13, storyboard 26, vp 14

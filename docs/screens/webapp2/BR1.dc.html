@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>3D 조감도 1/3 — 요구사항</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="birdseye" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 조감도 생성" title="새 3D 조감도" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <!-- 780 = section 364 (pad 28 + content 251, slack 85) + composer 416 -->
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 28px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 14px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">어떤 공간에서 어떤 느낌으로 쓰일지 말로 적어주세요. W가 요구사항을 분석해 인테리어와 가구를 고르고 배치한 뒤 3D로 렌더링합니다. 치수와 수량은 대략이면 충분해요.</div>
+
+            <!-- 이렇게 만들어요 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
+              <div style="height: 18px; display: flex; align-items: center; justify-content: space-between">
+                <span style="font-size: 12.5px; font-weight: 600">이렇게 만들어요</span>
+                <span style="font-size: 11.5px; color: #596170">W가 Blender로 자동 구성 · 만드는 동안 다른 작업을 해도 돼요</span>
+              </div>
+              <div style="height: 92px; display: flex; align-items: stretch">
+                <div style="flex: 1 1 0; min-width: 0; box-sizing: border-box; height: 92px; padding: 10px 12px; border-radius: 10px; background: #fbfbfc; border: 1px solid #e2e5ea; display: flex; flex-direction: column">
+                  <div style="height: 28px; display: flex; align-items: center; justify-content: space-between">
+                    <span style="width: 28px; height: 28px; border-radius: 8px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h4"/></svg></span>
+                    <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">01</span>
+                  </div>
+                  <span style="margin-top: 6px; font-size: 13px; line-height: 19px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">요구사항 분석</span>
+                  <span style="margin-top: 1px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">공간 · 분위기 · 제품을 읽어요</span>
+                </div>
+                <div style="width: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #b8bec8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></div>
+                <div style="flex: 1 1 0; min-width: 0; box-sizing: border-box; height: 92px; padding: 10px 12px; border-radius: 10px; background: #fbfbfc; border: 1px solid #e2e5ea; display: flex; flex-direction: column">
+                  <div style="height: 28px; display: flex; align-items: center; justify-content: space-between">
+                    <span style="display: flex; align-items: center; gap: 6px">
+                      <span style="width: 28px; height: 28px; border-radius: 8px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3 M3 11h18v6H3z M5 17v3 M19 17v3"/></svg></span>
+                      <span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; color: #1428a0; background: #ffffff; border: 1px solid #c9d3f2; border-radius: 4px; padding: 1px 6px">Blender</span>
+                    </span>
+                    <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">02</span>
+                  </div>
+                  <span style="margin-top: 6px; font-size: 13px; line-height: 19px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">인테리어 · 가구 선정 · 배치</span>
+                  <span style="margin-top: 1px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">마감 · 가구를 고르고 배치해요</span>
+                </div>
+                <div style="width: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #b8bec8"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></div>
+                <div style="flex: 1 1 0; min-width: 0; box-sizing: border-box; height: 92px; padding: 10px 12px; border-radius: 10px; background: #fbfbfc; border: 1px solid #e2e5ea; display: flex; flex-direction: column">
+                  <div style="height: 28px; display: flex; align-items: center; justify-content: space-between">
+                    <span style="width: 28px; height: 28px; border-radius: 8px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z M12 12l8-4.5 M12 12v9 M12 12L4 7.5"/></svg></span>
+                    <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">03</span>
+                  </div>
+                  <span style="margin-top: 6px; font-size: 13px; line-height: 19px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">렌더링 · 품질 확인</span>
+                  <span style="margin-top: 1px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">제품 비율 · 겹침까지 점검해요</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="height: 20px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #596170">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></svg>
+              <span style="white-space: nowrap">3D 조감도는 분위기를 보여주는 개략 이미지예요. 정확한 치수 · 수량 · 동선이 필요하면</span>
+              <a href="BP1.dc.html" style="font-weight: 600; white-space: nowrap">2D 조감도로 시작</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- composer: 14 + card 378 + 24 = 416 -->
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="height: 20px; padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">요구사항 <span style="color: #596170; font-weight: 500">· 1 / 3</span></div>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap">
+            <span>대략 규모</span>
+            <span style="color: #121417; font-weight: 600">약 120평 · 층고 높음 (4.5 m)</span>
+            <span>· 2D에서 가져옴</span>
+          </div>
+        </div>
+        <div style="padding: 10px 18px 0 18px">
+          <label for="req" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">요구사항</label>
+          <textarea id="req" style="display: block; width: 100%; height: 84px; box-sizing: border-box; resize: none; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; padding: 12px 14px; font-size: 14px; line-height: 1.6; color: #121417; outline: none">강남 플래그십 1층 로비를 고객이 브랜드를 체험하는 갤러리 같은 공간으로 보여주고 싶어요. 길에서도 창 너머 화면이 보이고, 안쪽엔 큰 미디어월이 있었으면 해요.</textarea>
+        </div>
+
+        <div style="padding: 12px 18px 0 18px; display: flex; flex-direction: column; gap: 8px">
+          <!-- 공간 유형 -->
+          <div style="height: 30px; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; overflow: hidden">
+            <span style="width: 76px; flex-shrink: 0; font-size: 12px; color: #596170; white-space: nowrap">공간 유형</span>
+            <button aria-pressed="true" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap">매장 · 로비</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">회의실 · 오피스</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">강의실</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">병원 대기실</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">호텔 객실</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">관제실</button>
+          </div>
+          <!-- 분위기 -->
+          <div style="height: 30px; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; overflow: hidden">
+            <span style="width: 76px; flex-shrink: 0; font-size: 12px; color: #596170; white-space: nowrap">분위기 (선택)</span>
+            <button aria-pressed="true" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>따뜻한</button>
+            <button aria-pressed="true" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>갤러리</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">프리미엄</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">미니멀</button>
+            <button aria-pressed="false" style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">활기찬</button>
+          </div>
+          <!-- 제품 (대수 없음) -->
+          <div style="height: 30px; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; overflow: hidden">
+            <span style="width: 76px; flex-shrink: 0; font-size: 12px; color: #596170; white-space: nowrap">제품</span>
+            <span style="height: 30px; flex-shrink: 0; box-sizing: border-box; padding: 0 11px; border-radius: 999px; border: 1px solid #c9d3f2; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center">OH55C</span>
+            <span style="height: 30px; flex-shrink: 0; box-sizing: border-box; padding: 0 11px; border-radius: 999px; border: 1px solid #c9d3f2; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center">The Wall IAB 146"</span>
+            <span style="height: 30px; flex-shrink: 0; box-sizing: border-box; padding: 0 11px; border-radius: 999px; border: 1px solid #c9d3f2; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center">Flip Pro WA75D</span>
+            <span style="height: 30px; flex-shrink: 0; box-sizing: border-box; padding: 0 11px; border-radius: 999px; border: 1px solid #c9d3f2; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center">QM43C</span>
+            <button style="height: 30px; flex-shrink: 0; padding: 0 11px; border-radius: 999px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap">+ 제품</button>
+            <span style="margin-left: auto; flex-shrink: 1; min-width: 0; font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">대수는 AI가 공간에 맞춰 정해요</span>
+          </div>
+          <!-- 참고 자료 (모두 선택) -->
+          <div style="height: 30px; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap; overflow: hidden">
+            <span style="width: 76px; flex-shrink: 0; font-size: 12px; color: #596170; white-space: nowrap">참고 자료</span>
+            <span style="height: 30px; flex-shrink: 0; box-sizing: border-box; padding: 0 4px 0 10px; border-radius: 999px; border: 1px solid #c9d3f2; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1 M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+              <span>2D 조감도 연결됨 · 강남 플래그십 1층 로비 · 2D</span>
+              <button aria-label="2D 조감도 연결 해제" style="width: 22px; height: 22px; padding: 0; border-radius: 50%; border: none; background: transparent; color: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </span>
+            <a href="BR1P.dc.html" style="height: 30px; flex-shrink: 0; box-sizing: border-box; padding: 0 8px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>현장 사진</a>
+            <button style="height: 30px; flex-shrink: 0; padding: 0 8px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4z M9 10.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M20 15l-5-5-8 8"/></svg>참조 이미지</button>
+            <button style="height: 30px; flex-shrink: 0; padding: 0 8px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500; white-space: nowrap">고객 요구사항 불러오기</button>
+          </div>
+        </div>
+        <div style="height: 16px; padding: 6px 18px 0 100px; font-size: 11.5px; line-height: 16px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">참고 자료는 모두 선택이에요. 2D 조감도를 연결하면 제품 위치는 2D 배치를 따르고, 인테리어 · 가구는 AI가 정해요.</div>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <span style="flex-grow: 1; min-width: 0; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">여기까지만 적으면 돼요 — 구성 · 배치 · 렌더링은 W가 진행합니다.</span>
+          <a href="BE0.dc.html" style="height: 44px; flex-shrink: 0; box-sizing: border-box; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">작업 목록</a>
+          <a href="BR2.dc.html" style="height: 44px; flex-shrink: 0; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5c.5 3.5 2.5 5.5 6 6-3.5.5-5.5 2.5-6 6-.5-3.5-2.5-5.5-6-6 3.5-.5 5.5-2.5 6-6z"/><path d="M18 3c.2 1.3.9 2 2 2.2-1.1.2-1.8.9-2 2.2-.2-1.3-.9-2-2-2.2 1.1-.2 1.8-.9 2-2.2z"/></svg>
+            <span>3D 조감도 만들기</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return { steps: ['요구사항', 'AI 구성 · 렌더링', '3D 조감도'], cur: 1 }; }
+}
+</script>
+</body>
+</html>

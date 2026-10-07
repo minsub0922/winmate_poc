@@ -7,6 +7,8 @@
  *   node docs/screens/_runtime/render.mjs templates       # PPT 템플릿만(docs/templates/source/*)
  *   node docs/screens/_runtime/render.mjs screens CA4 PR7 # 일부 보드만
  *
+ * 이미지: 보드의 /_blob/<id> 는 docs/_blob/<id>(아티팩트 에셋 사본, 확장자 없음)로 열린다.
+ *
  * 산출물
  *   docs/screens/_rendered/<webapp>/<보드>.jpg · .txt          화면(1440×900 등 보드의 $preview 크기)
  *   docs/templates/_rendered/<묶음>/<레이아웃>.jpg · .txt       PPT 레이아웃(1280×720)
@@ -50,7 +52,13 @@ const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; ch
 const server = http.createServer((req, res) => {
   const p = path.normalize(path.join(DOCS, decodeURIComponent(req.url.split('?')[0])));
   if (!p.startsWith(DOCS) || !fs.existsSync(p) || fs.statSync(p).isDirectory()) { res.writeHead(404); res.end(); return; }
-  res.writeHead(200, { 'content-type': TYPES[path.extname(p)] || 'application/octet-stream' });
+  let type = TYPES[path.extname(p)];
+  if (!type) {                                   // docs/_blob/<id> — 아티팩트 이미지(확장자 없음): 머리 바이트로 판단
+    const head = Buffer.alloc(4);
+    const fd = fs.openSync(p, 'r'); fs.readSync(fd, head, 0, 4, 0); fs.closeSync(fd);
+    type = head[0] === 0xff && head[1] === 0xd8 ? 'image/jpeg' : head.toString('latin1', 1, 4) === 'PNG' ? 'image/png' : 'application/octet-stream';
+  }
+  res.writeHead(200, { 'content-type': type });
   fs.createReadStream(p).pipe(res);
 });
 await new Promise((r) => server.listen(PORT, '127.0.0.1', r));

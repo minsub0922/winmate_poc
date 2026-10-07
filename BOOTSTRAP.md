@@ -220,6 +220,9 @@ MODEL_MODE=live uv run python services/ai-tools/scripts/live_check.py     # 7개
    - 예: requirements · storyboard 에 지우기(보관) API 를 만들고 e2e `helpers.cleanup` 에 반영한다.
 3. **`services/*/AGENTS.md`** 「현재 상태」의 「알려진 한계 · 공백」 중 코드로 풀 수 있는 것.
 4. **`docs/scenarios/*.md`** 수용 기준 중 e2e 로 확인되지 않은 것. 각 기능 e2e 와 시나리오 문서를 대조해서 찾는다.
+5. **`docs/screens/INDEX.md` 머리 안내 — 디자인이 바뀐 화면.**
+   - 공간 조감도는 최신 디자인이 `BP*`(2D 조감도 4단계 + 내보내기) · `BR*`(3D 조감도 3단계 + 내보내기)로 나뉘었다. 지금 구현(`web/src/features/birdseye`)과 `docs/scenarios/08-birdseye.md` 는 옛 `BE1`–`BE6` 기준이다.
+   - 화면을 BP · BR 로 옮기는 일은 `code`, 2D/3D 분리에 따른 API · 시나리오 변경 범위는 `decision` 으로 올린다(그림: `docs/screens/_rendered/webapp2/BP*.jpg` · `BR*.jpg`).
 
 종류는 셋으로 나눈다.
 

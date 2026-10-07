@@ -1,5 +1,8 @@
 # 08. 공간 조감도 (birdseye · BE) — 화면 수용 기준
 
+> **디자인 갱신(2026-10-07).** 아티팩트 최신안은 조감도를 **2D(`BP1`–`BP5` · `BP1D` · `BP3Z`)** 와 **3D(`BR1`–`BR4` · `BR1P` · `BR3V`)** 로 나눴다(`BE0` 에서 유형 선택).
+> 이 문서의 수용 기준은 옛 `BE1`–`BE6` 기준이다. 화면은 `docs/screens/_rendered/webapp2/BP*` · `BR*` 를 따르고, 이 문서와 어긋나는 흐름은 사람이 정한다.
+
 - 범위 보드(14): `UC_BE` `BE0` `BE1` `BE1D` `BE1P` `BE2` `BE3` `BE4` `BE4E` `BE5G` `BE5` `BE5V` `BE5Z` `BE6`
 - 원천: `docs/screens/webapp2/<보드>.dc.html`, `docs/screens/_text/webapp2/<보드>.txt`, `docs/ARCHITECTURE.md`, `config/services.yaml`, `winmate-kb/seed/ontology/{placement_rules,space_types,visual_vocab}.yaml`, `winmate-kb/docs/*`
 - 표기: 「…」 = 보드 문구 그대로. **(신규)** = 보드에 없는 상태용 제안 문구. `{변수}` = 템플릿 자리.

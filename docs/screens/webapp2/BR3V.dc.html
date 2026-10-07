@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>3D 조감도 — 시점 · 조명 컷</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="birdseye" current="강남 플래그십 1층 로비 · 3D" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 조감도 생성" title="강남 플래그십 1층 로비 · 3D 조감도" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">도입 전후 비교 컷 만들어줘. 입구에서 본 저녁 분위기도 보고 싶어.</div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65; max-height: 48px; overflow: hidden">배치 · 가구는 그대로 두고 카메라와 조명만 바꿨어요. 도입 전 컷은 같은 시점에서 제품 · 가구를 뺀 모습이라 지금 로비와 나란히 비교할 수 있어요.</div>
+
+            <!-- 전/후 비교 뷰어 (나란히) -->
+            <div style="display: flex; gap: 10px; width: 760px; height: 270px">
+              <div style="position: relative; width: 375px; height: 270px; border-radius: 12px; overflow: hidden; background: #e9ecf1">
+                <svg width="375" height="270" viewBox="0 0 375 270" style="display: block" role="img" aria-label="도입 전 — 제품 · 가구를 뺀 현재 로비, 조감 45° (AI 생성 · 개략)"><rect x="0" y="0" width="375" height="270" fill="#e9ecf1"/><polygon points="13.4,174.8 233.3,86 361.6,137.8 141.7,226.7" fill="#e4e2de"/><line x1="31.7" y1="167.4" x2="160" y2="219.3" stroke="#d6d3cd" stroke-width="0.4"/><line x1="50" y1="160" x2="178.3" y2="211.9" stroke="#d6d3cd" stroke-width="0.4"/><line x1="68.4" y1="152.6" x2="196.7" y2="204.4" stroke="#d6d3cd" stroke-width="0.4"/><line x1="86.7" y1="145.2" x2="215" y2="197" stroke="#d6d3cd" stroke-width="0.4"/><line x1="105" y1="137.8" x2="233.3" y2="189.6" stroke="#d6d3cd" stroke-width="0.4"/><line x1="123.3" y1="130.4" x2="251.7" y2="182.2" stroke="#d6d3cd" stroke-width="0.4"/><line x1="141.7" y1="123" x2="270" y2="174.8" stroke="#d6d3cd" stroke-width="0.4"/><line x1="160" y1="115.6" x2="288.3" y2="167.4" stroke="#d6d3cd" stroke-width="0.4"/><line x1="178.3" y1="108.2" x2="306.6" y2="160" stroke="#d6d3cd" stroke-width="0.4"/><line x1="196.7" y1="100.8" x2="325" y2="152.6" stroke="#d6d3cd" stroke-width="0.4"/><line x1="215" y1="93.4" x2="343.3" y2="145.2" stroke="#d6d3cd" stroke-width="0.4"/><line x1="31.7" y1="182.2" x2="251.7" y2="93.4" stroke="#d6d3cd" stroke-width="0.4"/><line x1="50" y1="189.6" x2="270" y2="100.8" stroke="#d6d3cd" stroke-width="0.4"/><line x1="68.4" y1="197" x2="288.3" y2="108.2" stroke="#d6d3cd" stroke-width="0.4"/><line x1="86.7" y1="204.4" x2="306.6" y2="115.6" stroke="#d6d3cd" stroke-width="0.4"/><line x1="105" y1="211.9" x2="325" y2="123" stroke="#d6d3cd" stroke-width="0.4"/><line x1="123.3" y1="219.3" x2="343.3" y2="130.4" stroke="#d6d3cd" stroke-width="0.4"/><polygon points="13.4,174.8 236.1,84.9 236.1,40.4 13.4,130.3" fill="#f2f1ef"/><polygon points="10.6,173.7 13.4,174.8 13.4,130.3 10.6,129.2" fill="#b8bec8"/><polygon points="10.6,129.2 233.3,39.3 236.1,40.4 13.4,130.3" fill="#c9ced6"/><polygon points="361.6,137.8 364.4,136.7 364.4,92.2 361.6,93.3" fill="#d5d9e0"/><polygon points="230.6,84.9 361.6,137.8 361.6,93.3 230.6,40.4" fill="#e6e5e2"/><polygon points="230.6,40.4 233.3,39.3 364.4,92.2 361.6,93.3" fill="#c9ced6"/><polygon points="224.2,144.5 231.5,141.5 231.5,97 224.2,100" fill="#c3c8d0"/><polygon points="216.8,141.5 224.2,144.5 224.2,100 216.8,97" fill="#d0d4db"/><polygon points="216.8,97 224.2,94.1 231.5,97 224.2,100" fill="#e2e5ea"/><polygon points="160,170.4 167.3,167.4 167.3,122.9 160,125.9" fill="#c3c8d0"/><polygon points="152.7,167.4 160,170.4 160,125.9 152.7,122.9" fill="#d0d4db"/><polygon points="152.7,122.9 160,120 167.3,122.9 160,125.9" fill="#e2e5ea"/><polygon points="140,228.2 142.8,227.1 142.8,223.9 140,225.1" fill="#d5d9e0"/><polygon points="7.9,174.8 140,228.2 140,225.1 7.9,171.7" fill="#b8bec8"/><polygon points="7.9,171.7 10.6,170.6 142.8,223.9 140,225.1" fill="#c9ced6"/><polygon points="142.8,227.1 365.5,137.1 365.5,134 142.8,223.9" fill="#eaeefb"/><polygon points="141.7,226.7 142.8,227.1 142.8,223.9 141.7,223.5" fill="#eaeefb"/><polygon points="141.7,223.5 364.4,133.5 365.5,134 142.8,223.9" fill="#eaeefb"/><line x1="142.8" y1="223.9" x2="365.5" y2="134" stroke="#8a91a0" stroke-width="0.9"/></svg>
+                <div style="position: absolute; left: 12px; top: 12px; display: flex; gap: 6px">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 4px; padding: 3px 8px; white-space: nowrap"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></svg>AI 생성 · 개략</span>
+                  <span style="font-size: 11px; font-weight: 600; color: #121417; background: rgba(255,255,255,0.92); border-radius: 4px; padding: 3px 8px; white-space: nowrap">도입 전 · 현재 로비</span>
+                </div>
+                <span style="position: absolute; left: 12px; bottom: 12px; font-size: 11px; color: #3d4452; background: rgba(255,255,255,0.92); border-radius: 4px; padding: 3px 8px; white-space: nowrap">제품 · 가구를 뺀 같은 시점</span>
+              </div>
+              <div style="position: relative; width: 375px; height: 270px; border-radius: 12px; overflow: hidden; background: #d8dde6">
+                <img src="/_blob/804c0d5b7fd3bcab6006eb4bc2ce108c" alt="도입 후 — 강남 플래그십 1층 로비 조감 45° 주간 렌더 (AI 생성 · 개략)" style="position: absolute; left: 0; top: 0; width: 375px; height: 270px; object-fit: cover; display: block">
+                <span style="position: absolute; left: 0; top: 0; width: 375px; height: 270px; box-sizing: border-box; border-radius: 12px; box-shadow: inset 0 0 0 2px #1428a0; display: block; pointer-events: none"></span>
+                <div style="position: absolute; left: 12px; top: 12px; display: flex; gap: 6px">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 4px; padding: 3px 8px; white-space: nowrap"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/></svg>AI 생성 · 개략</span>
+                  <span style="font-size: 11px; font-weight: 600; color: #ffffff; background: #1428a0; border-radius: 4px; padding: 3px 8px; white-space: nowrap">도입 후 · 조감 45° 주간</span>
+                </div>
+                <div style="position: absolute; right: 10px; bottom: 10px; display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: rgba(255,255,255,0.94); box-shadow: 0 1px 4px rgba(18,20,23,0.12)">
+                  <button aria-pressed="true" style="height: 24px; padding: 0 10px; border-radius: 999px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 600; white-space: nowrap">나란히</button>
+                  <button aria-pressed="false" style="height: 24px; padding: 0 10px; border-radius: 999px; border: none; background: transparent; color: #121417; font-size: 11.5px; font-weight: 500; white-space: nowrap">겹쳐 밀기</button>
+                  <button aria-pressed="false" style="height: 24px; padding: 0 10px; border-radius: 999px; border: none; background: transparent; color: #121417; font-size: 11.5px; font-weight: 500; white-space: nowrap">주간 / 야간</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 만든 컷 -->
+            <div style="height: 20px; display: flex; align-items: center; justify-content: space-between">
+              <span style="font-size: 12.5px; font-weight: 600">만든 컷 <span style="color: #596170; font-weight: 500">· 5</span></span>
+              <span style="font-size: 12px; color: #596170">테두리 표시된 2컷을 비교 중</span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px">
+              <!-- 1 원본 -->
+              <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                <div style="position: relative; width: 144px; height: 81px; box-sizing: border-box; border-radius: 8px; overflow: hidden; border: 2px solid #1428a0; background: #d8dde6">
+                  <img src="/_blob/804c0d5b7fd3bcab6006eb4bc2ce108c" alt="조감 45° 주간 컷 (원본)" style="position: absolute; left: 0; top: 0; width: 140px; height: 77px; object-fit: cover; display: block">
+                  <span style="position: absolute; left: 4px; top: 4px; font-size: 8.5px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 3px; padding: 1px 4px; white-space: nowrap">AI 생성 · 개략</span>
+                  <span style="position: absolute; left: 4px; bottom: 4px; font-size: 9.5px; font-weight: 600; color: #ffffff; background: #1428a0; border-radius: 3px; padding: 1px 5px">원본</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">조감 45° · 주간</span><span style="font-size: 11.5px; color: #596170; white-space: nowrap">비교 중 · 도입 후</span></div>
+              </div>
+              <!-- 2 도입 전 -->
+              <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                <div style="position: relative; width: 144px; height: 81px; box-sizing: border-box; border-radius: 8px; overflow: hidden; border: 2px solid #1428a0; background: #e9ecf1">
+                  <svg width="140" height="77" viewBox="0 0 140 77" style="display: block" aria-hidden="true"><rect x="0" y="0" width="140" height="77" fill="#e9ecf1"/><polygon points="4.7,53.4 87.2,20.1 135.3,39.5 52.8,72.9" fill="#e4e2de"/><line x1="11.6" y1="50.7" x2="59.7" y2="70.1" stroke="#d6d3cd" stroke-width="0.4"/><line x1="18.4" y1="47.9" x2="66.6" y2="67.3" stroke="#d6d3cd" stroke-width="0.4"/><line x1="25.3" y1="45.1" x2="73.4" y2="64.6" stroke="#d6d3cd" stroke-width="0.4"/><line x1="32.2" y1="42.3" x2="80.3" y2="61.8" stroke="#d6d3cd" stroke-width="0.4"/><line x1="39.1" y1="39.5" x2="87.2" y2="59" stroke="#d6d3cd" stroke-width="0.4"/><line x1="45.9" y1="36.8" x2="94.1" y2="56.2" stroke="#d6d3cd" stroke-width="0.4"/><line x1="52.8" y1="34" x2="100.9" y2="53.4" stroke="#d6d3cd" stroke-width="0.4"/><line x1="59.7" y1="31.2" x2="107.8" y2="50.7" stroke="#d6d3cd" stroke-width="0.4"/><line x1="66.6" y1="28.4" x2="114.7" y2="47.9" stroke="#d6d3cd" stroke-width="0.4"/><line x1="73.4" y1="25.7" x2="121.6" y2="45.1" stroke="#d6d3cd" stroke-width="0.4"/><line x1="80.3" y1="22.9" x2="128.4" y2="42.3" stroke="#d6d3cd" stroke-width="0.4"/><line x1="11.6" y1="56.2" x2="94.1" y2="22.9" stroke="#d6d3cd" stroke-width="0.4"/><line x1="18.4" y1="59" x2="100.9" y2="25.7" stroke="#d6d3cd" stroke-width="0.4"/><line x1="25.3" y1="61.8" x2="107.8" y2="28.4" stroke="#d6d3cd" stroke-width="0.4"/><line x1="32.2" y1="64.6" x2="114.7" y2="31.2" stroke="#d6d3cd" stroke-width="0.4"/><line x1="39.1" y1="67.3" x2="121.6" y2="34" stroke="#d6d3cd" stroke-width="0.4"/><line x1="45.9" y1="70.1" x2="128.4" y2="36.8" stroke="#d6d3cd" stroke-width="0.4"/><polygon points="4.7,53.4 88.2,19.7 88.2,3 4.7,36.8" fill="#f2f1ef"/><polygon points="3.6,53 4.7,53.4 4.7,36.8 3.6,36.3" fill="#b8bec8"/><polygon points="3.6,36.3 87.2,2.6 88.2,3 4.7,36.8" fill="#c9ced6"/><polygon points="135.3,39.5 136.4,39.1 136.4,22.4 135.3,22.9" fill="#d5d9e0"/><polygon points="86.2,19.7 135.3,39.5 135.3,22.9 86.2,3" fill="#e6e5e2"/><polygon points="86.2,3 87.2,2.6 136.4,22.4 135.3,22.9" fill="#c9ced6"/><polygon points="83.8,42.1 86.5,40.9 86.5,24.3 83.8,25.4" fill="#c3c8d0"/><polygon points="81,40.9 83.8,42.1 83.8,25.4 81,24.3" fill="#d0d4db"/><polygon points="81,24.3 83.8,23.1 86.5,24.3 83.8,25.4" fill="#e2e5ea"/><polygon points="59.7,51.8 62.4,50.7 62.4,34 59.7,35.1" fill="#c3c8d0"/><polygon points="56.9,50.7 59.7,51.8 59.7,35.1 56.9,34" fill="#d0d4db"/><polygon points="56.9,34 59.7,32.9 62.4,34 59.7,35.1" fill="#e2e5ea"/><polygon points="52.2,73.5 53.2,73.1 53.2,71.9 52.2,72.3" fill="#d5d9e0"/><polygon points="2.6,53.4 52.2,73.5 52.2,72.3 2.6,52.3" fill="#b8bec8"/><polygon points="2.6,52.3 3.6,51.8 53.2,71.9 52.2,72.3" fill="#c9ced6"/><polygon points="53.2,73.1 136.8,39.3 136.8,38.1 53.2,71.9" fill="#eaeefb"/><polygon points="52.8,72.9 53.2,73.1 53.2,71.9 52.8,71.7" fill="#eaeefb"/><polygon points="52.8,71.7 136.4,37.9 136.8,38.1 53.2,71.9" fill="#eaeefb"/><line x1="53.2" y1="71.9" x2="136.8" y2="38.1" stroke="#8a91a0" stroke-width="0.8"/></svg>
+                  <span style="position: absolute; left: 4px; top: 4px; font-size: 8.5px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 3px; padding: 1px 4px; white-space: nowrap">AI 생성 · 개략</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">도입 전 · 조감 45°</span><span style="font-size: 11.5px; color: #596170; white-space: nowrap">비교 중 · 방금</span></div>
+              </div>
+              <!-- 3 야간 -->
+              <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                <div style="position: relative; width: 144px; height: 81px; box-sizing: border-box; border-radius: 8px; overflow: hidden; border: 1px solid #e2e5ea; background: #2b2f36">
+                  <img src="/_blob/804c0d5b7fd3bcab6006eb4bc2ce108c" alt="조감 45° 야간 컷" style="position: absolute; left: 0; top: 0; width: 142px; height: 79px; object-fit: cover; display: block">
+                  <span style="position: absolute; left: 0; top: 0; width: 142px; height: 79px; background: rgba(18,20,23,0.45); display: block"></span>
+                  <span style="position: absolute; left: 4px; top: 4px; font-size: 8.5px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 3px; padding: 1px 4px; white-space: nowrap">AI 생성 · 개략</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">조감 45° · 야간</span><span style="font-size: 11.5px; color: #596170; white-space: nowrap">완료</span></div>
+              </div>
+              <!-- 4 입구 주간 -->
+              <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                <div style="position: relative; width: 144px; height: 81px; box-sizing: border-box; border-radius: 8px; overflow: hidden; border: 1px solid #e2e5ea; background: #d8dde6">
+                  <img src="/_blob/804c0d5b7fd3bcab6006eb4bc2ce108c" alt="입구 시점 주간 컷" style="position: absolute; left: 0; top: 0; width: 142px; height: 79px; object-fit: cover; display: block; transform: scale(1.8); transform-origin: 50% 88%">
+                  <span style="position: absolute; left: 4px; top: 4px; font-size: 8.5px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 3px; padding: 1px 4px; white-space: nowrap">AI 생성 · 개략</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">입구 시점 · 주간</span><span style="font-size: 11.5px; color: #596170; white-space: nowrap">완료</span></div>
+              </div>
+              <!-- 5 입구 저녁 (생성 중) -->
+              <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+                <div style="position: relative; width: 144px; height: 81px; box-sizing: border-box; border-radius: 8px; overflow: hidden; border: 1px solid #e2e5ea; background: #3d4452">
+                  <img src="/_blob/804c0d5b7fd3bcab6006eb4bc2ce108c" alt="입구 시점 저녁 컷 (생성 중 미리보기)" style="position: absolute; left: 0; top: 0; width: 142px; height: 79px; object-fit: cover; display: block; transform: scale(1.8); transform-origin: 50% 88%; filter: sepia(0.35) brightness(0.8)">
+                  <span style="position: absolute; left: 0; top: 0; width: 142px; height: 79px; background: rgba(255,255,255,0.45); display: block"></span>
+                  <span style="position: absolute; left: 4px; top: 4px; font-size: 8.5px; font-weight: 600; color: #ffffff; background: rgba(18,20,23,0.85); border-radius: 3px; padding: 1px 4px; white-space: nowrap">AI 생성 · 개략</span>
+                  <div style="position: absolute; left: 8px; right: 8px; bottom: 8px; height: 4px; border-radius: 999px; background: rgba(18,20,23,0.12); overflow: hidden"><div style="width: 62%; height: 4px; background: #1428a0"></div></div>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 1px"><span style="font-size: 12.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">입구 시점 · 저녁</span><span style="font-size: 11.5px; color: #1428a0; font-weight: 600; white-space: nowrap">생성 중 <span style="font-family: Manrope, sans-serif">62%</span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; height: 44px; box-sizing: border-box; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600; white-space: nowrap">시점 · 조명 컷 <span style="color: #596170; font-weight: 500">· 3 / 3 · 새로 만들 컷 2</span></div>
+          <a href="BR4.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 600; color: #1428a0; white-space: nowrap">
+            <span>전 / 후 2컷을 제안서 '두 시점 비교'로</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <div style="padding: 10px 18px 0 18px; height: 40px; box-sizing: border-box; display: flex; align-items: center; gap: 6px">
+          <span style="font-size: 12px; color: #596170; flex-shrink: 0; margin-right: 2px">시점</span>
+          <button aria-pressed="false" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">조감 45°</button>
+          <button aria-pressed="false" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">입구</button>
+          <button aria-pressed="true" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap">눈높이</button>
+          <button aria-pressed="true" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap">탑뷰</button>
+          <span style="width: 1px; height: 20px; background: #e2e5ea; margin: 0 4px; flex-shrink: 0"></span>
+          <span style="font-size: 12px; color: #596170; flex-shrink: 0; margin-right: 2px">조명</span>
+          <button aria-pressed="true" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; white-space: nowrap">주간</button>
+          <button aria-pressed="false" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">저녁</button>
+          <button aria-pressed="false" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap">야간</button>
+          <span style="width: 1px; height: 20px; background: #e2e5ea; margin: 0 4px; flex-shrink: 0"></span>
+          <button aria-pressed="false" style="height: 30px; padding: 0 11px 0 8px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; white-space: nowrap; display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 4px; border: 1.5px solid #b8bec8; background: #ffffff"></span>도입 전 컷도</button>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <div style="flex-grow: 1; min-width: 0; height: 44px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px; color: #3d4452">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            <span style="font-size: 13px; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">배치 · 가구는 그대로 두고 카메라와 조명만 바꿔요</span>
+            <span style="margin-left: auto; flex-shrink: 0; font-size: 12px; color: #596170; white-space: nowrap">눈높이 · 주간, 탑뷰 · 주간</span>
+          </div>
+          <a href="BR3.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0; box-sizing: border-box">결과로</a>
+          <button style="height: 44px; padding: 0 18px; border-radius: 12px; border: none; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span>선택한 2컷 생성</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return { steps: ['요구사항', 'AI 구성 · 렌더링', '3D 조감도'], cur: 3 }; }
+}
+</script>
+</body>
+</html>

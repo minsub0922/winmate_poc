@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>2D 조감도 — 도면 인식 확인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="birdseye" current="강남 플래그십 1층 로비 · 2D" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 조감도 생성" title="강남 플래그십 1층 로비 · 2D 조감도" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 20px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; justify-content: flex-end">
+          <div style="display: flex; align-items: center; gap: 8px; height: 34px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 10px; padding: 0 12px; font-size: 12.5px; color: #121417">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6V3z"/><path d="M14 3v5h5"/></svg>
+            <span style="font-weight: 600">lobby_plan_1F.pdf</span>
+            <span style="color: #596170">1쪽 · 2.4 MB</span>
+          </div>
+        </div>
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">도면에서 공간 구조를 읽었습니다. 여기서 확정한 치수가 다음 단계의 제품 위치 · 수량 · 동선 계산 기준이 돼요. 벽 · 창 · 문 · 기둥 · 콘센트가 맞는지 보시고, 확인이 필요한 두 곳(정면 폭 치수, 뒤쪽 문)을 정해 주세요.</div>
+
+            <div style="width: 760px; height: 440px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column">
+              <div style="height: 42px; flex-shrink: 0; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 16px">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <span style="font-size: 13px; font-weight: 600">인식 결과</span>
+                  <span style="font-size: 12px; color: #596170; white-space: nowrap">축척 1:100 감지 · 면적 396 ㎡ (약 120평)</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px">
+                  <button role="switch" aria-checked="true" style="display: flex; align-items: center; gap: 7px; height: 28px; padding: 0 8px; border-radius: 6px; border: none; background: transparent; color: #121417; font-size: 12px">
+                    <span style="position: relative; width: 26px; height: 16px; border-radius: 999px; background: #1428a0"><span style="position: absolute; right: 2px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #ffffff"></span></span>
+                    <span>원본 겹쳐 보기</span>
+                  </button>
+                  <span style="width: 1px; height: 18px; background: #e2e5ea"></span>
+                  <button aria-label="축소" style="width: 28px; height: 28px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #596170; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"/></svg></button>
+                  <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #596170; width: 36px; text-align: center">100%</span>
+                  <button aria-label="확대" style="width: 28px; height: 28px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #596170; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+                </div>
+              </div>
+
+              <div style="flex-grow: 1; min-height: 0; display: flex">
+                <!-- 평면 인식 결과 -->
+                <div style="width: 467px; height: 396px; flex-shrink: 0; position: relative; background: #fbfbfc; overflow: hidden">
+<!--PLAN_SVG:BEGIN-->
+                  <svg width="467" height="396" viewBox="0 0 467 396" style="position: absolute; left: 0; top: 0" role="img" aria-label="도면 인식 결과 평면도">
+                  <line x1="71" y1="78" x2="71" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="86" y1="78" x2="86" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="101" y1="78" x2="101" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="116" y1="78" x2="116" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="131" y1="78" x2="131" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="146" y1="78" x2="146" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="161" y1="78" x2="161" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="176" y1="78" x2="176" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="191" y1="78" x2="191" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="206" y1="78" x2="206" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="221" y1="78" x2="221" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="236" y1="78" x2="236" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="251" y1="78" x2="251" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="266" y1="78" x2="266" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="281" y1="78" x2="281" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="296" y1="78" x2="296" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="311" y1="78" x2="311" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="326" y1="78" x2="326" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="341" y1="78" x2="341" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="356" y1="78" x2="356" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="371" y1="78" x2="371" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="386" y1="78" x2="386" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="401" y1="78" x2="401" y2="326" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="93" x2="416" y2="93" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="108" x2="416" y2="108" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="123" x2="416" y2="123" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="138" x2="416" y2="138" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="153" x2="416" y2="153" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="168" x2="416" y2="168" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="183" x2="416" y2="183" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="198" x2="416" y2="198" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="213" x2="416" y2="213" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="228" x2="416" y2="228" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="243" x2="416" y2="243" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="258" x2="416" y2="258" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="273" x2="416" y2="273" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="288" x2="416" y2="288" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="303" x2="416" y2="303" stroke="#eef0f4" stroke-width="1"/>
+                  <line x1="56" y1="318" x2="416" y2="318" stroke="#eef0f4" stroke-width="1"/>
+                  <rect x="56" y="78" width="360" height="248" fill="none" stroke="#dfe3ea" stroke-width="9"/>
+                  <line x1="56" y1="78" x2="56" y2="326" stroke="#121417" stroke-width="5" stroke-linecap="square"/>
+                  <line x1="416" y1="78" x2="416" y2="326" stroke="#121417" stroke-width="5" stroke-linecap="square"/>
+                  <line x1="56" y1="326" x2="371" y2="326" stroke="#121417" stroke-width="5" stroke-linecap="square"/>
+                  <line x1="386" y1="326" x2="416" y2="326" stroke="#121417" stroke-width="5" stroke-linecap="square"/>
+                  <line x1="56" y1="78" x2="65" y2="78" stroke="#121417" stroke-width="5" stroke-linecap="square"/>
+                  <line x1="407" y1="78" x2="416" y2="78" stroke="#121417" stroke-width="5" stroke-linecap="square"/>
+                  <line x1="65" y1="78" x2="218" y2="78" stroke="#1428a0" stroke-width="5"/>
+                  <line x1="65" y1="78" x2="218" y2="78" stroke="#ffffff" stroke-width="1.2"/>
+                  <line x1="254" y1="78" x2="407" y2="78" stroke="#1428a0" stroke-width="5"/>
+                  <line x1="254" y1="78" x2="407" y2="78" stroke="#ffffff" stroke-width="1.2"/>
+                  <line x1="218" y1="75" x2="238" y2="75" stroke="#121417" stroke-width="2.5"/>
+                  <line x1="234" y1="81" x2="254" y2="81" stroke="#121417" stroke-width="2.5"/>
+                  <text x="236" y="98" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="600" fill="#596170" text-anchor="middle">주출입구</text>
+                  <text x="69" y="98" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="600" fill="#1428a0" text-anchor="start">전면 유리창 (도로측)</text>
+                  <line x1="371" y1="326" x2="371" y2="311" stroke="#121417" stroke-width="2"/>
+                  <path d="M371 311 A15 15 0 0 1 386 326" fill="none" stroke="#121417" stroke-width="1.2"/>
+                  <circle cx="378" cy="318" r="20" fill="none" stroke="#121417" stroke-width="1.4" stroke-dasharray="4 3"/>
+                  <circle cx="398" cy="294" r="9" fill="#121417"/><text x="398" y="297.6" font-family="Manrope, sans-serif" font-size="10.5" font-weight="800" fill="#ffffff" text-anchor="middle">2</text>
+                  <text x="378" y="346" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="600" fill="#121417" text-anchor="middle">뒤쪽 문 · 확인 필요</text>
+                  <rect x="178" y="182" width="9" height="9" fill="#596170"/>
+                  <rect x="286" y="182" width="9" height="9" fill="#596170"/>
+                  <text x="182" y="207" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="500" fill="#596170" text-anchor="middle">기둥</text>
+                  <text x="290" y="207" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="500" fill="#596170" text-anchor="middle">기둥</text>
+                  <!-- 콘센트 6 (도면 범례에서 인식): 후면 C1 · C2, 오른쪽 측벽 C3 · C4, 기둥 C5 · C6 -->
+                  <circle cx="191" cy="319" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/>
+                  <text x="191" y="310" font-family="Manrope, sans-serif" font-size="9" font-weight="700" fill="#596170" text-anchor="middle">C1</text>
+                  <circle cx="281" cy="319" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/>
+                  <text x="281" y="310" font-family="Manrope, sans-serif" font-size="9" font-weight="700" fill="#596170" text-anchor="middle">C2</text>
+                  <circle cx="409" cy="168" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/>
+                  <text x="400" y="171" font-family="Manrope, sans-serif" font-size="9" font-weight="700" fill="#596170" text-anchor="end">C3</text>
+                  <circle cx="409" cy="258" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/>
+                  <text x="400" y="261" font-family="Manrope, sans-serif" font-size="9" font-weight="700" fill="#596170" text-anchor="end">C4</text>
+                  <circle cx="193" cy="186.5" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/>
+                  <text x="200" y="189.5" font-family="Manrope, sans-serif" font-size="9" font-weight="700" fill="#596170" text-anchor="start">C5</text>
+                  <circle cx="301" cy="186.5" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/>
+                  <text x="308" y="189.5" font-family="Manrope, sans-serif" font-size="9" font-weight="700" fill="#596170" text-anchor="start">C6</text>
+                  <text x="250" y="246" font-family="'Noto Sans KR', sans-serif" font-size="11.5" font-weight="600" fill="#3d4452" text-anchor="middle">로비 · 396 ㎡</text>
+                  <line x1="56" y1="52" x2="416" y2="52" stroke="#8a91a0" stroke-width="1"/>
+                  <line x1="56" y1="45" x2="56" y2="59" stroke="#8a91a0" stroke-width="1"/>
+                  <line x1="416" y1="45" x2="416" y2="59" stroke="#8a91a0" stroke-width="1"/>
+                  <rect x="200" y="42" width="72" height="20" rx="10" fill="#ffffff" stroke="#121417" stroke-width="1.3" stroke-dasharray="4 2"/>
+                  <text x="236" y="56" font-family="Manrope, sans-serif" font-size="11.5" font-weight="700" fill="#121417" text-anchor="middle">24.0 m</text>
+                  <circle cx="286" cy="52" r="9" fill="#121417"/><text x="286" y="55.6" font-family="Manrope, sans-serif" font-size="10.5" font-weight="800" fill="#ffffff" text-anchor="middle">1</text>
+                  <line x1="30" y1="78" x2="30" y2="176" stroke="#8a91a0" stroke-width="1"/>
+                  <line x1="30" y1="228" x2="30" y2="326" stroke="#8a91a0" stroke-width="1"/>
+                  <line x1="23" y1="78" x2="37" y2="78" stroke="#8a91a0" stroke-width="1"/>
+                  <line x1="23" y1="326" x2="37" y2="326" stroke="#8a91a0" stroke-width="1"/>
+                  <text x="30" y="206" font-family="Manrope, sans-serif" font-size="11.5" font-weight="700" fill="#3d4452" text-anchor="middle" transform="rotate(-90 30 202)">16.5 m</text>
+                  <line x1="56" y1="350" x2="131" y2="350" stroke="#596170" stroke-width="1.5"/>
+                  <line x1="56" y1="346" x2="56" y2="354" stroke="#596170" stroke-width="1.5"/>
+                  <line x1="131" y1="346" x2="131" y2="354" stroke="#596170" stroke-width="1.5"/>
+                  <text x="138" y="354" font-family="Manrope, sans-serif" font-size="10" font-weight="600" fill="#596170" text-anchor="start">5 m</text>
+                  <line x1="56" y1="376" x2="72" y2="376" stroke="#121417" stroke-width="4"/><text x="78" y="380" font-family="'Noto Sans KR', sans-serif" font-size="10.5" font-weight="500" fill="#596170" text-anchor="start">벽</text>
+                  <line x1="108" y1="376" x2="124" y2="376" stroke="#1428a0" stroke-width="4"/><line x1="108" y1="376" x2="124" y2="376" stroke="#ffffff" stroke-width="1"/><text x="130" y="380" font-family="'Noto Sans KR', sans-serif" font-size="10.5" font-weight="500" fill="#596170" text-anchor="start">창</text>
+                  <path d="M160 368 A10 10 0 0 1 170 378" fill="none" stroke="#121417" stroke-width="1.2"/><line x1="160" y1="368" x2="160" y2="378" stroke="#121417" stroke-width="1.6"/><text x="176" y="380" font-family="'Noto Sans KR', sans-serif" font-size="10.5" font-weight="500" fill="#596170" text-anchor="start">문</text>
+                  <rect x="206" y="371" width="9" height="9" fill="#596170"/><text x="221" y="380" font-family="'Noto Sans KR', sans-serif" font-size="10.5" font-weight="500" fill="#596170" text-anchor="start">기둥</text>
+                  <circle cx="254" cy="376" r="4" fill="#ffffff" stroke="#596170" stroke-width="1.4"/><text x="263" y="380" font-family="'Noto Sans KR', sans-serif" font-size="10.5" font-weight="500" fill="#596170" text-anchor="start">콘센트</text>
+                  <circle cx="314" cy="376" r="6" fill="none" stroke="#121417" stroke-width="1.3" stroke-dasharray="3 2"/><text x="326" y="380" font-family="'Noto Sans KR', sans-serif" font-size="10.5" font-weight="500" fill="#596170" text-anchor="start">확인 필요</text>
+                  </svg>
+<!--PLAN_SVG:END-->
+                </div>
+
+                <!-- 인식한 요소 -->
+                <div style="flex-grow: 1; min-width: 0; box-sizing: border-box; border-left: 1px solid #e2e5ea; padding: 14px 16px; display: flex; flex-direction: column; overflow: hidden">
+                  <div style="display: flex; align-items: center; justify-content: space-between; height: 20px">
+                    <span style="font-size: 13px; font-weight: 600">인식한 요소</span>
+                    <span style="font-size: 12px; color: #596170">5종 · 확인 2</span>
+                  </div>
+                  <div style="margin-top: 8px; display: flex; flex-direction: column">
+                    <button style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px; border-radius: 8px; border: none; background: transparent; text-align: left; font-size: 12.5px; color: #121417">
+                      <span style="width: 42px; flex-shrink: 0; font-weight: 600">벽</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">외벽 4면</span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </button>
+                    <button style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px; border-radius: 8px; border: none; background: transparent; text-align: left; font-size: 12.5px; color: #121417">
+                      <span style="width: 42px; flex-shrink: 0; font-weight: 600">창</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">전면 유리창 2구간</span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </button>
+                    <div style="display: flex; flex-direction: column; border-radius: 10px; background: #f5f6f8; box-shadow: inset 2px 0 0 #121417">
+                      <button aria-expanded="true" style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px; border-radius: 8px; border: none; background: transparent; text-align: left; font-size: 12.5px; color: #121417">
+                        <span style="width: 42px; flex-shrink: 0; font-weight: 600">문</span>
+                        <span style="flex-grow: 1; min-width: 0; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">주출입구 1 · 뒤쪽 문 1</span>
+                        <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">2</span>
+                      </button>
+                      <div style="padding: 0 8px 10px 8px; display: flex; flex-direction: column; gap: 6px">
+                        <span style="font-size: 12px; color: #121417; padding-left: 4px">뒤쪽 문은 어떤 문인가요?</span>
+                        <div style="display: flex; gap: 4px; flex-wrap: nowrap">
+                          <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">비상구</button>
+                          <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">백오피스 출입</button>
+                          <button style="height: 28px; padding: 0 10px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 500">벽으로 처리</button>
+                        </div>
+                      </div>
+                    </div>
+                    <button style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px; border-radius: 8px; border: none; background: transparent; text-align: left; font-size: 12.5px; color: #121417">
+                      <span style="width: 42px; flex-shrink: 0; font-weight: 600">기둥</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">2개 · 600 × 600 mm</span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </button>
+                    <button style="display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 6px; border-radius: 8px; border: none; background: transparent; text-align: left; font-size: 12.5px; color: #121417">
+                      <span style="width: 42px; flex-shrink: 0; font-weight: 600; white-space: nowrap">콘센트</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">6 · 도면 범례에서 인식</span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </button>
+                  </div>
+
+                  <!-- 치수 보정 -->
+                  <div style="margin-top: 10px; box-sizing: border-box; border-radius: 10px; border: 1px solid #121417; padding: 10px 10px 10px 12px; display: flex; flex-direction: column; gap: 4px">
+                    <div style="display: flex; align-items: center; gap: 7px">
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>
+                      <span style="font-size: 12.5px; font-weight: 600">치수 보정 · 정면 폭</span>
+                    </div>
+                    <span style="font-size: 12px; color: #596170; white-space: nowrap">도면 표기 24.0 m · 축척 1:100 환산 23.6 m</span>
+                    <div style="margin-top: 4px; display: flex; gap: 4px">
+                      <button aria-pressed="true" style="height: 30px; padding: 0 8px; border-radius: 8px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 600; white-space: nowrap">표기값 24.0 m</button>
+                      <button aria-pressed="false" style="height: 30px; padding: 0 8px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 500; white-space: nowrap">환산값 23.6 m</button>
+                      <button aria-pressed="false" style="height: 30px; padding: 0 8px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 500; white-space: nowrap">직접 입력</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">공간 인식 확인 <span style="color: #596170; font-weight: 500">· 확인 필요 2 · 1 / 4</span></div>
+          <div style="display: flex; gap: 6px">
+            <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">다시 인식</button>
+            <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">다른 도면 올리기</button>
+            <button aria-pressed="true" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M10 9v3M14 9v3M12 15h.01"/></svg><span>콘센트 위치 표시</span><span style="font-family: Manrope, sans-serif; font-weight: 800">6</span></button>
+          </div>
+        </div>
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; gap: 10px">
+          <label for="fix" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">말로 고치기</label>
+          <div style="flex-grow: 1; height: 44px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+            <input id="fix" placeholder="말로 고치기 (예: 오른쪽 기둥은 철거됐어, 콘센트가 하나 더 있어)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none">
+            <button aria-label="보내기" style="width: 30px; height: 30px; border-radius: 8px; border: none; background: #e2e5ea; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></button>
+          </div>
+          <a href="BP1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; flex-shrink: 0">이전</a>
+          <a href="BP2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+            <span>이 구조로 계속</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return { steps: ['공간 · 치수', '제품 · 수량', '배치 · 동선', '2D 조감도 완성'], cur: 1 }; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Winmate 캔버스 안내</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; box-sizing: border-box; padding: 56px 64px; display: flex; flex-direction: column; gap: 22px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="display: flex; flex-direction: column; gap: 8px">
+    <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">WINMATE · DESIGN CANVASES</span>
+    <span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em">Winmate 디자인은 캔버스 9개로 나뉘어 있습니다</span>
+    <span style="font-size: 15px; color: #596170">캔버스 하나에 담을 수 있는 화면 양에 한도가 있어 묶음별로 나눴습니다 · 다른 캔버스로 가는 링크는 새 탭에서 열립니다</span>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="9">
+      <a href="{{r.href}}" style="{{r.style}}">
+        <span style="{{r.badge}}">{{r.k}}</span>
+        <span style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
+          <span style="font-size: 15px; font-weight: 700; line-height: 1.35; color: #121417; word-break: keep-all">{{r.t}}</span>
+          <span style="font-size: 12.5px; line-height: 1.45; color: #596170; word-break: keep-all">{{r.d}}</span>
+          <span style="font-size: 12px; font-weight: 700; color: #1428a0">{{r.cta}}</span>
+        </span>
+      </a>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [키, 캔버스, 담긴 것, 링크] · ME = 지금 보고 있는 캔버스
+    const ME = 'B';
+    const R = [["A", "웹앱 ① 홈 · 요구사항 · Storyboard · MI · VP · Spec", "홈 · 고객 요구사항 · Storyboard · MI · 경쟁사 · VP · Spec 화면", "https://claude.ai/artifact/HpEAtLAPouzejVqHgMrqyk"], ["B", "웹앱 ② 이미지 · 조감도 · 시나리오", "이미지 생성 · 공간 조감도 (2D · 3D) · 공간 시나리오 화면", "https://claude.ai/artifact/HrArDmhk9qC7pKKfvEyaqX"], ["G", "웹앱 ③ B2B 제안서", "시작 · 섹션 작성 · DnD · 딸깍 · 템플릿 고르기 · 생성 후", "https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe"], ["C", "PPT · 공통 레이아웃 · 솔루션 전용 · 분석", "공통 레이아웃 · 솔루션별 전용 템플릿 · 도입사례 198건 분석 · 이미지 중심 레이아웃", "https://claude.ai/artifact/GFCVoigDttt2414bvFWDvv"], ["D", "PPT · 01 MI (업종별)", "업종 16개 × 3장 + 범용 MI 템플릿", "https://claude.ai/artifact/XnbECsMCvmCsHTsJtfeQUV"], ["E", "PPT · 02 Value Props (업종별)", "범용 과제 · 가치 제안 · 기대 효과 (업종별 제작 중)", "https://claude.ai/artifact/V6bPV1WJhKFyJeHEYjmnhv"], ["F", "PPT · 03 공간별 가치 제공 시나리오 (업종별)", "업종 16개 × 5장 · 솔루션 조합 20 · 범용 시나리오", "https://claude.ai/artifact/7DyZ4i11yq9sjnBP2ztEtr"], ["H", "PPT · 04 공간별 제품 소개", "공간 맵 · 공간 제품 소개 · 구성 · 수량 46장", "https://claude.ai/artifact/9mD73MY9hcPFPAavohfA7B"], ["I", "PPT · 05 시나리오 커버리지 · 보강 레이아웃", "서비스 10개 × 상황 132개 점검 · 빈칸을 채운 레이아웃 62장", "https://claude.ai/artifact/MbhEa2JB7ELDFLbRceHHQ4"]];
+    const rows = R.map(([k, t, d, href]) => {
+      const me = k === ME;
+      return {
+        k, t, d, href,
+        cta: me ? '지금 보고 있는 캔버스' : '열기 →',
+        style: 'display: flex; align-items: flex-start; gap: 14px; box-sizing: border-box; height: 148px; padding: 20px 20px; border-radius: 14px; ' + (me ? 'border: 2px solid #1428a0; background: #eaeefb;' : 'border: 1px solid #e2e5ea; background: #ffffff;'),
+        badge: 'width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; ' + (me ? 'background: #1428a0; color: #ffffff;' : 'background: #f5f6f8; color: #1428a0;')
+      };
+    });
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

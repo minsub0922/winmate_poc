@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>2D 조감도 1/4 — 공간 · 치수</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="birdseye" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 조감도 생성" title="새 2D 조감도" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 24px 40px 0 40px; box-sizing: border-box; overflow: hidden">
+      <div style="width: 800px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; gap: 12px">
+          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
+          <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
+            <div style="font-size: 14.5px; line-height: 1.65">2D 조감도는 실제 치수로 제품 위치 · 수량 · 동선을 정하는 도면이에요. 도면이 있으면 올려 주세요. 벽 · 창 · 문 · 기둥을 읽어 옵니다. 없으면 아래에 실측 치수를 넣어 주세요.</div>
+            <div style="display: flex; align-items: center; gap: 6px; height: 20px; font-size: 12.5px; color: #596170">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6V3z"/><path d="M14 3v5h5"/></svg>
+              <span>도면 파일(PDF · DWG · 이미지)이 있나요?</span>
+              <a href="BP1D.dc.html" style="display: flex; align-items: center; gap: 3px; font-weight: 600">도면 올리기<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+            </div>
+
+            <!-- 실시간 미리보기 -->
+            <div style="width: 760px; height: 340px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column">
+              <div style="height: 40px; flex-shrink: 0; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">
+                <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
+                  <span style="font-size: 13px; font-weight: 600">실시간 미리보기</span>
+                  <span style="font-size: 12px; color: #596170; white-space: nowrap">입력한 값만 그려요</span>
+                </div>
+                <span style="font-size: 12px; color: #596170; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #3d4452">1:100</span> · <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #3d4452">396</span> ㎡ (약 120평)</span>
+              </div>
+
+              <div style="flex-grow: 1; min-height: 0; display: flex">
+                <!-- 평면 미리보기 -->
+                <div style="width: 420px; height: 298px; flex-shrink: 0; position: relative; background: #fbfbfc; overflow: hidden">
+                  <svg width="420" height="298" viewBox="0 0 420 298" style="position: absolute; left: 0; top: 0" role="img" aria-label="입력한 치수로 그린 평면 미리보기: 가로 24,000 mm, 세로 16,500 mm, 유리창 2, 출입구 1, 뒤쪽 문 1, 기둥 2">
+                  <!-- 전체 폭 치수 -->
+                  <line x1="64" y1="16" x2="384" y2="16" stroke="#596170" stroke-width="1"/>
+                  <line x1="64" y1="12" x2="64" y2="20" stroke="#596170" stroke-width="1"/>
+                  <line x1="384" y1="12" x2="384" y2="20" stroke="#596170" stroke-width="1"/>
+                  <rect x="200" y="9" width="48" height="14" fill="#fbfbfc"/>
+                  <text x="224" y="19.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="700" fill="#121417" text-anchor="middle">24,000</text>
+                  <!-- 정면 구성 치수 -->
+                  <line x1="64" y1="36" x2="384" y2="36" stroke="#596170" stroke-width="1"/>
+                  <line x1="64" y1="32" x2="64" y2="40" stroke="#596170" stroke-width="1"/>
+                  <line x1="72" y1="32" x2="72" y2="40" stroke="#596170" stroke-width="1"/>
+                  <line x1="208" y1="32" x2="208" y2="40" stroke="#596170" stroke-width="1"/>
+                  <line x1="240" y1="32" x2="240" y2="40" stroke="#596170" stroke-width="1"/>
+                  <line x1="376" y1="32" x2="376" y2="40" stroke="#596170" stroke-width="1"/>
+                  <line x1="384" y1="32" x2="384" y2="40" stroke="#596170" stroke-width="1"/>
+                  <rect x="120" y="29" width="40" height="14" fill="#fbfbfc"/>
+                  <text x="140" y="39.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="600" fill="#3d4452" text-anchor="middle">10,200</text>
+                  <rect x="210" y="29" width="28" height="14" fill="#fbfbfc"/>
+                  <text x="224" y="39.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="600" fill="#3d4452" text-anchor="middle">2,400</text>
+                  <rect x="288" y="29" width="40" height="14" fill="#fbfbfc"/>
+                  <text x="308" y="39.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="600" fill="#3d4452" text-anchor="middle">10,200</text>
+                  <text x="59" y="39.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="600" fill="#3d4452" text-anchor="end">600</text>
+                  <text x="389" y="39.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="600" fill="#3d4452" text-anchor="start">600</text>
+                  <!-- 세로 치수 (방금 입력) -->
+                  <line x1="40" y1="50" x2="40" y2="270" stroke="#1428a0" stroke-width="1"/>
+                  <line x1="36" y1="50" x2="44" y2="50" stroke="#1428a0" stroke-width="1"/>
+                  <line x1="36" y1="270" x2="44" y2="270" stroke="#1428a0" stroke-width="1"/>
+                  <g transform="rotate(-90 40 160)">
+                    <rect x="16" y="152" width="48" height="16" rx="8" fill="#ffffff" stroke="#1428a0" stroke-width="1.2"/>
+                    <text x="40" y="163.8" font-family="Manrope, sans-serif" font-size="10.5" font-weight="800" fill="#1428a0" text-anchor="middle">16,500</text>
+                  </g>
+                  <!-- 외벽 -->
+                  <line x1="64" y1="50" x2="64" y2="270" stroke="#8a91a0" stroke-width="3" stroke-linecap="square"/>
+                  <line x1="384" y1="50" x2="384" y2="270" stroke="#8a91a0" stroke-width="3" stroke-linecap="square"/>
+                  <line x1="64" y1="270" x2="344" y2="270" stroke="#8a91a0" stroke-width="3" stroke-linecap="square"/>
+                  <line x1="357" y1="270" x2="384" y2="270" stroke="#8a91a0" stroke-width="3" stroke-linecap="square"/>
+                  <line x1="64" y1="50" x2="72" y2="50" stroke="#8a91a0" stroke-width="3" stroke-linecap="square"/>
+                  <line x1="376" y1="50" x2="384" y2="50" stroke="#8a91a0" stroke-width="3" stroke-linecap="square"/>
+                  <!-- 유리창 A · B -->
+                  <line x1="72" y1="50" x2="208" y2="50" stroke="#1428a0" stroke-width="4.5"/>
+                  <line x1="72" y1="50" x2="208" y2="50" stroke="#ffffff" stroke-width="1"/>
+                  <line x1="240" y1="50" x2="376" y2="50" stroke="#1428a0" stroke-width="4.5"/>
+                  <line x1="240" y1="50" x2="376" y2="50" stroke="#ffffff" stroke-width="1"/>
+                  <text x="140" y="66" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="600" fill="#1428a0" text-anchor="middle">유리창 A</text>
+                  <text x="308" y="66" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="600" fill="#1428a0" text-anchor="middle">유리창 B</text>
+                  <!-- 주출입구 -->
+                  <path d="M224 54 L224 70 M219 65 L224 70 L229 65" fill="none" stroke="#596170" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <text x="224" y="84" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="600" fill="#596170" text-anchor="middle">주출입구</text>
+                  <!-- 기둥 -->
+                  <rect x="172" y="142" width="8" height="8" fill="#596170"/>
+                  <rect x="268" y="142" width="8" height="8" fill="#596170"/>
+                  <text x="176" y="164" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="500" fill="#596170" text-anchor="middle">기둥 1</text>
+                  <text x="272" y="164" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="500" fill="#596170" text-anchor="middle">기둥 2</text>
+                  <!-- 뒤쪽 문 -->
+                  <line x1="344" y1="270" x2="344" y2="257" stroke="#596170" stroke-width="1.6"/>
+                  <path d="M344 257 A13 13 0 0 1 357 270" fill="none" stroke="#596170" stroke-width="1.2"/>
+                  <text x="350" y="287" font-family="'Noto Sans KR', sans-serif" font-size="10" font-weight="500" fill="#596170" text-anchor="middle">뒤쪽 문 1,000</text>
+                  <!-- 면적 -->
+                  <text x="224" y="212" font-family="'Noto Sans KR', sans-serif" font-size="11.5" font-weight="600" fill="#3d4452" text-anchor="middle">로비 · 396 ㎡</text>
+                  <text x="224" y="228" font-family="Manrope, sans-serif" font-size="10.5" font-weight="600" fill="#596170" text-anchor="middle">H 4,500</text>
+                  <!-- 축척 막대 -->
+                  <line x1="64" y1="287" x2="90.7" y2="287" stroke="#596170" stroke-width="1.5"/>
+                  <line x1="64" y1="283" x2="64" y2="291" stroke="#596170" stroke-width="1.5"/>
+                  <line x1="90.7" y1="283" x2="90.7" y2="291" stroke="#596170" stroke-width="1.5"/>
+                  <text x="96" y="290.5" font-family="Manrope, sans-serif" font-size="10" font-weight="600" fill="#596170" text-anchor="start">2 m</text>
+                  </svg>
+                </div>
+
+                <!-- 입력한 구조 -->
+                <div style="flex-grow: 1; min-width: 0; box-sizing: border-box; border-left: 1px solid #e2e5ea; padding: 14px 16px; display: flex; flex-direction: column; overflow: hidden">
+                  <div style="display: flex; align-items: center; justify-content: space-between; height: 20px">
+                    <span style="font-size: 13px; font-weight: 600">입력한 구조</span>
+                    <span style="font-size: 12px; color: #596170">단위 mm</span>
+                  </div>
+                  <div style="margin-top: 8px; display: flex; flex-direction: column">
+                    <div style="display: flex; align-items: center; gap: 8px; height: 30px; font-size: 12.5px">
+                      <span style="width: 44px; flex-shrink: 0; font-weight: 600">정면</span>
+                      <span style="flex-grow: 1; min-width: 0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">600 · 10,200 · 2,400 · 10,200 · 600</span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; height: 30px; font-size: 12.5px">
+                      <span style="width: 44px; flex-shrink: 0; font-weight: 600">기둥 1</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">중심 <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600">8,400 · 7,200</span> · <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600">600 × 600</span></span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; height: 30px; font-size: 12.5px">
+                      <span style="width: 44px; flex-shrink: 0; font-weight: 600">기둥 2</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">중심 <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600">15,600 · 7,200</span> · <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600">600 × 600</span></span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; height: 30px; font-size: 12.5px">
+                      <span style="width: 44px; flex-shrink: 0; font-weight: 600">뒤쪽 문</span>
+                      <span style="flex-grow: 1; min-width: 0; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">X <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600">21,000</span> · 폭 <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 600">1,000</span></span>
+                      <span style="width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; height: 30px; font-size: 12.5px">
+                      <span style="width: 44px; flex-shrink: 0; font-weight: 600">콘센트</span>
+                      <button style="height: 26px; padding: 0 10px; border-radius: 999px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                        <span>위치 찍기 · 0 / 6</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div style="margin-top: 10px; font-size: 11.5px; line-height: 1.5; color: #596170">원점 (0, 0) = 정면 왼쪽 모서리 · X는 오른쪽, Y는 안쪽으로 재요.</div>
+                  <div style="margin-top: auto; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #596170">
+                    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 3px; background: #8a91a0"></span>벽</span>
+                    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 4px; background: #1428a0"></span>유리창</span>
+                    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 8px; height: 8px; background: #596170"></span>기둥</span>
+                    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 14px; height: 0; border-top: 1.5px solid #1428a0"></span>방금 입력</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
+      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
+        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
+          <div style="font-size: 13px; font-weight: 600">공간 · 치수 <span style="color: #596170; font-weight: 500">· 1 / 4</span></div>
+          <div role="group" aria-label="입력 방법" style="height: 34px; box-sizing: border-box; padding: 3px; border-radius: 10px; background: #f0f2f5; display: flex; align-items: center; gap: 2px">
+            <a href="BP1D.dc.html" style="height: 28px; padding: 0 12px; border-radius: 8px; color: #3d4452; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
+              <span>도면 올리기</span>
+              <span style="font-size: 10.5px; font-weight: 700; color: #1428a0; background: #eaeefb; border-radius: 4px; padding: 1px 5px">추천</span>
+            </a>
+            <button aria-pressed="true" style="height: 28px; padding: 0 12px; border-radius: 8px; border: none; background: #ffffff; box-shadow: 0 1px 2px rgba(18,20,23,0.10); color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l14-14 4 4L7 21z M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>
+              <span>치수 직접 입력</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="padding: 12px 18px 0 18px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label for="w" style="font-size: 12px; color: #596170">가로 (X · 정면 폭)</label>
+            <div style="height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; padding: 0 12px; gap: 6px"><input id="w" value="24,000" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 600; color: #121417; outline: none"><span style="font-size: 12.5px; color: #596170">mm</span></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label for="d" style="font-size: 12px; color: #1428a0; font-weight: 600">세로 (Y · 안쪽 깊이)</label>
+            <div style="height: 38px; box-sizing: border-box; border: 1.5px solid #1428a0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; padding: 0 12px; gap: 6px"><input id="d" value="16,500" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 600; color: #121417; outline: none"><span style="font-size: 12.5px; color: #596170">mm</span></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 5px">
+            <label for="h" style="font-size: 12px; color: #596170">층고</label>
+            <div style="height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; padding: 0 12px; gap: 6px"><input id="h" value="4,500" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 600; color: #121417; outline: none"><span style="font-size: 12.5px; color: #596170">mm</span></div>
+          </div>
+        </div>
+
+        <div style="padding: 12px 18px 0 18px; display: flex; align-items: center; gap: 6px; flex-wrap: nowrap">
+          <span style="font-size: 12px; color: #596170; margin-right: 4px; white-space: nowrap">개구부 · 구조물</span>
+          <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span>유리창</span><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0">2</span></button>
+          <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span>출입구</span><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0">1</span></button>
+          <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span>문</span><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0">1</span></button>
+          <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span>기둥</span><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0">2</span></button>
+          <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span>콘센트</span><span style="font-family: Manrope, sans-serif; font-weight: 700; color: #1428a0">6</span><span style="font-size: 12px; color: #8a91a0">· 위치 미정</span></button>
+          <button style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px dashed #b8bec8; background: #ffffff; color: #596170; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg><span>추가</span></button>
+        </div>
+
+        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #596170">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+            <span>치수는 mm 단위 · 줄자 실측값 기준</span>
+          </span>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <a href="BE0.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
+            <a href="BP2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
+              <span>제품 · 수량 입력</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() { return { steps: ['공간 · 치수', '제품 · 수량', '배치 · 동선', '2D 조감도 완성'], cur: 1 }; }
+}
+</script>
+</body>
+</html>
