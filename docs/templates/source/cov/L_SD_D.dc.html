@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SD-D 공조 사양</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">업무층 공조 — 실내기 4종과 실외기 조합 사양</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170; display: flex; align-items: center; gap: 8px">공간 용도별 실내기 · <span style="width: 8px; height: 8px; border-radius: 50%; background: #1428a0"></span>차이 나는 항목은 파란 점 · 실외기 한 계통 기준</div>
+
+  <!-- 실내기 비교표 9열 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 858px">
+    <div style="display: grid; grid-template-columns: {{gc}}; height: 156px; border-bottom: 2px solid #121417">
+      <div style="display: flex; align-items: flex-end; padding: 0 0 14px 4px; font-size: 12.5px; font-weight: 700; color: #596170">사양 · 단위</div>
+      <sc-for list="{{prods}}" as="p" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; padding-bottom: 12px">
+          <div style="width: 120px; height: 64px; margin-bottom: 2px"><dc-import name="Img" pid="{{p.pid}}" kind="cut" origin="official" hint="{{p.hint}}" w="120" h="64" radius="8" hint-size="120px,64px"></dc-import></div>
+          <span style="font-size: 15.5px; font-weight: 800; line-height: 1.3; white-space: nowrap">{{p.name}}</span>
+          <span style="height: 22px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p.use}}</span>
+          <span style="font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #1428a0">× {{p.qty}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+      <div style="display: grid; grid-template-columns: {{r.gc}}; height: 34px; align-items: center; border-bottom: 1px solid #e2e5ea; font-size: 13px">
+        <span style="padding-left: 4px; color: #596170; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="{{r.dot}}"></span>{{r.k}}<span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #8a91a0">{{r.u}}</span></span>
+        <sc-for list="{{r.vals}}" as="v" hint-placeholder-count="4">
+          <span style="text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; white-space: nowrap; {{r.vs}}">{{v}}</span>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 실외기 3열 -->
+  <div style="position: absolute; left: 946px; top: 156px; width: 270px; height: 438px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 22px 25px 14px; display: flex; flex-direction: column">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">실외기 · 한 계통</span>
+    <span style="margin-top: 4px; font-family: Manrope, sans-serif; font-size: 24px; font-weight: 800; line-height: 1.25">DVM S2</span>
+    <div style="margin-top: 14px; width: 220px; height: 120px; flex-shrink: 0"><dc-import name="Img" kind="cut" origin="official" hint="DVM S2 실외기 정면" w="220" h="120" radius="10" hint-size="220px,120px"></dc-import></div>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; flex-direction: column">
+      <sc-for list="{{odu}}" as="o" hint-placeholder-count="5">
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 38px; box-sizing: border-box; border-top: 1px solid #c9d1f0">
+          <span style="font-size: 13px; color: #596170; white-space: nowrap">{{o.k}}</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 800; white-space: nowrap">{{o.v}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 선정 메모 -->
+  <div style="position: absolute; left: 64px; top: 612px; height: 26px; display: flex; align-items: center; gap: 8px">
+    <span style="font-size: 12.5px; font-weight: 800; color: #596170; margin-right: 4px">선정 메모</span>
+    <sc-for list="{{notes}}" as="n" hint-placeholder-count="2">
+      <span style="height: 26px; padding: 0 12px 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{{n}}</span>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안 · 사양: 삼성 B2B 제품 카탈로그 [0000.00] · 단위 kW (RT · BTU 병기 가능)</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 27</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 실내기 열: pid가 있으면 실제 제품 컷, 없으면 hint로 자리표시
+    const P = [
+      { pid: 'ac360', hint: '360 카세트 정면', name: '360 카세트', use: '오픈 오피스', qty: '[00]' },
+      { pid: 'none', hint: '1Way 카세트 정면', name: '1Way 카세트', use: '회의실', qty: '[00]' },
+      { pid: 'none', hint: '덕트형 실내기', name: '덕트형', use: '로비', qty: '[00]' },
+      { pid: 'none', hint: '벽걸이형 실내기', name: '벽걸이', use: '서버 · 전산실', qty: '[00]' }
+    ];
+    const N = P.length;
+    // [항목, 단위, 실내기별 값, 차이 여부] — 값이 자리표시뿐일 때는 차이 여부를 데이터로 지정, 실제 값이 들어오면 값 비교로 판단
+    const R = [
+      ['냉방 능력', 'kW', ['[0.0]', '[0.0]', '[0.0]', '[0.0]'], true],
+      ['난방 능력', 'kW', ['[0.0]', '[0.0]', '[0.0]', '[0.0]'], true],
+      ['소비 전력', 'kW', ['[0.00]', '[0.00]', '[0.00]', '[0.00]'], false],
+      ['효율', 'COP', ['[0.0]', '[0.0]', '[0.0]', '[0.0]'], false],
+      ['소음 저/고', 'dB(A)', ['[00]/[00]', '[00]/[00]', '[00]/[00]', '[00]/[00]'], true],
+      ['풍량', '㎥/min', ['[00.0]', '[00.0]', '[00.0]', '[00.0]'], true],
+      ['본체 크기', 'mm', ['[000]×[000]×[000]', '[000]×[000]×[000]', '[000]×[000]×[000]', '[000]×[000]×[000]'], true],
+      ['무게', 'kg', ['[00.0]', '[00.0]', '[00.0]', '[00.0]'], false]
+    ];
+    const gc = '178px repeat(' + N + ', minmax(0, 1fr))';
+    const hasPh = (vals) => vals.every((v) => /\[/.test(v));
+    const rows = R.map(([k, u, all, flag]) => {
+      const vals = all.slice(0, N);
+      const diff = hasPh(vals) ? !!flag : new Set(vals).size > 1;
+      return {
+        k, u, vals, gc,
+        dot: diff ? 'width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: #1428a0' : 'width: 6px; height: 6px; flex-shrink: 0',
+        vs: diff ? 'font-weight: 700; color: #121417' : 'color: #596170'
+      };
+    });
+    const odu = [
+      { k: '용량', v: '[00]HP × [0]대' },
+      { k: '조합률', v: '[000]%' },
+      { k: '최대 배관 길이', v: '[000] m' },
+      { k: '운전 범위 · 냉방', v: '[−00]~[00]℃' },
+      { k: '설치', v: '옥상' }
+    ];
+    const notes = ['회의실은 저소음 1Way', '서버실은 연중 냉방 벽걸이'];
+    return { gc, prods: P, rows, odu, notes };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>RM-A 고객 요구 이해</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">00 · 고객 요구 이해</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">세 분의 기대를 이렇게 이해했습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">키맨별 요구 · 가중치 합 100% · 원문과 우리 해석을 나눠 표시</div>
+
+  <!-- 가중치 막대: 구간 폭 = 가중치 비율 -->
+  <sc-for list="{{segs}}" as="s" hint-placeholder-count="3">
+    <div>
+      <div style="{{s.lab}}"><span style="{{s.sw}}"></span><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #121417">{{s.pct}}</span><span style="font-size: 12px; color: #596170">{{s.name}}</span></div>
+      <div style="{{s.bar}}"></div>
+    </div>
+  </sc-for>
+
+  <!-- 키맨 카드 3열 -->
+  <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.box}}">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800">{{p.ini}}</div>
+        <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+          <span style="font-size: 16px; font-weight: 800; white-space: nowrap">{{p.role}}</span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">관심사 · {{p.concern}}</span>
+        </div>
+        <span style="height: 26px; flex-shrink: 0; padding: 0 11px 0 9px; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 6px"><span style="{{p.sw}}"></span><span style="font-size: 11.5px; font-weight: 700; color: #596170">가중치</span><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #121417">{{p.pct}}</span></span>
+      </div>
+      <div style="margin-top: 18px; display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 700; color: #8a91a0"><span>원문 · 우리 해석</span><span>중요도</span></div>
+      <div style="margin-top: 6px; display: flex; flex-direction: column">
+        <sc-for list="{{p.reqs}}" as="q" hint-placeholder-count="3">
+          <div style="display: flex; align-items: flex-start; gap: 12px; padding: 13px 0; border-top: 1px solid #e2e5ea">
+            <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+              <span style="font-size: 14px; font-weight: 700; line-height: 1.45">{{q.say}}</span>
+              <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; line-height: 1.45; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4v7a4 4 0 0 0 4 4h11"/><path d="M15 10l5 5-5 5"/></svg>{{q.ours}}</span>
+            </div>
+            <div style="display: flex; gap: 4px; padding-top: 7px; flex-shrink: 0">
+              <sc-for list="{{q.dots}}" as="d" hint-placeholder-count="3">
+                <span style="{{d}}"></span>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 공통 요구 -->
+  <div style="position: absolute; left: 64px; top: 538px; width: 564px; height: 102px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 14px 18px 14px 20px; display: flex; flex-direction: column; justify-content: space-between">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <span style="font-size: 13.5px; font-weight: 800; color: #1428a0">공통 요구</span>
+      <span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800; color: #1428a0">2</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 12px; color: #596170">세 분이 모두 말씀하신 것</span>
+    </div>
+    <div style="display: flex; gap: 12px">
+      <sc-for list="{{common}}" as="c" hint-placeholder-count="2">
+        <div style="flex: 1 1 0; min-width: 0; height: 42px; box-sizing: border-box; border-radius: 10px; background: #ffffff; padding: 0 10px 0 12px; display: flex; align-items: center; gap: 8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{c}}</span>
+          <span style="flex-grow: 1"></span>
+          <sc-for list="{{inis}}" as="n" hint-placeholder-count="3">
+            <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11px; font-weight: 800">{{n}}</span>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 부딪치는 요구 -->
+  <div style="position: absolute; left: 652px; top: 538px; width: 564px; height: 102px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #121417; padding: 13px 19px 13px 19px; display: flex; flex-direction: column; justify-content: space-between">
+    <div style="display: flex; align-items: center; gap: 8px">
+      <span style="font-size: 13.5px; font-weight: 800">부딪치는 요구</span>
+      <span style="font-family: Manrope, sans-serif; font-size: 17px; font-weight: 800">1</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 12px; color: #596170">마케팅</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg>
+      <span style="font-size: 12px; color: #596170">구매</span>
+    </div>
+    <div style="height: 42px; display: flex; align-items: center; gap: 10px">
+      <span style="font-size: 15px; font-weight: 700; white-space: nowrap">고휘도 대형 화면</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16"/><path d="M8 8l-4 4 4 4"/><path d="M16 8l4 4-4 4"/></svg>
+      <span style="font-size: 15px; font-weight: 700; white-space: nowrap">단가</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 6px"><path d="M4 12h15"/><path d="M13 6l6 6-6 6"/></svg>
+      <span style="font-size: 14.5px; font-weight: 700; color: #1428a0; white-space: nowrap">매장 유형별 구성 3안으로 조정</span>
+      <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">P-O</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 요구사항 정의서 v2 · 키맨 인터뷰 [00]/[00]</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 3</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 가중치 막대: x 64–1216 (1152), 구간 폭 = 가중치 비율, 구간 사이 4px
+    const X0 = 64, W = 1152, GAP = 4;
+    // [이니셜, 역할, 막대 라벨, 관심사, 가중치(%), 구간 색, 요구 [원문 요약, 우리 해석, 중요도 1–3]]
+    const K = [
+      ['마', '본사 마케팅 팀장', '본사 마케팅', '신메뉴 · 브랜드', 40, '#1428a0', [
+        ['“신메뉴를 전 매장 같은 날 띄우고 싶다”', '본사 예약 배포 · 매장 작업 0', 3],
+        ['“매장마다 브랜드 톤이 같아야”', '템플릿 잠금 · 지역 메뉴만 허용', 2],
+        ['“창가에서도 잘 보여야”', '창가 매장은 고휘도 모델', 2]
+      ]],
+      ['IT', 'IT 팀장', 'IT', '운영 부담 · 연동', 35, '#6f82d6', [
+        ['“서버를 늘리고 싶지 않다”', '클라우드 · 서버 없는 관리', 3],
+        ['“POS 가격과 자동으로 맞춰야”', 'POS 연동 · 품절 즉시 반영', 3],
+        ['“장애를 먼저 알고 싶다”', '원격 모니터링 · 알림', 2]
+      ]],
+      ['구', '구매 팀장', '구매', '총비용 · 가맹점 부담', 25, '#b8c3ee', [
+        ['“총비용으로 비교하겠다”', '5년 총소유비용 제시', 3],
+        ['“가맹점 부담을 줄여야”', '구독 · 분할 옵션', 2],
+        ['“전국 설치 일정 보장”', '지역별 설치 계획', 2]
+      ]]
+    ];
+    const sw = (c) => 'width: 10px; height: 10px; flex-shrink: 0; border-radius: 3px; background: ' + c;
+    const dot = (on) => 'width: 8px; height: 8px; border-radius: 50%; background: ' + (on ? '#1428a0' : '#d5d9e0');
+    let cum = 0;
+    const segs = K.map(([ini, role, short, concern, w, color], i) => {
+      const x0 = X0 + Math.round(W * cum / 100);
+      cum += w;
+      const x1 = X0 + Math.round(W * cum / 100);
+      return {
+        pct: w + '%', name: short, sw: sw(color),
+        lab: 'position: absolute; left: ' + x0 + 'px; top: 144px; height: 18px; display: flex; align-items: center; gap: 6px; white-space: nowrap',
+        bar: 'position: absolute; left: ' + x0 + 'px; top: 166px; width: ' + (x1 - x0 - (i < K.length - 1 ? GAP : 0)) + 'px; height: 14px; border-radius: 4px; background: ' + color
+      };
+    });
+    // 카드: 368 × 322, 열 간격 24 (x 64 · 456 · 848)
+    const people = K.map(([ini, role, short, concern, w, color, reqs], i) => ({
+      ini, role, concern, pct: w + '%', sw: sw(color),
+      box: 'position: absolute; left: ' + (64 + i * 392) + 'px; top: 196px; width: 368px; height: 322px; box-sizing: border-box; border-radius: 16px; background: #ffffff; border: 1px solid #e2e5ea; padding: 18px 20px; display: flex; flex-direction: column',
+      reqs: reqs.map(([say, ours, imp]) => ({ say, ours, dots: [1, 2, 3].map((k) => dot(k <= imp)) }))
+    }));
+    const inis = K.map((k) => k[0]);
+    const common = ['전 매장 동시 배포', '24시간 안정 운영'];
+    return { segs, people, inis, common };
+  }
+}
+</script>
+</body>
+</html>

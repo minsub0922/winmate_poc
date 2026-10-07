@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IP-C 무중단 · 야간 시공 일정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 설치 · 시공</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 760px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">영업을 멈추지 않고, 여섯 밤에 끝냅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 640px; font-size: 15px; color: #596170">구역 × 밤(D1–D6) · 22:00–06:00 · 반입 → 설치 → 시운전 → 복구</div>
+
+  <!-- 맨 위 오른쪽 칩 -->
+  <div style="position: absolute; right: 64px; top: 72px; height: 28px; padding: 0 12px 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span>영업 시작 <span style="font-family: Manrope, sans-serif; font-weight: 800">10:30</span> · 매일 오전 <span style="font-family: Manrope, sans-serif; font-weight: 800">09</span>시 점검</span>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 116px; display: flex; align-items: center; gap: 16px; font-size: 12.5px; color: #3d4452">
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="4">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="{{l.sw}}"></span>{{l.name}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 밤 칸 배경 (칸 사이 흰 틈 = 영업 시간) -->
+  <sc-for list="{{nights}}" as="n" hint-placeholder-count="6">
+    <div>
+      <div style="{{n.bg}}"></div>
+      <div style="{{n.head}}"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800">{{n.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0">{{n.date}}</span></div>
+      <span style="{{n.t0}}">22</span>
+      <span style="{{n.t1}}">02</span>
+      <span style="{{n.t2}}">06</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 186px; font-size: 12.5px; color: #596170">구역 · 설치 제품</div>
+
+  <!-- 시간 눈금 -->
+  <sc-for list="{{ticks}}" as="t" hint-placeholder-count="42">
+    <div style="{{t}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 204px; width: 1152px; height: 2px; background: #121417"></div>
+
+  <!-- 구역 행 -->
+  <sc-for list="{{zones}}" as="z" hint-placeholder-count="5">
+    <div>
+      <div style="{{z.line}}"></div>
+      <div style="{{z.lab}}">
+        <span style="font-size: 15.5px; font-weight: 700; white-space: nowrap">{{z.name}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 600; color: #8a91a0; white-space: nowrap">{{z.prod}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 06:00 복구 완료 점선 -->
+  <sc-for list="{{nights}}" as="n" hint-placeholder-count="6">
+    <div>
+      <div style="{{n.dash}}"></div>
+      <div style="{{n.done}}">06:00 복구 완료</div>
+    </div>
+  </sc-for>
+
+  <!-- 작업 막대 -->
+  <sc-for list="{{segs}}" as="s" hint-placeholder-count="24">
+    <div style="{{s.st}}">{{s.label}}</div>
+  </sc-for>
+
+  <!-- B1 냉장 쇼케이스 제약 -->
+  <sc-for list="{{limits}}" as="m" hint-placeholder-count="2">
+    <div style="{{m}}"></div>
+  </sc-for>
+  <div style="{{fridge}}">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 2v20 M4 7l16 10 M20 7L4 17 M9 4l3 2 3-2 M9 20l3-2 3 2"/></svg>
+    <span>냉장 쇼케이스 주변은 <span style="font-family: Manrope, sans-serif; font-weight: 800">02</span>시 이전 작업</span>
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14 M13 6l6 6-6 6"/></svg>
+  </div>
+
+  <!-- 규칙 3 -->
+  <div style="position: absolute; left: 64px; top: 570px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px">
+    <div style="height: 78px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 18px; display: flex; align-items: center; gap: 14px">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z M17 9l4 6 M21 9l-4 6"/></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 800">소음 작업 <span style="font-family: Manrope, sans-serif">02</span>시 전 종료</span><span style="font-size: 12.5px; color: #3d4452">타공 · 앵커 · 절단은 22–02시에만</span></div>
+    </div>
+    <div style="height: 78px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 18px; display: flex; align-items: center; gap: 14px">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V6 M21 20V6 M3 9h18 M3 15h18 M8 9v6 M14 9v6"/></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 800">고객 동선 차단 없음 · 가림막</span><span style="font-size: 12.5px; color: #3d4452">작업 구역만 가림막 · 통로 폭 <span style="font-family: Manrope, sans-serif">[0.0]</span> m 유지</span></div>
+    </div>
+    <div style="height: 78px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 18px; display: flex; align-items: center; gap: 14px">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg></span>
+      <div style="display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 800">매일 <span style="font-family: Manrope, sans-serif">06</span>시 원상 복구 · 사진 기록</span><span style="font-size: 12.5px; color: #3d4452">복구 전후 사진을 시설팀에 공유</span></div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 백화점 · VMD 사이니지 리뉴얼 제안 · 시간은 예시 · 매일 06시 원상 복구</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 38</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 격자: 밤 6칸 x 268–1216 (폭 148 · 사이 12) · 한 밤 = 22–06시 8시간 · 행 5개 × 66 (y 206–536)
+    const X0 = 268, W = 148, G = 12, HR = W / 8, TOP = 206, RH = 66, NN = 6;
+    const nx = (d) => X0 + (d - 1) * (W + G);
+    const ROWS_H = RH * 5;
+    // 단계 색 — 반입 Blue light · 설치 Blue · 시운전 Blue mid · 복구 · 청소 회색
+    const PH = {
+      in: ['반입', '#b8c3ee', '#121417'],
+      set: ['설치', '#1428a0', '#ffffff'],
+      test: ['시운전', '#6f82d6', '#ffffff'],
+      rst: ['복구 · 청소', '#b8bec8', '#121417']
+    };
+    // [구역, 설치 제품, [[밤, 시작(22시부터 시간), 길이(시간), 단계]]] — 시간은 예시
+    const Z = [
+      ['1F 외벽 미디어', 'OH55A-S × [00]', [[1, 0, 1, 'in'], [1, 1, 5, 'set'], [1, 6, 1.5, 'rst'], [2, 0, 3, 'set'], [2, 3, 2.5, 'test'], [2, 5.5, 2, 'rst']]],
+      ['1F 화장품', 'QM55C × [00]', [[2, 0, 1, 'in'], [2, 1, 5, 'set'], [2, 6, 1.5, 'rst'], [3, 0, 3, 'test'], [3, 3, 1.5, 'rst']]],
+      ['2F 여성', 'VM55B-U 비디오월 [0]면', [[3, 0, 1, 'in'], [3, 1, 5, 'set'], [3, 6, 1.5, 'rst'], [4, 0, 3, 'set'], [4, 3, 2.5, 'test'], [4, 5.5, 2, 'rst']]],
+      ['3F 남성', 'QM55C × [00]', [[4, 0, 1, 'in'], [4, 1, 5, 'set'], [4, 6, 1.5, 'rst'], [5, 0, 3, 'set'], [5, 3, 2.5, 'test'], [5, 5.5, 2, 'rst']]],
+      ['B1 식품관', 'QM55C 메뉴보드 × [00]', [[5, 0, 1, 'in'], [5, 1, 3, 'set'], [5, 4, 1.5, 'rst'], [6, 0, 2, 'set'], [6, 2, 2, 'test'], [6, 4, 1.5, 'rst']]]
+    ];
+    const tick = 'position: absolute; top: 187px; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; ';
+    const nights = Array.from({ length: NN }, (_, i) => {
+      const x = nx(i + 1);
+      return {
+        name: 'D' + (i + 1), date: '[00]/[00]',
+        bg: 'position: absolute; left: ' + x + 'px; top: ' + TOP + 'px; width: ' + W + 'px; height: ' + ROWS_H + 'px; background: #f5f6f8',
+        head: 'position: absolute; left: ' + x + 'px; top: 160px; width: ' + W + 'px; display: flex; align-items: baseline; gap: 8px',
+        t0: tick + 'left: ' + x + 'px; color: #8a91a0',
+        t1: tick + 'left: ' + (x + W / 2 - 12) + 'px; width: 24px; text-align: center; color: #121417',
+        t2: tick + 'left: ' + (x + W - 24) + 'px; width: 24px; text-align: right; color: #8a91a0',
+        dash: 'position: absolute; left: ' + (x + W - 2) + 'px; top: ' + TOP + 'px; width: 0; height: ' + (ROWS_H + 6) + 'px; border-left: 1.5px dashed #596170',
+        done: 'position: absolute; left: ' + x + 'px; top: ' + (TOP + ROWS_H + 10) + 'px; width: ' + W + 'px; text-align: right; font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap'
+      };
+    });
+    // 한 시간 눈금 (02시는 진하게 = 소음 작업 마감)
+    const ticks = [];
+    for (let d = 1; d <= NN; d++) {
+      for (let h = 1; h < 8; h++) {
+        ticks.push('position: absolute; left: ' + Math.round(nx(d) + h * HR) + 'px; top: ' + TOP + 'px; width: 1px; height: ' + ROWS_H + 'px; background: ' + (h === 4 ? '#c3c8d1' : '#e6e9ee'));
+      }
+    }
+    const zones = Z.map(([name, prod], i) => ({
+      name, prod,
+      line: 'position: absolute; left: 64px; top: ' + (TOP + (i + 1) * RH - 1) + 'px; width: 1152px; height: 1px; background: #e2e5ea',
+      lab: 'position: absolute; left: 64px; top: ' + (TOP + i * RH) + 'px; width: 196px; height: ' + (RH - 1) + 'px; display: flex; flex-direction: column; justify-content: center; gap: 3px'
+    }));
+    const segs = [];
+    Z.forEach(([, , tasks], i) => {
+      tasks.forEach(([d, s, len, ph]) => {
+        const w = len * HR - 2;
+        const showLabel = (ph === 'set' && w >= 34) || (ph === 'test' && w >= 44);
+        segs.push({
+          label: showLabel ? PH[ph][0] : '',
+          st: 'position: absolute; left: ' + Math.round(nx(d) + s * HR + 1) + 'px; top: ' + (TOP + i * RH + 19) + 'px; width: ' + Math.round(w) + 'px; height: 28px; box-sizing: border-box; border-radius: 5px; background: ' + PH[ph][1] + '; color: ' + PH[ph][2] + '; display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 700; white-space: nowrap'
+        });
+      });
+    });
+    // B1 행: 02시 작업 마감선 (D5 · D6)
+    const B1 = TOP + 4 * RH;
+    const limits = [5, 6].map((d) => 'position: absolute; left: ' + Math.round(nx(d) + 4 * HR - 1) + 'px; top: ' + (B1 + 8) + 'px; width: 2px; height: ' + (RH - 17) + 'px; background: #121417');
+    const fridge = 'position: absolute; left: ' + (nx(5) - 290) + 'px; top: ' + (B1 + 20) + 'px; width: 274px; height: 26px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px solid #121417; padding: 0 10px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 700; white-space: nowrap';
+    const legend = ['in', 'set', 'test', 'rst'].map((k) => ({ name: PH[k][0], sw: 'width: 18px; height: 10px; border-radius: 3px; background: ' + PH[k][1] }));
+    return { nights, ticks, zones, segs, limits, fridge, legend };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CB-G 성숙도 진단</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">T 은행 영업점의 디지털 수준, 다섯 축으로 보면</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">1 시작 · 2 부분 · 3 표준 · 4 통합 · 5 최적화 · 현재와 3년 목표</div>
+
+  <!-- 왼쪽 8열: 머리행 -->
+  <div style="position: absolute; left: 64px; top: 152px; width: 760px; height: 30px; box-sizing: border-box; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+    <span style="position: absolute; left: 4px; top: 4px">진단 축</span>
+    <span style="position: absolute; right: 0; top: 4px">차이</span>
+  </div>
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.head}}"><span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #121417">{{s.no}}</span><span>{{s.name}}</span></div>
+  </sc-for>
+
+  <!-- 축 행 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+    <div style="{{r.rowStyle}}">
+      <div style="position: absolute; left: 4px; top: 0; width: 196px; height: 84px; display: flex; flex-direction: column; justify-content: center; gap: 3px">
+        <span style="font-size: 15.5px; font-weight: 700">{{r.name}}</span>
+        <span style="font-size: 12px; color: #8a91a0">현재 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">{{r.cur}}</span> → 목표 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{r.tgt}}</span></span>
+      </div>
+      <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="5">
+        <div style="{{c.box}}">{{c.label}}</div>
+      </sc-for>
+      <div style="{{r.arrow}}"></div>
+      <div style="{{r.head}}"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2l5 4-5 4"/></svg></div>
+      <span style="{{r.chip}}">+{{r.diff}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 618px; width: 760px; display: flex; align-items: center; gap: 18px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 18px; height: 14px; border-radius: 3px; background: #121417"></span>현재 수준</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 18px; height: 14px; border-radius: 3px; background: #eaeefb"></span>올라갈 단계</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 18px; height: 14px; box-sizing: border-box; border-radius: 3px; border: 2px solid #1428a0"></span>3년 목표</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">+3</span>먼저 올릴 두 축</span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 11.5px; color: #8a91a0">단계 값은 예시</span>
+  </div>
+
+  <!-- 오른쪽 4열: 가장 큰 차이 2 -->
+  <div style="position: absolute; left: 848px; top: 152px; width: 368px; height: 30px; display: flex; align-items: flex-start; justify-content: space-between; padding-top: 3px; box-sizing: border-box"><span style="font-size: 13px; font-weight: 800; color: #1428a0">가장 큰 차이 2</span><span style="font-size: 12px; color: #596170">차이 큰 순 · 같으면 현재가 낮은 축</span></div>
+  <div style="position: absolute; left: 848px; top: 186px; width: 368px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{gaps}}" as="g" hint-placeholder-count="2">
+      <div style="height: 140px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 16px 20px; display: flex; flex-direction: column">
+        <div style="height: 26px; flex-shrink: 0; display: flex; align-items: center; gap: 10px">
+          <span style="font-size: 16.5px; font-weight: 800">{{g.name}}</span>
+          <span style="flex-grow: 1"></span>
+          <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center">+{{g.diff}}</span>
+        </div>
+        <span style="margin-top: 2px; font-size: 12px; line-height: 18px; color: #596170">현재 <span style="font-family: Manrope, sans-serif; font-weight: 800">{{g.cur}}</span> → 3년 목표 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{g.tgt}}</span></span>
+        <div style="height: 1px; flex-shrink: 0; margin: 9px 0 8px 0; background: #b8c3ee"></div>
+        <span style="font-size: 14px; font-weight: 600; line-height: 20px; color: #3d4452">{{g.how}}</span>
+        <span style="margin-top: 2px; font-size: 14px; font-weight: 800; line-height: 20px; color: #1428a0">→ {{g.what}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 단계 정의 -->
+  <div style="position: absolute; left: 848px; top: 494px; width: 368px">
+    <div style="height: 22px; box-sizing: border-box; border-bottom: 1.5px solid #121417; font-size: 12px; font-weight: 700; color: #596170">단계 정의</div>
+    <sc-for list="{{defs}}" as="d" hint-placeholder-count="5">
+      <div style="height: 26px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; font-size: 11.5px">
+        <span style="width: 12px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{d.no}}</span>
+        <span style="width: 44px; flex-shrink: 0; font-weight: 700">{{d.name}}</span>
+        <span style="color: #596170">{{d.desc}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 창구 제안 · 진단: 인터뷰 [0]명 · 현장 [0]곳 · 자체 점검표</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 7</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 행 5개 × 84 (y 182–602) · 단계 칸: 행 안 x 208부터, 폭 96 · 간격 4 · 높이 40
+    const TOP = 182, ROW = 84, CX = 208, CW = 96, CG = 4, CT = 22, CH = 40;
+    const cellX = (k) => CX + (k - 1) * (CW + CG);
+    const N = ['시작', '부분', '표준', '통합', '최적화'];
+    const stages = N.map((name, i) => ({
+      no: String(i + 1), name,
+      head: 'position: absolute; left: ' + (64 + cellX(i + 1)) + 'px; top: 152px; width: ' + CW + 'px; height: 28px; display: flex; align-items: flex-start; justify-content: center; gap: 5px; padding-top: 3px; box-sizing: border-box; font-size: 12px; font-weight: 600; color: #596170'
+    }));
+    // [축, 현재, 3년 목표] — 진단 결과 예시
+    const A = [
+      ['고객 접점 디지털', 2, 4],
+      ['창구 업무 페이퍼리스', 1, 4],
+      ['기기 관리 · 보안', 2, 4],
+      ['콘텐츠 운영', 2, 3],
+      ['데이터 활용', 1, 3]
+    ];
+    // 오른쪽 카드에 올린 두 축 (가장 큰 차이 2)
+    const TOP2 = ['창구 업무 페이퍼리스', '데이터 활용'];
+    const lab = 'display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800;';
+    const cellBox = (k, cur, tgt) => {
+      const base = 'position: absolute; left: ' + cellX(k) + 'px; top: ' + CT + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 6px; ' + lab;
+      if (k <= cur) return base + ' background: #121417; color: #ffffff;';
+      if (k < tgt) return base + ' background: #eaeefb;';
+      if (k === tgt) return base + ' background: #ffffff; border: 2px solid #1428a0; color: #1428a0;';
+      return base + ' background: #f5f6f8;';
+    };
+    const rows = A.map(([name, cur, tgt], i) => {
+      const diff = tgt - cur;
+      const hot = TOP2.indexOf(name) >= 0;
+      const hasMid = diff > 1;
+      // 화살표: 올라갈 단계 칸을 가로질러 목표 칸 직전까지
+      const ax0 = cellX(cur + 1) + 14, ax1 = cellX(tgt) - 6;
+      return {
+        name, cur: String(cur), tgt: String(tgt), diff: String(diff),
+        rowStyle: 'position: absolute; left: 64px; top: ' + (TOP + i * ROW) + 'px; width: 760px; height: ' + ROW + 'px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea',
+        cells: [1, 2, 3, 4, 5].map((k) => ({
+          label: k === cur ? '현재' : k === tgt ? '목표' : '',
+          box: cellBox(k, cur, tgt)
+        })),
+        arrow: hasMid ? 'position: absolute; left: ' + ax0 + 'px; top: ' + (CT + CH / 2 - 1) + 'px; width: ' + (ax1 - ax0 - 4) + 'px; height: 2px; background: #1428a0' : 'display: none',
+        head: hasMid ? 'position: absolute; left: ' + (ax1 - 10) + 'px; top: ' + (CT + CH / 2 - 6) + 'px; width: 12px; height: 12px; display: flex' : 'display: none',
+        chip: 'position: absolute; right: 0; top: ' + (CT + 7) + 'px; height: 26px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; ' +
+          (hot ? 'background: #1428a0; color: #ffffff;' : 'background: #eaeefb; color: #1428a0;')
+      };
+    });
+    const G = [
+      ['창구 업무 페이퍼리스', 1, 4, '서식 태블릿 · 전자 서명', 'Galaxy Tab · Knox Suite'],
+      ['데이터 활용', 1, 3, '대기 · 상담 데이터', '지점별 대시보드']
+    ];
+    const gaps = G.map(([name, cur, tgt, how, what]) => ({ name, cur: String(cur), tgt: String(tgt), diff: String(tgt - cur), how, what }));
+    const D = [
+      ['시작', '종이 서식 · 대면 처리 중심'],
+      ['부분', '일부 업무 · 일부 지점만 디지털'],
+      ['표준', '전 지점이 같은 디지털 기준으로 운영'],
+      ['통합', '기기 · 콘텐츠 · 데이터를 한 곳에서 관리'],
+      ['최적화', '데이터로 운영을 계속 개선']
+    ];
+    const defs = D.map(([name, desc], i) => ({ no: String(i + 1), name, desc }));
+    return { stages, rows, gaps, defs };
+  }
+}
+</script>
+</body>
+</html>

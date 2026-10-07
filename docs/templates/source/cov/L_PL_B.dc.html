@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>PL-B 파일럿 설계</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 파일럿 · 확산</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">시범 지점 세 곳은 이렇게 고릅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">후보 6곳 × 선정 기준 · 기간 12주 · 측정 지표와 비교군</div>
+
+  <!-- 후보 표 6열 -->
+  <div style="position: absolute; left: 64px; top: 160px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">후보 지점 6곳</div>
+  <div style="position: absolute; left: 64px; top: 186px; width: 560px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 96px repeat(5, minmax(0, 1fr)) 92px; height: 50px; align-items: center; border-bottom: 2px solid #121417">
+      <span style="padding-left: 4px; font-size: 12.5px; font-weight: 700; color: #596170">지점</span>
+      <sc-for list="{{crit}}" as="c" hint-placeholder-count="5">
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+          <span style="font-size: 12.5px; font-weight: 700; color: #596170; white-space: nowrap">{{c.name}}</span>
+          <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">{{c.sub}}</span>
+        </div>
+      </sc-for>
+      <span style="text-align: center; font-size: 12.5px; font-weight: 700; color: #596170">선정</span>
+    </div>
+    <sc-for list="{{cands}}" as="r" hint-placeholder-count="6">
+      <div style="{{r.row}}">
+        <div style="padding-left: 10px; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{r.name}}</span>
+          <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{r.type}}</span>
+        </div>
+        <sc-for list="{{r.scores}}" as="sc" hint-placeholder-count="5">
+          <div style="display: flex; justify-content: center; gap: 4px">
+            <sc-for list="{{sc}}" as="d" hint-placeholder-count="3">
+              <span style="{{d}}"></span>
+            </sc-for>
+          </div>
+        </sc-for>
+        <div style="display: flex; justify-content: center"><span style="{{r.chip}}">{{r.pick}}</span></div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 64px; top: 610px; width: 560px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 4px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1428a0"></span><span style="width: 10px; height: 10px; border-radius: 50%; background: #1428a0"></span><span style="width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8"></span></span>
+    <span>점수 3단계 · 예시</span>
+    <span style="width: 1px; height: 12px; background: #d5d9e0"></span>
+    <span>유형마다 1곳 선정 · 같은 유형 1곳은 비교군</span>
+  </div>
+
+  <!-- 기간 띠 -->
+  <div style="position: absolute; left: 648px; top: 160px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">기간 <span style="font-family: Manrope, sans-serif">12</span>주</div>
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="13">
+    <div style="{{g}}"></div>
+  </sc-for>
+  <sc-for list="{{weeks}}" as="w" hint-placeholder-count="12">
+    <span style="{{w.st}}">{{w.label}}</span>
+  </sc-for>
+  <sc-for list="{{phases}}" as="p" hint-placeholder-count="3">
+    <div>
+      <div style="{{p.bar}}"><span>{{p.name}}</span><span style="font-family: Manrope, sans-serif; font-weight: 800">{{p.wk}}</span></div>
+      <div style="{{p.capSt}}">{{p.cap}}</div>
+    </div>
+  </sc-for>
+
+  <!-- 측정 지표 -->
+  <div style="position: absolute; left: 648px; top: 300px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">측정 지표</div>
+  <div style="position: absolute; left: 648px; top: 326px; width: 568px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 170px 136px 120px minmax(0, 1fr); height: 34px; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">지표</span><span>측정 방법</span><span>도입 전</span><span>목표</span>
+    </div>
+    <sc-for list="{{kpis}}" as="k" hint-placeholder-count="4">
+      <div style="display: grid; grid-template-columns: 170px 136px 120px minmax(0, 1fr); height: 56px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <div style="padding-left: 4px; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">{{k.name}}</span>
+          <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{k.unit}}</span>
+        </div>
+        <span style="font-size: 13.5px; color: #3d4452; white-space: nowrap">{{k.how}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; color: #3d4452; white-space: nowrap">{{k.before}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 17px; font-weight: 800; color: #1428a0; white-space: nowrap">{{k.goal}}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 648px; top: 600px; width: 568px; display: flex; align-items: center; gap: 12px">
+    <span style="height: 26px; padding: 0 12px 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 4v16 M17 4v16 M3 8h8 M13 16h8"/></svg>
+      비교군 3곳과 같은 기간 비교
+    </span>
+    <span style="font-size: 12px; color: #596170; white-space: nowrap">목표는 시범 시작 전 고객과 합의</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 창구 제안 · 지점 이름은 익명(가–바)</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 41</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 점수 점 — 채움(#1428a0) · 빈 점(테두리)
+    const on = 'width: 10px; height: 10px; border-radius: 50%; background: #1428a0';
+    const off = 'width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #b8bec8';
+    const dots = (n) => [1, 2, 3].map((k) => (k <= n ? on : off));
+    const crit = [
+      ['방문객', '일 평균'], ['고객 연령', '고령 비중'], ['창구 수', '지점 규모'], ['네트워크', '회선 · 무선'], ['지점장 의지', '면담 결과']
+    ].map(([name, sub]) => ({ name, sub }));
+    // [지점, 유형, 점수 5개(1–3), 선정 여부] — 점수는 예시
+    const C = [
+      ['가 지점', '도심 · 대형', [3, 2, 3, 3, 3], true],
+      ['나 지점', '도심 · 대형', [3, 2, 3, 2, 1], false],
+      ['다 지점', '주거지 · 중형', [2, 3, 2, 3, 3], true],
+      ['라 지점', '주거지 · 중형', [2, 3, 2, 2, 2], false],
+      ['마 지점', '대학가 · 소형', [1, 1, 1, 3, 3], true],
+      ['바 지점', '대학가 · 소형', [1, 1, 1, 2, 1], false]
+    ];
+    const chip = 'height: 24px; padding: 0 11px; box-sizing: border-box; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ';
+    const cands = C.map(([name, type, sc, pick]) => ({
+      name, type, pick: pick ? '선정' : '비교군',
+      scores: sc.map(dots),
+      chip: chip + (pick ? 'background: #1428a0; color: #ffffff;' : 'background: #f5f6f8; color: #3d4452; border: 1px solid #d5d9e0;'),
+      row: 'display: grid; grid-template-columns: 96px repeat(5, minmax(0, 1fr)) 92px; height: 60px; align-items: center; border-bottom: 1px solid #e2e5ea;' + (pick ? ' background: #eaeefb;' : '')
+    }));
+    // 기간 띠: x 648–1216 (12주 × 47.33) · 주 라벨 y 186 · 막대 y 206–246
+    const X0 = 648, WK = 568 / 12, BAR = 206;
+    const wx = (w) => X0 + WK * w;
+    // [단계, 시작 주, 길이, 배경, 글자, 설명]
+    const P = [
+      ['준비', 1, 2, '#b8c3ee', '#121417', '설치 · 직원 교육'],
+      ['운영', 3, 8, '#1428a0', '#ffffff', '실사용 · 지표 수집 · 비교군 동시 측정'],
+      ['평가', 11, 2, '#6f82d6', '#ffffff', '분석 · 확산 판단']
+    ];
+    const bounds = P.map((p) => p[1] - 1).concat([12]);
+    const grid = Array.from({ length: 13 }, (_, k) =>
+      'position: absolute; left: ' + Math.round(k === 12 ? wx(k) - 1 : wx(k)) + 'px; top: 184px; width: 1px; height: 66px; background: ' + (bounds.indexOf(k) >= 0 ? '#b8bec8' : '#e2e5ea')
+    );
+    const weeks = Array.from({ length: 12 }, (_, i) => ({
+      label: 'W' + (i + 1),
+      st: 'position: absolute; left: ' + Math.round(wx(i)) + 'px; top: 186px; width: ' + Math.round(WK) + 'px; text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #8a91a0'
+    }));
+    const phases = P.map(([name, s, len, bg, fg, cap]) => ({
+      name, wk: len + '주', cap,
+      bar: 'position: absolute; left: ' + Math.round(wx(s - 1) + 2) + 'px; top: ' + BAR + 'px; width: ' + Math.round(WK * len - 4) + 'px; height: 40px; box-sizing: border-box; border-radius: 6px; background: ' + bg + '; color: ' + fg + '; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13.5px; font-weight: 700; white-space: nowrap',
+      capSt: 'position: absolute; left: ' + Math.round(wx(s - 1)) + 'px; top: ' + (BAR + 48) + 'px; width: ' + Math.round(WK * len) + 'px; text-align: center; font-size: 12px; color: #3d4452; white-space: nowrap'
+    }));
+    const kpis = [
+      ['창구 처리 시간', '건당 평균', '시스템 로그', '[00]분', '−[00]%'],
+      ['종이 서식', '지점 · 월', '출력 건수', '[0,000]장', '−[00]%'],
+      ['고객 만족', '5점 척도', '출구 설문', '[0.0]', '+[0.0]'],
+      ['직원 업무 부담', '5점 척도', '설문', '[0.0]', '−[0.0]']
+    ].map(([name, unit, how, before, goal]) => ({ name, unit, how, before, goal }));
+    return { crit, cands, grid, weeks, phases, kpis };
+  }
+}
+</script>
+</body>
+</html>

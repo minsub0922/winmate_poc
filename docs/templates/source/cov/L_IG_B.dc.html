@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>IG-B 연동 데이터 흐름</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 시스템 연동</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">POS에서 품절이 나면, [00]초 안에 메뉴판이 바뀝니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">고객 시스템 → 연동 → 삼성 → 매장 · 데이터 · 주기 · 장애 시 동작</div>
+
+  <!-- 세로 레인 4 -->
+  <sc-for list="{{lanes}}" as="l" hint-placeholder-count="4">
+    <div style="{{l.bg}}">
+      <div style="position: absolute; left: 18px; top: 14px; display: flex; align-items: baseline; gap: 8px; white-space: nowrap">
+        <span style="{{l.nameSt}}">{{l.name}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; font-weight: 600; color: #8a91a0">{{l.sub}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 연결선 · 화살촉 -->
+  <sc-for list="{{lines}}" as="ln" hint-placeholder-count="14">
+    <div style="{{ln}}"></div>
+  </sc-for>
+  <sc-for list="{{heads}}" as="h" hint-placeholder-count="8">
+    <div style="{{h}}"><svg width="10" height="10" viewBox="0 0 10 10" style="display: block"><path d="M0 0L10 5L0 10z" fill="#1428a0"/></svg></div>
+  </sc-for>
+
+  <!-- 상자 -->
+  <sc-for list="{{boxes}}" as="b" hint-placeholder-count="8">
+    <div style="{{b.st}}">
+      <span style="{{b.nameSt}}">{{b.name}}</span>
+      <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; line-height: 1.4; color: #596170; white-space: nowrap">{{b.sub}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 품절 반영 시간 -->
+  <div style="position: absolute; left: 996px; top: 408px; width: 176px; height: 28px; box-sizing: border-box; border-radius: 999px; background: #121417; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 12px; font-weight: 700; white-space: nowrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    <span>품절 반영 <span style="font-family: Manrope, sans-serif; font-weight: 800">[00]</span>초 이내</span>
+  </div>
+
+  <!-- 데이터 라벨 칩 -->
+  <sc-for list="{{chips}}" as="c" hint-placeholder-count="3">
+    <span style="{{c.st}}">{{c.name}}</span>
+  </sc-for>
+
+  <!-- 흐름 표 -->
+  <div style="position: absolute; left: 64px; top: 478px; width: 1152px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 170px 210px 200px 150px minmax(0, 1fr); height: 34px; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">흐름</span><span>방향</span><span>주기</span><span>형식</span><span>장애 시</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="display: grid; grid-template-columns: 170px 210px 200px 150px minmax(0, 1fr); height: 44px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <span style="padding-left: 4px; display: flex"><span style="{{r.chip}}">{{r.name}}</span></span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; white-space: nowrap">{{r.dir}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 600; color: #3d4452; white-space: nowrap">{{r.cycle}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 700; color: #3d4452; white-space: nowrap">{{r.fmt}}</span>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #121417; white-space: nowrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z M9 12l2 2 4-4"/></svg>
+          {{r.fail}}
+        </span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 주기 · 형식은 POS 벤더 협의로 확정</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 39</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 레인 4개: x 64 · 360 · 656 · 952 (폭 264 · 간격 32) · y 156–456
+    // 흐름 3줄(트랙): T1 품절 y 240 · T2 가격 y 320 · T3 프로모션 y 400 — 상자는 지나가는 트랙 높이를 덮음
+    const LX = [64, 360, 656, 952], LW = 264, TOP = 156, LH = 300;
+    const BW = 176, BOFF = 44;
+    const T = [240, 320, 400];
+    const bx = (lane) => LX[lane] + BOFF;
+    const lanes = [
+      ['고객 시스템', 'A 커피 본사 · 매장', false],
+      ['연동', 'SI 파트너 구축', false],
+      ['삼성', 'MagicINFO', true],
+      ['매장', '320곳 동시 반영', false]
+    ].map(([name, sub, sam], i) => ({
+      name, sub,
+      nameSt: 'font-size: 13.5px; font-weight: 800; color: ' + (sam ? '#1428a0' : '#121417'),
+      bg: 'position: absolute; left: ' + LX[i] + 'px; top: ' + TOP + 'px; width: ' + LW + 'px; height: ' + LH + 'px; border-radius: 12px; background: #f5f6f8'
+    }));
+    // [레인, 이름, 보조, top, height]
+    const B = [
+      [0, 'POS (매장)', '매장 320곳 · 품절 입력', 212, 56],
+      [0, '메뉴 마스터 (ERP)', '본사 · 가격 · 프로모션', 292, 136],
+      [1, 'API 게이트웨이', '인증 · 호출 제한', 212, 56],
+      [1, '변환 · 검증', '형식 변환 · 오류 검사', 292, 136],
+      [2, '데이터 링크', '데이터 → 메뉴 템플릿', 212, 136],
+      [2, 'MagicINFO 서버', '콘텐츠 예약 배포', 372, 56],
+      [3, '메뉴보드 QM55C ×3', '품절 표시 · 가격 · 행사', 212, 80],
+      [3, '키오스크 KM24C', '품절 메뉴 주문 막음', 316, 80]
+    ];
+    const boxes = B.map(([lane, name, sub, top, h]) => {
+      const sam = lane === 2;
+      return {
+        name, sub,
+        nameSt: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 14px; font-weight: 800; white-space: nowrap; color: ' + (sam ? '#1428a0' : '#121417'),
+        st: 'position: absolute; left: ' + bx(lane) + 'px; top: ' + top + 'px; width: ' + BW + 'px; height: ' + h + 'px; box-sizing: border-box; border-radius: 10px; background: #ffffff; ' +
+          (sam ? 'border: 1.5px solid #1428a0; ' : 'border: 1px solid #d5d9e0; ') + 'padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px'
+      };
+    });
+    const hl = (x1, x2, y) => 'position: absolute; left: ' + x1 + 'px; top: ' + (y - 1) + 'px; width: ' + (x2 - x1) + 'px; height: 2px; background: #1428a0';
+    const head = (xTip, y) => 'position: absolute; left: ' + (xTip - 10) + 'px; top: ' + (y - 5) + 'px; width: 10px; height: 10px';
+    const lines = [], heads = [];
+    // 레인 1→2, 2→3 : 트랙마다 가로선 + 화살촉
+    [0, 1].forEach((g) => {
+      const x1 = bx(g) + BW, x2 = bx(g + 1);
+      T.forEach((y) => { lines.push(hl(x1, x2 - 10, y)); heads.push(head(x2, y)); });
+    });
+    // 레인 3→4 : 세 트랙이 버스로 모여 매장 화면 둘로 동시에
+    const BUS = 936, s3 = bx(2) + BW, s4 = bx(3);
+    T.forEach((y) => lines.push(hl(s3, BUS + 1, y)));
+    lines.push('position: absolute; left: ' + (BUS - 1) + 'px; top: ' + (T[0] - 1) + 'px; width: 2px; height: ' + (T[2] - T[0] + 2) + 'px; background: #1428a0');
+    [252, 356].forEach((y) => { lines.push(hl(BUS, s4 - 10, y)); heads.push(head(s4, y)); });
+    // 데이터 라벨 칩 — 고객 시스템을 떠나는 화살표 위
+    const chip = 'position: absolute; height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ';
+    const F = {
+      sold: ['품절 · 실시간', 'background: #1428a0; color: #ffffff;'],
+      price: ['가격 · 일 1회', 'background: #ffffff; color: #3d4452; border: 1px solid #b8bec8;'],
+      promo: ['프로모션 · 예약', 'background: #eaeefb; color: #1428a0;']
+    };
+    const g1c = (bx(0) + BW + bx(1)) / 2;
+    const chips = ['sold', 'price', 'promo'].map((k, i) => ({
+      name: F[k][0],
+      st: chip + F[k][1] + ' left: ' + (g1c - 52) + 'px; top: ' + (T[i] - 30) + 'px; width: 104px; justify-content: center;'
+    }));
+    // [흐름, 방향, 주기, 형식, 장애 시]
+    const R = [
+      ['sold', 'POS → 화면', '실시간', 'JSON', '마지막 값 유지 + 알림'],
+      ['price', 'ERP → 화면', '일 1회 06시', 'CSV', '전날 가격 유지'],
+      ['promo', '본사 → 화면', '예약', '콘텐츠', '기본 화면으로 복귀']
+    ];
+    const rows = R.map(([k, dir, cycle, fmt, fail]) => ({
+      name: F[k][0], dir, cycle, fmt, fail,
+      chip: chip.replace('position: absolute; ', '') + F[k][1]
+    }));
+    return { lanes, boxes, lines, heads, chips, rows };
+  }
+}
+</script>
+</body>
+</html>

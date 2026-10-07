@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-D 이벤트 대응 시나리오</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">새벽 3시 냉동고 온도가 오르면, 아침 전에 끝납니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 640px; font-size: 15px; color: #596170">한 번의 이상 상황 · 시스템과 사람이 이어 받는 다섯 단계</div>
+
+  <!-- 주체 범례 -->
+  <div style="position: absolute; right: 64px; top: 114px; display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: #3d4452">
+    <span style="font-size: 12px; color: #8a91a0">이어 받는 주체</span>
+    <span style="height: 24px; padding: 0 10px 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12H6z M9 2v4 M15 2v4 M9 18v4 M15 18v4 M2 9h4 M2 15h4 M18 9h4 M18 15h4"/></svg>시스템</span>
+    <span style="height: 24px; padding: 0 10px 0 8px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3d4452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0"/></svg>사람</span>
+  </div>
+
+  <!-- 다섯 단계 -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.box}}">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 6px">
+        <span style="{{s.timeSt}}">{{s.time}}</span>
+        <sc-if value="{{s.sys}}" hint-placeholder-val="{{true}}">
+          <span style="height: 24px; padding: 0 9px 0 7px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6h12v12H6z M9 2v4 M15 2v4 M9 18v4 M15 18v4 M2 9h4 M2 15h4 M18 9h4 M18 15h4"/></svg>{{s.who}}</span>
+        </sc-if>
+        <sc-if value="{{s.human}}" hint-placeholder-val="{{false}}">
+          <span style="height: 24px; padding: 0 9px 0 7px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#3d4452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21a8 8 0 0 1 16 0"/></svg>{{s.who}}</span>
+        </sc-if>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 8px">
+        <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #8a91a0">{{s.no}}</span>
+        <span style="font-size: 17px; font-weight: 800; letter-spacing: -0.01em">{{s.name}}</span>
+      </div>
+      <div style="width: 186px; height: 120px; flex-shrink: 0">
+        <dc-import name="Img" pid="{{s.pid}}" kind="{{s.kind}}" origin="{{s.origin}}" hint="{{s.hint}}" w="186" h="120" radius="8" hint-size="186px,120px"></dc-import>
+      </div>
+      <span style="min-height: 39px; font-size: 13px; line-height: 1.5; color: #3d4452; word-break: keep-all">{{s.desc}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; align-items: center; gap: 6px">
+        <span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; color: #121417; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{s.sol}}</span>
+        <sc-if value="{{s.gen}}" hint-placeholder-val="{{false}}">
+          <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: rgba(20,40,160,0.86); color: #ffffff; font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff" stroke="none"><path d="M12 2l2.4 6.9L21 11l-6.6 2.1L12 20l-2.4-6.9L3 11l6.6-2.1z"/></svg>AI 생성 시안</span>
+        </sc-if>
+      </div>
+    </div>
+  </sc-for>
+  <sc-for list="{{chevs}}" as="c" hint-placeholder-count="4">
+    <div style="{{c}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 지금 vs 도입 후 -->
+  <div style="position: absolute; left: 64px; top: 482px; width: 564px; height: 100px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid #121417; background: #ffffff; padding: 0 24px; display: flex; align-items: center; gap: 16px">
+    <span style="height: 28px; padding: 0 12px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 13px; font-weight: 800; display: flex; align-items: center; flex-shrink: 0">지금</span>
+    <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+      <span style="font-size: 16px; font-weight: 700; white-space: nowrap">아침 출근 후 발견</span>
+      <span style="font-size: 13px; color: #596170; white-space: nowrap">원인 기록 없음 · 같은 일이 반복</span>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+      <span style="font-size: 12.5px; color: #596170">재고 폐기</span>
+      <span style="display: flex; align-items: baseline; gap: 3px"><span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">[00]</span><span style="font-size: 15px; font-weight: 800">만 원</span></span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 631px; top: 523px; width: 18px; height: 18px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  <div style="position: absolute; left: 652px; top: 482px; width: 564px; height: 100px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; border: 1.5px solid #eaeefb; padding: 0 24px; display: flex; align-items: center; gap: 16px">
+    <span style="height: 28px; padding: 0 12px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 800; display: flex; align-items: center; flex-shrink: 0">도입 후</span>
+    <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+      <span style="font-size: 16px; font-weight: 700; white-space: nowrap; color: #1428a0"><span style="font-family: Manrope, sans-serif; font-weight: 800">[00]</span>분 안에 대응</span>
+      <span style="font-size: 13px; color: #3d4452; white-space: nowrap">기록 자동 · 위생 점검 때 그대로 제출</span>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+      <span style="font-size: 12.5px; color: #596170">재고 폐기</span>
+      <span style="display: flex; align-items: baseline; gap: 3px; color: #1428a0"><span style="font-family: Manrope, sans-serif; font-size: 30px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1">0</span><span style="font-size: 15px; font-weight: 800">원</span></span>
+    </div>
+  </div>
+
+  <!-- 같은 틀로 -->
+  <div style="position: absolute; left: 64px; top: 606px; width: 1152px; height: 28px; display: flex; align-items: center; gap: 8px">
+    <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">같은 틀로</span>
+    <sc-for list="{{others}}" as="o" hint-placeholder-count="3">
+      <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 12px; font-weight: 700; display: flex; align-items: center">{{o}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12px; color: #8a91a0">이벤트가 바뀌어도 감지 기준 · 알림 대상만 바꿉니다</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 다이닝 · 매장 주방 · 냉장 관리 제안 · 시각은 예시 · 화면은 공개 화면(실제 데이터 아님)</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 18</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 카드 208 × 302, 간격 28 (쉐브런) · x 64 → 1216
+    const X0 = 64, CW = 208, GAP = 28, TOP = 156, CH = 302;
+    // [시각, 단계, 주체(sys/human), 주체 칩, 이미지 pid, kind, origin, hint, 설명, 솔루션 칩]
+    // 이미지가 작아 AI 생성 출처 칩은 이미지 위가 아닌 카드 아래 칩 줄에 붙임
+    const S = [
+      ['03:12', '감지', 'sys', '시스템', 'ui.stp.detect', 'ui', 'official', '', '냉동고 −18℃ → −12℃, 기준 이탈 [0]분 지속', '삼성 콜드체인'],
+      ['03:13', '알림', 'sys', '시스템', 'none', 'ui', 'official', '점장 휴대폰 알림 화면', '점장 휴대폰 · 본사 관제에 동시 알림', 'SmartThings Pro'],
+      ['03:20', '원격 조치', 'human', '사람 · 본사 관제', 'ui.stp.schedule', 'ui', 'official', '', '설정 확인 · 제상 운전 원격 실행', 'SmartThings Pro'],
+      ['07:00', '현장 조치', 'human', '사람 · 서비스 기사', 'none', 'people', 'gen', '서비스 기사가 냉동고 점검', '필요 시 서비스 방문 · 부품 교체', '삼성 서비스'],
+      ['자동', '기록', 'sys', '시스템', 'ui.stp.energy', 'ui', 'official', '', '온도 이력 · 조치 내역 위생 기록에 저장', '삼성 콜드체인']
+    ];
+    const steps = S.map(([time, name, who, whoLabel, pid, kind, origin, hint, desc, sol], i) => ({
+      time, name, desc, sol, pid, kind, origin, hint,
+      no: '0' + (i + 1),
+      who: whoLabel,
+      sys: who === 'sys',
+      human: who === 'human',
+      gen: origin === 'gen',
+      timeSt: 'height: 26px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.02em; display: flex; align-items: center; white-space: nowrap',
+      box: 'position: absolute; left: ' + (X0 + i * (CW + GAP)) + 'px; top: ' + TOP + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; padding: 12px 10px 12px 10px; display: flex; flex-direction: column; gap: 8px'
+    }));
+    // 쉐브런: 카드 사이 간격 가운데, 이미지 높이에 맞춤
+    const chevs = [0, 1, 2, 3].map((i) => 'position: absolute; left: ' + (X0 + CW + i * (CW + GAP) + (GAP - 18) / 2) + 'px; top: ' + (TOP + 142) + 'px; width: 18px; height: 18px');
+    const others = ['사이니지 화면 꺼짐', '병동 낙상 감지', '공조 고장 · 누수'];
+    return { steps, chevs, others };
+  }
+}
+</script>
+</body>
+</html>

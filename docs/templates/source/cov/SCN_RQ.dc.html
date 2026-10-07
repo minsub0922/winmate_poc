@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SCN RQ 고객 요구사항 점검</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">시나리오 점검 · 웹앱 ① · 고객 요구사항</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">요구사항 — 10개 상황 중 6개는 담을 장이 부족했습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1100px; font-size: 15px; color: #596170">만드는 것 — 정의서(키맨별 요구 · 가중치 · 물을 것) → 요구 이해 · 대응 시트</div>
+  <div style="position: absolute; right: 64px; top: 38px; height: 24px; display: flex; align-items: center; gap: 6px"><span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">점검 전</span><span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #3d4452"><span style="width: 9px; height: 9px; flex-shrink: 0; border-radius: 50%; background: #1428a0"></span>표현됨 <span style="font-family: Manrope, sans-serif; font-weight: 800">4</span></span><span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #3d4452"><span style="width: 9px; height: 9px; flex-shrink: 0; border-radius: 50%; background: #b8bec8"></span>부족 <span style="font-family: Manrope, sans-serif; font-weight: 800">2</span></span><span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: #3d4452"><span style="width: 9px; height: 9px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #3d4452"></span>없음 <span style="font-family: Manrope, sans-serif; font-weight: 800">4</span></span><svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="#1428a0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6h15M11 1.5 16 6l-5 4.5"></path></svg><span style="height: 24px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; background: #1428a0; display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; color: #ffffff">이후 표현됨 <span style="font-family: Manrope, sans-serif; font-weight: 800">10 / 10</span></span></div>
+  <div style="position: absolute; left: 1020px; top: 146px; width: 196px; height: 476px; border-radius: 10px; background: #eaeefb"></div>
+  <div style="position: absolute; left: 64px; top: 150px; width: 1152px">
+    <div style="display: grid; grid-template-columns: 32px 296px 236px 124px 176px 92px 196px; align-items: center; height: 28px; box-sizing: border-box; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170"><span style="padding-left: 2px">#</span><span>상황 · 고객 맥락</span><span>데이터</span><span>시트 역할</span><span>기존 레이아웃</span><span>점검 전</span><span style="padding-left: 10px; color: #1428a0">이번에 더한 레이아웃</span></div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+      <div style="{{r.rowStyle}}">
+        <span style="padding-left: 2px; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #8a91a0">{{r.no}}</span>
+        <span style="padding-right: 12px; font-size: 13px; font-weight: 600; white-space: nowrap">{{r.sit}}</span>
+        <span style="padding-right: 12px; font-size: 12.5px; color: #3d4452; white-space: nowrap">{{r.data}}</span>
+        <span style="padding-right: 8px; font-size: 12.5px; font-weight: 600; white-space: nowrap">{{r.role}}</span>
+        <div style="display: flex; align-items: center; gap: 4px">
+          <sc-for list="{{r.old}}" as="c" hint-placeholder-count="2"><span style="height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 6px; background: #f5f6f8; border: 1px solid #e2e5ea; display: flex; align-items: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap">{{c.t}}</span></sc-for>
+          <sc-if value="{{r.noOld}}" hint-placeholder-val="{{false}}"><span style="font-size: 12.5px; color: #b8bec8">—</span></sc-if>
+        </div>
+        <div style="display: flex; align-items: center"><span style="{{r.vChip}}"><span style="{{r.vDot}}"></span>{{r.vLabel}}</span></div>
+        <div style="display: flex; align-items: center; gap: 4px; padding-left: 10px">
+          <sc-for list="{{r.add}}" as="c" hint-placeholder-count="1"><span style="height: 22px; padding: 0 8px; box-sizing: border-box; border-radius: 6px; background: #1428a0; display: flex; align-items: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #ffffff; white-space: nowrap">{{c.t}}</span></sc-for>
+          <sc-if value="{{r.noAdd}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #8a91a0; white-space: nowrap">{{r.addNote}}</span></sc-if>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 681px; display: flex; align-items: center; gap: 16px; font-size: 11px; color: #8a91a0"><span style="font-weight: 700; color: #596170">Winmate · 시나리오 점검 2026.10</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 9px; height: 9px; flex-shrink: 0; border-radius: 50%; background: #1428a0"></span>표현됨 — 기존 레이아웃 그대로</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 9px; height: 9px; flex-shrink: 0; border-radius: 50%; background: #b8bec8"></span>부족 — 비슷한 장은 있으나 데이터 모양이 안 맞음</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 9px; height: 9px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #3d4452"></span>없음 — 담을 장이 없음</span><span style="display: flex; align-items: center; gap: 5px"><span style="width: 9px; height: 9px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #8a91a0"></span>제작 중</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">SCN · RQ · 3</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [번호, 상황 · 고객 맥락, 데이터, 시트 역할, 기존 레이아웃, 점검 전 판정, 이번에 더한 레이아웃]
+    const R = [[1, "A 커피 · 키맨 3명 · 가중치 40/35/25", "키맨별 요구 · 가중치", "요구 이해", ["VP-D"], "part", ["RM-A"]], [2, "S 지자체 RFP · 요구 28개", "요구 ID · 필수/선택 · 출처 쪽", "요구 대응표", ["SC-B"], "part", ["RM-B"]], [3, "E 대학교 RFP · 평가 8항목 · 배점", "평가 항목 · 배점 · 근거", "평가 대응", [], "miss", ["RM-C"]], [4, "A 커피 퀵윈 · 요구 4개 · 결재자 1명", "요구 4", "요구 ↔ 강점", ["ST-B"], "full", []], [5, "B 병원 · 밝기 · 24시간 · 인증 수치", "요구값 · 모델값", "스펙 대응", ["SC-B"], "full", []], [6, "C 빌딩 · 물을 것 6개 · 미확정 전제", "질문 · 가정값 · 영향", "전제 · 확인 요청", [], "miss", ["OV-C"]], [7, "T 은행 · 일부 요구는 2차 사업으로", "포함 · 제외 · 옵션", "제안 범위", [], "miss", ["OV-B"]], [8, "H 백화점 · 요구가 타사 대비로", "요구 × 경쟁사 점수", "요구 충족 비교", ["CM-B"], "full", []], [9, "R 건설 · 고객 답변 반영 v2", "바뀐 요구 · 전/후", "요구 대응 · 변경", [], "miss", ["RM-B"]], [10, "W 요양병원 · 요구가 문제 + 비용으로", "과제 · 비용 수치", "고객 과제", ["CH-A"], "full", []]];
+    const H = 44;
+    const DOT = {"full": "width: 9px; height: 9px; flex-shrink: 0; border-radius: 50%; background: #1428a0", "part": "width: 9px; height: 9px; flex-shrink: 0; border-radius: 50%; background: #b8bec8", "miss": "width: 9px; height: 9px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #3d4452", "wait": "width: 9px; height: 9px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #8a91a0"};
+    const LBL = {"full": "표현됨", "part": "부족", "miss": "없음", "wait": "제작 중"};
+    const chip = (v) => 'height: 22px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; white-space: nowrap; ' + (v === 'miss' ? 'background: #ffffff; border: 1px solid #3d4452; color: #121417;' : v === 'wait' ? 'background: #ffffff; border: 1px dashed #8a91a0; color: #596170;' : v === 'part' ? 'background: #f5f6f8; color: #3d4452;' : 'background: #f5f6f8; color: #1428a0;');
+    const rows = R.map(([no, sit, data, role, old, v, add]) => ({
+      no: String(no).padStart(2, '0'), sit, data, role,
+      old: old.map((t) => ({ t })), noOld: old.length === 0,
+      add: add.map((t) => ({ t })), noAdd: add.length === 0,
+      addNote: v === 'wait' ? '업종판 제작 중 · 범용으로 대체' : '—',
+      vLabel: LBL[v], vDot: DOT[v], vChip: chip(v),
+      rowStyle: 'display: grid; grid-template-columns: 32px 296px 236px 124px 176px 92px 196px; align-items: center; height: ' + H + 'px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea'
+    }));
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

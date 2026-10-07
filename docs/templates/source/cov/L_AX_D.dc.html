@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>AX-D 용어 · 약어</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">부록 · 용어</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">이 제안서에서 쓰는 용어</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">쉬운 말 풀이 · 처음 나온 쪽</div>
+
+  <!-- 3열 × 5항목 -->
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.box}}">
+      <div style="height: 30px; box-sizing: border-box; border-bottom: 2px solid #121417; display: flex; align-items: flex-start; justify-content: space-between; font-size: 12.5px; font-weight: 700; color: #596170"><span>{{c.head}}</span><span>처음 나온 쪽</span></div>
+      <sc-for list="{{c.items}}" as="t" hint-placeholder-count="5">
+        <div style="{{t.st}}">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <span style="{{t.termStyle}}">{{t.term}}</span>
+            <span style="height: 22px; flex-shrink: 0; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{t.pg}}</span>
+          </div>
+          <span style="font-size: 13px; line-height: 1.55; color: #3d4452; word-break: keep-all">{{t.desc}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 47</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 열 368 · 간격 24 (x 64 · 456 · 848) · 머리 30 + 항목 5 × 90 → y 156–636
+    const COL_W = 368, GAP = 24, TOP = 156, ITEM_H = 90, PER = 5;
+    // [용어, 풀이, 처음 나온 쪽] — 처음 나온 쪽은 제안서 조립 후 채움
+    const T = [
+      ['CMS', '화면에 띄울 콘텐츠를 올리고 예약하는 관리 프로그램'],
+      ['MagicINFO', '삼성 사이니지를 한곳에서 관리하는 CMS'],
+      ['DVM', '실외기 하나에 실내기 여러 대를 잇는 시스템에어컨'],
+      ['b.IoT', '건물 설비를 한 화면에서 보는 삼성 빌딩 관리'],
+      ['BMS', '건물의 공조 · 전력 · 조명을 관리하는 시스템'],
+      ['SLA', '장애가 나면 몇 시간 안에 고칠지 약속한 기준'],
+      ['PoC', '본 도입 전 작은 범위에서 효과를 확인하는 시범'],
+      ['TCO', '구매가에 운영 · 유지 · 교체 비용까지 더한 총비용'],
+      ['RACI', '일마다 수행 · 책임 · 협의 · 통보를 나눈 표'],
+      ['IP 등급', '먼지 · 물에 견디는 정도를 숫자로 나타낸 등급'],
+      ['nit', '화면 밝기 단위, 클수록 밝음'],
+      ['피치', 'LED 화소 사이 간격, 작을수록 가까이서 선명'],
+      ['Knox', '삼성 기기의 보안 · 관리 플랫폼'],
+      ['COP', '쓴 전기 대비 얻는 냉난방 능력, 클수록 효율적'],
+      ['kWh', '전기 사용량 단위']
+    ];
+    const latin = (s) => /^[A-Za-z]/.test(s);
+    const cols = [0, 1, 2].map((c) => ({
+      head: '용어',
+      box: 'position: absolute; left: ' + (64 + c * (COL_W + GAP)) + 'px; top: ' + TOP + 'px; width: ' + COL_W + 'px; display: flex; flex-direction: column',
+      items: T.slice(c * PER, (c + 1) * PER).map(([term, desc], i) => ({
+        term, desc, pg: 'p.[00]',
+        termStyle: 'font-size: 16px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; ' + (latin(term) ? "font-family: Manrope, 'Noto Sans KR', sans-serif" : ''),
+        st: 'height: ' + ITEM_H + 'px; box-sizing: border-box; padding: 0 4px; display: flex; flex-direction: column; justify-content: center; gap: 7px; border-bottom: 1px solid ' + (i === PER - 1 ? '#d5d9e0' : '#e2e5ea')
+      }))
+    }));
+    return { cols };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SD-G LED 사양</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">외벽 LED, 피치는 보는 거리로 고릅니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">피치 3안 · 최적 시청 거리 · 해상도 · 캐비닛 수 · 밝기 · 상대 비용</div>
+
+  <!-- 피치 3안 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 1152px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+      <div style="{{o.box}}">
+        <div style="display: flex; align-items: center; gap: 10px; height: 40px">
+          <span style="font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; {{o.nameColor}}">{{o.name}}</span>
+          <sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}">
+            <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center">권장</span>
+          </sc-if>
+          <span style="flex-grow: 1"></span>
+          <span style="font-size: 11.5px; color: #8a91a0">{{o.density}}</span>
+          <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 8px; background: {{o.iconBg}}; display: flex; align-items: center; justify-content: center">
+            <div style="{{o.grid}}">
+              <sc-for list="{{o.px}}" as="p" hint-placeholder-count="9">
+                <span style="{{p}}"></span>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <span style="margin-top: 4px; font-size: 13.5px; line-height: 20px; {{o.descColor}}">{{o.desc}}</span>
+        <div style="margin-top: 10px; display: flex; flex-direction: column">
+          <sc-for list="{{o.rows}}" as="r" hint-placeholder-count="5">
+            <div style="{{r.line}}">
+              <span style="font-size: 13px; color: #596170; white-space: nowrap">{{r.k}}</span>
+              <sc-if value="{{r.isCost}}" hint-placeholder-val="{{false}}">
+                <span style="display: flex; gap: 4px">
+                  <sc-for list="{{r.cost}}" as="c" hint-placeholder-count="3">
+                    <span style="{{c}}"></span>
+                  </sc-for>
+                </span>
+              </sc-if>
+              <sc-if value="{{r.isText}}" hint-placeholder-val="{{true}}">
+                <span style="{{r.vs}}">{{r.v}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 시청 거리 자 -->
+  <div style="position: absolute; left: 64px; top: 400px; width: 1152px; height: 204px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 413px; display: flex; align-items: baseline; gap: 10px">
+    <span style="font-size: 13px; font-weight: 800">시청 거리 자</span>
+    <span style="font-size: 12.5px; color: #596170">피치별로 화면이 선명하게 보이는 거리</span>
+  </div>
+  <div style="position: absolute; right: 88px; top: 415px; display: flex; align-items: center; gap: 14px; font-size: 11.5px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 10px; border-radius: 3px; background: #1428a0"></span>권장 피치</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 10px; border-radius: 3px; background: #d5d9e0"></span>다른 피치</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 12px; box-sizing: border-box; border-left: 1.5px dashed #1428a0; border-right: 1.5px dashed #1428a0; background: rgba(20,40,160,0.10)"></span>실제 관람 구간</span>
+    <span style="color: #8a91a0">막대 길이는 예시</span>
+  </div>
+
+  <!-- 관람 구간 오버레이 -->
+  <div style="{{zone.box}}"></div>
+  <div style="{{zone.labelPos}}"><span style="height: 22px; padding: 0 10px; border-radius: 999px; background: #ffffff; border: 1px solid #b8c3ee; box-sizing: border-box; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">도로 건너편 보행자 <span style="font-family: Manrope, sans-serif; margin-left: 4px">[00]–[00] m</span></span></div>
+
+  <!-- 피치별 선명 구간 띠 -->
+  <sc-for list="{{bands}}" as="b" hint-placeholder-count="3">
+    <div style="{{b.bar}}"><span style="{{b.labStyle}}">{{b.label}}</span><span style="flex-grow: 1"></span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{{b.arrow}}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 외벽 (측면) -->
+  <div style="position: absolute; left: 112px; top: 450px; width: 52px; height: 118px; border-radius: 3px 3px 0 0; background: #d5d9e0"></div>
+  <div style="position: absolute; left: 120px; top: 460px; width: 12px; height: 8px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 140px; top: 460px; width: 12px; height: 8px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 120px; top: 538px; width: 12px; height: 8px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 140px; top: 538px; width: 12px; height: 8px; background: #eef0f3"></div>
+  <div style="position: absolute; left: 164px; top: 468px; width: 7px; height: 60px; border-radius: 0 2px 2px 0; background: #1428a0"></div>
+
+  <!-- 보행자 -->
+  <sc-for list="{{people}}" as="p" hint-placeholder-count="3">
+    <div>
+      <div style="{{p.head}}"></div>
+      <div style="{{p.body}}"></div>
+    </div>
+  </sc-for>
+
+  <!-- 거리 축 -->
+  <div style="position: absolute; left: 100px; top: 568px; width: 1092px; height: 2px; background: #121417"></div>
+  <sc-for list="{{ticks}}" as="t" hint-placeholder-count="13">
+    <div>
+      <div style="{{t.mark}}"></div>
+      <span style="{{t.labStyle}}">{{t.label}}</span>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 100px; top: 579px; width: 60px; text-align: right; font-size: 11.5px; font-weight: 700; color: #596170">외벽 LED</div>
+
+  <!-- 공통 사양 -->
+  <div style="position: absolute; left: 64px; top: 618px; width: 1152px; height: 26px; display: flex; align-items: center; gap: 8px">
+    <span style="font-size: 12.5px; font-weight: 800; color: #596170; margin-right: 4px">공통 사양</span>
+    <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+      <span style="height: 26px; padding: 0 11px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c}}</span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12px; color: #596170">피치 · 캐비닛 수는 외벽 실측 후 확정</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>Q 미디어 · 랜드마크 외벽 LED 제안 · 권장 시청 거리 기준 [기준] · 값은 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 27</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (x, y, w, h, extra) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; ' + (extra || '');
+    // 피치 3안 — 촘촘 · 권장 · 성김. gap = 픽셀 격자 아이콘의 점 간격(피치에 비례), cost = 상대 비용(1–3), from = 선명하게 보이는 시작 거리(예시 m)
+    const O = [
+      { name: 'P[0.0]', density: '촘촘', gap: 2, cost: 3, from: 6, rec: false, desc: '가까이서도 선명 · 비용이 가장 큽니다' },
+      { name: 'P[0.0]', density: '보통', gap: 6, cost: 2, from: 18, rec: true, desc: '관람 구간 전체를 덮는 가장 큰 피치' },
+      { name: 'P[0.0]', density: '성김', gap: 10, cost: 1, from: 32, rec: false, desc: '가까운 보행자에게는 화면이 거칠게 보입니다' }
+    ];
+    const sqOn = 'width: 12px; height: 12px; border-radius: 3px; background: #121417';
+    const sqOff = 'width: 12px; height: 12px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #b8bec8';
+    const opts = O.map((o) => {
+      const lineC = o.rec ? '#c9d1f0' : '#e2e5ea';
+      const R = [
+        ['최적 시청 거리', '[00] m 이상', true],
+        ['캐비닛', '[00] × [00] = [000]개', false],
+        ['해상도', '[0,000] × [0,000]', false],
+        ['밝기', '[0,000] nit', false],
+        ['상대 비용', '', false]
+      ];
+      return {
+        name: o.name, rec: o.rec, desc: o.desc, density: o.density,
+        nameColor: 'color: ' + (o.rec ? '#1428a0' : '#121417'),
+        descColor: 'color: ' + (o.rec ? '#1428a0; font-weight: 700' : '#3d4452'),
+        box: 'height: 228px; box-sizing: border-box; border-radius: 16px; display: flex; flex-direction: column; ' + (o.rec ? 'background: #eaeefb; border: 2px solid #1428a0; padding: 13px 21px 0' : 'background: #ffffff; border: 1px solid #e2e5ea; padding: 14px 22px 0'),
+        iconBg: o.rec ? '#ffffff' : '#f5f6f8',
+        grid: 'display: grid; grid-template-columns: repeat(3, 5px); grid-auto-rows: 5px; gap: ' + o.gap + 'px',
+        px: Array.from({ length: 9 }, () => 'display: block; width: 5px; height: 5px; border-radius: 1px; background: ' + (o.rec ? '#1428a0' : '#596170')),
+        rows: R.map(([k, v, hi], i) => ({
+          k, v,
+          isCost: k === '상대 비용', isText: k !== '상대 비용',
+          cost: [1, 2, 3].map((n) => (n <= o.cost ? sqOn : sqOff)),
+          line: 'display: flex; align-items: center; justify-content: space-between; height: 25px; box-sizing: border-box; border-top: 1px solid ' + lineC,
+          vs: 'font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; white-space: nowrap; color: ' + (hi && o.rec ? '#1428a0' : '#121417')
+        }))
+      };
+    });
+
+    // 시청 거리 자: 0 m = 외벽 면(x 171), 1 m = 16.8 px, 0–60 m
+    const X0 = 171, PXM = 16.8, AXIS = 568;
+    const xm = (m) => Math.round(X0 + m * PXM);
+    const Z = [24, 44];                       // 실제 관람 구간(예시 m)
+    const zone = {
+      box: at(xm(Z[0]), 442, xm(Z[1]) - xm(Z[0]), AXIS - 442, 'background: rgba(20,40,160,0.08); border-left: 1.5px dashed #1428a0; border-right: 1.5px dashed #1428a0;'),
+      labelPos: at(xm(Z[0]), 447, xm(Z[1]) - xm(Z[0]), 22, 'display: flex; justify-content: center;')
+    };
+    const BAND_Y = [476, 501, 526], END = xm(60) + 8;
+    const bands = O.map((o, i) => ({
+      label: o.density + ' ' + o.name + ' · [00] m부터 선명',
+      bar: at(xm(o.from), BAND_Y[i], END - xm(o.from), 20, 'border-radius: 4px; padding: 0 6px 0 10px; display: flex; align-items: center; background: ' + (o.rec ? '#1428a0' : '#d5d9e0') + ';'),
+      labStyle: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 12px; font-weight: 700; white-space: nowrap; color: ' + (o.rec ? '#ffffff' : '#3d4452'),
+      arrow: o.rec ? '#ffffff' : '#8a91a0'
+    }));
+    // 관람 구간 안의 보행자(예시 위치)
+    const people = [27, 34.5, 41].map((m) => ({
+      head: at(xm(m) - 4, 552, 9, 9, 'border-radius: 50%; background: #8a91a0;'),
+      body: at(xm(m) - 6, 562, 13, 6, 'border-radius: 6px 6px 0 0; background: #8a91a0;')
+    }));
+    const ticks = [];
+    for (let m = 0; m <= 60; m += 5) {
+      const major = m % 10 === 0;
+      ticks.push({
+        mark: at(xm(m), AXIS + 2, 1, major ? 8 : 5, 'background: ' + (major ? '#121417' : '#8a91a0') + ';'),
+        label: major ? (m === 60 ? '60 m' : String(m)) : '',
+        labStyle: at(xm(m) - 24, AXIS + 11, 48, 16, 'text-align: center; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #596170;')
+      });
+    }
+    const chips = ['IP[00] 방진 · 방수', '24/7', '원격 진단', '밝기 자동 조절'];
+    return { opts, zone, bands, people, ticks, chips };
+  }
+}
+</script>
+</body>
+</html>

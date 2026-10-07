@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>RM-C 평가 항목 · 배점 대응</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">00 · 평가 기준 대응</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">평가 항목마다, 근거가 있는 쪽을 짚었습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 560px; font-size: 15px; color: #596170">기술 80점 · 가격 20점(별도 가격 제안서)</div>
+
+  <!-- 자체 점검 범례 -->
+  <div style="position: absolute; right: 64px; top: 114px; height: 24px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170; white-space: nowrap">
+    <span style="font-weight: 700; color: #3d4452">자체 점검</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="height: 22px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">강</span>근거 충분</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="height: 22px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">보통</span>근거 있음</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; border: 1px solid #121417; color: #121417; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">보완</span>보강 계획 있음</span>
+  </div>
+
+  <!-- 머리행 (막대 열 + 표) -->
+  <div style="position: absolute; left: 64px; top: 152px; width: 1152px; height: 34px; box-sizing: border-box; border-bottom: 2px solid #121417"></div>
+  <div style="position: absolute; left: 64px; top: 152px; width: 120px; height: 32px; display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: #596170">배점 비중 <span style="font-family: Manrope, sans-serif; color: #121417">100</span></div>
+  <div style="{{head}}">
+    <span>평가 항목</span><span style="text-align: center">배점</span><span>평가위원이 보는 것</span><span>우리의 근거</span><span style="text-align: center">위치</span><span>자체 점검</span>
+  </div>
+
+  <!-- 왼쪽 누적 막대: 블록 높이 = 배점 (1점 = 4.6px), 표의 행과 같은 높이 -->
+  <sc-for list="{{blocks}}" as="b" hint-placeholder-count="7">
+    <div style="{{b.st}}"><span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.02em">{{b.pts}}</span><span style="font-size: 12px; font-weight: 700">점</span></div>
+  </sc-for>
+
+  <!-- 기술 · 가격 묶음 표시 -->
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+    <div>
+      <div style="{{g.line}}"></div>
+      <div style="{{g.capT}}"></div>
+      <div style="{{g.capB}}"></div>
+      <div style="{{g.lab}}"><span style="font-size: 11.5px; font-weight: 700; line-height: 1.3">{{g.name}}</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; line-height: 1.2">{{g.pts}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- 오른쪽 표 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+    <div style="{{r.st}}">
+      <span style="{{r.nameStyle}}">{{r.name}}</span>
+      <span style="{{r.ptsStyle}}">{{r.pts}}</span>
+      <span style="font-size: 13.5px; line-height: 1.45; color: #3d4452">{{r.look}}</span>
+      <span style="{{r.evStyle}}">{{r.ev}}</span>
+      <span style="display: flex; justify-content: center"><span style="{{r.pgStyle}}">{{r.pg}}</span></span>
+      <span style="display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="{{r.chkStyle}}">{{r.chk}}</span><span style="font-size: 12px; color: #3d4452">{{r.chkNote}}</span></span>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 · 스마트 캠퍼스 구축 제안 · 평가 배점은 RFP p.[00] 기준</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 막대 x 64–184 (폭 120) · 표 x 232–1216 (폭 984) · 행 y 186부터, 1점 = 4.6px (100점 = 460px → y 646)
+    const TOP = 186, U = 4.6, BAR_X = 64, BAR_W = 120, TX = 232, TW = 984;
+    const GC = 'grid-template-columns: 124px 48px 248px 236px 72px minmax(0, 1fr); column-gap: 18px;';
+    // [평가 항목, 배점, 평가위원이 보는 것, 우리의 근거, 위치, 자체 점검(강 · 보통 · 보완 · —), 구분]
+    const R = [
+      ['사업 이해도', 10, '요구 · 현황을 정확히 이해했는가', '요구 대응표 28개 · 현장 조사', 'p.[00]', '강', 'tech'],
+      ['시스템 구성', 20, '구성이 요구를 충족하는가', '강의실 · 도서관 · 기숙사 구성', 'p.[00]', '강', 'tech'],
+      ['성능 · 품질', 15, '운영 안정성 · 품질 근거', '24/7 모델 · 인증 현황', 'p.[00]', '보통', 'tech'],
+      ['운영 · 유지보수', 15, '장애 대응 · 점검 체계', 'SLA · 점검 캘린더', 'p.[00]', '강', 'tech'],
+      ['일정 · 관리', 10, '방학 내 구축 가능성', '방학 집중 시공 일정', 'p.[00]', '보통', 'tech'],
+      ['수행 실적', 10, '유사 레퍼런스', '교육 기관 사례 [0]건', 'p.[00]', '보완', 'tech'],
+      ['가격', 20, '가격 점수', '별도 가격 제안서', '—', '—', 'price']
+    ];
+    const MAXTECH = Math.max.apply(null, R.filter((r) => r[6] === 'tech').map((r) => r[1]));
+    const CHK = {
+      '강': 'height: 24px; padding: 0 11px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center',
+      '보통': 'height: 24px; padding: 0 11px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 12px; font-weight: 700; display: flex; align-items: center',
+      '보완': 'height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; border: 1px solid #121417; color: #121417; font-size: 12px; font-weight: 700; display: flex; align-items: center',
+      '—': 'font-size: 13px; color: #b8bec8'
+    };
+    let y = TOP;
+    const blocks = [], rows = [];
+    R.forEach(([name, pts, look, ev, pg, chk, kind], i) => {
+      const h = Math.round(pts * U);
+      const price = kind === 'price';
+      const top = pts === MAXTECH && !price;
+      const fill = price ? 'background: #f5f6f8; border: 1.5px dashed #b8bec8; color: #8a91a0;'
+        : top ? 'background: #1428a0; color: #ffffff;'
+        : pts >= 15 ? 'background: #6f82d6; color: #ffffff;'
+        : 'background: #b8c3ee; color: #121417;';
+      blocks.push({
+        pts: String(pts),
+        st: 'position: absolute; left: ' + BAR_X + 'px; top: ' + (y + (price ? 6 : 2)) + 'px; width: ' + BAR_W + 'px; height: ' + (h - (price ? 8 : 4)) + 'px; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center; gap: 2px; ' + fill
+      });
+      rows.push({
+        name, pts: String(pts), look, ev, pg, chk,
+        chkNote: chk === '보완' ? '보완 계획 p.[00]' : '',
+        nameStyle: 'font-size: 15px; font-weight: 700; white-space: nowrap; color: ' + (price ? '#596170' : '#121417'),
+        ptsStyle: 'text-align: center; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: ' + (price ? '#8a91a0' : top ? '#1428a0' : '#121417'),
+        evStyle: 'font-size: 13.5px; font-weight: 700; line-height: 1.45; color: ' + (price ? '#596170' : '#121417'),
+        pgStyle: pg === '—' ? 'font-size: 13px; color: #b8bec8'
+          : 'height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap',
+        chkStyle: CHK[chk],
+        st: 'position: absolute; left: ' + TX + 'px; top: ' + y + 'px; width: ' + TW + 'px; height: ' + h + 'px; box-sizing: border-box; display: grid; ' + GC + ' align-items: center; padding: 0 4px; border-bottom: 1px solid ' + (i === R.length - 2 ? '#b8bec8' : '#e2e5ea') + (price ? '; background: #fafbfc' : '')
+      });
+      y += h;
+    });
+    // 막대와 표 사이(x 184–232)에 기술 · 가격 묶음 괄호
+    const GX = 207;
+    const grp = (name, from, to, dashed, color) => {
+      const y0 = TOP + Math.round(from * U) + 4, y1 = TOP + Math.round(to * U) - 4, mid = Math.round((y0 + y1) / 2);
+      const ln = dashed ? 'border-left: 2px dashed #d5d9e0' : 'background: #b8bec8';
+      return {
+        name, pts: String(to - from),
+        line: 'position: absolute; left: ' + GX + 'px; top: ' + y0 + 'px; width: 2px; height: ' + (y1 - y0) + 'px; box-sizing: border-box; ' + ln,
+        capT: 'position: absolute; left: ' + (GX - 7) + 'px; top: ' + y0 + 'px; width: 9px; height: 2px; background: ' + (dashed ? '#d5d9e0' : '#b8bec8'),
+        capB: 'position: absolute; left: ' + (GX - 7) + 'px; top: ' + (y1 - 2) + 'px; width: 9px; height: 2px; background: ' + (dashed ? '#d5d9e0' : '#b8bec8'),
+        lab: 'position: absolute; left: ' + (GX - 19) + 'px; top: ' + (mid - 21) + 'px; width: 40px; height: 42px; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; color: ' + color
+      };
+    };
+    const TECH = R.filter((r) => r[6] === 'tech').reduce((a, r) => a + r[1], 0);
+    const groups = [grp('기술', 0, TECH, false, '#121417'), grp('가격', TECH, 100, true, '#8a91a0')];
+    const head = 'position: absolute; left: ' + TX + 'px; top: 152px; width: ' + TW + 'px; height: 32px; box-sizing: border-box; display: grid; ' + GC + ' align-items: center; padding: 0 4px; font-size: 12.5px; font-weight: 700; color: #596170';
+    return { head, blocks, rows, groups };
+  }
+}
+</script>
+</body>
+</html>

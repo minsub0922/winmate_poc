@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>TO-B 운영 이관 체크리스트</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 교육 · 이관</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">구축팀이 떠나도 멈추지 않도록, 세 단계로 넘깁니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">구축 완료 → 안정화(공동 운영) → 이관 · 단계마다 산출물과 넘어가는 기준</div>
+
+  <!-- 3단계 카드 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.box}}">
+      <div style="display: flex; align-items: center; gap: 10px; height: 28px">
+        <span style="{{s.numStyle}}">{{s.no}}</span>
+        <span style="{{s.tagStyle}}">{{s.tag}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 11.5px; color: #596170">담당</span>
+        <span style="{{s.ownerStyle}}">{{s.owner}}</span>
+      </div>
+      <span style="margin-top: 14px; font-size: 19px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap; font-family: Manrope, 'Noto Sans KR', sans-serif">{{s.name}}</span>
+      <span style="margin-top: 3px; font-size: 13px; color: #596170; white-space: nowrap">{{s.desc}}</span>
+      <div style="{{s.rule}}"></div>
+      <div style="margin-top: 6px; display: flex; flex-direction: column">
+        <sc-for list="{{s.checks}}" as="c" hint-placeholder-count="4">
+          <div style="display: flex; align-items: center; gap: 10px; height: 40px">
+            <span style="{{s.boxCheck}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="{{s.tick}}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+            <span style="font-size: 14.5px; font-weight: 500; white-space: nowrap">{{c}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <div style="{{s.gateBox}}">
+        <span style="{{s.gateLabel}}">{{s.gateK}}</span>
+        <span style="font-size: 14.5px; font-weight: 800; white-space: nowrap; font-family: Manrope, 'Noto Sans KR', sans-serif">{{s.gate}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 단계 사이 쉐브런 -->
+  <sc-for list="{{chevs}}" as="c" hint-placeholder-count="2">
+    <div style="{{c}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 산출물 -->
+  <div style="position: absolute; left: 64px; top: 584px; width: 1152px; height: 64px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 14px">
+    <div style="display: flex; flex-direction: column; gap: 1px; flex-shrink: 0">
+      <span style="font-size: 14px; font-weight: 800">산출물</span>
+      <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; color: #596170">6종 · 이관 시 인계</span>
+    </div>
+    <span style="width: 1px; height: 30px; background: #d5d9e0; flex-shrink: 0"></span>
+    <div style="flex-grow: 1; display: flex; align-items: center; justify-content: space-between">
+    <sc-for list="{{docs}}" as="d" hint-placeholder-count="6">
+      <span style="height: 30px; padding: 0 12px 0 9px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 13h7 M9 17h5"/></svg><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0">{{d.no}}</span>{{d.name}}</span>
+    </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>S 지자체 · 통합 안내 · 관제 고도화 사업 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 44</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 카드 3개 × 368 (간격 24) · y 156–560
+    const X = [64, 456, 848], TOP = 156, H = 404, W = 368;
+    // [번호, 시점 태그, 단계명, 설명, 체크 4줄, 담당, 넘어가는 기준 라벨, 기준, 스타일 종류]
+    const S = [
+      ['1', '구축 직후', '구축 완료 · 검수', '현장 설치부터 검수 시험까지',
+        ['설치 · 시운전 완료', '검수 시험 통과', '자산 대장 작성', '관리자 계정 발급'], '삼성 · SI', '① → ② 넘어가는 기준', '검수 확인서 서명', 'surface'],
+      ['2', '검수 후 [0]주', '안정화 · [0]주 공동 운영', '삼성 · 고객 담당자가 함께 대응',
+        ['장애 대응 절차 리허설', '운영 매뉴얼 검토', '백업 · 복구 시험', '운영자 교육 이수'], '공동', '② → ③ 넘어가는 기준', '장애 [0]건 이하 [0]주 연속', 'soft'],
+      ['3', '이관 이후', '이관 · 고객 운영 + 삼성 유지보수', '일상 운영은 S 지자체, 정비는 삼성',
+        ['계정 · 권한 인계', '모니터링 알림 수신자 변경', '유지보수 계약 개시', '월간 리포트 시작'], 'S 지자체', '③ 완료 기준', '이관 확인서', 'final']
+    ];
+    const BG = { surface: '#f5f6f8', soft: '#eaeefb', final: '#ffffff' };
+    const stages = S.map(([no, tag, name, desc, checks, owner, gateK, gate, kind], i) => {
+      const fin = kind === 'final';
+      return {
+        no, tag, name, desc, checks, owner, gateK, gate,
+        box: 'position: absolute; left: ' + X[i] + 'px; top: ' + TOP + 'px; width: ' + W + 'px; height: ' + H + 'px; box-sizing: border-box; border-radius: 16px; background: ' + BG[kind] + '; display: flex; flex-direction: column; ' +
+          (fin ? 'border: 2px solid #1428a0; padding: 21px 23px 19px 23px' : 'padding: 22px 24px 20px 24px'),
+        numStyle: 'width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center',
+        tagStyle: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 12.5px; font-weight: 700; color: #596170; white-space: nowrap',
+        ownerStyle: 'height: 24px; padding: 0 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' +
+          (fin ? 'background: #121417; color: #ffffff' : kind === 'soft' ? 'background: #1428a0; color: #ffffff' : 'background: #ffffff; color: #3d4452; border: 1px solid #d5d9e0; box-sizing: border-box'),
+        rule: 'margin-top: 14px; height: 1px; flex-shrink: 0; background: ' + (kind === 'soft' ? '#b8c3ee' : kind === 'surface' ? '#d5d9e0' : '#e2e5ea'),
+        boxCheck: 'width: 18px; height: 18px; flex-shrink: 0; box-sizing: border-box; border-radius: 5px; display: flex; align-items: center; justify-content: center; ' +
+          (fin ? 'background: #ffffff; border: 1.5px solid #1428a0' : 'background: #1428a0'),
+        tick: fin ? '#1428a0' : '#ffffff',
+        // 넘어가는 기준 박스: 흰 카드 위는 회색 박스, 색 있는 카드 위는 흰 박스
+        gateBox: 'height: 62px; flex-shrink: 0; box-sizing: border-box; border-radius: 10px; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px; color: #121417; ' +
+          (fin ? 'background: #f5f6f8' : 'background: #ffffff; border: 1px solid ' + (kind === 'soft' ? '#b8c3ee' : '#d5d9e0')),
+        gateLabel: 'font-size: 11.5px; font-weight: 700; color: ' + (fin ? '#1428a0' : '#596170')
+      };
+    });
+    // 카드 사이 24px 틈 가운데 원형 쉐브런 (y 중앙)
+    const chevs = [0, 1].map((i) => 'position: absolute; left: ' + (X[i] + W - 4) + 'px; top: ' + (TOP + H / 2 - 16) + 'px; width: 32px; height: 32px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1.5px solid #b8c3ee; display: flex; align-items: center; justify-content: center');
+    const docs = ['운영 매뉴얼', '장애 대응 절차서', '자산 대장', '계정 인계서', '교육 이수 기록', '백업 · 복구 결과서']
+      .map((name, i) => ({ no: String(i + 1), name }));
+    return { stages, chevs, docs };
+  }
+}
+</script>
+</body>
+</html>

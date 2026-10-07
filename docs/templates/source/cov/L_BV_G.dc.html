@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BV-G 단지 · 캠퍼스 배치도</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">캠퍼스 여덟 동, 1차는 강의동 세 곳부터</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">동별 적용 범위 · 단계 · 수량 · 색 = 도입 단계</div>
+
+  <!-- 배치도 7열 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 662px; height: 492px; border-radius: 16px; background: #f5f6f8"></div>
+  <sc-for list="{{roads}}" as="r" hint-placeholder-count="3">
+    <div style="{{r}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 84px; top: 170px; font-size: 12px; font-weight: 700; color: #596170">캠퍼스 배치도</div>
+
+  <!-- 건물 8동 -->
+  <sc-for list="{{blds}}" as="b" hint-placeholder-count="8">
+    <div style="{{b.box}}">
+      <div style="display: flex; align-items: center; gap: 6px; min-width: 0">
+        <span style="{{b.numSt}}">{{b.no}}</span>
+        <span style="{{b.nameSt}}">{{b.name}}</span>
+      </div>
+      <div style="display: flex; gap: 4px">
+        <sc-for list="{{b.icons}}" as="i" hint-placeholder-count="2">
+          <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 5px; background: #ffffff; display: flex; align-items: center; justify-content: center">
+            <sc-if value="{{i.board}}" hint-placeholder-val="{{true}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M12 16v4 M8 20h8 M7 11l3-3 3 2 4-4"/></svg></sc-if>
+            <sc-if value="{{i.ac}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z M9 9h6v6H9z"/></svg></sc-if>
+            <sc-if value="{{i.sign}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v11H3z M12 16v4 M8 20h8"/></svg></sc-if>
+            <sc-if value="{{i.kiosk}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10v18H7z M7 15h10 M11 18h2"/></svg></sc-if>
+            <sc-if value="{{i.wall}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h8v6H3z M13 5h8v6h-8z M3 13h8v6H3z M13 13h8v6h-8z"/></svg></sc-if>
+          </span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 정문 -->
+  <div style="position: absolute; left: 370px; top: 618px; width: 8px; height: 16px; border-radius: 2px; background: #121417"></div>
+  <div style="position: absolute; left: 410px; top: 618px; width: 8px; height: 16px; border-radius: 2px; background: #121417"></div>
+  <div style="position: absolute; left: 426px; top: 612px; height: 24px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5 M6 11l6-6 6 6"/></svg>정문</div>
+
+  <!-- 방위표 · 축척 -->
+  <div style="position: absolute; left: 676px; top: 168px; width: 32px; display: flex; flex-direction: column; align-items: center; gap: 3px">
+    <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 1">N</span>
+    <svg width="18" height="26" viewBox="0 0 18 26" fill="none" stroke="#121417" stroke-width="1.6" stroke-linejoin="round"><path d="M9 1L16 24L9 19L2 24Z"/><path d="M9 1L9 19L2 24Z" fill="#121417"/></svg>
+  </div>
+  <div style="position: absolute; left: 84px; top: 592px; font-size: 11px; font-weight: 700; color: #8a91a0">예시 축척</div>
+  <div style="position: absolute; left: 84px; top: 610px; width: 40px; height: 6px; box-sizing: border-box; border: 1px solid #121417; background: #121417"></div>
+  <div style="position: absolute; left: 124px; top: 610px; width: 40px; height: 6px; box-sizing: border-box; border: 1px solid #121417; background: #ffffff"></div>
+  <div style="position: absolute; left: 81px; top: 620px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700">0</div>
+  <div style="position: absolute; left: 116px; top: 620px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700">50</div>
+  <div style="position: absolute; left: 154px; top: 620px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700">100 m</div>
+
+  <!-- 동별 표 5열 -->
+  <div style="position: absolute; left: 750px; top: 156px; width: 466px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 124px 44px minmax(0, 1fr) 44px 48px; column-gap: 8px; height: 36px; box-sizing: border-box; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">동</span><span>용도</span><span>적용 제품</span><span style="text-align: right">수량</span><span style="text-align: center">단계</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+      <div style="display: grid; grid-template-columns: 124px 44px minmax(0, 1fr) 44px 48px; column-gap: 8px; height: 44px; box-sizing: border-box; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <div style="display: flex; align-items: center; gap: 8px; padding-left: 4px; min-width: 0">
+          <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span>
+          <span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">{{r.name}}</span>
+        </div>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">{{r.use}}</span>
+        <span style="font-size: 13px; white-space: nowrap">{{r.prod}}</span>
+        <span style="text-align: right; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">[00]</span>
+        <span style="display: flex; justify-content: center"><span style="{{r.chip}}">{{r.ph}}</span></span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 단계 범례 + 합계 -->
+  <div style="position: absolute; left: 750px; top: 560px; width: 466px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 12px">
+    <sc-for list="{{phases}}" as="p" hint-placeholder-count="3">
+      <div style="{{p.card}}">
+        <div style="display: flex; align-items: center; gap: 7px">
+          <span style="{{p.sw}}"></span>
+          <span style="font-size: 14px; font-weight: 800">{{p.name}}</span>
+          <span style="flex-grow: 1"></span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #596170">{{p.blds}}</span>
+        </div>
+        <div style="display: flex; align-items: baseline; gap: 3px"><span style="{{p.numSt}}">[000]</span><span style="font-size: 13px; font-weight: 700">대</span></div>
+        <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{p.which}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 · 스마트 캠퍼스 구축 제안 · 배치는 단순화한 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 배치도 카드 (64, 156) 662 × 492 안의 좌표 — 건물 위치 · 크기는 단순화한 예시
+    const OX = 64, OY = 156;
+    const box = (x, y, w, h) => 'position: absolute; left: ' + (OX + x) + 'px; top: ' + (OY + y) + 'px; width: ' + w + 'px; height: ' + h + 'px; ';
+    // 길: 위 가로 · 가운데 가로 · 정문에서 올라오는 세로 (흰 띠, 직선)
+    const roads = [
+      box(16, 118, 630, 20) + 'background: #ffffff',
+      box(16, 296, 630, 22) + 'background: #ffffff',
+      box(318, 138, 26, 338) + 'background: #ffffff'
+    ];
+    // 단계 색
+    const PH = {
+      1: { name: '1차', fill: '#1428a0', text: '#ffffff', chipText: '#ffffff' },
+      2: { name: '2차', fill: '#b8c3ee', text: '#121417', chipText: '#121417' },
+      3: { name: '3차', fill: '#d5d9e0', text: '#121417', chipText: '#121417' }
+    };
+    // 제품 아이콘 (전자칠판 · 공조 · 사이니지 · 키오스크 · 비디오월) — 아이콘 모양은 마크업의 sc-if가 고름
+    const KINDS = ['board', 'ac', 'sign', 'kiosk', 'wall'];
+    const icon = (k) => { const o = {}; KINDS.forEach((n) => { o[n] = n === k; }); return o; };
+    // [이름, 용도, 적용 제품, 단계, 아이콘, x, y, w, h]
+    const B = [
+      ['공학관', '강의', '전자칠판 · 시스템에어컨', 1, ['board', 'ac'], 28, 46, 202, 64],
+      ['인문관', '강의', '전자칠판 · 시스템에어컨', 1, ['board', 'ac'], 436, 58, 186, 52],
+      ['자연과학관', '강의', '전자칠판 · 사이니지', 1, ['board', 'sign'], 40, 168, 196, 96],
+      ['중앙도서관', '열람', '좌석 키오스크 · 사이니지', 2, ['kiosk', 'sign'], 404, 156, 156, 120],
+      ['학생회관', '편의', '키오스크 · 비디오월', 2, ['kiosk', 'wall'], 104, 346, 186, 76],
+      ['기숙사 A', '주거', '시스템에어컨', 3, ['ac'], 392, 336, 240, 44],
+      ['기숙사 B', '주거', '시스템에어컨', 3, ['ac'], 392, 396, 240, 44],
+      ['본관', '행정', '사이니지 · 시스템에어컨', 2, ['sign', 'ac'], 252, 52, 158, 58]
+    ];
+    const blds = B.map(([name, use, prod, ph, icons, x, y, w, h], i) => {
+      const p = PH[ph], tall = h >= 90;
+      return {
+        no: String(i + 1), name,
+        icons: icons.map(icon),
+        box: box(x, y, w, h) + 'box-sizing: border-box; border-radius: 6px; background: ' + p.fill + '; padding: ' + (tall ? '10px 12px' : '0 10px') + '; display: flex; ' + (tall ? 'flex-direction: column; justify-content: space-between; align-items: flex-start' : 'align-items: center; justify-content: space-between; gap: 8px'),
+        numSt: 'width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; ' + (ph === 1 ? 'background: #ffffff; color: #1428a0' : 'background: #1428a0; color: #ffffff'),
+        nameSt: 'font-size: 13px; font-weight: 700; white-space: nowrap; color: ' + p.text
+      };
+    });
+    const chip = (ph) => 'height: 22px; padding: 0 9px; border-radius: 999px; background: ' + PH[ph].fill + '; color: ' + PH[ph].chipText + '; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap';
+    const rows = B.map(([name, use, prod, ph], i) => ({ no: String(i + 1), name, use, prod, ph: PH[ph].name, chip: chip(ph) }));
+    // [단계, 동 수, 해당 동]
+    const S = [[1, '[3]개 동', '① ② ③ 강의동'], [2, '[3]개 동', '④ ⑤ ⑧ 공용 · 행정'], [3, '[2]개 동', '⑥ ⑦ 기숙사']];
+    const phases = S.map(([ph, blds, which]) => ({
+      name: PH[ph].name, blds, which,
+      sw: 'width: 12px; height: 12px; flex-shrink: 0; border-radius: 3px; background: ' + PH[ph].fill,
+      card: 'height: 88px; box-sizing: border-box; border-radius: 12px; padding: 0 12px; display: flex; flex-direction: column; justify-content: center; gap: 3px; ' + (ph === 1 ? 'background: #eaeefb; border: 2px solid #1428a0' : 'background: #f5f6f8; border: 2px solid #f5f6f8'),
+      numSt: 'font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: ' + (ph === 1 ? '#1428a0' : '#121417')
+    }));
+    return { roads, blds, rows, phases };
+  }
+}
+</script>
+</body>
+</html>

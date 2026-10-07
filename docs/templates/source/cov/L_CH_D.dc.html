@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CH-D 과제 우선순위</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">일곱 가지 불편 중, 먼저 풀 세 가지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">영향(환자 안전 · 비용) × 발생 빈도 · 번호는 오른쪽 목록과 같습니다</div>
+
+  <!-- 좌측 7열: 2×2 매트릭스 -->
+  <div style="position: absolute; left: 64px; top: 156px; font-size: 13px; font-weight: 700; color: #596170">영향 ↑ <span style="font-weight: 400; color: #8a91a0">환자 안전 · 비용</span></div>
+  <div style="position: absolute; left: 64px; top: 184px; width: 60px; text-align: right; font-size: 12px; color: #8a91a0">높음</div>
+  <div style="position: absolute; left: 64px; top: 596px; width: 60px; text-align: right; font-size: 12px; color: #8a91a0">낮음</div>
+  <div style="position: absolute; left: 136px; top: 184px; width: 520px; height: 430px">
+    <sc-for list="{{quads}}" as="q" hint-placeholder-count="4">
+      <div style="{{q.tile}}"></div>
+      <div style="{{q.labelStyle}}">{{q.name}}</div>
+    </sc-for>
+    <sc-for list="{{dots}}" as="d" hint-placeholder-count="7">
+      <div style="{{d.style}}">{{d.no}}</div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 136px; top: 624px; font-size: 12px; color: #8a91a0">낮음</div>
+  <div style="position: absolute; left: 136px; top: 623px; width: 520px; text-align: center; font-size: 13px; font-weight: 700; color: #596170">발생 빈도 →</div>
+  <div style="position: absolute; left: 596px; top: 624px; width: 60px; text-align: right; font-size: 12px; color: #8a91a0">높음</div>
+
+  <!-- 우측 5열: 번호순 목록 -->
+  <div style="position: absolute; left: 750px; top: 156px; width: 466px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #596170"><span style="font-weight: 800; color: #1428a0">불편 목록 · 7</span><span style="font-size: 12px">파란 행 · 이번 제안으로 먼저 해결</span></div>
+  <div style="position: absolute; left: 750px; top: 184px; width: 466px; display: flex; flex-direction: column; gap: 4px">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+      <div style="{{r.rowStyle}}">
+        <span style="{{r.badge}}">{{r.no}}</span>
+        <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px">
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{r.name}}</span>
+          <span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{r.note}}</span>
+        </div>
+        <sc-if value="{{r.hot}}" hint-placeholder-val="{{true}}">
+          <span style="height: 24px; padding: 0 10px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap"><span style="font-family: Manrope, sans-serif; font-weight: 800">→</span>{{r.fix}}</span>
+        </sc-if>
+        <span style="{{r.chip}}">{{r.quad}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>W 요양병원 · 스마트 병동 제안 · 점 위치는 인터뷰 · 기록 기반 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 10</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 매트릭스 520 × 430, 타일 256 × 211, 간격 8
+    const tw = 256, th = 211, g = 8;
+    const Q = [
+      { name: '계획', col: 0, row: 0, bg: '#f5f6f8', color: '#596170', corner: 'left: 16px; top: 14px;' },
+      { name: '먼저 해결', col: 1, row: 0, bg: '#eaeefb', color: '#1428a0', corner: 'right: 16px; top: 14px;' },
+      { name: '관찰', col: 0, row: 1, bg: '#f5f6f8', color: '#596170', corner: 'left: 16px; bottom: 14px;' },
+      { name: '빠른 개선', col: 1, row: 1, bg: '#f5f6f8', color: '#596170', corner: 'right: 16px; bottom: 14px;' }
+    ];
+    const quads = Q.map((q) => ({
+      name: q.name,
+      tile: 'position: absolute; left: ' + (q.col * (tw + g)) + 'px; top: ' + (q.row * (th + g)) + 'px; width: ' + tw + 'px; height: ' + th + 'px; border-radius: 12px; background: ' + q.bg + ';',
+      labelStyle: 'position: absolute; ' + q.corner + ' font-size: 14px; font-weight: 800; color: ' + q.color + ';'
+    }));
+    // 점 위치는 예시 (x → 발생 빈도, y ↓ → 영향 낮아짐)
+    const P = [[440, 74], [350, 118], [462, 164], [420, 318], [176, 92], [92, 150], [128, 330]];
+    const hot = (i) => i < 3;
+    const dotBase = 'width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;';
+    const dotLook = (i) => hot(i) ? ' background: #1428a0; color: #ffffff;' : ' background: #ffffff; color: #121417; border: 2px solid #121417;';
+    const dots = P.map(([x, y], i) => ({
+      no: String(i + 1),
+      style: 'position: absolute; left: ' + (x - 14) + 'px; top: ' + (y - 14) + 'px; ' + dotBase + dotLook(i)
+    }));
+    // [과제, 한 줄, 사분면, 해결 제품]
+    const R = [
+      ['야간 낙상', '침상 이탈 감지가 늦음', '먼저 해결', '침상 센서 · 호출 알림'],
+      ['병실 온도 민원', '병실마다 체감 온도가 다름', '먼저 해결', '병실별 공조 제어'],
+      ['간호 기록 이중 작업', '종이 기록 후 다시 입력', '먼저 해결', '병동 태블릿'],
+      ['면회 안내 혼선', '주말 면회 문의 집중', '빠른 개선', ''],
+      ['세탁 · 위생 관리', '감염 관리 기록 부족', '계획', ''],
+      ['에너지 비용 증가', '야간 공조 상시 가동', '계획', ''],
+      ['보호자 소통 부족', '상태 공유가 전화 위주', '관찰', '']
+    ];
+    const rows = R.map(([name, note, quad, fix], i) => ({
+      no: String(i + 1), name, note, quad, fix, hot: hot(i),
+      rowStyle: 'height: 58px; box-sizing: border-box; border-radius: 12px; padding: 0 14px; display: flex; align-items: center; gap: 12px; ' + (hot(i) ? 'background: #eaeefb;' : 'background: #ffffff; border: 1px solid #e2e5ea;'),
+      badge: dotBase + dotLook(i),
+      chip: 'height: 24px; padding: 0 10px; flex-shrink: 0; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + (hot(i) ? 'background: #1428a0; color: #ffffff;' : 'background: #f5f6f8; color: #3d4452;')
+    }));
+    return { quads, dots, rows };
+  }
+}
+</script>
+</body>
+</html>

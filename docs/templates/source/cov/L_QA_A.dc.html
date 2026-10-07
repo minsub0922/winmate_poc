@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>QA-A 예상 질문 · 답변</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">부록 · 예상 질문</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">자주 받는 질문 여섯 가지와 답</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">질문마다 근거가 있는 쪽을 표시했습니다</div>
+
+  <!-- 질문 카드 2열 × 3행 -->
+  <sc-for list="{{cards}}" as="c" hint-placeholder-count="6">
+    <div style="{{c.box}}">
+      <div style="display: flex; align-items: flex-start; gap: 12px">
+        <span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">Q</span>
+        <span style="height: 24px; margin-top: 2px; flex-shrink: 0; padding: 0 10px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{c.cat}}</span>
+        <span style="flex-grow: 1; min-width: 0; padding-top: 3px; font-size: 15px; font-weight: 700; line-height: 1.5; letter-spacing: -0.01em; word-break: keep-all">{{c.q}}</span>
+      </div>
+      <div style="height: 1px; flex-shrink: 0; margin: 14px 0 14px 40px; background: #e2e5ea"></div>
+      <div style="flex-grow: 1; display: flex; align-items: flex-start; gap: 12px">
+        <span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">A</span>
+        <span style="flex-grow: 1; min-width: 0; padding-top: 4px; font-size: 13.5px; line-height: 1.6; color: #3d4452; word-break: keep-all">{{c.a}}</span>
+        <span style="align-self: flex-end; height: 24px; flex-shrink: 0; margin-left: 4px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="font-size: 11.5px; font-weight: 700">근거</span><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800">{{c.pg}}</span></span>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 병원 · 환자 안내 시스템 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 45</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 카드 564 × 152 · 열 간격 24 · 행 간격 16 · y 156–644
+    const W = 564, H = 152, GX = 24, GY = 16, TOP = 156;
+    // [분류, 질문, 답, 근거 쪽]
+    const Q = [
+      ['연동', '기존 진료 대기 시스템과 연결되나요?', 'HIS의 대기 번호만 받아 표시합니다. 연동 방식은 병원 IT와 확정합니다.', 'p.[00]'],
+      ['위생', '터치 화면 소독은 어떻게 하나요?', '알코올 소독이 가능한 강화유리이며, 비접촉 호출도 함께 제공합니다.', 'p.[00]'],
+      ['운영', '화면이 멈추면 안내가 끊기나요?', '장애를 원격으로 먼저 감지하고, 대체 화면이 자동으로 나갑니다.', 'p.[00]'],
+      ['보안', '환자 이름이 화면에 그대로 나오나요?', '이름은 가운데를 가린 형태로만 표시하고 당일 자동 삭제합니다.', 'p.[00]'],
+      ['시공', '공사 중 진료에 지장이 없나요?', '진료 종료 후 야간 시공, 구역별 [0]일 이내로 끝냅니다.', 'p.[00]'],
+      ['비용', '5년 뒤 교체 비용은 얼마인가요?', '5년 총비용에 교체 · 유지비를 포함해 p.[00]에 정리했습니다.', 'p.[00]']
+    ];
+    const cards = Q.map(([cat, q, a, pg], i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      return {
+        cat, q, a, pg,
+        box: 'position: absolute; left: ' + (64 + col * (W + GX)) + 'px; top: ' + (TOP + row * (H + GY)) + 'px; width: ' + W + 'px; height: ' + H + 'px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; padding: 18px 20px 16px 18px; display: flex; flex-direction: column'
+      };
+    });
+    return { cards };
+  }
+}
+</script>
+</body>
+</html>

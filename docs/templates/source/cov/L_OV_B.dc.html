@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OV-B 제안 범위</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">00 · 제안 개요</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">이번 제안이 맡는 것과 맡지 않는 것</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">범위 밖 항목은 담당과 진행 방법을 함께 적었습니다</div>
+
+  <!-- 3열: 포함 · 선택 옵션 · 제외 -->
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+    <div style="{{c.box}}">
+      <div style="display: flex; align-items: center; gap: 10px; height: 28px; flex-shrink: 0">
+        <span style="{{c.chipStyle}}">{{c.chip}}</span>
+        <span style="font-size: 13px; color: #596170">{{c.desc}}</span>
+      </div>
+      <div style="{{c.rule}}"></div>
+      <div style="display: flex; flex-direction: column">
+        <sc-for list="{{c.rows}}" as="r" hint-placeholder-count="6">
+          <div style="{{r.st}}">
+            <div style="{{r.iconBox}}">
+              <sc-if value="{{r.isIn}}" hint-placeholder-val="{{false}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if>
+              <sc-if value="{{r.isOpt}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></sc-if>
+              <sc-if value="{{r.isOut}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="3.2" stroke-linecap="round"><path d="M5 12h14"/></svg></sc-if>
+            </div>
+            <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+              <span style="{{r.nameStyle}}">{{r.name}}</span>
+              <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; color: #596170; white-space: nowrap"><span style="{{r.ownerStyle}}">{{r.owner}}</span>{{r.sub}}</span>
+            </div>
+            <span style="{{r.costStyle}}">{{r.cost}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <div style="{{c.noteBox}}">
+        <span style="{{c.noteLabel}}">{{c.noteK}}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{c.noteChips}}" as="n" hint-placeholder-count="3">
+            <span style="{{c.noteChip}}">{{n}}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 결정이 필요한 두 가지 -->
+  <div style="position: absolute; left: 64px; top: 580px; width: 1152px; height: 68px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 24px 0 18px; display: flex; align-items: center; gap: 14px">
+    <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #121417; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 8.6a4 4 0 0 1 8 .4c0 2.6-4 3.2-4 5.8M12 19.4h.01"/></svg></div>
+    <span style="font-size: 16px; font-weight: 800; white-space: nowrap">결정이 필요한 두 가지</span>
+    <span style="width: 1px; height: 22px; background: #d5d9e0; margin: 0 6px"></span>
+    <sc-for list="{{asks}}" as="q" hint-placeholder-count="2">
+      <span style="height: 36px; padding: 0 16px 0 8px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; gap: 8px; white-space: nowrap"><span style="width: 22px; height: 22px; border-radius: 50%; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800">{{q.no}}</span><span style="font-size: 14px; font-weight: 700">{{q.t}}</span></span>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <span style="font-size: 12.5px; color: #596170; white-space: nowrap">답을 주시면 범위를 확정해 견적에 반영합니다</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 3열: x 64 / 456 / 848 (각 368), y 160 – 560
+    const X = [64, 456, 848], TOP = 160, CH = 400;
+    const ROW = { in: 52, opt: 62, out: 52 };
+    // 포함 — [항목, 보조줄]
+    const IN = [
+      ['시스템에어컨 교체', '3–9F · 360 카세트 · DVM S2'],
+      ['b.IoT 중앙 관리', '전 층 · 공조 통합 제어'],
+      ['회의실 사이니지', '[00]실 · [모델명]'],
+      ['로비 안내 키오스크', '[0]대 · KM24C'],
+      ['설치 · 시운전 · 교육', '전 품목 · 운영자 교육 [0]회'],
+      ['무상 유지보수', '[0]년 · 정기 점검 포함']
+    ];
+    // 선택 옵션 — [항목, 보조줄, 상대 비용]
+    const OPT = [
+      ['로비 LED 외벽', '건물 전면 · 크기는 실사 후 확정', '+[00]%'],
+      ['에너지 리포트', 'SmartThings Pro · 층별 월간 리포트', '+[00]%'],
+      ['유지보수 연장 +[0]년', '무상 기간 종료 후 이어서', '+[00]%']
+    ];
+    // 제외 — [항목, 담당, 진행 방법]
+    const OUT = [
+      ['건축 · 인테리어 공사', '고객사', '공정 일정은 함께 조율'],
+      ['전기 간선 증설', '별도 발주', '필요 용량 자료 제공'],
+      ['기존 장비 폐기 비용', '고객사', '반출은 시공 일정에 맞춤'],
+      ['입주사 개별 장비', '입주사', '연동 사양 안내']
+    ];
+    const ICON = {
+      in: 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center',
+      opt: 'width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #1428a0; display: flex; align-items: center; justify-content: center',
+      out: 'width: 22px; height: 22px; flex-shrink: 0; border-radius: 50%; background: #e2e5ea; display: flex; align-items: center; justify-content: center'
+    };
+    const row = (kind, name, sub, cost, owner, i) => ({
+      name, sub, cost: cost || '', owner: owner ? '담당 · ' + owner : '',
+      isIn: kind === 'in', isOpt: kind === 'opt', isOut: kind === 'out',
+      iconBox: ICON[kind],
+      st: 'height: ' + ROW[kind] + 'px; box-sizing: border-box; display: flex; align-items: center; gap: 12px;' + (i > 0 ? ' border-top: 1px solid ' + (kind === 'out' ? '#e2e5ea' : '#eef0f3') + ';' : ''),
+      nameStyle: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 15px; font-weight: 700; white-space: nowrap; color: ' + (kind === 'out' ? '#3d4452' : '#121417'),
+      ownerStyle: owner ? 'font-weight: 700; color: #121417; margin-right: 6px' : 'display: none',
+      costStyle: cost ? 'height: 24px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; white-space: nowrap' : 'display: none'
+    });
+    const box = (k) => 'position: absolute; left: ' + X[k] + 'px; top: ' + TOP + 'px; width: 368px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 16px; display: flex; flex-direction: column; ';
+    const chip = (bg, fg, extra) => 'height: 28px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; font-size: 13px; font-weight: 800; white-space: nowrap; background: ' + bg + '; color: ' + fg + '; ' + (extra || '');
+    const noteBox = (bg) => 'border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; background: ' + bg;
+    const noteChip = (bg, fg) => 'height: 24px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 12px; font-weight: 700; white-space: nowrap; background: ' + bg + '; color: ' + fg;
+    // 제외 항목의 담당별 개수 (데이터에서 계산)
+    const cnt = {};
+    OUT.forEach(([, o]) => { cnt[o] = (cnt[o] || 0) + 1; });
+    const owners = Object.keys(cnt).map((o) => o + ' ' + cnt[o]);
+    const cols = [
+      { chip: '포함 · 6', desc: '본 제안 금액에 포함',
+        box: box(0) + 'background: #ffffff; border: 2px solid #1428a0; padding: 19px 21px 19px;',
+        chipStyle: chip('#1428a0', '#ffffff'),
+        rule: 'height: 1px; flex-shrink: 0; margin: 14px 0 2px; background: #e2e5ea',
+        rows: IN.map(([n, s], i) => row('in', n, s, '', '', i)),
+        noteK: '', noteChips: [], noteBox: 'display: none', noteLabel: 'display: none', noteChip: '' },
+      { chip: '선택 · 3', desc: '원하시면 추가 · 금액 별도',
+        box: box(1) + 'background: #ffffff; border: 1.5px dashed #1428a0; padding: 19.5px 21.5px 19.5px;',
+        chipStyle: chip('#eaeefb', '#1428a0', 'border: 1.5px dashed #1428a0'),
+        rule: 'height: 1px; flex-shrink: 0; margin: 14px 0 2px; background: #e2e5ea',
+        rows: OPT.map(([n, s, c], i) => row('opt', n, s, c, '', i)),
+        noteK: '상대 비용 = 본 제안 금액 대비', noteChips: ['하나씩 따로 선택 가능', '금액은 견적서에서 제시'],
+        noteBox: noteBox('#eaeefb'), noteLabel: 'font-size: 12px; font-weight: 700; color: #1428a0', noteChip: noteChip('#ffffff', '#1428a0') },
+      { chip: '제외 · 4', desc: '다른 주체가 진행',
+        box: box(2) + 'background: #f5f6f8; padding: 20px 22px 20px;',
+        chipStyle: chip('#121417', '#ffffff'),
+        rule: 'height: 1px; flex-shrink: 0; margin: 14px 0 2px; background: #d5d9e0',
+        rows: OUT.map(([n, o, m], i) => row('out', n, m, '', o, i)),
+        noteK: '담당 정리', noteChips: owners,
+        noteBox: noteBox('#ffffff'), noteLabel: 'font-size: 12px; font-weight: 700; color: #596170', noteChip: noteChip('#f5f6f8', '#3d4452') }
+    ];
+    const asks = [['천장 마감 복구는 누가?'], ['옵션은 계약 때 확정?']].map(([t], i) => ({ no: 'Q' + (i + 1), t }));
+    return { cols, asks };
+  }
+}
+</script>
+</body>
+</html>

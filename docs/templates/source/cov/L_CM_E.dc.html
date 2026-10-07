@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CM-E 열위 → 보완 방안</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">두 가지는 경쟁사가 앞섭니다 — 이렇게 메웁니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 560px; font-size: 15px; color: #596170">열위 항목 · 원인 · 보완 방안 · 보완 후 예상</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 116px; display: flex; align-items: center; gap: 18px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 22px; height: 10px; border-radius: 0 3px 3px 0; background: #121417"></span>경쟁사</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 22px; height: 10px; border-radius: 0 3px 3px 0; background: #b8bec8"></span>삼성 지금</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 22px; height: 10px; border-radius: 0 3px 3px 0; background: #1428a0"></span>삼성 보완 후</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 0; height: 14px; border-left: 2px dashed #121417"></span>경쟁사 수준</span>
+  </div>
+
+  <!-- 열위 행 2개: ① 항목 · ② 지금 비교 · 화살표 · ③ 보완 방안 · ④ 보완 후 -->
+  <sc-for list="{{rows}}" as="r" hint-placeholder-count="2">
+    <div style="{{r.pos}}">
+      <!-- ① 항목 -->
+      <div style="width: 200px; margin-right: 16px; flex-shrink: 0; box-sizing: border-box; padding: 20px 4px 0 0; display: flex; flex-direction: column; gap: 12px">
+        <span style="width: 28px; height: 28px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span>
+        <span style="font-size: 17px; font-weight: 800; line-height: 1.35; letter-spacing: -0.01em">{{r.name}}</span>
+        <div style="display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">원인</span>
+          <span style="font-size: 13.5px; line-height: 1.45; color: #596170">{{r.cause}}</span>
+        </div>
+        <span style="align-self: flex-start; height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px solid #121417; font-size: 12px; font-weight: 700; display: flex; align-items: center">{{r.lead}}</span>
+      </div>
+
+      <!-- ② 지금 비교 -->
+      <div style="width: 312px; flex-shrink: 0; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 18px 20px; display: flex; flex-direction: column">
+        <span style="font-size: 12.5px; font-weight: 800; color: #3d4452">지금 비교</span>
+        <span style="margin-top: 2px; font-size: 12px; color: #8a91a0">{{r.metric}}</span>
+        <div style="flex-grow: 1"></div>
+        <span style="font-size: 12.5px; font-weight: 700">{{r.comp}}</span>
+        <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px; height: 20px">
+          <div style="{{r.cBar}}"></div>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 800; white-space: nowrap">{{r.cVal}}</span>
+        </div>
+        <span style="margin-top: 12px; font-size: 12.5px; font-weight: 700; color: #596170">삼성 지금</span>
+        <div style="margin-top: 4px; display: flex; align-items: center; gap: 8px; height: 20px">
+          <div style="{{r.sBar}}"></div>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 800; color: #596170; white-space: nowrap">{{r.sVal}}</span>
+        </div>
+      </div>
+
+      <!-- 화살표 -->
+      <div style="width: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+        <div style="width: 22px; height: 2px; background: #1428a0"></div>
+        <svg width="10" height="12" viewBox="0 0 10 12" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: -3px"><path d="M2 1l6 5-6 5"/></svg>
+      </div>
+
+      <!-- ③ 보완 방안 -->
+      <div style="width: 312px; margin-right: 16px; flex-shrink: 0; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 12.5px; font-weight: 800; color: #1428a0">보완 방안</span>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <sc-for list="{{r.plan}}" as="p" hint-placeholder-count="3">
+            <div style="display: flex; align-items: center; gap: 10px; height: 24px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+              <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{p.t}}</span>
+              <sc-if value="{{p.hasRef}}" hint-placeholder-val="{{false}}">
+                <span style="height: 22px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #ffffff; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">{{p.ref}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="display: flex; align-items: center; gap: 8px; padding-top: 10px; border-top: 1px solid #b8c3ee">
+          <span style="font-size: 12px; font-weight: 700; color: #596170">근거</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; color: #3d4452">{{r.basis}}</span>
+        </div>
+      </div>
+
+      <!-- ④ 보완 후 -->
+      <div style="width: 248px; flex-shrink: 0; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1.5px solid #1428a0; padding: 17px 19px; display: flex; flex-direction: column">
+        <span style="font-size: 12.5px; font-weight: 800; color: #1428a0">보완 후 예상</span>
+        <span style="margin-top: 2px; font-size: 12px; color: #8a91a0">{{r.afterMetric}}</span>
+        <div style="flex-grow: 1"></div>
+        <div style="display: flex; align-items: baseline; gap: 6px">
+          <span style="font-size: 13.5px; font-weight: 700; color: #1428a0">{{r.aPre}}</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 30px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #1428a0">{{r.aVal}}</span>
+          <span style="font-size: 14px; font-weight: 700; color: #1428a0">{{r.aPost}}</span>
+        </div>
+        <div style="position: relative; height: 26px; margin-top: 6px">
+          <div style="{{r.aBar}}"></div>
+          <div style="{{r.tick}}"></div>
+          <span style="{{r.tickLbl}}">{{r.comp}}</span>
+        </div>
+        <span style="margin-top: 10px; align-self: flex-start; height: 26px; padding: 0 11px 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; gap: 5px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>동등 이상</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 하단 메모 -->
+  <div style="position: absolute; left: 64px; top: 606px; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #3d4452">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18M12 11v6M12 7.5v.5"/></svg>
+    <span>열위를 먼저 밝히고 보완책을 함께 제시합니다 — 평가 질의에서 같은 내용을 근거로 답합니다</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 막대 길이는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 24</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 막대 척도: 1.0 = 180px (② · ④ 같은 척도). 값은 예시 (0–1). 두 지표 모두 짧을수록 좋음.
+    const S = 180;
+    const px = (f) => Math.round(S * f);
+    const bar = (f, h, color) => 'width: ' + px(f) + 'px; height: ' + h + 'px; flex-shrink: 0; border-radius: 0 4px 4px 0; background: ' + color;
+    const R = [
+      {
+        name: '수도권 설치 속도', cause: '시공 협력사 1팀 운영', comp: '경쟁사 D',
+        metric: '매장당 설치 기간 · 짧을수록 좋음',
+        c: 0.46, cVal: '[0]일', s: 0.82, sVal: '[0]일',
+        plan: [['시공 협력사 2팀 추가', ''], ['야간 동시 설치 2개 매장', ''], ['자재 사전 배송', '']],
+        basis: '시공 일정 p.[00] · 협력사 계약 [확정 필요]',
+        afterMetric: '매장당 설치 기간', a: 0.42, ref: 0.46, aPre: '매장당', aVal: '[0]일', aPost: ''
+      },
+      {
+        name: '소프트웨어 단독 가격', cause: '하드웨어 포함 견적이 기본', comp: '경쟁사 C',
+        metric: '매장당 월 요금 · 낮을수록 좋음',
+        c: 0.4, cVal: '월 [0,000]원', s: 0.84, sVal: '월 [0,000]원',
+        plan: [['5년 총비용으로 비교', 'CO-B'], ['구독형 요금 옵션', ''], ['기존 화면 재사용 검토', '']],
+        basis: '총소유비용 p.[00] · 요금표 p.[00]',
+        afterMetric: '5년 총비용 기준 · 낮을수록 좋음', a: 0.6, ref: 0.78, aPre: '총비용', aVal: '[00]%', aPost: '낮음'
+      }
+    ];
+    const TOPS = [160, 384];
+    const rows = R.map((r, i) => {
+      const tx = px(r.ref);
+      return {
+        no: String(i + 1), name: r.name, cause: r.cause, comp: r.comp, lead: r.comp + ' 우위', metric: r.metric, basis: r.basis,
+        cVal: r.cVal, sVal: r.sVal, afterMetric: r.afterMetric, aPre: r.aPre, aVal: r.aVal, aPost: r.aPost,
+        pos: 'position: absolute; left: 64px; top: ' + TOPS[i] + 'px; width: 1152px; height: 200px; display: flex; align-items: stretch',
+        cBar: bar(r.c, 16, '#121417'),
+        sBar: bar(r.s, 16, '#b8bec8'),
+        aBar: 'position: absolute; left: 0; top: 6px; width: ' + px(r.a) + 'px; height: 14px; border-radius: 0 4px 4px 0; background: #1428a0',
+        tick: 'position: absolute; left: ' + (tx - 1) + 'px; top: 0; width: 0; height: 26px; border-left: 2px dashed #121417',
+        tickLbl: 'position: absolute; left: ' + (tx + 7) + 'px; top: 5px; font-size: 11.5px; font-weight: 700; color: #3d4452; white-space: nowrap',
+        plan: r.plan.map(([t, ref]) => ({ t, ref, hasRef: ref !== '' }))
+      };
+    });
+    return { rows };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MT-A 유지보수 점검 캘린더</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 유지보수</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">성수기 전에 먼저 점검합니다 — 1년 점검 캘린더</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">설비 × 월 · 정기 점검 · 필터 세척 · 시즌 전 집중 점검 · 원격 진단 상시</div>
+
+  <!-- 성수기 세로 띠 + 머리 칩 -->
+  <sc-for list="{{bands}}" as="b" hint-placeholder-count="3">
+    <div>
+      <div style="{{b.band}}"></div>
+      <div style="{{b.chipWrap}}"><span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">성수기</span></div>
+    </div>
+  </sc-for>
+
+  <!-- 월 머리 -->
+  <div style="position: absolute; left: 64px; top: 188px; font-size: 13px; color: #596170">설비 · 수량</div>
+  <div style="position: absolute; left: 304px; top: 186px; width: 912px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr))">
+    <sc-for list="{{months}}" as="m" hint-placeholder-count="12">
+      <span style="{{m.st}}">{{m.label}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 월 눈금선 -->
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="13">
+    <div style="{{g}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 210px; width: 1152px; height: 2px; background: #121417"></div>
+
+  <!-- 설비 행 -->
+  <div style="position: absolute; left: 64px; top: 212px; width: 1152px; display: flex; flex-direction: column">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+      <div style="position: relative; height: 60px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea">
+        <div style="position: absolute; left: 0; top: 0; width: 220px; height: 59px; display: flex; flex-direction: column; justify-content: center; gap: 3px">
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{r.name}}</span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap"><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-weight: 700; color: #3d4452">{{r.qty}}</span> · {{r.where}}</span>
+        </div>
+        <div style="{{r.track}}"></div>
+        <sc-for list="{{r.marks}}" as="k" hint-placeholder-count="4">
+          <div style="{{k.box}}">
+            <div style="{{k.shape}}"></div>
+            <svg style="{{k.star}}" width="19" height="19" viewBox="0 0 24 24" fill="#121417" stroke="#ffffff" stroke-width="1.6" stroke-linejoin="round"><path d="M12 2.6l2.85 5.95 6.55.85-4.8 4.55 1.2 6.5L12 17.3l-5.8 3.15 1.2-6.5-4.8-4.55 6.55-.85z"/></svg>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 526px; width: 1152px; height: 22px; display: flex; align-items: center; gap: 22px; font-size: 12.5px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #1428a0"></span>정기 점검</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 9px; height: 9px; background: #b8c3ee; transform: rotate(45deg)"></span>필터 세척</span>
+    <span style="display: flex; align-items: center; gap: 6px"><svg width="15" height="15" viewBox="0 0 24 24" fill="#121417" stroke="none"><path d="M12 2.6l2.85 5.95 6.55.85-4.8 4.55 1.2 6.5L12 17.3l-5.8 3.15 1.2-6.5-4.8-4.55 6.55-.85z"/></svg>시즌 전 집중 점검</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 22px; height: 2px; background: #6f82d6"></span>원격 진단 · 상시</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 14px; height: 12px; box-sizing: border-box; border-radius: 3px; background: #eaeefb; border: 1px solid #b8c3ee"></span>성수기</span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-weight: 700; color: #1428a0">성수기 한 달 전, 6월 · 11월에 집중 점검</span>
+  </div>
+
+  <!-- 점검 한 번에 하는 것 -->
+  <div style="position: absolute; left: 64px; top: 558px; width: 760px; height: 90px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 22px; display: flex; align-items: center; gap: 18px">
+    <div style="width: 112px; flex-shrink: 0; display: flex; flex-direction: column; gap: 3px">
+      <span style="font-size: 15px; font-weight: 800; line-height: 1.35">점검 한 번에<br>하는 것</span>
+    </div>
+    <div style="width: 1px; height: 48px; flex-shrink: 0; background: #d5d9e0"></div>
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 12px">
+      <sc-for list="{{checks}}" as="c" hint-placeholder-count="4">
+        <div style="display: flex; align-items: flex-start; gap: 8px">
+          <span style="width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; border-radius: 5px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+          <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+            <span style="font-size: 14px; font-weight: 700; white-space: nowrap">{{c.k}}</span>
+            <span style="font-size: 12px; color: #596170; white-space: nowrap">{{c.d}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 리포트 -->
+  <div style="position: absolute; left: 848px; top: 558px; width: 368px; height: 90px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 22px; display: flex; align-items: center; gap: 16px">
+    <div style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 13h7 M9 17h5"/></svg></div>
+    <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-size: 13px; font-weight: 800; color: #1428a0">리포트</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">매월 [0]일</span>
+      </div>
+      <span style="font-size: 13.5px; color: #3d4452; white-space: nowrap">설비별 이상 · 조치 이력</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>N 호텔 · 리조트 객실 · 공용부 제안 · 점검 월은 운영 일정 협의로 확정</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 42</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 격자: x 304–1216 (12개월 × 76px) · 행 5개 × 60 (y 212–512) · 성수기 띠는 y 152부터
+    const X0 = 304, MW = 76, TOP = 212, RH = 60, BAND_TOP = 152;
+    const PEAK = [1, 7, 8, 12];
+    // 이어진 성수기 달끼리 한 띠로 묶음
+    const groups = [];
+    PEAK.forEach((m) => {
+      const g = groups[groups.length - 1];
+      if (g && g[1] === m - 1) g[1] = m; else groups.push([m, m]);
+    });
+    // [설비, 수량, 위치, 원격 진단 상시, 정기 점검(c) · 필터 세척(f) · 시즌 전 집중 점검(s)] — 점검 월은 예시
+    const R = [
+      ['시스템에어컨 실내기', '[000]대', '객실 · 공용부', true, { f: [2, 4, 6, 8, 10, 12], s: [6, 11] }],
+      ['실외기 DVM S2', '[00]대', '옥상', true, { c: [3, 9], s: [6, 11] }],
+      ['객실 TV · LYNK Cloud', '[000]대', '전 객실', true, { c: [4, 10] }],
+      ['로비 · 연회 사이니지', '[00]대', '로비 · 연회장', true, { c: [3, 6, 9, 11] }],
+      ['세탁 · 주방 가전', '[00]대', '세탁실 · 주방', true, { c: [2, 5, 9, 11] }]
+    ];
+    const SHAPE = {
+      c: 'width: 14px; height: 14px; border-radius: 50%; background: #1428a0; box-shadow: 0 0 0 2.5px #ffffff',
+      f: 'width: 11px; height: 11px; background: #b8c3ee; transform: rotate(45deg); box-shadow: 0 0 0 2px #ffffff',
+      s: 'display: none'
+    };
+    const rows = R.map(([name, qty, where, remote, M]) => {
+      const list = [];
+      ['s', 'c', 'f'].forEach((t) => (M[t] || []).forEach((m) => list.push({ t, m })));
+      const marks = list.map((x) => {
+        const same = list.filter((y) => y.m === x.m);
+        const off = same.length > 1 ? (same.indexOf(x) === 0 ? -11 : 11) : 0;
+        const cx = (X0 - 64) + (x.m - 1) * MW + MW / 2 + off;
+        return {
+          box: 'position: absolute; left: ' + (cx - 11) + 'px; top: 19px; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center',
+          shape: SHAPE[x.t],
+          star: x.t === 's' ? 'display: block' : 'display: none'
+        };
+      });
+      return {
+        name, qty, where, marks,
+        track: remote
+          ? 'position: absolute; left: ' + (X0 - 64) + 'px; top: 29px; width: ' + (MW * 12) + 'px; height: 2px; background: #6f82d6'
+          : 'display: none'
+      };
+    });
+    return {
+      bands: groups.map(([a, b]) => {
+        const left = X0 + (a - 1) * MW, w = (b - a + 1) * MW;
+        return {
+          band: 'position: absolute; left: ' + left + 'px; top: ' + BAND_TOP + 'px; width: ' + w + 'px; height: ' + (TOP + RH * R.length - BAND_TOP) + 'px; border-radius: 10px 10px 0 0; background: #eaeefb',
+          chipWrap: 'position: absolute; left: ' + left + 'px; top: 158px; width: ' + w + 'px; display: flex; justify-content: center'
+        };
+      }),
+      months: Array.from({ length: 12 }, (_, i) => {
+        const peak = PEAK.indexOf(i + 1) >= 0;
+        return {
+          label: (i + 1) + '월',
+          st: 'text-align: center; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 13px; font-weight: ' + (peak ? '800; color: #1428a0' : '700; color: #596170')
+        };
+      }),
+      grid: Array.from({ length: 13 }, (_, k) =>
+        'position: absolute; left: ' + (k === 12 ? X0 + MW * k - 1 : X0 + MW * k) + 'px; top: ' + TOP + 'px; width: 1px; height: ' + (RH * R.length) + 'px; background: ' + (k % 3 === 0 ? '#d5d9e0' : '#eef0f3')
+      ),
+      rows,
+      checks: [
+        { k: '작동 확인', d: '전 대수 운전 · 표시' },
+        { k: '필터', d: '세척 · 교체 시기' },
+        { k: '배수', d: '배수 펌프 · 누수' },
+        { k: '펌웨어', d: '최신 버전 적용' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

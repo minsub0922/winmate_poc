@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BV-F 층별 평면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">C 빌딩 네 개 층, 층마다 들어가는 것</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">B1 주차 · 1F 로비 · 3–9F 업무층(대표 3F) · RF 옥상 · 같은 기호 · 같은 축척</div>
+
+  <!-- 층 패널 2 × 2 -->
+  <sc-for list="{{panels}}" as="p" hint-placeholder-count="4">
+    <div style="{{p.box}}">
+      <div style="position: absolute; left: 16px; top: 14px; display: flex; align-items: center; gap: 8px">
+        <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">{{p.floor}}</span>
+        <span style="font-size: 15.5px; font-weight: 800; white-space: nowrap">{{p.name}}</span>
+        <sc-if value="{{p.multi}}" hint-placeholder-val="{{false}}">
+          <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">×7개 층 · 3–9F 동일</span>
+        </sc-if>
+      </div>
+      <div style="position: absolute; left: 384px; top: 20px; font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; color: #8a91a0">이 층 수량</div>
+      <div style="position: absolute; left: 384px; top: 50px; width: 166px; display: flex; flex-direction: column; gap: 6px">
+        <sc-for list="{{p.items}}" as="c" hint-placeholder-count="4">
+          <div style="height: 28px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #e2e5ea; padding: 0 10px 0 4px; display: flex; align-items: center; gap: 6px">
+            <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.no}}</span>
+            <span style="flex-grow: 1; font-size: 12px; font-weight: 700; white-space: nowrap">{{c.name}}</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; white-space: nowrap">{{c.qty}}</span>
+          </div>
+        </sc-for>
+        <span style="padding: 2px 0 0 4px; font-size: 11.5px; line-height: 1.45; color: #596170; word-break: keep-all">{{p.note}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 평면 요소 (벽 · 코어 · 구획 · 제품 기호 · 번호) -->
+  <sc-for list="{{els}}" as="e" hint-placeholder-count="80">
+    <div style="{{e.st}}">{{e.t}}</div>
+  </sc-for>
+
+  <!-- 기호 범례 -->
+  <div style="position: absolute; left: 64px; top: 618px; width: 1152px; height: 30px; display: flex; align-items: center; gap: 20px; font-size: 12.5px; color: #3d4452; white-space: nowrap">
+    <span style="font-size: 12.5px; font-weight: 800; color: #596170">기호</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 22px; height: 6px; border-radius: 1px; background: #1f232a"></span>사이니지 · 디스플레이</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 1px; background: #1f232a; border: 2px solid #121417"></span>키오스크</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #596170"></span>공조 · 천장 카세트</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 22px; height: 15px; box-sizing: border-box; border: 1.5px solid #121417; border-radius: 2px; background: #ffffff; display: flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417"></span></span>실외기</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 10px; height: 10px; box-sizing: border-box; border: 2px solid #121417; background: #ffffff; transform: rotate(45deg)"></span>게이트웨이</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 18px; height: 18px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">1</span>번호 = 오른쪽 수량 칩</span>
+    <span style="flex-grow: 1"></span>
+    <span style="height: 28px; padding: 0 12px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px">전체 합계는 수량표 <span style="font-family: Manrope, sans-serif; font-weight: 800">BM-A</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg></span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안 · 평면은 단순화한 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 16</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 패널 564 × 216 (간격 24 / 16), 평면은 패널 안 (16, 50)에서 352 × 144 — 네 층 모두 같은 축척 · 같은 외곽
+    const PW = 564, PH = 216, GX = 24, GY = 16, TOP = 156, BW = 352, BH = 144;
+    const els = [];
+    const put = (o, x, y, w, h, look, t) => els.push({ t: t || '', st: 'position: absolute; left: ' + (o.x + x) + 'px; top: ' + (o.y + y) + 'px; width: ' + w + 'px; height: ' + h + 'px; ' + look });
+    const INK = 'background: #121417';
+    const PART = 'background: #3d4452';
+    const GRID = 'background: #b8bec8';
+    const BAR = 'background: #1f232a; border-radius: 1px';
+    const KIOSK = 'box-sizing: border-box; border-radius: 1px; background: #1f232a; border: 2px solid #121417';
+    const DESK = 'box-sizing: border-box; border-radius: 2px; background: #eef0f3; border: 1px solid #b8bec8';
+    const LAB = 'display: flex; align-items: center; justify-content: center; white-space: nowrap; font-size: 11px; font-weight: 600; color: #8a91a0';
+    const wall = (o, x, y, w, h) => put(o, x, y, w, h, INK);
+    const part = (o, x, y, w, h) => put(o, x, y, w, h, PART);
+    const label = (o, x, y, w, h, t) => put(o, x, y, w, h, LAB, t);
+    const bar = (o, x, y, w, h) => put(o, x, y, w, h, BAR);
+    const kiosk = (o, x, y) => put(o, x, y, 12, 12, KIOSK);
+    const desk = (o, x, y, w, h) => put(o, x, y, w, h, DESK);
+    const cas = (o, cx, cy, d) => put(o, cx - d / 2, cy - d / 2, d, d, 'box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #596170');
+    const num = (o, cx, cy, n) => put(o, cx - 9, cy - 9, 18, 18, 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 1.5px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center', String(n));
+    const leaf = (o, x, y, len, deg) => put(o, x, y, len, 1.5, 'background: #3d4452; transform-origin: 0 50%; transform: rotate(' + deg + 'deg)');
+    const odu = (o, x, y) => {
+      put(o, x, y, 26, 16, 'box-sizing: border-box; border: 1.5px solid #121417; border-radius: 2px; background: #ffffff');
+      put(o, x + 8, y + 3, 10, 10, 'box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417');
+    };
+    const gw = (o, cx, cy) => put(o, cx - 6, cy - 6, 12, 12, 'box-sizing: border-box; border: 2px solid #121417; background: #ffffff; transform: rotate(45deg)');
+    // 같은 자리의 코어 (엘리베이터 · 계단)
+    const core = (o, a, b) => {
+      put(o, 144, 6, 70, 48, 'background: #d5d9e0');
+      put(o, 178, 6, 2, 48, 'background: #b8bec8');
+      label(o, 144, 6, 34, 48, a);
+      label(o, 180, 6, 34, 48, b);
+    };
+    const shell = (o, gaps) => {
+      wall(o, 0, 0, BW, 6); wall(o, BW - 6, 0, 6, BH);
+      if (gaps.left) { wall(o, 0, 0, 6, gaps.left[0]); wall(o, 0, gaps.left[1], 6, BH - gaps.left[1]); } else wall(o, 0, 0, 6, BH);
+      if (gaps.bottom) { wall(o, 0, BH - 6, gaps.bottom[0], 6); wall(o, gaps.bottom[1], BH - 6, BW - gaps.bottom[1], 6); } else wall(o, 0, BH - 6, BW, 6);
+    };
+
+    // [층 칩, 이름, 여러 층 여부, 수량 칩, 메모, 그리기]
+    const F = [
+      ['B1', '주차장', false, [['주차 안내 사이니지', '[0]'], ['출입 키오스크', '[0]']], '램프 · EV 앞 · 차량 동선 기준', (o) => {
+        shell(o, { left: [48, 96] });
+        [28, 50, 72, 94, 116, 236, 258, 280, 302, 324].forEach((x) => put(o, x, 6, 1, 36, GRID));
+        for (let x = 28; x <= 324; x += 22) put(o, x, 102, 1, 36, GRID);
+        put(o, 40, 72, 296, 0, 'border-top: 1.5px dashed #b8bec8');
+        core(o, 'EV', '계단');
+        label(o, 8, 56, 34, 14, '램프');
+        bar(o, 104, 61, 5, 22); bar(o, 270, 61, 5, 22);
+        num(o, 90, 72, 1);
+        kiosk(o, 222, 58);
+        num(o, 248, 64, 2);
+      }],
+      ['1F', '로비', false, [['LED 미디어월', '1'], ['안내 키오스크', '[0]'], ['사이니지', '[0]'], ['천장 카세트', '[0]']], '', (o) => {
+        shell(o, { bottom: [150, 204] });
+        leaf(o, 150, BH - 5, 22, -55); leaf(o, 204, BH - 5, 22, -125);
+        label(o, 150, BH + 2, 54, 14, '정문');
+        core(o, 'EV', '계단');
+        part(o, 262, 6, 2, 82);
+        label(o, 270, 14, 70, 16, '카페');
+        label(o, 20, 112, 44, 16, '로비');
+        bar(o, 22, 9, 104, 8);
+        num(o, 74, 30, 1);
+        kiosk(o, 118, 112); kiosk(o, 226, 112);
+        num(o, 102, 118, 2);
+        bar(o, 150, 61, 26, 5); bar(o, 184, 61, 26, 5);
+        num(o, 226, 64, 3);
+        cas(o, 60, 84, 22); cas(o, 190, 98, 22); cas(o, 304, 56, 22); cas(o, 304, 108, 22);
+        num(o, 84, 84, 4);
+      }],
+      ['3F 기준층', '업무층', true, [['360 카세트', '[00]'], ['회의실 사이니지', '[0]'], ['Flip Pro', '[0]']], '층당 수량 · 합계는 × 7', (o) => {
+        shell(o, {});
+        core(o, 'EV', '계단');
+        part(o, 220, 6, 2, 54); part(o, 262, 6, 2, 54); part(o, 304, 6, 2, 54);
+        [220, 262, 304].forEach((x) => { part(o, x, 58, 26, 2); leaf(o, x + 26, 59, 14, -50); });
+        bar(o, 229, 11, 26, 5); bar(o, 271, 11, 26, 5); bar(o, 313, 11, 26, 5);
+        num(o, 242, 34, 3);
+        bar(o, 228, 65, 12, 5); bar(o, 270, 65, 12, 5); bar(o, 312, 65, 12, 5);
+        num(o, 210, 68, 2);
+        [22, 102, 182, 262].forEach((x) => { desk(o, x, 80, 60, 16); desk(o, x, 116, 60, 16); });
+        desk(o, 22, 20, 50, 16); desk(o, 82, 20, 50, 16);
+        [52, 132, 212, 292].forEach((x) => cas(o, x, 106, 18));
+        cas(o, 78, 46, 18);
+        num(o, 44, 46, 1);
+      }],
+      ['RF', '옥상', false, [['DVM S2 실외기', '[0]'], ['b.IoT 게이트웨이', '1']], '배관 경로는 실사 후 확정', (o) => {
+        shell(o, {});
+        core(o, 'EV', '계단');
+        put(o, 226, 66, 110, 66, 'box-sizing: border-box; border: 1px dashed #8a91a0; border-radius: 4px');
+        label(o, 226, 48, 110, 14, '실외기 존');
+        [234, 266, 298].forEach((x) => { odu(o, x, 78); odu(o, x, 106); });
+        num(o, 210, 99, 1);
+        gw(o, 128, 28);
+        num(o, 106, 28, 2);
+        label(o, 24, 104, 80, 16, '옥상 바닥');
+      }]
+    ];
+
+    const panels = F.map(([floor, name, multi, items, note, draw], i) => {
+      const px = 64 + (i % 2) * (PW + GX), py = TOP + Math.floor(i / 2) * (PH + GY);
+      draw({ x: px + 16, y: py + 50 });
+      return {
+        floor, name, multi, note,
+        items: items.map(([n, q], k) => ({ no: String(k + 1), name: n, qty: q })),
+        box: 'position: absolute; left: ' + px + 'px; top: ' + py + 'px; width: ' + PW + 'px; height: ' + PH + 'px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8'
+      };
+    });
+    // 평면 바닥(흰 슬래브)은 벽 아래에 먼저 깔기
+    const slabs = panels.map((p, i) => {
+      const px = 64 + (i % 2) * (PW + GX), py = TOP + Math.floor(i / 2) * (PH + GY);
+      return { t: '', st: 'position: absolute; left: ' + (px + 16) + 'px; top: ' + (py + 50) + 'px; width: ' + BW + 'px; height: ' + BH + 'px; background: #ffffff' };
+    });
+    return { panels, els: slabs.concat(els) };
+  }
+}
+</script>
+</body>
+</html>

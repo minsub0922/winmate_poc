@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>이미지 슬롯 — 종류 · 비율 · 출처</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="{{box}}">
+  <sc-if value="{{real}}" hint-placeholder-val="{{false}}">
+    <img src="{{src}}" alt="{{alt}}" style="{{imgStyle}}">
+  </sc-if>
+  <sc-if value="{{empty}}" hint-placeholder-val="{{true}}">
+    <div style="{{phStyle}}">
+      <svg width="{{iconSize}}" height="{{iconSize}}" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="{{icon}}"/></svg>
+      <sc-if value="{{showLabel}}" hint-placeholder-val="{{true}}">
+        <span style="{{labelStyle}}">{{label}}</span>
+      </sc-if>
+      <sc-if value="{{showMeta}}" hint-placeholder-val="{{true}}">
+        <span style="{{metaStyle}}">{{meta}}</span>
+      </sc-if>
+      <sc-if value="{{showHint}}" hint-placeholder-val="{{true}}">
+        <span style="{{hintStyle}}">{{hint}}</span>
+      </sc-if>
+    </div>
+  </sc-if>
+  <sc-if value="{{showChip}}" hint-placeholder-val="{{false}}">
+    <span style="{{chip}}">
+      <sc-if value="{{isGen}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="#ffffff" stroke="none"><path d="M12 2l2.4 6.9L21 11l-6.6 2.1L12 20l-2.4-6.9L3 11l6.6-2.1z"/></svg></sc-if>
+      {{source}}
+    </span>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"pid":{"editor":"enum","options":["none","qm55c.front","qm55c.persp","km24c.front","km24c.persp","oh55a.front","oh55a.persp","ac360","case.mcd.menuboard","case.mcd.counter","case.mcd.dt","case.mcd.dt2","case.mcd.window","case.mcd.seat","life.km24c.bakery","life.km24c.mounts","life.qm55c.coffee","life.qm55c.wall","life.oh55a.dt","life.ac360.store","life.ac360.wide","life.window","ui.cms","ui.mi.overview","ui.mi.insight","ui.mi.kv","ui.stp.map","ui.stp.energy","ui.stp.schedule","ui.stp.detect","ui.stp.store"],"default":"none"},"kind":{"editor":"enum","options":["cut","space","insitu","people","kv","ui","content","aerial","detail"],"default":"insitu"},"origin":{"editor":"enum","options":["auto","official","case","site","gen","client"],"default":"auto"},"hint":{"editor":"text","default":""},"w":{"editor":"int","default":320},"h":{"editor":"int","default":180},"fit":{"editor":"enum","options":["auto","cover","contain"],"default":"auto"},"pos":{"editor":"text","default":"50% 50%"},"zoom":{"editor":"float","default":1},"bg":{"editor":"enum","options":["none","soft","white","dark"],"default":"none"},"radius":{"editor":"int","default":0},"credit":{"editor":"enum","options":["off","bl","br","tl","tr"],"default":"off"},"$preview":{"width":320,"height":180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 이미지 슬롯 하나 = 종류(kind) + 비율(w × h) + 힌트(hint) + 출처 유형(origin).
+    // pid가 있으면 실제 이미지, 없으면 "무엇을 넣을지" 적힌 자리표시.
+    // 제안서 생성 시 agent는 kind · 비율 · hint · 업종/공간 메타데이터로 이미지 DB를 검색해 pid(또는 url)를 채운다.
+    // 실사 카탈로그 — samsung.com 제품 · 솔루션 페이지와 삼성 공식 성공 사례 (02 Value Props 캔버스와 같은 이미지)
+    // [url, 출처 종류(cut · life · case · ui), 모델 · 고객, 설명, 기본 kind, multiply 블렌드]
+    const C = {
+      'qm55c.front': ['/_blob/3fbb461b7d62fa901f051b37701fa058', 'cut', 'QM55C', '스마트 사이니지 QMC 55형 · 정면', 'cut'],
+      'qm55c.persp': ['/_blob/859010c4e8fb6e836e7d343dbfdf4623', 'cut', 'QM55C', '스마트 사이니지 QMC 55형 · 측면', 'cut'],
+      'km24c.front': ['/_blob/1d986db10c31a34d6e64c9a248aba280', 'cut', 'KM24C', '삼성 키오스크 24형 · 정면', 'cut'],
+      'km24c.persp': ['/_blob/9933b35662f05667df016dbd27059eec', 'cut', 'KM24C', '삼성 키오스크 24형 · 측면', 'cut'],
+      'oh55a.front': ['/_blob/b5648d2201b20a2be5a3d251275bcc88', 'cut', 'OH55A-S', '옥외 사이니지 OHA-S 55형 · 정면', 'cut'],
+      'oh55a.persp': ['/_blob/1149941ce2c21c6aa2f1d1cb686fe184', 'cut', 'OH55A-S', '옥외 사이니지 OHA-S 55형 · 측면', 'cut'],
+      'ac360': ['/_blob/f11ca878c6a0f0efc09fa9f54ef514e9', 'cut', '360 카세트', '시스템에어컨 360 카세트', 'cut', true],
+      'case.mcd.menuboard': ['/_blob/a0798ff2ccc03105292b85d597bebcd8', 'case', '맥도날드 코리아', '고양삼송DT · 카운터 메뉴보드', 'insitu'],
+      'case.mcd.counter': ['/_blob/6b567b52f14d5a0f2bc542a9ac9dfaa9', 'case', '맥도날드 코리아', '고양삼송DT · 카운터와 좌석', 'insitu'],
+      'case.mcd.dt': ['/_blob/0afc97e0bfcc03e31a9d955617437621', 'case', '맥도날드 코리아', '고양삼송DT · 드라이브스루 주문대', 'insitu'],
+      'case.mcd.dt2': ['/_blob/b5395cb76d031dd35c29b80a794ae765', 'case', '맥도날드 코리아', '고양삼송DT · 드라이브스루 정면', 'insitu'],
+      'case.mcd.window': ['/_blob/57235d11dac3509be118a1b2ce1cf5a9', 'case', '맥도날드 코리아', '고양삼송DT · 매장 외관과 창가 사이니지', 'insitu'],
+      'case.mcd.seat': ['/_blob/c87440f5136dc9e17a07879106e24fe1', 'case', '맥도날드 코리아', '고양삼송DT · 좌석 쪽 사이니지', 'insitu'],
+      'life.km24c.bakery': ['/_blob/1b9174d1281407399df2fabcf3b63f3d', 'life', 'KM24C', '베이커리 카운터의 키오스크', 'insitu'],
+      'life.km24c.mounts': ['/_blob/a3f8bbd3c23e04d1fe61d774981ba9f5', 'life', 'KM24C', '카운터 · 스탠드 · 벽걸이 설치 3종', 'insitu'],
+      'life.qm55c.coffee': ['/_blob/a5fbe1a9d3289b64fcedd8bb42e504e7', 'life', 'QM55C', '일반 제품 대비 화면 비교 연출', 'detail'],
+      'life.qm55c.wall': ['/_blob/6be4093ea8034ae70441613662a4d9a1', 'life', 'QM55C', '슬림 벽걸이 설치 장면', 'people'],
+      'life.oh55a.dt': ['/_blob/9d36c02af529659666dc8842c408a0cd', 'life', 'OH55A-S', '드라이브스루 옥외 메뉴보드', 'insitu'],
+      'life.ac360.store': ['/_blob/f70aece0e2dd1fda36794008773bf14d', 'life', '360 카세트', '매장 천장에 설치된 360 카세트', 'insitu'],
+      'life.ac360.wide': ['/_blob/b1d071530692c52982921a014697c206', 'life', '360 카세트', '매장 천장 · 와이드', 'insitu'],
+      'life.window': ['/_blob/841f86907ba1acc83429ae4f827e90d9', 'life', '윈도 사이니지', '쇼윈도 사이니지 앞을 지나는 손님', 'people'],
+      'ui.cms': ['/_blob/f3ce71d1e9b3068f606f2f4bdc79c757', 'ui', 'Samsung VXT CMS', '메뉴 템플릿 편집 화면', 'ui'],
+      'ui.mi.overview': ['/_blob/861af5c2d3b335ddb733ce4ed66acdb6', 'ui', 'MagicINFO', '콘텐츠 · 기기 · 데이터 관리 개요', 'kv'],
+      'ui.mi.insight': ['/_blob/6fd9f7b10b6c4e087547d1e43122e4a5', 'ui', 'MagicINFO Insight', 'POS 데이터 → 분석 화면', 'ui'],
+      'ui.mi.kv': ['/_blob/500be9639cb2e959a6ae0e57426a4b40', 'ui', 'MagicINFO', 'MagicINFO 대표 이미지', 'kv'],
+      'ui.stp.map': ['/_blob/3f24bf7d0a5137148019f76089ae432e', 'ui', 'SmartThings Pro', '지점 지도 대시보드', 'ui'],
+      'ui.stp.energy': ['/_blob/ebbac05035a6f27330ee658836c7029b', 'ui', 'SmartThings Pro', '에너지 사용량 대시보드', 'ui'],
+      'ui.stp.schedule': ['/_blob/d498d7d53dce4b002dd3565f754979ea', 'ui', 'SmartThings Pro', '냉난방 스케줄 제어', 'ui'],
+      'ui.stp.detect': ['/_blob/b54b67b40d04605e179c7a321c30ba26', 'ui', 'SmartThings Pro', '비효율 운전 감지', 'ui'],
+      'ui.stp.store': ['/_blob/f6ac92c9ed91ed04ecf0e9c366556229', 'ui', 'SmartThings Pro', '매장 + 태블릿 관제 화면', 'kv']
+    };
+    // 종류 — [이름, 아이콘, 기본 출처]
+    const K = {
+      cut: ['제품 컷', 'M3 4h18v12H3z M8 20h8 M12 16v4', 'official'],
+      space: ['공간', 'M3 4l5 4h8l5-4 M8 8v9 M16 8v9 M3 21l5-4h8l5 4', 'site'],
+      insitu: ['공간 + 제품', 'M3 4l5 4h8l5-4 M8 8v9 M16 8v9 M3 21l5-4h8l5 4 M10 10h4v3h-4z', 'official'],
+      people: ['사용 장면', 'M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21v-1a7 7 0 0 1 14 0v1 M18 8h3v5h-3z', 'gen'],
+      kv: ['솔루션 대표 이미지', 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z M19 16l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z', 'official'],
+      ui: ['솔루션 화면', 'M3 5h18v14H3z M3 9h18 M7 13h5 M7 16h8', 'official'],
+      content: ['화면 콘텐츠', 'M3 4h18v12H3z M8 20h8 M12 16v4 M10 7.5v5l4.5-2.5z', 'gen'],
+      aerial: ['조감도 · 렌더', 'M12 3l9 5v8l-9 5-9-5V8z M12 13l9-5 M12 13v8 M12 13L3 8', 'gen'],
+      detail: ['디테일 · 클로즈업', 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14z M21 21l-4.5-4.5 M11 8v6 M8 11h6', 'official']
+    };
+    const ORIGIN = { official: 'samsung.com 공식', case: '도입사례', site: '고객 현장 사진', gen: 'AI 생성 시안', client: '고객 제공' };
+
+    const pid = String(this.props.pid ?? 'none');
+    const e = C[pid];
+    const kindKey = String(this.props.kind ?? (e ? e[4] : 'insitu'));
+    const k = K[kindKey] || K.insitu;
+    const w = Number(this.props.w ?? 320);
+    const h = Number(this.props.h ?? 180);
+    const radius = Number(this.props.radius ?? 0);
+    const BG = { none: 'transparent', soft: '#f5f6f8', white: '#ffffff', dark: '#121417' };
+    const bgKey = String(this.props.bg ?? 'none');
+
+    // 출처: 실제 이미지는 카탈로그가 정하고, 자리표시는 origin(없으면 종류 기본값)
+    let originKey = String(this.props.origin ?? 'auto');
+    if (e) originKey = e[1] === 'case' ? 'case' : 'official';
+    else if (originKey === 'auto') originKey = k[2];
+    const source = e && e[1] === 'case' ? '도입사례 · ' + e[2] : ORIGIN[originKey];
+
+    // 비율 이름 — 가까운 표준 비율, 없으면 W×H
+    const R = [['1:1', 1], ['4:3', 4 / 3], ['3:2', 1.5], ['16:9', 16 / 9], ['2:1', 2], ['21:9', 21 / 9], ['3:4', 0.75], ['2:3', 2 / 3], ['9:16', 9 / 16], ['4:5', 0.8]];
+    const r = w / h;
+    let best = null;
+    R.forEach(([n, v]) => { const d = Math.abs(r - v) / v; if (d < 0.06 && (!best || d < best[1])) best = [n, d]; });
+    const ratio = best ? best[0] : (r > 1 ? '가로 ' : '세로 ') + w + '×' + h;
+
+    // 실제 이미지 스타일
+    const fitWant = String(this.props.fit ?? 'auto');
+    const isCut = e && e[1] === 'cut';
+    const fit = fitWant === 'auto' ? (isCut ? 'contain' : 'cover') : fitWant;
+    const pos = String(this.props.pos ?? '50% 50%');
+    const zoom = Number(this.props.zoom ?? 1);
+    const pad = e && fit === 'contain' ? Math.round(Math.min(w, h) * 0.06) : 0;
+    const bg = e ? (BG[bgKey] || 'transparent') : (bgKey === 'dark' ? '#2a2f38' : '#dfe3ea');
+
+    // 자리표시 크기 단계
+    const small = h < 96 || w < 128;
+    const tiny = h < 60 || w < 80;
+    const hint = String(this.props.hint ?? '');
+    const dark = bgKey === 'dark';
+
+    const credit = String(this.props.credit ?? 'off');
+    const CP = { bl: 'left: 8px; bottom: 8px;', br: 'right: 8px; bottom: 8px;', tl: 'left: 8px; top: 8px;', tr: 'right: 8px; top: 8px;' };
+
+    return {
+      real: !!e,
+      empty: !e,
+      src: e ? e[0] : '',
+      alt: e ? e[2] + ' — ' + e[3] : '',
+      box: 'position: relative; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; padding: ' + pad + 'px; overflow: hidden; border-radius: ' + radius + 'px; background: ' + bg + ';',
+      imgStyle: 'display: block; width: 100%; height: 100%; object-fit: ' + fit + '; object-position: ' + pos + ';' + (zoom !== 1 ? ' transform: scale(' + zoom + '); transform-origin: ' + pos + ';' : '') + (e && e[5] ? ' mix-blend-mode: multiply;' : ''),
+      phStyle: 'position: absolute; left: 0px; top: 0px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; padding: ' + (small ? 4 : 12) + 'px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: ' + (small ? 2 : 5) + 'px; text-align: center; font-family: \'Noto Sans KR\', system-ui, sans-serif;' + (originKey === 'gen' ? ' border: 1.5px dashed ' + (dark ? '#596170' : '#a9b0bc') + '; border-radius: ' + radius + 'px;' : ''),
+      icon: k[1],
+      iconSize: tiny ? 16 : (small ? 18 : 26),
+      label: k[0],
+      showLabel: !tiny,
+      labelStyle: 'font-size: ' + (small ? 10.5 : 13) + 'px; font-weight: 700; color: ' + (dark ? '#d5d9e0' : '#596170') + '; white-space: nowrap;',
+      meta: ratio + ' · ' + ORIGIN[originKey],
+      showMeta: !small,
+      metaStyle: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 11px; font-weight: 700; color: ' + (dark ? '#8a91a0' : '#8a91a0') + '; white-space: nowrap;',
+      hint,
+      showHint: !small && hint !== '' && h >= 120,
+      hintStyle: 'max-width: ' + Math.max(80, w - 32) + 'px; font-size: 11.5px; line-height: 1.45; color: ' + (dark ? '#b8bec8' : '#8a91a0') + '; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;',
+      showChip: credit !== 'off',
+      isGen: originKey === 'gen',
+      source,
+      chip: 'position: absolute; ' + (CP[credit] || CP.bl) + ' height: 18px; padding: 0 7px; border-radius: 999px; background: ' + (originKey === 'gen' ? 'rgba(20,40,160,0.86)' : 'rgba(18,20,23,0.66)') + '; color: #ffffff; font-family: \'Noto Sans KR\', system-ui, sans-serif; font-size: 10px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap;'
+    };
+  }
+}
+</script>
+</body>
+</html>

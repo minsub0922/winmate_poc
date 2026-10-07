@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CU-B 맞춤 개발 · 공급 일정</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 맞춤 개발</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">사양 확정부터 첫 출고까지 [00]주</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 480px; font-size: 15px; color: #596170">단계 · 책임 · 품질 게이트 · 버퍼</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 116px; display: flex; align-items: center; gap: 16px; font-size: 12.5px; color: #3d4452; white-space: nowrap">
+    <sc-for list="{{owners}}" as="o" hint-placeholder-count="3">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="{{o.sw}}"></span>{{o.name}}</span>
+    </sc-for>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 9px; height: 9px; background: #121417; transform: rotate(45deg)"></span>마일스톤</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 16px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417; display: flex; align-items: center; justify-content: center"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>품질 게이트</span>
+  </div>
+
+  <!-- 주 헤더 -->
+  <div style="position: absolute; left: 64px; top: 164px; font-size: 13px; color: #596170">단계 · 책임</div>
+  <div style="position: absolute; left: 304px; top: 162px; width: 888px; display: grid; grid-template-columns: repeat(24, minmax(0, 1fr))">
+    <sc-for list="{{weeks}}" as="w" hint-placeholder-count="24">
+      <span style="{{w.st}}">{{w.label}}</span>
+    </sc-for>
+  </div>
+
+  <!-- 주 눈금선 -->
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="25">
+    <div style="{{g}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 185px; width: 1152px; height: 2px; background: #121417"></div>
+
+  <!-- 마일스톤 기준선 -->
+  <sc-for list="{{miles}}" as="m" hint-placeholder-count="3">
+    <div style="{{m.line}}"></div>
+  </sc-for>
+
+  <!-- 단계 행 -->
+  <div style="position: absolute; left: 64px; top: 187px; width: 1152px; display: flex; flex-direction: column">
+    <sc-for list="{{phases}}" as="p" hint-placeholder-count="7">
+      <div style="position: relative; height: 52px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea">
+        <div style="position: absolute; left: 0; top: 0; width: 232px; height: 51px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px">
+          <span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">{{p.name}}</span>
+          <span style="height: 20px; padding: 0 8px 0 6px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; border: 1px solid #e2e5ea; font-size: 11px; font-weight: 700; color: #3d4452; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="{{p.sw}}"></span>{{p.owner}}</span>
+        </div>
+        <div style="{{p.bar}}">{{p.note}}</div>
+        <div style="{{p.gate}}"><span style="width: 16px; height: 16px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417; display: flex; align-items: center; justify-content: center"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span><span>게이트 · 결함 <span style="font-family: Manrope, sans-serif; font-weight: 800">[0]</span>건 이하</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 마일스톤 행 -->
+  <div style="position: absolute; left: 64px; top: 557px; font-size: 13px; font-weight: 800; color: #596170">마일스톤</div>
+  <sc-for list="{{miles}}" as="m" hint-placeholder-count="3">
+    <div>
+      <div style="{{m.dia}}"></div>
+      <div style="{{m.lab}}">{{m.name}} <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #8a91a0">{{m.wk}}</span></div>
+    </div>
+  </sc-for>
+
+  <!-- 버퍼 -->
+  <div style="position: absolute; left: 64px; top: 604px; width: 1152px; height: 44px; box-sizing: border-box; border-radius: 10px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 14px; white-space: nowrap">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 7v5l3 2"/></svg>
+    <span style="font-size: 14px; font-weight: 800; color: #1428a0">버퍼 <span style="font-family: Manrope, sans-serif">[0]</span>주 포함</span>
+    <span style="width: 1px; height: 16px; background: #d5d9e0"></span>
+    <span style="font-size: 13.5px; color: #3d4452">인증 일정이 늘면 출시일만 밀리고 앞 단계는 그대로</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>U 통신사 · 키즈 전용폰 공동 기획 제안 · 일정은 사양 동결일 기준 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 31</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 타임라인: x 304–1192, 24주 × 37px · 행 7개 × 52 (y 187–551) · 오른쪽 24px는 출시 마일스톤 자리
+    const X0 = 304, WK = 37, NW = 24, ROW_TOP = 187, RH = 52, NR = 7, ROWS_H = RH * NR;
+    const OWN = {
+      '삼성': { color: '#1428a0', text: '#ffffff', legend: '삼성 주도' },
+      '공동': { color: '#6f82d6', text: '#ffffff', legend: '공동' },
+      'U 통신사': { color: '#b8c3ee', text: '#121417', legend: 'U 통신사 주도' }
+    };
+    const sw = (o) => 'width: 10px; height: 10px; flex-shrink: 0; border-radius: 3px; background: ' + OWN[o].color;
+    // [단계, 책임, 시작 주, 끝 주, 막대 메모, 품질 게이트] — 일정은 예시
+    const P = [
+      ['사양 확정', '공동', 1, 3, '사양서', false],
+      ['설정 · 런처 개발', '삼성', 3, 9, '부팅 · 홈 화면 · 설정 잠금', false],
+      ['부모 앱 · 연동 개발', 'U 통신사', 4, 12, '부모 앱 · 위치 · 사용 시간', false],
+      ['내부 검증 (EVT)', '삼성', 9, 12, '기능 · 신뢰성', true],
+      ['통신사 망 연동 · 인증 시험', '공동', 12, 17, '망 연동 · 인증 시험', true],
+      ['시험 생산 · 양산', '삼성', 16, 21, '시험 생산 → 양산', false],
+      ['초도 출고 · 매장 배포', 'U 통신사', 21, 24, '초도 물량', false]
+    ];
+    // [이름, 해당 주 종료 시점]
+    const M = [['사양 동결', 3], ['인증 완료', 17], ['출시', 24]];
+    const mx = (w) => X0 + WK * w;
+    return {
+      owners: Object.keys(OWN).map((k) => ({ name: OWN[k].legend, sw: sw(k) })),
+      weeks: Array.from({ length: NW }, (_, i) => {
+        const hit = M.some((m) => m[1] === i + 1);
+        return {
+          label: 'W' + (i + 1),
+          st: 'text-align: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: ' + (hit ? '800; color: #1428a0' : '700; color: #8a91a0')
+        };
+      }),
+      grid: Array.from({ length: NW + 1 }, (_, k) =>
+        'position: absolute; left: ' + (k === NW ? mx(k) - 1 : mx(k)) + 'px; top: ' + ROW_TOP + 'px; width: 1px; height: ' + ROWS_H + 'px; background: ' + (k % 4 === 0 ? '#d5d9e0' : '#eef0f3')
+      ),
+      phases: P.map(([name, owner, s, e, note, gate]) => {
+        const left = (X0 - 64) + (s - 1) * WK + 2;
+        const w = (e - s + 1) * WK - 4;
+        return {
+          name, owner, note, sw: sw(owner),
+          bar: 'position: absolute; left: ' + left + 'px; top: 12px; width: ' + w + 'px; height: 28px; box-sizing: border-box; border-radius: 6px; background: ' + OWN[owner].color + '; color: ' + OWN[owner].text + '; padding: 0 10px; display: flex; align-items: center; font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden',
+          gate: gate
+            ? 'position: absolute; left: ' + (left + w + 8) + 'px; top: 14px; height: 24px; padding: 0 10px 0 5px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px solid #121417; font-size: 11.5px; font-weight: 700; color: #121417; display: flex; align-items: center; gap: 5px; white-space: nowrap'
+            : 'display: none'
+        };
+      }),
+      miles: M.map(([name, w], i) => {
+        const x = mx(w);
+        const last = i === M.length - 1;
+        return {
+          name, wk: 'W' + w,
+          line: 'position: absolute; left: ' + (x - 1) + 'px; top: ' + ROW_TOP + 'px; width: 0; height: ' + (ROWS_H + 12) + 'px; border-left: 1.5px dashed #8a91a0',
+          dia: 'position: absolute; left: ' + (x - 7) + 'px; top: 558px; width: 14px; height: 14px; background: #121417; transform: rotate(45deg)',
+          lab: last
+            ? 'position: absolute; right: 64px; top: 579px; text-align: right; font-size: 13px; font-weight: 800; color: #121417; white-space: nowrap'
+            : 'position: absolute; left: ' + (x - 80) + 'px; top: 579px; width: 160px; text-align: center; font-size: 13px; font-weight: 800; color: #121417; white-space: nowrap'
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

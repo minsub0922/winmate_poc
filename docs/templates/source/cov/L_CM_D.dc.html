@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CM-D 경쟁사 프로파일</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">07 · WHY SAMSUNG</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">비교 대상 네 곳, 각자의 강점과 빈자리</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 640px; font-size: 15px; color: #596170">제품 · 가격대 · 솔루션 · 레퍼런스 · 최근 동향 · 삼성 대비</div>
+
+  <!-- 범례: 삼성 대비 칩 읽는 법 -->
+  <div style="position: absolute; right: 64px; top: 114px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #3d4452">
+    <span style="color: #8a91a0">삼성 대비 · 비교 6개 항목 중</span>
+    <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">우위</span><span>삼성이 앞섬</span>
+    <span style="margin-left: 4px; height: 22px; padding: 0 8px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">비슷</span>
+    <span style="margin-left: 4px; height: 22px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; border: 1.5px solid #121417; color: #121417; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">열위</span><span>경쟁사가 앞섬</span>
+  </div>
+
+  <!-- 경쟁사 4열 카드 (각 270 · 간격 24) -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 1152px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+    <sc-for list="{{comps}}" as="c" hint-placeholder-count="4">
+      <div style="height: 484px; box-sizing: border-box; border-radius: 16px; background: #ffffff; border: 1px solid #e2e5ea; padding: 20px 18px 18px 18px; display: flex; flex-direction: column">
+        <!-- 머리 -->
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #121417; color: #ffffff; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{c.letter}}</span>
+          <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+            <span style="font-size: 16px; font-weight: 800">{{c.name}}</span>
+            <span style="font-size: 12px; color: #596170; white-space: nowrap">{{c.type}}</span>
+          </div>
+        </div>
+        <div style="margin-top: 14px; height: 2px; flex-shrink: 0; background: #121417"></div>
+
+        <!-- 행 6개 -->
+        <div style="display: flex; flex-direction: column; padding: 7px 0; border-bottom: 1px solid #e2e5ea; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">주력 제품</span>
+          <span style="font-size: 13px; font-weight: 600">{{c.prod}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; padding: 7px 0; border-bottom: 1px solid #e2e5ea; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">가격대</span>
+          <div style="display: flex; align-items: center; gap: 2px; height: 20px">
+            <sc-for list="{{c.won}}" as="w" hint-placeholder-count="3">
+              <span style="{{w}}">₩</span>
+            </sc-for>
+            <span style="margin-left: 8px; font-size: 13px; color: #596170">{{c.priceWord}}</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; padding: 7px 0; border-bottom: 1px solid #e2e5ea; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">솔루션</span>
+          <span style="font-size: 13px; font-weight: 600">{{c.sol}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; padding: 7px 0; border-bottom: 1px solid #e2e5ea; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">레퍼런스</span>
+          <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700">{{c.ref}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; padding: 7px 0; border-bottom: 1px solid #e2e5ea; gap: 3px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">최근 동향</span>
+          <span style="font-size: 13px; font-weight: 600">{{c.trend}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; padding: 8px 0 0 0; gap: 6px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #8a91a0">삼성 대비</span>
+          <div style="display: flex; align-items: center; gap: 6px">
+            <sc-for list="{{c.vs}}" as="v" hint-placeholder-count="3">
+              <span style="{{v.st}}"><span>{{v.k}}</span><span style="font-family: Manrope, sans-serif; font-weight: 800">{{v.n}}</span></span>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="flex-grow: 1"></div>
+        <!-- 그들이 말할 것 -->
+        <div style="border-radius: 10px; background: #f5f6f8; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #596170">그들이 말할 것</span>
+          <span style="font-size: 14px; font-weight: 700; line-height: 1.45">{{c.quote}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 공개 자료 · 영업 정보 [0000.00] 기준 · 실명 · 로고 미표기</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 23</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 경쟁사는 익명. 가격대 = ₩ 3칸 중 채운 수. 삼성 대비 = [우위, 비슷, 열위] (6개 비교 항목 기준)
+    const C = [
+      { letter: 'A', type: '국내 대형 가전 · 사이니지', prod: '사이니지 풀 라인업', price: 2, sol: '자체 CMS · 서버 필요', ref: '외식 [00]건', trend: '신제품 [00]형 출시', vs: [4, 2, 0], quote: '“우리도 전 라인업이 있다”' },
+      { letter: 'B', type: '글로벌 사이니지 전문', prod: '고휘도 · 대형 사이니지', price: 3, sol: '외부 CMS 연동', ref: '글로벌 [00]건', trend: '국내 파트너 교체', vs: [3, 3, 0], quote: '“글로벌 레퍼런스가 더 많다”' },
+      { letter: 'C', type: '클라우드 CMS 소프트웨어', prod: '소프트웨어만 공급', price: 1, sol: '자체 클라우드 CMS', ref: '외식 [00]건', trend: '요금제 인하', vs: [4, 1, 1], quote: '“소프트웨어만 바꾸면 더 싸다”' },
+      { letter: 'D', type: '키오스크 · 메뉴보드 통합 벤더', prod: '외식 특화 패키지', price: 2, sol: '외부 CMS', ref: '수도권 [00]건', trend: '수도권 설치망 확대', vs: [3, 2, 1], quote: '“설치가 더 빠르다”' }
+    ];
+    const wonOn = 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 16px; font-weight: 800; line-height: 1; color: #121417';
+    const wonOff = 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 16px; font-weight: 800; line-height: 1; color: #d5d9e0';
+    const priceWord = ['', '낮음', '중간', '높음'];
+    const chip = 'height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; ';
+    const look = [
+      () => 'background: #eaeefb; color: #1428a0;',
+      () => 'background: #f5f6f8; color: #3d4452;',
+      (n) => n > 0 ? 'background: #ffffff; color: #121417; border: 1.5px solid #121417;' : 'background: #ffffff; color: #8a91a0; border: 1.5px solid #d5d9e0;'
+    ];
+    const keys = ['우위', '비슷', '열위'];
+    const comps = C.map((c) => ({
+      letter: c.letter,
+      name: '경쟁사 ' + c.letter,
+      type: c.type, prod: c.prod, sol: c.sol, ref: c.ref, trend: c.trend, quote: c.quote,
+      won: [1, 2, 3].map((i) => (i <= c.price ? wonOn : wonOff)),
+      priceWord: priceWord[c.price],
+      vs: c.vs.map((n, i) => ({ k: keys[i], n: String(n), st: chip + look[i](n) }))
+    }));
+    return { comps };
+  }
+}
+</script>
+</body>
+</html>

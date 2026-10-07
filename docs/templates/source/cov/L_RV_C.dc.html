@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>RV-C 입주 후 서비스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS — 분양 · 입주민 가치</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">입주 한 달 전부터 2년 동안, 입주민이 만나는 서비스</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 620px; font-size: 15px; color: #596170">시점별 서비스 · 채널(입주민 앱 · 관리사무소 · 삼성 서비스)</div>
+
+  <!-- 채널 범례 -->
+  <div style="position: absolute; right: 64px; top: 112px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #596170">
+    <span style="margin-right: 2px">채널</span>
+    <span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">입주민 앱</span>
+    <span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">관리사무소</span>
+    <span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1.5px solid #121417; color: #121417; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">삼성 서비스</span>
+  </div>
+
+  <!-- 축: 입주 전(점선) → 입주 후(실선) -->
+  <div style="{{axis.pre}}"></div>
+  <div style="{{axis.post}}"></div>
+  <div style="{{axis.head}}"><svg width="10" height="14" viewBox="0 0 10 14" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 1.5l6 5.5-6 5.5"/></svg></div>
+  <div style="{{axis.preLbl}}">입주 전</div>
+
+  <!-- 시점 노드 · 서비스 카드 (위 · 아래 엇갈림) -->
+  <sc-for list="{{stops}}" as="s" hint-placeholder-count="6">
+    <div>
+      <div style="{{s.stub}}"></div>
+      <div style="{{s.node}}"></div>
+      <div style="{{s.labPos}}">
+        <span style="{{s.whenStyle}}">{{s.when}}</span>
+        <span style="font-size: 12px; line-height: 16px; color: #596170; white-space: nowrap">{{s.whenSub}}</span>
+      </div>
+      <div style="{{s.card}}">
+        <span style="font-size: 15px; font-weight: 800; line-height: 1.4; letter-spacing: -0.01em; word-break: keep-all">{{s.title}}</span>
+        <span style="font-size: 12.5px; line-height: 1.5; color: #596170; word-break: keep-all">{{s.desc}}</span>
+        <div style="flex-grow: 1"></div>
+        <div style="display: flex; gap: 6px">
+          <sc-for list="{{s.chips}}" as="c" hint-placeholder-count="2">
+            <span style="{{c.st}}">{{c.t}}</span>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 하단: 얻는 것 -->
+  <sc-for list="{{gains}}" as="g" hint-placeholder-count="2">
+    <div style="{{g.box}}">
+      <span style="{{g.labelStyle}}">{{g.label}}</span>
+      <div style="display: flex; align-items: center; gap: 22px">
+        <sc-for list="{{g.items}}" as="i" hint-placeholder-count="3">
+          <span style="display: flex; align-items: center; gap: 7px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; white-space: nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>{{i}}</span>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · [00]지구 [0,000]세대 공동주택 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 21</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 노드 6개를 같은 간격으로 (시점 순서 · 실제 기간과 비례하지 않음)
+    // 카드 폭 240: 첫 카드 왼쪽 64, 마지막 카드 오른쪽 1216 → 노드 x 184 … 1096
+    const CW = 240, X1 = 64 + CW / 2, XN = 1216 - CW / 2, N = 6;
+    const STEP = (XN - X1) / (N - 1);
+    const AY = 352;                       // 축 y
+    const UP_TOP = 156, DN_TOP = 400, CH = 148;
+    const nx = (i) => X1 + STEP * i;
+    const px = (n) => n.toFixed(1) + 'px';
+
+    const CHIP = {
+      '입주민 앱': 'background: #eaeefb; color: #1428a0;',
+      '관리사무소': 'background: #f5f6f8; color: #3d4452;',
+      '삼성 서비스': 'background: #ffffff; color: #121417; border: 1.5px solid #121417;'
+    };
+    const chip = (t) => ({ t, st: 'height: 24px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' + CHIP[t] });
+
+    // [시점, 시점 설명, 서비스, 설명, 채널, 노드 종류]
+    const S = [
+      ['D-30', '사전 점검', '가전 · 공조 작동 점검', '입주 전 세대별 에어컨 · 빌트인 가전 작동 확인', ['삼성 서비스', '관리사무소'], 'pre'],
+      ['입주일', '입주 당일', 'SmartThings 앱 등록 안내', '세대 기기를 입주민 앱에 한 번에 연결', ['입주민 앱', '관리사무소'], 'key'],
+      ['1개월', '입주 후', '사용법 영상 · QR', '세대 안 QR로 제품별 사용법 영상 바로 보기', ['입주민 앱'], 'mid'],
+      ['첫 여름', '[0]월', '시스템에어컨 첫 여름 점검', '본격 냉방 전 실내기 · 실외기 점검', ['삼성 서비스'], 'mid'],
+      ['1년', '입주 후', '필터 청소 알림 · 원격 진단', '청소 시기는 앱 알림 · 이상은 원격으로 먼저 확인', ['입주민 앱', '삼성 서비스'], 'mid'],
+      ['2년', '하자 보수 종료', '무상 점검 종료 안내 · 연장 케어 제안', '종료 [0]개월 전 안내 · 연장 케어는 선택', ['관리사무소', '삼성 서비스'], 'end']
+    ];
+    const NODE = {
+      pre: [18, 'background: #ffffff; border: 3px solid #1428a0;'],
+      key: [24, 'background: #1428a0; border: 4px solid #ffffff; box-shadow: 0 0 0 1.5px #1428a0;'],
+      mid: [18, 'background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 0 0 1px #1428a0;'],
+      end: [18, 'background: #121417; border: 3px solid #ffffff; box-shadow: 0 0 0 1px #121417;']
+    };
+    const stops = S.map(([when, whenSub, title, desc, ch, kind], i) => {
+      const x = nx(i), up = i % 2 === 0;
+      const [d, nodeSt] = NODE[kind];
+      const cardTop = up ? UP_TOP : DN_TOP;
+      const s1 = up ? UP_TOP + CH : AY + d / 2;      // 연결선 시작
+      const s2 = up ? AY - d / 2 : DN_TOP;           // 연결선 끝
+      return {
+        when, whenSub, title, desc, chips: ch.map(chip),
+        stub: 'position: absolute; left: ' + px(x - 1) + '; top: ' + px(s1) + '; width: 2px; height: ' + px(s2 - s1) + '; background: #1428a0;',
+        node: 'position: absolute; left: ' + px(x - d / 2) + '; top: ' + px(AY - d / 2) + '; width: ' + d + 'px; height: ' + d + 'px; box-sizing: border-box; border-radius: 50%; ' + nodeSt,
+        labPos: 'position: absolute; left: ' + px(x - 70) + '; top: ' + (up ? AY + 18 : AY - 56) + 'px; width: 140px; display: flex; flex-direction: column; align-items: center; gap: 1px;',
+        whenStyle: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 16px; line-height: 22px; font-weight: 800; white-space: nowrap; color: ' + (kind === 'end' ? '#121417' : '#1428a0') + ';',
+        card: 'position: absolute; left: ' + px(x - CW / 2) + '; top: ' + cardTop + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid ' + (kind === 'key' ? '#1428a0' : '#e2e5ea') + '; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px;'
+      };
+    });
+
+    // 축: 64 → 입주일 노드는 점선(입주 전), 이후 1216까지 실선 + 화살촉
+    const xKey = nx(1);
+    const axis = {
+      pre: 'position: absolute; left: 64px; top: ' + (AY - 1) + 'px; width: ' + px(xKey - 64) + '; height: 0; border-top: 2px dashed #1428a0;',
+      post: 'position: absolute; left: ' + px(xKey) + '; top: ' + (AY - 1) + 'px; width: ' + px(1213 - xKey) + '; height: 2px; background: #1428a0;',
+      head: 'position: absolute; left: 1206px; top: ' + (AY - 7) + 'px; width: 10px; height: 14px; display: flex;',
+      preLbl: 'position: absolute; left: 64px; top: ' + (AY - 24) + 'px; font-size: 11.5px; font-weight: 700; color: #8a91a0;'
+    };
+
+    const gains = [
+      ['입주민이 얻는 것', ['접수는 한 곳', '사용법은 쉽게', '고장 전에 알림'], true],
+      ['관리사무소가 얻는 것', ['AS 접수 일원화', '단지 에너지 대시보드', '민원 [00]% 감소 목표'], false]
+    ].map(([label, items, blue], i) => ({
+      label, items,
+      box: 'position: absolute; left: ' + (64 + i * 588) + 'px; top: 566px; width: 564px; height: 82px; box-sizing: border-box; border-radius: 14px; background: ' + (blue ? '#eaeefb' : '#f5f6f8') + '; padding: 0 24px; display: flex; flex-direction: column; justify-content: center; gap: 10px;',
+      labelStyle: 'font-size: 14px; font-weight: 800; color: ' + (blue ? '#1428a0' : '#3d4452') + ';'
+    }));
+    return { stops, axis, gains };
+  }
+}
+</script>
+</body>
+</html>

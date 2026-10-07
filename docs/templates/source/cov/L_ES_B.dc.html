@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ES-B 숫자로 보는 제안</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">00 · 제안 요약</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">숫자 넷으로 보는 이번 제안</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">영업점 [000]곳 · 태블릿 창구 · 사이니지 · Knox Suite · 수치는 근거 시트와 연결</div>
+
+  <!-- 왼쪽 4열: 제안 한 문장 · 범위 · 근거 시트 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 368px; height: 468px; display: flex; flex-direction: column">
+    <span style="align-self: flex-start; height: 24px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center">이번 제안</span>
+    <div style="margin-top: 14px; font-size: 22px; font-weight: 800; line-height: 1.5; letter-spacing: -0.02em; word-break: keep-all">종이 서식 없는 창구로,<br>상담 시간은 고객에게 돌려드립니다</div>
+
+    <div style="margin-top: 26px; padding-top: 20px; border-top: 1px solid #e2e5ea; display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 12.5px; font-weight: 700; color: #596170">범위</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <sc-for list="{{scope}}" as="s" hint-placeholder-count="4">
+          <span style="{{s.st}}">{{s.t}}</span>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="flex-grow: 1"></div>
+
+    <!-- 근거 시트 표 -->
+    <div style="display: flex; flex-direction: column">
+      <div style="height: 34px; box-sizing: border-box; display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+        <span style="padding-left: 4px">근거 시트</span><span></span><span style="text-align: right; padding-right: 4px">쪽</span>
+      </div>
+      <sc-for list="{{refs}}" as="r" hint-placeholder-count="3">
+        <div style="height: 42px; box-sizing: border-box; display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; align-items: center; border-bottom: 1px solid #e2e5ea">
+          <span style="padding-left: 4px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">{{r.code}}</span>
+          <span style="font-size: 14px; font-weight: 500">{{r.name}}</span>
+          <span style="text-align: right; padding-right: 4px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; color: #3d4452">{{r.page}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 오른쪽 8열: 2×2 KPI 타일 -->
+  <sc-for list="{{tiles}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.box}}">
+      <div style="display: flex; align-items: center; gap: 8px; height: 26px">
+        <span style="{{t.noStyle}}">{{t.no}}</span>
+        <span style="{{t.labelStyle}}">{{t.label}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="{{t.chipStyle}}">{{t.chip}}</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 10px">
+        <span style="{{t.numStyle}}">{{t.num}}</span>
+        <span style="{{t.unitStyle}}">{{t.unit}}</span>
+      </div>
+      <span style="{{t.capStyle}}">{{t.cap}}</span>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <sc-for list="{{t.bars}}" as="b" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 10px; height: 18px">
+            <span style="{{b.kStyle}}">{{b.k}}</span>
+            <div style="flex-grow: 1; height: 10px; display: flex; align-items: center"><div style="{{b.bar}}"></div></div>
+            <span style="{{b.vStyle}}">{{b.v}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+  <div style="position: absolute; left: 456px; top: 633px; width: 760px; font-size: 11.5px; line-height: 1.3; color: #8a91a0">막대 길이는 예시 · [00]은 확정 전</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>T 은행 · 영업점 디지털 창구 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 2</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 범위 칩 (Knox Suite는 솔루션이라 강조 칩)
+    const scope = [['영업점 [000]곳', false], ['태블릿 [0,000]대', false], ['사이니지 [000]대', false], ['Knox Suite', true]].map(([t, sol]) => ({
+      t,
+      st: 'height: 30px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; white-space: nowrap; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 13px; font-weight: 700; ' +
+        (sol ? 'background: #eaeefb; color: #1428a0' : 'background: #f5f6f8; color: #3d4452')
+    }));
+    const refs = [['EF-B', '투자 회수', 'p.[00]'], ['CH-A', '고객 과제', 'p.[00]'], ['OP-C', '업무 전 → 후', 'p.[00]']].map(([code, name, page]) => ({ code, name, page }));
+
+    // 2×2 타일: x 456 / 848, y 156 / 402, 368 × 222
+    const X = [456, 848], Y0 = 156, TW = 368, TH = 222, GAP = 24;
+    // [라벨, 큰 수치, 단위, 근거, 강조, [지금 값, 지금 길이], [도입 후 값, 도입 후 길이]] — 길이는 예시 (0–1)
+    const T = [
+      ['창구 서식 처리 시간', '−[00]', '%', 'OP-C p.[00]', false, '창구 1건 · 서식 작성부터 확인까지', ['[00]분', 1], ['[00]분', 0.42]],
+      ['연간 종이 사용', '−[00]', '만 장', 'OP-C p.[00]', false, '전 영업점 · 신청서 · 동의서 합계', ['[00]만 장', 1], ['[00]만 장', 0.18]],
+      ['투자 회수', '[0.0]', '년', 'EF-B p.[00]', true, '연 창구 운영비 절감으로 회수', ['연 [0.0]억 원', 1], ['연 [0.0]억 원', 0.36]],
+      ['고객 대기 시간', '−[00]', '분', 'CH-A p.[00]', false, '번호표 발급부터 상담 시작까지', ['[00]분', 1], ['[00]분', 0.55]]
+    ];
+    const KLABEL = ['지금', '도입 후'];
+    const tiles = T.map(([label, num, unit, chip, hi, cap, a, b], i) => {
+      const col = i % 2, row = Math.floor(i / 2);
+      const fg = hi ? '#ffffff' : '#121417';
+      const kw = 'width: 56px; flex-shrink: 0; font-size: 12px; ';
+      const vw = 'width: 84px; flex-shrink: 0; text-align: right; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 13px; ';
+      const barBase = 'height: 10px; border-radius: 0 4px 4px 0; ';
+      return {
+        no: String(i + 1).padStart(2, '0'),
+        label, num, unit, cap, chip: '근거 · ' + chip,
+        capStyle: 'margin-top: 4px; font-size: 12.5px; color: ' + (hi ? '#c8d3ff' : '#596170'),
+        box: 'position: absolute; left: ' + X[col] + 'px; top: ' + (Y0 + row * (TH + GAP)) + 'px; width: ' + TW + 'px; height: ' + TH + 'px; box-sizing: border-box; border-radius: 16px; display: flex; flex-direction: column; ' +
+          (hi ? 'background: #1428a0; padding: 22px 24px 24px;' : 'background: #f5f6f8; padding: 22px 24px 24px;'),
+        noStyle: 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: ' + (hi ? '#b8c3ee' : '#1428a0'),
+        labelStyle: 'font-size: 15px; font-weight: 700; color: ' + fg,
+        chipStyle: 'height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; white-space: nowrap; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 11.5px; font-weight: 700; ' +
+          (hi ? 'background: rgba(255, 255, 255, 0.16); color: #ffffff' : 'background: #ffffff; border: 1px solid #e2e5ea; color: #3d4452'),
+        numStyle: 'font-family: Manrope, sans-serif; font-size: 52px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: ' + (hi ? '#ffffff' : '#1428a0'),
+        unitStyle: 'font-size: 20px; font-weight: 800; color: ' + (hi ? '#ffffff' : '#1428a0'),
+        bars: [
+          { k: KLABEL[0], v: a[0],
+            kStyle: kw + 'color: ' + (hi ? '#c8d3ff' : '#596170'),
+            bar: barBase + 'width: ' + Math.round(a[1] * 100) + '%; background: ' + (hi ? 'rgba(255, 255, 255, 0.38)' : '#b8bec8'),
+            vStyle: vw + 'font-weight: 700; color: ' + (hi ? '#c8d3ff' : '#3d4452') },
+          { k: KLABEL[1], v: b[0],
+            kStyle: kw + 'font-weight: 700; color: ' + (hi ? '#ffffff' : '#1428a0'),
+            bar: barBase + 'width: ' + Math.round(b[1] * 100) + '%; background: ' + (hi ? '#ffffff' : '#1428a0'),
+            vStyle: vw + 'font-weight: 800; color: ' + (hi ? '#ffffff' : '#1428a0') }
+        ]
+      };
+    });
+    return { scope, refs, tiles };
+  }
+}
+</script>
+</body>
+</html>

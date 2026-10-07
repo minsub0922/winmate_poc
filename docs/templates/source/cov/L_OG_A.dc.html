@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OG-A 추진 체계</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 추진 체계</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">세 회사가 한 팀으로 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 560px; font-size: 15px; color: #596170">조직 · 역할 · 투입 인원 · 보고 체계</div>
+
+  <!-- 범례 · 합계 -->
+  <div style="position: absolute; right: 64px; top: 114px; height: 24px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #3d4452; white-space: nowrap">
+    <span style="height: 22px; padding: 0 10px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">삼성전자</span>
+    <span style="height: 22px; padding: 0 10px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">협력사</span>
+    <span style="width: 1px; height: 14px; margin: 0 6px; background: #d5d9e0"></span>
+    <span>총 투입</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 800; color: #1428a0">[00]명</span>
+  </div>
+
+  <!-- 연결선 (좌표는 renderVals) -->
+  <sc-for list="{{lines}}" as="l" hint-placeholder-count="10">
+    <div style="{{l}}"></div>
+  </sc-for>
+  <div style="position: absolute; left: 652px; top: 210px; height: 16px; display: flex; align-items: center; font-size: 11.5px; color: #8a91a0">보고 · 승인</div>
+
+  <!-- 고객 -->
+  <div style="position: absolute; left: 460px; top: 152px; width: 360px; height: 54px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; display: flex; align-items: center; justify-content: center; gap: 10px; white-space: nowrap">
+    <span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">발주처</span>
+    <span style="font-size: 16px; font-weight: 800">S 지자체</span>
+    <span style="font-size: 13px; color: #596170">사업 담당관 · PMO 위원회</span>
+  </div>
+
+  <!-- 총괄 PM + 보조 -->
+  <div style="position: absolute; left: 490px; top: 230px; width: 300px; height: 56px; box-sizing: border-box; border-radius: 12px; background: #1428a0; color: #ffffff; display: flex; align-items: center; justify-content: center; gap: 12px; white-space: nowrap">
+    <span style="font-size: 17px; font-weight: 800">총괄 PM</span>
+    <span style="width: 1px; height: 16px; background: rgba(255,255,255,0.35)"></span>
+    <span style="font-size: 13.5px; font-weight: 500; color: #dfe5fb">삼성전자</span>
+    <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800">1명</span>
+  </div>
+  <sc-for list="{{aides}}" as="a" hint-placeholder-count="2">
+    <div style="{{a.box}}">
+      <span style="font-size: 14px; font-weight: 700">{{a.name}}</span>
+      <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 800; color: #596170">{{a.n}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 수행 팀 4 -->
+  <sc-for list="{{teams}}" as="t" hint-placeholder-count="4">
+    <div style="{{t.box}}">
+      <span style="{{t.chip}}">{{t.co}}</span>
+      <span style="margin-top: 8px; font-size: 17px; font-weight: 800; letter-spacing: -0.01em; white-space: nowrap">{{t.name}}</span>
+      <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 2px">
+        <sc-for list="{{t.roles}}" as="r" hint-placeholder-count="3">
+          <span style="height: 23px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #3d4452; white-space: nowrap"><span style="width: 5px; height: 5px; flex-shrink: 0; border-radius: 50%; background: #8a91a0"></span>{{r}}</span>
+        </sc-for>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #e2e5ea; padding-top: 10px">
+        <span style="font-size: 12.5px; color: #596170">투입 인원</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">{{t.n}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 보고 · 소통 -->
+  <div style="position: absolute; left: 64px; top: 568px; width: 1152px; height: 80px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 24px; display: flex; align-items: center">
+    <div style="width: 148px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 15px; font-weight: 800">보고 · 소통</span>
+      <span style="font-size: 12px; color: #596170">총괄 PM 주관</span>
+    </div>
+    <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr))">
+      <sc-for list="{{comms}}" as="c" hint-placeholder-count="4">
+        <div style="height: 48px; display: flex; align-items: center; gap: 12px; padding-left: 20px; border-left: 1px solid #e2e5ea">
+          <span style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center">
+            <sc-if value="{{c.doc}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5"/><path d="M10 13h6"/><path d="M10 17h6"/></svg></sc-if>
+            <sc-if value="{{c.cal}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="M4 10h16"/></svg></sc-if>
+            <sc-if value="{{c.up}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5"/><path d="M6 11l6-6 6 6"/></svg></sc-if>
+            <sc-if value="{{c.folder}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></sc-if>
+          </span>
+          <div style="display: flex; flex-direction: column; gap: 1px; min-width: 0">
+            <span style="font-size: 12px; color: #596170; white-space: nowrap">{{c.k}}</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; white-space: nowrap">{{c.v}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>S 지자체 · 통합 안내 · 관제 고도화 사업 제안 · 인원은 투입 계획 기준 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 40</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 세로 배치: 고객 152–206 · PM 230–286 · 버스선 y 308 · 팀 328–548 · 보고 띠 568–648
+    const AX = 640;                         // 가운데 축
+    const PM = { l: 490, t: 230, w: 300, h: 56 };
+    const AIDE = { w: 200, h: 46, gap: 56 };
+    const BUS = 308, T_TOP = 328, T_H = 220, T_W = 270, T_GAP = 24;
+    const blue = 'background: #1428a0';
+    const ln = (l, t, w, h, bg) => 'position: absolute; left: ' + l + 'px; top: ' + t + 'px; width: ' + w + 'px; height: ' + h + 'px; ' + bg;
+
+    // [팀, 회사, 삼성 여부, 역할 3, 투입 인원]
+    const T = [
+      ['설계 · 구축', '삼성전자', true, ['구성 설계', '장비 설치 감리', '시운전'], '[0]명'],
+      ['SW · 연동', 'SI 파트너 [회사명]', false, ['통합 관제 SW', 'BIS · 재난 연동', '데이터 이관'], '[0]명'],
+      ['설치 · 시공', '시공 협력사 [회사명]', false, ['현장 설치', '전기 · 통신', '야간 시공'], '[0]명'],
+      ['운영 · 유지보수', '삼성전자 서비스', true, ['원격 모니터링', '정기 점검', '장애 대응'], '[0]명']
+    ];
+    const tx = (i) => 64 + i * (T_W + T_GAP);
+    const cx = (i) => tx(i) + T_W / 2;
+    const teams = T.map(([name, co, ss, roles, n], i) => ({
+      name, co, roles, n,
+      chip: 'align-self: flex-start; height: 22px; padding: 0 10px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' +
+        (ss ? 'background: #eaeefb; color: #1428a0' : 'background: #f5f6f8; color: #3d4452'),
+      box: 'position: absolute; left: ' + tx(i) + 'px; top: ' + T_TOP + 'px; width: ' + T_W + 'px; height: ' + T_H + 'px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #d5d9e0; padding: 16px 20px 16px 20px; display: flex; flex-direction: column'
+    }));
+
+    // PM 양옆 보조 상자 (점선으로 연결)
+    const midY = PM.t + PM.h / 2;
+    const A = [['품질 관리 (QA)', '1명', -1], ['보안 담당', '1명', 1]];
+    const aides = A.map(([name, n, side]) => {
+      const l = side < 0 ? PM.l - AIDE.gap - AIDE.w : PM.l + PM.w + AIDE.gap;
+      return {
+        name, n,
+        box: 'position: absolute; left: ' + l + 'px; top: ' + (midY - AIDE.h / 2) + 'px; width: ' + AIDE.w + 'px; height: ' + AIDE.h + 'px; box-sizing: border-box; border-radius: 10px; background: #ffffff; border: 1px solid #d5d9e0; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; white-space: nowrap'
+      };
+    });
+    const dash = 'height: 0; border-top: 2px dashed #b8bec8';
+
+    const lines = [
+      // 고객 → PM (보고 · 승인)
+      ln(AX - 1, 206, 2, PM.t - 206, 'background: #b8bec8'),
+      // PM ↔ 보조 (점선)
+      ln(PM.l - AIDE.gap, midY - 1, AIDE.gap, 0, dash),
+      ln(PM.l + PM.w, midY - 1, AIDE.gap, 0, dash),
+      // PM → 버스선 → 각 팀
+      ln(AX - 1, PM.t + PM.h, 2, BUS - (PM.t + PM.h), blue),
+      ln(cx(0) - 1, BUS, cx(T.length - 1) - cx(0) + 2, 2, blue)
+    ].concat(T.map((_, i) => ln(cx(i) - 1, BUS, 2, T_TOP - BUS, blue)));
+
+    // 보고 · 소통 4가지 [항목, 값, 아이콘: doc · cal · up · folder]
+    const C = [
+      ['주간 보고', '매주 [요일]', 'doc'],
+      ['월간 PMO', '매월 [0]주', 'cal'],
+      ['이슈 에스컬레이션', '4h → 24h', 'up'],
+      ['공동 작업 공간', '[도구]', 'folder']
+    ];
+    const comms = C.map(([k, v, ic]) => ({ k, v, doc: ic === 'doc', cal: ic === 'cal', up: ic === 'up', folder: ic === 'folder' }));
+    return { lines, aides, teams, comms };
+  }
+}
+</script>
+</body>
+</html>

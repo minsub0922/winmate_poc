@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>AX-C 출처 · 참고 자료</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">부록 · 출처</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">이 제안서에 쓴 수치와 주장의 출처</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 560px; font-size: 15px; color: #596170">쪽 · 내용 · 출처 · 기준일 · 구분 · 확정 여부</div>
+
+  <!-- 상태 요약 -->
+  <div style="position: absolute; right: 64px; top: 114px; height: 24px; display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: #3d4452; white-space: nowrap">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="{{okIcon}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>확정<span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{nOk}}</span></span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="height: 20px; padding: 0 8px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">확정 필요</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #121417">{{nTodo}}</span></span>
+  </div>
+
+  <!-- 표 -->
+  <div style="position: absolute; left: 64px; top: 152px; width: 1152px; display: flex; flex-direction: column">
+    <div style="{{head}}">
+      <span>#</span><span>쪽</span><span>내용</span><span>출처</span><span>기준일</span><span>구분</span><span>상태</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="10">
+      <div style="{{r.st}}">
+        <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #8a91a0">{{r.no}}</span>
+        <span style="display: flex"><span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{r.pg}}</span></span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; white-space: nowrap">{{r.what}}</span>
+        <span style="font-size: 13.5px; color: #3d4452; white-space: nowrap">{{r.src}}</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; color: #3d4452; white-space: nowrap">{{r.date}}</span>
+        <span style="display: flex"><span style="{{r.kindStyle}}">{{r.kind}}</span></span>
+        <span style="display: flex; align-items: center">
+          <sc-if value="{{r.ok}}" hint-placeholder-val="{{true}}">
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: #1428a0; white-space: nowrap"><span style="{{okIcon}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>확정</span>
+          </sc-if>
+          <sc-if value="{{r.todo}}" hint-placeholder-val="{{false}}">
+            <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">확정 필요</span>
+          </sc-if>
+        </span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 64px; top: 626px; height: 22px; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170; white-space: nowrap">
+    <span style="font-weight: 700; color: #3d4452">구분</span>
+    <sc-for list="{{kinds}}" as="k" hint-placeholder-count="4">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="{{k.st}}">{{k.name}}</span>{{k.note}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; right: 64px; top: 626px; height: 22px; display: flex; align-items: center; font-size: 12px; color: #8a91a0; white-space: nowrap">확정 필요 항목은 제출 전 고객 · 사내 확인</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 24개월 지난 자료는 쓰지 않음</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 46</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 열: # · 쪽 · 내용 · 출처 · 기준일 · 구분 · 상태 (폭 1152)
+    const GC = 'grid-template-columns: 36px 76px 340px minmax(0, 1fr) 110px 112px 104px; column-gap: 24px;';
+    // 구분: pub 공개 자료 · cli 고객 제공 · int 사내 자료 · est 추정
+    const KIND = {
+      pub: ['공개 자료', 'background: #f5f6f8; color: #3d4452', '조사 · 공개 문서'],
+      cli: ['고객 제공', 'background: #eaeefb; color: #1428a0', '고객 자료 · 인터뷰'],
+      int: ['사내 자료', 'background: #e2e5ea; color: #121417', '삼성 내부 자료'],
+      est: ['추정', 'box-sizing: border-box; background: #ffffff; border: 1px solid #121417; color: #121417', '가정을 둔 계산']
+    };
+    const chip = 'height: 22px; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ';
+    // [쪽, 내용, 출처, 기준일, 구분, 확정 여부]
+    const R = [
+      ['p.5', 'F&B 사이니지 시장 규모 [0,000]억 원', '[조사 기관] 시장 보고서', '[0000.00]', 'pub', true],
+      ['p.5', '연평균 성장률 [00]%', '[조사 기관]', '[0000.00]', 'pub', true],
+      ['p.6', '매장 수 320곳', '고객 제공 매장 목록', '2026.09', 'cli', true],
+      ['p.6', '메뉴 교체 1회 [00]일', '점장 인터뷰 3명', '2026.09', 'cli', false],
+      ['p.12', '인쇄 · 배송비 연 [0.0]억 원', '고객 회계 자료', '2025', 'cli', false],
+      ['p.12', '전력 절감 [00]%', '유사 매장 실측', '2025', 'int', true],
+      ['p.13', '투자 회수 [00]개월', '자체 계산 (가정 p.47)', '2026.10', 'est', false],
+      ['p.24', '경쟁사 가격대', '공개 가격표 · 영업 정보', '2026.08', 'pub', true],
+      ['p.27', '사양 값', '삼성 B2B 제품 카탈로그', '2026.09', 'int', true],
+      ['p.31', '설치 사례 [0]건', '삼성 비즈니스 도입사례', '2026.10', 'pub', true]
+    ];
+    const head = 'display: grid; ' + GC + ' height: 34px; box-sizing: border-box; align-items: center; padding: 0 4px; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170';
+    const rows = R.map(([pg, what, src, date, kind, ok], i) => ({
+      no: String(i + 1), pg, what, src, date,
+      kind: KIND[kind][0], kindStyle: chip + KIND[kind][1],
+      ok, todo: !ok,
+      st: 'display: grid; ' + GC + ' height: 43px; box-sizing: border-box; align-items: center; padding: 0 4px; border-bottom: 1px solid #e2e5ea'
+    }));
+    const kinds = Object.keys(KIND).map((k) => ({ name: KIND[k][0], st: chip + KIND[k][1], note: KIND[k][2] }));
+    const okIcon = 'width: 16px; height: 16px; flex-shrink: 0; border-radius: 50%; background: #1428a0; display: flex; align-items: center; justify-content: center';
+    const nOk = String(R.filter((r) => r[5]).length);
+    const nTodo = String(R.length - Number(nOk));
+    return { head, rows, kinds, okIcon, nOk, nTodo };
+  }
+}
+</script>
+</body>
+</html>

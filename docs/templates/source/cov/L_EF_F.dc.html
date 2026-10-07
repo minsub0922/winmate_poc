@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>EF-F 연차별 누적 효과</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">효과는 해마다 커지고, [0]년차에 투자를 넘어섭니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">연간 절감(에너지 · 유지보수 · 인력) 누적 vs 투자비 · 1–5년차</div>
+
+  <!-- 차트 8열 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 760px; height: 488px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 182px; font-size: 12.5px; font-weight: 700; color: #596170">절감액 (억 원)</div>
+  <div style="position: absolute; left: 280px; top: 180px; width: 520px; display: flex; justify-content: flex-end; gap: 16px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>에너지</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #6f82d6"></span>유지보수</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #b8c3ee"></span>인력</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 20px; height: 3px; border-radius: 2px; background: #1428a0"></span>누적 절감</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="width: 20px; height: 0; border-top: 2px dashed #121417"></span>투자비</span>
+  </div>
+
+  <!-- 격자 -->
+  <div style="position: absolute; left: 120px; top: 230px; width: 672px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 120px; top: 315px; width: 672px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 120px; top: 400px; width: 672px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 120px; top: 485px; width: 672px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 120px; top: 570px; width: 672px; height: 1px; background: #b8bec8"></div>
+
+  <!-- 연간 절감 막대 (3구간 누적) -->
+  <sc-for list="{{segs}}" as="s" hint-placeholder-count="13">
+    <div style="{{s}}"></div>
+  </sc-for>
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="5">
+    <div>
+      <span style="{{b.val}}">{{b.v}}</span>
+      <span style="{{b.tick}}">{{b.year}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 투자비 수평선 -->
+  <div style="{{chart.inv}}"></div>
+  <div style="{{chart.invLbl}}">투자비 <span style="font-family: Manrope, sans-serif">[0.0]</span>억</div>
+
+  <!-- 누적 절감 선 (좌표는 renderVals에서 계산) -->
+  <svg style="position: absolute; left: 120px; top: 230px; overflow: visible" width="672" height="340" viewBox="0 0 672 340">
+    <polyline points="{{chart.cum}}" fill="none" stroke="#ffffff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="{{chart.cum}}" fill="none" stroke="#1428a0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <sc-for list="{{dots}}" as="d" hint-placeholder-count="5">
+    <div style="{{d}}"></div>
+  </sc-for>
+  <div style="{{chart.endLbl}}">누적 <span style="font-family: Manrope, sans-serif">[00.0]</span>억</div>
+
+  <!-- 회수 시점 -->
+  <div style="{{chart.drop}}"></div>
+  <div style="{{chart.dot}}"></div>
+  <div style="{{chart.chip}}">회수 <span style="font-family: Manrope, sans-serif">[0.0]</span>년</div>
+
+  <div style="position: absolute; left: 88px; top: 618px; font-size: 11.5px; color: #8a91a0">막대 = 그해 절감 · 선 = 1년차부터 누적</div>
+  <div style="position: absolute; left: 560px; top: 618px; width: 240px; text-align: right; font-size: 11.5px; color: #8a91a0">가로축 · 도입 후 연차</div>
+
+  <!-- 요약 4열 -->
+  <div style="position: absolute; left: 848px; top: 160px; width: 368px; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{stats}}" as="s" hint-placeholder-count="3">
+      <div style="{{s.box}}">
+        <span style="{{s.labelStyle}}">{{s.label}}</span>
+        <div style="display: flex; align-items: baseline; gap: 6px"><span style="{{s.numStyle}}">{{s.n}}</span><span style="{{s.unitStyle}}">{{s.unit}}</span></div>
+        <span style="{{s.noteStyle}}">{{s.note}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 848px; top: 522px; width: 368px; display: flex; flex-direction: column">
+    <span style="height: 26px; font-size: 13px; font-weight: 800; color: #596170">효과가 커지는 이유</span>
+    <sc-for list="{{why}}" as="w" hint-placeholder-count="3">
+      <div style="display: flex; align-items: center; gap: 10px; height: 32px; border-top: 1px solid #e2e5ea">
+        <span style="{{w.sw}}"></span>
+        <span style="font-size: 14px; font-weight: 700">{{w.t}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0">{{w.from}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안 · 전기 단가 · 사용 시간 가정은 부록 p.[00] · 막대 · 선은 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 플롯 영역: 슬라이드 좌표 (120, 230), 672 × 340 · 값은 억 원 단위 예시 (화면에는 자리표시만)
+    const X0 = 120, Y0 = 230, W = 672, H = 340, MAX = 21.5, N = 5;
+    const SLOT = W / N, BW = 56;
+    const cx = (i) => X0 + SLOT * (i + 0.5);
+    const y = (v) => Y0 + H - v / MAX * H;
+    const px = (n) => n.toFixed(1) + 'px';
+    const COL = ['#1428a0', '#6f82d6', '#b8c3ee'];
+    // 연차별 [에너지, 유지보수, 인력] — 예시. 유지보수는 2년차, 인력은 3년차부터
+    const A = [[2.6, 0, 0], [2.6, 0.6, 0], [2.8, 0.8, 0.8], [3.0, 0.9, 1.1], [3.2, 1.0, 1.2]];
+    const INV = 12;
+
+    const segs = [];
+    const bars = A.map((parts, i) => {
+      const total = parts.reduce((a, b) => a + b, 0);
+      const last = parts.reduce((k, v, j) => (v > 0 ? j : k), 0);
+      let base = 0;
+      parts.forEach((v, j) => {
+        if (v <= 0) return;
+        segs.push('position: absolute; left: ' + px(cx(i) - BW / 2) + '; top: ' + px(y(base + v)) + '; width: ' + BW + 'px; height: ' + px(v / MAX * H) + '; box-sizing: border-box; background: ' + COL[j] + ';' +
+          (j > 0 ? ' border-bottom: 1.5px solid #f5f6f8;' : '') + (j === last ? ' border-radius: 4px 4px 0 0;' : ''));
+        base += v;
+      });
+      return {
+        v: '[0.0]',
+        year: (i + 1) + '년차',
+        val: 'position: absolute; left: ' + px(cx(i) - 30) + '; top: ' + px(y(total) - 28) + '; width: 60px; text-align: center; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 700; color: #3d4452;',
+        tick: 'position: absolute; left: ' + px(cx(i) - 40) + '; top: 580px; width: 80px; text-align: center; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 12.5px; font-weight: 700; color: #596170;'
+      };
+    });
+
+    // 누적 절감
+    const cum = [];
+    A.reduce((acc, p) => { const t = acc + p.reduce((a, b) => a + b, 0); cum.push(t); return t; }, 0);
+    const pts = cum.map((c, i) => (cx(i) - X0).toFixed(1) + ',' + (y(c) - Y0).toFixed(1)).join(' ');
+    const dots = cum.map((c, i) => 'position: absolute; left: ' + px(cx(i) - 5) + '; top: ' + px(y(c) - 5) + '; width: 10px; height: 10px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 2.5px solid #1428a0;');
+
+    // 투자비와 만나는 지점 (선형 보간)
+    const k = cum.findIndex((c) => c >= INV);
+    const t = (INV - cum[k - 1]) / (cum[k] - cum[k - 1]);
+    const mx = cx(k - 1) + t * SLOT, my = y(INV);
+    const end = cum.length - 1;
+    const chart = {
+      cum: pts,
+      inv: 'position: absolute; left: ' + X0 + 'px; top: ' + px(my - 1) + '; width: ' + W + 'px; height: 0; border-top: 2px dashed #121417;',
+      invLbl: 'position: absolute; left: ' + (X0 + 8) + 'px; top: ' + px(my - 26) + '; font-size: 12.5px; font-weight: 700; color: #121417; white-space: nowrap;',
+      drop: 'position: absolute; left: ' + px(mx - 1) + '; top: ' + px(my + 9) + '; width: 0; height: ' + px(Y0 + H - my - 9) + '; border-left: 2px dashed #1428a0;',
+      dot: 'position: absolute; left: ' + px(mx - 9) + '; top: ' + px(my - 9) + '; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 3px solid #ffffff; box-shadow: 0 0 0 1px #1428a0;',
+      chip: 'position: absolute; left: ' + px(mx + 14) + '; top: ' + px(my + 18) + '; height: 30px; padding: 0 12px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 800; display: flex; align-items: center; gap: 4px; white-space: nowrap;',
+      endLbl: 'position: absolute; left: ' + px(cx(end) - 132) + '; top: ' + px(y(cum[end]) - 9) + '; width: 116px; text-align: right; font-size: 12.5px; font-weight: 800; color: #1428a0; white-space: nowrap;'
+    };
+
+    // 요약: 5년 누적(파랑 채움) · 연평균 증가 · 회수 기간
+    const stat = (label, n, unit, note, solid, numColor) => ({
+      label, n, unit, note,
+      box: 'height: 110px; box-sizing: border-box; border-radius: 14px; padding: 14px 24px; display: flex; flex-direction: column; justify-content: center; gap: 2px; background: ' + (solid ? '#1428a0' : '#f5f6f8') + ';',
+      labelStyle: 'font-size: 14px; font-weight: 700; color: ' + (solid ? '#ffffff' : '#3d4452') + ';',
+      numStyle: 'font-family: Manrope, sans-serif; font-size: 40px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: ' + (solid ? '#ffffff' : numColor) + ';',
+      unitStyle: 'font-size: 15px; font-weight: 700; color: ' + (solid ? '#ffffff' : numColor) + ';',
+      noteStyle: 'font-size: 12.5px; color: ' + (solid ? '#c8d3ff' : '#596170') + ';'
+    });
+    const stats = [
+      stat('5년 누적 절감', '[00]', '억 원', '에너지 · 유지보수 · 인력 합계', true, '#ffffff'),
+      stat('연평균 증가', '+[00]', '%', '연간 절감이 해마다 늘어나는 폭', false, '#1428a0'),
+      stat('회수 기간', '[0.0]', '년', '누적 절감이 투자비를 넘는 시점', false, '#121417')
+    ];
+
+    const sw = (c) => 'width: 10px; height: 10px; flex-shrink: 0; border-radius: 2px; background: ' + c;
+    const why = [
+      { sw: sw(COL[0]), t: '에너지 단가 상승 반영', from: '1년차~' },
+      { sw: sw(COL[1]), t: '2년차부터 유지보수 절감', from: '2년차~' },
+      { sw: sw(COL[2]), t: '3년차 운영 인력 재배치', from: '3년차~' }
+    ];
+    return { segs, bars, chart, dots, stats, why };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>C13 다음 단계</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 0; top: 0; width: 1280px; height: 8px; background: #1428a0"></div>
+  <div style="position: absolute; left: 64px; top: 64px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">NEXT STEPS</div>
+  <div style="position: absolute; left: 64px; top: 88px; width: 1060px; font-size: 40px; font-weight: 800; line-height: 1.3; letter-spacing: -0.03em">다음 2주, 함께 정할 세 가지</div>
+  <div style="position: absolute; left: 64px; top: 148px; width: 760px; font-size: 16px; line-height: 1.5; color: #596170">A 커피 프랜차이즈 디지털 메뉴보드 전환 제안</div>
+
+  <!-- 3단계 카드 -->
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="3">
+    <div style="{{s.box}}">
+      <div style="display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+        <span style="{{s.numStyle}}">{{s.no}}</span>
+        <span style="{{s.titleStyle}}">{{s.title}}</span>
+      </div>
+      <div style="{{s.rule}}"></div>
+      <div style="display: flex; flex-direction: column; padding-top: 8px">
+        <sc-for list="{{s.lines}}" as="l" hint-placeholder-count="3">
+          <div style="height: 34px; display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center">
+            <span style="{{s.keyStyle}}">{{l.k}}</span>
+            <span style="{{s.valStyle}}">{{l.v}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <div style="{{s.foot}}">
+        <span style="{{s.chipStyle}}">{{s.chip}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="{{s.dateKStyle}}">{{s.dateK}}</span>
+        <span style="{{s.dateStyle}}">{{s.date}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 카드 사이 쉐브런 -->
+  <sc-for list="{{chevs}}" as="v" hint-placeholder-count="2">
+    <div style="{{v}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 연락처 띠 -->
+  <div style="position: absolute; left: 64px; top: 556px; width: 1152px; height: 72px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 20px 0 28px; display: flex; align-items: center">
+    <sc-for list="{{contacts}}" as="c" hint-placeholder-count="3">
+      <div style="{{c.st}}">
+        <span style="font-size: 12px; color: #596170">{{c.k}}</span>
+        <span style="{{c.vStyle}}">{{c.v}}</span>
+      </div>
+    </sc-for>
+    <span style="flex-grow: 1"></span>
+    <div style="display: flex; gap: 12px">
+      <div style="width: 116px; height: 36px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8a91a0">고객사 로고</div>
+      <div style="width: 116px; height: 36px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 4px; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #8a91a0">제안사 로고</div>
+    </div>
+  </div>
+
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 30</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 3단계: x 64 / 456 / 848 (각 368 · 간격 24), y 220 – 500
+    const X = [64, 456, 848], TOP = 220, CW = 368, CH = 280;
+    // [제목, [[항목, 내용] × 3], 결정 칩, 날짜 라벨, 날짜, 강조]
+    const S = [
+      ['현장 실사', [['대상', '시범 매장 10곳'], ['참석', '삼성 · 시공사 · 점장'], ['기간', '[00]/[00] – [00]/[00]']], '결정 · 실사 일정', '확정', '[00]/[00]', false],
+      ['시범 범위 확정', [['범위', '매장 유형 3종 · 구성 3안 중'], ['콘텐츠', '운영 주체'], ['회의', '[00]/[00]']], '결정 · 본사 마케팅', '확정', '[00]/[00]', false],
+      ['PoC 승인 · 착수', [['계약', '발주 방식'], ['착수 목표', '[00]월'], ['첫 오픈', '착수 후 [0]주']], '결정 · [직책]', '승인', '[00]/[00]', true]
+    ];
+    const steps = S.map(([title, lines, chip, dateK, date, hi], i) => ({
+      no: String(i + 1), title, chip, dateK, date,
+      lines: lines.map(([k, v]) => ({ k, v })),
+      box: 'position: absolute; left: ' + X[i] + 'px; top: ' + TOP + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 16px; padding: 24px 26px 22px; display: flex; flex-direction: column; background: ' + (hi ? '#1428a0' : '#f5f6f8') + '; color: ' + (hi ? '#ffffff' : '#121417'),
+      numStyle: 'width: 40px; height: 40px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; ' + (hi ? 'background: #ffffff; color: #1428a0' : 'background: #1428a0; color: #ffffff'),
+      titleStyle: 'font-size: 21px; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap',
+      rule: 'height: 1px; flex-shrink: 0; margin-top: 18px; background: ' + (hi ? 'rgba(255, 255, 255, 0.24)' : '#d5d9e0'),
+      keyStyle: 'font-size: 12.5px; color: ' + (hi ? '#c8d3ff' : '#596170'),
+      valStyle: 'font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 14.5px; font-weight: 600; white-space: nowrap; color: ' + (hi ? '#ffffff' : '#121417'),
+      foot: 'display: flex; align-items: center; gap: 8px; padding-top: 14px; border-top: 1px solid ' + (hi ? 'rgba(255, 255, 255, 0.24)' : '#d5d9e0'),
+      chipStyle: 'height: 28px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; font-size: 12.5px; font-weight: 800; white-space: nowrap; ' + (hi ? 'background: #ffffff; color: #1428a0' : 'background: #eaeefb; color: #1428a0'),
+      dateKStyle: 'font-size: 12px; color: ' + (hi ? '#c8d3ff' : '#596170'),
+      dateStyle: 'font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: ' + (hi ? '#ffffff' : '#1428a0')
+    }));
+    const chevs = [0, 1].map((i) => 'position: absolute; left: ' + (X[i] + CW + 12 - 14) + 'px; top: ' + (TOP + CH / 2 - 14) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center');
+    // 연락처 3칸
+    const C = [['담당', '[이름] · [직급]', false], ['이메일', '[email@company.com]', true], ['전화', '[000-0000-0000]', true]];
+    const contacts = C.map(([k, v, mono], i) => ({
+      k, v,
+      st: 'display: flex; flex-direction: column; gap: 2px; ' + (i > 0 ? 'margin-left: 28px; padding-left: 28px; border-left: 1px solid #d5d9e0' : ''),
+      vStyle: 'font-size: 15px; font-weight: 700; white-space: nowrap; ' + (mono ? 'font-family: Manrope, sans-serif' : '')
+    }));
+    return { steps, chevs, contacts };
+  }
+}
+</script>
+</body>
+</html>

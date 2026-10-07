@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MS-F 지역 · 국가별 시장</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">B 호텔의 다음 객실 [0,000]실은 아시아 네 나라에 생깁니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">국가별 호텔 객실 디지털 시장 · 규모 · 성장률 · B 호텔 계획</div>
+
+  <!-- 왼쪽 7열: 버블 배치 (실제 지도 아님, 대략적 지리 순서) -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 662px; height: 488px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 182px; font-size: 13px; font-weight: 700; color: #3d4452">국가별 객실 디지털 시장 · 규모와 성장률</div>
+
+  <!-- 네 나라 합계 -->
+  <div style="position: absolute; left: 88px; top: 216px; width: 250px; box-sizing: border-box; border-radius: 12px; background: #ffffff; padding: 14px 18px; display: flex; flex-direction: column">
+    <span style="font-size: 12.5px; font-weight: 700; color: #596170">네 나라 시장 합계</span>
+    <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em">[000]</span><span style="font-size: 13px; font-weight: 700">억 달러</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; font-weight: 700; color: #596170">· 연 +[0.0]%</span></div>
+    <div style="height: 1px; margin: 10px 0; background: #e2e5ea"></div>
+    <span style="font-size: 12.5px; font-weight: 700; color: #596170">B 호텔 계획 객실 · 4개국</span>
+    <div style="display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; color: #1428a0">[0,000]</span><span style="font-size: 13px; font-weight: 700; color: #1428a0">실</span></div>
+  </div>
+
+  <!-- 권역 윤곽 -->
+  <sc-for list="{{regions}}" as="g" hint-placeholder-count="2">
+    <div style="{{g.box}}"></div>
+    <span style="{{g.lab}}">{{g.name}}</span>
+  </sc-for>
+
+  <!-- 국가 버블 + 성장률 칩 -->
+  <sc-for list="{{bubbles}}" as="b" hint-placeholder-count="4">
+    <div style="{{b.circle}}">
+      <span style="{{b.nameStyle}}">{{b.name}}</span>
+      <span style="{{b.sizeStyle}}">[00]<span style="font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700">억 달러</span></span>
+    </div>
+    <div style="{{b.chipPos}}"><span style="{{b.chip}}">+[0.0]%/년</span></div>
+  </sc-for>
+
+  <!-- 범례 -->
+  <div style="position: absolute; left: 404px; top: 580px; width: 298px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px">
+    <div style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #3d4452">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #1428a0"></span>가장 빠른 성장</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #b8c3ee"></span>그 외 시장</span>
+    </div>
+    <span style="font-size: 11.5px; color: #8a91a0">원 크기 = 시장 규모 (예시) · 지도 아님, 대략적 위치</span>
+  </div>
+
+  <!-- 오른쪽 5열: 국가별 표 -->
+  <div style="position: absolute; left: 750px; top: 160px; width: 466px">
+    <div style="display: grid; grid-template-columns: 74px 70px 56px 98px minmax(0, 1fr); column-gap: 10px; height: 36px; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">국가</span><span>시장 규모</span><span>성장률</span><span>B 호텔 계획</span><span>유의점</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+      <div style="{{r.rowStyle}}">
+        <span style="padding-left: 4px; display: flex; align-items: center; gap: 8px"><span style="{{r.dot}}"></span><span style="font-size: 15px; font-weight: 700">{{r.name}}</span></span>
+        <span style="{{r.numStyle}}">{{r.size}}</span>
+        <span style="{{r.numStyle}}">{{r.growth}}</span>
+        <span style="display: flex; flex-direction: column; gap: 1px"><span style="{{r.planStyle}}">{{r.plan}}</span><span style="font-size: 11.5px; color: #596170">{{r.planKind}}</span></span>
+        <span style="{{r.noteStyle}}">{{r.note}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 시사점 -->
+  <div style="position: absolute; left: 750px; top: 436px; width: 466px; height: 212px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">시사점</span>
+    <sc-for list="{{insights}}" as="n" hint-placeholder-count="2">
+      <div style="{{n.box}}">
+        <span style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{n.no}}</span>
+        <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 16px; font-weight: 700; line-height: 1.4">{{n.t}}</span><span style="font-size: 13.5px; line-height: 1.5; color: #3d4452">{{n.d}}</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 호텔 체인 · 아시아 객실 디지털 전환 제안 · 출처: [조사 기관 · 연도] · 환율 기준일 [0000.00]</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 5</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 왼쪽 카드 (64,160)–(726,648) · 실제 지도가 아니라 대략적 지리 순서로 놓은 원
+    // [국가, 중심 x, 중심 y, 지름(시장 규모 예시), 가장 빠른 성장]
+    const B = [
+      ['한국', 462, 300, 130, false],
+      ['일본', 614, 324, 152, false],
+      ['태국', 170, 516, 116, false],
+      ['베트남', 294, 498, 102, true]
+    ];
+    const bubbles = B.map(([name, cx, cy, d, hot]) => ({
+      name,
+      circle: 'position: absolute; left: ' + (cx - d / 2) + 'px; top: ' + (cy - d / 2) + 'px; width: ' + d + 'px; height: ' + d + 'px; border-radius: 50%; background: ' + (hot ? '#1428a0' : '#b8c3ee') + '; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px',
+      nameStyle: 'font-size: 16px; font-weight: 800; line-height: 1.3; color: ' + (hot ? '#ffffff' : '#121417'),
+      sizeStyle: 'font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; line-height: 1.3; color: ' + (hot ? '#ffffff' : '#1428a0'),
+      chipPos: 'position: absolute; left: ' + (cx - 60) + 'px; top: ' + (cy + d / 2 + 8) + 'px; width: 120px; display: flex; justify-content: center',
+      chip: "height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; " +
+        (hot ? 'background: #1428a0; color: #ffffff' : 'background: #ffffff; color: #3d4452; border: 1px solid #d5d9e0')
+    }));
+
+    // 권역 윤곽 [이름, left, top, width, height, 라벨 위치]
+    const G = [
+      ['동아시아', 376, 202, 330, 254, 'bottom'],
+      ['동남아시아', 88, 428, 276, 200, 'top']
+    ];
+    const regions = G.map(([name, l, t, w, h, where]) => ({
+      name,
+      box: 'position: absolute; left: ' + l + 'px; top: ' + t + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; border-radius: 64px; border: 1.5px dashed #8a91a0',
+      lab: 'position: absolute; left: ' + (l + 30) + 'px; top: ' + (where === 'top' ? t - 11 : t + h - 11) + 'px; height: 22px; padding: 0 8px; background: #f5f6f8; font-size: 12px; font-weight: 800; color: #3d4452; display: flex; align-items: center'
+    }));
+
+    // 표 [국가, 시장 규모, 성장률, 계획 객실, 계획 구분, 유의점, 강조]
+    const R = [
+      ['한국', '[00]억 $', '[0.0]%', '[000]실', '리뉴얼', '기존 객실 TV 교체', false],
+      ['일본', '[00]억 $', '[0.0]%', '[000]실', '신규', '전압 · 인증 확인', false],
+      ['베트남', '[00]억 $', '[0.0]%', '[0,000]실', '신규', '가장 빠른 성장', true],
+      ['태국', '[00]억 $', '[0.0]%', '[000]실', '신규', '다국어 콘텐츠', false]
+    ];
+    const rows = R.map(([name, size, growth, plan, planKind, note, hot]) => ({
+      name, size, growth, plan, planKind, note,
+      rowStyle: 'display: grid; grid-template-columns: 74px 70px 56px 98px minmax(0, 1fr); column-gap: 10px; height: 54px; align-items: center; border-bottom: 1px solid #e2e5ea;' + (hot ? ' background: #eaeefb;' : ''),
+      dot: 'width: 10px; height: 10px; flex-shrink: 0; border-radius: 50%; background: ' + (hot ? '#1428a0' : '#b8c3ee'),
+      numStyle: "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: " + (hot ? '800; color: #1428a0' : '700; color: #121417'),
+      planStyle: "font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 800; color: " + (hot ? '#1428a0' : '#121417'),
+      noteStyle: 'font-size: 13px; line-height: 1.4; ' + (hot ? 'font-weight: 700; color: #1428a0' : 'color: #3d4452')
+    }));
+
+    const I = [
+      ['1', '신규 객실의 [00]%가 베트남 · 태국', '현지 서비스망이 조건입니다'],
+      ['2', '국가별 인증 · 전압이 다릅니다', '모델 구성을 나라별로 나눠야 합니다']
+    ];
+    const insights = I.map(([no, t, d], i) => ({
+      no, t, d,
+      box: 'display: flex; gap: 14px;' + (i < I.length - 1 ? ' padding-bottom: 14px; border-bottom: 1px solid #b8c3ee' : '')
+    }));
+    return { bubbles, regions, rows, insights };
+  }
+}
+</script>
+</body>
+</html>

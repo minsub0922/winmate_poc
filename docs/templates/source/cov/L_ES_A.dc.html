@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>ES-A 제안 요약 4단</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">00 · 제안 요약</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">320개 매장 메뉴판을, 본사에서 한 번에 바꿉니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">한 장으로 보는 이번 제안 · 과제 → 제안 → 효과 → 왜 삼성</div>
+
+  <!-- 4단 카드: 과제 → 제안 → 효과 → 왜 삼성 (각 270 · 간격 24) -->
+  <sc-for list="{{cols}}" as="c" hint-placeholder-count="4">
+    <div style="{{c.box}}">
+      <div style="display: flex; align-items: center; gap: 10px; height: 28px; flex-shrink: 0">
+        <span style="{{c.numStyle}}">{{c.no}}</span>
+        <span style="font-size: 17px; font-weight: 800; letter-spacing: -0.01em">{{c.title}}</span>
+      </div>
+      <div style="{{c.rule}}"></div>
+
+      <!-- 01 지금의 과제: 큰 수치 + 3행 -->
+      <sc-if value="{{c.isIssue}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-direction: column; gap: 2px; padding: 18px 0 14px; flex-shrink: 0">
+          <div style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 56px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em">{{c.big}}</span><span style="font-size: 22px; font-weight: 800">{{c.bigUnit}}</span></div>
+          <span style="font-size: 13px; color: #596170">{{c.bigCap}}</span>
+        </div>
+        <div style="display: flex; flex-direction: column; flex-grow: 1">
+          <sc-for list="{{c.items}}" as="t" hint-placeholder-count="3">
+            <div style="flex-grow: 1; display: flex; align-items: center; gap: 10px; border-top: 1px solid #d5d9e0"><span style="width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: #121417"></span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 500; line-height: 1.45; white-space: nowrap">{{t}}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- 02 이번 제안: 제품 칩 3 + 범위 · 기간 -->
+      <sc-if value="{{c.isOffer}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-direction: column; gap: 8px; padding-top: 18px; flex-shrink: 0">
+          <sc-for list="{{c.chips}}" as="p" hint-placeholder-count="3">
+            <div style="height: 38px; padding: 0 14px 0 12px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #b8c3ee; display: flex; align-items: center; gap: 9px; white-space: nowrap">
+              <div style="width: 26px; height: 20px; flex-shrink: 0; display: flex; align-items: center; justify-content: center">
+                <div style="{{p.shape}}"></div>
+                <sc-if value="{{p.isSw}}" hint-placeholder-val="{{false}}">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
+                </sc-if>
+              </div>
+              <span style="font-family: Manrope, sans-serif; font-size: 14.5px; font-weight: 800">{{p.name}}</span>
+              <span style="font-size: 12px; color: #596170">{{p.cat}}</span>
+              <span style="flex-grow: 1"></span>
+              <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{p.qty}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 16px; border-top: 1px solid #b8c3ee; flex-shrink: 0">
+          <sc-for list="{{c.kv}}" as="r" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; font-weight: 700; color: #1428a0">{{r.k}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 700; line-height: 1.45">{{r.v}}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- 03 기대 효과: KPI 3행 -->
+      <sc-if value="{{c.isEffect}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-direction: column; flex-grow: 1">
+          <sc-for list="{{c.kpis}}" as="k" hint-placeholder-count="3">
+            <div style="{{k.st}}"><span style="font-size: 13px; font-weight: 500; color: #596170">{{k.label}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 27px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; color: #1428a0; white-space: nowrap">{{k.value}}</span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <!-- 04 왜 삼성: 3행 -->
+      <sc-if value="{{c.isWhy}}" hint-placeholder-val="{{false}}">
+        <div style="display: flex; flex-direction: column; flex-grow: 1">
+          <sc-for list="{{c.whys}}" as="w" hint-placeholder-count="3">
+            <div style="{{w.st}}">
+              <div style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center">
+                <sc-if value="{{w.cloud}}" hint-placeholder-val="{{false}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg></sc-if>
+                <sc-if value="{{w.store}}" hint-placeholder-val="{{false}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M3 9h18M3 9a3 3 0 0 0 6 0a3 3 0 0 0 6 0a3 3 0 0 0 6 0M5 12v8h14v-8M10 20v-5h4v5"/></svg></sc-if>
+                <sc-if value="{{w.tool}}" hint-placeholder-val="{{false}}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 2px"><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; line-height: 1.45; white-space: nowrap">{{w.t}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; color: #8a91a0">{{w.note}}</span></div>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+  </sc-for>
+
+  <!-- 단 사이 쉐브런 -->
+  <sc-for list="{{chevs}}" as="v" hint-placeholder-count="3">
+    <div style="{{v}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- KEY MESSAGE 띠 -->
+  <div style="position: absolute; left: 64px; top: 564px; width: 1152px; height: 84px; box-sizing: border-box; border-radius: 14px; background: #1428a0; padding: 0 22px 0 28px; display: flex; align-items: center; gap: 24px; color: #ffffff">
+    <div style="display: flex; flex-direction: column; gap: 3px">
+      <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; letter-spacing: 0.12em; color: #b8c3ee">KEY MESSAGE</span>
+      <span style="font-size: 22px; font-weight: 800; letter-spacing: -0.02em">메뉴는 본사가, 매장은 손님에게 집중합니다</span>
+    </div>
+    <span style="flex-grow: 1"></span>
+    <span style="height: 40px; padding: 0 18px; box-sizing: border-box; border-radius: 999px; background: #ffffff; display: flex; align-items: center; gap: 10px; white-space: nowrap"><span style="font-size: 13px; font-weight: 800; color: #1428a0">결정 요청</span><span style="width: 1px; height: 14px; background: #b8c3ee"></span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 700; color: #121417">시범 매장 10곳 [00]월 착수</span></span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 2</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 4단: x = 64 + i × 294 (폭 270 · 간격 24), y 160 – 540
+    const X0 = 64, CW = 270, GAP = 24, TOP = 160, CH = 380;
+    // 제품 실루엣 (화면 = 진한 사각형)
+    const land = 'width: 26px; height: 15px; box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 2px solid #121417';
+    const port = 'width: 11px; height: 19px; box-sizing: border-box; border-radius: 2px; background: #1f232a; border: 2px solid #121417';
+    const C = [
+      { no: '01', title: '지금의 과제', kind: 'issue',
+        big: '[00]', bigUnit: '일', bigCap: '메뉴 교체 1회 소요',
+        items: ['인쇄 · 배송 · 현장 교체 5단계', '매장마다 메뉴판이 다른 날이 생김', '피크 시간 주문 줄 [0]줄'] },
+      { no: '02', title: '이번 제안', kind: 'offer',
+        chips: [['QM55C', '사이니지', '×960', land], ['KM24C', '키오스크', '×320', port], ['MagicINFO', '콘텐츠 관리', '', '']],
+        kv: [['범위', '320개 매장 · 3단계 확산'], ['기간', '계약 후 [00]주']] },
+      { no: '03', title: '기대 효과', kind: 'effect',
+        kpis: [['메뉴 교체', '[0]일 → [0]분'], ['인쇄 · 배송비', '연 −[00]%'], ['주문 대기', '−[00]%']] },
+      { no: '04', title: '왜 삼성', kind: 'why',
+        whys: [['서버 없이 전 매장 통합 관리', 'cloud', '근거 · 솔루션 구성 p.[00]'], ['외식 매장 도입 [00]곳 이상', 'store', '근거 · 도입 사례 p.[00]'], ['전국 직영 서비스망', 'tool', '근거 · 서비스 체계 p.[00]']] }
+    ];
+    const BG = {
+      issue: 'background: #f5f6f8; padding: 22px 22px 8px;',
+      offer: 'background: #eaeefb; padding: 22px 22px 22px;',
+      effect: 'background: #ffffff; border: 1px solid #e2e5ea; padding: 21px 21px 7px;',
+      why: 'background: #ffffff; border: 1px solid #e2e5ea; padding: 21px 21px 7px;'
+    };
+    const RULE = { issue: '#d5d9e0', offer: '#b8c3ee', effect: '#e2e5ea', why: '#e2e5ea' };
+    const rowSt = (i, extra) => 'flex-grow: 1; display: flex; ' + extra + (i > 0 ? ' border-top: 1px solid #e2e5ea;' : '');
+    const cols = C.map((c, i) => ({
+      no: c.no, title: c.title,
+      isIssue: c.kind === 'issue', isOffer: c.kind === 'offer', isEffect: c.kind === 'effect', isWhy: c.kind === 'why',
+      box: 'position: absolute; left: ' + (X0 + i * (CW + GAP)) + 'px; top: ' + TOP + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 16px; display: flex; flex-direction: column; ' + BG[c.kind],
+      numStyle: 'width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; color: #ffffff; background: ' + (c.kind === 'issue' ? '#121417' : '#1428a0'),
+      rule: 'height: 1px; flex-shrink: 0; margin-top: 16px; background: ' + RULE[c.kind],
+      big: c.big || '', bigUnit: c.bigUnit || '', bigCap: c.bigCap || '',
+      items: c.items || [],
+      chips: (c.chips || []).map(([name, cat, qty, shape]) => ({
+        name, cat, qty, isSw: !shape, shape: shape || 'display: none'
+      })),
+      kv: (c.kv || []).map(([k, v]) => ({ k, v })),
+      kpis: (c.kpis || []).map(([label, value], j) => ({
+        label, value, st: rowSt(j, 'flex-direction: column; justify-content: center; gap: 4px;')
+      })),
+      whys: (c.whys || []).map(([t, ic, note], j) => ({
+        t, note, cloud: ic === 'cloud', store: ic === 'store', tool: ic === 'tool',
+        st: rowSt(j, 'align-items: center; gap: 11px;')
+      }))
+    }));
+    // 단 사이 쉐브런: 간격 중앙, 카드 세로 중앙
+    const chevs = [0, 1, 2].map((i) => 'position: absolute; left: ' + (X0 + CW + i * (CW + GAP) + GAP / 2 - 14) + 'px; top: ' + (TOP + CH / 2 - 14) + 'px; width: 28px; height: 28px; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 1px solid #d5d9e0; display: flex; align-items: center; justify-content: center');
+    return { cols, chevs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SS-E 연간 운영 캘린더</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 공간별 가치 제공 시나리오</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">학기와 방학, 캠퍼스는 열두 달 다르게 움직입니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">공간 × 월 · 운영 모드 · 모드마다 공조 · 화면 · 점검이 바뀝니다</div>
+
+  <!-- 학사 이벤트 줄 -->
+  <div style="position: absolute; left: 64px; top: 162px; font-size: 12px; font-weight: 700; color: #596170">학사 일정</div>
+  <sc-for list="{{events}}" as="e" hint-placeholder-count="9">
+    <div style="{{e.st}}">{{e.t}}</div>
+  </sc-for>
+
+  <!-- 월 머리 -->
+  <div style="position: absolute; left: 64px; top: 196px; font-size: 12.5px; font-weight: 700; color: #596170">공간</div>
+  <sc-for list="{{months}}" as="m" hint-placeholder-count="12">
+    <div style="{{m.st}}"><span style="font-family: Manrope, sans-serif; font-weight: 800">{{m.n}}</span>월</div>
+  </sc-for>
+  <div style="position: absolute; left: 64px; top: 220px; width: 1152px; height: 2px; background: #121417"></div>
+  <sc-for list="{{seps}}" as="s" hint-placeholder-count="5">
+    <div style="{{s}}"></div>
+  </sc-for>
+
+  <!-- 공간 행 머리 -->
+  <sc-for list="{{spaces}}" as="r" hint-placeholder-count="5">
+    <div style="{{r.st}}">
+      <span style="font-size: 15px; font-weight: 700">{{r.name}}</span>
+      <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; color: #8a91a0">{{r.sub}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 셀 -->
+  <sc-for list="{{cells}}" as="c" hint-placeholder-count="60">
+    <div style="{{c.st}}">
+      <sc-if value="{{c.fix}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></sc-if>
+      <span>{{c.t}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 모드 범례 -->
+  <div style="position: absolute; left: 64px; top: 524px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">운영 모드</div>
+  <div style="position: absolute; left: 64px; top: 552px; width: 248px; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{modes}}" as="m" hint-placeholder-count="4">
+      <div style="display: flex; align-items: center; gap: 10px; height: 18px">
+        <span style="{{m.sw}}"></span>
+        <span style="font-size: 13px; font-weight: 700; white-space: nowrap">{{m.name}}</span>
+        <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">{{m.when}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 모드별로 바뀌는 것 -->
+  <div style="position: absolute; left: 336px; top: 524px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">모드별로 바뀌는 것</div>
+  <div style="position: absolute; left: 336px; top: 548px; width: 880px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 16px">
+    <sc-for list="{{changes}}" as="k" hint-placeholder-count="3">
+      <div style="height: 100px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 7px; background: #ffffff; display: flex; align-items: center; justify-content: center">
+            <sc-if value="{{k.isAir}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3 M3 12h16a3 3 0 1 1-3 3 M3 16h8"/></svg></sc-if>
+            <sc-if value="{{k.isScreen}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M12 16v4 M8 20h8"/></svg></sc-if>
+            <sc-if value="{{k.isFix}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></sc-if>
+          </span>
+          <span style="font-size: 15.5px; font-weight: 800">{{k.name}}</span>
+          <span style="flex-grow: 1"></span>
+          <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{k.sol}}</span>
+        </div>
+        <sc-for list="{{k.lines}}" as="l" hint-placeholder-count="2">
+          <div style="display: flex; align-items: center; gap: 8px; height: 20px">
+            <span style="{{l.tag}}">{{l.mode}}</span>
+            <span style="font-size: 13px; color: #3d4452; white-space: nowrap">{{l.t}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>E 대학교 · 스마트 캠퍼스 구축 제안 · 학사 일정은 [0000] 학사력 기준 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 19</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 격자: 공간 열 x 64–224 (160) · 월 12열 x 232–1216 (82 × 12) · 행 5 × 56 (y 222–502)
+    const X0 = 232, CW = 82, Y0 = 222, RH = 56;
+    const MON = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2];
+    // 모드: N 정상 · F 집중 · M 최소 · X 점검 · 공사 창
+    const MODE = {
+      N: { name: '정상 운영', when: '학기 중', look: 'background: #eaeefb; color: #1428a0' },
+      F: { name: '집중 운영', when: '시험 · 축제', look: 'background: #1428a0; color: #ffffff' },
+      M: { name: '최소 운영', when: '방학', look: 'background: #f5f6f8; border: 1px solid #d5d9e0; color: #596170' },
+      X: { name: '점검 · 공사 창', when: '방학 중 일괄', look: 'background: #ffffff; border: 1.5px dashed #121417; color: #121417' }
+    };
+    // [공간, 보조, 월별 모드(3월 → 2월), 월별 라벨]
+    const R = [
+      ['강의동', '강의실 [00]실', 'N F N F X X N F N F M M', ['', '시험', '', '시험', '공사 창', '공사 창', '', '시험', '', '시험', '최소', '최소']],
+      ['중앙도서관', '열람석 [000]석', 'N F N F N N N F N F M X', ['', '24시간', '', '24시간', '', '', '', '24시간', '', '24시간', '최소', '점검']],
+      ['기숙사', '[000]실', 'N N N N M X N N N N M M', ['', '', '', '', '최소', '점검', '', '', '', '', '최소', '최소']],
+      ['체육관', '[0]개 동', 'N N F N M M N N N N X M', ['', '', '축제', '', '최소', '최소', '', '', '', '', '점검', '최소']],
+      ['행정동', '[0]개 층', 'F N N N N N F N N N N F', ['개강', '', '', '', '', '', '개강', '', '', '', '', '졸업']]
+    ];
+    const cells = [];
+    R.forEach(([, , modes, labels], r) => {
+      modes.split(' ').forEach((m, c) => {
+        cells.push({
+          t: labels[c], fix: m === 'X',
+          st: 'position: absolute; left: ' + (X0 + c * CW + 2) + 'px; top: ' + (Y0 + r * RH + 4) + 'px; width: ' + (CW - 4) + 'px; height: ' + (RH - 8) + 'px; box-sizing: border-box; border-radius: 6px; ' + MODE[m].look + '; display: flex; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 700; white-space: nowrap'
+        });
+      });
+    });
+    const spaces = R.map(([name, sub], r) => ({
+      name, sub,
+      st: 'position: absolute; left: 64px; top: ' + (Y0 + r * RH) + 'px; width: 160px; height: ' + RH + 'px; display: flex; flex-direction: column; justify-content: center; gap: 1px; padding-left: 4px; box-sizing: border-box'
+    }));
+    const seps = R.map((_, r) => 'position: absolute; left: 64px; top: ' + (Y0 + (r + 1) * RH - 1) + 'px; width: 1152px; height: 1px; background: #e2e5ea');
+    const months = MON.map((n, c) => ({
+      n: String(n),
+      st: 'position: absolute; left: ' + (X0 + c * CW) + 'px; top: 196px; width: ' + CW + 'px; text-align: center; font-size: 13px; font-weight: 700; color: ' + (n === 1 || n === 3 ? '#121417' : '#596170')
+    }));
+    // 학사 이벤트: [이름, 시작 열, 열 수, 모드 색]
+    const E = [
+      ['개강', 0, 1, 'N'], ['중간고사', 1, 1, 'F'], ['축제', 2, 1, 'F'], ['기말', 3, 1, 'F'], ['여름방학', 4, 2, 'M'],
+      ['개강', 6, 1, 'N'], ['중간', 7, 1, 'F'], ['기말', 9, 1, 'F'], ['겨울방학', 10, 2, 'M']
+    ];
+    const chipLook = {
+      N: 'background: #ffffff; border: 1px solid #b8c3ee; color: #1428a0',
+      F: 'background: #121417; border: 1px solid #121417; color: #ffffff',
+      M: 'background: #f5f6f8; border: 1px solid #d5d9e0; color: #3d4452'
+    };
+    const events = E.map(([t, c, span, m]) => ({
+      t,
+      st: 'position: absolute; left: ' + (X0 + c * CW + 6) + 'px; top: 158px; width: ' + (span * CW - 12) + 'px; height: 24px; box-sizing: border-box; border-radius: 999px; ' + chipLook[m] + '; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; white-space: nowrap'
+    }));
+    const modes = ['N', 'F', 'M', 'X'].map((k) => ({
+      name: MODE[k].name, when: MODE[k].when,
+      sw: 'width: 28px; height: 18px; flex-shrink: 0; box-sizing: border-box; border-radius: 4px; ' + MODE[k].look
+    }));
+    const tag = (k) => 'width: 34px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 4px; ' + MODE[k].look + '; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center';
+    const C = [
+      ['공조', '삼성 통합공조', 'air', [['F', '집중', '24시간 가동'], ['M', '최소', '공용부만 · 나머지 정지']]],
+      ['화면', 'MagicINFO', 'screen', [['F', '집중', '시험 안내 · 좌석 현황 자동 전환'], ['M', '최소', '방학 공지 · 운영 시간 자동 전환']]],
+      ['점검', 'SmartThings Pro', 'fix', [['X', '점검', '방학 공사 창에 일괄 점검 · 교체'], ['N', '정상', '학기 중엔 원격 진단만']]]
+    ];
+    const changes = C.map(([name, sol, kind, lines]) => ({
+      name, sol,
+      isAir: kind === 'air', isScreen: kind === 'screen', isFix: kind === 'fix',
+      lines: lines.map(([k, mode, t]) => ({ mode, t, tag: tag(k) }))
+    }));
+    return { events, months, seps, spaces, cells, modes, changes };
+  }
+}
+</script>
+</body>
+</html>

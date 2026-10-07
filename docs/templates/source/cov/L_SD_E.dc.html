@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SD-E 모바일 · 현장 단말 사양</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">현장 단말 두 종, 떨어뜨리고 젖어도 일합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">태블릿 · 스마트폰 · 그룹별 사양 · 현장 조건과 대응</div>
+
+  <!-- 2열 비교 8열 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 760px">
+    <div style="display: grid; grid-template-columns: 236px 262px 262px; height: 124px; border-bottom: 2px solid #121417">
+      <div style="display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; padding: 0 0 12px 4px">
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #8a91a0"><span style="width: 26px; height: 12px; border-radius: 3px; background: #f5f6f8; border: 1px solid #e2e5ea; box-sizing: border-box"></span>두 모델 공통</span>
+        <span style="font-size: 12.5px; font-weight: 700; color: #596170">사양 그룹 · 항목</span>
+      </div>
+      <sc-for list="{{devs}}" as="d" hint-placeholder-count="2">
+        <div style="display: flex; align-items: flex-start; justify-content: center; gap: 12px; padding-top: 2px">
+          <div style="width: 150px; height: 110px; flex-shrink: 0"><dc-import name="Img" kind="cut" origin="official" hint="{{d.hint}}" w="150" h="110" radius="10" hint-size="150px,110px"></dc-import></div>
+          <div style="width: 92px; height: 110px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px">
+            <span style="font-size: 15px; font-weight: 800; line-height: 1.3">{{d.name}}</span>
+            <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{d.use}}</span>
+            <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; color: #1428a0">× {{d.qty}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+      <div style="display: flex; border-bottom: 1px solid #b8bec8">
+        <div style="width: 120px; flex-shrink: 0; height: 35px; display: flex; align-items: center; gap: 7px; padding-left: 4px; box-sizing: border-box">
+          <sc-if value="{{g.icShield}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></sc-if>
+          <sc-if value="{{g.icBattery}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 8h15v8H3z M21 11v2 M7 11v2 M11 11v2"/></svg></sc-if>
+          <sc-if value="{{g.icTouch}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V11 M12 10.5a1.5 1.5 0 0 1 3 0V12 M15 11.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-1c-2.2 0-3.6-1-4.8-2.6L3.6 15a1.5 1.5 0 0 1 2.3-1.9L9 15.5"/></svg></sc-if>
+          <sc-if value="{{g.icLock}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M6 11h12v10H6z M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11 M12 15v2"/></svg></sc-if>
+          <sc-if value="{{g.icBox}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 8h16v12H4z M9 8V5h6v3 M4 13h16"/></svg></sc-if>
+          <span style="font-size: 13px; font-weight: 800; white-space: nowrap">{{g.name}}</span>
+        </div>
+        <div style="flex-grow: 1; display: flex; flex-direction: column">
+          <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="3">
+            <div style="{{r.rowStyle}}">
+              <span style="font-size: 13px; color: #596170; white-space: nowrap">{{r.k}}</span>
+              <sc-if value="{{r.same}}" hint-placeholder-val="{{false}}">
+                <span style="grid-column: 2 / 4; margin: 0 24px; height: 22px; border-radius: 6px; background: #f5f6f8; display: flex; align-items: center; justify-content: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 600; color: #3d4452; white-space: nowrap">{{r.a}}</span>
+              </sc-if>
+              <sc-if value="{{r.split}}" hint-placeholder-val="{{true}}">
+                <span style="text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap">{{r.a}}</span>
+                <span style="text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap">{{r.b}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 현장 조건 → 대응 4열 -->
+  <div style="position: absolute; left: 848px; top: 156px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">현장 조건 → 대응</div>
+  <div style="position: absolute; left: 848px; top: 186px; width: 368px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{conds}}" as="c" hint-placeholder-count="4">
+      <div style="height: 105px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 16px">
+        <div style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center">
+          <sc-if value="{{c.icDrop}}" hint-placeholder-val="{{true}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></sc-if>
+          <sc-if value="{{c.icFall}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11 M7.5 9.5L12 14l4.5-4.5 M4 20h16"/></svg></sc-if>
+          <sc-if value="{{c.icClock}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7v5l3 2"/></svg></sc-if>
+          <sc-if value="{{c.icLock}}" hint-placeholder-val="{{false}}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 11h12v10H6z M8.5 11V7.5a3.5 3.5 0 0 1 7 0V11 M12 15v2"/></svg></sc-if>
+        </div>
+        <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+            <span style="font-size: 15px; font-weight: 800; white-space: nowrap">{{c.cond}}</span>
+            <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{c.group}}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14 M13 6l6 6-6 6"/></svg>
+            <span style="font-size: 14px; font-weight: 700; color: #1428a0; white-space: nowrap">{{c.resp}}</span>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>L 제조 · 현장 디지털 전환 제안 · 사양: 삼성 B2B 카탈로그 [0000.00] · 인증 번호 확인 필요</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 27</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const devs = [
+      { hint: 'Galaxy Tab Active 정면', name: 'Galaxy Tab Active[0]', use: '라인 · 검사', qty: '[000]' },
+      { hint: 'Galaxy XCover 정면', name: 'Galaxy XCover[0]', use: '물류 · 이동', qty: '[000]' }
+    ];
+    // 아이콘 종류 → sc-if 플래그
+    const icon = (pre, keys, k) => keys.reduce((o, x) => { o[pre + x] = x === k; return o; }, {});
+    const GI = ['Shield', 'Battery', 'Touch', 'Lock', 'Box'];
+    // [그룹, 아이콘, [[항목, A값, B값]]] — B값이 null이면 두 모델 공통(가운데 1칸). 같은 실제 값도 공통으로 합침(자리표시끼리는 합치지 않음)
+    const G = [
+      ['내구성', 'Shield', [['규격 · 등급', 'MIL-STD-810H · IP68', null], ['낙하 높이', '[0.0] m', '[0.0] m']]],
+      ['배터리', 'Battery', [['용량', '[0,000] mAh', '[0,000] mAh'], ['배터리 교체', '[가능]', '[가능]'], ['충전', '포고 충전', null]]],
+      ['현장 기능', 'Touch', [['터치', '장갑 · 물기 터치', null], ['프로그래머블 키', '[0]개', '[0]개']]],
+      ['보안 · 관리', 'Lock', [['보안 플랫폼', 'Knox Vault · Knox Suite 지원', null], ['보안 업데이트', '[0]년', '[0]년']]],
+      ['액세서리', 'Box', [['현장 구성', '거치대 · 핸드 스트랩', '거치대 · 스캐너 케이스']]]
+    ];
+    const groups = G.map(([name, ic, rows]) => Object.assign({
+      name,
+      rows: rows.map(([k, a, b], i) => {
+        const same = b === null || (a === b && !/\[/.test(a));
+        return {
+          k, a, b: same ? '' : b, same, split: !same,
+          rowStyle: 'display: grid; grid-template-columns: 116px 262px 262px; height: 35px; box-sizing: border-box; align-items: center;' + (i > 0 ? ' border-top: 1px solid #eef0f3;' : '')
+        };
+      })
+    }, icon('ic', GI, ic)));
+    const CI = ['Drop', 'Fall', 'Clock', 'Lock'];
+    const C = [
+      ['Drop', '기름 · 물기 있는 손', '현장 기능', '장갑 · 물기 터치'],
+      ['Fall', '2m 높이 낙하', '내구성', 'MIL-STD 낙하 시험 [확인 필요]'],
+      ['Clock', '3교대 24시간', '배터리', '교체형 배터리 · 거치 충전'],
+      ['Lock', '분실 · 반출', '보안 · 관리', 'Knox 원격 잠금 · 삭제']
+    ];
+    const conds = C.map(([ic, cond, group, resp]) => Object.assign({ cond, group, resp }, icon('ic', CI, ic)));
+    return { devs, groups, conds };
+  }
+}
+</script>
+</body>
+</html>

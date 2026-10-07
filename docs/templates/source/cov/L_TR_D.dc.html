@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>TR-D 규제 · 정책 타임라인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">C 빌딩이 2030년까지 맞춰야 할 네 가지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 700px; font-size: 15px; color: #596170">에너지 · 냉매 · 탄소 관련 규제 흐름 · C 빌딩 해당 여부와 대응 수단</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 116px; display: flex; align-items: center; gap: 18px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 9px; height: 9px; background: #121417; transform: rotate(45deg)"></span>시행 · 강화 시점</span>
+    <span style="display: flex; align-items: center; gap: 8px"><span style="width: 9px; height: 9px; box-sizing: border-box; border: 2px solid #121417; background: #ffffff; transform: rotate(45deg)"></span>대상 여부 검토 중</span>
+    <span style="color: #8a91a0">위치는 예시</span>
+  </div>
+
+  <!-- 오늘 위치 -->
+  <div style="{{now.line}}"></div>
+  <div style="{{now.chip}}"><span>지금</span><span>·</span><span style="font-family: Manrope, sans-serif; font-weight: 800">2026.10</span></div>
+
+  <!-- 축 + 연도 눈금 -->
+  <div style="position: absolute; left: 64px; top: 369px; width: 1152px; height: 2px; background: #121417"></div>
+  <sc-for list="{{years}}" as="y" hint-placeholder-count="6">
+    <div style="{{y.tick}}"></div>
+    <span style="{{y.lab}}">{{y.label}}</span>
+  </sc-for>
+
+  <!-- 규제 카드 · 연결선 · 마커 -->
+  <sc-for list="{{regs}}" as="r" hint-placeholder-count="4">
+    <div style="{{r.conn}}"></div>
+    <div style="{{r.dia}}"></div>
+    <div style="{{r.box}}">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span>
+        <span style="font-size: 12px; color: #596170">시행</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800">{{r.when}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="{{r.chip}}">{{r.who}}</span>
+      </div>
+      <span style="font-size: 16px; font-weight: 800; line-height: 1.35">{{r.name}}</span>
+      <div style="height: 1px; background: #e2e5ea"></div>
+      <div style="display: flex; flex-direction: column; gap: 5px">
+        <div style="display: flex; gap: 10px; font-size: 13.5px; line-height: 1.45"><span style="width: 28px; flex-shrink: 0; font-size: 12px; font-weight: 700; line-height: 1.6; color: #8a91a0">요구</span><span style="color: #3d4452">{{r.req}}</span></div>
+        <div style="display: flex; gap: 10px; font-size: 13.5px; line-height: 1.45"><span style="width: 28px; flex-shrink: 0; font-size: 12px; font-weight: 700; line-height: 1.6; color: #1428a0">대응</span><span style="font-weight: 700; color: #1428a0">{{r.act}}</span></div>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 요약 띠 -->
+  <div style="position: absolute; left: 64px; top: 590px; width: 1152px; height: 58px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 24px; display: flex; align-items: center; gap: 22px">
+    <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 13px; font-weight: 700; color: #3d4452">C 빌딩 해당</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 1.1; color: #1428a0">3</span></span>
+    <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 13px; font-weight: 700; color: #3d4452">검토 필요</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800; line-height: 1.1; color: #121417">1</span></span>
+    <span style="width: 1px; height: 26px; background: #b8c3ee"></span>
+    <span style="font-size: 16px; font-weight: 700">공조 교체를 규제 일정 앞에 두면 두 번 공사하지 않습니다</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>C 빌딩 · 스마트 오피스 제안 · 법령 · 고시 원문 확인 필요 — 시행 시점은 [확정 필요]</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 축: y 370 · 연도 2025 → x 100, 2030 → x 1180 (216px/년) · 시점은 예시
+    const AX = 370, Y0 = 2025, X0 = 100, PY = 216;
+    const xAt = (y) => X0 + (y - Y0) * PY;
+    // 카드 4개: 폭 300, 위 · 아래로 엇갈림 (위 166–324 · 아래 414–572)
+    const CW = 300, CH = 158, TOP_UP = 166, TOP_DN = 414;
+    const LEFT = [64, 348, 632, 916];
+    // [제목, 예시 시점(연), 대상, 검토 필요 여부, 요구, 대응]
+    const R = [
+      ['에너지 사용량 신고 · 공개 확대', 2025.8, 'C 빌딩 해당', false, '연간 사용량 · 원단위 공개', 'b.IoT 에너지 리포트'],
+      ['고효율 설비 기준 강화', 2027.2, 'C 빌딩 해당', false, '냉난방 설비 효율 등급 기준 상향', 'DVM S2 고효율 실외기'],
+      ['냉매(HFC) 감축 단계', 2028.4, '검토 필요', true, '고GWP 냉매 사용 제한 단계적 강화', '저GWP 냉매 대응 모델 [확인 필요]'],
+      ['건물 온실가스 감축 목표', 2029.6, 'C 빌딩 해당', false, '배출량 산정 · 감축 실적 보고', 'SmartThings Pro 사용량 데이터']
+    ];
+    const regs = R.map(([name, t, who, check, req, act], i) => {
+      const up = i % 2 === 0;
+      const x = Math.round(xAt(t));
+      const top = up ? TOP_UP : TOP_DN;
+      return {
+        no: String(i + 1), name, who, req, act, when: '[0000]',
+        box: 'position: absolute; left: ' + LEFT[i] + 'px; top: ' + top + 'px; width: ' + CW + 'px; height: ' + CH + 'px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 16px 20px; display: flex; flex-direction: column; gap: 9px',
+        conn: 'position: absolute; left: ' + (x - 1) + 'px; top: ' + (up ? TOP_UP + CH : AX) + 'px; width: 2px; height: ' + (up ? AX - TOP_UP - CH : TOP_DN - AX) + 'px; background: ' + (check ? '#8a91a0' : '#121417'),
+        dia: 'position: absolute; left: ' + (x - 7) + 'px; top: ' + (AX - 7) + 'px; width: 14px; height: 14px; box-sizing: border-box; transform: rotate(45deg); box-shadow: 0 0 0 2px #ffffff; ' + (check ? 'background: #ffffff; border: 2.5px solid #121417' : 'background: #121417'),
+        chip: 'height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; ' +
+          (check ? 'background: #ffffff; border: 1.5px solid #121417; color: #121417' : 'background: #eaeefb; color: #1428a0')
+      };
+    });
+    const years = [2025, 2026, 2027, 2028, 2029, 2030].map((y) => ({
+      label: String(y),
+      tick: 'position: absolute; left: ' + (xAt(y) - 1) + 'px; top: ' + (AX - 6) + 'px; width: 2px; height: 12px; background: #121417',
+      lab: 'position: absolute; left: ' + (xAt(y) - 30) + 'px; top: ' + (AX + 12) + 'px; width: 60px; text-align: center; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; color: #596170'
+    }));
+    // 오늘 2026.10
+    const nx = Math.round(xAt(2026 + 9.5 / 12));
+    const now = {
+      line: 'position: absolute; left: ' + (nx - 1) + 'px; top: 192px; width: 0; height: ' + (AX - 192) + 'px; border-left: 1.5px dashed #121417',
+      chip: 'position: absolute; left: ' + (nx - 56) + 'px; top: 166px; width: 112px; height: 26px; box-sizing: border-box; border-radius: 999px; background: #121417; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 5px; white-space: nowrap'
+    };
+    return { regs, years, now };
+  }
+}
+</script>
+</body>
+</html>

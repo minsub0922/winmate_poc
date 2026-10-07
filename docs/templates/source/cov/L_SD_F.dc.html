@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SD-F 빌트인 가전 사양</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">84 타입 주방, 빌트인 가전 세 가지의 매립 치수</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">가구장 정면 · 매립 공간(W × H × D) · 여유 공간 · 전원</div>
+
+  <!-- 주방 가구 정면 입면 7열 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 662px; height: 492px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 174px; font-size: 12.5px; font-weight: 800; color: #596170">주방 가구 정면 · 입면</div>
+
+  <!-- 가구장 면 · 매립 공간 · 걸레받이 -->
+  <sc-for list="{{faces}}" as="f" hint-placeholder-count="16">
+    <div style="{{f}}"></div>
+  </sc-for>
+  <!-- 바닥 -->
+  <div style="position: absolute; left: 88px; top: 596px; width: 614px; height: 2px; background: #121417"></div>
+
+  <!-- 매립 공간 번호 · 이름 -->
+  <sc-for list="{{tags}}" as="t" hint-placeholder-count="3">
+    <div style="{{t.st}}">
+      <span style="width: 24px; height: 24px; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{t.no}}</span>
+      <span style="font-size: 12.5px; font-weight: 800; color: #1428a0; white-space: nowrap">{{t.name}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 치수선 · 보조선 -->
+  <sc-for list="{{dims}}" as="d" hint-placeholder-count="24">
+    <div style="{{d}}"></div>
+  </sc-for>
+  <sc-for list="{{dimLabels}}" as="l" hint-placeholder-count="6">
+    <div style="{{l.st}}"><span style="font-size: 11.5px; font-weight: 700; color: #596170">{{l.k}}</span><span style="font-size: 13px; font-weight: 800; color: #121417">{{l.v}}</span></div>
+  </sc-for>
+
+  <!-- 축척 · 범례 -->
+  <div style="position: absolute; left: 88px; top: 612px; width: 614px; height: 18px; display: flex; align-items: center; gap: 16px; font-size: 11.5px; color: #8a91a0">
+    <span style="font-weight: 700">단위 mm · 예시 축척</span>
+    <span style="flex-grow: 1"></span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 12px; box-sizing: border-box; border: 1.5px dashed #1428a0; background: #eaeefb; border-radius: 2px"></span>매립 공간</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 18px; height: 12px; box-sizing: border-box; border: 1px solid #b8bec8; background: #ffffff; border-radius: 2px"></span>가구장</span>
+  </div>
+
+  <!-- 매립 치수 표 5열 -->
+  <div style="position: absolute; left: 750px; top: 156px; width: 466px">
+    <div style="display: grid; grid-template-columns: {{gc}}; height: 44px; align-items: end; padding-bottom: 8px; box-sizing: border-box; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170; line-height: 1.3">
+      <span style="padding-left: 4px">구분 · 모델</span>
+      <span>매립 W×H×D</span>
+      <span style="display: flex; flex-direction: column"><span>여유</span><span style="font-size: 11px; color: #8a91a0">후면/상부</span></span>
+      <span>도어</span>
+      <span>전원</span>
+      <span>에너지</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="3">
+      <div style="display: grid; grid-template-columns: {{r.gc}}; height: 96px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <div style="display: flex; align-items: flex-start; gap: 10px; padding-left: 4px">
+          <span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{r.no}}</span>
+          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+            <span style="font-size: 15px; font-weight: 800; line-height: 24px; white-space: nowrap">{{r.name}}</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; line-height: 1.4; color: #596170; word-break: keep-all">{{r.model}}</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1px; font-family: Manrope, 'Noto Sans KR', sans-serif; line-height: 18px">
+          <sc-for list="{{r.whd}}" as="m" hint-placeholder-count="3">
+            <span style="display: flex; gap: 5px; white-space: nowrap"><span style="width: 11px; font-size: 11.5px; font-weight: 700; color: #8a91a0">{{m.k}}</span><span style="font-size: 13px; font-weight: 800">{{m.v}}</span></span>
+          </sc-for>
+        </div>
+        <span style="font-family: Manrope, sans-serif; font-size: 13.5px; font-weight: 800; white-space: nowrap">{{r.gap}}</span>
+        <span style="font-size: 12.5px; line-height: 1.45; color: #3d4452; word-break: keep-all; padding-right: 8px">{{r.door}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; line-height: 1.45; word-break: keep-all; padding-right: 6px">{{r.power}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap">{{r.energy}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 시공 전 확인 -->
+  <div style="position: absolute; left: 750px; top: 508px; font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">시공 전 확인</div>
+  <div style="position: absolute; left: 750px; top: 536px; width: 466px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px">
+    <sc-for list="{{checks}}" as="c" hint-placeholder-count="3">
+      <span style="height: 26px; padding: 0 12px 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap"><span style="width: 13px; height: 13px; flex-shrink: 0; box-sizing: border-box; border: 1.5px solid #8a91a0; border-radius: 3px"></span>{{c}}</span>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>R 건설 · [00]지구 공동주택 제안 · 제조사 설치 도면 기준 · 가구 시공 도면과 대조 필요</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 28</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const at = (x, y, w, h, extra) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; box-sizing: border-box; ' + (extra || '');
+    // 입면 좌표 (예시 축척): 위 248 · 가구장 아래 582 · 바닥 596
+    const TOP = 248, BASE = 582, FLOOR = 596, CT = 462;
+    const cab = 'background: #ffffff; border: 1px solid #b8bec8; border-radius: 2px;';
+    const door = 'background: #ffffff; border: 1px solid #d5d9e0; border-radius: 2px;';
+    const kick = 'background: #d5d9e0;';
+    const nook = 'background: #eaeefb; border: 1.5px dashed #1428a0; border-radius: 2px;';
+    // 매립 공간 [번호, 이름, x, y, w, h]
+    const N = [
+      [1, '냉장고', 180, 262, 128, 320],
+      [2, '오븐', 332, 358, 96, 96],
+      [3, '식기세척기', 556, 470, 100, 112]
+    ];
+    const faces = [
+      // ① 냉장고장 (키 큰 장)
+      at(168, TOP, 152, BASE - TOP, cab), at(174, BASE, 140, FLOOR - BASE, kick),
+      // ② 오븐장 — 상부 도어 · 서랍 2단
+      at(320, TOP, 120, BASE - TOP, cab), at(326, BASE, 108, FLOOR - BASE, kick),
+      at(328, 256, 104, 60, door), at(328, 466, 104, 54, door), at(328, 524, 104, 52, door),
+      // 상부장 3도어
+      at(440, TOP, 220, 104, cab), at(446, 254, 68, 92, door), at(516, 254, 68, 92, door), at(586, 254, 68, 92, door),
+      // 하부장 · 상판 · 수전
+      at(440, 470, 220, BASE - 470, cab), at(446, 476, 50, 100, door), at(500, 476, 50, 100, door), at(446, BASE, 208, FLOOR - BASE, kick),
+      at(436, CT, 228, 8, 'background: #3d4452; border-radius: 1px;'),
+      at(496, 440, 3, 22, 'background: #8a91a0;'), at(484, 440, 15, 3, 'background: #8a91a0; border-radius: 2px;')
+    ].concat(N.map(([, , x, y, w, h]) => at(x, y, w, h, nook)));
+    const tags = N.map(([no, name, x, y, w, h]) => ({
+      no, name,
+      st: at(x, y + h / 2 - 25, w, 50, 'display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;')
+    }));
+    // 치수선 (SD-B 방식) — 선 1px · 끝 눈금 13px · 보조선 점선
+    const ink = 'background: #121417;';
+    const dims = [], dimLabels = [];
+    const lab = (k, v, st) => dimLabels.push({ k, v, st: 'display: flex; align-items: baseline; gap: 4px; font-family: Manrope, sans-serif; line-height: 1.25; white-space: nowrap; ' + st });
+    // 가로 치수: x1–x2, 선 높이 y, 보조선은 y+7 → 매립 공간 윗변(top)
+    const dimW = (x1, x2, y, top, v) => {
+      dims.push(at(x1, y, x2 - x1, 1, ink), at(x1, y - 6, 1, 13, ink), at(x2 - 1, y - 6, 1, 13, ink));
+      if (top - (y + 7) > 0) dims.push(at(x1, y + 7, 1, top - y - 7, 'border-left: 1px dashed #8a91a0;'), at(x2 - 1, y + 7, 1, top - y - 7, 'border-left: 1px dashed #8a91a0;'));
+      lab('W', v, at((x1 + x2) / 2 - 50, y - 24, 100, 18, 'justify-content: center;'));
+    };
+    // 세로 치수: y1–y2, 선 위치 x, 보조선은 from → 눈금, side: 라벨 왼쪽(L, 두 줄) · 오른쪽(R, 한 줄) · 오른쪽 두 줄(R2)
+    const dimH = (y1, y2, x, from, v, side) => {
+      dims.push(at(x, y1, 1, y2 - y1, ink), at(x - 6, y1, 13, 1, ink), at(x - 6, y2 - 1, 13, 1, ink));
+      const ex = from < x ? [from, x - 6 - from] : [x + 7, from - x - 7];
+      if (ex[1] > 0) dims.push(at(ex[0], y1, ex[1], 1, 'border-top: 1px dashed #8a91a0;'), at(ex[0], y2 - 1, ex[1], 1, 'border-top: 1px dashed #8a91a0;'));
+      const mid = (y1 + y2) / 2;
+      if (side === 'L') lab('H', v, at(x - 70, mid - 20, 62, 40, 'flex-direction: column; align-items: flex-end; justify-content: center; gap: 0px;'));
+      else if (side === 'R2') lab('H', v, at(x + 10, mid - 20, 50, 40, 'flex-direction: column; align-items: flex-start; justify-content: center; gap: 0px;'));
+      else lab('H', v, at(x + 12, mid - 9, 80, 18, ''));
+    };
+    // ① 냉장고: 위 · 왼쪽 / ② 오븐: 위 · 오른쪽(벽면) / ③ 식기세척기: 위(벽면) · 오른쪽 바깥
+    dimW(180, 308, 232, 262, '[000]');
+    dimH(262, 582, 150, 180, '[0,000]', 'L');
+    dimW(332, 428, 342, 358, '[000]');
+    dimH(358, 454, 452, 428, '[000]', 'R');
+    dimW(556, 656, 446, 470, '[000]');
+    dimH(470, 582, 672, 656, '[000]', 'R2');
+
+    // 표: 열 폭 합 466
+    const gc = '128px 96px 64px 70px 58px 50px';
+    const R = [
+      ['냉장고', 'Bespoke 빌트인 [모델명]', ['[000]', '[0,000]', '[000]'], '[00]/[00]', '가구 도어 부착', '전용 [00]A', '[0]등급'],
+      ['오븐', '[모델명]', ['[000]', '[000]', '[000]'], '[00]/—', '본체 도어', '전용 [00]A', '—'],
+      ['식기세척기', '[모델명]', ['[000]', '[000]', '[000]'], '[00]/—', '가구 도어 부착', '[00]A', '[0]등급']
+    ];
+    const rows = R.map(([name, model, whd, gap, door, power, energy], i) => ({
+      no: i + 1, name, model, gap, door, power, energy, gc,
+      whd: ['W', 'H', 'D'].map((k, j) => ({ k, v: whd[j] }))
+    }));
+    const checks = ['매립 깊이 = 가구장 깊이 − 여유', '전용 회로는 전기 도면에 반영', '도어 패널 규격 가구사 전달'];
+    return { faces, tags, dims, dimLabels, gc, rows, checks };
+  }
+}
+</script>
+</body>
+</html>

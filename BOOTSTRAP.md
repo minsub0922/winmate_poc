@@ -240,7 +240,8 @@ MODEL_MODE=live uv run python services/ai-tools/scripts/live_check.py     # 7개
    - mi · competitor: 요구 태그 이름표 `label` · `description`(이미 동작 — 화면 표시만 확인)
 3. **requirements · storyboard 지우기(보관) API** + 통합 e2e 정리 도우미.
 4. **남은 `code` 항목.** 서비스별로 묶어서 진행한다.
-5. (사람이 지시하면) birdseye 3D 조감도와 `poc/birdseye`(Blender) 연결.
+5. **PPT 레이아웃을 디자인 보드와 같게** — 출시 381종 모양 맞추기 · 05 캔버스 62장 추가 · 제안서 새 섹션: 따로 `docs/templates/PPT_TASK.md` 대로.
+6. (사람이 지시하면) birdseye 3D 조감도와 `poc/birdseye`(Blender) 연결.
    - 먼저 설계 문서(`docs/requests/birdseye.md` 에 제안)를 쓴다. 사람의 확인을 받은 뒤 구현한다.
 
 ### 4.3 손대지 말 것(사람의 결정 · 자료 필요) — 목록에 `decision` · `data` 로만 둔다

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>OV-C 전제 조건 · 확인 요청</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">00 · 제안 개요</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">금액과 일정은 아래 전제에서 유효합니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">가정값은 실사 · 고객 확인 후 확정 · 바뀌면 영향 범위를 다시 알려드립니다</div>
+
+  <!-- 왼쪽 8열: 전제 표 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 760px; display: flex; flex-direction: column">
+    <div style="height: 40px; box-sizing: border-box; display: grid; grid-template-columns: 116px 226px 122px 146px minmax(0, 1fr); align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">전제</span><span>우리가 가정한 값</span><span>확인</span><span>영향</span><span>상태</span>
+    </div>
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
+      <div style="height: 64px; box-sizing: border-box; display: grid; grid-template-columns: 116px 226px 122px 146px minmax(0, 1fr); align-items: center; border-bottom: 1px solid #e2e5ea">
+        <span style="padding-left: 4px; font-size: 15px; font-weight: 700">{{r.k}}</span>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14.5px; font-weight: 500; white-space: nowrap">{{r.v}}</span>
+        <span style="font-size: 13.5px; color: #3d4452; white-space: nowrap">{{r.who}}</span>
+        <div style="display: flex; gap: 6px">
+          <sc-for list="{{r.impact}}" as="m" hint-placeholder-count="2">
+            <span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #f5f6f8; color: #3d4452; display: flex; align-items: center; font-size: 11.5px; font-weight: 700; white-space: nowrap">{{m}}</span>
+          </sc-for>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px"><span style="{{r.stStyle}}">{{r.st}}</span><span style="{{r.qStyle}}">{{r.q}}</span></div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 확인 현황 -->
+  <div style="position: absolute; left: 64px; top: 600px; width: 760px; height: 48px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 16px">
+    <span style="font-size: 14px; font-weight: 800">확인 현황</span>
+    <div style="display: flex; gap: 4px">
+      <sc-for list="{{pips}}" as="p" hint-placeholder-count="6">
+        <span style="{{p}}"></span>
+      </sc-for>
+    </div>
+    <span style="display: flex; align-items: baseline; gap: 4px; font-size: 13px; color: #1428a0; font-weight: 700">확인됨 <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">{{done}}</span></span>
+    <span style="width: 1px; height: 16px; background: #d5d9e0"></span>
+    <span style="display: flex; align-items: baseline; gap: 4px; font-size: 13px; font-weight: 700">확인 필요 <span style="font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800">{{todo}}</span></span>
+    <span style="flex-grow: 1"></span>
+    <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; color: #596170">실사 항목은 현장 실사 [00]/[00]에 확인 · Q는 오른쪽 질문</span>
+  </div>
+
+  <!-- 오른쪽 4열: 고객께 여쭙는 것 -->
+  <div style="position: absolute; left: 848px; top: 160px; width: 368px; height: 488px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 22px 24px 20px; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; gap: 10px; height: 28px">
+      <span style="font-size: 17px; font-weight: 800; color: #1428a0">고객께 여쭙는 것</span>
+      <span style="width: 26px; height: 26px; border-radius: 50%; background: #1428a0; color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800">{{qCount}}</span>
+    </div>
+    <div style="margin-top: 10px; display: flex; flex-direction: column">
+      <sc-for list="{{qs}}" as="q" hint-placeholder-count="4">
+        <div style="{{q.st}}">
+          <span style="width: 28px; height: 24px; flex-shrink: 0; margin-top: 1px; border-radius: 6px; background: #1428a0; color: #ffffff; display: flex; align-items: center; justify-content: center; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800">{{q.no}}</span>
+          <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+            <span style="font-size: 15px; font-weight: 700; line-height: 1.45; word-break: keep-all">{{q.t}}</span>
+            <span style="font-size: 12px; color: #596170">{{q.rel}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div style="height: 48px; box-sizing: border-box; border-radius: 10px; background: #ffffff; padding: 0 16px; display: flex; align-items: center; gap: 10px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v14H4zM4 10h16M8 3v4M16 3v4"/></svg>
+      <span style="font-size: 14px; font-weight: 700">답변 기한</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800; letter-spacing: -0.01em; color: #1428a0">[00]/[00]</span>
+    </div>
+    <span style="margin-top: 12px; font-size: 12px; line-height: 1.5; color: #596170">답이 없으면 가정값으로 진행하고<br>변경 시 견적을 다시 드립니다</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>H 백화점 · VMD 사이니지 리뉴얼 제안</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // [전제, 우리가 가정한 값, 확인 주체, 영향, 확인됨 여부, 관련 질문 번호]
+    const R = [
+      ['전원', '벽면 콘센트 1.5m 이내', '실사', ['금액'], true, ''],
+      ['네트워크', '매장당 유선 LAN 1포트', '고객 IT', ['일정'], false, 'Q2'],
+      ['시공 시간', '영업 종료 후 22–06시', '고객 시설', ['일정', '금액'], false, 'Q1'],
+      ['벽체', '조적벽 · 앵커 고정 가능', '실사', ['금액'], false, ''],
+      ['콘텐츠 원본', '고객 제공 · 4K', '고객 마케팅', ['일정'], true, ''],
+      ['기존 장비', '반출은 고객 처리', '고객 시설', ['금액'], false, 'Q4']
+    ];
+    const chip = 'height: 26px; padding: 0 11px; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; font-size: 12px; font-weight: 700; white-space: nowrap; ';
+    const rows = R.map(([k, v, who, impact, ok, q]) => ({
+      k, v, who, impact, q,
+      qStyle: q ? 'height: 22px; padding: 0 7px; box-sizing: border-box; border-radius: 6px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800' : 'display: none',
+      st: ok ? '확인됨' : '확인 필요',
+      stStyle: chip + (ok ? 'background: #eaeefb; color: #1428a0' : 'background: #ffffff; border: 1.5px solid #121417; color: #121417')
+    }));
+    const done = R.filter((r) => r[4]).length;
+    const pips = R.map((r) => r[4]
+      ? 'width: 18px; height: 10px; border-radius: 3px; background: #1428a0'
+      : 'width: 18px; height: 10px; box-sizing: border-box; border-radius: 3px; border: 1.5px solid #121417; background: #ffffff')
+      .sort((a, b) => (a.indexOf('#1428a0') >= 0 ? -1 : 0) - (b.indexOf('#1428a0') >= 0 ? -1 : 0));
+    // 질문 — [질문, 관련 전제]
+    const Q = [
+      ['야간 시공 시 보안 요원 동행이 가능한가요?', '관련 전제 · 시공 시간'],
+      ['층별 네트워크 포트 위치 도면이 있나요?', '관련 전제 · 네트워크'],
+      ['콘텐츠 운영은 본사 VMD팀이 맡나요?', '관련 · 운영 교육 대상'],
+      ['기존 장비 반출일을 정해 주실 수 있나요?', '관련 전제 · 기존 장비']
+    ];
+    const qs = Q.map(([t, rel], i) => ({
+      no: 'Q' + (i + 1), t, rel,
+      st: 'display: flex; align-items: flex-start; gap: 12px; padding: 14px 0;' + (i > 0 ? ' border-top: 1px solid #b8c3ee;' : '')
+    }));
+    return { rows, pips, done: String(done), todo: String(R.length - done), qs, qCount: String(Q.length) };
+  }
+}
+</script>
+</body>
+</html>

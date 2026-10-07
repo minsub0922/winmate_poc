@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>BV-E 2D 배치 도면</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">03 · 조감도</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">역삼점 1층 배치 — 도면 그대로, 수량까지</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">축척 1:100 · 단위 mm · 번호는 오른쪽 범례와 같음</div>
+
+  <!-- 도면 시트 8열 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 760px; height: 488px; box-sizing: border-box; border-radius: 12px; background: #ffffff; border: 1px solid #d5d9e0"></div>
+
+  <!-- 치수선 : 위 가로 · 왼쪽 세로 -->
+  <sc-for list="{{dims}}" as="d" hint-placeholder-count="10">
+    <div style="{{d}}"></div>
+  </sc-for>
+  <div style="{{dimW}}">[12,400]</div>
+  <div style="{{dimH}}">[8,200]</div>
+
+  <!-- 평면 : 가구 · 벽 · 유리 · 문 -->
+  <sc-for list="{{floor}}" as="f" hint-placeholder-count="30">
+    <div style="{{f}}"></div>
+  </sc-for>
+  <sc-for list="{{labels}}" as="b" hint-placeholder-count="6">
+    <div style="{{b.st}}">{{b.t}}</div>
+  </sc-for>
+
+  <!-- 제품 기호 · 전원 · LAN · 번호 원 -->
+  <sc-for list="{{prods}}" as="p" hint-placeholder-count="10">
+    <div style="{{p}}"></div>
+  </sc-for>
+  <sc-for list="{{jacks}}" as="j" hint-placeholder-count="6">
+    <div style="{{j.o}}"><div style="{{j.i}}"></div></div>
+  </sc-for>
+  <sc-for list="{{marks}}" as="m" hint-placeholder-count="10">
+    <div style="{{m.st}}">{{m.no}}</div>
+  </sc-for>
+
+  <!-- 방위표 -->
+  <div style="position: absolute; left: 772px; top: 174px; width: 32px; display: flex; flex-direction: column; align-items: center; gap: 3px">
+    <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; line-height: 1">N</span>
+    <svg width="18" height="26" viewBox="0 0 18 26" fill="none" stroke="#121417" stroke-width="1.6" stroke-linejoin="round"><path d="M9 1L16 24L9 19L2 24Z"/><path d="M9 1L9 19L2 24Z" fill="#121417"/></svg>
+  </div>
+
+  <!-- 축척 막대 · 선 범례 -->
+  <div style="position: absolute; left: 88px; top: 580px; font-size: 11px; font-weight: 700; color: #8a91a0">예시 축척</div>
+  <sc-for list="{{scale}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.st}}">{{s.t}}</div>
+  </sc-for>
+  <div style="position: absolute; left: 252px; top: 598px; display: flex; align-items: center; gap: 16px; font-size: 11.5px; color: #596170">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 5px; background: #121417"></span>벽</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 22px; height: 6px; box-sizing: border-box; border-top: 2px solid #121417; border-bottom: 2px solid #121417"></span>유리</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #596170"></span>천장 기기</span>
+  </div>
+
+  <!-- 표제란 -->
+  <div style="position: absolute; left: 568px; top: 566px; width: 240px; height: 70px; box-sizing: border-box; border: 1px solid #121417; background: #ffffff; display: grid; grid-template-rows: 28px 20px 20px; font-size: 11px">
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 8px; border-bottom: 1px solid #121417"><span style="color: #8a91a0">도면명</span><span style="font-size: 12.5px; font-weight: 700">역삼점 1층 배치도</span></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #121417">
+      <div style="display: flex; align-items: center; gap: 8px; padding: 0 8px; border-right: 1px solid #121417"><span style="color: #8a91a0">축척</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800">1:100</span></div>
+      <div style="display: flex; align-items: center; gap: 8px; padding: 0 8px"><span style="color: #8a91a0">버전</span><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800">v3</span></div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; padding: 0 8px"><span style="color: #8a91a0">작성</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-weight: 700">[이름] · [0000.00.00]</span></div>
+  </div>
+
+  <!-- 범례 · 수량 4열 -->
+  <div style="position: absolute; left: 848px; top: 160px; width: 368px; display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">범례 · 수량</span><span style="font-size: 12px; color: #596170">번호 = 도면 기호</span></div>
+  <div style="position: absolute; left: 848px; top: 186px; width: 368px; display: flex; flex-direction: column">
+    <div style="display: grid; grid-template-columns: 100px minmax(0, 1fr) 92px 36px; height: 36px; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">기호</span><span>제품</span><span>모델</span><span style="text-align: right; padding-right: 4px">수량</span>
+    </div>
+    <sc-for list="{{legend}}" as="r" hint-placeholder-count="4">
+      <div style="display: grid; grid-template-columns: 100px minmax(0, 1fr) 92px 36px; height: 66px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <div style="display: flex; align-items: center; gap: 3px; padding-left: 4px">
+          <span style="width: 28px; height: 24px; flex-shrink: 0; display: flex; align-items: center; justify-content: center"><span style="{{r.sym}}"></span></span>
+          <sc-for list="{{r.badges}}" as="b" hint-placeholder-count="2">
+            <span style="{{b.st}}">{{b.t}}</span>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{r.name}}</span>
+          <span style="font-size: 12px; color: #596170; white-space: nowrap">{{r.where}}</span>
+        </div>
+        <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 700; white-space: nowrap">{{r.model}}</span>
+        <span style="text-align: right; padding-right: 4px; font-family: Manrope, sans-serif; font-size: 20px; font-weight: 800">{{r.qty}}</span>
+      </div>
+    </sc-for>
+    <div style="height: 52px; display: flex; align-items: center; gap: 16px; padding-left: 4px; border-bottom: 1px solid #e2e5ea; font-size: 13px; white-space: nowrap">
+      <span style="width: 96px; flex-shrink: 0; font-size: 12.5px; font-weight: 700; color: #596170">위치 기호</span>
+      <span style="display: flex; align-items: center; gap: 7px; flex-shrink: 0"><span style="width: 12px; height: 12px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417; display: flex; align-items: center; justify-content: center"><span style="width: 4px; height: 4px; border-radius: 50%; background: #121417"></span></span>전원</span>
+      <span style="display: flex; align-items: center; gap: 7px; flex-shrink: 0"><span style="width: 12px; height: 12px; box-sizing: border-box; border: 1.5px solid #121417; display: flex; align-items: center; justify-content: center"><span style="width: 4px; height: 4px; background: #121417"></span></span>LAN</span>
+      <span style="flex-grow: 1"></span>
+      <span style="padding-right: 4px; font-size: 12px; color: #8a91a0">실사 때 확정</span>
+    </div>
+    <div style="margin-top: 12px; height: 60px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; padding: 0 18px; display: flex; align-items: center; justify-content: space-between">
+      <span style="font-size: 14px; font-weight: 800; color: #1428a0">합계</span>
+      <span style="display: flex; align-items: baseline; gap: 4px; color: #1428a0"><span style="font-size: 14px; font-weight: 700">제품</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800">4</span><span style="font-size: 14px; font-weight: 700">종</span><span style="margin: 0 6px; font-size: 14px; color: #6f82d6">·</span><span style="font-family: Manrope, sans-serif; font-size: 26px; font-weight: 800">10</span><span style="font-size: 14px; font-weight: 700">대</span></span>
+    </div>
+  </div>
+  <div style="position: absolute; left: 848px; top: 626px; width: 368px; font-size: 12px; color: #8a91a0">치수는 실측 전 예시 · 실사 후 v4로 갱신</div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 2D 조감도 v3 · 원본 DXF 별도 제공</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 15</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 평면: 왼쪽 위 (172, 204), 532 × 352 px = 12.4 × 8.2 m → 1 m ≈ 43 px (예시 축척)
+    const PX = 196, PY = 204, W = 532, H = 352, M = 43;
+    const at = (x, y, w, h) => 'position: absolute; left: ' + (PX + x) + 'px; top: ' + (PY + y) + 'px; width: ' + w + 'px; height: ' + h + 'px; ';
+    const ink = (x, y, w, h) => at(x, y, w, h) + 'background: #121417';
+    const inner = (x, y, w, h) => at(x, y, w, h) + 'background: #3d4452';
+    const glass = (x, y, w, h) => at(x, y, w, h) + 'box-sizing: border-box; border-top: 2px solid #121417; border-bottom: 2px solid #121417; background: #ffffff';
+    const leaf = (x, y, len, deg) => at(x, y, len, 1.5) + 'background: #3d4452; transform-origin: 0 50%; transform: rotate(' + deg + 'deg)';
+    const furn = (x, y, w, h, bg, bd) => at(x, y, w, h) + 'box-sizing: border-box; border-radius: 2px; background: ' + bg + '; border: 1px solid ' + bd;
+
+    // 좌석: 테이블 2줄 × 4 + 창가 바 (천장 카세트 줄 y 213을 피해 배치)
+    const TX = [262, 332, 402, 472], TY = [146, 250];
+    const tables = [];
+    TY.forEach((y) => TX.forEach((x) => tables.push(furn(x, y, 30, 30, '#eef0f3', '#b8bec8'))));
+    const floor = tables.concat([
+      furn(250, 312, 270, 16, '#eef0f3', '#b8bec8'),                     // 창가 바
+      furn(138, 88, 208, 34, '#d5d9e0', '#b8bec8'),                      // 카운터
+      furn(366, 88, 80, 34, '#d5d9e0', '#b8bec8'),                       // 픽업대
+      furn(384, 6, 136, 22, '#eef0f3', '#d5d9e0'),                       // 제조대
+      // 창고 내벽 + 문
+      inner(100, 6, 3, 34), inner(100, 76, 3, 31), inner(6, 104, 97, 3), leaf(101, 41, 34, 135),
+      // 외벽 (6px Ink) — 아래 벽은 유리(이중선) + 출입구 틈
+      ink(0, 0, W, 6), ink(0, 0, 6, H), ink(W - 6, 0, 6, H),
+      ink(0, H - 6, 24, 6), glass(24, H - 6, 66, 6), ink(90, H - 6, 6, 6),
+      ink(154, H - 6, 6, 6), glass(160, H - 6, 348, 6), ink(508, H - 6, 24, 6),
+      leaf(96, H - 5, 56, -62)
+    ]);
+    const lab = (x, y, w, h, t, strong) => ({ t, st: at(x, y, w, h) + 'display: flex; align-items: center; justify-content: center; white-space: nowrap; font-size: ' + (strong ? '12px; font-weight: 700; color: #3d4452' : '11px; font-weight: 600; color: #8a91a0') });
+    const labels = [
+      lab(138, 88, 208, 34, '카운터', true),
+      lab(366, 88, 80, 34, '픽업대', true),
+      lab(384, 6, 136, 22, '제조대', false),
+      lab(6, 6, 94, 98, '창고', false),
+      lab(250, 312, 270, 16, '창가 바', false),
+      lab(18, 160, 100, 18, '주문 대기', false),
+      lab(292, 250, 40, 30, '좌석', false),
+      lab(86, H + 6, 80, 18, '출입구', true)
+    ];
+
+    // 제품 기호 — 메뉴보드 = 진한 가로 막대(번호는 막대 위) · 키오스크 = 작은 사각 · 세로 사이니지 = 세로 막대 · 카세트 = 천장 점선 원
+    const dark = 'background: #1f232a; border-radius: 1px';
+    const MB = [150, 214, 278];                      // 메뉴보드 3면, 각 54 px ≈ 1.24 m
+    const KI = [26, 62];                             // 입구 옆 키오스크 2대
+    const VS = [454, 84];                            // 픽업대 옆 세로 사이니지
+    const AC = [158, 264, 369, 474].map((x) => [x, 213]);
+    const prods = MB.map((x) => at(x, 14, 54, 8) + dark)
+      .concat(KI.map((x) => at(x, 306, 18, 18) + 'box-sizing: border-box; border: 2px solid #121417; ' + dark))
+      .concat([at(VS[0], VS[1], 8, 42) + dark])
+      .concat(AC.map(([x, y]) => at(x - 20, y - 20, 40, 40) + 'box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #596170'));
+
+    // 전원 ◉ · LAN ▣ — 제품 옆 (위치는 예시)
+    const jack = (x, y, round) => ({
+      o: at(x, y, 10, 10) + 'box-sizing: border-box; border: 1.5px solid #121417; display: flex; align-items: center; justify-content: center; border-radius: ' + (round ? '50%' : '1px'),
+      i: 'width: 4px; height: 4px; background: #121417; border-radius: ' + (round ? '50%' : '0')
+    });
+    const jacks = [jack(118, 13, true), jack(132, 13, false), jack(9, 300, true), jack(9, 314, false), jack(468, 90, true), jack(468, 104, false)];
+
+    // 번호 원 22px — 범례 표의 번호와 같음
+    const N = MB.map((x) => [x + 27, 18])
+      .concat(KI.map((x) => [x + 9, 286]))
+      .concat([[VS[0] + 4, 64]])
+      .concat(AC);
+    const marks = N.map(([cx, cy], i) => ({
+      no: String(i + 1),
+      st: at(cx - 11, cy - 11, 22, 22) + 'box-sizing: border-box; border-radius: 50%; background: #1428a0; border: 2px solid #ffffff; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center'
+    }));
+
+    // 치수선 (치수선 Ink · 보조선 #b8bec8)
+    const L = (x, y, w, h, c) => 'position: absolute; left: ' + x + 'px; top: ' + y + 'px; width: ' + w + 'px; height: ' + h + 'px; background: ' + c;
+    const DY = 188, DX = PX - 18;
+    const dims = [
+      L(PX, DY, W, 1, '#121417'), L(PX, DY - 5, 1, 11, '#121417'), L(PX + W - 1, DY - 5, 1, 11, '#121417'),
+      L(PX, DY + 7, 1, PY - DY - 9, '#b8bec8'), L(PX + W - 1, DY + 7, 1, PY - DY - 9, '#b8bec8'),
+      L(DX, PY, 1, H, '#121417'), L(DX - 5, PY, 11, 1, '#121417'), L(DX - 5, PY + H - 1, 11, 1, '#121417'),
+      L(DX + 7, PY, PX - DX - 9, 1, '#b8bec8'), L(DX + 7, PY + H - 1, PX - DX - 9, 1, '#b8bec8')
+    ];
+    const dimW = 'position: absolute; left: ' + (PX + W / 2 - 60) + 'px; top: ' + (DY - 22) + 'px; width: 120px; text-align: center; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800';
+    const dimH = 'position: absolute; left: ' + (DX - 70) + 'px; top: ' + (PY + H / 2 - 9) + 'px; width: 62px; text-align: right; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800';
+
+    // 축척 막대 0 · 1 · 2 m (1 m = M px)
+    const SX = 88, SY = 598;
+    const num = (x, t) => ({ t, st: 'position: absolute; left: ' + (x - 6) + 'px; top: ' + (SY + 12) + 'px; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700' });
+    const scale = [
+      { t: '', st: 'position: absolute; left: ' + SX + 'px; top: ' + SY + 'px; width: ' + M + 'px; height: 6px; box-sizing: border-box; border: 1px solid #121417; background: #121417' },
+      { t: '', st: 'position: absolute; left: ' + (SX + M) + 'px; top: ' + SY + 'px; width: ' + M + 'px; height: 6px; box-sizing: border-box; border: 1px solid #121417; background: #ffffff' },
+      num(SX + 3, '0'), num(SX + M + 3, '1'), num(SX + 2 * M + 3, '2 m')
+    ];
+
+    // 범례 · 수량
+    const circ = (t) => ({ t, st: 'width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center' });
+    const dash = { t: '–', st: 'font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #596170' };
+    const sym = {
+      bar: 'display: block; width: 26px; height: 6px; ' + dark,
+      kiosk: 'display: block; width: 13px; height: 13px; box-sizing: border-box; border: 2px solid #121417; ' + dark,
+      vbar: 'display: block; width: 6px; height: 22px; ' + dark,
+      cassette: 'display: block; width: 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 1.5px dashed #596170'
+    };
+    const legend = [
+      { sym: sym.bar, badges: [circ('1'), dash, circ('3')], name: '메뉴보드', where: '카운터 뒤 벽 · 벽걸이', model: 'QM55C', qty: '3' },
+      { sym: sym.kiosk, badges: [circ('4'), circ('5')], name: '키오스크', where: '출입구 옆 · 스탠드', model: 'KM24C', qty: '2' },
+      { sym: sym.vbar, badges: [circ('6')], name: '세로 사이니지', where: '픽업대 옆', model: 'QM43C 세로', qty: '1' },
+      { sym: sym.cassette, badges: [circ('7'), dash, circ('10')], name: '천장 공조', where: '천장 매립 · 객석 위', model: '360 카세트', qty: '4' }
+    ];
+    return { dims, dimW, dimH, floor, labels, prods, jacks, marks, scale, legend };
+  }
+}
+</script>
+</body>
+</html>

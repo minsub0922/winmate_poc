@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SC-D 옵션 · 구성품 · 라이선스</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장 한 곳에 들어가는 것 — 본품 · 설치 부품 · 라이선스</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 700px; font-size: 15px; color: #596170">표준 매장 1곳 기준 · 320개 매장 합계 · 필수 / 선택</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 113px; display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 7px"><span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">필수</span>기본 견적 포함</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="height: 22px; padding: 0 9px; border-radius: 999px; box-sizing: border-box; background: #ffffff; border: 1.5px dashed #1428a0; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">선택</span>고객이 고르면 추가</span>
+  </div>
+
+  <!-- 그룹 표 9열 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 858px">
+    <div style="display: grid; grid-template-columns: {{gc}}; height: 34px; align-items: end; padding-bottom: 8px; box-sizing: border-box; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 12px">품목</span><span>모델</span><span>규격</span><span style="text-align: center">매장당</span><span style="text-align: center">320매장</span><span style="text-align: center">구분</span><span style="padding-left: 12px">비고</span>
+    </div>
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="4">
+      <div style="{{g.wrap}}">
+        <div style="height: 30px; box-sizing: border-box; background: #f5f6f8; padding: 0 12px; display: flex; align-items: center; gap: 8px">
+          <sc-if value="{{g.icBox}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg></sc-if>
+          <sc-if value="{{g.icTool}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.5 17.3a1.8 1.8 0 0 0 2.6 2.6l5.8-5.8a4 4 0 0 0 5.2-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg></sc-if>
+          <sc-if value="{{g.icSoft}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M7 18a4.5 4.5 0 0 1-.6-9A6 6 0 0 1 18 9.5a4 4 0 0 1-.5 8.5z M10 12l-2 2 2 2 M14 12l2 2-2 2"/></svg></sc-if>
+          <sc-if value="{{g.icService}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 14v-2a8 8 0 0 1 16 0v2 M4 14h3v5H4z M17 14h3v5h-3z M20 19a3 3 0 0 1-3 3h-4"/></svg></sc-if>
+          <span style="font-size: 13px; font-weight: 800">{{g.name}}</span>
+          <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0">{{g.count}}</span>
+        </div>
+        <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="3">
+          <div style="{{r.rowStyle}}">
+            <span style="padding-left: 12px; font-size: 14px; font-weight: 700; white-space: nowrap">{{r.item}}</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; white-space: nowrap">{{r.model}}</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; color: #3d4452; white-space: nowrap">{{r.spec}}</span>
+            <span style="text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800">{{r.per}}</span>
+            <span style="text-align: center; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 800; color: #1428a0">{{r.total}}</span>
+            <span style="display: flex; justify-content: center"><span style="{{r.chip}}">{{r.kind}}</span></span>
+            <span style="padding-left: 12px; font-size: 12.5px; color: #596170; white-space: nowrap">{{r.note}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 요약 3열 -->
+  <div style="position: absolute; left: 946px; top: 156px; width: 270px; height: 492px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; padding: 24px 24px 22px; display: flex; flex-direction: column">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">표준 매장 1곳</span>
+    <div style="margin-top: 12px; display: flex; align-items: baseline; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 56px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em; color: #1428a0">[00]</span><span style="font-size: 20px; font-weight: 800; color: #1428a0">개 품목</span></div>
+    <span style="margin-top: 4px; font-size: 13px; color: #3d4452">본품 · 부품 · 라이선스 · 서비스 합계</span>
+    <div style="margin-top: 18px; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 40px; box-sizing: border-box; border-top: 1px solid #c9d1f0"><span style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #3d4452"><span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">필수</span>매장당</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800">[0]품목</span></div>
+      <div style="display: flex; align-items: center; justify-content: space-between; height: 40px; box-sizing: border-box; border-top: 1px solid #c9d1f0; border-bottom: 1px solid #c9d1f0"><span style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #3d4452"><span style="height: 22px; padding: 0 9px; border-radius: 999px; box-sizing: border-box; background: #ffffff; border: 1.5px dashed #1428a0; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">선택</span>매장당</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800">[0]품목</span></div>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 13px; font-weight: 800; color: #121417">선택 시 바뀌는 것</span>
+    <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 8px">
+      <sc-for list="{{gains}}" as="x" hint-placeholder-count="2">
+        <div style="height: 86px; box-sizing: border-box; border-radius: 10px; background: #ffffff; padding: 0 14px; display: flex; flex-direction: column; justify-content: center; gap: 3px">
+          <span style="display: flex; align-items: center; gap: 6px"><span style="height: 22px; padding: 0 8px; border-radius: 999px; box-sizing: border-box; border: 1.5px dashed #1428a0; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">선택</span><span style="font-size: 12.5px; color: #596170; white-space: nowrap">{{x.from}}</span></span>
+          <span style="display: flex; align-items: center; gap: 6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14 M13 6l6 6-6 6"/></svg><span style="font-size: 15px; font-weight: 800; color: #1428a0; white-space: nowrap">{{x.to}}</span></span>
+          <span style="font-size: 12px; line-height: 1.4; color: #596170; white-space: nowrap">{{x.note}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 단가 · 금액은 견적서</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 29</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 열 폭 합 858: 품목 · 모델 · 규격 · 매장당 · 320매장 · 구분 · 비고
+    const gc = '178px 116px 112px 72px 86px 72px minmax(0, 1fr)';
+    const chip = {
+      '필수': 'height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center',
+      '선택': 'height: 22px; padding: 0 9px; border-radius: 999px; box-sizing: border-box; background: #ffffff; border: 1.5px dashed #1428a0; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center'
+    };
+    const IC = ['Box', 'Tool', 'Soft', 'Service'];
+    // [그룹, 아이콘, [[품목, 모델, 규격, 매장당, 320매장, 구분, 비고]]]
+    const G = [
+      ['본품', 'Box', [
+        ['메뉴보드', 'QM55C', '55" UHD', '3', '[000]', '필수', '카운터 위 3면'],
+        ['키오스크', 'KM24C', '24"', '1', '320', '필수', '카운터 옆 셀프 주문']
+      ]],
+      ['설치 부품', 'Tool', [
+        ['벽걸이 브래킷', '[모델명]', '슬림', '3', '[000]', '필수', '메뉴보드용'],
+        ['카운터 마운트', '[모델명]', '키오스크용', '1', '320', '필수', '카운터 상판 고정'],
+        ['케이블 · 몰딩', '—', '일식', '1', '320', '필수', '전원 · LAN 정리']
+      ]],
+      ['소프트웨어', 'Soft', [
+        ['MagicINFO 라이선스', '—', '기기당', '4', '[0,000]', '필수', '메뉴보드 3 + 키오스크 1'],
+        ['POS 연동 모듈', '—', '본사 1식', '—', '1', '선택', '메뉴 · 품절 자동 반영']
+      ]],
+      ['서비스', 'Service', [
+        ['설치 · 시운전', '—', '매장당', '1', '320', '필수', '영업 외 시간 시공'],
+        ['보증 연장', '—', '+[0]년', '1', '320', '선택', '기본 보증 이후']
+      ]]
+    ];
+    const groups = G.map(([name, ic, rows], gi) => Object.assign({
+      name,
+      count: rows.length + '품목',
+      wrap: gi > 0 ? 'margin-top: 8px' : 'margin-top: 0px',
+      rows: rows.map(([item, model, spec, per, total, kind, note]) => ({
+        item, model, spec, per, total, kind, note,
+        chip: chip[kind],
+        rowStyle: 'display: grid; grid-template-columns: ' + gc + '; height: 34px; align-items: center; border-bottom: 1px solid #e2e5ea'
+      }))
+    }, IC.reduce((o, k) => { o['ic' + k] = k === ic; return o; }, {})));
+    const gains = [
+      { from: 'POS 연동 모듈', to: '품절 자동 반영', note: '품절 메뉴가 메뉴판에 바로 표시' },
+      { from: '보증 연장', to: '5년 무상', note: '기본 보증 후 +[0]년 · 전 매장' }
+    ];
+    return { gc, groups, gains };
+  }
+}
+</script>
+</body>
+</html>

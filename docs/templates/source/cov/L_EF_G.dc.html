@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>EF-G 비용 절감 워터폴</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">매장당 연 운영비, 네 군데에서 줄어듭니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">지금의 연 운영비 → 항목별 절감 → 새로 생기는 비용 → 도입 후</div>
+
+  <!-- 워터폴 9열 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 858px; height: 488px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 182px; font-size: 12.5px; font-weight: 700; color: #596170">매장당 연 운영비 (만 원)</div>
+  <div style="position: absolute; left: 400px; top: 180px; width: 498px; display: flex; justify-content: flex-end; gap: 16px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #121417"></span>지금</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #b8c3ee"></span>줄어드는 비용</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #b8bec8"></span>새로 생기는 비용</span>
+    <span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 2px; background: #1428a0"></span>도입 후</span>
+  </div>
+
+  <!-- 기준선 · 연결 점선 · 막대 (좌표는 renderVals에서 계산) -->
+  <div style="position: absolute; left: 101px; top: 548px; width: 784px; height: 1px; background: #b8bec8"></div>
+  <sc-for list="{{links}}" as="l" hint-placeholder-count="6">
+    <div style="{{l}}"></div>
+  </sc-for>
+  <sc-for list="{{steps}}" as="s" hint-placeholder-count="7">
+    <div>
+      <div style="{{s.bar}}"></div>
+      <span style="{{s.valStyle}}">{{s.v}}</span>
+      <div style="{{s.labPos}}">
+        <span style="{{s.nameStyle}}">{{s.name}}</span>
+        <span style="font-size: 11.5px; line-height: 16px; color: #8a91a0; white-space: nowrap">{{s.sub}}</span>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 88px; top: 618px; font-size: 11.5px; color: #8a91a0">점선 = 직전 막대가 끝난 높이 · 수치는 매장 운영 데이터로 확정</div>
+
+  <!-- 결과 3열 -->
+  <div style="position: absolute; left: 946px; top: 160px; width: 270px; height: 248px; box-sizing: border-box; border-radius: 16px; background: #1428a0; color: #ffffff; padding: 26px 24px; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #c8d3ff">순절감</span>
+    <span style="margin-top: 10px; font-size: 16px; font-weight: 700">매장당 연</span>
+    <div style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 56px; font-weight: 800; line-height: 1.05; letter-spacing: -0.02em">−[00]</span><span style="font-family: Manrope, sans-serif; font-size: 22px; font-weight: 800">%</span></div>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; justify-content: space-between; border-top: 1px solid rgba(255,255,255,0.25); padding-top: 12px; font-size: 13px"><span style="color: #c8d3ff">지금 → 도입 후</span><span style="font-family: Manrope, sans-serif; font-weight: 800">[0,000] → [0,000]</span></div>
+  </div>
+  <div style="position: absolute; left: 946px; top: 420px; width: 270px; height: 172px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 24px; display: flex; flex-direction: column; gap: 4px">
+    <span style="font-size: 16px; font-weight: 700">320개 매장 환산</span>
+    <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 4px"><span style="font-size: 18px; font-weight: 800; color: #1428a0">연</span><span style="font-family: Manrope, sans-serif; font-size: 44px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #1428a0">−[00]</span><span style="font-size: 18px; font-weight: 800; color: #1428a0">억 원</span></div>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 12.5px; color: #596170">매장당 순절감 × 320개 매장</span>
+  </div>
+  <div style="position: absolute; left: 946px; top: 606px; width: 270px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #596170">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 11v5 M12 7.5h.01"/></svg>
+    <span>라이선스 · 통신비는 포함한 순절감</span>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 매장당 연간 · 단가 · 빈도 가정 부록 p.[00] · 막대 길이는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 13</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 플롯: x 101–885 (7칸 × 112, 막대 폭 84 · 간격 28), 기준선 y 548, 높이 318 (값 0–104 예시 척도)
+    const X0 = 101, SLOT = 112, BW = 84, BASE = 548, H = 318, MAX = 104;
+    const y = (v) => BASE - v / MAX * H;
+    const px = (n) => n.toFixed(1) + 'px';
+    // [이름, 설명, 종류(now · cut · add · after), 크기(예시), 화면 값]
+    const S = [
+      ['지금', '연 운영비', 'now', 100, '[0,000]만 원'],
+      ['인쇄 · 배송', '메뉴판 · 포스터', 'cut', 22, '−[000]'],
+      ['교체 인건비', '매장 교체 작업', 'cut', 18, '−[000]'],
+      ['전기료', '밝기 스케줄', 'cut', 8, '−[00]'],
+      ['폐기 · 재작업', '오탈자 · 재인쇄', 'cut', 6, '−[00]'],
+      ['라이선스 · 통신', '새로 생기는 비용', 'add', 9, '+[00]'],
+      ['도입 후', '연 운영비', 'after', 0, '[0,000]만 원']
+    ];
+    const FILL = { now: '#121417', cut: '#b8c3ee', add: '#b8bec8', after: '#1428a0' };
+    const VAL = { now: '#121417', cut: '#1428a0', add: '#596170', after: '#1428a0' };
+    let level = 0;
+    const ends = [];
+    const steps = S.map(([name, sub, kind, v, label], i) => {
+      let lo, hi;
+      if (kind === 'now') { lo = 0; hi = v; level = v; }
+      else if (kind === 'cut') { hi = level; lo = level - v; level = lo; }
+      else if (kind === 'add') { lo = level; hi = level + v; level = hi; }
+      else { lo = 0; hi = level; }
+      ends.push(level);
+      const left = X0 + SLOT * i + (SLOT - BW) / 2;
+      const strong = kind === 'now' || kind === 'after';
+      return {
+        name, sub, v: label,
+        bar: 'position: absolute; left: ' + px(left) + '; top: ' + px(y(hi)) + '; width: ' + BW + 'px; height: ' + px(y(lo) - y(hi)) + '; border-radius: ' + (kind === 'cut' || kind === 'add' ? '3px' : '4px 4px 0 0') + '; background: ' + FILL[kind] + ';',
+        valStyle: 'position: absolute; left: ' + px(X0 + SLOT * i) + '; top: ' + px(y(hi) - 24) + '; width: ' + SLOT + 'px; text-align: center; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: ' + (strong ? '14px' : '13.5px') + '; font-weight: 800; color: ' + VAL[kind] + '; white-space: nowrap;',
+        labPos: 'position: absolute; left: ' + px(X0 + SLOT * i) + '; top: 558px; width: ' + SLOT + 'px; display: flex; flex-direction: column; align-items: center; gap: 1px;',
+        nameStyle: 'font-size: 13px; line-height: 19px; font-weight: ' + (strong ? '800' : '700') + '; white-space: nowrap; color: ' + (kind === 'after' ? '#1428a0' : '#121417') + ';'
+      };
+    });
+    // 막대 사이 점선: 막대 i의 오른쪽 끝 → 막대 i+1의 왼쪽 끝, 높이 = 막대 i가 끝난 값
+    const links = ends.slice(0, -1).map((lv, i) => {
+      const x1 = X0 + SLOT * i + (SLOT + BW) / 2;
+      return 'position: absolute; left: ' + px(x1) + '; top: ' + px(y(lv) - 0.5) + '; width: ' + (SLOT - BW) + 'px; height: 0; border-top: 1.5px dashed #8a91a0;';
+    });
+    return { steps, links };
+  }
+}
+</script>
+</body>
+</html>

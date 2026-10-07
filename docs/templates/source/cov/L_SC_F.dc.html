@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SC-F 단종 → 후속 모델</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">08 · 제품 스펙</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">견적 사이에 바뀐 모델 두 가지, 이렇게 이어집니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 640px; font-size: 15px; color: #596170">구 모델 → 후속 모델 · 달라지는 사양 · 설치 · 콘텐츠 영향</div>
+
+  <!-- 범례 -->
+  <div style="position: absolute; right: 64px; top: 113px; display: flex; align-items: center; gap: 16px; font-size: 12.5px; color: #3d4452">
+    <span style="display: flex; align-items: center; gap: 7px"><span style="font-size: 12.5px; font-weight: 800; color: #1428a0">파란 글자</span>좋아지는 점</span>
+    <span style="display: flex; align-items: center; gap: 7px"><span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #121417; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">검은 칩</span>확인 필요</span>
+  </div>
+
+  <sc-for list="{{pairs}}" as="p" hint-placeholder-count="2">
+    <div style="{{p.wrap}}">
+      <!-- 구 모델 -->
+      <div style="position: absolute; left: 0px; top: 0px; width: 250px; height: 224px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 18px 20px; display: flex; flex-direction: column; justify-content: center">
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 24px">
+          <span style="font-size: 12px; font-weight: 700; color: #8a91a0">구 모델 · 1차 견적</span>
+          <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">단종 [0000.00]</span>
+        </div>
+        <div style="margin-top: 12px; width: 120px; height: 70px; align-self: center; filter: grayscale(1); opacity: 0.8"><dc-import name="Img" kind="cut" origin="official" hint="구 모델 정면" w="120" h="70" radius="8" hint-size="120px,70px"></dc-import></div>
+        <span style="margin-top: 12px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800; line-height: 24px; color: #596170">{{p.oldName}}</span>
+        <span style="margin-top: 2px; font-size: 13px; line-height: 18px; color: #8a91a0; white-space: nowrap">{{p.oldSub}}</span>
+      </div>
+
+      <!-- 화살표 -->
+      <div style="position: absolute; left: 250px; top: 88px; width: 48px; height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: space-between">
+        <span style="font-size: 11.5px; font-weight: 700; line-height: 16px; color: #1428a0">대체</span>
+        <div style="display: flex; align-items: center"><div style="width: 26px; height: 2px; background: #1428a0"></div><svg width="10" height="12" viewBox="0 0 10 12" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="margin-left: -3px"><path d="M2 1l6 5-6 5"/></svg></div>
+        <span style="height: 16px"></span>
+      </div>
+
+      <!-- 후속 모델 -->
+      <div style="position: absolute; left: 298px; top: 0px; width: 250px; height: 224px; box-sizing: border-box; border-radius: 16px; background: #eaeefb; border: 2px solid #1428a0; padding: 16px 18px; display: flex; flex-direction: column; justify-content: center">
+        <div style="display: flex; align-items: center; justify-content: space-between; height: 24px">
+          <span style="font-size: 12px; font-weight: 700; color: #1428a0">후속 모델 · 2차 견적</span>
+          <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">후속 · 공급 중</span>
+        </div>
+        <div style="margin-top: 12px; width: 120px; height: 70px; align-self: center"><dc-import name="Img" pid="{{p.pid}}" kind="cut" origin="official" hint="{{p.hint}}" w="120" h="70" radius="8" bg="white" hint-size="120px,70px"></dc-import></div>
+        <span style="margin-top: 12px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 18px; font-weight: 800; line-height: 24px; color: #1428a0">{{p.newName}}</span>
+        <span style="margin-top: 2px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; line-height: 18px; color: #3d4452; white-space: nowrap">{{p.newSub}}</span>
+      </div>
+
+      <!-- 차이 표 -->
+      <div style="position: absolute; left: 572px; top: 0px; width: 580px">
+        <div style="display: grid; grid-template-columns: {{gc}}; height: 34px; align-items: end; padding-bottom: 8px; box-sizing: border-box; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+          <span style="padding-left: 4px">항목</span><span>구</span><span style="color: #1428a0">후속</span><span>영향</span>
+        </div>
+        <sc-for list="{{p.diffs}}" as="d" hint-placeholder-count="5">
+          <div style="display: grid; grid-template-columns: {{d.gc}}; height: 38px; align-items: center; border-bottom: 1px solid #e2e5ea">
+            <span style="padding-left: 4px; font-size: 13.5px; font-weight: 700; white-space: nowrap">{{d.k}}</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; color: #8a91a0; white-space: nowrap">{{d.old}}</span>
+            <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 800; white-space: nowrap">{{d.next}}</span>
+            <span style="display: flex; align-items: center">
+              <sc-if value="{{d.good}}" hint-placeholder-val="{{true}}">
+                <span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13.5px; font-weight: 700; color: #1428a0; white-space: nowrap">{{d.impact}}</span>
+              </sc-if>
+              <sc-if value="{{d.check}}" hint-placeholder-val="{{false}}">
+                <span style="height: 24px; padding: 0 10px; border-radius: 999px; background: #121417; color: #ffffff; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{d.impact}}</span>
+              </sc-if>
+            </span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 병원 · 환자 안내 시스템 제안 · Spec 시트 단종 경고 기준 · 카탈로그 [0000.00]</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 28</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 차이 표 열 폭 합 580: 항목 · 구 · 후속 · 영향
+    const gc = '124px 122px 122px minmax(0, 1fr)';
+    // [항목, 구, 후속, 영향, 확인 필요 여부]
+    const P = [
+      { top: 156, oldName: '[구 모델명]', oldSub: '안내 사이니지 · × [00]', pid: 'qm55c.front', hint: 'QM55C 정면', newName: 'QM55C', newSub: '스마트 사이니지 55" · × [00]',
+        diffs: [
+          ['밝기', '[000] nit', '[000] nit', '더 밝음 ↑', false],
+          ['소비전력', '[000] W', '[000] W', '더 적음 ↓', false],
+          ['크기', '[0,000]×[000]', '±[0] mm', '브래킷 호환', false],
+          ['해상도', 'FHD', 'UHD', '콘텐츠 그대로 사용', false],
+          ['가격 영향', '—', '—', '견적 [±0]%', true]
+        ] },
+      { top: 404, oldName: '[구 모델명]', oldSub: '접수 키오스크 · × [0]', pid: 'km24c.front', hint: 'KM24C 정면', newName: 'KM24C', newSub: '키오스크 24" · × [0]',
+        diffs: [
+          ['터치 방식', '[방식]', '[방식]', '조작 방식 그대로', false],
+          ['결제 모듈 호환', '[모듈명]', '[모듈명]', '결제 모듈 호환 확인', true],
+          ['크기', '[000]×[000]', '±[0] mm', '카운터 자리 그대로', false],
+          ['거치대 호환', '[거치대]', '[거치대]', '거치대 교체 여부 확인', true],
+          ['가격 영향', '—', '—', '견적 [±0]%', true]
+        ] }
+    ];
+    const pairs = P.map((p) => ({
+      oldName: p.oldName, oldSub: p.oldSub, pid: p.pid, hint: p.hint, newName: p.newName, newSub: p.newSub,
+      wrap: 'position: absolute; left: 64px; top: ' + p.top + 'px; width: 1152px; height: 224px',
+      diffs: p.diffs.map(([k, old, next, impact, check]) => ({ k, old, next, impact, check, good: !check, gc }))
+    }));
+    return { gc, pairs };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CB-E 거점 · 지점 분포</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">A 커피 320개 매장, [00]%가 수도권에 있습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">시도별 매장 수 · 매장 유형 · 출점 계획 → 설치 순서</div>
+
+  <!-- 왼쪽 6열: 타일 지도 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 560px; height: 488px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 182px; font-size: 13px; font-weight: 700; color: #3d4452">시도별 매장 수</div>
+
+  <!-- 수도권 묶음 표시 (타일 아래 괄호) -->
+  <div style="position: absolute; left: 88px; top: 284px; width: 210px; height: 8px; box-sizing: border-box; border: 2px solid #1428a0; border-top: none; border-radius: 0 0 4px 4px"></div>
+
+  <sc-for list="{{tiles}}" as="t" hint-placeholder-count="17">
+    <div style="{{t.box}}">
+      <span style="{{t.nameStyle}}">{{t.name}}</span>
+      <span style="{{t.numStyle}}">{{t.n}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 지도 옆: 수도권 비중 · 범례 -->
+  <div style="position: absolute; left: 402px; top: 208px; width: 198px; display: flex; flex-direction: column">
+    <span style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #3d4452"><span style="width: 20px; height: 8px; flex-shrink: 0; box-sizing: border-box; border: 2px solid #1428a0; border-top: none; border-radius: 0 0 3px 3px"></span>수도권 · 서울 인천 경기</span>
+    <span style="margin-top: 4px; font-family: Manrope, sans-serif; font-size: 44px; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: #1428a0">[00]%</span>
+    <span style="font-size: 13px; color: #596170"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">[000]</span>곳 / 320곳</span>
+    <div style="height: 1px; margin: 16px 0 14px 0; background: #d5d9e0"></div>
+    <span style="font-size: 12.5px; font-weight: 700; color: #3d4452">그 외 14개 시도</span>
+    <span style="margin-top: 2px; font-family: Manrope, sans-serif; font-size: 28px; font-weight: 800; line-height: 1.2; letter-spacing: -0.02em">[00]%</span>
+    <span style="font-size: 13px; color: #596170"><span style="font-family: Manrope, sans-serif; font-weight: 800; color: #121417">[000]</span>곳 / 320곳</span>
+  </div>
+  <div style="position: absolute; left: 402px; top: 470px; width: 198px; display: flex; flex-direction: column; gap: 8px">
+    <span style="font-size: 12px; font-weight: 700; color: #596170">색 농도 = 매장 수</span>
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="4">
+      <span style="display: flex; align-items: center; gap: 8px; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12.5px; color: #3d4452"><span style="{{l.sw}}"></span>{{l.label}}</span>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 88px; top: 612px; font-size: 11.5px; color: #8a91a0">타일 하나 = 시도 하나 · 위치는 대략적 배치</div>
+
+  <!-- 오른쪽 6열: 매장 유형 -->
+  <div style="position: absolute; left: 648px; top: 160px; width: 568px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #596170"><span style="font-weight: 800; color: #1428a0">매장 유형</span><span style="font-size: 12px">전체 320곳 기준 · 막대 길이는 예시</span></div>
+  <div style="position: absolute; left: 648px; top: 188px; width: 568px; display: flex; flex-direction: column">
+    <sc-for list="{{types}}" as="b" hint-placeholder-count="3">
+      <div style="display: grid; grid-template-columns: 112px minmax(0, 1fr) 72px; column-gap: 14px; height: 44px; align-items: center; border-bottom: 1px solid #e2e5ea">
+        <span style="font-size: 15px; font-weight: 700">{{b.name}}</span>
+        <div style="height: 16px; border-radius: 4px; background: #f5f6f8"><div style="{{b.bar}}"></div></div>
+        <span style="text-align: right; font-size: 13px; color: #596170"><span style="font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; color: #121417">{{b.n}}</span>곳</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="position: absolute; left: 648px; top: 326px; width: 568px; font-size: 11.5px; color: #8a91a0">드라이브스루는 가맹 · 직영 중 해당 매장</div>
+
+  <!-- 출점 계획 -->
+  <div style="position: absolute; left: 648px; top: 362px; width: 568px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #596170"><span style="font-weight: 800; color: #1428a0">출점 계획</span><span style="font-size: 12px">신규 매장 수 · 고객 계획 기준</span></div>
+  <div style="position: absolute; left: 648px; top: 409px; width: 568px; height: 2px; background: #b8c3ee"></div>
+  <sc-for list="{{plan}}" as="p" hint-placeholder-count="3">
+    <div style="{{p.box}}"><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 700; color: #3d4452">{{p.when}}</span><span style="font-family: Manrope, sans-serif; font-size: 18px; font-weight: 800; color: #1428a0">{{p.n}}</span></div>
+  </sc-for>
+  <sc-for list="{{arrows}}" as="a" hint-placeholder-count="2">
+    <div style="{{a}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 시사점 -->
+  <div style="position: absolute; left: 648px; top: 456px; width: 568px; height: 192px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 18px 24px; display: flex; flex-direction: column">
+    <span style="font-size: 12.5px; font-weight: 800; letter-spacing: 0.04em; color: #1428a0">시사점 · 설치 순서</span>
+    <sc-for list="{{insights}}" as="n" hint-placeholder-count="3">
+      <div style="{{n.box}}">
+        <span style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{n.no}}</span>
+        <span style="flex-grow: 1; font-size: 15.5px; font-weight: 700">{{n.t}}</span>
+        <span style="height: 26px; padding: 0 10px; flex-shrink: 0; border-radius: 999px; background: #ffffff; color: #1428a0; font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{n.chip}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 매장 목록: 고객 제공 2026.09 · 색 농도는 예시</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 6</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 타일 지도: 타일 66 × 66 · 간격 6 · 수도권 줄 아래 14 · 제주 위 16 (대략적 배치)
+    const T = 66;
+    const COLX = [88, 160, 232, 304];
+    const ROWY = [214, 302, 374, 446, 532];
+    // 농도 단계(예시): 3 · 2 · 1 · 0(매장 없음)
+    const LV = {
+      3: 'background: #1428a0; color: #ffffff;',
+      2: 'background: #6f82d6; color: #ffffff;',
+      1: 'background: #b8c3ee; color: #121417;',
+      0: 'background: #ffffff; color: #8a91a0; border: 1.5px solid #d5d9e0;'
+    };
+    // [시도, 열, 행, 단계, 매장 수]
+    const S = [
+      ['인천', 0, 0, 2, '[00]'], ['서울', 1, 0, 3, '[000]'], ['경기', 2, 0, 3, '[000]'], ['강원', 3, 0, 1, '[00]'],
+      ['충남', 0, 1, 1, '[00]'], ['세종', 1, 1, 0, '0'], ['충북', 2, 1, 1, '[00]'], ['경북', 3, 1, 1, '[00]'],
+      ['전북', 0, 2, 1, '[00]'], ['대전', 1, 2, 2, '[00]'], ['대구', 2, 2, 2, '[00]'], ['울산', 3, 2, 1, '[00]'],
+      ['광주', 0, 3, 1, '[00]'], ['전남', 1, 3, 1, '[00]'], ['경남', 2, 3, 1, '[00]'], ['부산', 3, 3, 2, '[00]'],
+      ['제주', 0, 4, 1, '[00]']
+    ];
+    const tiles = S.map(([name, c, r, lv, n]) => ({
+      name, n,
+      box: 'position: absolute; left: ' + COLX[c] + 'px; top: ' + ROWY[r] + 'px; width: ' + T + 'px; height: ' + T + 'px; box-sizing: border-box; border-radius: 10px; padding: 8px 10px; display: flex; flex-direction: column; justify-content: space-between; ' + LV[lv],
+      nameStyle: 'font-size: 13px; font-weight: 700; line-height: 1.3',
+      numStyle: 'font-family: Manrope, sans-serif; font-size: 15px; font-weight: 800; line-height: 1.2'
+    }));
+    const sw = (lv) => 'width: 14px; height: 14px; flex-shrink: 0; box-sizing: border-box; border-radius: 3px; ' + LV[lv];
+    const legend = [
+      { label: '[00]곳 이상', sw: sw(3) },
+      { label: '[00]–[00]곳', sw: sw(2) },
+      { label: '1–[00]곳', sw: sw(1) },
+      { label: '매장 없음', sw: sw(0) }
+    ];
+
+    // 매장 유형 (막대 길이 예시, 전체 320곳 = 100%)
+    const B = [['가맹', '[000]', 0.78], ['직영', '[00]', 0.22], ['드라이브스루', '[00]', 0.12]];
+    const types = B.map(([name, n, f]) => ({
+      name, n,
+      bar: 'width: ' + Math.round(f * 100) + '%; height: 16px; border-radius: 4px; background: #1428a0'
+    }));
+
+    // 출점 계획: 알약 3개 (폭 172, 간격 26) · 연결선 y 410
+    const PW = 172, PG = 26, PX0 = 648, PT = 390;
+    const P = [['2026 하반기', '+[00]'], ['2027', '+[00]'], ['2028', '+[00]']];
+    const plan = P.map(([when, n], i) => ({
+      when, n,
+      box: 'position: absolute; left: ' + (PX0 + i * (PW + PG)) + 'px; top: ' + PT + 'px; width: ' + PW + 'px; height: 40px; box-sizing: border-box; border-radius: 999px; background: ' + (i === 0 ? '#eaeefb' : '#ffffff') + '; border: 1.5px solid #1428a0; display: flex; align-items: center; justify-content: center; gap: 10px'
+    }));
+    const arrows = [0, 1].map((i) => 'position: absolute; left: ' + (PX0 + (i + 1) * PW + i * PG + PG / 2 - 8) + 'px; top: ' + (PT + 12) + 'px; width: 16px; height: 16px; background: #ffffff; border-radius: 50%');
+
+    const I = [
+      ['1', '설치는 수도권 1차 · 지방 2차로', '1차 [000]곳'],
+      ['2', '드라이브스루는 옥외 모델 별도', 'OH55A-S'],
+      ['3', '출점 매장은 개점 때 바로 설치', '연 +[00]곳']
+    ];
+    const insights = I.map(([no, t, chip], i) => ({
+      no, t, chip,
+      box: 'display: flex; align-items: center; gap: 12px; height: 44px;' + (i > 0 ? ' border-top: 1px solid #b8c3ee;' : ' margin-top: 4px;')
+    }));
+    return { tiles, legend, types, plan, arrows, insights };
+  }
+}
+</script>
+</body>
+</html>

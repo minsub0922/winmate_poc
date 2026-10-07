@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>SE-C 개인정보 처리 흐름</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">09 · 실행 계획 — 보안 · 규제</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">환자 이름은 화면에 이렇게만 나옵니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1152px; font-size: 15px; color: #596170">수집 → 전송 → 표시 → 저장 → 파기 · 단계마다 무엇을 · 어디서 · 누가 · 얼마나 · 어떻게 보호</div>
+
+  <!-- 5단계 카드 -->
+  <sc-for list="{{stages}}" as="s" hint-placeholder-count="5">
+    <div style="{{s.box}}">
+      <div style="display: flex; align-items: center; gap: 9px; height: 28px">
+        <span style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 12.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{s.no}}</span>
+        <span style="{{s.nameStyle}}">{{s.name}}</span>
+      </div>
+      <!-- 데이터가 있는 곳 · 표시 단계는 실제 화면 미니 목업 -->
+      <div style="{{s.zone}}">
+        <svg style="{{s.icDb}}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a8 3 0 1 0 16 0a8 3 0 1 0-16 0 M4 6v12a8 3 0 0 0 16 0V6 M4 12a8 3 0 0 0 16 0"/></svg>
+        <svg style="{{s.icLock}}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 11h14v10H5z M8 11V7a4 4 0 0 1 8 0v4 M12 15v2"/></svg>
+        <svg style="{{s.icSrv}}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v7H4z M4 13h16v7H4z M8 7.5h.01 M8 16.5h.01"/></svg>
+        <svg style="{{s.icDel}}" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16 M9 7V4h6v3 M6 7l1 13h10l1-13 M10 11v6 M14 11v6"/></svg>
+        <sc-if value="{{s.screen}}" hint-placeholder-val="{{false}}">
+          <div style="width: 100%; height: 100%; box-sizing: border-box; border-radius: 6px; background: #1f232a; border: 3px solid #121417; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 0 10px">
+            <span style="font-size: 11px; color: #8a91a0; white-space: nowrap">진료 대기 안내</span>
+            <span style="display: flex; align-items: baseline; gap: 5px; white-space: nowrap; color: #ffffff"><span style="font-size: 14px; font-weight: 700">김*수</span><span style="font-size: 12px; color: #8a91a0">·</span><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #b8c3ee">A-023</span><span style="font-size: 12px; color: #8a91a0">·</span><span style="font-size: 12.5px; font-weight: 500">진료실 3</span></span>
+          </div>
+        </sc-if>
+      </div>
+      <div style="{{s.rule}}"></div>
+      <div style="margin-top: 4px; display: flex; flex-direction: column">
+        <sc-for list="{{s.rows}}" as="r" hint-placeholder-count="5">
+          <div style="{{r.row}}">
+            <span style="font-size: 11.5px; line-height: 1.35; color: #8a91a0">{{r.k}}</span>
+            <span style="{{r.vs}}">{{r.v}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+
+  <!-- 단계 사이 쉐브런 -->
+  <sc-for list="{{chevs}}" as="c" hint-placeholder-count="4">
+    <div style="{{c}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></div>
+  </sc-for>
+
+  <!-- 화면에 나오지 않는 것 -->
+  <div style="position: absolute; left: 64px; top: 498px; width: 564px; height: 150px; box-sizing: border-box; border-radius: 16px; background: #ffffff; border: 1.5px solid #121417; padding: 17px 22px 0 22px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 3l18 18 M10.6 5.1A10 10 0 0 1 12 5c6 0 9.5 7 9.5 7a17 17 0 0 1-2.6 3.4 M6.6 6.6C3.9 8.3 2.5 12 2.5 12S6 19 12 19a9.6 9.6 0 0 0 5.4-1.6 M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>
+      <span style="font-size: 16px; font-weight: 800">화면에 나오지 않는 것</span>
+      <span style="flex-grow: 1"></span>
+      <span style="font-size: 12.5px; color: #596170">HIS에만 있고, 사이니지로는 보내지 않습니다</span>
+    </div>
+    <div style="margin-top: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px">
+      <sc-for list="{{hidden}}" as="h" hint-placeholder-count="4">
+        <div style="height: 42px; box-sizing: border-box; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 10px">
+          <span style="width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 50%; border: 1.5px solid #121417; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#121417" stroke-width="3.4" stroke-linecap="round"><path d="M6 6l12 12 M18 6L6 18"/></svg></span>
+          <span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{h}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 관련 기준 -->
+  <div style="position: absolute; left: 652px; top: 498px; width: 564px; height: 150px; box-sizing: border-box; border-radius: 16px; background: #f5f6f8; padding: 17px 24px 18px 24px; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z M8.5 12l2.5 2.5 4.5-5"/></svg>
+      <span style="font-size: 16px; font-weight: 800">관련 기준</span>
+    </div>
+    <div style="margin-top: 16px; display: flex; gap: 8px">
+      <sc-for list="{{rules}}" as="g" hint-placeholder-count="3">
+        <span style="height: 30px; padding: 0 12px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 13px; font-weight: 700; color: #121417; display: flex; align-items: center; gap: 6px; white-space: nowrap">{{g.name}}<span style="{{g.flagStyle}}">{{g.flag}}</span></span>
+      </sc-for>
+    </div>
+    <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid #e2e5ea; font-size: 12.5px; line-height: 1.5; color: #596170">세부 조항 · 보관 기간은 병원 정보보호 담당과 확인 후 확정합니다</div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>B 병원 · 환자 안내 시스템 제안 · 관련 법령 · 병원 내부 지침 확인 필요</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 33</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 카드 5개 × 208 (간격 28) · y 156–482 · 안: 여백 16 + 머리 28 + 10 + 화면 칸 50 + 10 + 선 1 + 4 + 행 5개 × 38 + 여백 16 = 325
+    const W = 208, G = 28, TOP = 156, H = 326, ZH = 50, RH = 38;
+    const X = [0, 1, 2, 3, 4].map((i) => 64 + i * (W + G));
+    const K = ['무엇을', '어디서', '누가', '보관', '보호'];
+    // [단계, 아이콘(db · lock · srv · del · screen), 무엇을, 어디서, 누가, 보관, 보호]
+    const S = [
+      ['수집', 'db', '진료 대기 번호 · 이름', '병원 HIS', '원무과 시스템', '—', '병원 내부망'],
+      ['전송', 'lock', '번호 · 가린 이름', 'HIS → 사내 서버', '연동 모듈', '—', '암호화 전송'],
+      ['표시', 'screen', '김*수 · 번호', '대기실 사이니지', '누구나 보임', '호출 후 [00]초', '가운데 글자 가림'],
+      ['저장', 'srv', '호출 기록', '사내 서버', '관리자 2명', '당일', '접근 기록'],
+      ['파기', 'del', '이름 · 기록', '사내 서버', '자동', '매일 자정', '복구 불가 삭제']
+    ];
+    const ic = (on) => (on ? 'display: block' : 'display: none');
+    const stages = S.map(([name, icon, ...vals], i) => {
+      const hot = icon === 'screen';
+      return {
+        no: String(i + 1), name,
+        screen: hot,
+        icDb: ic(icon === 'db'), icLock: ic(icon === 'lock'), icSrv: ic(icon === 'srv'), icDel: ic(icon === 'del'),
+        box: 'position: absolute; left: ' + X[i] + 'px; top: ' + TOP + 'px; width: ' + W + 'px; height: ' + H + 'px; box-sizing: border-box; border-radius: 14px; display: flex; flex-direction: column; ' +
+          (hot ? 'background: #eaeefb; border: 2px solid #1428a0; padding: 15px 15px' : 'background: #ffffff; border: 1px solid #e2e5ea; padding: 16px 16px'),
+        nameStyle: 'font-size: 17px; font-weight: 800; color: ' + (hot ? '#1428a0' : '#121417'),
+        rule: 'margin-top: 10px; height: 1px; flex-shrink: 0; background: ' + (hot ? '#b8c3ee' : '#e2e5ea'),
+        zone: 'margin-top: 10px; height: ' + ZH + 'px; flex-shrink: 0; box-sizing: border-box; border-radius: 8px; display: flex; align-items: center; justify-content: center; ' +
+          (hot ? '' : 'background: #f5f6f8'),
+        rows: K.map((k, j) => {
+          const v = vals[j];
+          const none = v === '—';
+          const protect = k === '보호';
+          return {
+            k, v,
+            row: 'height: ' + RH + 'px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; gap: 1px',
+            vs: 'font-size: 13px; line-height: 1.4; white-space: nowrap; font-family: Manrope, \'Noto Sans KR\', sans-serif; ' +
+              (none ? 'color: #b8bec8; font-weight: 700' : protect ? 'color: #1428a0; font-weight: 800' : 'color: #121417; font-weight: 600')
+          };
+        })
+      };
+    });
+    // 아이콘 칸 높이 가운데에 맞춘 쉐브런
+    const chevs = [0, 1, 2, 3].map((i) => 'position: absolute; left: ' + (X[i] + W + (G - 16) / 2) + 'px; top: ' + (TOP + 16 + 28 + 10 + ZH / 2 - 8) + 'px; width: 16px; height: 16px');
+    return {
+      stages, chevs,
+      hidden: ['주민번호 · 생년월일', '진료과 상세 · 병명', '전화번호', '보호자 정보'],
+      rules: [
+        { name: '개인정보 보호법', flag: '[확인 필요]', flagStyle: 'font-size: 11.5px; font-weight: 700; color: #8a3b00' },
+        { name: '의료법', flag: '[확인 필요]', flagStyle: 'font-size: 11.5px; font-weight: 700; color: #8a3b00' },
+        { name: '병원 내부 지침', flag: '', flagStyle: 'display: none' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

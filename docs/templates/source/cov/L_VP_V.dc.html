@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP-V 두 층 가치</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">02 · VALUE PROPS</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">아이와 부모가 얻는 것이, 통신사의 지표가 됩니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">고객의 고객(부모 · 아이) 가치 → U 통신사가 얻는 것 · 같은 제품에서 출발</div>
+
+  <!-- 위 층 · 고객사 -->
+  <div style="position: absolute; left: 64px; top: 150px; height: 20px; display: flex; align-items: center; gap: 10px">
+    <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.08em; color: #8a91a0">고객사</span>
+    <span style="font-size: 15px; font-weight: 800">U 통신사가 얻는 것</span>
+  </div>
+  <sc-for list="{{kpis}}" as="k" hint-placeholder-count="3">
+    <div style="{{k.box}}">
+      <span style="font-size: 14px; font-weight: 700; color: #3d4452">{{k.label}}</span>
+      <div style="display: flex; align-items: baseline; gap: 4px"><span style="font-family: Manrope, sans-serif; font-size: 38px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #1428a0">{{k.n}}</span><span style="font-family: Manrope, 'Noto Sans KR', sans-serif; font-size: 16px; font-weight: 800; color: #1428a0">{{k.unit}}</span></div>
+      <span style="font-size: 12.5px; color: #596170">{{k.note}}</span>
+    </div>
+  </sc-for>
+
+  <!-- 가운데 · 같은 제품 (허브) -->
+  <div style="position: absolute; left: 64px; top: 322px; width: 1152px; height: 120px; border-radius: 16px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 160px; top: 332px; width: 176px; height: 100px">
+    <dc-import name="Img" kind="cut" origin="official" hint="갤럭시 스마트폰 정면 · 아이 전용 홈 화면" w="176" h="100" radius="10" hint-size="176px,100px"></dc-import>
+  </div>
+  <div style="position: absolute; left: 400px; top: 332px; width: 480px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px">
+    <span style="font-size: 11.5px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">같은 제품에서 출발</span>
+    <span style="height: 40px; padding: 0 22px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 16px; font-weight: 800; display: flex; align-items: center; white-space: nowrap">Galaxy 키즈 에디션 · Knox Configure</span>
+    <span style="font-size: 12.5px; color: #596170; white-space: nowrap">아이 전용 홈 화면 · 앱 · 연락처를 출고 전에 설정</span>
+  </div>
+  <div style="position: absolute; left: 900px; top: 332px; width: 264px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px">
+    <span style="font-size: 13px; font-weight: 800; color: #3d4452">U 통신사 출시 패키지</span>
+    <div style="display: flex; gap: 6px">
+      <sc-for list="{{pack}}" as="p" hint-placeholder-count="3">
+        <span style="height: 24px; padding: 0 10px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{p}}</span>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 가치 → 지표 연결선 (아래에서 위로) -->
+  <sc-for list="{{links}}" as="l" hint-placeholder-count="6">
+    <div>
+      <div style="{{l.line}}"></div>
+      <div style="{{l.head}}"><svg width="12" height="8" viewBox="0 0 12 8" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 6.8L6 1.6l4.5 5.2"/></svg></div>
+    </div>
+  </sc-for>
+
+  <!-- 아래 층 · 고객의 고객 -->
+  <div style="position: absolute; left: 64px; top: 449px; font-size: 11.5px; font-weight: 800; letter-spacing: 0.08em; color: #8a91a0">고객의 고객</div>
+
+  <div style="position: absolute; left: 64px; top: 474px; width: 368px; height: 174px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; padding: 14px 20px 0 20px; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; gap: 10px; height: 32px; margin-bottom: 8px">
+      <span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M8.5 14a4 4 0 0 0 7 0 M9 9.5h.01 M15 9.5h.01"/></svg></span>
+      <span style="font-size: 16px; font-weight: 800">아이가 얻는 것</span><span style="flex-grow: 1"></span><span style="height: 24px; padding: 0 10px 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5 M6 11l6-6 6 6"/></svg>신규 가입으로</span>
+    </div>
+      <div style="display: flex; align-items: center; gap: 10px; height: 36px; border-top: 1px solid #e2e5ea">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 4h6v6H4z M14 4h6v6h-6z M4 14h6v6H4z M14 14h6v6h-6z"/></svg>
+        <span style="font-size: 14px; font-weight: 600; white-space: nowrap">쉬운 첫 화면</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">키즈 홈 화면</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; height: 36px; border-top: 1px solid #e2e5ea">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 20.5l1.4-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg>
+        <span style="font-size: 14px; font-weight: 600; white-space: nowrap">친구 · 가족 연락만 빠르게</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">연락처 지정</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; height: 36px; border-top: 1px solid #e2e5ea">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M8 2.5h8a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2z M11 18h2"/></svg>
+        <span style="font-size: 14px; font-weight: 600; white-space: nowrap">떨어뜨려도 걱정 적은 케이스</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">전용 케이스</span>
+      </div>
+  </div>
+
+  <div style="position: absolute; left: 456px; top: 474px; width: 760px; height: 174px; box-sizing: border-box; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; padding: 14px 20px 0 20px; display: flex; flex-direction: column">
+    <div style="display: flex; align-items: center; gap: 10px; height: 32px; margin-bottom: 8px">
+      <span style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 50%; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z M3 20a6 6 0 0 1 12 0 M16 11a3 3 0 1 0 0-6 M21 20a5 5 0 0 0-5-5"/></svg></span>
+      <span style="font-size: 16px; font-weight: 800">부모가 얻는 것</span><span style="flex-grow: 1"></span><span style="height: 24px; padding: 0 10px 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V5 M6 11l6-6 6 6"/></svg>해지율 · 가족 결합으로</span>
+    </div>
+      <div style="display: flex; align-items: center; gap: 10px; height: 36px; border-top: 1px solid #e2e5ea">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></svg>
+        <span style="width: 230px; flex-shrink: 0; font-size: 14px; font-weight: 600; white-space: nowrap">아이 위치를 앱에서 바로</span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">등하교 · 학원 도착 알림까지</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">부모 앱</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; height: 36px; border-top: 1px solid #e2e5ea">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z M12 7v5l3 2"/></svg>
+        <span style="width: 230px; flex-shrink: 0; font-size: 14px; font-weight: 600; white-space: nowrap">사용 시간 · 앱을 원격 관리</span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">잘 시간엔 게임 · 영상 잠금</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">부모 앱 · 기기 정책</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 10px; height: 36px; border-top: 1px solid #e2e5ea">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z M9 12l2 2 4-4"/></svg>
+        <span style="width: 230px; flex-shrink: 0; font-size: 14px; font-weight: 600; white-space: nowrap">유해 콘텐츠 자동 차단</span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">연령에 맞춘 차단을 출고 때부터</span>
+        <span style="flex-grow: 1"></span>
+        <span style="height: 22px; padding: 0 9px; border-radius: 999px; background: #f5f6f8; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">Knox Configure</span>
+      </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>U 통신사 · 키즈 전용폰 공동 기획 제안 · 지표는 출시 후 [0]년 목표 · 확정 전</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 11</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 세 열 중심 x: 248 · 640 · 1032 (지표 카드 4열씩). 아이 카드는 첫 열, 부모 카드는 둘째 · 셋째 열 아래
+    // → 아이 가치 → 신규 가입, 부모 가치 → 해지율 · 가족 결합이 같은 세로선으로 이어짐
+    const K = [
+      ['신규 가입', '+[00]', '만 회선', '아이 첫 폰 수요를 U 통신사로'],
+      ['해지율', '−[0.0]', '%p', '관리 기능 때문에 오래 씁니다'],
+      ['가족 결합', '+[00]', '%', '부모 회선과 묶어 가입합니다']
+    ];
+    const kpis = K.map(([label, n, unit, note], i) => ({
+      label, n, unit, note,
+      box: 'position: absolute; left: ' + (64 + i * 392) + 'px; top: 176px; width: 368px; height: 114px; box-sizing: border-box; border-radius: 14px; background: #eaeefb; padding: 0 24px; display: flex; flex-direction: column; justify-content: center; gap: 2px'
+    }));
+
+    // [x, 위쪽 끝(화살촉), 아래쪽 끝] — 위: 지표 카드 아래 290 ↔ 허브 322 · 아래: 허브 442 ↔ 가치 카드 474
+    const L = [[248, 290, 322], [640, 290, 322], [1032, 290, 322], [248, 442, 474], [640, 442, 474], [1032, 442, 474]];
+    const links = L.map(([x, y1, y2]) => ({
+      line: 'position: absolute; left: ' + (x - 1) + 'px; top: ' + (y1 + 2) + 'px; width: 2px; height: ' + (y2 - y1 - 2) + 'px; background: #1428a0',
+      head: 'position: absolute; left: ' + (x - 6) + 'px; top: ' + y1 + 'px; width: 12px; height: 8px; display: flex'
+    }));
+
+    const pack = ['키즈 요금제', '부모 앱', '전용 케이스'];
+    return { kpis, links, pack };
+  }
+}
+</script>
+</body>
+</html>

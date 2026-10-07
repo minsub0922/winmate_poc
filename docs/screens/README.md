@@ -13,7 +13,7 @@
 | `_runtime/support.js` | 아티팩트 런타임 대체(템플릿 `{{}}` · `sc-for` · `sc-if` · `dc-import` 를 그린다) | — |
 | `_runtime/render.mjs` | `_rendered/` 를 다시 만든다(화면 + PPT 템플릿) | 보드를 고쳤을 때 |
 
-PPT 레이아웃 보드(`docs/templates/source/*`)도 같은 방식으로 `docs/templates/_rendered/<묶음>/<레이아웃>.jpg · .txt` 에 있다.
+PPT 레이아웃 보드(`docs/templates/source/*`, 캔버스 6개 — 05 보강 캔버스는 `cov/`)도 같은 방식으로 `docs/templates/_rendered/<묶음>/<레이아웃>.jpg · .txt` 에 있다.
 
 ```bash
 # 브라우저로 살아 있는 보드 보기(네트워크 불필요, 포트는 5000번대)

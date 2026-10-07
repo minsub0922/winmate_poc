@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>US-D VOC · 리뷰 분석</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">01 · MARKET INTELLIGENCE</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">손님의 불만은 '기다림'과 '찾기'에 몰려 있습니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">리뷰 [0,000]건 · 키워드 빈도 · 감성 · 대표 원문</div>
+
+  <!-- 감성 비율 띠 -->
+  <div style="position: absolute; left: 64px; top: 156px; width: 1152px; height: 68px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 20px; display: flex; align-items: center; gap: 20px">
+    <div style="width: 132px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 14px; font-weight: 800">전체 감성</span>
+      <span style="font-size: 11.5px; color: #8a91a0">띠 길이는 예시</span>
+    </div>
+    <div style="flex-grow: 1; height: 34px; display: flex; gap: 3px">
+      <sc-for list="{{senti}}" as="s" hint-placeholder-count="3">
+        <div style="{{s.seg}}"><span>{{s.name}}</span><span style="font-family: Manrope, sans-serif; font-weight: 800">{{s.pct}}</span></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- 왼쪽 5열: 키워드 빈도 -->
+  <div style="position: absolute; left: 64px; top: 244px; width: 466px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #596170">
+    <span style="font-weight: 800; color: #1428a0">키워드 빈도</span>
+    <span style="display: flex; align-items: center; gap: 12px; font-size: 12px; color: #3d4452">
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #121417"></span>부정</span>
+      <span style="display: flex; align-items: center; gap: 6px"><span style="width: 12px; height: 12px; border-radius: 3px; background: #1428a0"></span>긍정</span>
+      <span style="color: #8a91a0">길이는 예시</span>
+    </span>
+  </div>
+  <div style="position: absolute; left: 64px; top: 271px; width: 466px; height: 2px; background: #121417"></div>
+
+  <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+    <div style="{{g.line}}"></div>
+    <div style="{{g.lab}}">{{g.name}}</div>
+  </sc-for>
+  <sc-for list="{{words}}" as="w" hint-placeholder-count="8">
+    <div style="{{w.row}}">
+      <span style="{{w.nameStyle}}">{{w.name}}</span>
+      <div style="{{w.track}}">
+        <div style="{{w.neg}}"></div>
+        <div style="{{w.pos}}"></div>
+      </div>
+      <span style="width: 66px; flex-shrink: 0; text-align: right; font-size: 12px; color: #596170"><span style="font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #121417">[000]</span>건</span>
+    </div>
+  </sc-for>
+
+  <!-- 오른쪽 7열: 대표 원문 -->
+  <div style="position: absolute; left: 554px; top: 244px; width: 662px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #596170">
+    <span style="font-weight: 800; color: #1428a0">대표 원문</span>
+    <span style="font-size: 12px">익명 · 원문 그대로 · 키워드별 1건</span>
+  </div>
+  <div style="position: absolute; left: 554px; top: 272px; width: 662px; display: flex; flex-direction: column; gap: 10px">
+    <sc-for list="{{quotes}}" as="q" hint-placeholder-count="3">
+      <div style="height: 116px; box-sizing: border-box; border-radius: 14px; background: #f5f6f8; padding: 0 22px; display: flex; align-items: center; gap: 16px">
+        <div style="flex-grow: 1; min-width: 0; display: flex; align-items: flex-start; gap: 14px">
+          <svg style="flex-shrink: 0; margin-top: 1px" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 7H6a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3v1a3 3 0 0 1-3 3"/><path d="M20 7h-4a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h3v1a3 3 0 0 1-3 3"/></svg>
+          <div style="flex-grow: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+            <span style="font-size: 15.5px; font-weight: 600; line-height: 1.5; word-break: keep-all; text-wrap: balance">{{q.text}}</span>
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="height: 22px; padding: 0 9px; box-sizing: border-box; border-radius: 999px; background: #ffffff; border: 1px solid #d5d9e0; font-size: 11.5px; font-weight: 700; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{q.kw}}</span>
+              <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">[플랫폼] · <span style="font-family: Manrope, sans-serif; font-weight: 700">[0000.00]</span></span>
+            </div>
+          </div>
+        </div>
+        <div style="width: 1px; height: 76px; flex-shrink: 0; background: #d5d9e0"></div>
+        <div style="width: 168px; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 6px">
+          <span style="font-size: 11.5px; font-weight: 700; color: #596170">제안</span>
+          <span style="height: 28px; padding: 0 12px 0 10px; box-sizing: border-box; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg><span>{{q.sol}}</span></span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>D 리테일 플래그십 · 매장 경험 리뉴얼 제안 · 수집: [플랫폼] · [기간] · 자동 분류 후 사람 검토 [00]건</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 8</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 감성 비율 (예시 길이) — 긍정 · 중립 · 부정
+    const S = [
+      ['긍정', '[00]%', 30, 'background: #1428a0; color: #ffffff;'],
+      ['중립', '[00]%', 20, 'background: #d5d9e0; color: #3d4452;'],
+      ['부정', '[00]%', 50, 'background: #121417; color: #ffffff;']
+    ];
+    const senti = S.map(([name, pct, w, look], i) => ({
+      name, pct,
+      seg: 'flex: ' + w + ' 1 0px; height: 34px; box-sizing: border-box; padding: 0 14px; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; white-space: nowrap; ' + look +
+        (i === 0 ? ' border-radius: 8px 0 0 8px;' : i === S.length - 1 ? ' border-radius: 0 8px 8px 0;' : '')
+    }));
+
+    // 키워드 행: y 274부터 46px × 8 · 행 안: 이름 98 · 막대 트랙 · 건수 66
+    const TOP = 274, ROW = 46, LX = 120, TRACK = 230;
+    // [키워드, 부정, 긍정] — 막대 길이는 예시 (트랙 대비 0–1)
+    const K = [
+      ['계산 대기', 0.86, 0.06], ['피팅룸 대기', 0.70, 0.07], ['위치 찾기', 0.62, 0.06], ['재고 문의', 0.50, 0.08],
+      ['직원 응대', 0.22, 0.26], ['매장 분위기', 0.05, 0.37], ['디스플레이', 0.05, 0.29], ['주차', 0.20, 0.05]
+    ];
+    const words = K.map(([name, ng, ps], i) => ({
+      name,
+      row: 'position: absolute; left: ' + LX + 'px; top: ' + (TOP + i * ROW) + 'px; width: ' + (530 - LX) + 'px; height: ' + ROW + 'px; box-sizing: border-box; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 10px',
+      nameStyle: 'width: 98px; flex-shrink: 0; font-size: 14px; white-space: nowrap; ' + (i < 4 ? 'font-weight: 800; color: #121417' : 'font-weight: 600; color: #3d4452'),
+      track: 'width: ' + TRACK + 'px; height: 16px; flex-shrink: 0; display: flex; gap: 2px',
+      neg: 'width: ' + Math.round(ng * TRACK) + 'px; height: 16px; flex-shrink: 0; border-radius: 3px 0 0 3px; background: #121417',
+      pos: 'width: ' + Math.round(ps * TRACK) + 'px; height: 16px; flex-shrink: 0; border-radius: 0 3px 3px 0; background: #1428a0'
+    }));
+    // 불만 묶음: 기다림(1–2행) · 찾기(3–4행)
+    const G = [['기다림', 0], ['찾기', 2]];
+    const groups = G.map(([name, r]) => ({
+      name,
+      line: 'position: absolute; left: 110px; top: ' + (TOP + r * ROW + 8) + 'px; width: 2px; height: ' + (ROW * 2 - 16) + 'px; border-radius: 1px; background: #121417',
+      lab: 'position: absolute; left: 64px; top: ' + (TOP + r * ROW) + 'px; width: 38px; height: ' + (ROW * 2) + 'px; display: flex; align-items: center; justify-content: flex-end; font-size: 12.5px; font-weight: 800; color: #121417; white-space: nowrap'
+    }));
+
+    const Q = [
+      ['“계산하려고 [00]분을 줄 섰어요. 셀프 계산대가 있었으면.”', '계산 대기', '셀프 결제 키오스크'],
+      ['“원하는 사이즈가 있는지 직원 찾기가 어려웠어요.”', '재고 문의', '재고 조회 사이니지'],
+      ['“2층 어디에 있는지 한참 헤맸어요.”', '위치 찾기', '층별 안내 키오스크']
+    ];
+    const quotes = Q.map(([text, kw, sol]) => ({ text, kw, sol }));
+    return { senti, words, groups, quotes };
+  }
+}
+</script>
+</body>
+</html>

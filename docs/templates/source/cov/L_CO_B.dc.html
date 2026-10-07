@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>CO-B 총소유비용 5년</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1280px; height: 720px; position: relative; overflow: hidden; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif">
+  <div style="position: absolute; left: 64px; top: 44px; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: #1428a0">10 · 비용 · 총소유비용</div>
+  <div style="position: absolute; left: 64px; top: 66px; width: 1060px; font-size: 30px; font-weight: 700; line-height: 1.3; letter-spacing: -0.02em">5년을 보면, 처음 가격의 순서가 바뀝니다</div>
+  <div style="position: absolute; left: 64px; top: 112px; width: 1060px; font-size: 15px; color: #596170">세 가지 안의 5년 총비용 · 구매 · 설치 · 라이선스 · 전기 · 유지보수 · 교체</div>
+
+  <!-- 왼쪽 8열: 누적 막대 -->
+  <div style="position: absolute; left: 64px; top: 160px; width: 760px; height: 488px; box-sizing: border-box; border-radius: 12px; background: #f5f6f8"></div>
+  <div style="position: absolute; left: 88px; top: 180px; font-size: 12.5px; font-weight: 700; color: #596170">5년 총비용 구성 · 억 원</div>
+
+  <!-- 격자 · 기준선 -->
+  <sc-for list="{{grid}}" as="g" hint-placeholder-count="4">
+    <div style="{{g}}"></div>
+  </sc-for>
+
+  <!-- 막대 -->
+  <sc-for list="{{bars}}" as="b" hint-placeholder-count="3">
+    <div style="{{b.total}}"><span style="{{b.totalNum}}">{{b.sum}}</span><span style="{{b.totalUnit}}">억</span></div>
+    <div style="{{b.stack}}">
+      <sc-for list="{{b.segs}}" as="s" hint-placeholder-count="6">
+        <div style="{{s}}"></div>
+      </sc-for>
+    </div>
+    <div style="{{b.cap}}">
+      <span style="{{b.nameStyle}}">{{b.name}}</span>
+      <span style="font-size: 12px; color: #596170; white-space: nowrap">처음 가격 <span style="font-family: Manrope, sans-serif; font-weight: 700">[0.0]</span>억</span>
+    </div>
+  </sc-for>
+
+  <!-- 범례 6개 (위 → 아래 = 막대 위 → 아래) -->
+  <div style="position: absolute; left: 592px; top: 236px; width: 208px; display: flex; flex-direction: column; gap: 14px">
+    <span style="font-size: 12px; font-weight: 700; color: #8a91a0">구간 · 삼성 / 경쟁</span>
+    <sc-for list="{{legend}}" as="l" hint-placeholder-count="6">
+      <div style="display: flex; align-items: flex-start; gap: 10px">
+        <div style="display: flex; gap: 3px; padding-top: 3px; flex-shrink: 0"><span style="{{l.blue}}"></span><span style="{{l.gray}}"></span></div>
+        <div style="display: flex; flex-direction: column; gap: 1px">
+          <span style="font-size: 13px; font-weight: 700">{{l.name}}</span>
+          <span style="font-size: 11.5px; color: #8a91a0">{{l.sub}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 오른쪽 4열: 연도별 누적 표 -->
+  <div style="position: absolute; left: 848px; top: 160px; width: 368px; display: flex; align-items: baseline; justify-content: space-between">
+    <span style="font-size: 15px; font-weight: 800">연도별 누적</span>
+    <span style="font-size: 12px; color: #8a91a0">단위 · 억 원</span>
+  </div>
+  <div style="position: absolute; left: 848px; top: 188px; width: 368px">
+    <div style="display: grid; grid-template-columns: 116px repeat(3, minmax(0, 1fr)); height: 34px; align-items: center; border-bottom: 2px solid #121417; font-size: 12.5px; font-weight: 700; color: #596170">
+      <span style="padding-left: 4px">연차</span>
+      <span style="text-align: center; color: #1428a0">삼성</span>
+      <span style="text-align: center">경쟁사 C</span>
+      <span style="text-align: center">경쟁사 A</span>
+    </div>
+    <sc-for list="{{years}}" as="y" hint-placeholder-count="5">
+      <div style="{{y.st}}">
+        <span style="{{y.labStyle}}">{{y.lab}}</span>
+        <span style="{{y.sStyle}}">[0.0]</span>
+        <span style="{{y.vStyle}}">[0.0]</span>
+        <span style="{{y.vStyle}}">[0.0]</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <!-- 결론 카드 -->
+  <div style="position: absolute; left: 848px; top: 464px; width: 368px; height: 184px; box-sizing: border-box; border-radius: 14px; background: #1428a0; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; gap: 2px">
+    <span style="font-size: 14px; font-weight: 700; color: #ffffff">5년 총비용</span>
+    <div style="display: flex; align-items: baseline; gap: 10px">
+      <span style="font-family: Manrope, sans-serif; font-size: 52px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: #ffffff">−[00]%</span>
+      <span style="font-size: 15px; font-weight: 700; color: #ffffff">경쟁 안 대비</span>
+    </div>
+    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.24); display: flex; gap: 16px; font-size: 12.5px; color: #c8d3ff">
+      <span>경쟁사 C 안 대비 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #ffffff">−[00]%</span></span>
+      <span>경쟁사 A 안 대비 <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #ffffff">−[00]%</span></span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 64px; top: 668px; width: 1152px; height: 1px; background: #e2e5ea"></div>
+  <div style="position: absolute; left: 64px; top: 680px; display: flex; align-items: center; gap: 12px; font-size: 11px; color: #8a91a0"><span style="width: 72px; height: 20px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 9px">고객사 로고</span><span>A 커피 프랜차이즈 · 디지털 메뉴보드 제안 · 320개 매장 · 5년 · 막대 길이는 예시 · 산출 가정은 부록 p.[00]</span></div>
+  <div style="position: absolute; right: 64px; top: 683px; font-size: 11px; color: #8a91a0; font-family: Manrope, sans-serif">CONFIDENTIAL · 35</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // ── 누적 막대: 기준선 y 568, 1 단위 = 3.3px (값은 예시) ──
+    const BASE = 568, U = 3.3, BW = 104, GAP = 2;
+    // 구간 순서(아래 → 위): 초기 구매 · 설치 · 라이선스/구독 · 전기 · 유지보수 · 교체/폐기
+    const SEG = [
+      ['초기 구매', '화면 · 플레이어'],
+      ['설치', '시공 · 배선'],
+      ['라이선스 · 구독', 'CMS · 서버'],
+      ['전기', '5년 전력 사용'],
+      ['유지보수', '출장 · 부품'],
+      ['교체 · 폐기', '노후 화면 교체']
+    ];
+    const BLUE = ['#1428a0', '#3347b2', '#5669c5', '#7d8ed7', '#a3b0e5', '#c8d0f1'];
+    const GRAY = ['#2e333d', '#4b525f', '#6b7280', '#8d94a1', '#afb5c0', '#cfd3da'];
+    const B = [
+      { name: '삼성 안', blue: true, cx: 196, v: [30, 8, 10, 12, 8, 4] },
+      { name: '경쟁사 C 안', blue: false, cx: 340, v: [6, 7, 22, 18, 14, 30] },
+      { name: '경쟁사 A 안', blue: false, cx: 484, v: [32, 10, 14, 15, 12, 6] }
+    ];
+    const bars = B.map((b) => {
+      const sum = b.v.reduce((a, x) => a + x, 0);
+      const h = Math.round(sum * U);
+      const left = b.cx - BW / 2;
+      const pal = b.blue ? BLUE : GRAY;
+      // 위에서 아래로 그리므로 역순
+      const segs = b.v.map((x, i) => ({ x, c: pal[i], i })).reverse().map((s, k) =>
+        'height: ' + Math.max(2, Math.round(s.x * U) - GAP) + 'px; flex-shrink: 0; background: ' + s.c + '; ' +
+        (k === 0 ? 'border-radius: 4px 4px 0 0; ' : '') + 'margin-top: ' + (k === 0 ? 0 : GAP) + 'px');
+      return {
+        name: b.name, sum: '[0.0]', segs,
+        total: 'position: absolute; left: ' + (left - 20) + 'px; top: ' + (BASE - h - 34) + 'px; width: ' + (BW + 40) + 'px; display: flex; align-items: baseline; justify-content: center; gap: 2px; color: ' + (b.blue ? '#1428a0' : '#3d4452'),
+        totalNum: 'font-family: Manrope, sans-serif; font-size: ' + (b.blue ? 22 : 18) + 'px; font-weight: 800; letter-spacing: -0.02em',
+        totalUnit: 'font-size: ' + (b.blue ? 14 : 13) + 'px; font-weight: 700',
+        stack: 'position: absolute; left: ' + left + 'px; top: ' + (BASE - h) + 'px; width: ' + BW + 'px; height: ' + h + 'px; display: flex; flex-direction: column; overflow: hidden',
+        cap: 'position: absolute; left: ' + (b.cx - 80) + 'px; top: ' + (BASE + 12) + 'px; width: 160px; display: flex; flex-direction: column; align-items: center; gap: 2px',
+        nameStyle: 'font-size: 14.5px; font-weight: 800; white-space: nowrap; color: ' + (b.blue ? '#1428a0' : '#121417')
+      };
+    });
+    const grid = [
+      'position: absolute; left: 112px; top: ' + BASE + 'px; width: 456px; height: 2px; background: #b8bec8'
+    ].concat([100, 200, 300].map((dy) => 'position: absolute; left: 112px; top: ' + (BASE - dy) + 'px; width: 456px; height: 1px; background: #e2e5ea'));
+    const sw = (c) => 'width: 12px; height: 12px; border-radius: 3px; background: ' + c;
+    const legend = SEG.map(([name, sub], i) => ({ name, sub, blue: sw(BLUE[i]), gray: sw(GRAY[i]) })).reverse();
+
+    // ── 연도별 누적 표: 3년차 역전 강조 ──
+    const FLIP = 3;
+    const years = [1, 2, 3, 4, 5].map((y) => {
+      const hot = y === FLIP;
+      return {
+        lab: hot ? '3년차에 역전' : y + '년차',
+        st: 'display: grid; grid-template-columns: 116px repeat(3, minmax(0, 1fr)); height: 44px; align-items: center; ' +
+          (hot ? 'background: #eaeefb; border-radius: 8px; border-bottom: 1px solid #ffffff;' : 'border-bottom: 1px solid #e2e5ea;'),
+        labStyle: hot
+          ? 'justify-self: start; margin-left: 4px; height: 24px; padding: 0 10px; border-radius: 999px; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap'
+          : 'padding-left: 4px; font-family: Manrope, \'Noto Sans KR\', sans-serif; font-size: 14px; font-weight: 700; color: #3d4452',
+        sStyle: 'text-align: center; font-family: Manrope, sans-serif; font-size: 14px; font-weight: 800; color: #1428a0',
+        vStyle: 'text-align: center; font-family: Manrope, sans-serif; font-size: 14px; color: ' + (hot ? '#121417; font-weight: 800' : '#596170; font-weight: 600')
+      };
+    });
+    return { bars, grid, legend, years };
+  }
+}
+</script>
+</body>
+</html>
