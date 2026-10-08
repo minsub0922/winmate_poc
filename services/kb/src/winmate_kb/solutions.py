@@ -97,6 +97,38 @@ def _aliases(sol: dict[str, Any]) -> list[str]:
     return out
 
 
+def _text_aliases(sol: dict[str, Any]) -> list[str]:
+    """글자 일치용 이름 — 짧은 영문(2~4자, 예 DeX)은 단어 경계로만 쓰도록 길이 3 이상만 LIKE 에 넘긴다."""
+    out = []
+    for a in _aliases(sol) + list(sol.get("text_aliases") or []):
+        if a and len(a.strip()) >= 3 and a not in out:
+            out.append(a.strip())
+    return out
+
+
+def _word_ok(alias: str, text: str) -> bool:
+    if re.fullmatch(r"[A-Za-z.]{2,4}", alias):
+        return bool(re.search(r"(?<![A-Za-z])" + re.escape(alias) + r"(?![A-Za-z])", text or ""))
+    return alias.lower() in (text or "").lower()
+
+
+def _text_match_images(sol: dict[str, Any], exclude: set[str], limit: int = 12) -> list[str]:
+    """KB 에 솔루션 id 가 없을 때 — alt · 캡션 · 섹션 글에 이름이 나오는 이미지(등급 A · A?C · C, 아이콘 제외)."""
+    I = idx()
+    hits: list[str] = []
+    for a in _text_aliases(sol):
+        for r in q("SELECT asset_id, text FROM image_doc WHERE text LIKE ? LIMIT 400", (f"%{a}%",)):
+            aid = r["asset_id"]
+            asset = I.assets.get(aid)
+            if not asset or aid in exclude or aid in hits or asset["grade_hint"] not in ("A", "A?C", "C"):
+                continue
+            if _word_ok(a, r["text"]):
+                hits.append(aid)
+    pri = {"A": 0, "A?C": 1, "C": 2}
+    hits.sort(key=lambda a: pri.get(I.assets[a]["grade_hint"], 9))
+    return hits[:limit]
+
+
 def search(text: str | None, industry: str | None) -> list[dict[str, Any]]:
     sols = list(catalog())
     if industry:
@@ -163,10 +195,29 @@ def _supported_devices(sol: dict[str, Any]) -> dict[str, Any] | None:
     return {"label": label, "example": example, "family_ids": fams}
 
 
+def _text_messages(sol: dict[str, Any], limit: int = 12) -> list[dict[str, Any]]:
+    """KB 에 솔루션 id 가 없을 때 — 원문 메시지 중 이름이 나오는 문장(about 이 다른 대상이어도), basis=text_match."""
+    out: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for a in _text_aliases(sol):
+        rows = q("""SELECT v.text, v.level, v.claim_flag, d.url FROM value_prop v LEFT JOIN occurrence o ON o.id=v.source_occurrence_id
+                    LEFT JOIN source_document d ON d.id=o.document_id WHERE v.text LIKE ? AND v.locale='ko-KR' LIMIT 200""", (f"%{a}%",))
+        for r in rows:
+            t = r["text"]
+            if t in seen or not _word_ok(a, t):
+                continue
+            seen.add(t)
+            out.append({"level": r["level"] or "key_message", "text": t, "children": [], "source_url": r["url"],
+                        "claim_flag": bool(r["claim_flag"]), "basis": "text_match"})
+    lv = {"tagline": 0, "key_message": 1, "usp": 2, "proof_point": 3}
+    out.sort(key=lambda m: lv.get(m["level"], 9))
+    return out[:limit]
+
+
 def _messages(sol: dict[str, Any]) -> list[dict[str, Any]]:
     kb_ids = sol.get("kb_ids") or []
     if not kb_ids:
-        return []
+        return _text_messages(sol)
     tree = kb().E1(about=[("solution", k) for k in kb_ids])["result"].get("tree") or {}
     out = []
     for t in tree.get("taglines") or []:
@@ -216,7 +267,15 @@ def case_ids(sol: dict[str, Any]) -> tuple[list[str], list[str]]:
             if (kind == "re" and p.search(t)) or (kind == "norm" and p in nt):
                 by_title.add(did)
                 break
-    union = (by_edge | by_title) & body
+    by_text: set[str] = set()
+    if not kb_ids:                       # KB 에 솔루션 id 가 없으면 사례 본문 글자로(G-SOL-1 보완)
+        doc_dep = {I.deps[d]["document_id"]: d for d in body if I.deps[d]["document_id"]}
+        for a in _text_aliases(sol):
+            for r in q("SELECT DISTINCT document_id, text FROM text_chunk WHERE text LIKE ?", (f"%{a}%",)):
+                did = doc_dep.get(r["document_id"])
+                if did and _word_ok(a, r["text"]):
+                    by_text.add(did)
+    union = (by_edge | by_title | by_text) & body
 
     def by_date(ids: set[str]) -> list[str]:
         return sorted(ids, key=lambda d: I.deps[d]["date"] or "", reverse=True)
@@ -260,8 +319,10 @@ def detail(ident: str) -> dict[str, Any]:
     }
 
 
-def images(sol: dict[str, Any], case_limit: int = 4) -> dict[str, Any]:
-    """official = KB 의 솔루션 페이지 이미지(아이콘 E 제외 — 소개 페이지 이미지는 갭 G-SOL-3), case = 활용 사례 대표 사진 1장씩(최대 4)."""
+def images(sol: dict[str, Any], case_limit: int = 4, context_limit: int = 12) -> dict[str, Any]:
+    """official = KB 의 솔루션 페이지 이미지(아이콘 E 제외 — 소개 페이지 이미지는 갭 G-SOL-3),
+    context = 다른 공식 페이지에서 이 솔루션이 나오는 이미지(묘사 · 추정 묘사 · 이름 일치, 최대 12),
+    case = 활용 사례 대표 사진 1장씩(최대 4)."""
     I = idx()
     kb_ids = sol.get("kb_ids") or []
     groups = []
@@ -286,6 +347,31 @@ def images(sol: dict[str, Any], case_limit: int = 4) -> dict[str, Any]:
                 official.append(m)
     groups.append({"key": "official", "label": "공식 소개 이미지",
                    "source_label": "samsung.com " + (" · ".join(t for t in titles if t) or sol["name"]), "items": official})
+    # 공간 · 업종 페이지에서 이 솔루션이 나오는 이미지(묘사 · 추정 묘사, KB id 가 없으면 글자 일치) — 사례 사진은 아래 묶음
+    ctx_ids: list[str] = []
+    have = {x["id"] for x in official}
+    if kb_ids:
+        ph = ",".join("?" * len(kb_ids))
+        rows = q(f"""SELECT asset_id a FROM depicts WHERE target_kind='solution' AND target_id IN ({ph})
+                     UNION SELECT src_id a FROM kg_edge WHERE rel='DEPICTS_PROBABLE' AND dst_kind='solution' AND dst_id IN ({ph})""",
+                 list(kb_ids) + list(kb_ids))
+        pri = {"A": 0, "A?C": 1, "C": 2, "D": 3}
+        cand = [r["a"] for r in rows if r["a"] in I.assets and r["a"] not in have and I.assets[r["a"]]["grade_hint"] in pri
+                and I.assets[r["a"]]["rights"] != "customer_case"]
+        cand.sort(key=lambda a: pri.get(I.assets[a]["grade_hint"], 9))
+        ctx_ids = cand
+    if len(ctx_ids) < 4:
+        ctx_ids += [a for a in _text_match_images(sol, have | set(ctx_ids)) if I.assets[a]["rights"] != "customer_case"]
+    ctx_items = []
+    for aid in dict.fromkeys(ctx_ids):
+        m = imagecards.meta(aid)
+        if m:
+            ctx_items.append(m)
+        if len(ctx_items) >= context_limit:
+            break
+    if ctx_items:
+        groups.append({"key": "context", "label": "공간 · 업종 페이지 이미지",
+                       "source_label": "samsung.com 공간 · 업종 · 제품 페이지" + ("" if kb_ids else " · 이름 일치(확인 필요)"), "items": ctx_items})
     title_ids, body_ids = case_ids(sol)
     case_items = []
     for did in title_ids + body_ids:
@@ -298,7 +384,7 @@ def images(sol: dict[str, Any], case_limit: int = 4) -> dict[str, Any]:
         if len(case_items) >= case_limit:
             break
     groups.append({"key": "case", "label": "도입사례 사진", "source_label": "samsung.com 고객 도입사례", "items": case_items})
-    return {"groups": groups, "total": len(official) + len(case_items)}
+    return {"groups": groups, "total": sum(len(g["items"]) for g in groups)}
 
 
 def cases_out(ident: str) -> dict[str, Any]:

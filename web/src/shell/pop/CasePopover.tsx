@@ -11,6 +11,7 @@ import { useShellRuntime } from '../runtime';
 import { useShellUrl } from '../urlState';
 import {
   ADD_FAIL_TEXT, AddAllButton, DragHint, NoTaskFooter, PopoverFrame, PopSearch, useAddRunner, useAddState, useDebounced, usePopMemory, usePopoverEscape, type TrayEntry,
+  errorReason,
 } from './common';
 
 type Period = 'all' | '1y' | '3y' | '5y';
@@ -146,7 +147,7 @@ export function CasePopover({ onClose, hidden }: { onClose: () => void; hidden?:
   let body: ReactNode;
   if (!enabled) body = <div className="sh-state">고객 · 업종 · 용도로 검색해 보세요.</div>;
   else if (search.isError && !search.data) {
-    body = <div className="sh-state" role="alert"><span>도입사례를 불러오지 못했어요.<br /><Button h={28} onClick={() => search.refetch()} style={{ marginTop: 8 }}>다시 시도</Button></span></div>;
+    body = <div className="sh-state" role="alert"><span>도입사례를 불러오지 못했어요.<br /><span className="sh-state__why">{errorReason(search.error)}</span><Button h={28} onClick={() => search.refetch()} style={{ marginTop: 8 }}>다시 시도</Button></span></div>;
   } else if (search.isLoading && !search.data) body = [0, 1, 2].map((i) => <Skeleton key={i} h={150} r={10} />);
   else if (!items.length) body = <div className="sh-state">조건에 맞는 도입사례가 없어요. 필터를 줄여 보세요.</div>;
   else {

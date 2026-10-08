@@ -292,6 +292,26 @@ return <>{/* 화면 */}{dialog}</>;
 <ChatLine body={<ShotGrid shots={shots} />}>공간과 제품을 넣어 시안 4장을 만들었어요.</ChatLine>
 ```
 
+## 6-1. 콘텐츠 흐름 화면 (`flow.tsx` · `ProductPicker.tsx`, 2026-10-08 · `docs/scenarios/11-content-flow.md`)
+
+새 흐름(보드 webapp1 v58 — SBBar · VP2 · SC2 · Done · ProdPicker)의 공통 부품. 보드 px 를 그대로 옮겼다.
+
+| 부품 | props | 설명 |
+|---|---|---|
+| `LinkedStoryboardBar` | `chips: { id, name, done[], current }[]`, `note?`, `emptyText?` | 화면 위 연결된 Storyboard 바(높이 52 · 진행 칸 RQ→DSS→MI·CA·VP·SP·SC) |
+| `FlowScreen` | `bar?`, `pad = '18px 40px'`, `gap = 12`, `className?` | 바 + 높이를 채우는 작업 영역(`.wm-flow`, 본문 열 1180 안) |
+| `FlowHead` | `title`, `desc?`, `actions?` | 작업 머리(제목 · 설명 13px · 오른쪽 버튼) |
+| `AiButton` | `onClick`, `busy?`, `disabled?`, `size = 38` | AI 추가기능 버튼(파란 테두리 + ✦) |
+| `AiBar` | `children`, `actionLabel = '모두 수락'`, `onAction?` | 점선 결과 안내 줄(`role=status`) |
+| `ByTag` · `KindTag` | `by`(manual · ai-accepted · ai-pending · ai-web) · `kind` | 출처 · 종류 태그 |
+| `FlowPanel` | `dashed?` | 흰 패널(r 16). `dashed` 는 AI 점선 |
+| `FlowFooter` | `back: { to, label }`, `summary`, `summaryTone?`, `primary` | 하단 줄(목록 · 요약 · 저장 48px) |
+| `FlowDone` | `title`, `sbName`, `stages`, `md`, `stageKey`, `stage`, `follow?` … | 완료 화면 — 요약본 추가분 + 접힌 JSON(`foldJson`) + 전체 JSON 팝업 |
+| `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
+
+**폭 규칙**: 셸이 `.sh-content` 의 직계 자식을 `--wm-main-w`(1180px) 가운데 열로 맞춘다. 화면은 자기 max-width 를 주지 않는다.
+고정 칸은 보드 px, 나머지는 `minmax(0, 1fr)`. 작업 화면은 `FlowScreen` 으로 높이를 채우고 패널 안에서만 스크롤한다.
+
 ## 7. 끌어서 추가 (`dnd.tsx`)
 
 - 끄는 것: 셸 팝오버 항목(제품 · 솔루션 · 이미지 · 사례)과 사이드바 작업 항목. 셸이 붙인다.

@@ -1094,6 +1094,139 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/space-sets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Space Sets */
+        get: operations["list_space_sets"];
+        put?: never;
+        /**
+         * Create Space Set
+         * @description 새 묶음. spaces(DSS 공간 · 제품)를 주거나, context_text(요구 문장)로 KB 에서 공간별 제품을 찾는다.
+         */
+        post: operations["create_space_set"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Space Set */
+        get: operations["get_space_set"];
+        /**
+         * Put Space Set
+         * @description 공간 · 제품 · 시나리오 · 장면 · 항목 전체를 고쳐 저장(자동 저장). 제품이 빈 공간 · 시나리오는 issues 로 알려 준다(저장은 됨).
+         */
+        put: operations["put_space_set"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}:finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish Space Set
+         * @description 저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). stages.sc 와 요약 md.
+         */
+        post: operations["finish_space_set"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}/spaces/{space_id}:suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suggest Scenarios
+         * @description AI 시나리오 3안(이 공간) — 후보는 candidates 에 점선으로, 수락해야 시나리오가 된다.
+         */
+        post: operations["suggest_scenarios"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}/spaces/{space_id}/candidates/{cid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Drop Candidate */
+        delete: operations["drop_candidate"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}/spaces/{space_id}/candidates/{cid}:accept": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept Candidate */
+        post: operations["accept_candidate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}/stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Space Set Stage */
+        get: operations["get_space_set_stage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2937,6 +3070,278 @@ export interface components {
             related_products: components["schemas"]["RelatedProduct"][];
             /** Solution Picks */
             solution_picks: components["schemas"]["SolutionPick"][];
+        };
+        /** SSCandidate */
+        SSCandidate: {
+            /** Basis */
+            basis?: string | null;
+            /**
+             * By
+             * @description manual · ai-candidate-A … (수락한 AI 후보)
+             * @default manual
+             */
+            by: string;
+            /**
+             * Cid
+             * @enum {string}
+             */
+            cid: "A" | "B" | "C";
+            /**
+             * Fields
+             * @description 자유 항목(시간대 · 기대 효과 · …)
+             */
+            fields?: components["schemas"]["SSFieldKV"][];
+            /** Id */
+            id: string;
+            /**
+             * Mode
+             * @default llm
+             * @enum {string}
+             */
+            mode: "llm" | "kb_only";
+            /**
+             * Products
+             * @description 이 시나리오에 쓰는 제품 · 솔루션 이름(공간 제품 중에서, 하나 이상)
+             */
+            products?: string[];
+            /** Steps */
+            steps?: components["schemas"]["SSStep"][];
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * User
+             * @default
+             */
+            user: string;
+        };
+        /** SSCounts */
+        SSCounts: {
+            /** Scenarios */
+            scenarios: number;
+            /** Spaces */
+            spaces: number;
+            /** Spaces Without Product */
+            spaces_without_product: number;
+            /** Spaces Without Scenario */
+            spaces_without_scenario: number;
+        };
+        /** SSCreate */
+        SSCreate: {
+            /** Context Text */
+            context_text?: string | null;
+            /** Sb Id */
+            sb_id?: string | null;
+            /**
+             * Spaces
+             * @description DSS 공간 · 제품. 없으면 context_text 로 KB S1 에서 공간별 제품을 찾는다
+             */
+            spaces?: components["schemas"]["SSSpaceIn"][] | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** SSDoc */
+        SSDoc: {
+            /**
+             * Code
+             * @description 화면 · flow.json 에 쓰는 짧은 번호(SC-01 …)
+             */
+            code?: string | null;
+            /** Context Text */
+            context_text?: string | null;
+            counts: components["schemas"]["SSCounts"];
+            /** Created At */
+            created_at: string;
+            /** Id */
+            id: string;
+            /**
+             * Issues
+             * @description 저장을 막는 것(공간 · 시나리오에 제품 · 솔루션 없음)
+             */
+            issues?: components["schemas"]["SSIssue"][];
+            /** Sb Id */
+            sb_id?: string | null;
+            /** Spaces */
+            spaces: components["schemas"]["SSSpace"][];
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /** Version */
+            version: number;
+        };
+        /** SSFieldKV */
+        SSFieldKV: {
+            /** K */
+            k: string;
+            /**
+             * V
+             * @default
+             */
+            v: string;
+        };
+        /** SSIssue */
+        SSIssue: {
+            /**
+             * Code
+             * @enum {string}
+             */
+            code: "SPACE_WITHOUT_PRODUCT" | "SCENARIO_WITHOUT_PRODUCT";
+            /** Message */
+            message: string;
+            /** Scenario Id */
+            scenario_id?: string | null;
+            /** Space Id */
+            space_id: string;
+        };
+        /** SSList */
+        SSList: {
+            /** Items */
+            items: components["schemas"]["SSListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /** SSListItem */
+        SSListItem: {
+            /** Code */
+            code?: string | null;
+            counts: components["schemas"]["SSCounts"];
+            /** Id */
+            id: string;
+            /** Sb Id */
+            sb_id?: string | null;
+            /** Status */
+            status: string;
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+        };
+        /** SSProduct */
+        SSProduct: {
+            /**
+             * Kind
+             * @default product
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /** Name */
+            name: string;
+            /**
+             * Ref
+             * @description KB 참조 kb:family:… · kb:solution:…
+             */
+            ref?: string | null;
+        };
+        /** SSPut */
+        SSPut: {
+            /**
+             * Expected Version
+             * @description 낙관적 잠금(지금 판). 다르면 409
+             */
+            expected_version?: number | null;
+            /**
+             * Spaces
+             * @description 공간 · 시나리오 · 장면 전체(화면이 고친 그대로). candidates 는 서버 목록을 유지하고 같은 id·cid 의 고친 내용만 반영
+             */
+            spaces: components["schemas"]["SSSpace"][];
+        };
+        /** SSScenario */
+        SSScenario: {
+            /** Basis */
+            basis?: string | null;
+            /**
+             * By
+             * @description manual · ai-candidate-A … (수락한 AI 후보)
+             * @default manual
+             */
+            by: string;
+            /**
+             * Fields
+             * @description 자유 항목(시간대 · 기대 효과 · …)
+             */
+            fields?: components["schemas"]["SSFieldKV"][];
+            /** Id */
+            id: string;
+            /**
+             * Products
+             * @description 이 시나리오에 쓰는 제품 · 솔루션 이름(공간 제품 중에서, 하나 이상)
+             */
+            products?: string[];
+            /** Steps */
+            steps?: components["schemas"]["SSStep"][];
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * User
+             * @default
+             */
+            user: string;
+        };
+        /** SSSpace */
+        SSSpace: {
+            /**
+             * Candidates
+             * @description AI 3안(수락 전, 점선)
+             */
+            candidates?: components["schemas"]["SSCandidate"][];
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Products */
+            products?: components["schemas"]["SSProduct"][];
+            /** Scenarios */
+            scenarios?: components["schemas"]["SSScenario"][];
+        };
+        /** SSSpaceIn */
+        SSSpaceIn: {
+            /** Name */
+            name: string;
+            /** Products */
+            products?: components["schemas"]["SSProduct"][];
+        };
+        /** SSStageOut */
+        SSStageOut: {
+            /** Stage */
+            stage: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+        };
+        /** SSStep */
+        SSStep: {
+            /**
+             * Product
+             * @description 이 장면에 쓰인 제품 · 솔루션 이름(시나리오 제품 중 하나)
+             */
+            product?: string | null;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /** SSSuggestOut */
+        SSSuggestOut: {
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "llm" | "kb_only";
+            set: components["schemas"]["SSDoc"];
         };
         /** Stage */
         Stage: {
@@ -5913,6 +6318,378 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SearchResult"];
+                };
+            };
+        };
+    };
+    list_space_sets: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSList"];
+                };
+            };
+        };
+    };
+    create_space_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SSCreate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
+                };
+            };
+        };
+    };
+    get_space_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
+                };
+            };
+        };
+    };
+    put_space_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SSPut"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
+                };
+            };
+        };
+    };
+    finish_space_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSStageOut"];
+                };
+            };
+        };
+    };
+    suggest_scenarios: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+                space_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSSuggestOut"];
+                };
+            };
+        };
+    };
+    drop_candidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                cid: string;
+                set_id: string;
+                space_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
+                };
+            };
+        };
+    };
+    accept_candidate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                cid: string;
+                set_id: string;
+                space_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
+                };
+            };
+        };
+    };
+    get_space_set_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSStageOut"];
                 };
             };
         };

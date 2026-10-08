@@ -92,7 +92,11 @@ export default function ListPage() {
             <h1 className="sc-list__title">공간 시나리오</h1>
             <div className="sc-list__desc">고객 공간의 하루 · 동선을 장면으로 풀고, 장면마다 삼성 제품 · 솔루션 활용을 넣습니다.</div>
           </div>
-          <Link to={route.newType()} className="sc-btn sc-btn--primary" data-testid="sc0-new"><Ico d={P.plus} size={16} sw={2.4} />새 시나리오</Link>
+          <span style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+            {/* 새 흐름(2026-10-08 보드 webapp1 SC2) — 공간 → 시나리오 → 장면 */}
+            <Link to="/scenario/spaces/new" className="sc-btn" data-testid="sc0-spaces-new">공간 → 시나리오 → 장면</Link>
+            <Link to={route.newType()} className="sc-btn sc-btn--primary" data-testid="sc0-new"><Ico d={P.plus} size={16} sw={2.4} />새 시나리오</Link>
+          </span>
         </div>
         <StartCards />
         {alert && (

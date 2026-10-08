@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from winmate_common.errors import ApiError, bad_request, not_found
 
 from . import cases as CS
-from . import catalog, images, imagecards, segments, solutions, specs
+from . import catalog, imagerank, images, imagecards, segments, solutions, specs
 from . import schemas as S
 from .engine import engine, kb, q
 from .index import idx
@@ -250,7 +250,7 @@ def images_search(q_: str | None = Query(None, alias="q"), source: Literal["all"
     allowed = {g.strip() for g in (grades or "A,A?C,C").split(",") if g.strip()}
     rows: list[tuple[str, str | None]] = []
     if q_ and q_.strip():
-        res = kb().image_search(q_.strip(), limit=400)["result"]["images"]
+        res = imagerank.ranked(q_.strip(), limit=400)
         rows = [(r["id"], r.get("page_type")) for r in res]
         prefer_pt = True
     else:

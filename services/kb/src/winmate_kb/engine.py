@@ -36,6 +36,10 @@ class _Shared:
         self._names = None
         self._e3 = None
         self._e2: dict[Any, Any] = {}
+        # 검색 방식 상태(키워드만으로 도는 중인지) — /healthz · kb_doctor
+        self.vector_failed = False
+        self.vector_error: str | None = None
+        self.fts_error: str | None = None
         # _cat_level 은 query.py 가 hasattr 로 검사하므로 처음엔 속성이 없어야 한다
 
 
@@ -80,18 +84,79 @@ def _make_thread_kb(Q: ModuleType) -> type:
             self.c.row_factory = sqlite3.Row
 
         # ── 캐시 만들기는 잠금 안에서 한 번만 ──
+        # 벡터 모델(LSA joblib)을 못 읽으면(파일 없음 · 깨짐 · numpy/scikit-learn 판 차이) 예외를 올리지 않고
+        # None 을 돌려 키워드 검색만으로 돈다. 이유는 `_shared.vector_error` 에 남겨 /healthz · kb_doctor 가 보여 준다.
         def lsa(self):  # type: ignore[override]
+            if self._shared.vector_failed:
+                return None
             if self._shared._lsa is None:
                 with self._shared.lock:
-                    return Base.lsa(self)
+                    if self._shared.vector_failed:
+                        return None
+                    try:
+                        m = Base.lsa(self)
+                    except Exception as exc:  # noqa: BLE001
+                        self._shared.vector_failed = True
+                        self._shared.vector_error = f"{type(exc).__name__}: {exc}"[:300]
+                        log.error("벡터 모델을 읽지 못해 키워드 검색으로 돈다: %s", self._shared.vector_error)
+                        return None
+                    if m is None and not self._shared.vector_error:
+                        self._shared.vector_error = "models/*.joblib 없음"
+                    return m
             return self._shared._lsa
+
+        def embed(self, texts):  # type: ignore[override]
+            try:
+                return Base.embed(self, texts)
+            except Exception as exc:  # noqa: BLE001 — 모델은 읽혔지만 변환이 깨질 때(판 차이)
+                with self._shared.lock:
+                    self._shared.vector_failed = True
+                    self._shared.vector_error = f"embed {type(exc).__name__}: {exc}"[:300]
+                log.error("문장 벡터를 만들지 못해 키워드 검색으로 돈다: %s", self._shared.vector_error)
+                return None
 
         def vectors(self, space):  # type: ignore[override]
             v = self._shared._vec
             if v is None or space not in v:
                 with self._shared.lock:
-                    return Base.vectors(self, space)
+                    try:
+                        return Base.vectors(self, space)
+                    except Exception as exc:  # noqa: BLE001 — vec_index 가 없거나 차원이 다르면 벡터 없이
+                        self._shared.vector_error = f"vec_index[{space}] {type(exc).__name__}: {exc}"[:300]
+                        log.error("벡터 색인을 읽지 못했다: %s", self._shared.vector_error)
+                        if self._shared._vec is None:
+                            self._shared._vec = {}
+                        self._shared._vec[space] = ([], None)
+                        return self._shared._vec[space]
             return v[space]
+
+        def _kw_entity_sim(self, text, k):
+            """벡터 없이 엔티티 유사도를 흉내 — 토큰 포괄도(entity_doc 이름 · 본문 부분 일치). D1 · A2 가 0건이 되지 않게."""
+            toks = self.query_tokens(text or "")
+            if not toks:
+                return []
+            cnt: collections.Counter = collections.Counter()
+            for t in toks:
+                for (ref,) in self.c.execute("SELECT kind || ':' || id FROM entity_doc WHERE (name || ' ' || text) LIKE ? LIMIT 3000", (f"%{t}%",)):
+                    cnt[ref] += 1
+            return [("entity:" + ref, round(0.8 * n / len(toks), 4)) for ref, n in cnt.most_common(k)]
+
+        def vec_search(self, text, space, k=20):  # type: ignore[override]
+            refs, M = self.vectors(space)
+            z = self.embed([text])
+            if z is None or M is None or not len(refs):
+                return self._kw_entity_sim(text, k) if space == "entity" else []
+            if M.shape[1] != z.shape[1]:            # 모델과 색인을 다른 빌드에서 가져왔을 때
+                self._shared.vector_error = f"차원 불일치: 색인 {M.shape[1]} · 모델 {z.shape[1]} (index_kb.py 를 다시 돌린다)"
+                return []
+            return Base.vec_search(self, text, space, k)
+
+        def kw_search(self, text, table="chunk_fts", col="chunk_id", k=20):  # type: ignore[override]
+            try:
+                return Base.kw_search(self, text, table, col, k)
+            except sqlite3.Error as exc:            # FTS5 없는 sqlite · 깨진 FTS 표 → 부분 일치(like_search)만
+                self._shared.fts_error = f"{table} {type(exc).__name__}: {exc}"[:300]
+                return []
 
         def alias_index(self):  # type: ignore[override]
             if self._shared._alias is None:

@@ -2,7 +2,7 @@
  * 솔루션 상세 시트(00-shell §5.9, 보드 SolutionDetail · HomeSolutionDetail · HomeSolutionImages · HomeSolutionCases) — 1200×828.
  * `?detail=solution:<id>&tab=overview|images|cases&img=img_…`
  */
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { Badge, Button, CaseRow, Icon, Img, InfoBox, KeyChip, MiniChip, Skeleton, displayUrl, formatDate, josa } from '@/ui';
 import { imageAlt, imageSrc, ref, useSolution, useSolutionCases, useSolutionImages } from '../kb';
 import type { KbImageMeta, KbSolutionDetail } from '../kbTypes';
@@ -13,20 +13,36 @@ type Tab = 'overview' | 'images' | 'cases';
 const TABS: Tab[] = ['overview', 'images', 'cases'];
 const CASE_LIST_URL = 'https://www.samsung.com/sec/business/insights/case-study/';
 
+type Msg = KbSolutionDetail['messages'][number] & { basis?: string | null };
+
+/** KB 원문 메시지(프로필이 있어도 보여 준다 — 2026-10-08: 프로필 있는 MagicINFO 는 메시지 14개가 화면에 없었다). */
+function MessageList({ msgs, max }: { msgs: Msg[]; max: number }) {
+  const [all, setAll] = useState(false);
+  const shown = all ? msgs : msgs.slice(0, max);
+  const textMatch = msgs.some((m) => m.basis === 'text_match');
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }} data-solution-messages="">
+      <div className="sh-subhead"><b>삼성 공식 메시지 {msgs.length}</b><span className="sh-note" style={{ marginLeft: 6 }}>{textMatch ? '이름이 나오는 원문 문장 · 확인 필요' : '원문 그대로'}</span></div>
+      {shown.map((m, i) => (
+        <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 4 }} data-message-level={m.level}>
+          <span style={{ fontSize: 13.5, lineHeight: 1.6, color: 'var(--wm-text-2)', fontWeight: 600 }}>{m.text}</span>
+          {(m.children ?? []).map((c, j) => <span key={j} style={{ fontSize: 12.5, color: 'var(--wm-text-2)', paddingLeft: 12 }}>· {typeof c === 'string' ? c : (c as { text?: string }).text}</span>)}
+        </div>
+      ))}
+      {msgs.length > max && <Button h={28} onClick={() => setAll((v) => !v)} style={{ alignSelf: 'flex-start' }}>{all ? '접기' : `메시지 ${msgs.length - max}개 더 보기`}</Button>}
+    </div>
+  );
+}
+
 function OverviewTab({ s }: { s: KbSolutionDetail }) {
   const p = s.profile;
+  const msgs = (s.messages ?? []) as Msg[];
   if (!p) {
-    const msgs = s.messages ?? [];
     if (!msgs.length) return <div className="sh-note" data-overview-empty="">아직 정리된 개요가 없어요. 견적 문의 페이지에서 확인하세요.</div>;
     return (
       <>
         <span className="sh-note">정리된 개요 대신 KB 메시지(원문 그대로)를 보여 줍니다.</span>
-        {msgs.map((m, i) => (
-          <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-            <span style={{ fontSize: 13.5, lineHeight: 1.6, color: 'var(--wm-text-2)', fontWeight: 600 }}>{m.text}</span>
-            {(m.children ?? []).map((c, j) => <span key={j} style={{ fontSize: 12.5, color: 'var(--wm-text-2)', paddingLeft: 12 }}>· {typeof c === 'string' ? c : (c as { text?: string }).text}</span>)}
-          </div>
-        ))}
+        <MessageList msgs={msgs} max={8} />
       </>
     );
   }
@@ -67,6 +83,7 @@ function OverviewTab({ s }: { s: KbSolutionDetail }) {
         </div>
       )}
       {p.source_note && <span className="sh-note">{p.source_note}</span>}
+      {!!msgs.length && <MessageList msgs={msgs} max={4} />}
     </>
   );
 }
@@ -81,11 +98,13 @@ function ImagesTab({ s, focusId, setFocus }: { s: KbSolutionDetail; focusId: str
   const official = groups.find((g) => g.key === 'official');
   const cases = groups.find((g) => g.key === 'case');
   const isCase = (im?: KbImageMeta) => !!im && (im.rights === 'customer_case' || cases?.items.some((c) => c.id === im.id));
+  const context = groups.find((g) => (g.key as string) === 'context');
+  const isContext = (im?: KbImageMeta) => !!im && !!context?.items.some((c) => c.id === im.id);
   return (
     <>
       <div className="sh-h">
         <span className="sh-h__title">이미지 {all.length}</span>
-        <span className="sh-h__desc">{official?.label ?? '공식 소개 이미지'} {official?.items.length ?? 0} · {cases?.label ?? '도입사례 사진'} {cases?.items.length ?? 0} — 모두 samsung.com 게시물</span>
+        <span className="sh-h__desc">{official?.label ?? '공식 소개 이미지'} {official?.items.length ?? 0}{context ? ` · ${context.label} ${context.items.length}` : ''} · {cases?.label ?? '도입사례 사진'} {cases?.items.length ?? 0} — 모두 samsung.com 게시물</span>
       </div>
       {groups.map((g) => (
         <div key={g.key} style={{ display: 'flex', flexDirection: 'column', gap: 6 }} data-image-group={g.key}>
@@ -97,7 +116,7 @@ function ImagesTab({ s, focusId, setFocus }: { s: KbSolutionDetail; focusId: str
       ))}
       {focus && (
         <SelectedImagePanel im={focus} label={imageLabel(focus)} withPageNote
-          badge={isCase(focus) ? <Badge tone="dark">도입사례 사진</Badge> : <Badge tone="brand">삼성 공식 · 솔루션 소개 이미지</Badge>} />
+          badge={isCase(focus) ? <Badge tone="dark">도입사례 사진</Badge> : isContext(focus) ? <Badge tone="brand">삼성 공식 · 공간 · 업종 페이지 이미지</Badge> : <Badge tone="brand">삼성 공식 · 솔루션 소개 이미지</Badge>} />
       )}
     </>
   );

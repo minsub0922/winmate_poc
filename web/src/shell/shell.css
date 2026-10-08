@@ -5,6 +5,9 @@ html, body { overflow-x: auto; }
 .sh-main { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; }
 .sh-content { flex: 1; min-height: 0; overflow: auto; position: relative; display: flex; flex-direction: column; }
 .sh-content > * { flex-shrink: 0; }
+/* 본문 열 = 보드의 main 폭(1180, 사이드바 260 + 1180 = 1440 보드). 화면이 넓으면 가운데에 두고, 좁으면(1280~1440) 1fr 칸만 줄어든다.
+   특이도 0(:where) — 페이지가 max-width 를 직접 정하면(PPT 레이아웃 브라우저 1480 등) 그것을 쓴다. 높이를 채우는 작업 화면은 flex: 1 을 그대로 쓴다. */
+:where(.sh-content) > :where(*) { width: 100%; max-width: var(--wm-main-w); margin-inline: auto; box-sizing: border-box; }
 
 /* ── 사이드바 §6 ───────────────────────────────────── */
 .sh-sidebar { width: var(--wm-sidebar-w); flex-shrink: 0; height: 100%; background: var(--wm-surface); border-right: 1px solid var(--wm-line);
@@ -80,6 +83,7 @@ html, body { overflow-x: auto; }
 .sh-path button { border: none; background: transparent; padding: 0; color: inherit; font-size: 12px; white-space: nowrap; }
 .sh-path button:hover { color: var(--wm-brand); text-decoration: underline; }
 .sh-path__last { color: var(--wm-text); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sh-state__why { display: block; margin-top: 4px; font-size: 11px; color: var(--wm-text-faint, #8a91a0); word-break: keep-all; }
 .sh-state { flex: 1; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 12px; color: var(--wm-text-muted); padding: 24px; line-height: 1.5; }
 
 /* 제품 탐색 §5.3 */

@@ -43,7 +43,11 @@ def _health() -> dict[str, Any]:
     db = config.db_path()
     out: dict[str, Any] = {"ok": db.is_file(), "db": str(db)}
     if _engine is not None:
-        out.update({"warm": _engine.warm, "warm_seconds": _engine.warm_seconds, "warm_error": _engine.warm_error})
+        sh = _engine.shared
+        out.update({"warm": _engine.warm, "warm_seconds": _engine.warm_seconds, "warm_error": _engine.warm_error,
+                    # 검색 방식: vector=ok 면 키워드+벡터, keyword_only 면 벡터 모델을 못 읽어 키워드로만 찾는 중(이유는 vector_error)
+                    "search_mode": "keyword_only" if (sh.vector_failed or sh.vector_error) else "hybrid",
+                    "vector_error": sh.vector_error, "fts_error": sh.fts_error})
     return out
 
 

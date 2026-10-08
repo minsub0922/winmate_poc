@@ -4,6 +4,7 @@
  * 라우트: /vp(VP0) · /vp/rules(VPR) · /vp/new · /vp/:id/materials(VP1) · …/materials/review(VP1A) · …/questions(VP1Q) · …/structure(VP2)
  *        · …/generating?job=(VP3G) · …/result(VP3) · …/result/layout(VP3L) · …/result/numbers(VP3N) · …/result/images(VPI) · …/export(VP4)
  *        · /vp/:id → 작업의 resume_route
+ *        · /vp/values/new · /vp/values/:id — 새 흐름(가치 · 고객의 니즈, 보드 VP2 · VpDetail · VP_Done)
  */
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -21,6 +22,8 @@ import { LayoutPage } from './pages/Layout';
 import { NumbersPage } from './pages/Numbers';
 import { ImagesPage } from './pages/Images';
 import { ExportPage } from './pages/Export';
+import { NewValuesPage } from './values/NewValuesPage';
+import { ValuesPage } from './values/ValuesPage';
 import { Page, useVpShell } from './parts';
 import './vp.css';
 
@@ -47,6 +50,9 @@ export default feature({
     { index: true, element: <ListPage /> },
     { path: 'rules', element: <ListPage rules /> },
     { path: 'new', element: <MaterialsPage /> },
+    // 새 흐름(2026-10-08 보드 VP2): 제품 · 솔루션마다 가치 여러 개 + 고객의 니즈
+    { path: 'values/new', element: <NewValuesPage /> },
+    { path: 'values/:id', element: <ValuesPage /> },
     { path: ':id', element: <ResumePage /> },
     { path: ':id/materials', element: <MaterialsPage /> },
     { path: ':id/materials/review', element: <ReviewPage /> },

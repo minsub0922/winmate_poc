@@ -553,6 +553,7 @@ class Message(_M):
     children: list[str]
     source_url: str | None = None
     claim_flag: bool = False
+    basis: str | None = Field(None, description="추가 — text_match 면 KB 에 솔루션 id 가 없어 이름 글자 일치로 찾은 문장(확인 필요)")
 
 
 class SolutionDetail(_M):
@@ -578,7 +579,7 @@ class SolutionDetail(_M):
 
 
 class ImageGroup(_M):
-    key: Literal["official", "case"]
+    key: Literal["official", "context", "case"] = Field(description="official 솔루션 페이지 · context(추가) 공간 · 업종 페이지에서 솔루션이 나오는 이미지 · case 도입사례 사진")
     label: str
     source_label: str
     items: list[ImageMeta]

@@ -278,11 +278,14 @@ async def test_solution_detail(client, ok):  # SD-01 · SD-02 · SD-03 · SD-07
 async def test_solution_images(client, ok):  # SD-05
     body = ok(await client.get("/v1/solutions/magicinfo/images"))
     groups = {g["key"]: g for g in body["groups"]}
-    assert set(groups) == {"official", "case"}
+    assert set(groups) == {"official", "context", "case"}          # context: 공간 · 업종 페이지에서 솔루션이 나오는 이미지(2026-10-08)
     assert groups["case"]["label"] == "도입사례 사진" and groups["case"]["source_label"] == "samsung.com 고객 도입사례"
     assert 1 <= len(groups["case"]["items"]) <= 4
     assert all(i["rights"] == "customer_case" for i in groups["case"]["items"])
-    assert body["total"] == len(groups["official"]["items"]) + len(groups["case"]["items"])
+    assert all(i["rights"] != "customer_case" for i in groups["context"]["items"])
+    official_ids = {i["id"] for i in groups["official"]["items"]}
+    assert not official_ids & {i["id"] for i in groups["context"]["items"]}
+    assert body["total"] == sum(len(g["items"]) for g in body["groups"])
     assert ok(await client.get("/v1/solutions/magicinfo"))["counts"]["images"] == body["total"]
 
 

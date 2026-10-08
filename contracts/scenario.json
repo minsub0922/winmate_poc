@@ -3834,6 +3834,547 @@
           }
         }
       }
+    },
+    "/v1/space-sets": {
+      "get": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "List Space Sets",
+        "operationId": "list_space_sets",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Create Space Set",
+        "description": "새 묶음. spaces(DSS 공간 · 제품)를 주거나, context_text(요구 문장)로 KB 에서 공간별 제품을 찾는다.",
+        "operationId": "create_space_set",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SSCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}": {
+      "get": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Get Space Set",
+        "operationId": "get_space_set",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Put Space Set",
+        "description": "공간 · 제품 · 시나리오 · 장면 · 항목 전체를 고쳐 저장(자동 저장). 제품이 빈 공간 · 시나리오는 issues 로 알려 준다(저장은 됨).",
+        "operationId": "put_space_set",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SSPut"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}/spaces/{space_id}:suggest": {
+      "post": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Suggest Scenarios",
+        "description": "AI 시나리오 3안(이 공간) — 후보는 candidates 에 점선으로, 수락해야 시나리오가 된다.",
+        "operationId": "suggest_scenarios",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          },
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSSuggestOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}/spaces/{space_id}/candidates/{cid}:accept": {
+      "post": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Accept Candidate",
+        "operationId": "accept_candidate",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          },
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}/spaces/{space_id}/candidates/{cid}": {
+      "delete": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Drop Candidate",
+        "operationId": "drop_candidate",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          },
+          {
+            "name": "space_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}:finish": {
+      "post": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Finish Space Set",
+        "description": "저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). stages.sc 와 요약 md.",
+        "operationId": "finish_space_set",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}/stage": {
+      "get": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Get Space Set Stage",
+        "operationId": "get_space_set_stage",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6810,6 +7351,657 @@
           "next"
         ],
         "title": "RouteResult"
+      },
+      "SSCandidate": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "user": {
+            "type": "string",
+            "title": "User",
+            "default": ""
+          },
+          "products": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Products",
+            "description": "이 시나리오에 쓰는 제품 · 솔루션 이름(공간 제품 중에서, 하나 이상)"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/SSStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/SSFieldKV"
+            },
+            "type": "array",
+            "title": "Fields",
+            "description": "자유 항목(시간대 · 기대 효과 · …)"
+          },
+          "by": {
+            "type": "string",
+            "title": "By",
+            "description": "manual · ai-candidate-A … (수락한 AI 후보)",
+            "default": "manual"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          },
+          "cid": {
+            "type": "string",
+            "enum": [
+              "A",
+              "B",
+              "C"
+            ],
+            "title": "Cid"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "kb_only"
+            ],
+            "title": "Mode",
+            "default": "llm"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "cid"
+        ],
+        "title": "SSCandidate"
+      },
+      "SSCounts": {
+        "properties": {
+          "spaces": {
+            "type": "integer",
+            "title": "Spaces"
+          },
+          "scenarios": {
+            "type": "integer",
+            "title": "Scenarios"
+          },
+          "spaces_without_scenario": {
+            "type": "integer",
+            "title": "Spaces Without Scenario"
+          },
+          "spaces_without_product": {
+            "type": "integer",
+            "title": "Spaces Without Product"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spaces",
+          "scenarios",
+          "spaces_without_scenario",
+          "spaces_without_product"
+        ],
+        "title": "SSCounts"
+      },
+      "SSCreate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "context_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Text"
+          },
+          "spaces": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SSSpaceIn"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Spaces",
+            "description": "DSS 공간 · 제품. 없으면 context_text 로 KB S1 에서 공간별 제품을 찾는다"
+          }
+        },
+        "type": "object",
+        "title": "SSCreate"
+      },
+      "SSDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "화면 · flow.json 에 쓰는 짧은 번호(SC-01 …)"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "context_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Text"
+          },
+          "spaces": {
+            "items": {
+              "$ref": "#/components/schemas/SSSpace"
+            },
+            "type": "array",
+            "title": "Spaces"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "issues": {
+            "items": {
+              "$ref": "#/components/schemas/SSIssue"
+            },
+            "type": "array",
+            "title": "Issues",
+            "description": "저장을 막는 것(공간 · 시나리오에 제품 · 솔루션 없음)"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/SSCounts"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "spaces",
+          "counts",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "SSDoc"
+      },
+      "SSFieldKV": {
+        "properties": {
+          "k": {
+            "type": "string",
+            "maxLength": 30,
+            "minLength": 1,
+            "title": "K"
+          },
+          "v": {
+            "type": "string",
+            "title": "V",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "k"
+        ],
+        "title": "SSFieldKV"
+      },
+      "SSIssue": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "enum": [
+              "SPACE_WITHOUT_PRODUCT",
+              "SCENARIO_WITHOUT_PRODUCT"
+            ],
+            "title": "Code"
+          },
+          "space_id": {
+            "type": "string",
+            "title": "Space Id"
+          },
+          "scenario_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenario Id"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "space_id",
+          "message"
+        ],
+        "title": "SSIssue"
+      },
+      "SSList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SSListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "SSList"
+      },
+      "SSListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/SSCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "counts",
+          "updated_at"
+        ],
+        "title": "SSListItem"
+      },
+      "SSProduct": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "product",
+              "solution"
+            ],
+            "title": "Kind",
+            "default": "product"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref",
+            "description": "KB 참조 kb:family:… · kb:solution:…"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "SSProduct"
+      },
+      "SSPut": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "낙관적 잠금(지금 판). 다르면 409"
+          },
+          "spaces": {
+            "items": {
+              "$ref": "#/components/schemas/SSSpace"
+            },
+            "type": "array",
+            "title": "Spaces",
+            "description": "공간 · 시나리오 · 장면 전체(화면이 고친 그대로). candidates 는 서버 목록을 유지하고 같은 id·cid 의 고친 내용만 반영"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spaces"
+        ],
+        "title": "SSPut"
+      },
+      "SSScenario": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "user": {
+            "type": "string",
+            "title": "User",
+            "default": ""
+          },
+          "products": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Products",
+            "description": "이 시나리오에 쓰는 제품 · 솔루션 이름(공간 제품 중에서, 하나 이상)"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/SSStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "fields": {
+            "items": {
+              "$ref": "#/components/schemas/SSFieldKV"
+            },
+            "type": "array",
+            "title": "Fields",
+            "description": "자유 항목(시간대 · 기대 효과 · …)"
+          },
+          "by": {
+            "type": "string",
+            "title": "By",
+            "description": "manual · ai-candidate-A … (수락한 AI 후보)",
+            "default": "manual"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "SSScenario"
+      },
+      "SSSpace": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/SSProduct"
+            },
+            "type": "array",
+            "title": "Products"
+          },
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/SSScenario"
+            },
+            "type": "array",
+            "title": "Scenarios"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/SSCandidate"
+            },
+            "type": "array",
+            "title": "Candidates",
+            "description": "AI 3안(수락 전, 점선)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "SSSpace"
+      },
+      "SSSpaceIn": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/SSProduct"
+            },
+            "type": "array",
+            "title": "Products"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "SSSpaceIn"
+      },
+      "SSStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md"
+        ],
+        "title": "SSStageOut"
+      },
+      "SSStep": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          },
+          "product": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Product",
+            "description": "이 장면에 쓰인 제품 · 솔루션 이름(시나리오 제품 중 하나)"
+          }
+        },
+        "type": "object",
+        "title": "SSStep"
+      },
+      "SSSuggestOut": {
+        "properties": {
+          "set": {
+            "$ref": "#/components/schemas/SSDoc"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "kb_only"
+            ],
+            "title": "Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "set",
+          "mode"
+        ],
+        "title": "SSSuggestOut"
       },
       "SaveResult": {
         "properties": {

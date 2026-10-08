@@ -39,6 +39,12 @@ export type { ProductToken, ProductSearchItem, ProductInputProps } from './Produ
 
 export { Thumb, THUMB_KINDS, templateThumbUrl } from './Thumb';
 
+// 콘텐츠 흐름 공통(웹앱 ① 2026-10-08 재설계) — SB 바 · 작업 화면 틀 · AI 버튼/안내 · 출처 태그 · 발 · 제품 고르기
+export { LinkedStoryboardBar, FlowScreen, FlowHead, AiButton, AiBar, ByTag, KindTag, FlowFooter, FlowPanel, FlowDone, foldJson } from './flow';
+export type { StoryboardChip, ByKind, DoneStage } from './flow';
+export { ProductPickerDialog } from './ProductPicker';
+export type { PickItem, PickGroup } from './ProductPicker';
+
 // 기능 요청으로 더한 부품(2026-10-07) — 선택 카드 · Q 상자 · 키맨 가중치 · 판단 모드 · 출처 카드 · 근거 패널 · 작업 고르기
 export { ChoiceCard, ChoiceList, ChoiceCustomInput, QBadge } from './choice';
 export type { ChoiceCardProps, QBadgeSize } from './choice';

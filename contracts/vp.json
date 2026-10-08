@@ -3439,6 +3439,868 @@
           }
         }
       }
+    },
+    "/v1/value-maps": {
+      "get": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "List Value Maps",
+        "operationId": "list_value_maps",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Create Value Map",
+        "description": "새 가치 맵. candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다.",
+        "operationId": "create_value_map",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}": {
+      "get": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Get Value Map",
+        "operationId": "get_value_map",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/items": {
+      "put": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Set Value Map Items",
+        "description": "VP 에 넣을 제품 · 솔루션 고르기(제품 · 솔루션 고르기 팝업). 하나 이상.",
+        "operationId": "set_value_map_items",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMSetItems"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/items/{item_key}/values": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Add Value",
+        "operationId": "add_value",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          },
+          {
+            "name": "item_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMAddValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/values/{value_id}": {
+      "patch": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Patch Value",
+        "description": "가치 고치기 · 니즈 쓰기(빈 문자열이면 지움) · AI 후보 수락(accept) · AI 니즈 수락(accept_need).",
+        "operationId": "patch_value",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          },
+          {
+            "name": "value_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Value Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMPatchValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Delete Value",
+        "description": "가치 지우기 — AI 후보 '빼기'도 이것.",
+        "operationId": "delete_value",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          },
+          {
+            "name": "value_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Value Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}:accept-all": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Accept All",
+        "operationId": "accept_all",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}:suggest": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Suggest",
+        "description": "AI 가치 매칭 추천 — KB 원문 메시지 + 요구 → 가치 후보(니즈 포함, 제품마다 최대 2) · 빈 니즈 추론. 모두 ai-pending.",
+        "operationId": "suggest",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/VMSuggestBody"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMSuggestResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/values/{value_id}:infer-need": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Infer Need",
+        "description": "AI 니즈 추론(가치 하나). 모델이 없으면 need=null · reason.",
+        "operationId": "infer_need",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          },
+          {
+            "name": "value_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Value Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMInferNeedResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/items/{item_key}/linked": {
+      "get": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Linked Values",
+        "description": "연결된 가치 전체 — 이 제안 · 같은 제품을 쓴 다른 제안 · KB 공식 메시지.",
+        "operationId": "linked_values",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          },
+          {
+            "name": "item_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMLinked"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/items/{item_key}/values:import": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Import Value",
+        "description": "다른 제안의 가치를 이 제안에 가져오기(복사).",
+        "operationId": "import_value",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          },
+          {
+            "name": "item_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VMImportValue"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}:finish": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Finish",
+        "description": "저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다.",
+        "operationId": "finish",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}/stage": {
+      "get": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Get Stage",
+        "operationId": "get_stage",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9621,6 +10483,875 @@
         },
         "type": "object",
         "title": "UsageHistory"
+      },
+      "VMAddValue": {
+        "properties": {
+          "space": {
+            "type": "string",
+            "title": "Space",
+            "default": "전체"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Message"
+          },
+          "need": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Need"
+          },
+          "req": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Req"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "title": "VMAddValue"
+      },
+      "VMCandidate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "product",
+              "solution"
+            ],
+            "title": "Kind"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "kind"
+        ],
+        "title": "VMCandidate"
+      },
+      "VMCounts": {
+        "properties": {
+          "items": {
+            "type": "integer",
+            "title": "Items"
+          },
+          "values": {
+            "type": "integer",
+            "title": "Values"
+          },
+          "needs": {
+            "type": "integer",
+            "title": "Needs"
+          },
+          "needs_missing": {
+            "type": "integer",
+            "title": "Needs Missing"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "values",
+          "needs",
+          "needs_missing",
+          "pending"
+        ],
+        "title": "VMCounts"
+      },
+      "VMCreate": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "context_text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 8000
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Text"
+          },
+          "candidates": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/VMCandidate"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Candidates",
+            "description": "DSS 제품 · 솔루션. 없으면 context_text 로 KB S1 에서 공간별 후보를 찾는다"
+          },
+          "select_all": {
+            "type": "boolean",
+            "title": "Select All",
+            "description": "후보를 처음부터 모두 고른다",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "VMCreate"
+      },
+      "VMDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "화면 · flow.json 에 쓰는 짧은 번호(VP-01 …)"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "context_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context Text",
+            "description": "요구 · Storyboard 요약(AI 추천 문맥)"
+          },
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/VMCandidate"
+            },
+            "type": "array",
+            "title": "Candidates",
+            "description": "DSS 에서 온 고를 수 있는 제품 · 솔루션"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VMItem"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "고른 제품 · 솔루션(이 순서로 보인다)"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/VMCounts"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "counts",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "VMDoc"
+      },
+      "VMImportValue": {
+        "properties": {
+          "from_map": {
+            "type": "string",
+            "title": "From Map"
+          },
+          "value_id": {
+            "type": "string",
+            "title": "Value Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "from_map",
+          "value_id"
+        ],
+        "title": "VMImportValue"
+      },
+      "VMInferNeedResult": {
+        "properties": {
+          "map": {
+            "$ref": "#/components/schemas/VMDoc"
+          },
+          "need": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VMNeed"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "map",
+          "need"
+        ],
+        "title": "VMInferNeedResult"
+      },
+      "VMItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "맵 안에서 제품 · 솔루션을 가리키는 키(이름에서 만든 slug)"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "product",
+              "solution"
+            ],
+            "title": "Kind"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref",
+            "description": "KB 참조 — kb:family:fam_… · kb:solution:sol_… · kb:model:…"
+          },
+          "spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces"
+          },
+          "from_dss": {
+            "type": "boolean",
+            "title": "From Dss",
+            "default": true
+          },
+          "values": {
+            "items": {
+              "$ref": "#/components/schemas/VMValue"
+            },
+            "type": "array",
+            "title": "Values"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "name",
+          "kind"
+        ],
+        "title": "VMItem"
+      },
+      "VMLinked": {
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/VMItem"
+          },
+          "here": {
+            "items": {
+              "$ref": "#/components/schemas/VMLinkedValue"
+            },
+            "type": "array",
+            "title": "Here"
+          },
+          "other": {
+            "items": {
+              "$ref": "#/components/schemas/VMLinkedValue"
+            },
+            "type": "array",
+            "title": "Other"
+          },
+          "official": {
+            "items": {
+              "$ref": "#/components/schemas/VMOfficialMessage"
+            },
+            "type": "array",
+            "title": "Official",
+            "description": "KB 원문 메시지(삼성 공식 · 원문 그대로)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "item",
+          "here",
+          "other",
+          "official"
+        ],
+        "title": "VMLinked"
+      },
+      "VMLinkedValue": {
+        "properties": {
+          "space": {
+            "type": "string",
+            "title": "Space"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "need": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Need"
+          },
+          "req": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Req"
+          },
+          "by": {
+            "type": "string",
+            "title": "By"
+          },
+          "map_id": {
+            "type": "string",
+            "title": "Map Id"
+          },
+          "map_title": {
+            "type": "string",
+            "title": "Map Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "value_id": {
+            "type": "string",
+            "title": "Value Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "space",
+          "message",
+          "by",
+          "map_id",
+          "map_title",
+          "value_id"
+        ],
+        "title": "VMLinkedValue"
+      },
+      "VMList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VMListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "VMList"
+      },
+      "VMListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/VMCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "counts",
+          "updated_at"
+        ],
+        "title": "VMListItem"
+      },
+      "VMNeed": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "VMNeed"
+      },
+      "VMOfficialMessage": {
+        "properties": {
+          "level": {
+            "type": "string",
+            "title": "Level"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          },
+          "claim_flag": {
+            "type": "boolean",
+            "title": "Claim Flag",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "level",
+          "text"
+        ],
+        "title": "VMOfficialMessage"
+      },
+      "VMPatchValue": {
+        "properties": {
+          "space": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Space"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "need": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Need",
+            "description": "빈 문자열이면 니즈를 지운다"
+          },
+          "req": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Req"
+          },
+          "accept": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accept",
+            "description": "AI 가치 후보 수락(ai-pending → ai-accepted)"
+          },
+          "accept_need": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accept Need",
+            "description": "AI 니즈 추론 수락"
+          }
+        },
+        "type": "object",
+        "title": "VMPatchValue"
+      },
+      "VMSetItems": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/VMCandidate"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "고를 제품 · 솔루션(순서대로). 빠진 것의 가치는 지운다"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "VMSetItems"
+      },
+      "VMStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.vp"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md"
+        ],
+        "title": "VMStageOut"
+      },
+      "VMSuggestBody": {
+        "properties": {
+          "item_keys": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Item Keys",
+            "description": "이 제품 · 솔루션만(없으면 고른 것 모두)"
+          }
+        },
+        "type": "object",
+        "title": "VMSuggestBody"
+      },
+      "VMSuggestResult": {
+        "properties": {
+          "map": {
+            "$ref": "#/components/schemas/VMDoc"
+          },
+          "added_values": {
+            "type": "integer",
+            "title": "Added Values"
+          },
+          "added_needs": {
+            "type": "integer",
+            "title": "Added Needs"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "kb_only"
+            ],
+            "title": "Mode",
+            "description": "llm = 모델이 다듬음 · kb_only = 모델 없이 KB 원문 메시지만(니즈는 비움)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "map",
+          "added_values",
+          "added_needs",
+          "mode"
+        ],
+        "title": "VMSuggestResult"
+      },
+      "VMValue": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "space": {
+            "type": "string",
+            "title": "Space",
+            "description": "공간(로비 · 회의실 …) 또는 '전체'"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "고객에게 주는 가치 한 문장"
+          },
+          "need": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VMNeed"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "고객의 니즈 — 고객이 할 말처럼 쓴 한 문장(예: 여름에도 쾌적한 교실 환경이 필요해요)"
+          },
+          "req": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Req",
+            "description": "연결 요구(예: RQ-01 에너지 20% 절감)"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis",
+            "description": "AI 후보의 근거(KB 메시지 원문 출처 · 요구)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "space",
+          "message"
+        ],
+        "title": "VMValue"
       },
       "VPCounts": {
         "properties": {

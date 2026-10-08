@@ -54,6 +54,16 @@ export function usePopoverEscape(onClose: () => void, enabled: boolean) {
   }, [enabled]);
 }
 
+/** 검색 실패 이유 한 줄(사내망 진단용) — `HTTP 500 · INTERNAL · 메시지`. 원인 찾기는 `make kb-doctor`. */
+export function errorReason(err: unknown): string {
+  if (!err) return '';
+  const e = err as { status?: number; code?: string; message?: string };
+  const head = [e.status ? `HTTP ${e.status}` : null, e.code && e.code !== 'ERROR' ? e.code : null].filter(Boolean).join(' · ');
+  const msg = (e.message || '').slice(0, 140);
+  if (e.status === 0 || /Failed to fetch|NetworkError/i.test(msg)) return '서버에 연결하지 못했어요 · 게이트웨이(5000) · kb 서비스 상태를 확인해 주세요';
+  return [head, msg].filter(Boolean).join(' · ') + ' · 관리자: make kb-doctor';
+}
+
 export function useDebounced<T>(value: T, ms: number) {
   const [v, setV] = useState(value);
   useEffect(() => {

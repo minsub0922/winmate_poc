@@ -32,10 +32,42 @@ class KindId(_Req):
 Target = Union[tuple[str, str], KindId]
 
 
+def _norm_target(kind: str, ident: str) -> tuple[str, str]:
+    """대상 id 를 KB id 로 맞춘다 — 기능 서비스가 카탈로그 id(magicinfo) · 표시 이름(MagicINFO) · 모델코드를 넘겨도 0건이 되지 않게.
+    solution: magicinfo · sol_magicinfo · kb:solution:… · 이름/별칭 → sol_… (카탈로그에 KB id 가 여럿이면 첫 번째)
+    family: fam_… 이 아니면 모델코드 · 이름으로 찾아 fam_…  · model: mdl_… 이 아니면 모델코드로."""
+    kind, ident = (kind or "").strip(), (ident or "").strip()
+    if not ident:
+        return (kind, ident)
+    try:
+        if kind == "solution" and not ident.startswith("sol_"):
+            from . import solutions as SOL
+
+            cat = SOL.resolve(ident)
+            if cat and cat.get("kb_ids"):
+                return (kind, cat["kb_ids"][0])
+            for l in kb().A1(ident)["result"].get("links") or []:
+                if l.get("type") == "solution" and l.get("id"):
+                    return (kind, l["id"])
+        elif kind in ("family", "model") and not ident.startswith(("fam_", "mdl_")):
+            from .index import idx
+
+            I = idx()
+            mid = I.resolve_model(ident) if hasattr(I, "resolve_model") else None
+            if mid:
+                return ("family", I.models[mid]["family_id"]) if kind == "family" else ("model", mid)
+            for l in kb().A1(ident)["result"].get("links") or []:
+                if l.get("type") == kind and l.get("id"):
+                    return (kind, l["id"])
+    except Exception:  # noqa: BLE001 — 못 맞추면 받은 그대로
+        pass
+    return (kind, ident)
+
+
 def _t(x: Any) -> tuple[str, str]:
     if isinstance(x, KindId):
-        return (x.kind, x.id)
-    return (str(x[0]), str(x[1]))
+        return _norm_target(x.kind, x.id)
+    return _norm_target(str(x[0]), str(x[1]))
 
 
 class Envelope(BaseModel):
@@ -389,7 +421,7 @@ PATTERNS: list[dict[str, Any]] = [
      "run": lambda r: kb().G1(r.space, r.category, r.vertical, r.limit),
      "desc": "공간 맥락 이미지(등급순), 없으면 폴백(fallback_level)."},
     {"code": "G2", "method": "G2", "name": "제품 · 분류가 나오는 이미지", "model": G2Req,
-     "run": lambda r: kb().G2(r.kind, r.ident, r.limit),
+     "run": lambda r: kb().G2(*_norm_target(r.kind, r.ident), r.limit),
      "desc": "설치 · 사례 사진 우선."},
     {"code": "G4", "method": "G4", "name": "제품 단독컷", "model": G4Req,
      "run": lambda r: kb().G4(r.family_id, r.limit),

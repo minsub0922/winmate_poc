@@ -29,6 +29,15 @@ make contracts SERVICE=vp    # contracts/vp.json 갱신 + 깨지는 변경 검�
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
 ## 현재 상태
+
+### 새 흐름 · 가치 · 고객의 니즈 (2026-10-08 · `docs/scenarios/11-content-flow.md` §2 · 보드 webapp1 VP2*)
+- 백엔드 `valuemap.py` + `api_values.py` — `/v1/value-maps*`(DocStore `value_maps`, 코드 `VP-NN`). 스키마는 모두 `VM*` 접두(기존 스키마 이름과 겹치지 않게).
+  - 만들기: KB S1(공간별 후보)로 후보 목록. 항목 고르기 `PUT …/items` · 가치 더하기/고치기/지우기 · `:accept-all` · 다른 제안의 가치 `values:import`.
+  - AI: `:suggest`(`vp.values_suggest.v1`, 모델이 없으면 KB E1 원문 메시지 → 니즈 없는 점선 후보 `mode=kb_only`) · `values/{id}:infer-need`(`vp.need_infer.v1`, 못 쓰면 빈 값).
+  - `items/{key}/linked`: 이 제안 · 같은 제품을 쓴 다른 제안 · KB 공식 메시지(E1). `:finish` → `stage`(= flow.json `stages.vp`) + `summary_md`. 점선 값은 빠진다.
+- 화면 `web/src/features/vp/values/`(`/vp/values/new` · `/vp/values/:id`, 목록 머리 「가치 · 고객의 니즈」). `@/ui` FlowScreen · ProductPickerDialog · FlowDone 사용.
+- 시험: `tests/test_value_maps.py` 3개 · e2e `web/e2e/vp/values.spec.ts`(폭 280 · 1180 도 잰다). mock `mocks/ai-tools/vp.need_infer.v1.json`.
+- 남은 것: Storyboard `flow.json` 에 `stage` 를 써 넣는 일(storyboard 단계 1) · Gate. 이전 VP 화면(VP0~)은 그대로 둔다.
 - **완성(1차)** — 05-vp 의 화면 13(VP0 · VPR · VP1 · VP1A · VP1Q · VP2 · VP3G · VP3 · VP3L · VP3N · VPI · VP4 + `/vp/:id` 이어 열기) · API 48 경로 · 잡 6종.
 - 코드 지도(`src/winmate_vp/`): `api.py`(라우트 · 202 잡) · `models.py`(요청/응답) · `service.py`(문서 · 파생 값 · 저장 지점 · 플랜) · `ops_work.py`(작업 · 재료 · 되묻기 · 플랜)
   · `ops_result.py`(결과 다듬기 · 수치 · 이미지 · 내보내기 · 넘김 · 업종판) · `workflows.py`(LangGraph: `vp.materials` · `vp.generate` · `vp.revise` · `vp.images` · `vp.export` · `vp.pack_offer`)

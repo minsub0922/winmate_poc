@@ -27,7 +27,18 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
 - API 를 바꾸면 `make contracts SERVICE=kb` 를 돌리고 `contracts/kb.json` 변경을 함께 남긴다. 깨지는 변경이면 소비 서비스를 `docs/requests/` 에 알린다.
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
-## 현재 상태 (2026-10-07)
+## 현재 상태 (2026-10-08)
+
+### 2026-10-08 반영 — 이미지 검색 · 유관 사례 검색 · 솔루션 매칭
+- **검색이 500 으로 죽던 것**: 벡터 모델(`models/*.joblib`)을 못 읽거나 차원이 안 맞으면 image_search · D1 · E2 가 모두 실패했다.
+  이제 `ThreadKB.lsa/embed/vectors/vec_search` 가 실패를 잡고 **키워드 검색으로 내려간다**(엔티티 문서 LIKE 유사도). FTS5 오류도 잡는다.
+  `/healthz` `checks.kb` 에 `search_mode`(hybrid · keyword_only) · `vector_error` · `fts_error`.
+- **진단**: `make kb-doctor`(`scripts/kb_doctor.py`) — 버전 · DB · FTS5 · 모델 · 썸네일 · 로컬 사본 · 엔진 검색 · (선택) 게이트웨이를 보고 「고칠 것」 목록을 낸다.
+- **이미지 검색 순위**(`imagerank.py`): 텍스트 점수에 A1 링크(공간 · 업종 · 대상 · 장면 등급 A · 공간 있는 사례)를 더해 다시 줄 세우고 G1 · G2 로 후보를 넓힌다. 「로비」 → 로비 장면 사진.
+- **솔루션 매칭**: `kb_ids` 가 빈 솔루션(DeX · 콜드체인 · 통합공조 · Knox Capture)도 제목 · 별칭(`text_aliases`) 본문 일치로 메시지(`basis=text_match`) · 사례 · 이미지를 찾는다.
+  `/v1/solutions/{id}/images` 에 `context` 묶음(depicts · DEPICTS_PROBABLE · 본문 일치, 최대 12) — `ImageGroup.key` 에 `context` 추가. G2 대상은 카탈로그 id(`magicinfo`)도 KB id 로 맞춘다.
+- 시험 `test_requests_1008.py`. 아래 G-SOL-1 공백은 「본문 일치로 일부 채움」으로 바뀌었다(Knox Capture 는 메시지 2건뿐).
+
 
 ### 2026-10-07 반영 (docs/requests/kb.md 요청 4묶음 — 모두 더한 필드 · 계약 경로는 그대로)
 - **/ 가 든 모델코드(58개 — The Wall `LH012IWCMWS/XU` · 프린터 `SL-C2410ND/KRM` …)**: `/v1/models/{model_code}` · `/images` · `/cases` · `/lifecycle` 이
@@ -238,7 +249,7 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
 00-shell
 - **G-PRD-1**: 표시명 규칙은 사이니지 모델코드에만 맞는다. 영문 계열 이름도 Smart Signage 만 있다. 나머지는 모델코드로 표시한다.
 - **G-PRD-3**: 공식 자료(매뉴얼 · QSG · 펌웨어) 데이터가 없다. `documents=null` 이다.
-- **G-SOL-1**: Knox Capture · DeX · 콜드체인 · 통합공조는 KB 에 없다. `kb_ids=[]` 라 이미지 · 사례가 빈 목록이고, `gaps` 에 표시한다.
+- **G-SOL-1**: Knox Capture · DeX · 콜드체인 · 통합공조는 KB 엔티티가 없다(`kb_ids=[]`, `gaps` 표시). 2026-10-08 부터 본문 일치로 메시지 · 사례 · context 이미지를 채운다.
 - **G-SOL-2**: 솔루션 프로필은 MagicINFO 만 있다. 나머지는 `profile=null` 이다.
 - **G-SOL-3**: 솔루션 소개 페이지와 공식 소개 이미지를 수집하지 않았다.
 - **G-IMG-1 · G-IMG-2**: 원본 메타와 저장본은 `kb_fetch_images.py` 를 돌려야 채워진다. 그전에는 표본 · 썸네일을 근거로 쓴다.
@@ -276,7 +287,7 @@ make contracts SERVICE=kb    # contracts/kb.json 갱신 + 깨지는 변경 검�
 
 ### 확인 방법
 ```bash
-UV_SYSTEM_CERTS=1 uv run pytest services/kb -q        # = make test SERVICE=kb, 90개, 실제 KB 파일로
+UV_SYSTEM_CERTS=1 uv run pytest services/kb -q        # = make test SERVICE=kb, 94개, 실제 KB 파일로
 UV_SYSTEM_CERTS=1 uv run python scripts/contracts.py export kb && (cd web && node scripts/gen-api.mjs kb)
 WINMATE_ONLY=kb ops/node_modules/.bin/pm2 start ops/pm2/ecosystem.config.cjs   # 처음(또는 make up)
 ops/node_modules/.bin/pm2 restart kb                                           # 코드를 바꾼 뒤

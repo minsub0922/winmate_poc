@@ -53,7 +53,11 @@ export function ListPage({ rules = false }: { rules?: boolean }) {
           <h1 className="vp-list__title">Value Proposition 작업</h1>
           <div className="vp-list__sub">가치 제안 {counts?.all ?? 0}건 · 답을 기다리는 작업 {waiting}건 · 생성 중 {counts?.run ?? 0}건</div>
         </div>
-        <Link to="/vp/new" className="vp-new"><Icon name="plus" size={16} />새 가치 제안</Link>
+        <span style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          {/* 새 흐름(2026-10-08 보드 webapp1 VP2) — 제품 · 솔루션마다 가치 여러 개 + 고객의 니즈 */}
+          <Link to="/vp/values/new" className="wm-btn wm-btn--outline" style={{ height: 44, fontWeight: 700, fontSize: 14 }} data-testid="vp-values-new">가치 · 고객의 니즈</Link>
+          <Link to="/vp/new" className="vp-new"><Icon name="plus" size={16} />새 가치 제안</Link>
+        </span>
       </div>
 
       <div className="vp-starts">

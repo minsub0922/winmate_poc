@@ -6,6 +6,7 @@
  *   :id/type(SC1) · :id/input(SC2) · :id/timeline(SC2E) · :id/solutions(SC3) · :id/solutions/recommend(SC3R)
  *   :id/generate/:jobId(SC4G) · :id/result(SC4) · :id/scenes/:sceneId(SC4E) · :id/send(SC5) · :id/birdseye(SC1B 변경 반영)
  *   uc(UC_SC 유스케이스 맵 — 개발용)
+ *   spaces/new · spaces/:id — 새 흐름(공간 → 시나리오 → 장면, 보드 webapp1 SC2 · SC_Done)
  */
 import { lazy, Suspense, type ReactNode } from 'react';
 import { feature } from '@/shell/feature';
@@ -26,6 +27,8 @@ const ScenePage = lazy(() => import('./pages/ScenePage'));
 const SendPage = lazy(() => import('./pages/SendPage'));
 const OpenPage = lazy(() => import('./pages/OpenPage'));
 const UseCasePage = lazy(() => import('./pages/UseCasePage'));
+const SpacesPage = lazy(() => import('./spaces/SpacesPage').then((m) => ({ default: m.SpacesPage })));
+const NewSpacesPage = lazy(() => import('./spaces/NewSpacesPage').then((m) => ({ default: m.NewSpacesPage })));
 
 const L = (el: ReactNode) => (
   <Suspense fallback={<div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Spinner /></div>}>{el}</Suspense>
@@ -43,6 +46,9 @@ export default feature({
     { path: 'new/template', element: L(<TemplatePage />) },
     { path: 'new/birdseye', element: L(<BirdseyePage />) },
     { path: 'uc', element: L(<UseCasePage />) },
+    // 새 흐름(2026-10-08 보드 webapp1 SC2): 공간 → 시나리오(여러 개) → 장면 · 공간 / 시나리오별 제품 · 솔루션
+    { path: 'spaces/new', element: L(<NewSpacesPage />) },
+    { path: 'spaces/:id', element: L(<SpacesPage />) },
     { path: ':id', element: L(<OpenPage />) },
     { path: ':id/type', element: L(<TypePage />) },
     { path: ':id/input', element: L(<InputPage />) },

@@ -10,7 +10,7 @@ port = $(shell $(PY) -c "import yaml;print(yaml.safe_load(open('config/services.
 module = winmate_$(subst -,_,$(1))
 
 .PHONY: help setup py-setup ops-setup web-setup up down restart status logs dev test test-all contracts contracts-check \
-        web-dev web-build web-gen e2e e2e-feature typecheck dev-bg dev-stop health clean-data
+        web-dev web-build web-gen e2e e2e-feature typecheck dev-bg dev-stop health kb-doctor clean-data
 
 help:
 	@echo "make setup                 # 파이썬·pm2·웹 의존성 설치, 계약·API 타입 생성, 웹 빌드"
@@ -115,3 +115,7 @@ typecheck:
 
 health:
 	@curl -s http://127.0.0.1:$(call port,gateway)/api/_health | $(PY) -m json.tool
+
+# 이미지 · 사례 검색 · 솔루션이 안 될 때: 파일 · 판 · 검색 · 게이트웨이를 한 번에 점검(services/kb/scripts/kb_doctor.py)
+kb-doctor:
+	$(PY) services/kb/scripts/kb_doctor.py --gateway http://127.0.0.1:$(call port,gateway)

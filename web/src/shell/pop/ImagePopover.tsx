@@ -15,6 +15,7 @@ import { useAssetUsage, usageText } from '../workspace';
 import { useShellUrl } from '../urlState';
 import {
   ADD_FAIL_TEXT, AddAllButton, DragHint, NoTaskFooter, PopoverFrame, PopSearch, useAddRunner, useDebounced, usePopMemory, usePopoverEscape,
+  errorReason,
 } from './common';
 
 type Tab = 'all' | 'official' | 'case' | 'mine' | 'internal';
@@ -171,7 +172,7 @@ export function ImagePopover({ onClose, hidden }: { onClose: () => void; hidden?
   let grid: ReactNode;
   if (!q) grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }}>장면 · 공간 · 제품으로 검색해 보세요.</div>;
   else if (search.isError && !search.data && mem.tab !== 'mine') {
-    grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }} role="alert"><span>이미지를 불러오지 못했어요.<br /><Button h={28} onClick={() => search.refetch()} style={{ marginTop: 8 }}>다시 시도</Button></span></div>;
+    grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }} role="alert"><span>이미지를 불러오지 못했어요.<br /><span className="sh-state__why">{errorReason(search.error)}</span><Button h={28} onClick={() => search.refetch()} style={{ marginTop: 8 }}>다시 시도</Button></span></div>;
   } else if ((search.isLoading && !search.data && mem.tab !== 'mine') || (mem.tab === 'mine' && mine.isLoading)) {
     grid = Array.from({ length: 6 }, (_, i) => <Skeleton key={i} h={160} r={10} />);
   } else if (!items.length) {

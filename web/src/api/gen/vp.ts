@@ -142,6 +142,239 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/value-maps": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Value Maps */
+        get: operations["list_value_maps"];
+        put?: never;
+        /**
+         * Create Value Map
+         * @description 새 가치 맵. candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다.
+         */
+        post: operations["create_value_map"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Value Map */
+        get: operations["get_value_map"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}:accept-all": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Accept All */
+        post: operations["accept_all"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}:finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish
+         * @description 저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다.
+         */
+        post: operations["finish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}:suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suggest
+         * @description AI 가치 매칭 추천 — KB 원문 메시지 + 요구 → 가치 후보(니즈 포함, 제품마다 최대 2) · 빈 니즈 추론. 모두 ai-pending.
+         */
+        post: operations["suggest"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Set Value Map Items
+         * @description VP 에 넣을 제품 · 솔루션 고르기(제품 · 솔루션 고르기 팝업). 하나 이상.
+         */
+        put: operations["set_value_map_items"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/items/{item_key}/linked": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Linked Values
+         * @description 연결된 가치 전체 — 이 제안 · 같은 제품을 쓴 다른 제안 · KB 공식 메시지.
+         */
+        get: operations["linked_values"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/items/{item_key}/values": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Value */
+        post: operations["add_value"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/items/{item_key}/values:import": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Import Value
+         * @description 다른 제안의 가치를 이 제안에 가져오기(복사).
+         */
+        post: operations["import_value"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Stage */
+        get: operations["get_stage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/values/{value_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Value
+         * @description 가치 지우기 — AI 후보 '빼기'도 이것.
+         */
+        delete: operations["delete_value"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch Value
+         * @description 가치 고치기 · 니즈 쓰기(빈 문자열이면 지움) · AI 후보 수락(accept) · AI 니즈 수락(accept_need).
+         */
+        patch: operations["patch_value"];
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}/values/{value_id}:infer-need": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Infer Need
+         * @description AI 니즈 추론(가치 하나). 모델이 없으면 need=null · reason.
+         */
+        post: operations["infer_need"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/value-props:draft": {
         parameters: {
             query?: never;
@@ -3340,6 +3573,333 @@ export interface components {
             /** Items */
             items: components["schemas"]["VersionItem"][];
         };
+        /** VMAddValue */
+        VMAddValue: {
+            /** Message */
+            message: string;
+            /** Need */
+            need?: string | null;
+            /** Req */
+            req?: string | null;
+            /**
+             * Space
+             * @default 전체
+             */
+            space: string;
+        };
+        /** VMCandidate */
+        VMCandidate: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /** Name */
+            name: string;
+            /** Ref */
+            ref?: string | null;
+            /** Spaces */
+            spaces?: string[];
+        };
+        /** VMCounts */
+        VMCounts: {
+            /** Items */
+            items: number;
+            /** Needs */
+            needs: number;
+            /** Needs Missing */
+            needs_missing: number;
+            /** Pending */
+            pending: number;
+            /** Values */
+            values: number;
+        };
+        /** VMCreate */
+        VMCreate: {
+            /**
+             * Candidates
+             * @description DSS 제품 · 솔루션. 없으면 context_text 로 KB S1 에서 공간별 후보를 찾는다
+             */
+            candidates?: components["schemas"]["VMCandidate"][] | null;
+            /** Context Text */
+            context_text?: string | null;
+            /** Sb Id */
+            sb_id?: string | null;
+            /**
+             * Select All
+             * @description 후보를 처음부터 모두 고른다
+             * @default true
+             */
+            select_all: boolean;
+            /** Title */
+            title?: string | null;
+        };
+        /** VMDoc */
+        VMDoc: {
+            /**
+             * Candidates
+             * @description DSS 에서 온 고를 수 있는 제품 · 솔루션
+             */
+            candidates?: components["schemas"]["VMCandidate"][];
+            /**
+             * Code
+             * @description 화면 · flow.json 에 쓰는 짧은 번호(VP-01 …)
+             */
+            code?: string | null;
+            /**
+             * Context Text
+             * @description 요구 · Storyboard 요약(AI 추천 문맥)
+             */
+            context_text?: string | null;
+            counts: components["schemas"]["VMCounts"];
+            /** Created At */
+            created_at: string;
+            /** Id */
+            id: string;
+            /**
+             * Items
+             * @description 고른 제품 · 솔루션(이 순서로 보인다)
+             */
+            items?: components["schemas"]["VMItem"][];
+            /** Sb Id */
+            sb_id?: string | null;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /** Version */
+            version: number;
+        };
+        /** VMImportValue */
+        VMImportValue: {
+            /** From Map */
+            from_map: string;
+            /** Value Id */
+            value_id: string;
+        };
+        /** VMInferNeedResult */
+        VMInferNeedResult: {
+            map: components["schemas"]["VMDoc"];
+            need: components["schemas"]["VMNeed"] | null;
+            /** Reason */
+            reason?: string | null;
+        };
+        /** VMItem */
+        VMItem: {
+            /**
+             * From Dss
+             * @default true
+             */
+            from_dss: boolean;
+            /**
+             * Key
+             * @description 맵 안에서 제품 · 솔루션을 가리키는 키(이름에서 만든 slug)
+             */
+            key: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /** Name */
+            name: string;
+            /**
+             * Ref
+             * @description KB 참조 — kb:family:fam_… · kb:solution:sol_… · kb:model:…
+             */
+            ref?: string | null;
+            /** Spaces */
+            spaces?: string[];
+            /** Values */
+            values?: components["schemas"]["VMValue"][];
+        };
+        /** VMLinked */
+        VMLinked: {
+            /** Here */
+            here: components["schemas"]["VMLinkedValue"][];
+            item: components["schemas"]["VMItem"];
+            /**
+             * Official
+             * @description KB 원문 메시지(삼성 공식 · 원문 그대로)
+             */
+            official: components["schemas"]["VMOfficialMessage"][];
+            /** Other */
+            other: components["schemas"]["VMLinkedValue"][];
+        };
+        /** VMLinkedValue */
+        VMLinkedValue: {
+            /** By */
+            by: string;
+            /** Map Id */
+            map_id: string;
+            /** Map Title */
+            map_title: string;
+            /** Message */
+            message: string;
+            /** Need */
+            need?: string | null;
+            /** Req */
+            req?: string | null;
+            /** Sb Id */
+            sb_id?: string | null;
+            /** Space */
+            space: string;
+            /** Value Id */
+            value_id: string;
+        };
+        /** VMList */
+        VMList: {
+            /** Items */
+            items: components["schemas"]["VMListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /** VMListItem */
+        VMListItem: {
+            /** Code */
+            code?: string | null;
+            counts: components["schemas"]["VMCounts"];
+            /** Id */
+            id: string;
+            /** Sb Id */
+            sb_id?: string | null;
+            /** Status */
+            status: string;
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+        };
+        /** VMNeed */
+        VMNeed: {
+            /**
+             * By
+             * @default manual
+             * @enum {string}
+             */
+            by: "manual" | "ai-pending" | "ai-accepted";
+            /** Text */
+            text: string;
+        };
+        /** VMOfficialMessage */
+        VMOfficialMessage: {
+            /**
+             * Claim Flag
+             * @default false
+             */
+            claim_flag: boolean;
+            /** Level */
+            level: string;
+            /** Source Url */
+            source_url?: string | null;
+            /** Text */
+            text: string;
+        };
+        /** VMPatchValue */
+        VMPatchValue: {
+            /**
+             * Accept
+             * @description AI 가치 후보 수락(ai-pending → ai-accepted)
+             */
+            accept?: boolean | null;
+            /**
+             * Accept Need
+             * @description AI 니즈 추론 수락
+             */
+            accept_need?: boolean | null;
+            /** Message */
+            message?: string | null;
+            /**
+             * Need
+             * @description 빈 문자열이면 니즈를 지운다
+             */
+            need?: string | null;
+            /** Req */
+            req?: string | null;
+            /** Space */
+            space?: string | null;
+        };
+        /** VMSetItems */
+        VMSetItems: {
+            /**
+             * Items
+             * @description 고를 제품 · 솔루션(순서대로). 빠진 것의 가치는 지운다
+             */
+            items: components["schemas"]["VMCandidate"][];
+        };
+        /** VMStageOut */
+        VMStageOut: {
+            /**
+             * Stage
+             * @description Storyboard flow.json 의 stages.vp
+             */
+            stage: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+        };
+        /** VMSuggestBody */
+        VMSuggestBody: {
+            /**
+             * Item Keys
+             * @description 이 제품 · 솔루션만(없으면 고른 것 모두)
+             */
+            item_keys?: string[] | null;
+        };
+        /** VMSuggestResult */
+        VMSuggestResult: {
+            /** Added Needs */
+            added_needs: number;
+            /** Added Values */
+            added_values: number;
+            map: components["schemas"]["VMDoc"];
+            /**
+             * Mode
+             * @description llm = 모델이 다듬음 · kb_only = 모델 없이 KB 원문 메시지만(니즈는 비움)
+             * @enum {string}
+             */
+            mode: "llm" | "kb_only";
+        };
+        /** VMValue */
+        VMValue: {
+            /**
+             * Basis
+             * @description AI 후보의 근거(KB 메시지 원문 출처 · 요구)
+             */
+            basis?: string | null;
+            /**
+             * By
+             * @default manual
+             * @enum {string}
+             */
+            by: "manual" | "ai-pending" | "ai-accepted";
+            /** Id */
+            id: string;
+            /**
+             * Message
+             * @description 고객에게 주는 가치 한 문장
+             */
+            message: string;
+            /** @description 고객의 니즈 — 고객이 할 말처럼 쓴 한 문장(예: 여름에도 쾌적한 교실 환경이 필요해요) */
+            need?: components["schemas"]["VMNeed"] | null;
+            /**
+             * Req
+             * @description 연결 요구(예: RQ-01 에너지 20% 절감)
+             */
+            req?: string | null;
+            /**
+             * Space
+             * @description 공간(로비 · 회의실 …) 또는 '전체'
+             */
+            space: string;
+        };
         /** VPCounts */
         VPCounts: {
             /**
@@ -3887,6 +4447,595 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Scenarios"];
+                };
+            };
+        };
+    };
+    list_value_maps: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMList"];
+                };
+            };
+        };
+    };
+    create_value_map: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VMCreate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    get_value_map: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    accept_all: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    finish: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMStageOut"];
+                };
+            };
+        };
+    };
+    suggest: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["VMSuggestBody"] | null;
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMSuggestResult"];
+                };
+            };
+        };
+    };
+    set_value_map_items: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VMSetItems"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    linked_values: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_key: string;
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMLinked"];
+                };
+            };
+        };
+    };
+    add_value: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_key: string;
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VMAddValue"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    import_value: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                item_key: string;
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VMImportValue"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    get_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMStageOut"];
+                };
+            };
+        };
+    };
+    delete_value: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+                value_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    patch_value: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+                value_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VMPatchValue"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
+    infer_need: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+                value_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMInferNeedResult"];
                 };
             };
         };

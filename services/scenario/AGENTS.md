@@ -29,6 +29,17 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
 ## 현재 상태
+
+**새 흐름 · 공간 → 시나리오 → 장면 (2026-10-08 · `docs/scenarios/11-content-flow.md` §3 · 보드 webapp1 SC2*)**
+- 백엔드 `spaceset.py` + `api_spaces.py` — `/v1/space-sets*`(DocStore `space_sets`, 코드 `SC-NN`). 스키마는 모두 `SS*` 접두.
+  - 공간마다 제품 · 솔루션 1개 이상, 시나리오마다 공간 제품 중 1개 이상(어기면 `issues` · `:finish` 422 `SPACE_WITHOUT_PRODUCT` · `SCENARIO_WITHOUT_PRODUCT`).
+  - `PUT`(expected_version 409)은 화면이 고친 그대로 저장. 후보 목록은 서버 기준이고 같은 id · cid 후보의 고친 내용만 받는다(수락 전 편집).
+  - `spaces/{id}:suggest`: KB D1 사례 + `sc.space_candidates.v1` → 점선 3안 A/B/C. 모델이 없으면 사례 틀 + `[확인 필요]`(`mode=kb_only`). `candidates/{cid}:accept` · `DELETE`.
+  - `:finish` → `stage`(= flow.json `stages.sc`) + `summary_md`.
+- 화면 `web/src/features/scenario/spaces/`(`/scenario/spaces/new` · `/scenario/spaces/:id`, 목록 머리 「공간 → 시나리오 → 장면」). 자동 저장 600ms.
+- 시험: `tests/test_space_sets.py` 4개 · e2e `web/e2e/scenario/spaces.spec.ts`. mock `mocks/ai-tools/sc.space_candidates.v1.json`.
+- 이전 SC0~SC5 흐름은 그대로 둔다(제안서 handoff 가 아직 그것을 읽는다).
+
 - 화면 12개 + UC_SC(개발용) 구현(`web/src/features/scenario/`): SC0 목록 · SC1 유형(+조감도 추가) · SC1T 업종 템플릿 · SC1B 조감도에서 이어 만들기(+변경 반영 모드) ·
   SC2 입력(+텍스트 보기) · SC2E 타임라인 · SC3 솔루션 · 제품 · SC3R 추천 · SC4G 생성 중 · SC4 결과 · SC4E 장면 편집 · SC5 보내기. 라우트는 `index.tsx`.
 - API 65개(경로 59, `contracts/scenario.json`). 다른 서비스용(internal): `GET …/handoff`(§8) · `GET …/proposal-handoff`(ProposalHandoff v1, section=spaceScenario|solution) ·
