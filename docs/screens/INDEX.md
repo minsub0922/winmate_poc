@@ -9,7 +9,9 @@
 > **웹앱 ① 은 2026-10-08 에 콘텐츠 흐름을 처음부터 다시 그렸다(Storyboard 중심 · 사전 작업 · 완료 JSON · DSS 신규 · VP 가치 · 고객의 니즈 · 공간 → 시나리오 → 장면).**
 > 정본은 `webapp1/`(아티팩트 v58 사본)이고, 규칙은 `docs/scenarios/11-content-flow.md` 가 정본이다. 그 전 웹앱 ① 보드(RQ1~RQ7 · SB1~SB5 · MI1~MI4 · CA1~CA5 · VP1~VP4 · SP1~SP4 등)는
 > `_archive/webapp1-v52/` · `_rendered/_archive/webapp1-v52/` 에 참고용으로만 남긴다 — **새로 만들거나 고칠 때는 따르지 않는다.**
-> 웹앱 ② 의 SC0~SC5(옛 공간 시나리오)도 새 흐름(웹앱 ① SC0 · SC1 · SC2)으로 대체됐다. 웹앱 ② 의 이미지 · 조감도는 그대로다.
+> 웹앱 ② 의 SC0~SC5(옛 공간 시나리오)도 새 흐름(웹앱 ① SC0 · SC1 · SC2)으로 대체됐다. 웹앱 ② 의 이미지는 그대로다.
+> 웹앱 ② 조감도는 2026-10-08 아티팩트에서 **2D(BP1~BP5 · BP1D · BP3Z) / 3D(BR1~BR4 · BR1P · BR3V)** 두 흐름으로 갈렸다 — BE0 은 유형을 고르는 목록이고,
+> 옛 BE1~BE6 은 `_archive/webapp2-be/` · `_rendered/_archive/webapp2-be/` 로 옮겼다(조감도 → 시나리오 연결은 BP3Z · BP5).
 
 | 웹앱 | 보드 | 제목 | 페이지 | 기능(서비스) |
 |---|---|---|---|---|
@@ -97,20 +99,8 @@
 | webapp1 | `SC_DoneJson` | 공간 시나리오 · 완료 · flow.json 전체 | 웹앱 · 공간 시나리오 생성 | scenario |
 | webapp1 | `ProdPicker` | 컴포넌트 · 제품 · 솔루션 고르기 팝업 (picked · min) |  | shell(공통 흐름) |
 | webapp1 | `VpDetail` | 컴포넌트 · VP 연결된 가치 전체 팝업 |  | vp |
-| webapp2 | `UC_BE` | 조감도 · 유스케이스 맵 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE0` | 조감도 · 작업 목록 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE1` | 조감도 1/5 · 공간 입력 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE2` | 조감도 2/5 · 배치될 제품 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE3` | 조감도 3/5 · 가구 추천 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE4` | 조감도 4/5 · 배치·인테리어 컨펌 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE5` | 조감도 5/5 · 3D 조감도 생성 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE1D` | 조감도 · 도면 인식 확인 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE1P` | 조감도 · 현장 사진으로 입력 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE5G` | 조감도 · 생성 중 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE4E` | 조감도 · 배치 직접 수정 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE5V` | 조감도 · 시점 · 조명 바꾸기 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE5Z` | 조감도 · 존 포인트 지정 | 웹앱 · 공간 조감도 생성 | birdseye |
-| webapp2 | `BE6` | 조감도 · 내보내기 · 보내기 | 웹앱 · 공간 조감도 생성 | birdseye |
+| webapp2 | `UC_BE` | 조감도 · 유스케이스 맵 (2D / 3D) | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
+| webapp2 | `BE0` | 조감도 · 작업 목록 (유형 선택) | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
 | webapp2 | `BP1` | 2D 조감도 1/4 · 공간 · 치수 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
 | webapp2 | `BP2` | 2D 조감도 2/4 · 제품 · 수량 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
 | webapp2 | `BP3` | 2D 조감도 3/4 · 배치 · 동선 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
