@@ -2,7 +2,7 @@
  * 라우터 — 기능 모듈(registry.loadFeatures())을 불러온 뒤 main.tsx 가 `createAppRouter()` 로 만든다.
  *
  *   셸 밖(로그인 확인 없음): /login · 기능 publicRoutes(예 /m/upload/:token)
- *   /  ─ AuthGate(AUTH_MODE=local 로그인 확인 · 401 → /login?next=) ─ Layout(사이드바 · 상단바) ─ 홈 · /<기능 key>/…(기능마다 오류 경계) · /_dev/…
+ *   /  ─ AuthGate(AUTH_MODE=local 로그인 확인 · 401 → /login?next=) ─ Layout(사이드바 · 상단바) ─ 홈 · /<기능 key>/…(기능마다 오류 경계) · /layouts · /_dev/…
  *
  * 기능 하나가 import 오류면 그 경로만 FeatureLoadFailed, 그리다 오류면 FeatureError(사이드바 · 다른 기능은 그대로).
  */
@@ -28,6 +28,8 @@ const DevShell = lazy(() => import('./shell/dev/DevShell'));
 const DevKit = lazy(() => import('./shell/dev/DevKit'));
 // 사용자 관리(관리자 · AUTH_MODE=none) — 사용자 메뉴에서 연다
 const UsersPage = lazy(() => import('./shell/admin/UsersPage'));
+// PPT 레이아웃 브라우저 — 사이드바 「PPT 레이아웃 브라우저」(작업 내역 위)로 연다
+const LayoutBrowser = lazy(() => import('./shell/LayoutBrowser'));
 const lazyEl = (el: ReactNode) => <Suspense fallback={null}>{el}</Suspense>;
 
 /** 셸 밖 화면 틀(사이드바 · 상단바 없음) — 토스트만 */
@@ -67,7 +69,8 @@ export function createAppRouter() {
       element: <AuthGate><Layout /></AuthGate>,
       errorElement: <RootError />,
       children: [
-        { index: true, element: <Home /> }, ...featureRoutes(), { path: 'admin/users', element: lazyEl(<UsersPage />) }, ...devRoutes,
+        { index: true, element: <Home /> }, ...featureRoutes(), { path: 'admin/users', element: lazyEl(<UsersPage />) },
+        { path: 'layouts', element: lazyEl(<LayoutBrowser />) }, ...devRoutes,
         { path: '*', element: <NotFound /> },
       ],
     },

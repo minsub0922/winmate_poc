@@ -52,6 +52,7 @@ src/winmate_export/
 | `GET /templates/stats` | `{total, ready, industry, dedicated, by_role, by_section, by_kind, by_status, catalog_version}` |
 | `GET /templates/{code}?n=` | 칸(slots) · 상자(boxes, 0..1) · 원본 보드 · `example_slots`(칸 값 모양 예시). 별칭은 `n`(항목 수)으로 고른다. `slots[].default` 는 글 · 목록(표 머리 등 count 칸) · 숫자, 보드 없는(제작 중) 템플릿은 `source.board` 없음 + `note` |
 | `GET /templates/{code}/thumbnail.png?w=&brand=` | Pillow 와이어프레임, 기본 120×68(`w` 60–1280, 16:9). ETag · 메모리 캐시 |
+| `GET /templates/{code}/board.jpg` | 원본 디자인 보드 그림(1280×720, `docs/templates/_rendered/<캔버스>/<보드>.jpg` — `render.mjs templates` 가 만든다). 보드 없음(제작 중) · 아직 안 그림이면 404 `BOARD_NOT_RENDERED`. 웹 `/layouts`(PPT 레이아웃 브라우저)가 쓴다 |
 | `POST /exports` | 빠르면 **201** `{export_id, status:"done", file:{id,name,mime,size,url}, files[], template_codes, slide_count, warnings}` · 느리면 **202** `{export_id, job_id, status:"queued"}`(잡 `export`, 결과 `{export_id, file_id, files}`) |
 | `GET /exports?project_id=&source_ref=` · `GET /exports/{export_id}` | 기록(queued · running · done · failed, 파일 · 경고 · 오류) |
 | `POST /renders` | 202 `{render_id, job_id}` — 슬라이드 PNG(잡 `render`). 원본 `file_id`(PDF 는 바로, PPTX 는 LibreOffice) 또는 덱 `document`. `sheet_ids` 로 골라 받기 |
@@ -126,6 +127,6 @@ language|lang?: ko|en|both|ko_en, bilingual?: files|slides|inline, tbd_mode?: ke
   스레드 댓글 · 셀 안 그림)는 잃는다 — 저장 전후 부품 수를 비교해 `form_fill.lost` · 경고로 알린다(몰래 잃지 않음). 더 엄격히 지켜야 하면 시트 XML 직접 수정 방식으로.
   이름 맞추기는 결정적 규칙뿐 — 의미가 같은 다른 말(「휘도」 ↔ 「밝기」)은 부르는 쪽(spec 의 `spec.template_map.v1`)이 `row_map` · `column_map` · `_form_row` 로 준다.
   이름을 찾는 범위는 시트 앞 5000행 · 200열. 행을 양식 중간에 끼워 넣지 않는다(append 는 맨 아래).
-- 테스트: `make test SERVICE=export` — 75개(+ LibreOffice 경로 3개는 `SOFFICE_PATH` 있을 때만: 덱 PDF · 덱 렌더 · 옛 형식 .xls 양식).
+- 테스트: `make test SERVICE=export` — 76개(+ LibreOffice 경로 3개는 `SOFFICE_PATH` 있을 때만: 덱 PDF · 덱 렌더 · 옛 형식 .xls 양식).
   `test_api.py::test_get_template_every_catalog_code` 가 카탈로그 전 코드(표시 코드 · 별칭 n 포함)를 상세 API 로 돌린다(응답 모델 ↔ 카탈로그 데이터 회귀 방지).
   `test_xlsx_form.py` 25개(맞추기 · 쓰기 · 보존 · API).

@@ -496,6 +496,60 @@
         }
       }
     },
+    "/v1/templates/{code}/board.jpg": {
+      "get": {
+        "tags": [
+          "templates"
+        ],
+        "summary": "Template Board",
+        "description": "레이아웃 브라우저용 — 원본 보드 그림. 보드가 없거나(제작 중) 아직 그리지 않았으면 404 `BOARD_NOT_RENDERED`.",
+        "operationId": "template_board",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Code"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "원본 디자인 보드를 그린 그림(1280×720, docs/templates/_rendered)",
+            "content": {
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/exports": {
       "post": {
         "tags": [

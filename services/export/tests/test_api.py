@@ -141,6 +141,20 @@ async def test_thumbnail(app, w, size):
         assert (await c.get("/v1/templates/NOPE/thumbnail.png")).status_code == 404
 
 
+async def test_board_image(app):
+    """레이아웃 브라우저 — 원본 보드 그림(docs/templates/_rendered). 보드 없는(제작 중) 템플릿 · 없는 코드는 404."""
+    async with testing.api_client(app) as c:
+        r = await c.get("/v1/templates/MS-A/board.jpg")
+        assert r.status_code == 200 and r.headers["content-type"] == "image/jpeg"
+        assert Image.open(io.BytesIO(r.content)).size == (1280, 720)
+        assert (await c.get("/v1/templates/MS-A/board.jpg", headers={"If-None-Match": r.headers["etag"]})).status_code == 304
+        assert (await c.get("/v1/templates/NOPE/board.jpg")).status_code == 404
+        lst = (await c.get("/v1/templates", params={"status": "in_production", "limit": 1, "include_slots": False})).json()["items"]
+        if lst:
+            r = await c.get(f"/v1/templates/{lst[0]['code']}/board.jpg")
+            assert r.status_code == 404 and r.json()["error"]["code"] == "BOARD_NOT_RENDERED"
+
+
 # ── 내보내기 ─────────────────────────────────────────────
 
 async def test_export_pptx_sync(app, files, png):

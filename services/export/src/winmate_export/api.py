@@ -11,11 +11,13 @@ from __future__ import annotations
 import asyncio
 import base64
 import hashlib
+from pathlib import Path
 from typing import Any, Literal
 
 from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
+from winmate_common.env import repo_root
 from winmate_common.errors import ApiError
 from winmate_common.jobs import jobs
 
@@ -295,6 +297,32 @@ async def template_thumbnail(
     png = await asyncio.to_thread(cached_thumbnail, t["code"], w, version, b)
     return Response(content=png, media_type="image/png",
                     headers={"Cache-Control": "public, max-age=86400", "ETag": etag})
+
+
+@router.get("/templates/{code}/board.jpg", tags=["templates"], response_class=Response,
+            responses={200: {"content": {"image/jpeg": {"schema": {"type": "string", "format": "binary"}}},
+                             "description": "원본 디자인 보드를 그린 그림(1280×720, docs/templates/_rendered)"}})
+async def template_board(code: str, request: Request) -> Response:
+    """레이아웃 브라우저용 — 원본 보드 그림. 보드가 없거나(제작 중) 아직 그리지 않았으면 404 `BOARD_NOT_RENDERED`."""
+    t = catalog().get(code)
+    if t is None:
+        raise ApiError(404, "TEMPLATE_NOT_FOUND", f"템플릿을 찾을 수 없습니다: {code}", {"code": code})
+    src = t.get("source") or {}
+    jpg = _board_jpg(src.get("canvas"), src.get("board"))
+    if jpg is None:
+        raise ApiError(404, "BOARD_NOT_RENDERED", "이 템플릿은 원본 보드 그림이 없습니다", {"code": t["code"]})
+    etag = f'"{int(jpg.stat().st_mtime)}-{jpg.stat().st_size}"'
+    if request.headers.get("if-none-match") == etag:
+        return Response(status_code=304, headers={"ETag": etag})
+    data = await asyncio.to_thread(jpg.read_bytes)
+    return Response(content=data, media_type="image/jpeg", headers={"Cache-Control": "public, max-age=3600", "ETag": etag})
+
+
+def _board_jpg(canvas: str | None, board: str | None) -> Path | None:
+    if not canvas or not board or "/" in canvas or "/" in board or ".." in canvas or ".." in board:
+        return None
+    p = repo_root() / "docs" / "templates" / "_rendered" / canvas / board.replace(".dc.html", ".jpg")
+    return p if p.is_file() else None
 
 
 # ── 모델: 내보내기 ───────────────────────────────────────────

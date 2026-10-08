@@ -138,6 +138,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/templates/{code}/board.jpg": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Template Board
+         * @description 레이아웃 브라우저용 — 원본 보드 그림. 보드가 없거나(제작 중) 아직 그리지 않았으면 404 `BOARD_NOT_RENDERED`.
+         */
+        get: operations["template_board"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/templates/{code}/thumbnail.png": {
         parameters: {
             query?: never;
@@ -1799,6 +1819,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TemplateDetail"];
+                };
+            };
+        };
+    };
+    template_board: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 원본 디자인 보드를 그린 그림(1280×720, docs/templates/_rendered) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "image/jpeg": string;
                 };
             };
         };

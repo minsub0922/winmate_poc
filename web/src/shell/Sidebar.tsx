@@ -1,18 +1,21 @@
 /**
- * 사이드바(00-shell §6) — 로고 · 새 작업 · 작업 내역(기능 10, 개수 · 펼친 그룹 항목 최대 5) · 사용자 카드.
+ * 사이드바(00-shell §6) — 로고 · 새 작업 · PPT 레이아웃 브라우저(/layouts) · 작업 내역(기능 10, 개수 · 펼친 그룹 항목 최대 5) · 사용자 카드.
  * 데이터: workspace `/v1/me` · `/v1/items/counts` · `/v1/items?feature=&limit=5`.
  * 작업 항목은 현재 화면이 그 기능 작업을 받을 때(accepts 'work_item' + acceptsWork) 끌 수 있다(§6.3 · §5.7).
  */
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { Avatar, Icon, Skeleton, useActiveDrag, useDragSource } from '@/ui';
+import { Avatar, Icon, PathIcon, Skeleton, useActiveDrag, useDragSource } from '@/ui';
 import { shellFeatures, type ShellFeature } from './catalog';
 import { FEATURE_ICON, FeatureIcon } from './icons';
 import { useShellRuntime } from './runtime';
 import { UserMenu } from './UserMenu';
 import { markNotificationsRead, useFeatureItems, useItemCounts, useMe, useNotificationCounts, type WsItem } from './workspace';
 import type { FeatureCode } from './types';
+
+/** 슬라이드 묶음(레이아웃 브라우저) */
+const LAYOUT_ICON = 'M3 5h12v9H3z M7 18h12V9 M6 8h6 M6 11h4';
 
 function pathOf(route: string) {
   try { return new URL(route, 'http://x').pathname.replace(/\/$/, ''); } catch { return route; }
@@ -93,6 +96,11 @@ export function Sidebar() {
       <Link to="/" className="sh-newbtn">
         <Icon name="plus" size={16} strokeWidth={2.2} />
         <span>새 작업</span>
+      </Link>
+      <Link to="/layouts" className={['sh-navlink', first === 'layouts' && 'sh-navlink--cur'].filter(Boolean).join(' ')}
+        aria-current={first === 'layouts' ? 'page' : undefined} data-testid="nav-layouts">
+        <PathIcon d={LAYOUT_ICON} size={16} color={first === 'layouts' ? 'var(--wm-brand)' : 'var(--wm-text-muted)'} strokeWidth={1.9} />
+        <span className="sh-navlink__name">PPT 레이아웃 브라우저</span>
       </Link>
       <div className="sh-overline">작업 내역</div>
       <nav className="sh-groups" aria-label="작업 내역">
