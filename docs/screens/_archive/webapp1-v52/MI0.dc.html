@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Market Intelligence · 분석 작업 목록</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="market" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Market Intelligence" title="분석 작업 목록" popover="none" has-task="{{false}}" hint-size="1180px,64px"></dc-import>
+
+    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; padding: 26px 40px 24px 40px; box-sizing: border-box; overflow: hidden">
+      <!-- 머리: 제목 · 새로 만들기 -->
+      <div style="height: 48px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between">
+        <div style="display: flex; flex-direction: column; gap: 3px">
+          <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.01em">Market Intelligence 작업</div>
+          <div style="font-size: 12.5px; color: #596170">분석 {{total}}건 · 업데이트 필요 {{updCount}}건 · 확정 필요 수치가 남은 작업 1건</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <a href="MI1I.dc.html" style="height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 7px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z"/></svg>
+            <span>업종 인사이트로 시작</span>
+          </a>
+          <a href="MI1.dc.html" style="height: 42px; padding: 0 16px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 600; display: flex; align-items: center; gap: 7px">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span>새 분석</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 검색 · 필터 · 정렬 -->
+      <div style="height: 38px; flex-shrink: 0; margin-top: 20px; display: flex; align-items: center; gap: 10px">
+        <div style="width: 300px; height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #ffffff; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">작업 검색</label>
+          <input id="q" placeholder="고객사 · 작업명 · 경쟁사 검색" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+        </div>
+        <div role="tablist" aria-label="상태 필터" style="display: flex; gap: 6px">
+          <sc-for list="{{filters}}" as="f" hint-placeholder-count="5">
+            <button role="tab" aria-selected="{{f.on}}" style="{{f.style}}"><span>{{f.label}}</span><span style="font-family: Manrope, sans-serif; font-weight: 700">{{f.n}}</span></button>
+          </sc-for>
+        </div>
+        <div style="flex-grow: 1"></div>
+        <button style="height: 34px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; display: flex; align-items: center; gap: 6px">업종 전체<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+        <button style="height: 34px; padding: 0 10px 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; display: flex; align-items: center; gap: 6px">최근 수정순<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+      </div>
+
+      <!-- 업데이트 필요 안내 -->
+      <div style="height: 54px; flex-shrink: 0; margin-top: 16px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; display: flex; align-items: center; gap: 12px; padding: 0 12px 0 14px">
+        <div style="width: 30px; height: 30px; border-radius: 8px; background: #1428a0; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7 M20 4v7h-7"/></svg></div>
+        <div style="flex-grow: 1; min-width: 0; font-size: 13px; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="font-weight: 700">2건은 다시 분석을 권해요.</span> <span style="color: #3d4452">분석한 지 30일이 지났고, 그사이 경쟁사 신제품 발표와 시장 리포트 개정이 확인됐어요.</span></div>
+        <button style="height: 32px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600; flex-shrink: 0">바뀐 자료 보기</button>
+        <a href="MI3G.dc.html" style="height: 32px; padding: 0 12px; border-radius: 8px; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-shrink: 0">2건 다시 분석</a>
+      </div>
+
+      <!-- 작업 표 -->
+      <div style="position: relative; flex-shrink: 0; margin-top: 16px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px">
+        <div style="{{headStyle}}">
+          <span>작업</span><span>업종</span><span>분석 범위</span><span>상태</span><span>연결된 제안서</span><span></span>
+        </div>
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+          <div style="{{r.rowStyle}}">
+            <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+              <div style="display: flex; align-items: center; gap: 6px; min-width: 0">
+                <a href="{{r.open}}" style="font-size: 13.5px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.title}}</a>
+                <sc-if value="{{r.hasVer}}" hint-placeholder-val="{{true}}">
+                  <span style="height: 18px; padding: 0 6px; border-radius: 5px; background: #f0f2f5; color: #596170; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">{{r.ver}}</span>
+                </sc-if>
+              </div>
+              <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.sub}}</span>
+            </div>
+            <span style="font-size: 12.5px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.ind}}</span>
+            <span style="{{r.scopeStyle}}">{{r.scope}}</span>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0">
+              <span style="{{r.chipStyle}}">
+                <sc-if value="{{r.isDone}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if>
+                <sc-if value="{{r.isRun}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#b8c3ee" stroke-width="3"/><path d="M12 3a9 9 0 0 1 9 9" stroke="#1428a0" stroke-width="3" stroke-linecap="round"/></svg></sc-if>
+                <sc-if value="{{r.isUpd}}" hint-placeholder-val="{{false}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 1 0-2.3 5.7 M20 4v7h-7"/></svg></sc-if>
+                <sc-if value="{{r.isDraft}}" hint-placeholder-val="{{false}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></sc-if>
+                <span>{{r.stText}}</span>
+              </span>
+              <span style="font-size: 11.5px; color: #596170; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.note}}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 7px; min-width: 0">
+              <sc-if value="{{r.hasProp}}" hint-placeholder-val="{{true}}">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg>
+                <span style="font-size: 12.5px; color: #121417; line-height: 1.4; max-height: 36px; overflow: hidden">{{r.prop}}</span>
+              </sc-if>
+              <sc-if value="{{r.noProp}}" hint-placeholder-val="{{false}}">
+                <span style="font-size: 12.5px; color: #8a91a0">아직 없음</span>
+              </sc-if>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: flex-end; gap: 6px">
+              <a href="{{r.actHref}}" style="{{r.actStyle}}">{{r.act}}</a>
+              <button aria-label="{{r.moreLabel}}" aria-expanded="{{r.menu}}" style="{{r.moreStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg></button>
+            </div>
+          </div>
+        </sc-for>
+
+        <!-- 열린 메뉴: B 병원 환자 동선 분석 (업데이트 필요) -->
+        <div role="menu" aria-label="B 병원 환자 동선 분석 작업 메뉴" style="position: absolute; top: 170px; right: 16px; width: 300px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; box-shadow: 0 16px 40px rgba(18,20,23,0.16); display: flex; flex-direction: column; padding: 6px; z-index: 3">
+          <div style="padding: 8px 10px; display: flex; flex-direction: column; gap: 2px; border-bottom: 1px solid #e2e5ea; margin-bottom: 4px">
+            <span style="font-size: 11.5px; font-weight: 700; color: #121417">바뀐 자료 2건</span>
+            <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">경쟁사 A 신제품 발표 · 시장 리포트 개정 [기관, 연도]</span>
+          </div>
+          <sc-for list="{{menu}}" as="m" hint-placeholder-count="5">
+            <a role="menuitem" href="{{m.href}}" style="{{m.style}}">
+              <span style="font-size: 13px; font-weight: 600; color: #121417; white-space: nowrap">{{m.label}}</span>
+              <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{m.hint}}</span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+
+      <!-- 업종 인사이트로 시작 -->
+      <div style="flex-shrink: 0; margin-top: 18px; display: flex; align-items: center; gap: 8px; min-width: 0">
+        <span style="font-size: 12.5px; font-weight: 600; color: #121417; flex-shrink: 0">업종 인사이트로 시작</span>
+        <span style="font-size: 12px; color: #8a91a0; flex-shrink: 0">삼성 도입사례 198건 기준</span>
+        <span style="width: 1px; height: 14px; background: #e2e5ea; margin: 0 4px; flex-shrink: 0"></span>
+        <sc-for list="{{inds}}" as="i" hint-placeholder-count="6">
+          <a href="MI1I.dc.html" style="height: 30px; padding: 0 11px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{i.name}}<span style="font-family: Manrope, sans-serif; font-weight: 700; font-size: 11.5px; color: #596170">{{i.n}}</span></a>
+        </sc-for>
+        <a href="MI1I.dc.html" style="height: 30px; padding: 0 6px; color: #1428a0; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">16개 업종 모두</a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    // 작업: 제목 · 버전 · 담당/시점 · 업종 · 범위 · 상태(done 완료 · upd 업데이트 필요 · run 진행 중 · draft 작성 중) · 상태 메모 · 연결 제안서 · 주 동작
+    const R = [
+      ['A 커피 프랜차이즈 시장·경쟁사 분석', 'v2', '최민섭 · 2시간 전 수정', '외식 · 카페', '시장 · 고객 · 사용자 · 경쟁', 'done', '출처 18곳 · 확정 필요 수치 3', 'A 커피 프랜차이즈 메뉴보드 제안', ['수치 확정', 'MI3V.dc.html'], 'MI3.dc.html'],
+      ['B 병원 환자 동선 분석', 'v1', '최민섭 · 9월 1일 분석', '의료 · 요양', '시장 · 사용자', 'upd', '분석 30일 경과 · 자료 갱신 2건', 'B 병원 안내 시스템 제안', ['다시 분석', 'MI3G.dc.html'], 'MI3.dc.html'],
+      ['C 물류센터 경쟁사 벤치마크', 'v1', '최민섭 · 방금 시작', '제조 · 물류', '고객 · 경쟁', 'run', '정리 중 · 출처 24곳 확인', '', ['진행 보기', 'MI3G.dc.html'], 'MI3G.dc.html'],
+      ['D 대학 강의동 협업 공간 시장 분석', '', '최민섭 · 어제 저장', '교육 · 캠퍼스', '범위 선택 전', 'draft', '고객 요구사항까지 입력', '', ['이어서', 'MI2.dc.html'], 'MI2.dc.html'],
+      ['B 병원 경쟁사 키오스크 비교', 'v3', '최민섭 · 8월 20일 분석', '의료 · 요양', '경쟁', 'upd', '경쟁사 신제품 감지 1건', 'B 병원 안내 시스템 제안', ['다시 분석', 'MI3G.dc.html'], 'MI3.dc.html']
+    ];
+    const ST = { done: '완료', upd: '업데이트 필요', run: '진행 중', draft: '작성 중' };
+    const CHIP = {
+      done: ' background: #f0f2f5; color: #121417;',
+      upd: ' background: #121417; color: #ffffff;',
+      run: ' background: #eaeefb; color: #1428a0;',
+      draft: ' background: #ffffff; color: #596170; border: 1px dashed #b8bec8;'
+    };
+    const cols = 'grid-template-columns: minmax(0, 1fr) 92px 160px 188px 170px 116px; column-gap: 10px;';
+    const MENU_ROW = 1;
+    const rows = R.map(([title, ver, sub, ind, scope, s, note, prop, act, open], i) => ({
+      title, ver, hasVer: ver.length > 0, sub, ind, scope, note, prop, open,
+      hasProp: prop.length > 0, noProp: prop.length === 0,
+      stText: ST[s], isDone: s === 'done', isUpd: s === 'upd', isRun: s === 'run', isDraft: s === 'draft',
+      act: act[0], actHref: act[1], menu: i === MENU_ROW,
+      moreLabel: title + ' 메뉴',
+      rowStyle: 'display: grid; ' + cols + ' align-items: center; height: 74px; padding: 0 16px; border-top: 1px solid #eef0f3;' + (i === MENU_ROW ? ' background: #fbfbfc;' : ''),
+      scopeStyle: 'font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (s === 'draft' ? ' color: #8a91a0;' : ' color: #3d4452;'),
+      chipStyle: 'height: 24px; padding: 0 9px; border-radius: 999px; box-sizing: border-box; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap;' + CHIP[s],
+      actStyle: 'height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap;' + (s === 'upd' ? ' background: #1428a0; color: #ffffff;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417;'),
+      moreStyle: 'width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;' + (i === MENU_ROW ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #596170;')
+    }));
+    const count = (s) => R.filter((r) => r[5] === s).length;
+    const F = [['전체', R.length, true], ['진행 중', count('run'), false], ['완료', count('done'), false], ['업데이트 필요', count('upd'), false], ['작성 중', count('draft'), false]];
+    const filters = F.map(([label, n, on]) => ({
+      label, n, on,
+      style: 'height: 34px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap;' + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 600;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;')
+    }));
+    const M = [
+      ['바뀐 부분만 다시 분석', '시장 · 경쟁 · 약 1분', 'MI3G.dc.html', true],
+      ['전체 다시 분석', 'v2로 저장 · v1 보관', 'MI3G.dc.html', false],
+      ['지난 결과 열기', 'v1 · 9월 1일', 'MI3.dc.html', false],
+      ['제안서 MI 섹션으로 보내기', 'B 병원 제안', 'MI4.dc.html', false],
+      ['복제해서 새 분석', '범위 그대로', 'MI1.dc.html', false]
+    ];
+    const menu = M.map(([label, hint, href, hi]) => ({
+      label, hint, href,
+      style: 'display: flex; align-items: center; justify-content: space-between; gap: 10px; height: 32px; padding: 0 10px; border-radius: 8px;' + (hi ? ' background: #f5f7fd;' : '')
+    }));
+    const inds = [['외식 · 카페', 23], ['의료 · 요양', 10], ['교육 · 캠퍼스', 13], ['제조 · 물류', 7], ['호텔 · 리조트', 17], ['오피스', 11]].map(([name, n]) => ({ name, n: n + '건' }));
+    return {
+      rows, filters, menu, inds, total: R.length, updCount: count('upd'),
+      headStyle: 'display: grid; ' + cols + ' align-items: center; height: 40px; padding: 0 16px; font-size: 11.5px; font-weight: 600; color: #596170; background: #fbfbfc; border-radius: 14px 14px 0 0;'
+    };
+  }
+}
+</script>
+</body>
+</html>

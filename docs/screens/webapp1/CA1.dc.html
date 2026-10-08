@@ -2,88 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>경쟁사 분석 · 넣기</title>
+<title>경쟁사 분석 · 사전 작업 Storyboard 고르기</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
-<style>
-body{margin:0;background:#f5f6f8}
-a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
-</style>
+<style>body{margin:0;background:#f5f6f8}</style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="competitor" current="" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="경쟁사 분석" title="새 분석" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
-    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
-      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
-        <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">넣기 · 자유 양식</span>
-        <div style="display: flex; align-items: center; gap: 12px">
-          <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">어떤 고객의 경쟁사를 찾을까요?</h1>
-        </div>
-        <span style="font-size: 14px; color: #596170">고객 요구사항 정의서를 고르거나, 아래에 자유롭게 적어 주세요.</span>
-      </div>
-
-      <div role="tablist" aria-label="입력 방식" style="display: flex; gap: 6px; flex-shrink: 0">
-        <button role="tab" aria-selected="true" style="{{tabOn}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9 M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>자유 양식</button>
-        <a role="tab" aria-selected="false" href="CA1R.dc.html" style="{{tabOff}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7"/></svg>고객 요구사항에서</a>
-      </div>
-
-      <div style="box-sizing: border-box; flex-shrink: 0; background: #ffffff; border: 1.5px solid #1428a0; border-radius: 18px; box-shadow: 0 10px 32px rgba(20,40,160,0.10); display: flex; flex-direction: column">
-        <div style="padding: 16px 18px 0 18px">
-          <label for="catext" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">고객 · 사업 설명</label>
-          <textarea id="catext" placeholder="고객사 · 업종 · 장소 · 제품을 한 문단으로 적어 주세요" style="width: 100%; height: 150px; box-sizing: border-box; resize: none; border: none; background: transparent; padding: 4px 2px; font-size: 14.5px; line-height: 1.65; color: #121417; outline: none">A 커피 프랜차이즈가 전국 320개 매장의 메뉴보드를 디지털로 바꾸려고 해요. 수도권 직영점부터 시작하고, 55인치 사이니지와 본사에서 콘텐츠를 일괄 배포하는 솔루션이 필요해요.</textarea>
-        </div>
-        <div style="padding: 12px 14px 12px 18px; border-top: 1px solid #f0f2f5; display: flex; align-items: center; justify-content: space-between; gap: 12px">
-          <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
-            <button style="height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12l-8.5 8.5a5 5 0 0 1-7-7L14 5a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 7"/></svg>파일 올리기</button>
-            <span style="font-size: 12px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">RFP · 회의록을 올리면 경쟁사 언급과 평가 기준도 읽어요</span>
-          </div>
-          <a href="CA1G.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap; flex-shrink: 0">경쟁사 찾기<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        </div>
-      </div>
-
-      <div style="height: 60px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; display: flex; align-items: center; gap: 12px; padding: 0 14px">
-        <span style="font-size: 12px; font-weight: 700; color: #596170; white-space: nowrap; flex-shrink: 0">입력에서 읽은 것</span>
-        <div style="flex-grow: 1; min-width: 0; display: flex; align-items: center; gap: 6px; overflow: hidden">
-          <sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
-            <span style="{{c.style}}">
-              <sc-if value="{{c.found}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg></sc-if>
-              <span style="font-weight: 700">{{c.k}}</span><span style="opacity: 0.55">·</span><span style="font-weight: 500">{{c.v}}</span>
-            </span>
-          </sc-for>
-        </div>
-        <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0; white-space: nowrap; flex-shrink: 0">{{foundCount}}</span>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 7px; flex-shrink: 0; padding: 0 2px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 11v5 M12 8h.01"/></svg>
-        <span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">고객사 · 업종 · 장소 · 제품까지 알려 주면 경쟁사를 훨씬 잘 찾아요. 업종만 있어도 찾긴 하지만 후보가 넓어져요.</span>
-      </div>
-    </section>
-  </main>
+<div style="width: 1440px; height: 900px; overflow: hidden">
+  <dc-import name="Gate" content="ca" hint-size="1440px,900px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() {
-    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
-    // 입력 방식 세그먼트: 선택 = 흰 배경 + 삼성 블루 테두리
-    const tabBase = 'height: 36px; box-sizing: border-box; padding: 0 14px 0 12px; border-radius: 10px; font-size: 13px; display: flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer;';
-    const tabOn = tabBase + ' border: 1px solid #1428a0; background: #ffffff; color: #1428a0; font-weight: 600;';
-    const tabOff = tabBase + ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;';
-    // 입력에서 읽은 4가지: 읽힌 것은 '찾음', 안 읽힌 것은 점선 '비어 있음'
-    const chip = (found) => 'height: 26px; box-sizing: border-box; padding: 0 9px 0 7px; border-radius: 999px; font-size: 11px; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0;' + (found ? ' background: #e6f4ee; color: #0b6e4f;' : ' border: 1px dashed #8a91a0; background: transparent; color: #596170;');
-    const C = [['고객사', 'A 커피 프랜차이즈', true], ['업종', '외식 · 카페', true], ['장소', '수도권 직영점', true], ['제품', '55" 사이니지 + 배포 솔루션', true]];
-    const chips = C.map(([k, v, found]) => ({ k, v: found ? v : '비어 있음', found, style: chip(found) }));
-    const n = chips.filter((c) => c.found).length;
-    return { steps, cur: 1, tabOn, tabOff, chips, foundCount: n + ' / ' + chips.length };
-  }
+  renderVals() { return { yes: true }; }
 }
 </script>
 </body>

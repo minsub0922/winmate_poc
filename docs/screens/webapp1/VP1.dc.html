@@ -2,138 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Value Proposition 1/3 — 재료</title>
+<title>VP · 사전 작업 Storyboard 고르기</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
-<style>
-body{margin:0;background:#f5f6f8}
-a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
-</style>
+<style>body{margin:0;background:#f5f6f8}</style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="value" current="A 커피 메뉴보드 가치 제안" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="Value Proposition" title="새 작업" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
-
-    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 18px 40px 0 40px; box-sizing: border-box; overflow: hidden">
-      <div style="width: 800px; display: flex; gap: 12px">
-        <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
-        <div style="display: flex; flex-direction: column; gap: 10px; padding-top: 3px; flex-grow: 1; min-width: 0">
-          <div style="font-size: 14.5px; line-height: 1.6">누구에게 어떤 가치를 말할지 정리할게요. 연결할 자료를 찾아 두었어요 — 연결하면 과제 · 가치 · 근거 수치 · 이해관계자를 알아서 뽑고, 빈 곳은 비워 두셔도 됩니다.</div>
-
-          <!-- 연결할 수 있는 자료 -->
-          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden">
-            <div style="height: 42px; box-sizing: border-box; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e5ea; background: #fbfbfc">
-              <span style="font-size: 13px; font-weight: 700; white-space: nowrap">연결할 수 있는 자료 <span style="color: #596170; font-weight: 500">· 같은 고객사의 최근 작업에서 3개 찾음</span></span>
-              <span style="display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; white-space: nowrap"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>자동으로 찾음</span>
-            </div>
-            <sc-for list="{{srcs}}" as="s" hint-placeholder-count="3">
-              <label style="display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 16px; border-top: 1px solid #f0f2f5; cursor: pointer">
-                <input type="checkbox" checked="{{s.on}}" aria-label="{{s.aria}}" style="accent-color: #1428a0; margin: 0; flex-shrink: 0">
-                <div style="width: 30px; height: 30px; border-radius: 8px; background: #f0f2f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{s.icon}}"/></svg></div>
-                <div style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
-                  <span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis"><span style="color: #596170; font-weight: 500">{{s.kind}} · </span>{{s.title}}</span>
-                  <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.gives}}</span>
-                </div>
-                <span style="{{s.stStyle}}">{{s.st}}</span>
-              </label>
-            </sc-for>
-            <div style="height: 38px; box-sizing: border-box; padding: 0 16px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #596170; background: #fbfbfc">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg>
-              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">보낼 곳 · <span style="color: #121417; font-weight: 600">A 커피 프랜차이즈 메뉴보드 제안</span> · 표준 · Value Props 섹션 — 시트 수를 이 유형에 맞춰요</span>
-            </div>
-          </div>
-
-          <!-- 재료 커버리지 -->
-          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 10px 16px 8px 16px; display: flex; flex-direction: column">
-            <div style="display: flex; align-items: center; justify-content: space-between; height: 24px">
-              <span style="font-size: 13px; font-weight: 700; white-space: nowrap">재료 커버리지 <span style="color: #596170; font-weight: 500">· 연결한 자료 기준 · 4축</span></span>
-              <a href="VPR.dc.html" style="font-size: 12px; font-weight: 600; white-space: nowrap">무엇을 보고 판단하나</a>
-            </div>
-            <sc-for list="{{axes}}" as="a" hint-placeholder-count="4">
-              <div style="display: grid; grid-template-columns: 76px 120px minmax(0, 1fr) 48px 220px; column-gap: 10px; align-items: center; height: 34px; border-top: 1px solid #f0f2f5">
-                <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">{{a.k}}</span>
-                <div style="height: 6px; border-radius: 999px; background: #eef0f3; overflow: hidden"><div style="{{a.bar}}"></div></div>
-                <span style="font-size: 12px; color: #3d4452; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{a.v}}</span>
-                <span style="{{a.lvStyle}}">{{a.lv}}</span>
-                <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{a.todo}}</span>
-              </div>
-            </sc-for>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 14px 40px 24px 40px">
-      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
-        <div style="padding: 14px 18px 0 18px; font-size: 13px; font-weight: 600">재료 <span style="color: #596170; font-weight: 500">· 1 / 3</span></div>
-        <div style="padding: 10px 18px 0 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px">
-          <div style="display: flex; flex-direction: column; gap: 5px">
-            <label for="cust" style="font-size: 12px; color: #596170">고객사</label>
-            <div style="height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #f5f6f8; display: flex; align-items: center; padding: 0 12px"><input id="cust" value="A 커피 프랜차이즈" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 14px; color: #121417; outline: none"></div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 5px">
-            <span style="font-size: 12px; color: #596170">업종 <span style="color: #8a91a0">· 연결한 MI에서 상속</span></span>
-            <div style="height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #ffffff; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 10px">
-              <span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg>자동</span>
-              <span style="font-size: 13.5px; font-weight: 600; white-space: nowrap">외식 · 카페</span>
-              <span style="font-size: 12px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0">업종판 제작 중 → 범용</span>
-              <a href="VP1Q.dc.html" style="height: 28px; padding: 0 9px; border-radius: 7px; font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">바꾸기</a>
-            </div>
-          </div>
-        </div>
-        <div style="padding: 10px 18px 0 18px">
-          <label for="more" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">덧붙일 내용</label>
-          <textarea id="more" placeholder="덧붙일 내용 (예: 결재는 CFO, 비용 절감이 1순위, 경쟁사 이야기는 빼 주세요)" style="width: 100%; height: 56px; box-sizing: border-box; resize: none; border: 1px solid #e2e5ea; border-radius: 12px; background: #f5f6f8; padding: 10px 14px; font-size: 14px; line-height: 1.6; color: #121417; outline: none"></textarea>
-        </div>
-        <div style="padding: 10px 18px 14px 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
-          <div style="display: flex; align-items: center; gap: 6px; min-width: 0">
-            <button aria-label="파일 첨부" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12l-8.5 8.5a5 5 0 0 1-7-7L14 5a3.5 3.5 0 0 1 5 5l-8.5 8.5a2 2 0 0 1-3-3L16 7"/></svg></button>
-            <span style="font-size: 12.5px; color: #596170; white-space: nowrap">RFP를 올리면 평가 기준 · 결재 구조까지 읽어요</span>
-          </div>
-          <a href="VP2.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; flex-shrink: 0; white-space: nowrap">
-            <span>가치 구조 만들기</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </main>
+<div style="width: 1440px; height: 900px; overflow: hidden">
+  <dc-import name="Gate" content="vp" hint-size="1440px,900px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() {
-    // 연결 후보: [종류, 이름, 뽑을 수 있는 재료, 연결, 상태, 아이콘]
-    const S = [
-      ['Storyboard', 'A 커피 프랜차이즈 매장 리뉴얼', 'Key Message 3 · 요구사항 5 → 가치 · 과제', true, '연결됨', 'M4 5h16v14H4z M4 11h16 M10 11v8'],
-      ['Market Intelligence', 'A 커피 프랜차이즈 시장·경쟁사 분석 v2', '과제 6 · 사용자 3 · 삼성 강점 3 · 수치 12 → 과제 · 근거 · 이해관계자', true, '연결됨', 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2'],
-      ['유관 사례', '글로벌 버거 체인 드라이브스루 옥외 메뉴보드', '효과 수치 2 (교체 리드타임 · 전력) → 기대 효과', false, '연결 추천', 'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z M9 14h6']
-    ];
-    const srcs = S.map(([kind, title, gives, on, st, icon]) => ({
-      kind, title, gives, on, st, icon, aria: title + ' 연결',
-      stStyle: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: inline-flex; align-items: center; white-space: nowrap; flex-shrink: 0; ' + (on ? 'background: #f0f2f5; color: #121417;' : 'background: #ffffff; color: #1428a0; border: 1px solid #1428a0;')
-    }));
-    // 4축: [축, 채움 %, 내용, 수준, 에이전트가 할 일]
-    const A = [
-      ['과제', 100, '6개 · 비용 수치가 붙은 것 3', '충분', '그대로 사용'],
-      ['가치', 100, 'Key Message 3 · 삼성 강점 3', '충분', 'KM 3 → 가치 기둥 3 후보'],
-      ['근거 수치', 70, '7 / 10 · 전 → 후 값 3개 비어 있음', '보통', '만들 때 사례 DB에서 찾아 채워요'],
-      ['이해관계자', 60, '본사 운영본부(결재) · 점장', '보통', '손님 관점은 MI 사용자에서 가져와요']
-    ];
-    const axes = A.map(([k, p, v, lv, todo]) => ({
-      k, v, lv, todo,
-      bar: 'width: ' + p + '%; height: 6px; border-radius: 999px; background: ' + (p >= 90 ? '#1428a0' : '#6f82d6') + ';',
-      lvStyle: 'font-size: 11.5px; font-weight: 700; white-space: nowrap; ' + (lv === '충분' ? 'color: #1428a0;' : 'color: #121417;')
-    }));
-    return { steps: ['재료', '가치 구조', '결과'], cur: 1, srcs, axes };
-  }
+  renderVals() { return { yes: true }; }
 }
 </script>
 </body>

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>경쟁사 분석 · 경쟁사 확인</title>
+<title>경쟁사 분석 · 리스트업 · 비교</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,120 +12,227 @@
 <style>
 body{margin:0;background:#f5f6f8}
 a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#a3a9b5}
+.c-ghost:hover,.c-card:hover{background:#f3f5fd}
+.c-aib:hover{background:#eaeefb}
+.c-ghost:focus-visible,.c-btn:focus-visible,.c-aib:focus-visible,.c-card:focus-visible,.c-tab:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 </style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="competitor" current="A 커피 메뉴보드 경쟁사 분석" hint-size="260px,900px"></dc-import>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="" hint-size="260px,900px"></dc-import>
   <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="경쟁사 분석" title="A 커피 메뉴보드 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
-    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
-      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
-        <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">확인 1 / 1</span>
-        <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">이 경쟁사들로 분석할까요?</h1>
-        <span style="font-size: 14px; color: #596170">입력에서 읽은 4가지로 후보 6곳을 찾았어요. 추천 4곳은 켜 두었고, 빼거나 더할 수 있어요.</span>
+    <dc-import name="TopBar" section="경쟁사 분석" title="새 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 18px 40px 18px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+          <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em">경쟁사를 리스트업하고 우리 제안과 비교해요</h1>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden">
+            <span style="font-weight: 600">비교 기준 · DSS-01</span>
+            <sc-for list="{{cats}}" as="c" hint-placeholder-count="5"><span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #ffffff; border: 1px solid #e2e5ea; font-weight: 600; color: #3d4452; display: flex; align-items: center">{{c}}</span></sc-for>
+          </div>
+        </div>
+        <button class="c-aib" onClick="{{runAi}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 경쟁사 후보군 웹 탐색</button>
       </div>
 
-      <div style="height: 44px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; display: flex; align-items: center; gap: 6px; padding: 0 14px 0 10px">
-        <sc-for list="{{found}}" as="f" hint-placeholder-count="4">
-          <span style="height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #e6f4ee; color: #0b6e4f; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; min-width: 0; flex-shrink: 1">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
-            <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.t}}</span>
-          </span>
-        </sc-for>
-        <span style="flex-grow: 1"></span>
-        <a href="CA1.dc.html" style="font-size: 12.5px; font-weight: 600; color: #1428a0; white-space: nowrap; flex-shrink: 0">바꾸기</a>
-      </div>
-
-      <div style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
-        <div role="group" aria-label="경쟁사 후보 6곳" style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden">
-          <sc-for list="{{cands}}" as="c" hint-placeholder-count="6">
-            <div style="{{c.row}}">
-              <button role="switch" aria-checked="{{c.on}}" aria-label="{{c.switchLabel}}" onClick="{{c.pick}}" style="{{c.sw}}"><span style="{{c.knob}}"></span></button>
-              <span style="{{c.letter}}">{{c.id}}</span>
-              <div style="width: 186px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; min-width: 0">
-                <span style="{{c.name}}">경쟁사 {{c.id}}</span>
-                <span style="{{c.kind}}">{{c.kindText}}</span>
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 14px">
+        <!-- 경쟁사 목록 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="height: 42px; display: flex; align-items: center; padding: 0 14px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 14px; font-weight: 700; flex-grow: 1">경쟁사 {{n}}</span><span style="font-size: 11.5px; color: #8a91a0">점선은 AI 후보</span></div>
+          <div style="flex-grow: 1; min-height: 0; padding: 6px; display: flex; flex-direction: column; gap: 4px; overflow: hidden">
+            <sc-for list="{{list}}" as="r" hint-placeholder-count="2">
+              <div style="{{r.wrap}}">
+                <button class="c-card" onClick="{{r.pick}}" aria-pressed="{{r.on}}" style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; padding: 8px 10px; border: none; border-radius: 9px; background: transparent; text-align: left; color: #121417">
+                  <span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">{{r.t}}</span><span style="{{r.tagStyle}}">{{r.tag}}</span></span>
+                  <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.meta}}</span>
+                  <span style="font-size: 11.5px; color: #1428a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.why}}</span>
+                </button>
+                <sc-if value="{{r.cand}}" hint-placeholder-val="{{false}}"><button class="c-ghost" onClick="{{r.add}}" style="align-self: center; height: 28px; margin-right: 6px; padding: 0 10px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; flex-shrink: 0">추가</button></sc-if>
               </div>
-              <div style="width: 112px; flex-shrink: 0; display: flex; gap: 4px">
-                <sc-for list="{{c.chips}}" as="p" hint-placeholder-count="3">
-                  <span style="height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 5px; background: #f0f2f5; color: #596170; font-size: 11px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{p}}</span>
+            </sc-for>
+          </div>
+          <div style="padding: 8px 10px 10px 10px; border-top: 1px solid #f0f2f5; flex-shrink: 0">
+            <label for="ca-add" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">경쟁사 추가</label>
+            <input id="ca-add" placeholder="+ 회사 이름 · 위키 정보를 불러와요" style="width: 100%; height: 36px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 9px; padding: 0 10px; font-size: 12.5px; color: #121417; outline: none">
+          </div>
+        </div>
+
+        <!-- 선택한 경쟁사 -->
+        <div style="{{detailStyle}}">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px 0 18px; flex-shrink: 0">
+            <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 16px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{d.letter}}</span>
+            <span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1; min-width: 0">
+              <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 17px; font-weight: 700">{{d.t}}</span><span style="{{d.tagStyle}}">{{d.tag}}</span></span>
+              <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.oneLine}}</span>
+            </span>
+            <sc-if value="{{d.isCand}}" hint-placeholder-val="{{false}}"><button class="c-ghost" onClick="{{d.add}}" style="height: 34px; padding: 0 14px; border-radius: 9px; border: none; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 700; white-space: nowrap">목록에 추가</button></sc-if>
+          </div>
+          <div role="tablist" style="display: flex; gap: 2px; padding: 10px 16px 0 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+            <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3"><button class="c-tab" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.t}}</button></sc-for>
+          </div>
+
+          <div style="flex-grow: 1; min-height: 0; overflow: hidden; padding: 14px 18px; display: flex; flex-direction: column; gap: 12px">
+            <!-- 개요 · 선별 기준 -->
+            <sc-if value="{{tabInfo}}" hint-placeholder-val="{{false}}">
+              <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+                <sc-for list="{{d.meta}}" as="m" hint-placeholder-count="6">
+                  <div style="box-sizing: border-box; padding: 9px 11px; border-radius: 9px; background: #f5f6f8; display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 11px; color: #596170">{{m.k}}</span><span style="{{m.style}}">{{m.v}}</span></div>
                 </sc-for>
               </div>
-              <span style="{{c.why}}">{{c.whyText}}</span>
-              <span style="width: 72px; flex-shrink: 0; display: flex; justify-content: flex-end"><span style="{{c.badge}}">{{c.badgeText}}</span></span>
-              <span style="width: 30px; flex-shrink: 0; text-align: right; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">{{c.conf}}</span>
-            </div>
-          </sc-for>
-        </div>
+              <span style="font-size: 11.5px; color: #8a91a0">{{d.src}}</span>
+              <span style="font-size: 13.5px; font-weight: 700; margin-top: 4px">선별 기준</span>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <sc-for list="{{d.crit}}" as="c" hint-placeholder-count="3">
+                  <div style="display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea">
+                    <span style="width: 84px; flex-shrink: 0; font-size: 12px; font-weight: 700; color: #1428a0">{{c.k}}</span>
+                    <span style="font-size: 13px; flex-grow: 1">{{c.v}}</span>
+                    <sc-if value="{{c.tbd}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #fff4dc; color: #7a4f00; font-size: 11px; font-weight: 700; display: flex; align-items: center">확인 필요</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
 
-        <div style="height: 38px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 12px">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          <label for="comp" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">경쟁사 직접 추가</label>
-          <input id="comp" placeholder="경쟁사 직접 추가 (회사명 · 제품명)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
-        </div>
+            <!-- 제안 기준 제품 · 솔루션 비교 -->
+            <sc-if value="{{tabCmp}}" hint-placeholder-val="{{true}}">
+              <div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 6px; align-items: center; font-size: 11.5px; font-weight: 700; color: #596170; padding: 0 2px"><span>우리 제안 ↔ 경쟁 제품</span><span>스펙</span><span>가격</span><span>유관 사례</span><span>ESG</span><span>브랜드 평판</span></div>
+              <sc-for list="{{d.pairs}}" as="p" hint-placeholder-count="2">
+                <div style="display: grid; grid-template-columns: 200px repeat(5, minmax(0, 1fr)); column-gap: 6px; align-items: stretch; padding: 10px 2px; border-top: 1px solid #f0f2f5">
+                  <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                    <span style="font-size: 11px; color: #8a91a0">{{p.where}}</span>
+                    <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">{{p.ours}}</span>
+                    <span style="font-size: 12px; color: #3d4452">↔ {{p.theirs}}</span>
+                  </span>
+                  <sc-for list="{{p.dims}}" as="x" hint-placeholder-count="5">
+                    <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0"><span style="{{x.pill}}">{{x.v}}</span><span style="font-size: 11px; line-height: 1.4; color: #3d4452">{{x.note}}</span></span>
+                  </sc-for>
+                </div>
+              </sc-for>
+              <span style="font-size: 11.5px; color: #8a91a0">판정은 우리 제품 기준 · 우위 / 비슷 / 열위 · 수치와 견적은 원문 · 사내 자료로 확인</span>
+            </sc-if>
 
-        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; padding: 0 2px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">실명은 이 작업 안에서만 보여요 · 내보내기엔 익명(경쟁사 A · B …) · 직접 넣거나 뺀 곳은 다시 분석해도 유지돼요</span>
+            <!-- 장단점 -->
+            <sc-if value="{{tabPc}}" hint-placeholder-val="{{false}}">
+              <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+                <sc-for list="{{d.pc}}" as="b" hint-placeholder-count="2">
+                  <div style="{{b.style}}">
+                    <span style="font-size: 13px; font-weight: 700">{{b.h}}</span>
+                    <sc-for list="{{b.items}}" as="i" hint-placeholder-count="3"><span style="font-size: 12.5px; line-height: 1.5">· {{i}}</span></sc-for>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="box-sizing: border-box; border-radius: 12px; border: 1.5px solid #1428a0; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+                <span style="font-size: 13px; font-weight: 700; color: #1428a0">그래서 우리가 주장할 것</span>
+                <sc-for list="{{d.claims}}" as="c" hint-placeholder-count="3"><span style="display: flex; gap: 8px; font-size: 12.5px; line-height: 1.5"><span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #eaeefb; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">{{c.k}}</span>{{c.v}}</span></sc-for>
+              </div>
+            </sc-if>
+          </div>
         </div>
       </div>
 
-      <div style="margin-top: auto; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
-        <a href="CA1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>뒤로</a>
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <a href="SB1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
         <span style="flex-grow: 1"></span>
-        <span style="font-size: 12.5px; color: #596170; white-space: nowrap">선택 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{selCount}}</span>곳</span>
-        <a href="CA3.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">{{selCount}}곳으로 분석<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">경쟁사 {{n}} · 비교 쌍 {{nPairs}}</span>
+        <a class="c-btn" href="CA_Done.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</a>
       </div>
     </section>
   </main>
+
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"tab":{"editor":"enum","options":["info","cmp","pc"],"default":"cmp"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
-    const st = this.state || {};
-    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
-
-    // 입력에서 읽은 4가지 — 모두 찾음
-    const found = ['고객사 · A 커피 프랜차이즈', '업종 · 외식 · 카페', '장소 · 수도권 직영점', '제품 · 55" 사이니지 + 배포 솔루션'].map((t) => ({ t }));
-
-    // 후보: 글자 · 유형 · 근거 칩 · 근거 한 줄 · 상태 · 신뢰 (실명은 화면에 쓰지 않음)
-    const C = [
-      ['A', '국내 대형 가전 · 사이니지', ['업종', '제품'], '같은 업종 도입사례 6건 · 55" 라인업 · 자체 CMS', 'rec', '0.91'],
-      ['B', '글로벌 사이니지 전문', ['업종', '장소', '제품'], '수도권 프랜차이즈 사례 3건 · 3rd-party CMS 연동', 'rec', '0.86'],
-      ['C', '클라우드 CMS 소프트웨어', ['업종', '제품'], '메뉴보드 콘텐츠 배포 · 하드웨어 없음 (제품 일부 겹침)', 'rec', '0.78'],
-      ['D', '키오스크 · 메뉴보드 통합 벤더', ['업종', '장소'], '외식 특화 · 수도권 설치 파트너망', 'rec', '0.74'],
-      ['E', '저가형 상업용 디스플레이 수입사', ['제품'], '가격대 겹침 · 레퍼런스 미확인', 'check', '0.52'],
-      ['F', '오프라인 광고 매체사', ['업종'], '업종 겹침 · 제품 다름', 'drop', '0.31']
-    ];
-    // 신뢰 0.70 이상(추천)만 기본 켜짐 · 유저 토글은 state 에 유지
-    const on = Array.isArray(st.on) ? st.on : C.map((c) => c[4] === 'rec');
-    const BADGE = {
-      rec: ['추천', ' background: #1428a0; color: #ffffff;'],
-      check: ['확인 필요', ' background: #ffffff; color: #121417; border: 1px solid #121417;'],
-      drop: ['제외 제안', ' background: #f0f2f5; color: #596170;']
+    const pai = !!this.props.ai;
+    const ptab = this.props.tab ?? 'cmp';
+    const s = Object.assign({ ai: pai, add: {}, sel: pai ? 'C' : 'A', tab: ptab, pop: false }, (this.state && this.state.k === String(pai) + ptab) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: String(pai) + ptab }));
+    // 경쟁사: id → { 이름, 직접/AI, 메타(위키), 선별 기준, 비교 쌍, 장단점, 주장 }
+    // 비교 판정: + 우리 우위 · = 비슷 · - 우리 열위 · ? 자료 없음
+    const C = {
+      A: { t: '경쟁사 A', by: 'manual', why: '사이니지 · LED 겹침 · 로비 · 라운지',
+        meta: [['본사', '국내'], ['규모', '대기업 · 매출 [위키 값]'], ['임직원', '[위키 값]'], ['업종', '전자 · 디스플레이'], ['주력 사업', '상업용 디스플레이 · LED 월'], ['B2B 오피스', '국내 납품 다수']],
+        crit: [['제품군', '사이니지 · LED 월이 DSS-01 로비 · 라운지 제품과 겹침', false], ['공간', '로비 · 라운지 · 공용공간', false], ['고객 접점', 'E 자산운용 거래 이력', true]],
+        pairs: [['로비 미디어월', 'The Wall IAB 146"', '올인원 LED 월 · 동급 크기', [['=', '해상도 동급 · 밝기 수치 확인'], ['-', '가격 이점 없음 · 초기가 낮음 [견적 확인]'], ['+', '국내 AI 오피스 로비 사례'], ['+', '저전력 · 소재 인증 [확인]'], ['=', '비슷']]],
+          ['로비 안내 사이니지', 'Smart Signage QM55C', '55" 보급형 사이니지', [['+', '24/7 운영 등급 · 고휘도'], ['-', '단가 높음'], ['=', '비슷'], ['=', '비슷'], ['+', 'B2B 사이니지 인지도']]],
+          ['콘텐츠 관리', 'MagicINFO', '자사 CMS', [['+', '원격 일괄 배포 · 예약 · 공간 연동'], ['=', '비슷'], ['+', '대형 오피스 · 리테일 사례'], ['?', '자료 없음'], ['=', '비슷']]]],
+        pros: ['초기 도입가가 낮음 [견적 확인]', '국내 유지보수 거점이 많음 [확인 필요]'],
+        cons: ['사이니지 · IoT · 관제가 따로 놀아 공간 통합이 약함', 'AI 오피스 레퍼런스가 적음'],
+        claims: [['통합', 'MagicINFO · SmartThings Pro · b.IoT 하나의 플랫폼으로 공간 7개를 묶음'], ['사례', '국내 AI 오피스 로비 도입사례로 RQ-01 ‘최초 AI Ready’ 뒷받침'], ['가격', '초기가는 높지만 원격 관리로 운영비 절감 — RQ-01 에너지 20% 근거와 연결']] },
+      B: { t: '경쟁사 B', by: 'manual', why: '협업 디스플레이 겹침 · 회의실',
+        meta: [['본사', '해외'], ['규모', '중견 · 매출 [위키 값]'], ['임직원', '[위키 값]'], ['업종', '전자 · 협업 디스플레이'], ['주력 사업', '인터랙티브 보드 · 회의실 솔루션'], ['B2B 오피스', '회의실 단독 납품 중심']],
+        crit: [['제품군', '인터랙티브 보드가 DSS-01 Flip Pro와 겹침', false], ['공간', '회의실', false]],
+        pairs: [['회의실 협업 보드', 'Flip Pro WA75D', '75" 인터랙티브 보드', [['=', '터치 · 판서 동급'], ['=', '가격 비슷'], ['-', '회의실 단독 사례가 더 많음'], ['=', '비슷'], ['=', '비슷']]],
+          ['회의실 화상 화면', 'Smart Signage QB55C', '회의실 디스플레이', [['=', '비슷'], ['+', '단가 낮음 [견적 확인]'], ['=', '비슷'], ['?', '자료 없음'], ['+', '인지도']]]],
+        pros: ['회의실 협업 소프트웨어 생태계가 넓음', '회의실 단독 레퍼런스 많음'],
+        cons: ['로비 · 관제 등 다른 공간 제품이 없음', '국내 지원 범위 [확인 필요]'],
+        claims: [['통합', '회의실만이 아니라 건물 전체를 같은 플랫폼으로'], ['사례', '오피스 전체 도입사례로 범위 차별화']] },
+      C: { t: '경쟁사 C', by: 'ai', why: '비디오월 · 관제 겹침 · 중앙관제실', src: '업계 뉴스 · 2026-08',
+        meta: [['본사', '국내'], ['규모', '중견 · 매출 [위키 값]'], ['임직원', '[위키 값]'], ['업종', '산업용 디스플레이 · 관제'], ['주력 사업', '관제 비디오월 · 상황실 구축'], ['B2B 오피스', '빌딩 관제 납품 이력']],
+        crit: [['제품군', '관제 비디오월이 DSS-01 중앙관제실 VM55B와 겹침', false], ['공간', '중앙관제실', false], ['근거', '빌딩 관제 납품 보도 · 업계 뉴스 2026-08', false]],
+        pairs: [['중앙관제실', '비디오월 VM55B', '55" 관제 비디오월', [['=', '베젤 · 밝기 수치 확인'], ['-', '구축 묶음가 낮음 [견적 확인]'], ['=', '비슷'], ['?', '자료 없음'], ['+', '글로벌 인지도']]],
+          ['관제 데이터', 'b.IoT', '상황실 소프트웨어', [['+', '설비 · 에너지 데이터 연동'], ['=', '비슷'], ['+', '에너지 절감 사례'], ['+', '에너지 실측 증빙'], ['=', '비슷']]]],
+        pros: ['상황실 구축 경험 · 시공 일괄', '구축 묶음 가격 경쟁력'],
+        cons: ['오피스 사용자 공간(로비 · 회의실) 제품 없음', '에너지 데이터 연동이 약함'],
+        claims: [['ESG', 'b.IoT 실측 데이터로 에너지 20% 절감 증빙 — RQ-01'], ['통합', '관제 화면과 공간 기기를 한 플랫폼에서']] },
+      D: { t: '경쟁사 D', by: 'ai', why: 'IoT · 빌딩 관리 겹침 · 공용공간 · 관제실', src: '회사 소개 페이지',
+        meta: [['본사', '해외'], ['규모', '대기업 · 매출 [위키 값]'], ['임직원', '[위키 값]'], ['업종', '빌딩 자동화'], ['주력 사업', '빌딩 관리 · 에너지 플랫폼'], ['B2B 오피스', '대형 빌딩 다수']],
+        crit: [['제품군', '빌딩 관리 플랫폼이 b.IoT · SmartThings Pro와 겹침', false], ['공간', '공용공간 · 관제실', false]],
+        pairs: [['공간 IoT · 에너지', 'b.IoT · SmartThings Pro', '빌딩 관리 플랫폼', [['=', '비슷'], ['=', '비슷'], ['-', '대형 빌딩 레퍼런스 많음'], ['=', '비슷'], ['=', '비슷']]]],
+        pros: ['빌딩 설비 자동화 레퍼런스가 많음'], cons: ['디스플레이 · 사용자 경험 제품이 없음'],
+        claims: [['통합', '디스플레이 · 사이니지까지 한 번에 — 사용자가 보는 화면과 설비를 연결']] },
+      E: { t: '경쟁사 E', by: 'ai', why: '사이니지 · CMS 겹침 · 로비 · 공용공간', src: '조달 공고 · 2026-06',
+        meta: [['본사', '국내'], ['규모', '중소 · 매출 [위키 값]'], ['임직원', '[위키 값]'], ['업종', '사이니지 SI'], ['주력 사업', '사이니지 · CMS 묶음 납품'], ['B2B 오피스', '공공 · 오피스 납품']],
+        crit: [['제품군', '사이니지 + CMS 묶음이 QM55C · MagicINFO와 겹침', false], ['공간', '로비 · 공용공간', false]],
+        pairs: [['사이니지 + CMS', 'QM55C + MagicINFO', '타사 패널 + 자체 CMS', [['+', '패널 · CMS 같은 제조사'], ['-', '묶음가 낮음'], ['=', '비슷'], ['?', '자료 없음'], ['+', '제조사 브랜드']]]],
+        pros: ['묶음가가 낮음', '공공 조달 경험'], cons: ['패널 · CMS 제조사가 달라 장애 책임이 나뉨'],
+        claims: [['브랜드', '패널부터 CMS까지 같은 제조사 · 한 곳에서 지원']] }
     };
-    const cands = C.map(([id, kindText, chips, whyText, status, conf], i) => {
-      const isOn = !!on[i];
-      return {
-        id, kindText, chips, whyText, conf, on: isOn,
-        switchLabel: '경쟁사 ' + id + (isOn ? ' 빼기' : ' 넣기'),
-        pick: () => { const n = on.slice(); n[i] = !n[i]; this.setState({ on: n }); },
-        row: 'display: flex; align-items: center; gap: 10px; height: 56px; box-sizing: border-box; padding: 0 16px;' + (i > 0 ? ' border-top: 1px solid #f0f2f5;' : ''),
-        sw: 'width: 36px; height: 22px; border-radius: 999px; border: none; position: relative; padding: 0; flex-shrink: 0; cursor: pointer;' + (isOn ? ' background: #1428a0;' : ' background: #c9ced6;'),
-        knob: 'position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff;' + (isOn ? ' right: 3px;' : ' left: 3px;'),
-        letter: 'width: 28px; height: 28px; border-radius: 8px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;' + (isOn ? ' background: #121417; color: #ffffff;' : ' background: #e2e5ea; color: #8a91a0;'),
-        name: 'font-size: 13.5px; font-weight: 600; white-space: nowrap;' + (isOn ? ' color: #121417;' : ' color: #8a91a0;'),
-        kind: 'font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (isOn ? ' color: #596170;' : ' color: #8a91a0;'),
-        why: 'flex-grow: 1; min-width: 0; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (isOn ? ' color: #596170;' : ' color: #8a91a0;'),
-        badge: 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' + BADGE[status][1],
-        badgeText: BADGE[status][0]
-      };
+    const order = ['A', 'B'].concat(['C', 'D', 'E'].filter((id) => s.add[id] || s.ai));
+    const isIn = (id) => C[id].by === 'manual' || !!s.add[id];
+    const sel = C[s.sel] ? s.sel : 'A';
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+    const tagOf = (id) => C[id].by === 'manual' ? ['직접', tagBase + ' background: #f0f2f5; color: #3d4452;'] : isIn(id) ? ['AI 웹 탐색 · 추가', tagBase + ' background: #e6f4ee; color: #0b6e4f;'] : ['AI 후보', tagBase + ' border: 1px dashed #1428a0; color: #1428a0;'];
+    const list = order.map((id) => {
+      const c = C[id]; const on = sel === id; const cand = !isIn(id); const [tag, tagStyle] = tagOf(id);
+      return { t: c.t, tag, tagStyle, on, cand, why: c.why, meta: c.meta[3][1] + ' · ' + c.meta[1][1].split(' · ')[0],
+        wrap: 'display: flex; align-items: stretch; border-radius: 10px; flex-shrink: 0;' + (on ? ' background: #eaeefb;' : '') + (cand ? ' border: 1px dashed #b8c2e6;' : ' border: 1px solid transparent;'),
+        pick: () => put({ sel: id }), add: () => put({ add: Object.assign({}, s.add, { [id]: true }), sel: id }) };
     });
-    const selCount = on.filter(Boolean).length;
-    return { steps, cur: 2, found, cands, selCount };
+    const c = C[sel];
+    const V = { '+': ['우위', ' background: #e6f4ee; color: #0b6e4f;'], '=': ['비슷', ' background: #f0f2f5; color: #3d4452;'], '-': ['열위', ' background: #fff4dc; color: #7a4f00;'], '?': ['자료 없음', ' border: 1px dashed #b8bec8; color: #8a91a0;'] };
+    const [tag, tagStyle] = tagOf(sel);
+    const d = {
+      t: c.t, letter: sel, tag, tagStyle, isCand: !isIn(sel),
+      oneLine: c.meta[3][1] + ' · ' + c.meta[4][1] + ' · ' + c.meta[0][1],
+      meta: c.meta.map(([k, v]) => ({ k, v, style: 'font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (v.indexOf('[') >= 0 ? ' color: #7a4f00;' : '') })),
+      src: '기본 정보 · Wikipedia 기준 <원문 URL>' + (c.src ? ' · 후보 근거 · ' + c.src : ''),
+      crit: c.crit.map(([k, v, tbd]) => ({ k, v, tbd })),
+      pairs: c.pairs.map(([where, ours, theirs, dims]) => ({ where, ours, theirs, dims: dims.map(([j, note]) => ({ v: V[j][0], note, pill: 'align-self: flex-start; height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' + V[j][1] })) })),
+      pc: [['경쟁사 장점 · 삼성 대비', c.pros, 'background: #fff9ec; border: 1px solid #f1dfb3;'], ['경쟁사 단점 · 삼성 대비', c.cons, 'background: #f3faf6; border: 1px solid #cfe9dc;']].map(([h, items, st]) => ({ h, items, style: 'box-sizing: border-box; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 5px; ' + st })),
+      claims: c.claims.map(([k, v]) => ({ k, v }))
+    };
+    const T = [['info', '개요 · 선별 기준'], ['cmp', '제안 기준 비교'], ['pc', '장단점 · 주장 포인트']];
+    const tabs = T.map(([id, t]) => { const on = s.tab === id; return { t, on, pick: () => put({ tab: id }),
+      style: 'height: 36px; padding: 0 14px; border: none; background: transparent; font-size: 13px; white-space: nowrap; border-bottom: 2px solid ' + (on ? '#1428a0; color: #1428a0; font-weight: 700;' : 'transparent; color: #596170; font-weight: 600;') }; });
+    const inList = ['A', 'B', 'C', 'D', 'E'].filter(isIn);
+    return {
+      steps: ['Storyboard', '경쟁사 리스트업'], two: 2,
+      cats: ['사이니지 6', 'LED 1', '협업 디스플레이 1', '비디오월 1', 'IoT · 솔루션 3'],
+      list, d, tabs, tabInfo: s.tab === 'info', tabCmp: s.tab === 'cmp', tabPc: s.tab === 'pc',
+      detailStyle: 'box-sizing: border-box; background: #ffffff; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden;' + (isIn(sel) ? ' border: 1px solid #e2e5ea;' : ' border: 1.5px dashed #1428a0;'),
+      n: inList.length, nPairs: inList.reduce((a, id) => a + C[id].pairs.length, 0),
+      popOpen: s.pop,
+      runAi: () => put({ ai: true, sel: 'C' }), openPop: () => put({ pop: true }), closePop: () => put({ pop: false })
+    };
   }
 }
 </script>

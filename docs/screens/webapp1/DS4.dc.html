@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>DSS · 솔루션</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button{font-family:inherit;cursor:pointer}
+.o-ghost:hover{background:#f3f5fd}
+.o-aib:hover{background:#eaeefb}
+.o-card:focus-visible,.o-ghost:focus-visible,.o-btn:focus-visible,.o-aib:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="dss" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간별 제품 매칭 DSS" title="판교 스타트업 단지" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{four}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="SB-05" cur="SB-05" note="공간 6 · 제품 10" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 22px 120px 22px 120px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1">
+          <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em">솔루션을 고르세요 · 0개 이상</h1>
+          <span style="font-size: 13px; color: #596170">고르지 않아도 저장할 수 있어요.</span>
+        </div>
+        <button class="o-aib" onClick="{{runAi}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 솔루션 추천</button>
+      </div>
+      <sc-if value="{{overlap}}" hint-placeholder-val="{{false}}">
+        <div role="status" style="flex-shrink: 0; display: flex; align-items: center; gap: 10px; height: 38px; box-sizing: border-box; padding: 0 14px; border-radius: 10px; background: #fff4dc; color: #7a4f00; font-size: 12.5px; font-weight: 600">MagicINFO와 VXT는 둘 다 사이니지 CMS예요. 같은 사이니지에 함께 쓰는 경우는 드물어요.</div>
+      </sc-if>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; flex-shrink: 0">
+        <sc-for list="{{sols}}" as="o" hint-placeholder-count="5">
+          <div style="{{o.wrap}}">
+            <button class="o-card" role="checkbox" aria-checked="{{o.on}}" onClick="{{o.toggle}}" style="display: flex; align-items: flex-start; gap: 12px; padding: 0; border: none; background: transparent; text-align: left; color: #121417; flex-grow: 1; min-width: 0">
+              <span style="{{o.box}}"><sc-if value="{{o.on}}" hint-placeholder-val="{{false}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></span>
+              <span style="display: flex; flex-direction: column; gap: 5px; min-width: 0; flex-grow: 1">
+                <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 15px; font-weight: 700">{{o.t}}</span><sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 5px; border: 1px dashed #1428a0; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">AI 추천</span></sc-if></span>
+                <span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{o.d}}</span>
+                <span style="font-size: 12px; color: #3d4452"><b style="font-weight: 700">함께 쓰는 제품</b> · {{o.links}}</span>
+                <sc-if value="{{o.rec}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #1428a0">근거 · {{o.why}}</span></sc-if>
+              </span>
+            </button>
+            <button class="o-ghost" onClick="{{o.detail}}" style="align-self: flex-start; height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0">상세</button>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <a href="DS2.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>공간 · 제품</a>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">{{selLine}}</span>
+        <a class="o-btn" href="DS_Done.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">DSS 저장</a>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-05" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{detailOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 30"></div>
+    <div style="position: absolute; left: 120px; top: 36px; width: 1200px; height: 828px; z-index: 31">
+      <dc-import name="SolutionDetail" tab="overview" on-close="{{closeDetail}}" hint-size="1200px,828px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pai = !!this.props.ai;
+    const s = Object.assign({ on: {}, ai: pai, pop: '' }, (this.state && this.state.k === String(pai)) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: String(pai) }));
+    // [이름, 설명, 함께 쓰는 제품, AI 근거]
+    const SO = [
+      ['MagicINFO', '사이니지 콘텐츠를 한 곳에서 배포 · 예약', '로비 · 라운지 · 공용 공간 사이니지 · 전시 미디어월', 'RQ-05 1 입주사 안내 · 사이니지 6대'],
+      ['SmartThings Pro', '공간 기기 · 센서를 연결하고 자동화', '공용 회의실 Flip · 키오스크 · 센서', 'RQ-05 1 공용 회의실 예약'],
+      ['b.IoT', '빌딩 설비 · 에너지 데이터를 관제실로', '통합 관제실 비디오월 · 센서', 'RQ-05 3 단지 에너지 모니터링'],
+      ['VXT', '클라우드형 사이니지 CMS · 구독형', '로비 · 라운지 · 공용 공간 사이니지', ''],
+      ['Knox', '모바일 · 업무 기기 보안 관리', '—', '']
+    ];
+    const sols = SO.map(([t, d, links, why], i) => {
+      const on = !!s.on[i];
+      const rec = s.ai && !!why;
+      return { t, d, links, why, rec, on,
+        wrap: 'box-sizing: border-box; min-height: 112px; padding: 14px 14px 14px 16px; border-radius: 14px; background: #ffffff; display: flex; gap: 10px;' + (on ? ' border: 2px solid #1428a0;' : rec ? ' border: 1.5px dashed #1428a0;' : ' border: 1px solid #e2e5ea;'),
+        box: 'width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #1428a0;' : ' border: 2px solid #c9d0e6; background: #ffffff;'),
+        toggle: () => put({ on: Object.assign({}, s.on, { [i]: !on }) }),
+        detail: () => put({ pop: 'sol' }) };
+    });
+    const n = Object.keys(s.on).filter((k) => s.on[k]).length;
+    return {
+      steps: ['Storyboard', '공간 · 제품', '솔루션'], four: 3,
+      sols, overlap: !!(s.on[0] && s.on[3]),
+      selLine: n ? '솔루션 ' + n + '개 선택' : '솔루션 없이 저장해도 돼요',
+      popOpen: s.pop === 'sb', detailOpen: s.pop === 'sol',
+      runAi: () => put({ ai: true }),
+      openPop: () => put({ pop: 'sb' }), closePop: () => put({ pop: '' }), closeDetail: () => put({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

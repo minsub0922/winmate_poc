@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>연결된 Storyboard 바</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+.sbb-chip:hover{border-color:#1428a0}
+.sbb-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1180px; height: 52px; box-sizing: border-box; display: flex; align-items: center; gap: 10px; padding: 0 28px; background: #ffffff; border-bottom: 1px solid #e2e5ea; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417; overflow: hidden">
+  <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: #3d4452; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M4 11h16 M10 11v8"/></svg>연결된 Storyboard</span>
+  <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+    <span style="font-size: 12.5px; color: #596170">{{emptyText}}</span>
+  </sc-if>
+  <sc-for list="{{chips}}" as="c" hint-placeholder-count="2">
+    <button class="sbb-chip" onClick="{{c.open}}" aria-label="{{c.label}}" style="{{c.style}}">
+      <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap">{{c.name}}</span>
+      <sc-if value="{{c.branch}}" hint-placeholder-val="{{false}}"><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #f0f2f5; color: #3d4452; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">분기</span></sc-if>
+      <span style="display: flex; align-items: center; gap: 2px">
+        <sc-for list="{{c.dots}}" as="d" hint-placeholder-count="8"><span style="{{d}}"></span></sc-for>
+      </span>
+      <span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{c.stage}}</span>
+    </button>
+  </sc-for>
+  <span style="flex-grow: 1"></span>
+  <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{note}}</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ids":{"editor":"text","default":"SB-01"},"cur":{"editor":"text","default":"SB-01"},"hi":{"editor":"text","default":""},"note":{"editor":"text","default":""},"emptyText":{"editor":"text","default":"저장하면 Storyboard가 자동으로 만들어져요"},"onOpen":{"editor":null},"$preview":{"width":1180,"height":52}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const SBS = {
+      'SB-01': ['용산 AI Ready 오피스', 'E 자산운용', '', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-01 v1' }],
+      'SB-02': ['용산 AI Ready 오피스 · 분기 B', 'E 자산운용', 'SB-01 · MI에서 분기', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-02 v1' }],
+      'SB-03': ['A 커피 매장 리뉴얼', 'A 커피 프랜차이즈', '', { rq: 'RQ-03 v1', dss: 'DSS-03 v1', ca: 'CA-03 v1', sp: 'SP-03 v1' }],
+      'SB-04': ['동탄 시니어 복합단지', 'F 시행사', '', { rq: 'RQ-04 v1' }],
+      'SB-05': ['판교 스타트업 단지', 'G 공사', '', { rq: 'RQ-05 v1' }],
+      'SB-06': ['성수 플래그십 리테일', 'K 리츠', '', { rq: 'RQ-06 v1' }]
+    };
+    const ORDER = ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'];
+    const stageOf = (d) => { const n = ['mi', 'ca', 'vp', 'sp', 'sc'].filter((k) => d[k]).length; if (d.ppt) return '제안서까지'; if (!d.dss) return '요구사항까지'; return n ? 'DSS + 콘텐츠 ' + n + '/5' : 'DSS까지'; };
+    const ids = String(this.props.ids ?? 'SB-01').split(',').map((x) => x.trim()).filter((x) => SBS[x]);
+    const cur = this.props.cur ?? ids[0];
+    const hi = this.props.hi ?? '';
+    const open = this.props.onOpen;
+    const chips = ids.map((id) => {
+      const [name, , from, done0] = SBS[id];
+      const done = Object.assign({}, done0);
+      if (hi && id === cur) done[hi] = done[hi] || 'new';
+      const on = id === cur;
+      return {
+        name, branch: !!from, stage: stageOf(done), label: name + ' 요약 보기',
+        dots: ORDER.map((k, i) => 'width: 7px; height: 12px; border-radius: 2px;' + (i === 2 || i === 7 ? ' margin-left: 3px;' : '') + (k === hi && on ? ' background: #0b6e4f;' : done[k] ? ' background: #1428a0;' : ' background: #e2e5ea;')),
+        style: 'height: 34px; box-sizing: border-box; padding: 0 10px; border-radius: 9px; display: flex; align-items: center; gap: 8px; flex-shrink: 0; color: #121417;' + (on ? ' border: 1.5px solid #1428a0; background: #f7f8fd;' : ' border: 1px solid #e2e5ea; background: #ffffff;'),
+        open: () => { if (open) open(id); }
+      };
+    });
+    return { chips, empty: chips.length === 0, emptyText: this.props.emptyText ?? '저장하면 Storyboard가 자동으로 만들어져요', note: this.props.note ?? '' };
+  }
+}
+</script>
+</body>
+</html>

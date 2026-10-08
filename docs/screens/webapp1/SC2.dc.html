@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>공간 시나리오 · 공간 · 시나리오 · 제품</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#a3a9b5}
+.c-sp:hover,.c-ghost:hover,.c-sc:hover{background:#f3f5fd}
+.c-aib:hover{background:#eaeefb}
+.c-sp:focus-visible,.c-ghost:focus-visible,.c-btn:focus-visible,.c-aib:focus-visible,.c-sc:focus-visible,.c-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="scenario" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간 시나리오 생성" title="새 공간 시나리오" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" on-open="{{openSb}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 16px 32px 16px 32px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; flex-grow: 1">공간마다 시나리오를 여러 개 써요</h1>
+        <span style="font-size: 12.5px; color: #596170; white-space: nowrap">공간 → 시나리오 → 장면 · 공간과 시나리오마다 제품 · 솔루션을 골라요</span>
+      </div>
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 196px minmax(0, 1fr); gap: 12px">
+        <!-- 1 공간 -->
+        <div role="tablist" aria-orientation="vertical" aria-label="공간" style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 6px; display: flex; flex-direction: column; gap: 2px; overflow: hidden">
+          <span style="font-size: 12px; font-weight: 700; color: #596170; padding: 6px 8px 4px 8px">공간 · DSS-01</span>
+          <sc-for list="{{spaces}}" as="p" hint-placeholder-count="7">
+            <button class="c-sp" role="tab" aria-selected="{{p.on}}" onClick="{{p.pick}}" style="{{p.style}}">
+              <span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 13.5px; font-weight: 700; flex-grow: 1; white-space: nowrap">{{p.t}}</span><sc-if value="{{p.warn}}" hint-placeholder-val="{{false}}"><span style="width: 8px; height: 8px; border-radius: 999px; background: #d98a00"></span></sc-if></span>
+              <span style="{{p.subStyle}}">{{p.sub}}</span>
+            </button>
+          </sc-for>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; min-height: 0; min-width: 0">
+          <!-- 공간 헤더 · 공간 제품 · 솔루션 -->
+          <div style="{{spHeadStyle}}">
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="font-size: 17px; font-weight: 700; white-space: nowrap">{{spName}}</span>
+              <span style="font-size: 12px; color: #596170; flex-grow: 1">공간 제품 · 솔루션 · 하나 이상</span>
+              <button class="c-aib" onClick="{{runAi}}" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 시나리오 3안</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap">
+              <sc-for list="{{spProds}}" as="x" hint-placeholder-count="3">
+                <span style="{{x.style}}"><span style="{{x.kindStyle}}">{{x.kind}}</span>{{x.t}}<button class="c-ghost" onClick="{{x.remove}}" aria-label="{{x.rmLabel}}" style="width: 20px; height: 20px; border-radius: 5px; border: none; background: transparent; color: #8a91a0; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>
+              </sc-for>
+              <button class="c-ghost" onClick="{{openPick}}" style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; white-space: nowrap">+ 추가 · 변경</button>
+              <sc-if value="{{spNone}}" hint-placeholder-val="{{false}}"><span style="height: 28px; padding: 0 10px; border-radius: 7px; background: #fff4dc; color: #7a4f00; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">공간마다 제품 · 솔루션이 하나 이상 있어야 해요</span></sc-if>
+            </div>
+          </div>
+
+          <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 10px">
+            <!-- 2 시나리오 목록 -->
+            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+              <div style="height: 38px; display: flex; align-items: center; padding: 0 12px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 13px; font-weight: 700; flex-grow: 1">시나리오 {{nSc}}</span><sc-if value="{{hasCand}}" hint-placeholder-val="{{false}}"><span style="font-size: 11px; color: #1428a0">점선은 AI 후보</span></sc-if></div>
+              <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 6px; display: flex; flex-direction: column; gap: 4px">
+                <sc-if value="{{noSc}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; color: #8a91a0; padding: 10px 8px; line-height: 1.5">아직 시나리오가 없어요. 직접 추가하거나 AI 3안을 받아 보세요.</span></sc-if>
+                <sc-for list="{{scs}}" as="c" hint-placeholder-count="3">
+                  <button class="c-sc" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="{{c.style}}">
+                    <span style="display: flex; align-items: center; gap: 6px"><span style="font-size: 13px; font-weight: 700; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.t}}</span><span style="{{c.tagStyle}}">{{c.tag}}</span></span>
+                    <span style="font-size: 11.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{c.who}}</span>
+                    <span style="font-size: 11px; color: #8a91a0">{{c.meta}}</span>
+                  </button>
+                </sc-for>
+              </div>
+              <div style="padding: 6px; border-top: 1px solid #f0f2f5; flex-shrink: 0"><button class="c-ghost" onClick="{{addSc}}" style="width: 100%; height: 34px; border-radius: 9px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 700">+ 시나리오 추가</button></div>
+            </div>
+
+            <!-- 3 시나리오 편집 -->
+            <div style="{{edStyle}}">
+              <sc-if value="{{noSc}}" hint-placeholder-val="{{false}}">
+                <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #596170; text-align: center"><span style="font-size: 14px; font-weight: 700; color: #121417">{{spName}} 시나리오를 시작해요</span><span style="font-size: 12.5px">왼쪽 아래 “+ 시나리오 추가” 또는 위의 AI 3안</span></div>
+              </sc-if>
+              <sc-if value="{{hasEd}}" hint-placeholder-val="{{true}}">
+                <sc-if value="{{ed.cand}}" hint-placeholder-val="{{false}}">
+                  <div role="status" style="display: flex; align-items: center; gap: 8px; height: 36px; box-sizing: border-box; padding: 0 6px 0 12px; border-radius: 9px; background: #f7f8fd; border: 1px dashed #b8c2e6; font-size: 12.5px; color: #1428a0; flex-shrink: 0">
+                    <span style="flex-grow: 1">AI 후보 {{ed.cid}}안이에요 · 수락해야 시나리오로 들어가요</span>
+                    <button class="c-ghost" onClick="{{ed.accept}}" style="height: 26px; padding: 0 10px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700">수락</button>
+                    <button class="c-ghost" onClick="{{ed.drop}}" style="height: 26px; padding: 0 8px; border-radius: 7px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 600">빼기</button>
+                  </div>
+                </sc-if>
+                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+                  <label for="sc-title" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">시나리오 이름</label>
+                  <input id="sc-title" value="{{ed.t}}" placeholder="시나리오 이름 · 예: 예약 방문객의 첫 5분" style="flex-grow: 1; min-width: 0; height: 36px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 9px; padding: 0 12px; font-size: 15px; font-weight: 700; color: #121417; outline: none">
+                  <span style="{{ed.tagStyle}}">{{ed.tag}}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+                  <label for="sc-who" style="width: 76px; flex-shrink: 0; font-size: 12.5px; font-weight: 600; color: #3d4452">사용자</label>
+                  <input id="sc-who" value="{{ed.who}}" placeholder="누구의 장면인가요?" style="flex-grow: 1; min-width: 0; height: 32px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; padding: 0 10px; font-size: 13px; color: #121417; outline: none">
+                </div>
+                <div style="display: flex; align-items: flex-start; gap: 8px; flex-shrink: 0">
+                  <span style="width: 76px; flex-shrink: 0; font-size: 12.5px; font-weight: 600; color: #3d4452; line-height: 28px">제품 · 솔루션</span>
+                  <span style="display: flex; gap: 5px; flex-wrap: wrap; flex-grow: 1; min-width: 0">
+                    <sc-for list="{{ed.prods}}" as="x" hint-placeholder-count="3"><button class="c-chip" role="checkbox" aria-checked="{{x.on}}" onClick="{{x.toggle}}" style="{{x.style}}">{{x.t}}</button></sc-for>
+                    <button class="c-ghost" onClick="{{openPick}}" style="height: 28px; padding: 0 9px; border-radius: 7px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 11.5px; font-weight: 700; white-space: nowrap">+ 공간에 더하기</button>
+                    <sc-if value="{{ed.noProd}}" hint-placeholder-val="{{false}}"><span style="height: 28px; font-size: 11.5px; font-weight: 700; color: #7a4f00; display: flex; align-items: center">하나 이상 골라 주세요</span></sc-if>
+                  </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; margin-top: 2px; flex-shrink: 0"><span style="font-size: 12.5px; font-weight: 700">장면 흐름</span><span style="font-size: 11.5px; color: #8a91a0">단계 수 · 항목은 자유 · 단계마다 쓰인 제품을 눌러 바꿔요</span></div>
+                <sc-for list="{{ed.steps}}" as="t" hint-placeholder-count="4">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+                    <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{t.n}}</span>
+                    <label for="{{t.id}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">{{t.label}}</label>
+                    <input id="{{t.id}}" value="{{t.v}}" placeholder="장면을 적어요" style="flex-grow: 1; min-width: 0; height: 32px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; padding: 0 10px; font-size: 13px; color: #121417; outline: none">
+                    <button class="c-chip" onClick="{{t.cycle}}" style="{{t.tagStyle}}">{{t.tag}}</button>
+                    <button class="c-ghost" onClick="{{t.remove}}" aria-label="{{t.rmLabel}}" style="width: 26px; height: 26px; flex-shrink: 0; border-radius: 7px; border: none; background: transparent; color: #8a91a0; display: flex; align-items: center; justify-content: center; padding: 0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+                  </div>
+                </sc-for>
+                <button class="c-ghost" onClick="{{ed.addStep}}" style="align-self: flex-start; height: 28px; padding: 0 10px; margin-left: 30px; border-radius: 7px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; flex-shrink: 0">+ 단계 추가</button>
+                <sc-for list="{{ed.fields}}" as="f" hint-placeholder-count="1">
+                  <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0">
+                    <label for="{{f.id}}" style="width: 76px; flex-shrink: 0; font-size: 12.5px; font-weight: 600; color: #3d4452">{{f.k}}</label>
+                    <input id="{{f.id}}" value="{{f.v}}" placeholder="{{f.ph}}" style="flex-grow: 1; min-width: 0; height: 32px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; padding: 0 10px; font-size: 13px; color: #121417; outline: none">
+                  </div>
+                </sc-for>
+                <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap; flex-shrink: 0; padding-top: 2px">
+                  <span style="font-size: 11.5px; color: #8a91a0; margin-right: 2px">항목 추가</span>
+                  <sc-for list="{{ed.addable}}" as="a" hint-placeholder-count="4"><button class="c-ghost" onClick="{{a.add}}" style="height: 26px; padding: 0 9px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 600; white-space: nowrap">+ {{a.t}}</button></sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <a href="SB1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
+        <span style="flex-grow: 1"></span>
+        <span style="{{footStyle}}">{{footLine}}</span>
+        <sc-if value="{{canSave}}" hint-placeholder-val="{{true}}"><a class="c-btn" href="SC_Done.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</a></sc-if>
+        <sc-if value="{{cantSave}}" hint-placeholder-val="{{false}}"><span aria-disabled="true" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #e2e5ea; color: #8a91a0; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</span></sc-if>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{sbOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{pickOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="ProdPicker" title="{{pickTitle}}" sub="공간에 쓸 제품 · 솔루션을 고르세요. 하나 이상 있어야 하고, 고른 것 중에서 시나리오마다 다시 골라요." picked="{{spNames}}" min="{{one}}" on-toggle="{{togglePick}}" on-close="{{closePop}}" hint-size="760px,640px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"pop":{"editor":"enum","options":["","pick"],"default":""},"space":{"editor":"number","default":1},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pai = !!this.props.ai;
+    const ppop = this.props.pop ?? '';
+    const psp = this.props.space ?? 1;
+    const KEY = [pai, ppop, psp].join('|');
+    const s = Object.assign({ sp: psp, cur: pai ? { [psp]: 'aA' } : {}, spP: {}, scP: {}, aiSp: pai ? { [psp]: true } : {}, acc: {}, drop: {}, addSc: {}, addStep: {}, rmStep: {}, tagOv: {}, extra: {}, pop: ppop }, (this.state && this.state.k === KEY) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: KEY }));
+    const KIND = { 'MagicINFO': '솔루션', 'SmartThings Pro': '솔루션', 'b.IoT': '솔루션', 'VXT': '솔루션', 'Knox Suite': '솔루션' };
+    const kindOf = (n) => KIND[n] || '제품';
+    // 공간: [이름, 공간 제품 · 솔루션, 시나리오 [이름, 사용자, 제품, 단계 [장면, 쓰인 제품], 항목 [이름, 값], 출처]]
+    const SP = [
+      ['사무실 · R&D', ['스마트 모니터', 'Smart Signage QB43C', 'SmartThings Pro'], [
+        ['출근 후 하루 계획', '연구원', ['스마트 모니터', 'Smart Signage QB43C'], [['아침 출근 후 자리 확인', ''], ['좌석 모니터로 오늘 일정 확인', '스마트 모니터'], ['회의실 예약 현황이 함께 뜸', '스마트 모니터'], ['이동 없이 하루 계획 완료', '']], [], 'manual']]],
+      ['로비', ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'MagicINFO'], [
+        ['예약 방문객의 첫 5분', '사전 예약한 외부 방문객', ['The Wall IAB 146"', 'Smart Signage QM55C', 'MagicINFO'], [['방문 전날 예약 알림과 QR을 받음', ''], ['로비 게이트에 QR을 대면 자동으로 열림', ''], ['The Wall에 회사 소개와 환영 문구가 뜸', 'The Wall IAB 146"'], ['안내 사이니지가 회의실까지 길을 알려 줌', 'Smart Signage QM55C']], [['시간대', '오전 10시 전후'], ['기대 효과', '안내 인력 없이 방문 응대']], 'ai-candidate-A'],
+        ['출근 혼잡 시간의 로비', '오전 9시 전후 임직원', ['Smart Signage QM55C', 'MagicINFO'], [['출근 인원이 몰려 게이트 앞이 혼잡해짐', ''], ['층별 엘리베이터 대기 안내가 뜸', 'Smart Signage QM55C'], ['혼잡이 풀리면 사이니지가 공지로 돌아감', 'MagicINFO']], [], 'manual']]],
+      ['회의실', ['Flip Pro WA75D', 'Smart Signage QB55C', 'SmartThings Pro'], [
+        ['하이브리드 회의', '프로젝트 팀', ['Flip Pro WA75D', 'Smart Signage QB55C'], [['[확인 필요]', '']], [], 'manual']]],
+      ['라운지', ['Smart Signage QM55C'], []],
+      ['주차장', ['옥외형 사이니지 OHC55'], []],
+      ['중앙관제실', ['비디오월 VM55B', 'b.IoT'], [
+        ['설비 이상 대응', '시설 관리자', ['비디오월 VM55B', 'b.IoT'], [['공조 설비 이상 징후를 감지', 'b.IoT'], ['비디오월에 해당 층 · 설비가 강조됨', '비디오월 VM55B'], ['담당자에게 점검 요청이 감', ''], ['고장 전에 부품 교체', '']], [['기대 효과', '유지보수 비용 절감']], 'manual']]],
+      ['공용공간', ['SmartThings 센서', 'Smart Signage QB43C', 'SmartThings Pro'], []]
+    ];
+    // AI 3안 (공간별) · 없으면 공간 제품으로 기본 3안
+    const CAND = {
+      1: [['A', '미등록 방문객 응대', '예약 없이 온 방문객', ['삼성 키오스크', 'Smart Signage QM55C'], [['안내 데스크 없이 키오스크로 방문 등록', '삼성 키오스크'], ['담당자에게 도착 알림이 감', ''], ['라운지 대기를 안내', 'Smart Signage QM55C'], ['담당자가 내려와 함께 입장', '']], [['기대 효과', '대기 시간 단축']]],
+        ['B', '사내 행사 날 로비', '행사 참석 임직원', ['The Wall IAB 146"', 'MagicINFO'], [['행사 시작 30분 전 로비 화면이 행사 모드로 바뀜', 'MagicINFO'], ['The Wall에 행사 무대 화면이 뜸', 'The Wall IAB 146"'], ['끝나면 평소 콘텐츠로 돌아감', 'MagicINFO']], []],
+        ['C', '퇴근 후 보안 모드', '야간 보안 요원', ['Smart Signage QM55C', 'MagicINFO'], [['오후 8시 이후 사이니지가 절전 · 보안 안내로 전환', 'MagicINFO'], ['출입 기록이 안내 화면에 요약됨', 'Smart Signage QM55C'], ['아침에 자동으로 환영 화면 복귀', '']], [['시간대', '오후 8시 ~ 오전 7시']]]],
+      3: [['A', '점심 후 라운지 휴식', '오후 휴식 임직원', ['Smart Signage QM55C'], [['라운지 사이니지에 오늘의 사내 소식', 'Smart Signage QM55C'], ['빈 좌석 · 혼잡도 안내', 'Smart Signage QM55C'], ['쉬는 동안 회의 알림 확인', '']], []],
+        ['B', '외부 손님 대기', '미팅을 기다리는 방문객', ['Smart Signage QM55C'], [['라운지에 회사 소개 콘텐츠', 'Smart Signage QM55C'], ['담당자 도착 알림 표시', '']], []],
+        ['C', '사내 이벤트 공지', '전 임직원', ['Smart Signage QM55C'], [['이벤트 일정이 라운지 화면에 순환', 'Smart Signage QM55C'], ['QR로 바로 신청', '']], []]]
+    };
+    const candOf = (i) => CAND[i] || [['A', SP[i][0] + ' 첫 이용', '처음 오는 사용자'], ['B', SP[i][0] + ' 혼잡 시간', '많이 몰리는 시간의 사용자'], ['C', SP[i][0] + ' 야간 · 주말', '근무 외 시간의 사용자']].map(([id, t, w]) => [id, t, w, SP[i][1].slice(0, 2), [['[확인 필요]', SP[i][1][0] || '']], []]);
+    const spNamesOf = (i) => Array.isArray(s.spP[i]) ? s.spP[i] : SP[i][1];
+    // 공간 i의 시나리오 목록: 원래 b · 새로 n · AI 후보 a
+    const listOf = (i) => {
+      const pn = spNamesOf(i);
+      const out = SP[i][2].map((c, j) => ({ key: 'b' + j, t: c[0], who: c[1], prods: c[2], steps: c[3], fields: c[4], by: c[5], cand: false }));
+      for (let j = 0; j < (s.addSc[i] || 0); j++) out.push({ key: 'n' + j, t: '', who: '', prods: pn.slice(), steps: [['', '']], fields: [], by: 'manual', cand: false });
+      if (s.aiSp[i]) candOf(i).forEach(([id, t, who, prods, steps, fields]) => {
+        const ck = i + id; if (s.drop[ck]) return;
+        out.push({ key: 'a' + id, cid: id, t, who, prods, steps, fields, by: s.acc[ck] ? 'ai-candidate-' + id : 'ai-pending', cand: !s.acc[ck] });
+      });
+      return out;
+    };
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const tagOf = (by) => by === 'manual' ? ['직접', tagBase + ' background: #f0f2f5; color: #3d4452;'] : by === 'ai-pending' ? ['AI 후보', tagBase + ' border: 1px dashed #1428a0; color: #1428a0;'] : ['AI ' + by.slice(-1) + '안 · 수락', tagBase + ' background: #e6f4ee; color: #0b6e4f;'];
+    let totalSc = 0, noProd = 0;
+    const spaces = SP.map(([t], i) => {
+      const on = s.sp === i; const pn = spNamesOf(i).length; const n = listOf(i).filter((c) => !c.cand).length;
+      totalSc += n; if (!pn) noProd++;
+      return { t, on, warn: !pn, sub: pn ? '시나리오 ' + n + ' · 제품 ' + pn : '제품 · 솔루션 없음',
+        subStyle: 'font-size: 11.5px; white-space: nowrap;' + (pn ? (n ? ' color: #596170;' : ' color: #8a91a0;') : ' color: #7a4f00; font-weight: 700;'),
+        style: 'display: flex; flex-direction: column; align-items: stretch; gap: 2px; width: 100%; height: 52px; box-sizing: border-box; padding: 0 10px; justify-content: center; border-radius: 10px; border: none; text-align: left; color: #121417; flex-shrink: 0;' + (on ? ' background: #eaeefb;' : ' background: transparent;'),
+        pick: () => put({ sp: i }) };
+    });
+    const sp = s.sp;
+    const spNames = spNamesOf(sp);
+    const setSp = (next) => put({ spP: Object.assign({}, s.spP, { [sp]: next }) });
+    const spProds = spNames.map((t) => ({ t, kind: kindOf(t), rmLabel: t + ' 빼기',
+      style: 'height: 28px; box-sizing: border-box; padding: 0 2px 0 4px; border-radius: 7px; border: 1px solid #e2e5ea; background: #ffffff; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap;',
+      kindStyle: 'height: 18px; padding: 0 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center;' + (kindOf(t) === '제품' ? ' background: #f0f2f5; color: #3d4452;' : ' background: #eaeefb; color: #1428a0;'),
+      remove: () => setSp(spNames.filter((x) => x !== t)) }));
+    const list = listOf(sp);
+    const curKey = list.some((c) => c.key === s.cur[sp]) ? s.cur[sp] : (list[0] ? list[0].key : null);
+    const scs = list.map((c) => { const on = c.key === curKey; const [tag, tagStyle] = tagOf(c.by);
+      const pr = (Array.isArray(s.scP[sp + c.key]) ? s.scP[sp + c.key] : c.prods).filter((x) => spNames.indexOf(x) >= 0);
+      return { t: c.t || '새 시나리오', who: c.who || '사용자 미정', tag, tagStyle, on,
+        meta: '제품 ' + pr.length + ' · 단계 ' + Math.max(0, c.steps.length + (s.addStep[sp + c.key] || 0) - Object.keys(s.rmStep[sp + c.key] || {}).length),
+        style: 'display: flex; flex-direction: column; gap: 3px; width: 100%; box-sizing: border-box; padding: 9px 10px; border-radius: 10px; text-align: left; color: #121417; flex-shrink: 0;' + (c.cand ? ' border: 1px dashed #1428a0; background: ' + (on ? '#f7f8fd;' : '#ffffff;') : on ? ' border: 1.5px solid #1428a0; background: #eaeefb;' : ' border: 1px solid transparent; background: transparent;'),
+        pick: () => put({ cur: Object.assign({}, s.cur, { [sp]: c.key }) }) }; });
+    let ed = null;
+    const c = list.find((x) => x.key === curKey);
+    if (c) {
+      const k = sp + c.key;
+      const pr = (Array.isArray(s.scP[k]) ? s.scP[k] : c.prods).filter((x) => spNames.indexOf(x) >= 0);
+      const rm = s.rmStep[k] || {};
+      const raw = c.steps.concat(Array.from({ length: s.addStep[k] || 0 }, () => ['', '']));
+      const live = raw.map((st, i) => [st, i]).filter(([, i]) => !rm[i]);
+      const steps = live.map(([[v, tag0], i], n) => {
+        const tk = k + '|' + i; const tag = s.tagOv[tk] !== undefined ? s.tagOv[tk] : tag0;
+        const opts = [''].concat(pr);
+        const next = opts[(opts.indexOf(tag) + 1) % opts.length];
+        return { n: n + 1, v, id: 'sc-step-' + sp + c.key + i, label: (n + 1) + '단계 장면', rmLabel: (n + 1) + '단계 빼기',
+          tag: tag ? tag : '+ 쓰인 제품',
+          tagStyle: 'height: 26px; max-width: 150px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; font-size: 11.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;' + (tag ? ' border: none; background: #eaeefb; color: #1428a0;' : ' border: 1px dashed #c9d0e6; background: #ffffff; color: #8a91a0;'),
+          cycle: () => put({ tagOv: Object.assign({}, s.tagOv, { [tk]: next }) }),
+          remove: () => put({ rmStep: Object.assign({}, s.rmStep, { [k]: Object.assign({}, rm, { [i]: true }) }) }) };
+      });
+      const extra = s.extra[k] || [];
+      const fields = c.fields.concat(extra.map((t) => [t, ''])).map(([fk, fv], i) => ({ k: fk, v: fv, id: 'sc-f-' + sp + c.key + i, ph: fk + ' 적기' }));
+      const have = fields.map((f) => f.k);
+      const addable = ['시간대', '기대 효과', '연결 요구', '페인 포인트', '직접 이름 짓기'].filter((t) => have.indexOf(t) < 0).map((t) => ({ t, add: () => put({ extra: Object.assign({}, s.extra, { [k]: extra.concat([t === '직접 이름 짓기' ? '새 항목' : t]) }) }) }));
+      const [tag, tagStyle] = tagOf(c.by);
+      ed = { t: c.t, who: c.who, cand: c.cand, cid: c.cid || '', tag, tagStyle, noProd: pr.length === 0,
+        prods: spNames.map((t) => { const on = pr.indexOf(t) >= 0; return { t, on,
+          style: 'height: 28px; padding: 0 10px; border-radius: 7px; font-size: 12px; white-space: nowrap;' + (on ? ' border: 1.5px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #8a91a0; font-weight: 600;'),
+          toggle: () => put({ scP: Object.assign({}, s.scP, { [k]: on ? pr.filter((x) => x !== t) : pr.concat([t]) }) }) }; }),
+        steps, fields, addable,
+        addStep: () => put({ addStep: Object.assign({}, s.addStep, { [k]: (s.addStep[k] || 0) + 1 }) }),
+        accept: () => put({ acc: Object.assign({}, s.acc, { [sp + c.cid]: true }) }),
+        drop: () => put({ drop: Object.assign({}, s.drop, { [sp + c.cid]: true }), cur: Object.assign({}, s.cur, { [sp]: null }) }) };
+    }
+    const nSc = list.filter((x) => !x.cand).length;
+    const togglePick = (n) => setSp(spNames.indexOf(n) >= 0 ? spNames.filter((x) => x !== n) : spNames.concat([n]));
+    return {
+      steps: ['Storyboard', '공간 · 시나리오'], two: 2, one: 1,
+      spaces, spName: SP[sp][0], spProds, spNames, spNone: spNames.length === 0,
+      spHeadStyle: 'box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-radius: 14px; padding: 10px 12px 10px 16px; display: flex; flex-direction: column; gap: 8px;' + (spNames.length ? ' border: 1px solid #e2e5ea;' : ' border: 1.5px solid #e0b25c;'),
+      scs, nSc, noSc: list.length === 0, hasCand: list.some((x) => x.cand), hasEd: !!ed,
+      ed: ed || { t: '', who: '', cand: false, cid: '', tag: '', tagStyle: '', noProd: false, prods: [], steps: [], fields: [], addable: [] },
+      edStyle: 'box-sizing: border-box; background: #ffffff; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; min-width: 0;' + (ed && ed.cand ? ' border: 1.5px dashed #1428a0;' : ' border: 1px solid #e2e5ea;'),
+      footLine: '공간 7 · 시나리오 ' + totalSc + (noProd ? ' · 제품 · 솔루션 없는 공간 ' + noProd : ''),
+      footStyle: 'font-size: 13px; white-space: nowrap;' + (noProd ? ' color: #7a4f00; font-weight: 700;' : ' color: #596170;'),
+      canSave: noProd === 0, cantSave: noProd > 0,
+      pickTitle: SP[sp][0] + ' · 제품 · 솔루션 고르기',
+      sbOpen: s.pop === 'sb', pickOpen: s.pop === 'pick',
+      runAi: () => put({ aiSp: Object.assign({}, s.aiSp, { [sp]: true }) }),
+      addSc: () => { const j = s.addSc[sp] || 0; put({ addSc: Object.assign({}, s.addSc, { [sp]: j + 1 }), cur: Object.assign({}, s.cur, { [sp]: 'n' + j }) }); },
+      togglePick,
+      openSb: () => put({ pop: 'sb' }), openPick: () => put({ pop: 'pick' }), closePop: () => put({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

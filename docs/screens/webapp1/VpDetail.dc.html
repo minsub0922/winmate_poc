@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP · 제품 · 솔루션의 연결된 가치 전체</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+.vd-ghost:hover{background:#f3f5fd}
+.vd-btn:focus-visible,.vd-ghost:focus-visible,.vd-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div role="dialog" aria-modal="true" aria-label="{{ariaLabel}}" style="width: 900px; height: 720px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 28px 72px rgba(18,20,23,0.28); display: flex; flex-direction: column; overflow: hidden; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+  <div style="display: flex; align-items: flex-start; gap: 14px; padding: 20px 16px 14px 24px; border-bottom: 1px solid #eef0f3; flex-shrink: 0">
+    <span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 12px; background: #eaeefb; color: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg></span>
+    <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+      <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 19px; font-weight: 700">{{name}}</span><span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #f0f2f5; color: #3d4452; font-size: 11px; font-weight: 700; display: flex; align-items: center">{{kind}}</span></span>
+      <span style="font-size: 12.5px; color: #596170">연결된 가치 {{total}} · 이 제안 {{nHere}} · 다른 제안 {{nOther}} · DSS-01 공간 {{where}}</span>
+    </span>
+    <button class="vd-btn" onClick="{{close}}" aria-label="닫기" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; border: none; background: transparent; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div style="display: flex; align-items: center; gap: 6px; padding: 10px 24px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+    <span style="font-size: 12px; font-weight: 600; color: #596170; margin-right: 4px">공간</span>
+    <sc-for list="{{chips}}" as="c" hint-placeholder-count="3"><button class="vd-chip" aria-pressed="{{c.on}}" onClick="{{c.pick}}" style="{{c.style}}">{{c.t}}</button></sc-for>
+  </div>
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 14px 24px; display: flex; flex-direction: column; gap: 8px">
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px">
+        <span style="font-size: 13.5px; font-weight: 700">{{g.h}}</span>
+        <span style="font-size: 12px; color: #596170">{{g.sub}}</span>
+      </div>
+      <sc-if value="{{g.empty}}" hint-placeholder-val="{{false}}"><span style="font-size: 12.5px; color: #8a91a0; padding: 6px 0">이 공간에 연결된 가치가 없어요</span></sc-if>
+      <sc-for list="{{g.rows}}" as="r" hint-placeholder-count="3">
+        <div style="display: grid; grid-template-columns: 92px minmax(0, 1fr) 150px 96px; column-gap: 12px; align-items: center; box-sizing: border-box; padding: 10px 12px; border-radius: 11px; border: 1px solid #e2e5ea">
+          <span style="justify-self: start; height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{r.space}}</span>
+          <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+            <span style="font-size: 14px; font-weight: 700; line-height: 1.4">{{r.value}}</span>
+            <span style="{{r.needStyle}}">{{r.need}}</span>
+          </span>
+          <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+            <span style="font-size: 11.5px; font-weight: 700; color: #1428a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.rq}}</span>
+            <span style="font-size: 11px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.src}}</span>
+          </span>
+          <span style="display: flex; justify-content: flex-end">
+            <sc-if value="{{r.canTake}}" hint-placeholder-val="{{false}}"><button class="vd-ghost" onClick="{{r.take}}" style="{{r.takeStyle}}">{{r.takeLabel}}</button></sc-if>
+            <sc-if value="{{r.here}}" hint-placeholder-val="{{true}}"><span style="{{r.byStyle}}">{{r.by}}</span></sc-if>
+          </span>
+        </div>
+      </sc-for>
+    </sc-for>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px 14px 24px; border-top: 1px solid #eef0f3; flex-shrink: 0">
+    <span style="font-size: 12.5px; color: #596170; flex-grow: 1">{{footLine}}</span>
+    <button class="vd-btn" onClick="{{close}}" style="height: 40px; padding: 0 20px; border-radius: 10px; border: none; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 700">닫기</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"nameOf":{"editor":"text","default":"The Wall IAB 146\""},"kind":{"editor":"text","default":"제품"},"where":{"editor":"text","default":"로비"},"values":{"editor":null},"onClose":{"editor":null},"$preview":{"width":900,"height":720}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const noop = () => {};
+    const name = this.props.nameOf ?? 'The Wall IAB 146"';
+    const here = Array.isArray(this.props.values) ? this.props.values : [
+      { space: '로비', value: '들어서는 순간 회사의 AI 비전을 보여 줌', need: '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', rq: 'RQ-01 최초 AI Ready', by: 'manual' },
+      { space: '로비', value: '사내 행사 때 로비를 무대로 바꿈', need: '', rq: 'RQ-01 업무환경 플랫폼', by: 'manual' }];
+    // 다른 제안(Storyboard)에 연결된 같은 제품 · 솔루션의 가치: [Storyboard, VP, 공간, 가치, 니즈, 요구]
+    const OTHER = {
+      'The Wall IAB 146"': [['SB-02 용산 AI Ready 오피스 · 분기', 'VP-02', '로비', '입주사 브랜드를 번갈아 보여 줌', '입주사마다 로비에서 존재감을 원해요', 'RQ-01 최초 AI Ready'],
+        ['SB-06 성수 플래그십 리테일', 'VP-04', '파사드', '거리에서 매장 안 캠페인이 보임', '지나가는 사람도 매장에 들어오게 하고 싶어요', 'RQ-06 파사드 집객']],
+      'Smart Signage QM55C': [['SB-05 판교 스타트업 단지', 'VP-03', '로비', '입주사 안내를 한 화면에서', '방문객이 입주사 위치를 바로 찾았으면 해요', 'RQ-05 입주사 안내']],
+      'Flip Pro WA75D': [['SB-05 판교 스타트업 단지', 'VP-03', '공용 회의실', '예약 없이도 바로 쓰는 협업 화면', '작은 팀도 큰 화면으로 회의하고 싶어요', 'RQ-05 공용 회의실']],
+      'MagicINFO': [['SB-05 판교 스타트업 단지', 'VP-03', '전체', '입주사별 콘텐츠 권한을 나눔', '입주사가 자기 화면은 직접 바꾸고 싶어요', 'RQ-05 입주사 안내'],
+        ['SB-06 성수 플래그십 리테일', 'VP-04', '매장', '시즌 캠페인을 하루 만에 교체', '캠페인 바꿀 때 업체를 부르지 않았으면 해요', 'RQ-06 캠페인 교체']],
+      'b.IoT': [['SB-05 판교 스타트업 단지', 'VP-03', '통합 관제실', '단지 전체 에너지를 동별로 비교', '어느 동이 에너지를 많이 쓰는지 알고 싶어요', 'RQ-05 에너지 모니터링']]
+    };
+    const other = OTHER[name] || [];
+    const s = Object.assign({ f: '전체', took: {} }, (this.state && this.state.n === name) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { n: name }));
+    const spaces = ['전체'];
+    here.forEach((v) => { if (spaces.indexOf(v.space) < 0) spaces.push(v.space); });
+    other.forEach((o) => { if (spaces.indexOf(o[2]) < 0) spaces.push(o[2]); });
+    const ok = (sp) => s.f === '전체' || sp === s.f;
+    const chips = spaces.map((t) => { const on = s.f === t; return { t, on, pick: () => put({ f: t }),
+      style: 'height: 28px; padding: 0 11px; border-radius: 999px; font-size: 12px; white-space: nowrap;' + (on ? ' border: 1.5px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-weight: 600;') }; });
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+    const needStyle = (has) => 'font-size: 12.5px; line-height: 1.45;' + (has ? ' color: #3d4452;' : ' color: #7a4f00;');
+    const hereRows = here.filter((v) => ok(v.space)).map((v) => ({ space: v.space, value: v.value, need: v.need ? '고객의 니즈 · “' + v.need + '”' : '고객의 니즈 · 아직 없음', needStyle: needStyle(!!v.need), rq: v.rq, src: 'VP-01 · 이 제안',
+      here: true, canTake: false, by: v.by === 'manual' ? '직접' : 'AI 추천 · 수락', byStyle: tagBase + (v.by === 'manual' ? ' background: #f0f2f5; color: #3d4452;' : ' background: #e6f4ee; color: #0b6e4f;') }));
+    const otherRows = other.map((o, i) => [o, i]).filter(([o]) => ok(o[2])).map(([o, i]) => { const t = !!s.took[i]; return { space: o[2], value: o[3], need: '고객의 니즈 · “' + o[4] + '”', needStyle: needStyle(true), rq: o[5], src: o[1] + ' · ' + o[0],
+      here: false, canTake: true, takeLabel: t ? '가져옴' : '이 제안에 가져오기', take: () => put({ took: Object.assign({}, s.took, { [i]: true }) }),
+      takeStyle: 'height: 28px; padding: 0 9px; border-radius: 7px; font-size: 11.5px; font-weight: 700; white-space: nowrap;' + (t ? ' border: none; background: #e6f4ee; color: #0b6e4f;' : ' border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0;') }; });
+    const nTook = Object.keys(s.took).length;
+    return {
+      ariaLabel: name + ' 연결된 가치', name, kind: this.props.kind ?? '제품', where: this.props.where ?? '로비',
+      total: here.length + other.length, nHere: here.length, nOther: other.length, chips,
+      groups: [
+        { h: '이 제안 · VP-01', sub: 'SB-01 용산 AI Ready 오피스', rows: hereRows, empty: hereRows.length === 0 },
+        { h: '다른 제안에 연결된 가치', sub: '같은 제품 · 솔루션을 쓴 다른 Storyboard · 가져오면 이 제안에 복사돼요', rows: otherRows, empty: otherRows.length === 0 }
+      ],
+      footLine: nTook ? '가치 ' + nTook + '개를 이 제안에 가져왔어요 · 공간 · 요구는 이 제안에 맞게 고칠 수 있어요' : '가치 메시지 · 고객의 니즈 · 연결 요구 · 출처를 한곳에서 봐요',
+      close: this.props.onClose || noop
+    };
+  }
+}
+</script>
+</body>
+</html>

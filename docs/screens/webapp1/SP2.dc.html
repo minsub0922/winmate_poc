@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Spec 시트 2/3 — 항목·형식</title>
+<title>Spec 시트 · 작성</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,76 +12,93 @@
 <style>
 body{margin:0;background:#f5f6f8}
 a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
+button{font-family:inherit;cursor:pointer}
+.s-row:hover{background:#f7f8fd}
+.s-row:focus-visible,.s-btn:focus-visible,.s-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 </style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="spec" current="QMC vs QBC 55&quot; 비교" hint-size="260px,900px"></dc-import>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="spec" current="" hint-size="260px,900px"></dc-import>
   <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="Spec 시트 생성" title="QMC vs QBC 55&quot; 비교" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
-
-    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; align-items: center; padding: 28px 40px 0 40px; box-sizing: border-box; overflow: hidden">
-      <div style="width: 800px; display: flex; flex-direction: column; gap: 22px">
-        <div style="display: flex; justify-content: flex-end">
-          <div style="max-width: 560px; background: #eef0f4; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13.5px; line-height: 1.6">제품 2개 · Smart Signage QM55C / QB55C</div>
+    <dc-import name="TopBar" section="Spec 시트 생성" title="새 Spec 시트" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 20px 40px 20px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 4px; flex-shrink: 0">
+        <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em">DSS 제품으로 스펙 시트를 만들어요</h1>
+        <span style="font-size: 13px; color: #596170">DSS-01에서 고른 제품을 그대로 가져왔어요. 값은 공식 카탈로그에서 채워요.</span>
+      </div>
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 330px minmax(0, 1fr); gap: 14px">
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 13.5px; font-weight: 700; flex-grow: 1">제품</span><span style="font-size: 12px; color: #596170">{{pickLine}}</span></div>
+          <sc-for list="{{prods}}" as="p" hint-placeholder-count="8">
+            <button class="s-row" role="checkbox" aria-checked="{{p.on}}" onClick="{{p.toggle}}" style="display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px; border: none; border-top: 1px solid #f5f6f8; background: transparent; text-align: left; color: #121417">
+              <span style="{{p.box}}"><sc-if value="{{p.on}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></span>
+              <span style="display: flex; flex-direction: column; min-width: 0; flex-grow: 1"><span style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.t}}</span><span style="font-size: 11.5px; color: #8a91a0">{{p.sp}}</span></span>
+            </button>
+          </sc-for>
         </div>
-        <div style="display: flex; gap: 12px">
-          <div style="width: 28px; height: 28px; flex-shrink: 0; border-radius: 8px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center">W</div>
-          <div style="font-size: 14.5px; line-height: 1.65; padding-top: 3px">두 모델은 같은 55" 4K 사이니지지만 밝기(500 vs 350nit)와 운영 시간(24/7 vs 16/7)이 다릅니다. 시트에 넣을 스펙 항목과 출력 형식을 골라주세요. 고객 요구사항과 관련된 항목을 미리 체크해 두었습니다.</div>
+        <div style="display: flex; flex-direction: column; gap: 12px; min-height: 0">
+          <div style="box-sizing: border-box; flex-shrink: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 4px 16px">
+            <sc-for list="{{opts}}" as="o" hint-placeholder-count="3">
+              <div style="display: flex; align-items: center; gap: 14px; min-height: 46px; border-top: {{o.line}}">
+                <span style="width: 64px; flex-shrink: 0; font-size: 13px; font-weight: 600; color: #3d4452">{{o.k}}</span>
+                <div style="display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 0">
+                  <sc-for list="{{o.vs}}" as="v" hint-placeholder-count="3"><button class="s-chip" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="{{v.style}}">{{v.t}}</button></sc-for>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="box-sizing: border-box; flex-grow: 1; min-height: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+            <div style="height: 38px; display: flex; align-items: center; padding: 0 14px; border-bottom: 1px solid #f0f2f5; font-size: 12.5px; font-weight: 700; flex-shrink: 0">미리보기 · 비교표</div>
+            <div style="display: grid; grid-template-columns: 130px repeat(3, minmax(0, 1fr)); font-size: 12px">
+              <sc-for list="{{grid}}" as="g" hint-placeholder-count="20"><span style="{{g.style}}">{{g.t}}</span></sc-for>
+            </div>
+          </div>
         </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <a href="SB1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
+        <span style="flex-grow: 1"></span>
+        <a class="s-btn" href="SP_Done.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">시트 만들기</a>
       </div>
     </section>
-
-    <div style="flex-shrink: 0; display: flex; justify-content: center; padding: 16px 40px 24px 40px">
-      <div style="width: 800px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 18px; box-shadow: 0 8px 28px rgba(18,20,23,0.08); display: flex; flex-direction: column">
-        <div style="padding: 14px 18px 0 18px; display: flex; align-items: center; justify-content: space-between">
-          <div style="font-size: 13px; font-weight: 600">스펙 항목 <span style="color: #596170; font-weight: 500">· 7개 선택 · 2 / 3</span></div>
-          <div style="display: flex; gap: 6px"><button style="height: 28px; padding: 0 10px; border-radius: 6px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600">전체 선택</button><button style="height: 28px; padding: 0 10px; border-radius: 6px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 600">차이 있는 항목만</button></div>
-        </div>
-        <div style="padding: 10px 18px 0 18px; display: flex; gap: 6px; flex-wrap: wrap">
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">화면 크기 · 해상도</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">밝기 · 명암비</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">운영 시간</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">소비전력 (일반 · 최대)</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">내장 플레이어 · OS</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">MagicINFO 호환</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">보증</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">입출력 단자</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">크기 · 무게</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">베젤</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">인증</button>
-          <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">액세서리</button>
-        </div>
-        <div style="padding: 12px 18px 0 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px">
-          <div style="display: flex; flex-direction: column; gap: 6px">
-            <div style="font-size: 12px; color: #596170">형식</div>
-            <div style="display: flex; gap: 6px"><button style="height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">비교표</button><button style="height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">제품별 개별 시트</button></div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 6px">
-            <div style="font-size: 12px; color: #596170">언어</div>
-            <div style="display: flex; gap: 6px"><button style="height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">한국어</button><button style="height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">English</button><button style="height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500">한/영</button></div>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 6px">
-            <div style="font-size: 12px; color: #596170">차이 강조</div>
-            <div style="display: flex; gap: 6px"><button style="height: 34px; padding: 0 12px; border-radius: 999px; border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-size: 12.5px; font-weight: 600">우위 항목 하이라이트</button></div>
-          </div>
-        </div>
-        <div style="padding: 12px 18px 14px 18px; display: flex; align-items: center; justify-content: flex-end; gap: 8px">
-          <a href="SP1.dc.html" style="height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600; display: flex; align-items: center">이전</a>
-          <a href="SP3G.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px">
-            <span>시트 생성</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-          </a>
-        </div>
-      </div>
-    </div>
   </main>
+
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() { return { steps: ['제품 입력', '항목 · 형식', '시트 생성'], cur: 2 }; }
+  renderVals() {
+    const s = Object.assign({ off: {}, o: { 0: 0, 1: [0, 1, 2, 3, 4, 5], 2: 0 }, pop: false }, this.state || {});
+    const put = (p) => this.setState(Object.assign({}, s, p));
+    const P = [['The Wall IAB 146"', '로비'], ['Smart Signage QM55C', '로비 · 라운지'], ['삼성 키오스크', '로비'], ['Flip Pro WA75D', '회의실'], ['Smart Signage QB55C', '회의실'], ['Smart Signage QB43C', '사무실 · 공용공간'], ['비디오월 VM55B', '중앙관제실'], ['옥외형 사이니지 OHC55', '주차장 · 확장'], ['SmartThings 센서', '공용공간']];
+    const prods = P.map(([t, sp], i) => { const on = !s.off[i]; return { t, sp, on,
+      box: 'width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 5px; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #1428a0;' : ' border: 2px solid #c9d0e6;'),
+      toggle: () => put({ off: Object.assign({}, s.off, { [i]: on }) }) }; });
+    const n = prods.filter((p) => p.on).length;
+    const chip = (on) => 'height: 30px; box-sizing: border-box; padding: 0 11px; border-radius: 999px; font-size: 12.5px; white-space: nowrap;' + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-weight: 500;');
+    const ITEMS = ['화면 크기 · 해상도', '밝기 · 명암비', '입출력 단자', '소비전력', '크기 · 무게', '설치 방식', '운영 시간', '보증'];
+    const O = [['형식', ['비교표', '제품별 1장'], false], ['항목', ITEMS, true], ['표기', ['한국어 · mm', '영문 · inch'], false]];
+    const opts = O.map(([k, vs, multi], oi) => ({ k, line: oi ? '1px solid #f0f2f5' : 'none',
+      vs: vs.map((t, i) => { const cur = s.o[oi]; const on = multi ? cur.indexOf(i) >= 0 : cur === i; return { t, on, style: chip(on), pick: () => put({ o: Object.assign({}, s.o, { [oi]: multi ? (on ? cur.filter((x) => x !== i) : cur.concat([i])) : i }) }) }; }) }));
+    const picked = P.filter((p, i) => !s.off[i]).slice(0, 3).map((p) => p[0]);
+    const items = s.o[1].slice().sort((a, b) => a - b).slice(0, 4).map((i) => ITEMS[i]);
+    const cell = 'box-sizing: border-box; min-height: 36px; padding: 8px 10px; border-top: 1px solid #f0f2f5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
+    const grid = [{ t: '항목', style: cell + ' font-weight: 700; color: #596170; border-top: none; background: #fbfbfc;' }]
+      .concat(picked.map((t) => ({ t, style: cell + ' font-weight: 700; border-top: none; background: #fbfbfc;' })));
+    items.forEach((it) => { grid.push({ t: it, style: cell + ' font-weight: 600; color: #3d4452;' }); picked.forEach(() => grid.push({ t: '카탈로그 값', style: cell + ' color: #8a91a0;' })); });
+    return {
+      steps: ['Storyboard', '시트 작성'], two: 2,
+      prods, pickLine: n + ' / ' + P.length + ' 선택', opts, grid, popOpen: s.pop,
+      openPop: () => put({ pop: true }), closePop: () => put({ pop: false })
+    };
+  }
 }
 </script>
 </body>

@@ -2,95 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>요구사항 · 목록</title>
+<title>고객 요구사항 · 목록</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
-<style>
-body{margin:0;background:#f5f6f8}
-a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input{font-family:inherit}
-</style>
+<style>body{margin:0;background:#f5f6f8}</style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="requirements" current="" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="고객 요구사항" title="" popover="none" has-task="{{no}}" hint-size="1180px,64px"></dc-import>
-
-    <section style="width: 1180px; height: 836px; box-sizing: border-box; padding: 28px 40px 24px 40px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
-      <div style="display: flex; align-items: center; justify-content: space-between; flex-shrink: 0">
-        <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">고객 요구사항</h1>
-        <a href="RQ1.dc.html" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>새 요구사항</a>
-      </div>
-
-      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0">
-        <div role="tablist" aria-label="상태" style="display: flex; gap: 6px">
-          <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3">
-            <button role="tab" aria-selected="{{t.on}}" style="{{t.style}}">{{t.label}}<span style="font-family: Manrope, sans-serif; font-weight: 700; margin-left: 6px">{{t.n}}</span></button>
-          </sc-for>
-        </div>
-        <div style="flex-grow: 1"></div>
-        <div style="width: 280px; height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #ffffff; display: flex; align-items: center; gap: 8px; padding: 0 12px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-          <label for="rqq" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">요구사항 검색</label>
-          <input id="rqq" placeholder="찾기" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
-        </div>
-      </div>
-
-      <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; flex-shrink: 0">
-        <div style="{{head}}">
-          <span>고객 · 사업</span><span>상태</span><span>수정</span><span></span>
-        </div>
-        <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
-          <div style="{{r.row}}">
-            <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
-              <a href="{{r.href}}" style="font-size: 14px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.title}}</a>
-              <span style="font-size: 12px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.sub}}</span>
-            </div>
-            <span style="{{r.pill}}">{{r.state}}</span>
-            <span style="font-size: 13px; color: #596170; white-space: nowrap">{{r.when}}</span>
-            <a href="{{r.href}}" style="{{r.cta}}">{{r.act}}</a>
-          </div>
-        </sc-for>
-      </div>
-    </section>
-  </main>
+<div style="width: 1440px; height: 900px; overflow: hidden">
+  <dc-import name="List" content="rq" hint-size="1440px,900px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() {
-    // [고객 · 사업, 한 줄 설명, 상태(save 저장됨 · check 진행 중), 상태 글, 수정, 링크]
-    const R = [
-      ['E 자산운용 용산 AI Ready 오피스', '키맨 3 · 요구사항 8', 'save', '저장됨 · v1', '오늘 11:20', 'RQ6.dc.html'],
-      ['F 시행사 동탄 시니어 복합단지', '키맨 2 · 요구사항 5', 'check', '심층 작성 3 / 5', '방금', 'RQ3B.dc.html'],
-      ['G 공사 판교 스타트업 단지', '키맨 1 · 요구사항 4', 'check', '입력 중', '오늘 09:15', 'RQ2.dc.html'],
-      ['H 디벨로퍼 소형 주거 분양', '키맨 2 · 요구사항 6', 'save', '저장됨 · v1', '어제', 'RQ6.dc.html'],
-      ['A 커피 프랜차이즈 매장 리뉴얼', '키맨 3 · 요구사항 9', 'save', '저장됨 · v3', '11/3', 'RQ6.dc.html'],
-      ['B 병원 로비 안내 시스템', '키맨 1 · 요구사항 3', 'check', '입력 중', '11/2', 'RQ2.dc.html']
-    ];
-    const cols = 'grid-template-columns: minmax(0, 1fr) 190px 110px 110px; column-gap: 16px;';
-    const pillBase = 'justify-self: start; height: 26px; padding: 0 10px; border-radius: 999px; box-sizing: border-box; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
-    const rows = R.map(([title, sub, st, state, when, href], i) => ({
-      title, sub, state, when, href,
-      act: st === 'check' ? '이어서' : '열기',
-      pill: pillBase + (st === 'check' ? ' background: #eaeefb; color: #1428a0;' : ' background: #f0f2f5; color: #121417;'),
-      cta: 'justify-self: end; height: 32px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap;' + (st === 'check' ? ' background: #1428a0; color: #ffffff;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417;'),
-      row: 'display: grid; ' + cols + ' align-items: center; height: 72px; padding: 0 20px; border-top: 1px solid #eef0f3;'
-    }));
-    const n = (st) => R.filter((r) => r[2] === st).length;
-    const tabs = [['전체', R.length, true], ['진행 중', n('check'), false], ['저장됨', n('save'), false]].map(([label, c, on]) => ({
-      label, n: c, on: String(on),
-      style: 'height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; display: flex; align-items: center; white-space: nowrap;' + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;')
-    }));
-    return {
-      no: false, tabs, rows,
-      head: 'display: grid; ' + cols + ' align-items: center; height: 42px; padding: 0 20px; background: #fbfbfc; font-size: 12px; font-weight: 600; color: #596170;'
-    };
-  }
+  renderVals() { return { yes: true }; }
 }
 </script>
 </body>

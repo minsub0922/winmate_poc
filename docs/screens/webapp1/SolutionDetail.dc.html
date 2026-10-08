@@ -18,13 +18,13 @@ button{font-family:inherit}
 <div role="dialog" aria-label="MagicINFO 솔루션 상세" style="width: 1200px; height: 828px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 24px 64px rgba(18,20,23,0.28); display: flex; flex-direction: column; overflow: hidden; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
 
   <header style="height: 64px; flex-shrink: 0; box-sizing: border-box; padding: 0 20px 0 24px; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 14px">
-    <a href="HomeSolution.dc.html" style="height: 34px; padding: 0 12px 0 8px; border-radius: 9px; border: 1px solid #e2e5ea; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>솔루션 탐색</a>
+    <a href="{{closeHref}}" onClick="{{closeClick}}" style="height: 34px; padding: 0 12px 0 8px; border-radius: 9px; border: 1px solid #e2e5ea; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 4px; white-space: nowrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>솔루션 탐색</a>
     <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #596170; white-space: nowrap; flex-grow: 1; min-width: 0">
       <span>디스플레이 솔루션</span><span>›</span><span>사이니지 CMS</span><span>›</span><span style="color: #121417; font-weight: 700">MagicINFO</span>
     </div>
     <a href="https://www.samsung.com/sec/business/display-solution/display-solution-bwmip70pa/BW-MIP70PA/" target="_blank" rel="noopener" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap">견적 문의 페이지 ↗</a>
     <a href="https://www.samsung.com/sec/business/display-solutions/magicinfo/" target="_blank" rel="noopener" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap">samsung.com 소개 페이지 ↗</a>
-    <a href="HomeSolution.dc.html" aria-label="상세 닫기" style="width: 34px; height: 34px; border-radius: 9px; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    <a href="{{closeHref}}" onClick="{{closeClick}}" aria-label="상세 닫기" style="width: 34px; height: 34px; border-radius: 9px; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
   </header>
 
   <div style="flex-grow: 1; min-height: 0; display: flex">
@@ -212,7 +212,7 @@ button{font-family:inherit}
   </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["overview","images","cases"],"default":"overview"},"$preview":{"width":1200,"height":828}}'>
+<script type="text/x-dc" data-dc-script data-props='{"onClose":{"editor":null},"tab":{"editor":"enum","options":["overview","images","cases"],"default":"overview"},"$preview":{"width":1200,"height":828}}'>
 class Component extends DCLogic {
   renderVals() {
     const tab = this.props.tab ?? 'overview';
@@ -304,7 +304,10 @@ class Component extends DCLogic {
       label, n, href, on: String(key === tab),
       style: 'display: flex; align-items: center; padding: 0 14px; font-size: 13.5px; white-space: nowrap; border-bottom: 2px solid ' + (key === tab ? '#1428a0; color: #1428a0; font-weight: 700;' : 'transparent; color: #596170; font-weight: 500;')
     }));
-    return {
+    const onClose = this.props.onClose;
+    const closeHref = onClose ? '#' : 'HomeSolution.dc.html';
+    const closeClick = onClose ? (e) => { if (e && e.preventDefault) e.preventDefault(); onClose(); } : undefined;
+    return { closeHref, closeClick,
       tabs, isOverview: tab === 'overview', isImages: tab === 'images', isCases: tab === 'cases',
       thumbs, keys: ['Author · Server · Player', '설치형', '클라우드형 (월 구독)'],
       pillars, parts, deploy, deviceFx: ['보안 제어', '원격 펌웨어 업데이트', '기기 상태', '메일 알림'],

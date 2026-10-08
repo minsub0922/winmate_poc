@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>flow.json 전체 보기 팝업</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button{font-family:inherit;cursor:pointer}
+.jp-btn:focus-visible,.jp-tab:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div role="dialog" aria-modal="true" aria-label="{{title}}" style="width: 900px; height: 780px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 28px 72px rgba(18,20,23,0.28); display: flex; flex-direction: column; overflow: hidden; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+  <div style="display: flex; align-items: center; gap: 12px; padding: 16px 16px 14px 24px; border-bottom: 1px solid #eef0f3; flex-shrink: 0">
+    <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+      <span style="font-family: ui-monospace, Menlo, monospace; font-size: 16px; font-weight: 700">{{title}}</span>
+      <span style="font-size: 12.5px; color: #596170">{{sub}}</span>
+    </span>
+    <div role="tablist" style="display: flex; gap: 4px">
+      <button class="jp-tab" role="tab" aria-selected="{{allOn}}" onClick="{{showAll}}" style="{{tabAll}}">전체</button>
+      <button class="jp-tab" role="tab" aria-selected="{{addOn}}" onClick="{{showAdd}}" style="{{tabAdd}}">추가된 값만</button>
+    </div>
+    <button class="jp-btn" onClick="{{close}}" aria-label="닫기" style="width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; background: #fbfbfc; padding: 10px 0">
+    <sc-for list="{{rows}}" as="r" hint-placeholder-count="20">
+      <div style="{{r.style}}"><span style="width: 40px; flex-shrink: 0; text-align: right; color: #a3a9b5; padding-right: 14px; user-select: none">{{r.n}}</span><span style="white-space: pre-wrap; min-width: 0">{{r.t}}</span></div>
+    </sc-for>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; padding: 12px 16px 14px 24px; border-top: 1px solid #eef0f3; flex-shrink: 0">
+    <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; flex-grow: 1"><span style="width: 12px; height: 12px; border-radius: 3px; background: #e6f4ee; border: 1px solid #b8dfcb"></span>이번에 추가 · 바뀐 줄</span>
+    <button class="jp-btn" style="height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600">복사</button>
+    <button class="jp-btn" onClick="{{close}}" style="height: 38px; padding: 0 16px; border-radius: 10px; border: none; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700">닫기</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lines":{"editor":null},"title":{"editor":"text","default":"flow.json"},"sub":{"editor":"text","default":""},"onClose":{"editor":null},"$preview":{"width":900,"height":780}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const L = Array.isArray(this.props.lines) ? this.props.lines : [{ t: '{', add: false }, { t: '  "id": "SB-01",', add: false }, { t: '  "stages": { … }', add: true }, { t: '}', add: false }];
+    const onlyAdd = !!(this.state && this.state.onlyAdd);
+    const rows = L.map((l, i) => ({ n: i + 1, t: l.t, add: l.add })).filter((r) => !onlyAdd || r.add).map((r) => ({
+      n: r.n, t: r.t,
+      style: 'display: flex; font-family: ui-monospace, \'SFMono-Regular\', Menlo, monospace; font-size: 12px; line-height: 1.7; padding: 0 20px 0 0;' + (r.add ? ' background: #e6f4ee; color: #0b4d38; box-shadow: inset 3px 0 0 #0b6e4f;' : ' color: #3d4452;')
+    }));
+    const tab = (on) => 'height: 32px; padding: 0 12px; border-radius: 8px; border: none; font-size: 12.5px; white-space: nowrap;' + (on ? ' background: #eaeefb; color: #1428a0; font-weight: 700;' : ' background: transparent; color: #596170; font-weight: 600;');
+    const noop = () => {};
+    return {
+      rows, title: this.props.title ?? 'flow.json', sub: this.props.sub ?? '',
+      allOn: !onlyAdd, addOn: onlyAdd, tabAll: tab(!onlyAdd), tabAdd: tab(onlyAdd),
+      showAll: () => this.setState({ onlyAdd: false }), showAdd: () => this.setState({ onlyAdd: true }),
+      close: this.props.onClose || noop
+    };
+  }
+}
+</script>
+</body>
+</html>

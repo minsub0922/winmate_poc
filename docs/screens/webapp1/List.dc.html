@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>콘텐츠 목록</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button{font-family:inherit;cursor:pointer}
+.l-chip:hover{border-color:#1428a0}
+.l-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="{{group}}" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="{{label}}" title="" popover="none" hint-size="1180px,64px"></dc-import>
+    <section style="width: 1180px; height: 836px; box-sizing: border-box; padding: 28px 40px 24px 40px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
+          <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">{{label}}</h1>
+          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #596170; flex-wrap: wrap">
+            <span>{{desc}}</span>
+            <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">사전 작업 · {{pre}}</span>
+            <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">후속 작업 · {{post}}</span>
+          </div>
+        </div>
+        <a href="{{newHref}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>{{newLabel}}</a>
+      </div>
+
+      <sc-if value="{{has}}" hint-placeholder-val="{{true}}">
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; flex-shrink: 0">
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 360px 110px 80px; column-gap: 16px; align-items: center; height: 42px; padding: 0 20px; background: #fbfbfc; font-size: 12px; font-weight: 600; color: #596170"><span>{{short}}</span><span>연결된 Storyboard</span><span>수정</span><span></span></div>
+          <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
+            <div style="display: grid; grid-template-columns: minmax(0, 1fr) 360px 110px 80px; column-gap: 16px; align-items: center; min-height: 72px; padding: 10px 20px; box-sizing: border-box; border-top: 1px solid #eef0f3">
+              <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                <a href="{{r.href}}" style="font-size: 14px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.title}}</a>
+                <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0">{{r.ref}}</span>
+              </div>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px">
+                <sc-for list="{{r.sbs}}" as="b" hint-placeholder-count="2">
+                  <button class="l-chip" onClick="{{b.open}}" style="height: 28px; box-sizing: border-box; padding: 0 9px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M4 11h16 M10 11v8"/></svg>{{b.name}}</button>
+                </sc-for>
+              </div>
+              <span style="font-size: 13px; color: #596170; white-space: nowrap">{{r.when}}</span>
+              <a href="{{r.href}}" style="justify-self: end; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">열기</a>
+            </div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
+        <div style="box-sizing: border-box; padding: 40px; border-radius: 16px; border: 1.5px dashed #c9d0e6; background: #ffffff; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+          <span style="font-size: 16px; font-weight: 700">아직 만든 {{short}}가 없어요</span>
+          <span style="font-size: 13.5px; color: #596170">{{pre}}이 된 Storyboard를 골라 시작해요.</span>
+          <a href="{{newHref}}" style="margin-top: 6px; height: 42px; padding: 0 16px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">{{newLabel}}</a>
+        </div>
+      </sc-if>
+    </section>
+  </main>
+
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="{{pop}}" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"rq"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const NAME = { 'SB-01': '용산 AI Ready 오피스', 'SB-02': '용산 · 분기 B', 'SB-03': 'A 커피 매장 리뉴얼', 'SB-04': '동탄 시니어 복합단지', 'SB-05': '판교 스타트업 단지' };
+    // [이름, 짧은 이름, 설명, 사전, 후속, 새로 만들기 링크, 새로 만들기 이름, 작업 화면, 사이드바 그룹, 목록[[제목, 참조, Storyboard, 수정]]]
+    const M = {
+      rq: ['고객 요구사항', '요구사항', '가장 첫 단위예요. 저장하면 Storyboard가 자동으로 만들어져요.', '없음', 'DSS', 'RQ1.dc.html', '새 요구사항', 'RQ1.dc.html', 'requirements',
+        [['E 자산운용 · 용산 업무시설 재개발 AI Ready 오피스', 'RQ-01 v2', ['SB-01', 'SB-02'], '오늘 13:40'], ['A 커피 프랜차이즈 · 매장 리뉴얼', 'RQ-03 v1', ['SB-03'], '어제'], ['F 시행사 · 동탄 시니어 복합단지', 'RQ-04 v1', ['SB-04'], '오늘 11:20'], ['G 공사 · 판교 스타트업 단지', 'RQ-05 v1', ['SB-05'], '11/2']]],
+      dss: ['공간별 제품 매칭 DSS', 'DSS', 'Storyboard에 공간별 제품 · 솔루션을 골라 넣어요.', 'Storyboard (고객 요구사항)', '공간 시나리오 · Spec 시트', 'DS1.dc.html', '새 DSS', 'DS2.dc.html', 'dss',
+        [['용산 오피스 공간별 제품', 'DSS-01 v1', ['SB-01', 'SB-02'], '오늘 10:10'], ['A 커피 매장 공간별 제품', 'DSS-03 v1', ['SB-03'], '어제']]],
+      mi: ['Market Intelligence', 'MI', 'Storyboard를 바탕으로 웹에서 시장 · 고객사 · 사용자 정보를 모아 정리해요.', '최소 DSS까지 된 Storyboard', '없음', 'MI1.dc.html', '새 MI', 'MI2.dc.html', 'market',
+        [['용산 오피스 시장 분석', 'MI-01 v1', ['SB-01'], '오늘 12:30'], ['용산 오피스 시장 분석 · 리테일 테넌트 관점', 'MI-02 v1', ['SB-02'], '오늘 14:05']]],
+      ca: ['경쟁사 분석', '경쟁사 분석', 'Storyboard의 제품 · 공간을 기준으로 B2B 경쟁사를 리스트업해요.', '최소 DSS까지 된 Storyboard', '없음', 'CA1.dc.html', '새 경쟁사 분석', 'CA2.dc.html', 'competitor',
+        [['A 커피 메뉴보드 경쟁사', 'CA-03 v1', ['SB-03'], '어제']]],
+      vp: ['Value Proposition', 'VP', '제품 · 솔루션마다 고객에게 줄 가치를 뽑아요.', '최소 DSS까지 된 Storyboard', '없음', 'VP1.dc.html', '새 VP', 'VP2.dc.html', 'value', []],
+      sp: ['Spec 시트 생성', 'Spec 시트', 'DSS에서 고른 제품의 스펙 시트를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SP1.dc.html', '새 Spec 시트', 'SP2.dc.html', 'spec',
+        [['A 커피 메뉴보드 스펙', 'SP-03 v1', ['SB-03'], '어제']]],
+      sc: ['공간 시나리오 생성', '공간 시나리오', 'Storyboard의 공간마다 사용자 시나리오를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SC1.dc.html', '새 공간 시나리오', 'SC2.dc.html', 'scenario', []]
+    };
+    const key = this.props.content ?? 'rq';
+    const [label, short, desc, pre, post, newHref, newLabel, workHref, group, L] = M[key] || M.rq;
+    const s = this.state || {};
+    const rows = L.map(([title, ref, sbs, when]) => ({ title, ref, when, href: workHref, sbs: sbs.map((id) => ({ name: NAME[id], open: () => this.setState({ pop: id }) })) }));
+    return {
+      label, short, desc, pre, post, newHref, newLabel, group, rows, has: rows.length > 0, empty: rows.length === 0,
+      popOpen: !!s.pop, pop: s.pop || 'SB-01', closePop: () => this.setState({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

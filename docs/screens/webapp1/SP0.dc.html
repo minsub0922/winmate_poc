@@ -2,189 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Spec 시트 · 작업 목록</title>
+<title>Spec 시트 · 목록</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
-<style>
-body{margin:0;background:#f5f6f8}
-a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
-</style>
+<style>body{margin:0;background:#f5f6f8}</style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="spec" current="" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="Spec 시트 생성" title="작업 목록" popover="none" hasTask="{{hasTask}}" hint-size="1180px,64px"></dc-import>
-
-    <section style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 18px; padding: 28px 40px 0 40px; box-sizing: border-box; overflow: hidden">
-
-      <!-- 제목 -->
-      <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; flex-shrink: 0">
-        <div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
-          <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">Spec 시트 작업</h1>
-          <p style="margin: 0; font-size: 13.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">제품 스펙 비교표와 단일 제품 시트를 만들고, 제안서 '제품 스펙'으로 보냅니다.</p>
-        </div>
-        <a href="SP1.dc.html" style="height: 40px; padding: 0 16px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 7px; flex-shrink: 0">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          <span>새 Spec 시트</span>
-        </a>
-      </div>
-
-      <!-- 시작 방법 -->
-      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; flex-shrink: 0">
-        <sc-for list="{{starts}}" as="s" hint-placeholder-count="4">
-          <a href="{{s.href}}" style="display: flex; gap: 12px; box-sizing: border-box; height: 84px; padding: 14px 16px; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; color: #121417">
-            <div style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; background: #eaeefb; display: flex; align-items: center; justify-content: center">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{s.icon}}"/></svg>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
-              <div style="display: flex; align-items: center; gap: 6px">
-                <span style="font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.title}}</span>
-                <sc-if value="{{s.base}}" hint-placeholder-val="{{false}}">
-                  <span style="font-size: 10.5px; font-weight: 600; color: #1428a0; background: #eaeefb; border-radius: 999px; padding: 1px 7px; flex-shrink: 0">기본</span>
-                </sc-if>
-              </div>
-              <div style="font-size: 12px; line-height: 1.5; color: #596170; height: 36px; overflow: hidden">{{s.desc}}</div>
-            </div>
-          </a>
-        </sc-for>
-      </div>
-
-      <!-- 카탈로그 갱신 알림 -->
-      <div style="display: flex; align-items: center; gap: 10px; height: 44px; flex-shrink: 0; padding: 0 14px; box-sizing: border-box; border-radius: 12px; background: #eaeefb; font-size: 13px; color: #121417">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8v.5"/></svg>
-        <span style="flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">사내 카탈로그가 10월 1일 갱신되었습니다. 저장된 시트 2개에서 값이 달라져 다시 확인이 필요해요.</span>
-        <a href="SP3W.dc.html" style="font-size: 13px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 4px">변경 내용 보기<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a>
-      </div>
-
-      <!-- 검색 · 필터 · 정렬 -->
-      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0">
-        <div style="width: 280px; height: 36px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #ffffff; display: flex; align-items: center; gap: 8px; padding: 0 12px">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
-          <label for="q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">작업 검색</label>
-          <input id="q" placeholder="작업명 · 모델명 · 고객사 검색" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
-        </div>
-        <div style="display: flex; gap: 6px">
-          <sc-for list="{{tabs}}" as="t" hint-placeholder-count="4">
-            <button style="{{t.style}}">{{t.label}}<span style="{{t.numStyle}}">{{t.n}}</span></button>
-          </sc-for>
-        </div>
-        <div style="flex-grow: 1"></div>
-        <button style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4"/></svg>
-          <span>제안서에 쓴 시트만</span>
-        </button>
-        <button style="height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 500; display: flex; align-items: center; gap: 6px">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/></svg>
-          <span>최근 수정순</span>
-        </button>
-      </div>
-
-      <!-- 작업 표 -->
-      <div style="flex-shrink: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
-        <div style="{{headStyle}}">
-          <span>작업</span><span>제품</span><span>출력</span><span>상태</span><span>연결된 제안서</span><span>수정</span><span></span>
-        </div>
-        <sc-for list="{{rows}}" as="r" hint-placeholder-count="6">
-          <a href="{{r.href}}" style="{{r.rowStyle}}">
-            <div style="display: flex; align-items: center; gap: 10px; min-width: 0">
-              <div style="width: 32px; height: 32px; flex-shrink: 0; border-radius: 8px; background: #f0f2f5; display: flex; align-items: center; justify-content: center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.typeIcon}}"/></svg>
-              </div>
-              <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
-                <span style="font-size: 13.5px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.title}}</span>
-                <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.sub}}</span>
-              </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 4px; min-width: 0; overflow: hidden">
-              <sc-for list="{{r.models}}" as="m" hint-placeholder-count="2">
-                <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{m.name}}</span>
-              </sc-for>
-            </div>
-            <span style="{{r.outStyle}}">{{r.out}}</span>
-            <div style="display: flex; align-items: center; gap: 7px; min-width: 0">
-              <span style="{{r.stBox}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="{{r.stStroke}}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="{{r.stPath}}"/></svg></span>
-              <span style="{{r.stText}}">{{r.st}}</span>
-            </div>
-            <span style="{{r.propStyle}}">{{r.prop}}</span>
-            <span style="font-size: 12px; color: #596170; white-space: nowrap">{{r.when}}</span>
-            <span aria-label="더 보기" style="width: 24px; height: 24px; border-radius: 6px; color: #8a91a0; display: flex; align-items: center; justify-content: center">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
-            </span>
-          </a>
-        </sc-for>
-        <div style="height: 40px; padding: 0 16px; border-top: 1px solid #e2e5ea; display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: #596170">
-          <span>작업 6개 · 최근 30일</span>
-          <span style="display: flex; align-items: center; gap: 14px"><span>열면 마지막 단계에서 이어집니다</span><span style="color: #1428a0; font-weight: 600">보관된 작업 3</span></span>
-        </div>
-      </div>
-    </section>
-  </main>
+<div style="width: 1440px; height: 900px; overflow: hidden">
+  <dc-import name="List" content="sp" hint-size="1440px,900px"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() {
-    const starts = [
-      { title: '모델명으로 입력', desc: '모델명을 넣으면 카탈로그 스펙을 바로 가져와요', href: 'SP1.dc.html', base: true, icon: 'M4 7h16M4 12h10M4 17h7 M17 14l3 3-3 3' },
-      { title: '제품 탐색에서 고르기', desc: '시리즈 폴더에서 여러 크기를 한 번에 담아요', href: 'SP1Product.dc.html', base: false, icon: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z' },
-      { title: '조건으로 모델 찾기', desc: '크기 · 밝기 · 용도 · 설치 조건으로 후보를 비교해요', href: 'SP1C.dc.html', base: false, icon: 'M4 5h16l-6 7v6l-4 2v-8L4 5z' },
-      { title: '고객 요구 스펙으로 시작', desc: '규격서를 올리면 요구사항 대응표를 만들어요', href: 'SP1R.dc.html', base: false, icon: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13l2 2 4-4' }
-    ];
-
-    const tabBase = 'height: 32px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; display: flex; align-items: center; gap: 6px; white-space: nowrap;';
-    const tabs = [['전체', 6, true], ['작성 중', 2, false], ['확인 필요', 3, false], ['완료', 1, false]].map(([label, n, on]) => ({
-      label, n,
-      style: tabBase + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 600;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;'),
-      numStyle: 'font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700;' + (on ? ' color: #1428a0;' : ' color: #8a91a0;')
-    }));
-
-    const cols = 'display: grid; grid-template-columns: minmax(0, 2.3fr) minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 1.7fr) 76px 24px; gap: 14px; align-items: center; padding: 0 16px;';
-    const headStyle = cols + ' height: 38px; background: #f5f6f8; font-size: 12px; font-weight: 600; color: #596170;';
-
-    const ICON = {
-      compare: 'M4 5h16v14H4z M10 5v14 M15 5v14 M4 10h16',
-      single: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7',
-      req: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13l2 2 4-4',
-      find: 'M4 5h16l-6 7v6l-4 2v-8L4 5z'
-    };
-    const ST = {
-      done: { box: 'background: #1428a0;', stroke: '#ffffff', path: 'M5 12l5 5L20 7', text: 'color: #121417; font-weight: 600;' },
-      check: { box: 'background: #eaeefb; border: 1.5px solid #1428a0; box-sizing: border-box;', stroke: '#1428a0', path: 'M12 6v8M12 18.5v.5', text: 'color: #1428a0; font-weight: 600;' },
-      warn: { box: 'background: #121417;', stroke: '#ffffff', path: 'M12 6v8M12 18.5v.5', text: 'color: #121417; font-weight: 700;' },
-      draft: { box: 'background: #ffffff; border: 1.5px dashed #8a91a0; box-sizing: border-box;', stroke: '#596170', path: 'M7 12h10', text: 'color: #596170; font-weight: 500;' }
-    };
-    const DATA = [
-      ['QMC vs QBC 55" 비교', '비교표 · 7개 항목', 'compare', ['QM55C', 'QB55C'], 'XLSX · 한국어', 'done', '완료', 'A 커피 프랜차이즈 메뉴보드 제안', '오늘 10:24', 'SP3.dc.html'],
-      ['The Wall IAB 146" 스펙', '단일 시트 · 12개 항목', 'single', ['The Wall IAB'], 'PDF · English', 'check', '값 확인 필요 2', 'B 병원 안내 시스템 제안', '오늘 09:10', 'SP3G.dc.html'],
-      ['B 병원 로비 요구 스펙 대응표', '요구사항 대응표 · 요구 12개', 'req', ['QM55C', 'QM65C'], 'XLSX · 한국어', 'check', '확인 필요 3', 'B 병원 안내 시스템 제안', '어제', 'SP1R.dc.html'],
-      ['A 커피 드라이브스루 실외 사이니지', '단일 시트 · 9개 항목', 'single', ['OH55C'], 'PPT · 한국어', 'warn', '카탈로그 변경 1', 'A 커피 프랜차이즈 메뉴보드 제안', '9월 26일', 'SP3W.dc.html'],
-      ['Flip Pro WA75D 스펙', '단일 시트 · 항목 · 형식 고르는 중', 'single', ['WA75D'], '정하지 않음', 'draft', '작성 중 2/3', '', '어제', 'SP2.dc.html'],
-      ['C 물류센터 관제실 후보 비교', '조건 검색 · 후보 4개', 'find', ['QH55C', 'QM55C', '+2'], '정하지 않음', 'draft', '작성 중 1/3', '', '9월 29일', 'SP1C.dc.html']
-    ];
-    const rows = DATA.map(([title, sub, type, models, out, st, stLabel, prop, when, href]) => {
-      const s = ST[st];
-      return {
-        title, sub, out, when, href,
-        typeIcon: ICON[type],
-        models: models.map((name) => ({ name })),
-        outStyle: 'font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (out === '정하지 않음' ? ' color: #8a91a0;' : ' color: #3d4452;'),
-        stBox: 'width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; display: flex; align-items: center; justify-content: center; ' + s.box,
-        stStroke: s.stroke, stPath: s.path,
-        stText: 'font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; ' + s.text,
-        st: stLabel,
-        prop: prop || '연결 안 됨',
-        propStyle: 'font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (prop ? ' color: #121417;' : ' color: #8a91a0;'),
-        rowStyle: cols + ' height: 58px; border-top: 1px solid #e2e5ea; color: #121417;'
-      };
-    });
-
-    return { hasTask: false, starts, tabs, headStyle, rows };
-  }
+  renderVals() { return { yes: true }; }
 }
 </script>
 </body>

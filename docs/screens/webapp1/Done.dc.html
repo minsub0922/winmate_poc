@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>완료 · Storyboard 갱신 · 후속 작업</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button{font-family:inherit;cursor:pointer}
+.d-next:hover{border-color:#1428a0;box-shadow:0 6px 18px rgba(20,40,160,0.10)}
+.d-json:hover{background:#eaeefb}
+.d-json{font-family:inherit;cursor:pointer}
+.d-next:focus-visible,.d-json:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="{{group}}" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="{{label}}" title="{{title}}" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{last}}" complete="{{yes}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="{{sb}}" cur="{{sb}}" hi="{{content}}" note="요약본이 방금 갱신됐어요" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 24px 80px 24px 80px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+        <span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 13px; background: #0b6e4f; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+          <span style="font-size: 23px; font-weight: 700; letter-spacing: -0.02em">{{headline}}</span>
+          <span style="font-size: 13.5px; color: #596170">{{sub}}</span>
+        </span>
+        <a href="{{workHref}}" style="height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">다시 고치기</a>
+      </div>
+
+      <div style="box-sizing: border-box; flex-shrink: 0; border: 1px solid #e2e5ea; border-radius: 16px; background: #ffffff; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <span style="font-size: 14px; font-weight: 700; flex-grow: 1">Storyboard · {{sbName}}</span>
+          <span style="font-size: 12.5px; color: #596170">{{stage}}</span>
+          <a href="SB1.dc.html" style="font-size: 12.5px; font-weight: 700; white-space: nowrap">Storyboard 열기</a>
+        </div>
+        <div style="display: flex; gap: 4px">
+          <sc-for list="{{track}}" as="t" hint-placeholder-count="8">
+            <div style="{{t.style}}"><span style="font-size: 11px; font-weight: 700; white-space: nowrap">{{t.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; white-space: nowrap">{{t.ref}}</span></div>
+          </sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px">
+          <div style="border-radius: 10px; background: #f3faf6; border: 1px solid #cfe9dc; overflow: hidden; height: 248px; display: flex; flex-direction: column">
+            <div style="height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-bottom: 1px solid #cfe9dc; flex-shrink: 0"><span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; color: #0b6e4f">SUMMARY.MD</span><span style="font-size: 11.5px; color: #0b6e4f">요약본에 더해진 부분</span></div>
+            <pre style="margin: 0; padding: 10px 12px; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 12px; line-height: 1.65; color: #121417; white-space: pre-wrap; overflow: hidden">{{md}}</pre>
+          </div>
+          <div style="position: relative; border-radius: 10px; background: #f7f8fd; border: 1px solid #c9d1f2; overflow: hidden; height: 248px; display: flex; flex-direction: column">
+            <div style="height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 6px 0 12px; border-bottom: 1px solid #c9d1f2; flex-shrink: 0">
+              <span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; color: #1428a0">FLOW.JSON</span>
+              <span style="font-size: 11.5px; color: #1428a0; flex-grow: 1; white-space: nowrap">{{jsonSub}}</span>
+              <button class="d-json" onClick="{{openJson}}" style="height: 26px; padding: 0 9px; border-radius: 7px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 11.5px; font-weight: 700; white-space: nowrap">전체 JSON 보기</button>
+            </div>
+            <pre style="margin: 0; padding: 10px 12px; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 11.5px; line-height: 1.6; color: #121417; white-space: pre-wrap; overflow: hidden; flex-grow: 1">{{jsonFold}}</pre>
+            <div style="position: absolute; left: 0; right: 0; bottom: 0; height: 40px; background: linear-gradient(rgba(247,248,253,0), #f7f8fd)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
+        <span style="font-size: 13.5px; font-weight: 700">후속 작업</span>
+        <sc-if value="{{hasNext}}" hint-placeholder-val="{{true}}">
+          <div style="{{nextGrid}}">
+            <sc-for list="{{nexts}}" as="n" hint-placeholder-count="2">
+              <a href="{{n.href}}" class="d-next" style="box-sizing: border-box; min-height: 84px; padding: 14px 16px; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; color: #121417; display: flex; align-items: center; gap: 14px">
+                <span style="width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{n.icon}}"/></svg></span>
+                <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0"><span style="font-size: 15px; font-weight: 700">{{n.t}}</span><span style="font-size: 12.5px; color: #596170">{{n.d}}</span></span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{noNext}}" hint-placeholder-val="{{false}}">
+          <div style="box-sizing: border-box; padding: 14px 16px; border-radius: 14px; border: 1px dashed #c9d0e6; background: #ffffff; display: flex; align-items: center; gap: 12px; font-size: 13px; color: #596170">
+            <span style="flex-grow: 1">이 콘텐츠는 후속 작업이 없어요. Storyboard에서 다른 콘텐츠를 이어서 만들 수 있어요.</span>
+            <a href="SB1.dc.html" style="font-size: 13px; font-weight: 700; white-space: nowrap">Storyboard로</a>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{jsonOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="JsonPopup" lines="{{jsonLines}}" title="{{jsonTitle}}" sub="{{jsonPopSub}}" on-close="{{closeJson}}" hint-size="900px,780px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="{{pop}}" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"dss"},"showJson":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const SBS = {
+      'SB-01': ['용산 AI Ready 오피스', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-01 v1' }],
+      'SB-05': ['판교 스타트업 단지', { rq: 'RQ-05 v1' }],
+      'SB-06': ['성수 플래그십 리테일', {}]
+    };
+    const CT = [['rq', '요구사항'], ['dss', 'DSS'], ['mi', 'MI'], ['ca', '경쟁사'], ['vp', 'VP'], ['sp', 'Spec'], ['sc', '시나리오'], ['ppt', '제안서']];
+    const IC = { dss: 'M3 21h18 M5 21V9l7-5 7 5v12 M9 21v-6h6v6', sc: 'M4 6h16v12H4z M10 9l5 3-5 3V9z', sp: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7' };
+    // [이름, 짧은 이름, Storyboard, 새 참조, 제목, 설명, 요약본에 더해진 줄, 후속 작업, 사이드바 그룹, 단계, 작업 화면]
+    const D = {
+      rq: ['고객 요구사항', '요구사항', 'SB-06', 'RQ-06 v1', '요구사항을 저장했어요', 'Storyboard ‘성수 플래그십 리테일’(SB-06)이 자동으로 만들어졌어요', '# 성수 플래그십 리테일\n고객: K 리츠 · 최종 제안대상: 자산관리본부장\n\n## 요구사항 · RQ-06 v1\n- 자산관리팀장(60%): 1층 파사드 미디어로 집객 · 테넌트별 콘텐츠 운영 · 시설 원격 관리\n- 마케팅 리드(40%): 시즌 캠페인 빠른 교체 · 방문객 데이터 활용 [확인 필요]', [['dss', '공간별 제품 매칭 DSS', 'SB-06으로 공간마다 제품 · 솔루션을 골라요', 'DS1.dc.html']], 'requirements', ['요구사항 입력'], 'RQ1.dc.html'],
+      dss: ['공간별 제품 매칭 DSS', 'DSS', 'SB-05', 'DSS-05 v1', 'DSS를 저장했어요', '공간 6 · 제품 10 · 솔루션 3을 Storyboard에 담았어요', '## DSS · DSS-05 v1\n- 업종: 오피스 · 업무시설 · 공간 6\n- 로비: Smart Signage QM55C ×2 · 삼성 키오스크\n- 공용 회의실: Flip Pro WA75D · QB55C\n- 솔루션: MagicINFO · SmartThings Pro · b.IoT', [['sc', '공간 시나리오 생성', '공간 6개에서 사용자가 겪는 장면을 만들어요', 'SC1.dc.html'], ['sp', 'Spec 시트 생성', '매칭한 제품 10개를 스펙 시트로', 'SP1.dc.html']], 'dss', ['Storyboard', '공간 · 제품', '솔루션'], 'DS4.dc.html'],
+      mi: ['Market Intelligence', 'MI', 'SB-01', 'MI-01 v2', 'MI를 고쳐 저장했어요', 'MI-01 v1 → v2 · 담은 정보 11 → 13', '## MI · MI-01 v2\n- 시장 5 · 고객사 4 · 사용자 4 (+2)\n- 출처 13 · 확인 필요 수치 2', [], 'market', ['Storyboard', '검색', '정제'], 'MI3.dc.html'],
+      ca: ['경쟁사 분석', '경쟁사', 'SB-01', 'CA-01 v1', '경쟁사 분석을 저장했어요', '경쟁사 5곳을 Storyboard에 담았어요', '## 경쟁사 · CA-01 v1\n- 경쟁사 5 (직접 2 · AI 웹 탐색 3) · 비교 쌍 9\n- 우위: 공간 통합 · AI 오피스 사례 · 에너지 실측(ESG)\n- 열위: 초기 도입가 · 묶음가 [견적 확인]\n- 주장: 하나의 플랫폼 · RQ-01 에너지 20% 증빙', [], 'competitor', ['Storyboard', '경쟁사 리스트업'], 'CA2.dc.html'],
+      vp: ['Value Proposition', 'VP', 'SB-01', 'VP-01 v1', '가치 제안을 저장했어요', '제품 · 솔루션 9개의 가치 17개와 고객의 니즈를 Storyboard에 담았어요', '## VP · VP-01 v1\n- 제품 · 솔루션 9 (DSS 13 중) · 가치 17 · 고객의 니즈 16/17\n- 대표 니즈: “방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요” · “에너지 20% 절감을 숫자로 보여 줘야 해요”\n- 니즈 비어 있음 1 · Flip Pro 케이블 없이 화면 공유', [], 'value', ['Storyboard', '가치 추출'], 'VP2.dc.html'],
+      sp: ['Spec 시트 생성', 'Spec 시트', 'SB-01', 'SP-01 v1', 'Spec 시트를 만들었어요', '제품 9개 · 비교표 · XLSX로 내보낼 수 있어요', '## Spec · SP-01 v1\n- 제품 9 · 항목 6 · 비교표 · 한국어 · mm', [], 'spec', ['Storyboard', '시트 작성'], 'SP2.dc.html'],
+      sc: ['공간 시나리오 생성', '공간 시나리오', 'SB-01', 'SC-01 v1', '공간 시나리오를 저장했어요', '공간 7개 · 시나리오 6개를 Storyboard에 담았어요', '## 시나리오 · SC-01 v1\n- 공간 7 · 시나리오 6 · 시나리오 없는 공간 3 (라운지 · 주차장 · 공용공간)\n- 로비 3: 예약 방문객의 첫 5분 · 출근 혼잡 · 미등록 방문객 응대\n- 공간마다 제품 · 솔루션 1개 이상 확인됨', [], 'scenario', ['Storyboard', '공간별 시나리오'], 'SC2.dc.html']
+    };
+    const key = this.props.content ?? 'dss';
+    const [label, short, sb, ref, headline, sub, md, next, group, steps, workHref] = D[key] || D.dss;
+    const done = Object.assign({}, SBS[sb][1], { [key]: ref });
+    const n = ['mi', 'ca', 'vp', 'sp', 'sc'].filter((k) => done[k]).length;
+    const stage = !done.dss ? '요구사항까지' : n ? 'DSS + 콘텐츠 ' + n + '/5' : 'DSS까지';
+    const track = CT.map(([k, l], i) => ({
+      label: l, ref: done[k] ? done[k].split(' ')[0] : '—',
+      style: 'flex: 1 1 0; min-width: 0; height: 44px; box-sizing: border-box; padding: 0 8px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; gap: 1px;' + (i === 2 || i === 7 ? ' margin-left: 6px;' : '') + (k === key ? ' background: #0b6e4f; color: #ffffff;' : done[k] ? ' background: #1428a0; color: #ffffff;' : ' background: #f5f6f8; color: #8a91a0; border: 1px dashed #d5d9e0;')
+    }));
+    const nexts = next.map(([k, t, d, href]) => ({ t, d, href, icon: IC[k] }));
+    // ---- flow.json: 콘텐츠가 담는 실제 값 ----
+    const U = '<원문 URL>';
+    const RQ01 = { ref: 'RQ-01', ver: 2, customer: 'E 자산운용', target: '대표이사', keymen: [{ name: '대표이사', weight: 50, reqs: 3 }, { name: '공간컨텐츠실장', weight: 30, reqs: 3 }, { name: '개발사업팀장', weight: 20, reqs: 2 }], sharedWith: ['SB-02'] };
+    const DSS01 = { ref: 'DSS-01', ver: 1, industry: '오피스 · 업무시설', spaces: 7, products: 12, solutions: ['MagicINFO', 'SmartThings Pro', 'b.IoT'], sharedWith: ['SB-02'] };
+    const MI_ITEMS = [
+      ['시장', '프라임 오피스에서 스마트 빌딩 설비 도입이 늘고 있다는 업계 분석', '리포트', '부동산 리서치', '2026-08', 'v1', false],
+      ['시장', '서울 도심 신축 오피스의 임대 경쟁 심화 보도 — 공실률 수치', '뉴스', '경제지', '2026-09', 'v2', true],
+      ['시장', 'AI를 도입한 기업이 회의 · 협업 공간을 늘리는 흐름', '리포트', '컨설팅사', '2026-07', 'v1', false],
+      ['시장', '오피스 로비를 브랜드 공간으로 바꾸는 사례 증가', '뉴스', '건축 매체', '2026-05', 'v1', false],
+      ['고객사', 'E 자산운용의 용산 재개발 사업 개요', '뉴스', '경제지', '2026-05', 'v1', false],
+      ['고객사', 'E 자산운용 ESG 보고서의 에너지 절감 목표', '공시 · IR', '지속가능경영보고서', '2026-04', 'v1', true],
+      ['고객사', 'E 자산운용 보유 오피스 포트폴리오', '공시 · IR', '사업보고서', '2026-03', 'v1', false],
+      ['고객사', 'E 자산운용의 최근 오피스 리모델링 투자 방향', '뉴스', '경제지', '2026-08', 'v2', false],
+      ['사용자', '하이브리드 근무 확산 뒤 회의실 수요 변화 조사', '리포트', '리서치 기관', '2026-06', 'v1', false],
+      ['사용자', '오피스 방문객 출입 절차에 대한 불편 조사', '뉴스', 'IT 매체', '2026-08', 'v2', false],
+      ['사용자', '임차인이 선호하는 오피스 설비 순위', '리포트', '부동산 리서치', '2026-07', 'v1', false],
+      ['사용자', '오피스 근로자의 실내 쾌적성 만족도', '리포트', '리서치 기관', '2026-05', 'v1', true]
+    ].map(([group, summary, sourceType, source, date, from, numberCheck], i) => ({ id: 'mi-' + (i + 1), group, summary, source: { type: sourceType, name: source, date, url: U }, kept: true, addedIn: from, numberCheck: numberCheck ? '원문 확인 필요' : null }));
+    const ADD = {
+      rq: { ref: 'RQ-06', ver: 1, customer: 'K 리츠', project: '성수 플래그십 리테일 리뉴얼', target: { value: '자산관리본부장', by: 'ai-deep-query' }, keymen: [{ name: '자산관리팀장', weight: 60, reqs: [{ text: '1층 파사드 미디어로 집객' }, { text: '테넌트별 콘텐츠 운영' }, { text: '시설 원격 관리' }] }, { name: '마케팅 리드', weight: 40, reqs: [{ text: '시즌 캠페인 빠른 교체' }, { text: '방문객 데이터 활용', status: '확인 필요' }] }], note: null, sources: [{ file: '회의록_K리츠.pdf', pages: 3 }] },
+      dss: { ref: 'DSS-05', ver: 1, industry: { value: '오피스 · 업무시설', by: 'ai-accepted', basis: 'RQ-05 1' }, spaces: [
+        { name: '로비', basis: 'RQ-05 1', products: [{ model: 'Smart Signage QM55C', qty: '2대', by: 'manual' }, { model: '삼성 키오스크', qty: null, qtyStatus: '확인 필요', by: 'ai-accepted' }] },
+        { name: '공용 회의실', basis: 'RQ-05 1', products: [{ model: 'Flip Pro WA75D', qty: null, qtyStatus: '확인 필요', by: 'ai-accepted' }, { model: 'Smart Signage QB43C', qty: '실당 1대', by: 'ai-accepted' }] },
+        { name: '라운지', basis: 'ai-space', products: [{ model: 'Smart Signage QM55C', qty: '1대', by: 'ai-accepted' }] },
+        { name: '전시 공간', basis: 'RQ-05 2', products: [{ model: 'The Wall IAB 146"', qty: '1식', by: 'ai-accepted' }] },
+        { name: '통합 관제실', basis: 'RQ-05 3', products: [{ model: '비디오월 VM55B', qty: '2×2', by: 'ai-accepted' }] },
+        { name: '공용 공간', basis: 'ai-space', products: [{ model: 'SmartThings 센서', qty: null, qtyStatus: '확인 필요', by: 'ai-accepted' }, { model: 'Smart Signage QB43C', qty: '층당 1대', by: 'ai-accepted' }] }],
+        solutions: [{ name: 'MagicINFO', by: 'ai-accepted', basis: 'RQ-05 1' }, { name: 'SmartThings Pro', by: 'ai-accepted', basis: 'RQ-05 1' }, { name: 'b.IoT', by: 'manual', basis: 'RQ-05 3' }] },
+      mi: { ref: 'MI-01', ver: 2, prevVer: 1, queries: { market: ['프라임 오피스 스마트 빌딩 도입', '서울 도심 신축 오피스 임대 동향', 'AI 도입 기업 업무 공간 변화'], customer: ['E 자산운용 용산 재개발', 'E 자산운용 ESG 에너지 목표', 'E 자산운용 오피스 포트폴리오'], user: ['하이브리드 근무 회의실 수요', '오피스 방문객 출입 경험', '임차인 선호 오피스 설비'] }, filters: { period: '최근 1년', sourceTypes: ['뉴스', '공시 · IR', '리포트'] }, counts: { found: 13, kept: 12, numberCheck: 3 }, items: MI_ITEMS },
+      ca: (() => {
+        // 판정: ours-better 우위 · similar 비슷 · ours-worse 열위 · no-data 자료 없음
+        const VJ = { '+': 'ours-better', '=': 'similar', '-': 'ours-worse', '?': 'no-data' };
+        const DK = ['spec', 'price', 'cases', 'esg', 'brand'];
+        const pair = (space, ours, theirs, d) => { const dims = {}; d.forEach(([j, note], i) => { dims[DK[i]] = { verdict: VJ[j], note }; }); return { space, ours, theirs, dims }; };
+        const wiki = (hq, size, industry, mainBusiness, b2bOffice) => ({ hq, size, revenue: '[위키 값]', employees: '[위키 값]', industry, mainBusiness, b2bOffice, source: { type: 'Wikipedia', url: U } });
+        return { ref: 'CA-01', ver: 1, basis: { from: 'DSS-01', categories: ['사이니지', 'LED', '협업 디스플레이', '비디오월', 'IoT · 솔루션'] }, dimensions: ['스펙', '가격', '유관 사례', 'ESG', '브랜드 평판'], competitors: [
+          { id: 'A', name: '경쟁사 A', by: 'manual', wiki: wiki('국내', '대기업', '전자 · 디스플레이', '상업용 디스플레이 · LED 월', '국내 납품 다수'),
+            criteria: [{ k: '제품군', v: '사이니지 · LED 월이 DSS-01 로비 · 라운지 제품과 겹침' }, { k: '공간', v: '로비 · 라운지 · 공용공간' }, { k: '고객 접점', v: 'E 자산운용 거래 이력', status: '확인 필요' }],
+            matches: [pair('로비 미디어월', 'The Wall IAB 146"', '올인원 LED 월 · 동급 크기', [['=', '해상도 동급 · 밝기 수치 확인'], ['-', '가격 이점 없음 · 초기가 낮음 [견적 확인]'], ['+', '국내 AI 오피스 로비 사례'], ['+', '저전력 · 소재 인증 [확인]'], ['=', '비슷']]),
+              pair('로비 안내 사이니지', 'Smart Signage QM55C', '55" 보급형 사이니지', [['+', '24/7 운영 등급 · 고휘도'], ['-', '단가 높음'], ['=', '비슷'], ['=', '비슷'], ['+', 'B2B 사이니지 인지도']]),
+              pair('콘텐츠 관리', 'MagicINFO', '자사 CMS', [['+', '원격 일괄 배포 · 예약 · 공간 연동'], ['=', '비슷'], ['+', '대형 오피스 · 리테일 사례'], ['?', '자료 없음'], ['=', '비슷']])],
+            pros: ['초기 도입가가 낮음 [견적 확인]', '국내 유지보수 거점이 많음 [확인 필요]'], cons: ['사이니지 · IoT · 관제가 따로 놀아 공간 통합이 약함', 'AI 오피스 레퍼런스가 적음'],
+            claims: [{ axis: '통합', text: 'MagicINFO · SmartThings Pro · b.IoT 하나의 플랫폼으로 공간 7개를 묶음' }, { axis: '사례', text: '국내 AI 오피스 로비 도입사례', supports: 'RQ-01 최초 AI Ready' }, { axis: '가격', text: '초기가는 높지만 원격 관리로 운영비 절감', supports: 'RQ-01 에너지 20% 절감' }] },
+          { id: 'B', name: '경쟁사 B', by: 'manual', wiki: wiki('해외', '중견', '전자 · 협업 디스플레이', '인터랙티브 보드 · 회의실 솔루션', '회의실 단독 납품 중심'),
+            criteria: [{ k: '제품군', v: '인터랙티브 보드가 DSS-01 Flip Pro와 겹침' }, { k: '공간', v: '회의실' }],
+            matches: [pair('회의실 협업 보드', 'Flip Pro WA75D', '75" 인터랙티브 보드', [['=', '터치 · 판서 동급'], ['=', '가격 비슷'], ['-', '회의실 단독 사례가 더 많음'], ['=', '비슷'], ['=', '비슷']]),
+              pair('회의실 화상 화면', 'Smart Signage QB55C', '회의실 디스플레이', [['=', '비슷'], ['+', '단가 낮음 [견적 확인]'], ['=', '비슷'], ['?', '자료 없음'], ['+', '인지도']])],
+            pros: ['회의실 협업 소프트웨어 생태계가 넓음', '회의실 단독 레퍼런스 많음'], cons: ['로비 · 관제 등 다른 공간 제품이 없음', '국내 지원 범위 [확인 필요]'],
+            claims: [{ axis: '통합', text: '회의실만이 아니라 건물 전체를 같은 플랫폼으로' }, { axis: '사례', text: '오피스 전체 도입사례로 범위 차별화' }] },
+          { id: 'C', name: '경쟁사 C', by: 'ai-web', candidateEvidence: { title: '관제용 비디오월 · 빌딩 관제 납품 이력', type: '업계 뉴스', date: '2026-08', url: U }, wiki: wiki('국내', '중견', '산업용 디스플레이 · 관제', '관제 비디오월 · 상황실 구축', '빌딩 관제 납품 이력'),
+            criteria: [{ k: '제품군', v: '관제 비디오월이 DSS-01 중앙관제실 VM55B와 겹침' }, { k: '공간', v: '중앙관제실' }, { k: '근거', v: '빌딩 관제 납품 보도 · 업계 뉴스 2026-08' }],
+            matches: [pair('중앙관제실', '비디오월 VM55B', '55" 관제 비디오월', [['=', '베젤 · 밝기 수치 확인'], ['-', '구축 묶음가 낮음 [견적 확인]'], ['=', '비슷'], ['?', '자료 없음'], ['+', '글로벌 인지도']]),
+              pair('관제 데이터', 'b.IoT', '상황실 소프트웨어', [['+', '설비 · 에너지 데이터 연동'], ['=', '비슷'], ['+', '에너지 절감 사례'], ['+', '에너지 실측 증빙'], ['=', '비슷']])],
+            pros: ['상황실 구축 경험 · 시공 일괄', '구축 묶음 가격 경쟁력'], cons: ['오피스 사용자 공간(로비 · 회의실) 제품 없음', '에너지 데이터 연동이 약함'],
+            claims: [{ axis: 'ESG', text: 'b.IoT 실측 데이터로 에너지 20% 절감 증빙', supports: 'RQ-01 에너지 20% 절감' }, { axis: '통합', text: '관제 화면과 공간 기기를 한 플랫폼에서' }] },
+          { id: 'D', name: '경쟁사 D', by: 'ai-web', candidateEvidence: { title: '빌딩 IoT · 에너지 관리 플랫폼', type: '회사 소개', url: U }, wiki: wiki('해외', '대기업', '빌딩 자동화', '빌딩 관리 · 에너지 플랫폼', '대형 빌딩 다수'),
+            criteria: [{ k: '제품군', v: '빌딩 관리 플랫폼이 b.IoT · SmartThings Pro와 겹침' }, { k: '공간', v: '공용공간 · 관제실' }],
+            matches: [pair('공간 IoT · 에너지', 'b.IoT · SmartThings Pro', '빌딩 관리 플랫폼', [['=', '비슷'], ['=', '비슷'], ['-', '대형 빌딩 레퍼런스 많음'], ['=', '비슷'], ['=', '비슷']])],
+            pros: ['빌딩 설비 자동화 레퍼런스가 많음'], cons: ['디스플레이 · 사용자 경험 제품이 없음'],
+            claims: [{ axis: '통합', text: '디스플레이 · 사이니지까지 한 번에 — 사용자가 보는 화면과 설비를 연결' }] },
+          { id: 'E', name: '경쟁사 E', by: 'ai-web', candidateEvidence: { title: '오피스 사이니지 · 콘텐츠 관리 묶음 제안', type: '조달 공고', date: '2026-06', url: U }, wiki: wiki('국내', '중소', '사이니지 SI', '사이니지 · CMS 묶음 납품', '공공 · 오피스 납품'),
+            criteria: [{ k: '제품군', v: '사이니지 + CMS 묶음이 QM55C · MagicINFO와 겹침' }, { k: '공간', v: '로비 · 공용공간' }],
+            matches: [pair('사이니지 + CMS', 'QM55C + MagicINFO', '타사 패널 + 자체 CMS', [['+', '패널 · CMS 같은 제조사'], ['-', '묶음가 낮음'], ['=', '비슷'], ['?', '자료 없음'], ['+', '제조사 브랜드']])],
+            pros: ['묶음가가 낮음', '공공 조달 경험'], cons: ['패널 · CMS 제조사가 달라 장애 책임이 나뉨'],
+            claims: [{ axis: '브랜드', text: '패널부터 CMS까지 같은 제조사 · 한 곳에서 지원' }] }],
+          counts: { competitors: 5, matches: 9, verdicts: { oursBetter: 14, similar: 21, oursWorse: 6, noData: 4 } } };
+      })(),
+      vp: (() => {
+        // 가치 하나 = 메시지 + 고객의 니즈(직접 / AI 추론) + 연결 요구
+        const v = (id, space, message, need, needBy, req, by) => ({ id, space, message, need: need ? { text: need, by: needBy } : null, req, by });
+        return { ref: 'VP-01', ver: 1, from: 'DSS-01',
+          selection: { fromDss: 9, excluded: ['Smart Signage QB55C', 'Smart Signage QB43C', '스마트 모니터', '옥외형 사이니지 OHC55'], addedOutsideDss: [] },
+          items: [
+            { name: 'The Wall IAB 146"', kind: 'product', spaces: ['로비'], values: [
+              v('vp-1', '로비', '들어서는 순간 회사의 AI 비전을 보여 줌', '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', 'manual', 'RQ-01 최초 AI Ready', 'manual'),
+              v('vp-2', '로비', '사내 행사 때 로비를 무대로 바꿈', '행사 때마다 외부 장소를 빌리지 않았으면 해요', 'ai-accepted', 'RQ-01 업무환경 플랫폼', 'manual'),
+              v('vp-3', '로비', '베젤 없는 큰 화면으로 콘텐츠에 몰입', '로비 화면이 광고판처럼 보이지 않았으면 해요', 'ai-accepted', 'RQ-01 최초 AI Ready', 'ai-accepted')] },
+            { name: 'Smart Signage QM55C', kind: 'product', spaces: ['로비', '라운지'], values: [
+              v('vp-4', '로비', '방문 안내와 환영을 사람 손 없이', '안내 데스크 인력 없이도 방문객을 맞고 싶어요', 'ai-accepted', 'RQ-01 인식 · 반응', 'ai-accepted'),
+              v('vp-5', '라운지', '층별 공지 · 비상 안내를 한 번에', '긴급할 때 모든 층에 바로 알리고 싶어요', 'ai-accepted', 'RQ-01 유지보수 최소화', 'ai-accepted')] },
+            { name: '삼성 키오스크', kind: 'product', spaces: ['로비'], values: [v('vp-6', '로비', '방문객 등록 대기를 줄임', '예약 없이 온 손님도 기다리지 않게 하고 싶어요', 'ai-accepted', 'RQ-01 인식 · 반응', 'ai-accepted')] },
+            { name: 'Flip Pro WA75D', kind: 'product', spaces: ['회의실'], values: [
+              v('vp-7', '회의실', '회의 내용이 끊기지 않고 이어짐', '회의 끝나도 판서 내용이 사라지지 않았으면 해요', 'manual', 'RQ-01 업무환경 플랫폼', 'manual'),
+              v('vp-8', '회의실', '케이블 없이 바로 화면 공유', null, null, 'RQ-01 업무환경 플랫폼', 'manual'),
+              v('vp-9', '회의실', '원격 참석자와 같은 화면에 함께 판서', '재택 인원도 회의에 똑같이 참여했으면 해요', 'ai-accepted', 'RQ-01 업무환경 플랫폼', 'ai-accepted')] },
+            { name: '비디오월 VM55B', kind: 'product', spaces: ['중앙관제실'], values: [v('vp-10', '중앙관제실', '건물 상태를 한 화면에서 보고 바로 대응', '설비 문제를 사고 나기 전에 알고 싶어요', 'ai-accepted', 'RQ-01 유지보수 최소화', 'ai-accepted')] },
+            { name: 'SmartThings 센서', kind: 'product', spaces: ['공용공간', '라운지'], values: [
+              v('vp-11', '공용공간', '재실에 맞춰 냉난방 · 조명을 줄여 에너지 절감', '빈 회의실에 에어컨이 켜져 있지 않았으면 해요', 'ai-accepted', 'RQ-01 에너지 20% 절감', 'ai-accepted'),
+              v('vp-12', '라운지', '온습도를 자동으로 맞춰 늘 쾌적하게', '여름에도 쾌적한 라운지가 필요해요', 'ai-accepted', 'RQ-01 예측 · 반응형 공간', 'ai-accepted')] },
+            { name: 'MagicINFO', kind: 'solution', spaces: ['전체'], values: [
+              v('vp-13', '전체', '모든 화면 콘텐츠를 한 곳에서 바꿈', '층마다 돌아다니며 화면을 바꾸지 않았으면 해요', 'ai-accepted', 'RQ-01 업무환경 플랫폼', 'manual'),
+              v('vp-14', '로비', '시간대별 콘텐츠 자동 예약', '출근 · 점심 · 퇴근 시간에 맞는 안내가 나왔으면 해요', 'ai-accepted', 'RQ-01 인식 · 반응', 'ai-accepted')] },
+            { name: 'SmartThings Pro', kind: 'solution', spaces: ['전체'], values: [v('vp-15', '전체', '공간 기기를 하나의 앱으로 자동화', '조명 · 공조 · 화면을 따로 관리하지 않았으면 해요', 'ai-accepted', 'RQ-01 예측 · 반응형 공간', 'ai-accepted')] },
+            { name: 'b.IoT', kind: 'solution', spaces: ['중앙관제실'], values: [
+              v('vp-16', '중앙관제실', '에너지 사용을 실측 데이터로 증빙', '에너지 20% 절감을 숫자로 보여 줘야 해요', 'manual', 'RQ-01 에너지 20% 절감', 'manual'),
+              v('vp-17', '중앙관제실', '설비 이상을 미리 알려 유지보수 비용을 줄임', '고장 나고서야 수리하는 일을 줄이고 싶어요', 'ai-accepted', 'RQ-01 유지보수 최소화', 'ai-accepted')] }],
+          importedFrom: [],
+          counts: { items: 9, values: 17, needs: 16, needsMissing: 1 } };
+      })(),
+      sp: { ref: 'SP-01', ver: 1, from: 'DSS-01', format: '비교표', lang: 'ko', unit: 'mm', fields: ['화면 크기 · 해상도', '밝기 · 명암비', '입출력 단자', '소비전력', '크기 · 무게', '설치 방식'], products: ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', 'Smart Signage QB55C', 'Smart Signage QB43C', '비디오월 VM55B', '옥외형 사이니지 OHC55', 'SmartThings 센서'], valuesFrom: '공식 카탈로그', file: 'SP-01_v1.xlsx' },
+      sc: (() => {
+        // 공간 → 제품 · 솔루션(1개 이상) → 시나리오 여러 개 → 시나리오별 제품 · 장면(단계 자유) · 항목(자유)
+        const st = (text, product) => ({ text, product: product || null });
+        return { ref: 'SC-01', ver: 1, from: 'DSS-01', spaces: [
+          { name: '사무실 · R&D', products: ['스마트 모니터', 'Smart Signage QB43C', 'SmartThings Pro'], scenarios: [
+            { id: 'sc-1', title: '출근 후 하루 계획', user: '연구원', products: ['스마트 모니터', 'Smart Signage QB43C'], steps: [st('아침 출근 후 자리 확인'), st('좌석 모니터로 오늘 일정 확인', '스마트 모니터'), st('회의실 예약 현황이 함께 뜸', '스마트 모니터'), st('이동 없이 하루 계획 완료')], fields: [], by: 'manual' }] },
+          { name: '로비', products: ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'MagicINFO'], scenarios: [
+            { id: 'sc-2', title: '예약 방문객의 첫 5분', user: '사전 예약한 외부 방문객', products: ['The Wall IAB 146"', 'Smart Signage QM55C', 'MagicINFO'], steps: [st('방문 전날 예약 알림과 QR을 받음'), st('로비 게이트에 QR을 대면 자동으로 열림'), st('The Wall에 회사 소개와 환영 문구가 뜸', 'The Wall IAB 146"'), st('안내 사이니지가 회의실까지 길을 알려 줌', 'Smart Signage QM55C')], fields: [{ k: '시간대', v: '오전 10시 전후' }, { k: '기대 효과', v: '안내 인력 없이 방문 응대' }], by: 'ai-candidate-A' },
+            { id: 'sc-3', title: '출근 혼잡 시간의 로비', user: '오전 9시 전후 임직원', products: ['Smart Signage QM55C', 'MagicINFO'], steps: [st('출근 인원이 몰려 게이트 앞이 혼잡해짐'), st('층별 엘리베이터 대기 안내가 뜸', 'Smart Signage QM55C'), st('혼잡이 풀리면 사이니지가 공지로 돌아감', 'MagicINFO')], fields: [], by: 'manual' },
+            { id: 'sc-4', title: '미등록 방문객 응대', user: '예약 없이 온 방문객', products: ['삼성 키오스크', 'Smart Signage QM55C'], steps: [st('안내 데스크 없이 키오스크로 방문 등록', '삼성 키오스크'), st('담당자에게 도착 알림이 감'), st('라운지 대기를 안내', 'Smart Signage QM55C'), st('담당자가 내려와 함께 입장')], fields: [{ k: '기대 효과', v: '대기 시간 단축' }], by: 'ai-candidate-A' }] },
+          { name: '회의실', products: ['Flip Pro WA75D', 'Smart Signage QB55C', 'SmartThings Pro'], scenarios: [
+            { id: 'sc-5', title: '하이브리드 회의', user: '프로젝트 팀', products: ['Flip Pro WA75D', 'Smart Signage QB55C'], steps: [st('[확인 필요]')], fields: [], by: 'manual' }] },
+          { name: '라운지', products: ['Smart Signage QM55C'], scenarios: [] },
+          { name: '주차장', products: ['옥외형 사이니지 OHC55'], scenarios: [] },
+          { name: '중앙관제실', products: ['비디오월 VM55B', 'b.IoT'], scenarios: [
+            { id: 'sc-6', title: '설비 이상 대응', user: '시설 관리자', products: ['비디오월 VM55B', 'b.IoT'], steps: [st('공조 설비 이상 징후를 감지', 'b.IoT'), st('비디오월에 해당 층 · 설비가 강조됨', '비디오월 VM55B'), st('담당자에게 점검 요청이 감'), st('고장 전에 부품 교체')], fields: [{ k: '기대 효과', v: '유지보수 비용 절감' }], by: 'manual' }] },
+          { name: '공용공간', products: ['SmartThings 센서', 'Smart Signage QB43C', 'SmartThings Pro'], scenarios: [] }],
+          rules: { minProductsPerSpace: 1, minProductsPerScenario: 1 },
+          counts: { spaces: 7, scenarios: 6, spacesWithoutScenario: 3 } };
+      })()
+    };
+    const BASE = {
+      'SB-06': { id: 'SB-06', name: '성수 플래그십 리테일', parent: null, branches: [], keyMessage: null, stages: {} },
+      'SB-05': { id: 'SB-05', name: '판교 스타트업 단지', parent: null, branches: [], keyMessage: null, stages: { rq: { ref: 'RQ-05', ver: 1, customer: 'G 공사', keymen: [{ name: '단지 운영본부장', weight: 100, reqs: 3 }] } } },
+      'SB-01': { id: 'SB-01', name: '용산 AI Ready 오피스', parent: null, branches: ['SB-02'], keyMessage: 'AI Ready 오피스의 새로운 모델', stages: { rq: RQ01, dss: DSS01, mi: { ref: 'MI-01', ver: 1, counts: { found: 11, kept: 11 } } } }
+    };
+    const ORDERK = ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'];
+    const base = BASE[sb];
+    const stages = {};
+    ORDERK.forEach((k) => { stages[k] = k === key ? ADD[key] : (base.stages[k] || null); });
+    const nDone = ['mi', 'ca', 'vp', 'sp', 'sc'].filter((k) => stages[k]).length;
+    const flow = { id: base.id, name: base.name, parent: base.parent, branches: base.branches, keyMessage: base.keyMessage, stages, progress: stages.dss ? 'dss+' + nDone + '/5' : 'rq', summary: 'storyboards/' + base.id + '/summary.md', updatedAt: '2026-10-08T15:20:00+09:00' };
+    const full = JSON.stringify(flow, null, 2).split('\n');
+    const startI = full.findIndex((l) => l.indexOf('    "' + key + '": {') === 0);
+    let endI = startI;
+    while (endI < full.length - 1 && !/^    \},?$/.test(full[endI])) endI++;
+    const jsonLines = full.map((t, i) => ({ t, add: key === 'rq' ? true : (i >= startI && i <= endI) || /"(progress|updatedAt)"/.test(t) }));
+    // 접힌 모습: 추가된 블록만, 2개 넘는 배열은 첫 항목 + 나머지 개수
+    const fold = (v) => {
+      if (Array.isArray(v)) { if (v.length > 2 && typeof v[0] === 'object') return [fold(v[0]), '… ' + (v.length - 1) + '개 더 · 전체 JSON에서 보기']; return v.map(fold); }
+      if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach((k) => { o[k] = fold(v[k]); }); return o; }
+      return v;
+    };
+    const jsonFold = '"stages.' + key + '": ' + JSON.stringify(fold(ADD[key]), null, 2);
+    const addCount = jsonLines.filter((l) => l.add).length;
+    const s = Object.assign({ json: !!this.props.showJson }, this.state || {});
+    return {
+      jsonFold, jsonLines, jsonSub: key === 'rq' ? '새 Storyboard 전체' : 'stages.' + key + ' · ' + addCount + '줄 추가', jsonTitle: base.id + '/flow.json', jsonPopSub: '초록 줄이 이번에 추가 · 바뀐 값이에요 · 전체 ' + full.length + '줄',
+      jsonOpen: !!s.json, openJson: () => this.setState({ json: true }), closeJson: () => this.setState({ json: false }),
+      label, title: ref.split(' ')[0], content: key, sb, sbName: SBS[sb][0], headline, sub, md, track, stage, group, steps, last: steps.length, yes: true, workHref,
+      nexts, hasNext: nexts.length > 0, noNext: nexts.length === 0,
+      nextGrid: 'display: grid; grid-template-columns: repeat(' + Math.max(1, nexts.length) + ', minmax(0, 1fr)); gap: 12px;',
+      popOpen: !!s.pop, pop: s.pop || sb,
+      openPop: (id) => this.setState({ pop: id, json: false }), closePop: () => this.setState({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

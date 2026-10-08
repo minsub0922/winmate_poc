@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>Storyboard 1/5 · 정의서 고르기</title>
+<title>Storyboard · 전체 흐름</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -12,48 +12,217 @@
 <style>
 body{margin:0;background:#f5f6f8}
 a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
+button,textarea{font-family:inherit}
+button{cursor:pointer}
+.h-ghost:hover{background:#f3f5fd}
+.h-next:hover{border-color:#1428a0}
+.h-cell{border:none;font-family:inherit;text-align:left;cursor:pointer}
+.h-cell:hover{box-shadow:0 0 0 2px #c9d1f2}
+.h-ghost:focus-visible,.h-tab:focus-visible,.h-next:focus-visible,.h-cell:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 </style>
 </helmet>
-<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="storyboard" current="E 자산운용 용산 오피스 제안 기획" hint-size="260px,900px"></dc-import>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="storyboard" current="용산 AI Ready 오피스" hint-size="260px,900px"></dc-import>
   <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="전략 수립 Storyboard" title="E 자산운용 용산 오피스 제안 기획" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
-    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
-      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
-        <div style="display: flex; align-items: center; gap: 12px">
-          <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.35">어떤 요구사항 정의서로 시작할까요?</h1>
+    <dc-import name="TopBar" section="전략 수립 Storyboard" title="용산 AI Ready 오피스" popover="none" hint-size="1180px,64px"></dc-import>
+    <section style="width: 1180px; height: 836px; box-sizing: border-box; padding: 22px 40px 22px 40px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0">
+        <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">용산 AI Ready 오피스</h1>
+        <span style="height: 22px; padding: 0 8px; border-radius: 5px; background: #121417; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center">main</span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">SB-01 · E 자산운용</span>
+        <div style="position: relative">
+          <button class="h-ghost" onClick="{{toggleBr}}" aria-expanded="{{brOpen}}" style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v10a4 4 0 0 0 4 4h8 M15 14l3 3-3 3"/></svg>분기 1</button>
+          <sc-if value="{{brOpen}}" hint-placeholder-val="{{false}}">
+            <div style="position: absolute; left: 0; top: 36px; width: 300px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; box-shadow: 0 12px 32px rgba(18,20,23,0.14); padding: 6px; z-index: 10">
+              <button class="h-ghost" onClick="{{openBranch}}" style="width: 100%; display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 8px; border: none; background: transparent; text-align: left; color: #121417"><span style="font-size: 13px; font-weight: 700">용산 AI Ready 오피스 · 분기 B</span><span style="font-size: 12px; color: #596170">SB-02 · MI에서 분기 · MI-02 리테일 테넌트 관점</span></button>
+            </div>
+          </sc-if>
         </div>
-        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #596170">정의서가 스토리보드의 근거가 돼요. 확인 필요한 값은 추정하지 않고 TBD로 둬요.</p>
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
-        <button aria-pressed="true" style="display: flex; align-items: center; gap: 14px; min-height: 68px; width: 100%; box-sizing: border-box; padding: 0 18px; border-radius: 14px; background: #ffffff; cursor: pointer; text-align: left; color: #121417; border: 2px solid #1428a0; box-shadow: 0 4px 14px rgba(20,40,160,0.10);"><span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 6px solid #1428a0;"></span><span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; padding: 12px 0"><span style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; white-space: nowrap">E 자산운용 용산 AI Ready 오피스<span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #1428a0; color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center">v2</span></span><span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">요구 12개 · 확인 필요 4개 · 오늘 13:40 저장</span></span></button>
-        <button aria-pressed="false" style="display: flex; align-items: center; gap: 14px; min-height: 68px; width: 100%; box-sizing: border-box; padding: 0 18px; border-radius: 14px; background: #ffffff; cursor: pointer; text-align: left; color: #121417; border: 1px solid #e2e5ea;"><span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 2px solid #c9d0e6;"></span><span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; padding: 12px 0"><span style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; white-space: nowrap">F 시행사 동탄 시니어 복합단지<span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #f0f2f5; color: #596170; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center">v1</span></span><span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">요구 9개 · 확인 필요 7개 · 심층 작성 중</span></span></button>
-        <button aria-pressed="false" style="display: flex; align-items: center; gap: 14px; min-height: 68px; width: 100%; box-sizing: border-box; padding: 0 18px; border-radius: 14px; background: #ffffff; cursor: pointer; text-align: left; color: #121417; border: 1px solid #e2e5ea;"><span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 2px solid #c9d0e6;"></span><span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; padding: 12px 0"><span style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; white-space: nowrap">G 공사 판교 스타트업 단지<span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #f0f2f5; color: #596170; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center">v1</span></span><span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">요구 8개 · 확인 필요 3개</span></span></button>
-        <a href="RQ1.dc.html" style="display: flex; align-items: center; gap: 14px; height: 52px; box-sizing: border-box; padding: 0 18px; border-radius: 14px; border: 1px dashed #1428a0; background: #ffffff; color: #1428a0; font-size: 14px; font-weight: 600">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 5v14M5 12h14"/></svg>정의서가 없어요 — 요청서 · 메모부터 넣기</a>
-      </div>
-      <div style="display: flex; align-items: center; gap: 12px; height: 52px; box-sizing: border-box; padding: 0 8px 0 18px; border-radius: 14px; background: #fbfbfc; border: 1px solid #e2e5ea; flex-shrink: 0">
-        <span style="font-size: 12.5px; font-weight: 700; color: #596170; white-space: nowrap">설정</span>
-        <span style="font-size: 14px; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0">컨셉 제안 · 고객 맞춤 제안 · 약 20장 · 한국어</span>
-        <span style="font-size: 12px; color: #8a91a0; white-space: nowrap">정의서에서 읽었어요</span>
-        <a href="SB1S.dc.html" style="height: 34px; padding: 0 12px; border-radius: 9px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9 M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>바꾸기</a>
-      </div>
-      <div style="margin-top: auto; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
-        <a href="SB0.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>목록</a>
         <span style="flex-grow: 1"></span>
-        <a href="SB2.dc.html" style="font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap">질의 건너뛰고 기획 방향</a>
-        <a href="SB1Q.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">다음 · 기획 질의 3개<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #0b6e4f; white-space: nowrap"><span style="width: 8px; height: 8px; border-radius: 50%; background: #0b6e4f"></span>요약본 자동 갱신 · 오늘 13:40</span>
       </div>
+
+      <!-- 어디까지 입력됐나 -->
+      <div style="display: flex; gap: 6px; flex-shrink: 0">
+        <sc-for list="{{track}}" as="t" hint-placeholder-count="8">
+          <sc-if value="{{t.done}}" hint-placeholder-val="{{true}}">
+            <button class="h-cell" onClick="{{t.view}}" aria-label="{{t.viewLabel}}" style="{{t.style}}">
+              <span style="display: flex; align-items: center; justify-content: space-between; gap: 4px"><span style="font-size: 12px; font-weight: 700; white-space: nowrap">{{t.label}}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></span>
+              <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; white-space: nowrap">{{t.ref}}</span>
+            </button>
+          </sc-if>
+          <sc-if value="{{t.todo}}" hint-placeholder-val="{{false}}">
+            <a class="h-cell" href="{{t.href}}" style="{{t.style}}">
+              <span style="font-size: 12px; font-weight: 700; white-space: nowrap">{{t.label}}</span>
+              <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; white-space: nowrap">{{t.ref}}</span>
+            </a>
+          </sc-if>
+        </sc-for>
+      </div>
+
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 470px; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 12px; min-height: 0">
+          <div style="box-sizing: border-box; flex-shrink: 0; border: 1.5px solid #1428a0; border-radius: 14px; background: #ffffff; padding: 12px 16px; display: flex; align-items: center; gap: 12px">
+            <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+              <span style="font-size: 12px; font-weight: 700; color: #1428a0">Key message</span>
+              <span style="font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">AI Ready 오피스의 새로운 모델</span>
+            </span>
+            <button class="h-ghost" onClick="{{openStrat}}" style="height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">전략 수립</button>
+          </div>
+          <div style="box-sizing: border-box; flex-grow: 1; min-height: 0; border: 1px solid #e2e5ea; border-radius: 14px; background: #ffffff; display: flex; flex-direction: column; overflow: hidden">
+            <div style="height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 13.5px; font-weight: 700; flex-grow: 1">연결된 콘텐츠</span><span style="font-size: 12px; color: #8a91a0">종류마다 하나씩</span></div>
+            <sc-for list="{{rows}}" as="r" hint-placeholder-count="7">
+              <div style="display: flex; align-items: center; gap: 12px; min-height: 50px; padding: 0 12px 0 16px; border-top: 1px solid #f5f6f8">
+                <span style="{{r.dot}}"></span>
+                <span style="width: 120px; flex-shrink: 0; font-size: 13.5px; font-weight: 700; white-space: nowrap">{{r.label}}</span>
+                <span style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0">
+                  <span style="{{r.mainStyle}}">{{r.main}}</span>
+                  <sc-if value="{{r.hasShare}}" hint-placeholder-val="{{false}}"><span style="font-size: 11.5px; color: #596170">{{r.share}}</span></sc-if>
+                </span>
+                <sc-if value="{{r.has}}" hint-placeholder-val="{{true}}"><button class="h-ghost" onClick="{{r.view}}" style="{{r.cta}}">보기</button></sc-if>
+                <sc-if value="{{r.none}}" hint-placeholder-val="{{false}}"><a href="{{r.href}}" style="{{r.cta}}">만들기</a></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 14px; background: #ffffff; display: flex; flex-direction: column; overflow: hidden; min-height: 0">
+          <div style="display: flex; align-items: center; gap: 4px; height: 46px; padding: 0 10px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+            <div role="tablist" style="display: flex; gap: 4px; flex-grow: 1">
+              <button class="h-tab" role="tab" aria-selected="{{isMd}}" onClick="{{toMd}}" style="{{tabMd}}">요약본 · md</button>
+              <button class="h-tab" role="tab" aria-selected="{{isJson}}" onClick="{{toJson}}" style="{{tabJson}}">전체 흐름 · json</button>
+            </div>
+            <sc-if value="{{isMd}}" hint-placeholder-val="{{true}}">
+              <button class="h-ghost" onClick="{{toggleEdit}}" style="height: 32px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: #1428a0; font-size: 12.5px; font-weight: 700; white-space: nowrap">{{editBtn}}</button>
+            </sc-if>
+          </div>
+          <sc-if value="{{showPre}}" hint-placeholder-val="{{true}}">
+            <pre style="margin: 0; flex-grow: 1; min-height: 0; padding: 12px 16px; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 12px; line-height: 1.65; color: #121417; white-space: pre-wrap; overflow: hidden; background: #fbfbfc">{{text}}</pre>
+          </sc-if>
+          <sc-if value="{{editing}}" hint-placeholder-val="{{false}}">
+            <label for="sb-md" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">요약본 수정</label>
+            <textarea id="sb-md" style="flex-grow: 1; min-height: 0; margin: 10px; box-sizing: border-box; resize: none; border: 1.5px solid #1428a0; border-radius: 10px; padding: 10px 12px; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 12px; line-height: 1.65; color: #121417; outline: none">{{mdText}}</textarea>
+          </sc-if>
+          <div style="display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-top: 1px solid #f0f2f5; font-size: 11.5px; color: #8a91a0; flex-shrink: 0">{{foot}}</div>
+        </div>
+      </div>
+
+      <!-- 후속 작업 -->
+      <a href="https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe" class="h-next" style="flex-shrink: 0; box-sizing: border-box; height: 64px; padding: 0 18px; border-radius: 14px; background: #ffffff; border: 1px solid #e2e5ea; color: #121417; display: flex; align-items: center; gap: 14px">
+        <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">후속 작업</span>
+        <span style="width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h18v12H3z M8 20h8 M12 16v4 M7 12l3-3 2 2 4-4"/></svg></span>
+        <span style="display: flex; flex-direction: column; gap: 2px; flex-grow: 1"><span style="font-size: 15px; font-weight: 700">PPT 제작 · B2B 제안서</span><span style="font-size: 12.5px; color: #596170">이 Storyboard의 요약본 · 연결된 콘텐츠로 제안서를 만들어요</span></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
     </section>
   </main>
+
+  <sc-if value="{{stratOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="StrategyPopup" ai="{{stratAi}}" on-close="{{closeStrat}}" hint-size="1100px,700px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{cpOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="ContentPopup" ref-id="{{cp}}" on-close="{{closeCp}}" hint-size="820px,680px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-02" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"tab":{"editor":"enum","options":["md","json"],"default":"md"},"view":{"editor":"enum","options":["","RQ-01","DSS-01","MI-01"],"default":""},"strat":{"editor":"enum","options":["","open","ai"],"default":""},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
-    return { steps: ["요구사항 불러오기", "기획 방향", "목차 · 서사", "요구 추적", "일정 · 공유"], cur: 1 };
+    const pt = this.props.tab ?? 'md';
+    const s = Object.assign({ tab: pt, edit: false, br: false, pop: false, cp: this.props.view || '', strat: this.props.strat || '' }, (this.state && this.state.k === pt + (this.props.view || '') + (this.props.strat || '')) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: pt + (this.props.view || '') + (this.props.strat || '') }));
+    // [키, 이름, 참조, 한 줄, 공유, 만들기/열기 링크]
+    const C = [
+      ['rq', '고객 요구사항', 'RQ-01 v2', '키맨 3 · 요구 12 · 확인 필요 4', 'SB-02와 공유', 'RQ1.dc.html'],
+      ['dss', 'DSS', 'DSS-01 v1', '오피스 · 공간 7 · 제품 12 · 솔루션 3', 'SB-02와 공유', 'DS2.dc.html'],
+      ['mi', 'MI', 'MI-01 v1', '담은 정보 11 · 출처 11', '', 'MI2.dc.html'],
+      ['ca', '경쟁사 분석', '', '', '', 'CA2.dc.html'],
+      ['vp', 'Value Proposition', '', '', '', 'VP2.dc.html'],
+      ['sp', 'Spec 시트', '', '', '', 'SP2.dc.html'],
+      ['sc', '공간 시나리오', '', '', '', 'SC2.dc.html']
+    ];
+    const rows = C.map(([k, label, ref, line, share, href]) => ({
+      label, href, hasShare: !!share, share, has: !!ref, none: !ref,
+      view: () => put({ cp: ref.split(' ')[0] }),
+      main: ref ? ref + ' · ' + line : '아직 없음 · 만들면 이 Storyboard를 가져가요',
+      mainStyle: 'font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (ref ? ' color: #121417;' : ' color: #8a91a0;'),
+      dot: 'width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;' + (ref ? ' background: #1428a0;' : ' border: 1.5px dashed #b8bec8;'),
+      cta: 'height: 30px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (ref ? ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417;' : ' background: #eaeefb; color: #1428a0;')
+    }));
+    const T = [['rq', '요구사항', 'RQ-01 v2', 'RQ1.dc.html'], ['dss', 'DSS', 'DSS-01 v1', 'DS2.dc.html'], ['mi', 'MI', 'MI-01 v1', 'MI2.dc.html'], ['ca', '경쟁사', '', 'CA2.dc.html'], ['vp', 'VP', '', 'VP2.dc.html'], ['sp', 'Spec', '', 'SP2.dc.html'], ['sc', '시나리오', '', 'SC2.dc.html'], ['ppt', '제안서', '', 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe']];
+    const track = T.map(([k, label, ref, href], i) => ({
+      label, href, done: !!ref, todo: !ref, ref: ref || (k === 'ppt' ? '후속 작업' : '+ 만들기'),
+      viewLabel: label + ' ' + ref + ' 보기', view: () => put({ cp: ref.split(' ')[0] }),
+      style: 'flex: 1 1 0; min-width: 0; height: 56px; box-sizing: border-box; padding: 8px 10px; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between;' + (i === 2 || i === 7 ? ' margin-left: 10px;' : '') + (ref ? ' background: #1428a0; color: #ffffff;' : ' background: #ffffff; color: #596170; border: 1px dashed #c9d0e6;')
+    }));
+    const md = [
+      '# 용산 AI Ready 오피스 — Storyboard 요약',
+      '고객: E 자산운용 · 최종 제안대상: 대표이사 · main',
+      '',
+      '## Key message',
+      'AI Ready 오피스의 새로운 모델',
+      '',
+      '## 1. 고객 요구사항 · RQ-01 v2',
+      '- 대표이사(50%): 사용자를 인식하고 반응하는 오피스 · 최초 AI Ready로 알리기',
+      '- 공간컨텐츠실장(30%): 업무환경 플랫폼 [확인 필요]',
+      '- 개발사업팀장(20%): 설계 단계 AI 인프라 · 유지보수 최소화',
+      '',
+      '## 2. DSS · DSS-01 v1',
+      '- 업종: 오피스 · 업무시설 / 공간 7',
+      '- 로비: The Wall IAB 146" · QM55C ×2 · 키오스크',
+      '- 솔루션: MagicINFO · SmartThings Pro · b.IoT',
+      '',
+      '## 3. Market Intelligence · MI-01 v1',
+      '- 담은 정보 11 (시장 4 · 고객사 4 · 사용자 3)',
+      '',
+      '## 남은 것',
+      '- 경쟁사 · VP · Spec · 공간 시나리오 → 제안서'
+    ].join('\n');
+    const json = [
+      '{',
+      '  "id": "SB-01",',
+      '  "name": "용산 AI Ready 오피스",',
+      '  "parent": null,',
+      '  "branches": ["SB-02"],',
+      '  "keyMessage": "AI Ready 오피스의 새로운 모델",',
+      '  "stages": {',
+      '    "rq": { "ref": "RQ-01", "ver": 2, "customer": "E 자산운용",',
+      '      "target": "대표이사", "keymen": [ … 3 ], "sharedWith": ["SB-02"] },',
+      '    "dss": { "ref": "DSS-01", "ver": 1, "industry": "오피스 · 업무시설",',
+      '      "spaces": [ … 7 · 제품 12 ], "solutions": [ … 3 ], "sharedWith": ["SB-02"] },',
+      '    "mi": { "ref": "MI-01", "ver": 1, "queries": { … 10 },',
+      '      "items": [ … 11 · 출처 · 정리 문장 ] },',
+      '    "ca": null, "vp": null, "sp": null, "sc": null, "ppt": null',
+      '  },',
+      '  "progress": "dss+1/5",',
+      '  "summary": "storyboards/SB-01/summary.md",',
+      '  "updatedAt": "2026-10-08T13:40:00+09:00"',
+      '}'
+    ].join('\n');
+    const tab = (on) => 'height: 32px; padding: 0 12px; border-radius: 8px; border: none; font-size: 12.5px; white-space: nowrap;' + (on ? ' background: #eaeefb; color: #1428a0; font-weight: 700;' : ' background: transparent; color: #596170; font-weight: 600;');
+    const isMd = s.tab === 'md';
+    const editing = isMd && s.edit;
+    return {
+      rows, track, isMd, isJson: !isMd, tabMd: tab(isMd), tabJson: tab(!isMd),
+      showPre: !editing, editing, text: isMd ? md : json, mdText: md,
+      editBtn: s.edit ? '저장' : '요약본 수정',
+      foot: isMd ? (s.edit ? '직접 고친 문장은 콘텐츠가 바뀌어도 유지돼요' : '콘텐츠가 저장될 때마다 다시 써져요 · 직접 고친 부분은 표시해 유지') : '콘텐츠의 실제 값까지 이 JSON 하나에 담겨요 · […]는 접힌 배열',
+      brOpen: s.br, popOpen: s.pop,
+      toMd: () => put({ tab: 'md' }), toJson: () => put({ tab: 'json', edit: false }),
+      toggleEdit: () => put({ edit: !s.edit }), toggleBr: () => put({ br: !s.br }),
+      openBranch: () => put({ br: false, pop: true }), closePop: () => put({ pop: false }),
+      cpOpen: !!s.cp, cp: s.cp || 'RQ-01', closeCp: () => put({ cp: '' }),
+      stratOpen: !!s.strat, stratAi: s.strat === 'ai', openStrat: () => put({ strat: 'open' }), closeStrat: () => put({ strat: '' })
+    };
   }
 }
 </script>

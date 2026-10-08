@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>경쟁사 분석 · 경쟁사 확인</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input,textarea{font-family:inherit}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="competitor" current="A 커피 메뉴보드 경쟁사 분석" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="경쟁사 분석" title="A 커피 메뉴보드 경쟁사 분석" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{cur}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 36px 180px 28px 180px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <span style="font-size: 12.5px; font-weight: 700; color: #1428a0">확인 1 / 1</span>
+        <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em">이 경쟁사들로 분석할까요?</h1>
+        <span style="font-size: 14px; color: #596170">입력에서 읽은 4가지로 후보 6곳을 찾았어요. 추천 4곳은 켜 두었고, 빼거나 더할 수 있어요.</span>
+      </div>
+
+      <div style="height: 44px; box-sizing: border-box; flex-shrink: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; display: flex; align-items: center; gap: 6px; padding: 0 14px 0 10px">
+        <sc-for list="{{found}}" as="f" hint-placeholder-count="4">
+          <span style="height: 24px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: #e6f4ee; color: #0b6e4f; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 4px; min-width: 0; flex-shrink: 1">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M5 12l5 5L20 7"/></svg>
+            <span style="min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{f.t}}</span>
+          </span>
+        </sc-for>
+        <span style="flex-grow: 1"></span>
+        <a href="CA1.dc.html" style="font-size: 12.5px; font-weight: 600; color: #1428a0; white-space: nowrap; flex-shrink: 0">바꾸기</a>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
+        <div role="group" aria-label="경쟁사 후보 6곳" style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; display: flex; flex-direction: column; overflow: hidden">
+          <sc-for list="{{cands}}" as="c" hint-placeholder-count="6">
+            <div style="{{c.row}}">
+              <button role="switch" aria-checked="{{c.on}}" aria-label="{{c.switchLabel}}" onClick="{{c.pick}}" style="{{c.sw}}"><span style="{{c.knob}}"></span></button>
+              <span style="{{c.letter}}">{{c.id}}</span>
+              <div style="width: 186px; flex-shrink: 0; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                <span style="{{c.name}}">경쟁사 {{c.id}}</span>
+                <span style="{{c.kind}}">{{c.kindText}}</span>
+              </div>
+              <div style="width: 112px; flex-shrink: 0; display: flex; gap: 4px">
+                <sc-for list="{{c.chips}}" as="p" hint-placeholder-count="3">
+                  <span style="height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 5px; background: #f0f2f5; color: #596170; font-size: 11px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{p}}</span>
+                </sc-for>
+              </div>
+              <span style="{{c.why}}">{{c.whyText}}</span>
+              <span style="width: 72px; flex-shrink: 0; display: flex; justify-content: flex-end"><span style="{{c.badge}}">{{c.badgeText}}</span></span>
+              <span style="width: 30px; flex-shrink: 0; text-align: right; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 700; color: #8a91a0">{{c.conf}}</span>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="height: 38px; box-sizing: border-box; border: 1px dashed #b8bec8; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <label for="comp" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">경쟁사 직접 추가</label>
+          <input id="comp" placeholder="경쟁사 직접 추가 (회사명 · 제품명)" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #596170; padding: 0 2px">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">실명은 이 작업 안에서만 보여요 · 내보내기엔 익명(경쟁사 A · B …) · 직접 넣거나 뺀 곳은 다시 분석해도 유지돼요</span>
+        </div>
+      </div>
+
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+        <a href="CA1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>뒤로</a>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 12.5px; color: #596170; white-space: nowrap">선택 <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #121417">{{selCount}}</span>곳</span>
+        <a href="CA3.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">{{selCount}}곳으로 분석<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const st = this.state || {};
+    const steps = ['넣기', '경쟁사 확인', '분석', '결과'];
+
+    // 입력에서 읽은 4가지 — 모두 찾음
+    const found = ['고객사 · A 커피 프랜차이즈', '업종 · 외식 · 카페', '장소 · 수도권 직영점', '제품 · 55" 사이니지 + 배포 솔루션'].map((t) => ({ t }));
+
+    // 후보: 글자 · 유형 · 근거 칩 · 근거 한 줄 · 상태 · 신뢰 (실명은 화면에 쓰지 않음)
+    const C = [
+      ['A', '국내 대형 가전 · 사이니지', ['업종', '제품'], '같은 업종 도입사례 6건 · 55" 라인업 · 자체 CMS', 'rec', '0.91'],
+      ['B', '글로벌 사이니지 전문', ['업종', '장소', '제품'], '수도권 프랜차이즈 사례 3건 · 3rd-party CMS 연동', 'rec', '0.86'],
+      ['C', '클라우드 CMS 소프트웨어', ['업종', '제품'], '메뉴보드 콘텐츠 배포 · 하드웨어 없음 (제품 일부 겹침)', 'rec', '0.78'],
+      ['D', '키오스크 · 메뉴보드 통합 벤더', ['업종', '장소'], '외식 특화 · 수도권 설치 파트너망', 'rec', '0.74'],
+      ['E', '저가형 상업용 디스플레이 수입사', ['제품'], '가격대 겹침 · 레퍼런스 미확인', 'check', '0.52'],
+      ['F', '오프라인 광고 매체사', ['업종'], '업종 겹침 · 제품 다름', 'drop', '0.31']
+    ];
+    // 신뢰 0.70 이상(추천)만 기본 켜짐 · 유저 토글은 state 에 유지
+    const on = Array.isArray(st.on) ? st.on : C.map((c) => c[4] === 'rec');
+    const BADGE = {
+      rec: ['추천', ' background: #1428a0; color: #ffffff;'],
+      check: ['확인 필요', ' background: #ffffff; color: #121417; border: 1px solid #121417;'],
+      drop: ['제외 제안', ' background: #f0f2f5; color: #596170;']
+    };
+    const cands = C.map(([id, kindText, chips, whyText, status, conf], i) => {
+      const isOn = !!on[i];
+      return {
+        id, kindText, chips, whyText, conf, on: isOn,
+        switchLabel: '경쟁사 ' + id + (isOn ? ' 빼기' : ' 넣기'),
+        pick: () => { const n = on.slice(); n[i] = !n[i]; this.setState({ on: n }); },
+        row: 'display: flex; align-items: center; gap: 10px; height: 56px; box-sizing: border-box; padding: 0 16px;' + (i > 0 ? ' border-top: 1px solid #f0f2f5;' : ''),
+        sw: 'width: 36px; height: 22px; border-radius: 999px; border: none; position: relative; padding: 0; flex-shrink: 0; cursor: pointer;' + (isOn ? ' background: #1428a0;' : ' background: #c9ced6;'),
+        knob: 'position: absolute; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #ffffff;' + (isOn ? ' right: 3px;' : ' left: 3px;'),
+        letter: 'width: 28px; height: 28px; border-radius: 8px; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;' + (isOn ? ' background: #121417; color: #ffffff;' : ' background: #e2e5ea; color: #8a91a0;'),
+        name: 'font-size: 13.5px; font-weight: 600; white-space: nowrap;' + (isOn ? ' color: #121417;' : ' color: #8a91a0;'),
+        kind: 'font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (isOn ? ' color: #596170;' : ' color: #8a91a0;'),
+        why: 'flex-grow: 1; min-width: 0; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (isOn ? ' color: #596170;' : ' color: #8a91a0;'),
+        badge: 'height: 20px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;' + BADGE[status][1],
+        badgeText: BADGE[status][0]
+      };
+    });
+    const selCount = on.filter(Boolean).length;
+    return { steps, cur: 2, found, cands, selCount };
+  }
+}
+</script>
+</body>
+</html>

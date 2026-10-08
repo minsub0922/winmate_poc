@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>콘텐츠 흐름 규칙</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+.fr-node:hover{border-color:#1428a0}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 40px 48px; display: flex; flex-direction: column; gap: 22px; background: #ffffff; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+    <span style="font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; letter-spacing: 0.08em; color: #1428a0">WINMATE · CONTENT FLOW</span>
+    <span style="font-size: 28px; font-weight: 800; letter-spacing: -0.02em">모든 콘텐츠는 Storyboard 하나에 쌓인다</span>
+    <span style="font-size: 14.5px; color: #596170">Storyboard는 제안 흐름 전체의 context — 전체 흐름은 JSON으로 들고, 요약본(md)은 콘텐츠가 저장될 때마다 다시 쓴다.</span>
+  </div>
+
+  <!-- 흐름도 -->
+  <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; height: 250px">
+    <a href="RQ1.dc.html" class="fr-node" style="width: 170px; box-sizing: border-box; padding: 14px; border-radius: 14px; border: 1.5px solid #1428a0; background: #ffffff; color: #121417; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0"><span style="font-size: 11.5px; font-weight: 700; color: #1428a0">시작</span><span style="font-size: 15px; font-weight: 700">고객 요구사항</span><span style="font-size: 11.5px; color: #596170">저장 → Storyboard 자동 생성</span></a>
+    <svg width="28" height="16" viewBox="0 0 28 16" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M2 8h22 M18 3l6 5-6 5"/></svg>
+    <a href="SB1.dc.html" class="fr-node" style="width: 220px; height: 230px; box-sizing: border-box; padding: 16px; border-radius: 16px; background: #1428a0; color: #ffffff; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
+      <span style="font-size: 11.5px; font-weight: 700; color: #c9d1f2">context</span>
+      <span style="font-size: 17px; font-weight: 800">전략 수립 Storyboard</span>
+      <span style="font-size: 12px; color: #dfe4fb; line-height: 1.5">연결된 콘텐츠 관리 · 요약본 · Key message</span>
+      <span style="margin-top: auto; display: flex; flex-direction: column; gap: 4px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: #ffffff"><span>flow.json · 전체 흐름</span><span>summary.md · 매번 갱신</span></span>
+      <span style="display: flex; gap: 3px"><sc-for list="{{dots}}" as="d" hint-placeholder-count="8"><span style="{{d}}"></span></sc-for></span>
+    </a>
+    <svg width="28" height="16" viewBox="0 0 28 16" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M2 8h22 M18 3l6 5-6 5"/></svg>
+    <a href="DS1.dc.html" class="fr-node" style="width: 170px; box-sizing: border-box; padding: 14px; border-radius: 14px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; display: flex; flex-direction: column; gap: 4px; flex-shrink: 0"><span style="font-size: 11.5px; font-weight: 700; color: #596170">사전 · Storyboard</span><span style="font-size: 15px; font-weight: 700">공간별 제품 매칭 DSS</span><span style="font-size: 11.5px; color: #596170">후속 · 시나리오 · Spec</span></a>
+    <svg width="28" height="16" viewBox="0 0 28 16" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M2 8h22 M18 3l6 5-6 5"/></svg>
+    <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; width: 230px">
+      <span style="font-size: 11.5px; font-weight: 700; color: #596170; padding-left: 2px">사전 · DSS까지 된 Storyboard</span>
+      <sc-for list="{{after}}" as="a" hint-placeholder-count="5">
+        <a href="{{a.href}}" class="fr-node" style="height: 36px; box-sizing: border-box; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: space-between">{{a.t}}<span style="font-size: 11px; font-weight: 600; color: #8a91a0">{{a.ai}}</span></a>
+      </sc-for>
+    </div>
+    <svg width="28" height="16" viewBox="0 0 28 16" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M2 8h22 M18 3l6 5-6 5"/></svg>
+    <a href="https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe" class="fr-node" style="flex-grow: 1; box-sizing: border-box; padding: 14px; border-radius: 14px; border: 1px solid #e2e5ea; background: #f5f6f8; color: #121417; display: flex; flex-direction: column; gap: 4px"><span style="font-size: 11.5px; font-weight: 700; color: #596170">Storyboard의 후속</span><span style="font-size: 15px; font-weight: 700">PPT 제작</span><span style="font-size: 11.5px; color: #596170">B2B 제안서</span></a>
+  </div>
+
+  <div style="display: grid; grid-template-columns: minmax(0, 1fr) 470px; gap: 28px; flex-grow: 1; min-height: 0">
+    <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; align-self: start">
+      <div style="display: grid; grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1fr) 130px 120px; column-gap: 12px; align-items: center; height: 36px; padding: 0 14px; background: #fbfbfc; font-size: 11.5px; font-weight: 700; color: #596170"><span>콘텐츠</span><span>기능</span><span>AI 추가기능 (버튼)</span><span>사전 작업</span><span>후속 작업</span></div>
+      <sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+        <div style="display: grid; grid-template-columns: 150px minmax(0, 1fr) minmax(0, 1fr) 130px 120px; column-gap: 12px; align-items: center; min-height: 40px; padding: 4px 14px; box-sizing: border-box; border-top: 1px solid #f0f2f5; font-size: 12px; line-height: 1.4">
+          <span style="font-size: 12.5px; font-weight: 700">{{r.t}}</span><span style="color: #3d4452">{{r.f}}</span><span style="{{r.aiStyle}}">{{r.ai}}</span><span style="color: #3d4452">{{r.pre}}</span><span style="color: #3d4452">{{r.post}}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <span style="font-size: 15px; font-weight: 700">규칙</span>
+      <sc-for list="{{rules}}" as="u" hint-placeholder-count="6">
+        <div style="display: flex; gap: 10px"><span style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 7px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{u.n}}</span><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13.5px; font-weight: 700">{{u.h}}</span><span style="font-size: 12px; color: #596170; line-height: 1.5">{{u.d}}</span></span></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const dots = [1, 1, 1, 0, 0, 0, 0, 0].map((on, i) => 'width: 16px; height: 10px; border-radius: 2px;' + (i === 2 || i === 7 ? ' margin-left: 4px;' : '') + (on ? ' background: #ffffff;' : ' background: rgba(255,255,255,0.25);'));
+    const after = [['MI1.dc.html', 'Market Intelligence', '웹 검색'], ['CA1.dc.html', '경쟁사 분석', 'AI 탐색'], ['VP1.dc.html', 'Value Proposition', 'AI 매칭'], ['SP1.dc.html', 'Spec 시트', ''], ['SC1.dc.html', '공간 시나리오', 'AI 3안']].map(([href, t, ai]) => ({ href, t, ai }));
+    const R = [
+      ['고객 요구사항', '요구사항 입력', 'AI 심층 질의로 폼 완성', '없음', 'DSS'],
+      ['Storyboard', '연결 콘텐츠 관리 · 요약본 제공 · 수정', '연결 콘텐츠로 Key message 수립', '고객 요구사항', 'PPT 제작'],
+      ['DSS', '업종 · 공간 · 공간별 제품 · 솔루션 선택', '업종 추론 · 공간 추천 · 제품 자동 매칭 · 솔루션 추천', 'Storyboard', '시나리오 · Spec'],
+      ['MI', 'Storyboard 기반 웹 검색 · 수집 · 정제', '—', 'DSS까지', '없음'],
+      ['경쟁사 분석', 'Storyboard 기반 경쟁사 리스트업', '경쟁사 후보군 웹 탐색', 'DSS까지', '없음'],
+      ['VP', '제품 · 솔루션 기반 가치 추출', 'context 기반 가치 매칭 추천', 'DSS까지', '없음'],
+      ['Spec 시트', 'DSS 제품 스펙 시트 작성', '—', 'DSS까지', '없음'],
+      ['공간 시나리오', 'Storyboard 기반 공간별 유저 시나리오', '시나리오 자동 추론 · 3안', 'DSS까지', '없음']
+    ];
+    const rows = R.map(([t, f, ai, pre, post]) => ({ t, f, ai, pre, post, aiStyle: ai === '—' ? 'color: #a3a9b5;' : 'color: #1428a0; font-weight: 600;' }));
+    const U = [
+      ['Storyboard ↔ 콘텐츠는 1 : N', 'Storyboard 하나에는 콘텐츠 종류별로 하나만. 콘텐츠 하나는 여러 Storyboard에 연결될 수 있어요.'],
+      ['사전 작업은 필수', '없으면 시작할 수 없어요. 고르는 화면에서 부족한 Storyboard는 막혀 있고, 만들러 가는 길만 보여요.'],
+      ['이미 있으면 수정 또는 복제본', '수정은 연결된 모든 Storyboard에 반영. 복제본은 Storyboard를 분기해 새 콘텐츠를 만들어요.'],
+      ['어디까지 됐는지 항상 표시', '모든 콘텐츠 화면 위에 연결된 Storyboard와 진행 칸이 보이고, 누르면 요약본 팝업이 떠요.'],
+      ['AI는 추가기능 버튼으로만', 'AI가 먼저 묻는 화면은 없어요. 추천은 점선으로 보이고 수락해야 들어가요.'],
+      ['후속 작업은 완료 화면 맨 아래', '마지막 콘텐츠를 저장하면 후속 작업 카드가 나와요.']
+    ];
+    const rules = U.map(([h, d], i) => ({ n: i + 1, h, d }));
+    return { dots, after, rows, rules };
+  }
+}
+</script>
+</body>
+</html>
