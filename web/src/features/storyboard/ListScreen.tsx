@@ -51,7 +51,7 @@ export function ListScreen() {
     <ListPage
       title="전략 수립 Storyboard"
       desc="요구사항 정의서로 기획 방향 → 목차 → 요구 추적 → 일정까지. 멈춘 단계에서 이어서 할 수 있어요."
-      action={<NewButton to="/storyboard/new">새 스토리보드</NewButton>}
+      action={<NewButton to="/storyboard/legacy/new">새 스토리보드</NewButton>}
       toolbar={(
         <div className="wm-toolbar">
           <FilterTabs<Tab> value={tab} ariaLabel="상태" onChange={(v) => setParams(v === 'all' ? {} : { tab: v }, { replace: true })}
@@ -67,7 +67,7 @@ export function ListScreen() {
           empty={list.isError ? '목록을 불러오지 못했어요.' : (
             <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
               <span>아직 스토리보드가 없어요</span>
-              {tab === 'all' && <Link to="/storyboard/new" className="wm-btn wm-btn--primary wm-btn--h36">새 스토리보드</Link>}
+              {tab === 'all' && <Link to="/storyboard/legacy/new" className="wm-btn wm-btn--primary wm-btn--h36">새 스토리보드</Link>}
             </span>
           )} />
       )}

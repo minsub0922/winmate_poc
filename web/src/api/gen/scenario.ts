@@ -1106,7 +1106,8 @@ export interface paths {
         put?: never;
         /**
          * Create Space Set
-         * @description 새 묶음. spaces(DSS 공간 · 제품)를 주거나, context_text(요구 문장)로 KB 에서 공간별 제품을 찾는다.
+         * @description 새 묶음(보드 Gate → SC2). sb_id 만 주면 Storyboard flow.json 의 DSS 공간 · 공간별 제품 · 솔루션으로 시작한다
+         *     (Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다.
          */
         post: operations["create_space_set"];
         delete?: never;
@@ -1147,7 +1148,8 @@ export interface paths {
         put?: never;
         /**
          * Finish Space Set
-         * @description 저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). stages.sc 와 요약 md.
+         * @description 저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). ver(저장 횟수)가 오르고,
+         *     Storyboard 가 있으면 허브 stages.sc · 요약본 · 팝업 카드에 반영한다(flow_sync). 응답: stages.sc · 요약 md · flow_sync.
          */
         post: operations["finish_space_set"];
         delete?: never;
@@ -3132,14 +3134,20 @@ export interface components {
         SSCreate: {
             /** Context Text */
             context_text?: string | null;
-            /** Sb Id */
+            /**
+             * Sb Id
+             * @description Gate 에서 고른 Storyboard(SB-01 …). spaces 가 없으면 flow.json stages.dss 의 공간 · 제품으로 시작
+             */
             sb_id?: string | null;
             /**
              * Spaces
-             * @description DSS 공간 · 제품. 없으면 context_text 로 KB S1 에서 공간별 제품을 찾는다
+             * @description 공간 · 제품을 직접 줄 때. 없으면 Storyboard DSS(sb_id) → context_text 로 KB S1 순으로 찾는다
              */
             spaces?: components["schemas"]["SSSpaceIn"][] | null;
-            /** Title */
+            /**
+             * Title
+             * @description 없으면 Storyboard 이름
+             */
             title?: string | null;
         };
         /** SSDoc */
@@ -3154,6 +3162,18 @@ export interface components {
             counts: components["schemas"]["SSCounts"];
             /** Created At */
             created_at: string;
+            /** Customer */
+            customer?: string | null;
+            /**
+             * Dss Items
+             * @description DSS 제품 · 솔루션(고르기 대화상자 묶음)
+             */
+            dss_items?: components["schemas"]["SSDssItem"][];
+            /**
+             * Dss Ref
+             * @description 시작할 때 읽은 Storyboard 의 DSS 코드(공간 목록 머리 「공간 · DSS-01」 · stages.sc.from)
+             */
+            dss_ref?: string | null;
             /** Id */
             id: string;
             /**
@@ -3175,8 +3195,40 @@ export interface components {
             title: string;
             /** Updated At */
             updated_at: string;
+            /**
+             * Ver
+             * @description 저장(완료)한 횟수 = flow.json stages.sc.ver
+             * @default 0
+             */
+            ver: number;
             /** Version */
             version: number;
+        };
+        /**
+         * SSDssItem
+         * @description DSS 에서 고른 제품 · 솔루션(SC2_Pick 첫 묶음 `DSS-01 · 제품` · `DSS-01 · 솔루션`).
+         */
+        SSDssItem: {
+            /**
+             * Kind
+             * @default product
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /**
+             * Links
+             * @description DSS 솔루션의 함께 쓰는 제품(공간 · 제품)
+             */
+            links?: string[];
+            /** Name */
+            name: string;
+            /** Ref */
+            ref?: string | null;
+            /**
+             * Spaces
+             * @description DSS 에서 이 제품이 있던 공간(솔루션은 links 가 가리킨 공간)
+             */
+            spaces?: string[];
         };
         /** SSFieldKV */
         SSFieldKV: {
@@ -3187,6 +3239,19 @@ export interface components {
              * @default
              */
             v: string;
+        };
+        /** SSFlowSync */
+        SSFlowSync: {
+            /**
+             * Md Added
+             * @description Storyboard 요약본에 더해진 부분
+             */
+            md_added: string;
+            /**
+             * Synced
+             * @description 같은 공간 시나리오가 연결돼 함께 바뀐 다른 Storyboard
+             */
+            synced?: string[];
         };
         /** SSIssue */
         SSIssue: {
@@ -3224,6 +3289,11 @@ export interface components {
             title: string;
             /** Updated At */
             updated_at: string;
+            /**
+             * Ver
+             * @default 0
+             */
+            ver: number;
         };
         /** SSProduct */
         SSProduct: {
@@ -3314,7 +3384,12 @@ export interface components {
         };
         /** SSStageOut */
         SSStageOut: {
-            /** Stage */
+            /** @description Storyboard 허브에 반영된 결과(sb_id 가 없거나 허브가 안 되면 null) */
+            flow_sync?: components["schemas"]["SSFlowSync"] | null;
+            /**
+             * Stage
+             * @description Storyboard flow.json 의 stages.sc
+             */
             stage: {
                 [key: string]: unknown;
             };

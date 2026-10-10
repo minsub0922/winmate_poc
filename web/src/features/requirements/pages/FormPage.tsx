@@ -1,5 +1,5 @@
 /**
- * RQ1 빈 폼 · RQ1D 끌어다 놓기 · RQ1G 채우는 중 · RQ2 채워진 폼 — `/requirements/new` · `/requirements/:rqId/form`.
+ * (이전 흐름) RQ1 빈 폼 · RQ1D 끌어다 놓기 · RQ1G 채우는 중 · RQ2 채워진 폼 — `/requirements/legacy/new` · `/requirements/:rqId/form`.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';

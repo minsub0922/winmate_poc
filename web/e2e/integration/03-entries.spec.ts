@@ -79,7 +79,7 @@ test('RQ4 「Market Intelligence」 카드 → MI1(정의서 · 사용 링크) �
 
 test('CA1R(?input=requirements&rq=) → 경쟁사 찾기 · 분석 → CA5 「새 제안서로 시작」 → PR1 → 유형 고르면 Why Samsung 이 그 분석으로', async ({ page, request }) => {
   budget(300_000);
-  await open(page, `/competitor/new?input=requirements&rq=${rq.id}`);
+  await open(page, `/competitor/legacy/new?input=requirements&rq=${rq.id}`);
   const radios = page.getByRole('radiogroup', { name: '요구사항 정의서' });
   await expect(radios.getByRole('radio', { checked: true })).toContainText('E 자산운용', { timeout: 30_000 });
   await page.getByRole('button', { name: '경쟁사 찾기' }).click();

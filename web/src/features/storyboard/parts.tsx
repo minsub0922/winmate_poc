@@ -222,7 +222,7 @@ export function Gate({ loading, error, onRetry }: { loading: boolean; error: unk
         <div className="wm-empty" role="alert">
           <strong>스토리보드를 찾을 수 없어요</strong>
           <span className="sb-muted">지워졌거나 주소가 바뀌었어요.</span>
-          <Link to="/storyboard" className="wm-btn wm-btn--h36">작업 목록</Link>
+          <Link to="/storyboard/legacy" className="wm-btn wm-btn--h36">작업 목록</Link>
         </div>
       ) : (
         <div className="wm-empty" role="alert">

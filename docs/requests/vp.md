@@ -24,3 +24,11 @@
 - 템플릿 상세 500 고침 안내(위, export): VP 웹 · 서버에 목록 우회 코드 없음 — 할 일 없음(pm2 export 재시작 뒤 그대로).
 - 보충(integration): `exporting._template_ready` 가 export 상세 호출 실패(500)까지 「준비 안 됨」으로 프로세스 내내 기억하던 것 → 실패는 기억하지 않게(export 재시작 뒤 vp 재시작 없이 바로 반영).
 - 보충(integration): 제안서에서 VP 반입을 실행 취소해 그 VP 연결이 하나도 안 남으면 proposal 이 `:release-proposal` 을 부른다.
+
+## 허브 완료 화면 머리 = 보드 Done(짧은 이름) — storyboard · 2026-10-10
+- 바뀐 것(허브 `/v1/flows*`, 응답 모양 그대로): `PUT /v1/flows/{id}/stages/{key}` 의 `md_added`(→ `push_stage` · 각 서비스 `flow_sync.md_added`) 첫 줄을
+  보드 Done 머리(짧은 이름 · 번호 없음)로 바꿨다 — `## 요구사항 · RQ-06 v1` · `## DSS · …` · `## MI · MI-01 v2` · `## 경쟁사 · CA-01 v1` · `## VP · …` · `## Spec · …` · `## 시나리오 · …`.
+  요약본 전체(`summary_md`)는 그대로 보드 SB1 형식(`## 1. 고객 요구사항 · RQ-01 v2` · `## 3. Market Intelligence · MI-01 v1`), 「남은 것」 줄의 시나리오는 `공간 시나리오`.
+  함께: flow.json `progress` 는 보드 값 `rq` · `dss+n/5`(화면 문구 `FlowDoc.progress` 는 그대로), `keyPillars` 는 받쳐 줄 메시지가 있을 때만, 분기(`:branch`)는 Key message 를 복사하지 않는다(보드 SB0 · SBPopup).
+- 맞출 곳: `services/vp/tests/test_value_maps.py:101` `md_added.startswith("## Value Proposition · VP-")` → `"## VP · VP-"`.
+- 상태: 완료(2026-10-10 플랫폼 통합 때 테스트 기대 문자열을 고침)

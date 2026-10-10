@@ -3673,8 +3673,26 @@ export interface components {
             title: string;
             /** Updated At */
             updated_at: string;
+            /**
+             * Ver
+             * @description 저장(완료) 판 — flow.json stages.vp.ver
+             */
+            ver?: number | null;
             /** Version */
             version: number;
+        };
+        /** VMFlowSync */
+        VMFlowSync: {
+            /**
+             * Md Added
+             * @description Storyboard 요약본에 더해진 부분
+             */
+            md_added: string;
+            /**
+             * Synced
+             * @description 같은 VP 가 연결돼 함께 바뀐 다른 Storyboard
+             */
+            synced?: string[];
         };
         /** VMImportValue */
         VMImportValue: {
@@ -3835,6 +3853,8 @@ export interface components {
         };
         /** VMStageOut */
         VMStageOut: {
+            /** @description Storyboard 허브에 반영된 결과(sb_id 가 없거나 허브가 안 되면 null) */
+            flow_sync?: components["schemas"]["VMFlowSync"] | null;
             /**
              * Stage
              * @description Storyboard flow.json 의 stages.vp

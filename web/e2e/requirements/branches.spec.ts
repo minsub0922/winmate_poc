@@ -21,7 +21,7 @@ test('E2E 1 목록: 탭 수 · 이어서 · 열기 · 새 요구사항', async (
     { op: 'set_field', field: 'customer_name', value: cust }, { op: 'set_field', field: 'project_name', value: '쓰는 중인 건' },
   ]);
 
-  await page.goto(`/requirements?q=${encodeURIComponent(cust)}`);
+  await page.goto(`/requirements/legacy?q=${encodeURIComponent(cust)}`);
   const tabs = page.getByRole('tablist', { name: '상태' });
   await expect(tabs.getByRole('tab', { name: /^전체\s*2$/ })).toHaveAttribute('aria-selected', 'true');
   await expect(tabs.getByRole('tab', { name: /^진행 중\s*1$/ })).toBeVisible();
@@ -44,14 +44,14 @@ test('E2E 1 목록: 탭 수 · 이어서 · 열기 · 새 요구사항', async (
   await expect(page).toHaveURL(new RegExp(`/requirements/${saved.id}$`));
   await expect(page.getByTestId('doc-version')).toHaveText('정의서 v1');
 
-  await page.goto(`/requirements?q=${encodeURIComponent(cust)}`);
+  await page.goto(`/requirements/legacy?q=${encodeURIComponent(cust)}`);
   await rowOpen.getByRole('link', { name: '이어서' }).click();
   await expect(page).toHaveURL(new RegExp(`/requirements/${open.id}/form$`));
   await expect(page.locator('#f-proj')).toHaveValue('쓰는 중인 건');
 
-  await page.goto('/requirements');
+  await page.goto('/requirements/legacy');
   await page.getByRole('link', { name: '새 요구사항' }).first().click();
-  await expect(page).toHaveURL(/\/requirements\/new$/);
+  await expect(page).toHaveURL(/\/requirements\/legacy\/new$/);
   await expect(page.getByPlaceholder('예) 용산 업무시설 재개발 제안')).toBeVisible();
   await expect(page.getByPlaceholder('키맨 (예: 대표이사)')).toBeVisible();
   await expect(crumb(page)).toHaveText('새 요구사항');
@@ -62,7 +62,7 @@ test('E2E 2 · 3 · 5 끌어다 놓기 · 사람 값 보호', async ({ page, req
   test.setTimeout(120_000);
   const U = uniq();
   const mine = `직접 입력한 이름 ${U}`;
-  await page.goto('/requirements/new');
+  await page.goto('/requirements/legacy/new');
   await page.getByPlaceholder('예) 용산 업무시설 재개발 제안').fill(mine);
   await expect(page).toHaveURL(/\/requirements\/rq_[0-9A-Z]{26}\/form$/);
   const id = page.url().match(RQ_ID)![0];
@@ -102,7 +102,7 @@ test('E2E 2 · 3 · 5 끌어다 놓기 · 사람 값 보호', async ({ page, req
 
 test('E2E 16 새로고침 복구: 채우는 중 새로고침 → 칩 · 진행 → RQ2', async ({ page, request }) => {
   test.setTimeout(120_000);
-  await page.goto('/requirements/new');
+  await page.goto('/requirements/legacy/new');
   const posted = page.waitForResponse((r) => r.request().method() === 'POST' && /\/requirements\/rq_[0-9A-Z]{26}\/files$/.test(r.url()));
   await attach(page, '[data-testid=rq-file-input]', files(PPTX, MEMO));
   expect((await posted).status()).toBe(202);
@@ -240,7 +240,7 @@ test('E2E 15 사이드바 · 이어서: 심층 작성 중 다른 화면 → 사�
   await expect(page).toHaveURL(new RegExp(`/requirements/${rq.id}/deep/${sid}/q$`));
   await expect(page.getByTestId('ask-progress')).toHaveText(`2 / ${N}`);
 
-  await page.goto(`/requirements?q=${encodeURIComponent(cust)}`);
+  await page.goto(`/requirements/legacy?q=${encodeURIComponent(cust)}`);
   const row = page.getByRole('table', { name: '요구사항 목록' }).getByRole('row').filter({ hasText: cust });
   await expect(row.locator('.rq-pill')).toHaveText(`심층 작성 2 / ${N}`);
   await row.getByRole('link', { name: '이어서' }).click();

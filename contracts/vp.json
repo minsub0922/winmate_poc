@@ -10732,6 +10732,18 @@
             "title": "Status",
             "default": "draft"
           },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver",
+            "description": "저장(완료) 판 — flow.json stages.vp.ver"
+          },
           "counts": {
             "$ref": "#/components/schemas/VMCounts"
           },
@@ -10758,6 +10770,28 @@
           "updated_at"
         ],
         "title": "VMDoc"
+      },
+      "VMFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added",
+            "description": "Storyboard 요약본에 더해진 부분"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced",
+            "description": "같은 VP 가 연결돼 함께 바뀐 다른 Storyboard"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added"
+        ],
+        "title": "VMFlowSync"
       },
       "VMImportValue": {
         "properties": {
@@ -11221,6 +11255,17 @@
           "summary_md": {
             "type": "string",
             "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VMFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Storyboard 허브에 반영된 결과(sb_id 가 없거나 허브가 안 되면 null)"
           }
         },
         "type": "object",

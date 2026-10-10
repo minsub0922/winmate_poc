@@ -13,7 +13,7 @@ test('CA0 → CA1 → 찾기 → CA2 → 분석 → CA4 → CA4D → CA5 한 바
   test.skip(!!down, down ?? '');
 
   // CA0 작업 목록
-  await page.goto('/competitor');
+  await page.goto('/competitor/legacy');
   await expect(page.getByRole('heading', { name: '경쟁사 분석 작업' })).toBeVisible();
   await expect(page.getByText(/분석 \d+건 · 업데이트 필요 \d+건 · 경쟁사는 실명 없이 A · B · C 로 표기해요/)).toBeVisible();
   await expect(page.getByRole('tablist', { name: '상태 필터' }).getByRole('tab')).toHaveText([/전체\s*\d+/, /완료\s*\d+/, /확인 중\s*\d+/]);
@@ -23,7 +23,7 @@ test('CA0 → CA1 → 찾기 → CA2 → 분석 → CA4 → CA4D → CA5 한 바
 
   // CA1 넣기 · 자유 양식
   await page.getByRole('link', { name: '새 분석' }).click();
-  await expect(page).toHaveURL(/\/competitor\/new$/);
+  await expect(page).toHaveURL(/\/competitor\/legacy\/new$/);
   await expect(page.getByRole('heading', { name: '어떤 고객의 경쟁사를 찾을까요?' })).toBeVisible();
   await expect(page.getByRole('tab', { name: '자유 양식' })).toHaveAttribute('aria-selected', 'true');
   const find = page.getByRole('button', { name: '경쟁사 찾기' });
@@ -145,7 +145,7 @@ test('CA0 → CA1 → 찾기 → CA2 → 분석 → CA4 → CA4D → CA5 한 바
   await expect(page.getByText('리포트를 저장했어요').first()).toBeVisible({ timeout: 60_000 });
 
   // CA0 행 · 보낸 곳(실명 없음, AC-CA-47)
-  await page.goto('/competitor');
+  await page.goto('/competitor/legacy');
   const row = page.locator(`[data-id="${id}"]`);
   await expect(row).toContainText('A 커피 메뉴보드 경쟁사 분석');
   await expect(row).toContainText('완료');

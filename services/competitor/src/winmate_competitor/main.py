@@ -3,8 +3,9 @@ from __future__ import annotations
 
 from winmate_common.app import create_app
 
-from . import api, api_results
+from . import api, api_flow, api_results
 
 app = create_app("competitor", version="1.0.0")
 app.include_router(api.router)
 app.include_router(api_results.router)
+app.include_router(api_flow.router)

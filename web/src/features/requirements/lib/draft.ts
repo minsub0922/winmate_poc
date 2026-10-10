@@ -152,6 +152,6 @@ export function emptyRequirement(): Requirement {
     form: { project_name: { ...EMPTY_FIELD }, customer_name: { ...EMPTY_FIELD }, final_audience: { ...EMPTY_FIELD }, author_note: { ...EMPTY_FIELD }, keymen: [], weights_mode: 'equal_default' },
     files: [], context: { spaces: [], products: [], solutions: [] }, open_question_count: 0, item_count: 0, keyman_count: 0,
     active_job: null, queued_jobs: [], fill_progress: null, active_deep_session_id: null, active_deep: null, last_deep_session_id: null,
-    route: '/requirements/new', created_at: now, updated_at: now, saved_at: null, skipped_ops: null,
+    route: '/requirements/legacy/new', created_at: now, updated_at: now, saved_at: null, skipped_ops: null,
   } as unknown as Requirement;
 }

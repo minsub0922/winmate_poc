@@ -39,3 +39,9 @@
 - SC5 → 제안서: 표준 · 퀵윈에 「solution」 섹션이 없으면 proposal 이 그 기능 기본 섹션으로 받고 응답 `section_key` 로 연다(SC5 웹이 응답으로 이동). 제안서를 지우면 사용 등록이 풀린다.
 - `scenarios:from-birdseye` 가 프로젝트 · 고객을 조감도 handoff 에서 잇는다(안 주면).
 - 참고: `make e2e-feature SERVICE=scenario` 의 `result.spec.ts:33` 은 mock 생성 속도(SC_PACE_S)가 0 이면(pm2 기본) 진행 화면을 못 보고 실패할 수 있다 — `SC_PACE_S=1.5 make dev-bg SERVICE=scenario` 로 돌리면 9개 모두 통과.
+
+## 이전 Storyboard SB4 「공간 시나리오」 카드 경로 — storyboard · 2026-10-10
+- 바뀐 것: `GET|POST /v1/storyboards/{sb}/handoffs[/scenario]` 의 `route` 를 `/scenario/new?sb={sb_…}` → `/scenario/legacy/new?sb={sb_…}` 로(`/scenario/new` 는 새 흐름 Gate).
+  `NewEntry` 의 `sb_…` → 이전 SC1 분기는 그대로 둬도 된다(옛 링크 대비).
+- 상태: 완료(안내)
+

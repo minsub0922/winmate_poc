@@ -42,7 +42,7 @@ export function ListPage({ rules = false }: { rules?: boolean }) {
   const indName = ind === 'GEN' ? '범용' : industries.find((i) => i.code === ind)?.name;
 
   const start = (k: (typeof STARTS)[number]['key']) => {
-    if (k === 'direct') nav('/vp/new');
+    if (k === 'direct') nav('/vp/legacy/new');
     else setPick(k);
   };
 
@@ -56,7 +56,7 @@ export function ListPage({ rules = false }: { rules?: boolean }) {
         <span style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
           {/* 새 흐름(2026-10-08 보드 webapp1 VP2) — 제품 · 솔루션마다 가치 여러 개 + 고객의 니즈 */}
           <Link to="/vp/values/new" className="wm-btn wm-btn--outline" style={{ height: 44, fontWeight: 700, fontSize: 14 }} data-testid="vp-values-new">가치 · 고객의 니즈</Link>
-          <Link to="/vp/new" className="vp-new"><Icon name="plus" size={16} />새 가치 제안</Link>
+          <Link to="/vp/legacy/new" className="vp-new"><Icon name="plus" size={16} />새 가치 제안</Link>
         </span>
       </div>
 
@@ -125,7 +125,7 @@ export function ListPage({ rules = false }: { rules?: boolean }) {
       </div>
 
       {pick && <WorkPicker kind={pick} onClose={() => setPick(null)} />}
-      <Modal open={rules} onClose={() => nav(loc.state?.back ?? '/vp')} title="에이전트 라우팅 규칙" width={1200} ariaLabel="에이전트 라우팅 규칙">
+      <Modal open={rules} onClose={() => nav(loc.state?.back ?? '/vp/legacy')} title="에이전트 라우팅 규칙" width={1200} ariaLabel="에이전트 라우팅 규칙">
         <RulesSheet />
       </Modal>
     </div>

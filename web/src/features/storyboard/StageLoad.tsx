@@ -41,9 +41,10 @@ function cardsFor(list: RqListItem[] | undefined, sb?: Sb): RqCard[] {
   return out.slice(0, 5);
 }
 
+/** 이전 흐름 정의서 만들기(`/requirements/legacy/new` 가 `return` 을 받아 저장 뒤 Storyboard 로 돌아온다) — `/requirements/new` 는 새 흐름 RQ1 */
 function NoRqCard({ emphasized }: { emphasized?: boolean }) {
   return (
-    <Link to="/requirements/new?return=storyboard" className="sb-norq" data-emph={emphasized || undefined}>
+    <Link to="/requirements/legacy/new?return=storyboard" className="sb-norq" data-emph={emphasized || undefined}>
       <Icon name="plus" size={16} strokeWidth={2.4} />정의서가 없어요 — 요청서 · 메모부터 넣기
     </Link>
   );
@@ -68,7 +69,7 @@ function SettingsRow({ sb, preparing }: { sb?: Sb; preparing: boolean }) {
 const SB1_TITLE = '어떤 요구사항 정의서로 시작할까요?';
 const SB1_SUB = '정의서가 스토리보드의 근거가 돼요. 확인 필요한 값은 추정하지 않고 TBD로 둬요.';
 
-/** `/storyboard/new?rq=` — 들어오면 바로 만든다(시작 전 초안 재사용 · Q-7) → `/storyboard/{sb}/source` */
+/** `/storyboard/legacy/new?rq=`(이전 주소 `/storyboard/new?rq=` 도 여기로) — 들어오면 바로 만든다(시작 전 초안 재사용 · Q-7) → `/storyboard/{sb}/source` */
 export function NewScreen() {
   useSbShell(undefined, 1, { title: '새 스토리보드' });
   const [params] = useSearchParams();
@@ -109,7 +110,7 @@ export function NewScreen() {
         </>
       )}
       <Bottom
-        back={<Back to="/storyboard">목록</Back>}
+        back={<Back to="/storyboard/legacy">목록</Back>}
         links={<GreyLink disabled disabledReason="정의서를 먼저 골라 주세요">질의 건너뛰고 기획 방향</GreyLink>}
         primary={<Primary disabled disabledReason="정의서를 먼저 골라 주세요">다음 · 기획 질의</Primary>} />
     </Page>
@@ -171,7 +172,7 @@ export function SourceScreen() {
       </div>
       <SettingsRow sb={sb} preparing={preparing} />
       <Bottom
-        back={<Back to="/storyboard">목록</Back>}
+        back={<Back to="/storyboard/legacy">목록</Back>}
         links={<GreyLink onClick={skip} disabled={preparing || act.busy} disabledReason="정의서를 읽는 중이에요">질의 건너뛰고 기획 방향</GreyLink>}
         primary={(
           <Primary onClick={next} disabled={preparing} busy={act.busy} disabledReason="정의서를 읽는 중이에요">

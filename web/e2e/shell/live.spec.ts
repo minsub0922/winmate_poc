@@ -21,7 +21,7 @@ test.describe('실제 workspace', () => {
     await expect(page.getByRole('heading', { level: 1 })).toContainText(`${me.given_name}님`);
     await expect(page.locator('.sh-user__name')).toHaveText(me.name);
     await expect(page.locator('.sh-user__org')).toHaveText(me.org);
-    await expect(page.locator('[data-home-section="plan"] [data-home-card]')).toHaveCount(6);
+    await expect(page.locator('[data-home-section="flow"] [data-home-card]')).toHaveCount(3);
   });
 });
 

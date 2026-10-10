@@ -1,5 +1,130 @@
 // 자동 생성 — 직접 고치지 말 것. 원본: contracts/storyboard.json (make contracts)
 export interface paths {
+    "/v1/flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Flows
+         * @description Storyboard 목록(SB0) · 사전 작업 고르기(Gate). content= 를 주면 eligible · need · existing 을 채우고 고를 수 있는 것을 위로.
+         */
+        get: operations["list_flows"];
+        put?: never;
+        /**
+         * Create Flow
+         * @description 고객 요구사항을 저장하면 requirements 가 부른다(Storyboard 자동 생성).
+         */
+        post: operations["create_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/flows/{flow_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Flow */
+        get: operations["get_flow"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Patch Flow
+         * @description 이름 · Key message · 요약본 고침(사람이 더한 문장은 절마다 남겨 ✎ 표시).
+         */
+        patch: operations["patch_flow"];
+        trace?: never;
+    };
+    "/v1/flows/{flow_id}:branch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Branch Flow
+         * @description 복제본 만들기 — Storyboard 를 분기하고 앞 단계(사전 작업)는 공유한다. 그 콘텐츠는 새 Storyboard 에서 새로 만든다.
+         */
+        post: operations["branch_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/flows/{flow_id}/key-message:suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suggest Key Message
+         * @description 전략 수립 팝업의 AI 후보 3안(sb.key_message.v1, 모델이 없으면 연결 콘텐츠 문장으로 규칙 후보).
+         */
+        post: operations["suggest_key_message"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/flows/{flow_id}/stages/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Put Flow Stage
+         * @description 콘텐츠를 저장하면 그 서비스가 부른다 — stages.<key> 실제 값 · 요약본 줄 · 팝업 카드. 같은 ref 의 다른 Storyboard 도 함께 바뀐다.
+         */
+        put: operations["put_flow_stage"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/flows/contents/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Flow Contents
+         * @description 콘텐츠 목록(보드 List) — 저장된 콘텐츠마다 연결된 Storyboard 들. 아직 저장 전 초안은 각 서비스 목록에 있다.
+         */
+        get: operations["list_flow_contents"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/info": {
         parameters: {
             query?: never;
@@ -1293,6 +1418,359 @@ export interface components {
             /** Suggestion */
             suggestion?: string | null;
         };
+        /** FlowBranch */
+        FlowBranch: {
+            /**
+             * Stage
+             * @description 복제본을 만들 콘텐츠 — 그 앞 단계(사전 작업)만 공유한다
+             * @enum {string}
+             */
+            stage: "rq" | "dss" | "mi" | "ca" | "vp" | "sp" | "sc" | "ppt";
+        };
+        /**
+         * FlowBranchRef
+         * @description SB1 「분기 n」 팝오버 한 줄 — SB-02 · MI에서 분기 · MI-02 리테일 테넌트 관점
+         */
+        FlowBranchRef: {
+            /** Id */
+            id: string;
+            /** Name */
+            name: string;
+            /** Ref */
+            ref?: string | null;
+            /** Stage */
+            stage?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /**
+         * FlowCard
+         * @description 연결된 콘텐츠 보기 팝업(ContentPopup)에 그대로 그리는 값 — 콘텐츠 서비스가 stage 와 함께 준다.
+         */
+        FlowCard: {
+            /**
+             * Facts
+             * @description [[이름, 값]] 3칸
+             */
+            facts?: string[][];
+            /** Foot */
+            foot?: string | null;
+            /** Groups */
+            groups?: components["schemas"]["FlowCardGroup"][];
+            /**
+             * Line
+             * @description SB1 연결된 콘텐츠 줄의 한 줄 요약(예: RQ-01 v2 · 키맨 3 · 요구 12 · 확인 필요 4)
+             */
+            line?: string | null;
+            /** Title */
+            title: string;
+        };
+        /** FlowCardGroup */
+        FlowCardGroup: {
+            /** H */
+            h: string;
+            /** Lines */
+            lines?: components["schemas"]["FlowCardLine"][];
+            /** Sub */
+            sub?: string | null;
+        };
+        /** FlowCardLine */
+        FlowCardLine: {
+            /**
+             * Note
+             * @description 오른쪽 꼬리표(확인 필요 · 확장 · 출처 종류 …)
+             */
+            note?: string | null;
+            /** T */
+            t: string;
+        };
+        /** FlowCell */
+        FlowCell: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** Ref */
+            ref?: string | null;
+            /** Res Id */
+            res_id?: string | null;
+            /** Route */
+            route?: string | null;
+            /** Shared */
+            shared?: string[];
+            /**
+             * State
+             * @enum {string}
+             */
+            state: "done" | "none";
+            /** Ver */
+            ver?: number | null;
+        };
+        /** FlowContentItem */
+        FlowContentItem: {
+            /** Key */
+            key: string;
+            /** Ref */
+            ref: string;
+            /** Res Id */
+            res_id: string;
+            /** Route */
+            route: string;
+            /** Storyboards */
+            storyboards: components["schemas"]["FlowSbRef"][];
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /** Ver */
+            ver: number;
+        };
+        /** FlowContentList */
+        FlowContentList: {
+            /** Items */
+            items: components["schemas"]["FlowContentItem"][];
+        };
+        /** FlowCreate */
+        FlowCreate: {
+            /** Customer */
+            customer?: string | null;
+            /** Name */
+            name: string;
+            rq?: components["schemas"]["FlowStageIn"] | null;
+            /**
+             * Target
+             * @description 최종 제안대상(대표이사 …)
+             */
+            target?: string | null;
+        };
+        /** FlowDoc */
+        FlowDoc: {
+            /**
+             * Branch Items
+             * @description branches 의 이름 · 분기한 콘텐츠(GET · PATCH 응답에서 채움)
+             */
+            branch_items?: components["schemas"]["FlowBranchRef"][];
+            /** Branch Point */
+            branch_point?: {
+                [key: string]: unknown;
+            } | null;
+            /** Branches */
+            branches?: string[];
+            /** Cards */
+            cards?: {
+                [key: string]: components["schemas"]["FlowCard"];
+            };
+            /** Cells */
+            cells: components["schemas"]["FlowCell"][];
+            /** Contents Done */
+            contents_done: number;
+            /** Created At */
+            created_at: string;
+            /** Customer */
+            customer?: string | null;
+            /**
+             * Flow Json
+             * @description flow.json 전체(화면 JSON 보기 · 완료 화면 강조에 그대로 쓴다)
+             */
+            flow_json: {
+                [key: string]: unknown;
+            };
+            /** History */
+            history?: components["schemas"]["FlowHistory"][];
+            /** Id */
+            id: string;
+            /**
+             * Key Message
+             * @description {text, by, at, pillars[{text, evidence[]}]}
+             */
+            key_message?: {
+                [key: string]: unknown;
+            } | null;
+            /** Name */
+            name: string;
+            /** Parent */
+            parent?: string | null;
+            /** Progress */
+            progress: string;
+            /**
+             * Stages
+             * @description flow.json stages — 콘텐츠 실제 값
+             */
+            stages: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+            /** Target */
+            target?: string | null;
+            /** Updated At */
+            updated_at: string;
+            /** User Lines */
+            user_lines?: {
+                [key: string]: string[];
+            };
+            /** Version */
+            version: number;
+        };
+        /** FlowHistory */
+        FlowHistory: {
+            /** At */
+            at: string;
+            /** Key */
+            key: string;
+            /** Md */
+            md: string;
+            /** Note */
+            note?: string | null;
+            /** Ref */
+            ref: string;
+            /** Ver */
+            ver: number;
+        };
+        /** FlowList */
+        FlowList: {
+            /** Items */
+            items: components["schemas"]["FlowListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /** FlowListItem */
+        FlowListItem: {
+            /**
+             * Branch Point
+             * @description 분기면 {stage, from_ref} — SB0 「SB-01 · MI에서 분기」
+             */
+            branch_point?: {
+                [key: string]: unknown;
+            } | null;
+            /** Cells */
+            cells: components["schemas"]["FlowCell"][];
+            /** Contents Done */
+            contents_done: number;
+            /** Customer */
+            customer?: string | null;
+            /**
+             * Eligible
+             * @description content= 를 줬을 때: 사전 작업이 됐는지
+             */
+            eligible?: boolean | null;
+            /** @description content= 를 줬을 때: 이미 연결된 그 콘텐츠 */
+            existing?: components["schemas"]["FlowCell"] | null;
+            /** Id */
+            id: string;
+            /**
+             * Is Branch
+             * @default false
+             */
+            is_branch: boolean;
+            /**
+             * Key Message
+             * @description SB0 Key message 칸(없으면 null)
+             */
+            key_message?: string | null;
+            /** Name */
+            name: string;
+            /**
+             * Need
+             * @description eligible=false 면 먼저 할 것(rq · dss)
+             */
+            need?: string | null;
+            /** Parent */
+            parent?: string | null;
+            /**
+             * Progress
+             * @description 요구사항까지 · DSS까지 · DSS + 콘텐츠 n/5
+             */
+            progress: string;
+            /** Updated At */
+            updated_at: string;
+        };
+        /** FlowPatch */
+        FlowPatch: {
+            /** Expected Version */
+            expected_version?: number | null;
+            /** Key Message */
+            key_message?: string | null;
+            /**
+             * Key Message By
+             * @description manual · ai-accepted
+             */
+            key_message_by?: string | null;
+            /**
+             * Key Pillars
+             * @description 받쳐 줄 메시지(최대 3) — 빈 칸은 빼고 저장
+             */
+            key_pillars?: components["schemas"]["KeyPillar"][] | null;
+            /** Name */
+            name?: string | null;
+            /**
+             * Summary Md
+             * @description 사람이 고친 요약본 전체 — 새로 더한 문장만 절마다 남긴다
+             */
+            summary_md?: string | null;
+        };
+        /** FlowSbRef */
+        FlowSbRef: {
+            /** Id */
+            id: string;
+            /**
+             * Is Branch
+             * @default false
+             */
+            is_branch: boolean;
+            /** Name */
+            name: string;
+        };
+        /** FlowStageIn */
+        FlowStageIn: {
+            card?: components["schemas"]["FlowCard"] | null;
+            /**
+             * Md
+             * @description 요약본에 더할 줄(첫 줄이 '## ' 머리면 빼고 쓴다)
+             * @default
+             */
+            md: string;
+            /**
+             * Ref
+             * @description 콘텐츠 코드(RQ-01 · DSS-01 · MI-01 …)
+             */
+            ref: string;
+            /**
+             * Res Id
+             * @description 콘텐츠 서비스 자원 id(편집 화면 라우트에 쓴다). 없으면 ref
+             */
+            res_id?: string | null;
+            /** Title */
+            title?: string | null;
+            /**
+             * Value
+             * @description stages.<key> 에 들어갈 실제 값(ref · ver 는 따로)
+             */
+            value?: {
+                [key: string]: unknown;
+            };
+            /**
+             * Ver
+             * @default 1
+             */
+            ver: number;
+        };
+        /** FlowStageOut */
+        FlowStageOut: {
+            flow: components["schemas"]["FlowDoc"];
+            /** Key */
+            key: string;
+            /**
+             * Md Added
+             * @description 요약본에 더해진 부분(완료 화면 왼쪽)
+             */
+            md_added: string;
+            /**
+             * Synced
+             * @description 같은 ref 라 함께 바뀐 다른 Storyboard
+             */
+            synced?: string[];
+        };
         /** FollowUp */
         FollowUp: {
             /**
@@ -1569,10 +2047,50 @@ export interface components {
              */
             updated_by: "llm" | "user" | "vp";
         };
+        /** KeyMessageCand */
+        KeyMessageCand: {
+            /** Basis */
+            basis?: string | null;
+            /**
+             * Id
+             * @description 후보 이름(A · B · C)
+             */
+            id?: string | null;
+            /**
+             * Pillars
+             * @description 받쳐 줄 메시지 3(근거 포함)
+             */
+            pillars?: components["schemas"]["KeyPillar"][];
+            /** Text */
+            text: string;
+        };
         /** KeyMessageList */
         KeyMessageList: {
             /** Items */
             items: components["schemas"]["KeyMessage"][];
+        };
+        /** KeyMessageOut */
+        KeyMessageOut: {
+            /** Candidates */
+            candidates: components["schemas"]["KeyMessageCand"][];
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "llm" | "rule";
+        };
+        /**
+         * KeyPillar
+         * @description Key message 를 받쳐 줄 메시지(전략 수립 팝업 · 3칸) — 근거는 연결된 콘텐츠 코드(RQ-01 대표이사 1 · DSS-01 로비 …)
+         */
+        KeyPillar: {
+            /** Evidence */
+            evidence?: string[];
+            /**
+             * Text
+             * @default
+             */
+            text: string;
         };
         /** LanguageSetting */
         LanguageSetting: {
@@ -2900,6 +3418,343 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    list_flows: {
+        parameters: {
+            query?: {
+                content?: ("rq" | "dss" | "mi" | "ca" | "vp" | "sp" | "sc" | "ppt") | null;
+                limit?: number;
+                q?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowList"];
+                };
+            };
+        };
+    };
+    create_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FlowCreate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowDoc"];
+                };
+            };
+        };
+    };
+    get_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowDoc"];
+                };
+            };
+        };
+    };
+    patch_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FlowPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowDoc"];
+                };
+            };
+        };
+    };
+    branch_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FlowBranch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowDoc"];
+                };
+            };
+        };
+    };
+    suggest_key_message: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeyMessageOut"];
+                };
+            };
+        };
+    };
+    put_flow_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+                key: "rq" | "dss" | "mi" | "ca" | "vp" | "sp" | "sc" | "ppt";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FlowStageIn"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowStageOut"];
+                };
+            };
+        };
+    };
+    list_flow_contents: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: "rq" | "dss" | "mi" | "ca" | "vp" | "sp" | "sc" | "ppt";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowContentList"];
+                };
+            };
+        };
+    };
     info: {
         parameters: {
             query?: never;

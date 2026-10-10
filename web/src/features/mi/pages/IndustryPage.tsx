@@ -1,4 +1,4 @@
-/** MI1I — 업종 인사이트 프리셋 `/mi/new/industry?segment=` · `/mi/:id/industry` (§4.8) */
+/** MI1I(이전 흐름) — 업종 인사이트 프리셋 `/mi/legacy/new/industry?segment=` · `/mi/:id/industry` (§4.8) */
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -75,7 +75,7 @@ export function IndustryPage() {
     }
   }
 
-  const back = id ? `/mi/${id}/input` : '/mi/new';
+  const back = id ? `/mi/${id}/input` : '/mi/legacy/new';
   const det = detect.data;
   const detName = det?.top ? items.find((s) => s.code === det.top)?.full : null;
   const cust = det?.customer_name || a.data?.customer_name;

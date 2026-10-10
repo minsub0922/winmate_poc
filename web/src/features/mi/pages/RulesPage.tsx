@@ -111,5 +111,5 @@ export function RulesSheet({ open, onClose }: { open: boolean; onClose: () => vo
 export function RulesPage() {
   useShellPage({ section: SECTION, title: '판단 규칙', hasTask: false, sidebarGroup: 'mi' });
   const nav = useNavigate();
-  return <RulesSheet open onClose={() => (window.history.length > 1 ? nav(-1) : nav('/mi'))} />;
+  return <RulesSheet open onClose={() => (window.history.length > 1 ? nav(-1) : nav('/mi/legacy'))} />;
 }

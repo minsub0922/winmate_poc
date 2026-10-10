@@ -75,7 +75,7 @@ export function GeneratingPage() {
       <Dock title="만드는 중" meta={`${k} / ${n} · 다른 작업을 해도 돼요`}
         input={{ placeholder: '진행 중에도 방향을 알려주세요 (예: 학생 가치는 수업 참여도로)', label: '진행 방향 메모', onSend: memo, disabled: done || failed }}
         actions={<>
-          <BtnLink to="/vp">목록으로</BtnLink>
+          <BtnLink to="/vp/legacy">목록으로</BtnLink>
           {failed
             ? <Btn primary onClick={retry}>다시 시도</Btn>
             : <Btn onClick={stop} busy={stopping} disabled={done} title="중지하고 가치 구조로 돌아가요. 끝난 시트는 남겨 둡니다.">

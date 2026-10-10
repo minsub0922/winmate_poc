@@ -307,7 +307,14 @@ return <>{/* 화면 */}{dialog}</>;
 | `FlowPanel` | `dashed?` | 흰 패널(r 16). `dashed` 는 AI 점선 |
 | `FlowFooter` | `back: { to, label }`, `summary`, `summaryTone?`, `primary` | 하단 줄(목록 · 요약 · 저장 48px) |
 | `FlowDone` | `title`, `sbName`, `stages`, `md`, `stageKey`, `stage`, `follow?` … | 완료 화면 — 요약본 추가분 + 접힌 JSON(`foldJson`) + 전체 JSON 팝업 |
+| ↳ `FlowDone` 추가 props | `jsonHead?` · `jsonTitle?` · `highlightAll?` · `onOpenStoryboard?` | FLOW.JSON 칸 머리 글 · 전체 JSON 팝업 제목(`SB-nn/flow.json`) · 새 Storyboard 면 전체 줄 강조 · 후속 작업 없음 칸의 「Storyboard로」 |
+| `JsonPopup` | `json`, `highlightKey?`, `highlightAll?`, `title?`, `sub?` | flow.json 전체 900×780 — 이번에 더해진 `stages.<key>` 줄(또는 전체)을 초록으로 · 전체 / 추가된 값만 |
 | `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
+
+**셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List · 초안 줄의 Storyboard 칩도 이름) ·
+`GateScreen({content, onStart, initialSb, autoStart})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
+`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다) · `FlowDoneView({sbId, stageKey, mdAdded, title, sub, onEdit, follow, newStoryboard?, jsonHead?})` ·
+`CONTENT`(콘텐츠별 이름 · base · 스텝 이름 = 보드 Gate META) · `useFlow` · `useFlows` · `FlowDots` · `whenText`.
 
 **폭 규칙**: 셸이 `.sh-content` 의 직계 자식을 `--wm-main-w`(1180px) 가운데 열로 맞춘다. 화면은 자기 max-width 를 주지 않는다.
 고정 칸은 보드 px, 나머지는 `minmax(0, 1fr)`. 작업 화면은 `FlowScreen` 으로 높이를 채우고 패널 안에서만 스크롤한다.

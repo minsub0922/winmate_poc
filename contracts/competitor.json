@@ -2421,6 +2421,847 @@
           }
         }
       }
+    },
+    "/v1/ca-flows": {
+      "get": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "List Ca Flows",
+        "description": "경쟁사 분석(새 흐름) 목록 — 보드 List 의 작성 중 초안.",
+        "operationId": "list_ca_flows",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Create Ca Flow",
+        "description": "새 경쟁사 분석 — Storyboard 의 DSS 로 비교 기준을 채운다. 없는 Storyboard 404 · DSS 전이면 422 PREREQUISITE_MISSING.",
+        "operationId": "create_ca_flow",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CFCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}": {
+      "get": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Get Ca Flow",
+        "operationId": "get_ca_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Patch Ca Flow",
+        "description": "제목 고치기(expected_version 이 다르면 409).",
+        "operationId": "patch_ca_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CFPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}/competitors": {
+      "post": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Add Competitor",
+        "description": "경쟁사 직접 추가 — 웹 검색 요약에서 기본 정보(위키)를 불러오고, 겹치는 제품군의 DSS 제품으로 비교 쌍을 만든다. 근거 없는 값은 자리표시.",
+        "operationId": "add_competitor",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CFCompetitorAdd"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}/competitors/{cid}": {
+      "patch": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Patch Competitor",
+        "description": "경쟁사 고치기 — 기본 정보 · 선별 기준 · 장단점 · 주장, AI 후보 목록에 추가(accept).",
+        "operationId": "patch_competitor",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CFCompetitorPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Delete Competitor",
+        "description": "경쟁사 빼기(AI 후보 빼기도 이것).",
+        "operationId": "delete_competitor",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          },
+          {
+            "name": "expected_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Expected Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}/competitors/{cid}/matches": {
+      "post": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Add Match",
+        "description": "비교 쌍 추가 — 우리 제품은 DSS 제품 · 솔루션(아니면 422 NOT_IN_DSS), 판정은 자료 없음으로 시작.",
+        "operationId": "add_match",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CFMatchAdd"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}/competitors/{cid}/matches/{mid}": {
+      "patch": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Patch Match",
+        "description": "비교 쌍 고치기 — 공간 · 경쟁 제품 · 축별 판정(ours-better · similar · ours-worse · no-data)과 메모.",
+        "operationId": "patch_match",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          },
+          {
+            "name": "mid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CFMatchPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Delete Match",
+        "operationId": "delete_match",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "cid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cid"
+            }
+          },
+          {
+            "name": "mid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Mid"
+            }
+          },
+          {
+            "name": "expected_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Expected Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}:candidates": {
+      "post": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Suggest Candidates",
+        "description": "AI 경쟁사 후보군 웹 탐색 — 웹 검색 요약에 이름 · 근거 구절이 있는 후보만 점선(ai-pending)으로. 웹 · 모델이 안 되면 mode=none · 후보 0.",
+        "operationId": "suggest_candidates",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFCandidatesResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}:finish": {
+      "post": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Finish",
+        "description": "저장 — status=done, Storyboard flow.json stages.ca · 요약 md · 팝업 카드 반영(push_stage). 경쟁사 0이면 422 NO_COMPETITORS.",
+        "operationId": "finish",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}/stage": {
+      "get": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Get Stage",
+        "operationId": "get_stage",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3492,6 +4333,1241 @@
         ],
         "title": "Bundle",
         "description": "넘김 묶음(§6.10). target 마다 채우는 필드가 다르다 — mi(실명 포함) · proposal_why(익명) · storyboard(익명)."
+      },
+      "CFBasis": {
+        "properties": {
+          "from": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From",
+            "description": "DSS 참조(DSS-01)"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories"
+          },
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Counts",
+            "description": "제품군마다 DSS 제품 · 솔루션 수"
+          }
+        },
+        "type": "object",
+        "required": [
+          "categories"
+        ],
+        "title": "CFBasis"
+      },
+      "CFCandidatesResult": {
+        "properties": {
+          "flow": {
+            "$ref": "#/components/schemas/CFDoc"
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "web",
+              "none"
+            ],
+            "title": "Mode",
+            "description": "web = 웹 검색 요약에서 후보를 찾음 · none = 웹 · 모델이 안 돼 찾지 못함"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "flow",
+          "added",
+          "mode"
+        ],
+        "title": "CFCandidatesResult"
+      },
+      "CFClaim": {
+        "properties": {
+          "axis": {
+            "type": "string",
+            "title": "Axis",
+            "description": "주장 축(통합 · 사례 · 가격 · ESG · 브랜드 …)"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "supports": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Supports",
+            "description": "연결 요구(예: RQ-01)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "axis",
+          "text"
+        ],
+        "title": "CFClaim"
+      },
+      "CFCompetitor": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "목록 글자(A · B · C …)"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-web"
+            ],
+            "title": "By"
+          },
+          "industry": {
+            "type": "string",
+            "title": "Industry",
+            "description": "목록 한 줄 — 업종",
+            "default": "[확인 필요]"
+          },
+          "size": {
+            "type": "string",
+            "title": "Size",
+            "description": "목록 한 줄 — 규모",
+            "default": "[확인 필요]"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories",
+            "description": "겹치는 비교 기준 제품군"
+          },
+          "spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces",
+            "description": "겹치는 DSS 공간"
+          },
+          "why": {
+            "type": "string",
+            "title": "Why",
+            "description": "목록 둘째 줄 — 겹침 · 공간",
+            "default": ""
+          },
+          "wiki": {
+            "$ref": "#/components/schemas/CFWiki"
+          },
+          "criteria": {
+            "items": {
+              "$ref": "#/components/schemas/CFCriterion"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/CFMatch"
+            },
+            "type": "array",
+            "title": "Matches"
+          },
+          "pros": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Pros",
+            "description": "경쟁사 장점 · 삼성 대비"
+          },
+          "cons": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Cons",
+            "description": "경쟁사 단점 · 삼성 대비"
+          },
+          "claims": {
+            "items": {
+              "$ref": "#/components/schemas/CFClaim"
+            },
+            "type": "array",
+            "title": "Claims",
+            "description": "그래서 우리가 주장할 것"
+          },
+          "candidateEvidence": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CFEvidence"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "by",
+          "wiki"
+        ],
+        "title": "CFCompetitor"
+      },
+      "CFCompetitorAdd": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "lookup": {
+            "type": "boolean",
+            "title": "Lookup",
+            "description": "웹 검색으로 기본 정보(위키)를 불러온다",
+            "default": true
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "CFCompetitorAdd"
+      },
+      "CFCompetitorPatch": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 80
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "accept": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accept",
+            "description": "AI 후보를 목록에 추가(ai-pending → ai-web)"
+          },
+          "wiki": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CFWikiPatch"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "criteria": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CFCriterion"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Criteria"
+          },
+          "pros": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pros"
+          },
+          "cons": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cons"
+          },
+          "claims": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/CFClaim"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Claims"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "title": "CFCompetitorPatch"
+      },
+      "CFCounts": {
+        "properties": {
+          "competitors": {
+            "type": "integer",
+            "title": "Competitors"
+          },
+          "candidates": {
+            "type": "integer",
+            "title": "Candidates"
+          },
+          "matches": {
+            "type": "integer",
+            "title": "Matches"
+          },
+          "verdicts": {
+            "$ref": "#/components/schemas/CFVerdictCounts"
+          }
+        },
+        "type": "object",
+        "required": [
+          "competitors",
+          "candidates",
+          "matches",
+          "verdicts"
+        ],
+        "title": "CFCounts"
+      },
+      "CFCreate": {
+        "properties": {
+          "sb_id": {
+            "type": "string",
+            "title": "Sb Id",
+            "description": "사전 작업 DSS 가 된 Storyboard"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sb_id"
+        ],
+        "title": "CFCreate"
+      },
+      "CFCriterion": {
+        "properties": {
+          "k": {
+            "type": "string",
+            "title": "K"
+          },
+          "v": {
+            "type": "string",
+            "title": "V"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "check"
+            ],
+            "title": "Status",
+            "default": "ok"
+          }
+        },
+        "type": "object",
+        "required": [
+          "k",
+          "v"
+        ],
+        "title": "CFCriterion"
+      },
+      "CFDim": {
+        "properties": {
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "ours-better",
+              "similar",
+              "ours-worse",
+              "no-data"
+            ],
+            "title": "Verdict",
+            "default": "no-data"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": "자료 없음"
+          }
+        },
+        "type": "object",
+        "title": "CFDim"
+      },
+      "CFDimPatch": {
+        "properties": {
+          "verdict": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ours-better",
+                  "similar",
+                  "ours-worse",
+                  "no-data"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Verdict"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "title": "CFDimPatch"
+      },
+      "CFDims": {
+        "properties": {
+          "spec": {
+            "$ref": "#/components/schemas/CFDim"
+          },
+          "price": {
+            "$ref": "#/components/schemas/CFDim"
+          },
+          "cases": {
+            "$ref": "#/components/schemas/CFDim"
+          },
+          "esg": {
+            "$ref": "#/components/schemas/CFDim"
+          },
+          "brand": {
+            "$ref": "#/components/schemas/CFDim"
+          }
+        },
+        "type": "object",
+        "title": "CFDims"
+      },
+      "CFDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "CA-01 …"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "basis": {
+            "$ref": "#/components/schemas/CFBasis"
+          },
+          "dss_items": {
+            "items": {
+              "$ref": "#/components/schemas/CFDssItem"
+            },
+            "type": "array",
+            "title": "Dss Items",
+            "description": "비교 쌍에 고를 수 있는 DSS 제품 · 솔루션"
+          },
+          "competitors": {
+            "items": {
+              "$ref": "#/components/schemas/CFCompetitor"
+            },
+            "type": "array",
+            "title": "Competitors"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver",
+            "description": "저장(완료) 판 — flow.json stages.ca.ver"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/CFCounts"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "basis",
+          "counts",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "CFDoc"
+      },
+      "CFDssItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "product",
+              "solution"
+            ],
+            "title": "Kind"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "kind",
+          "category"
+        ],
+        "title": "CFDssItem"
+      },
+      "CFEvidence": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "description": "근거 출처 이름(업계 뉴스 · 회사 소개 페이지 · 조달 공고 …)"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "quote": {
+            "type": "string",
+            "title": "Quote",
+            "description": "웹 검색 요약 원문 구절"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source",
+          "quote"
+        ],
+        "title": "CFEvidence"
+      },
+      "CFFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added"
+        ],
+        "title": "CFFlowSync"
+      },
+      "CFList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CFListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "CFList"
+      },
+      "CFListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/CFCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "counts",
+          "updated_at"
+        ],
+        "title": "CFListItem"
+      },
+      "CFMatch": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "space": {
+            "type": "string",
+            "title": "Space",
+            "description": "DSS 공간(또는 쓰임 — 로비 미디어월)"
+          },
+          "ours": {
+            "type": "string",
+            "title": "Ours",
+            "description": "우리 제품 · 솔루션(DSS)"
+          },
+          "ours_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ours Ref"
+          },
+          "theirs": {
+            "type": "string",
+            "title": "Theirs",
+            "description": "경쟁 제품 한 줄"
+          },
+          "dims": {
+            "$ref": "#/components/schemas/CFDims"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "space",
+          "ours",
+          "theirs",
+          "dims"
+        ],
+        "title": "CFMatch"
+      },
+      "CFMatchAdd": {
+        "properties": {
+          "ours": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Ours",
+            "description": "우리 제품 · 솔루션(DSS 이름)"
+          },
+          "space": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Space"
+          },
+          "theirs": {
+            "type": "string",
+            "maxLength": 120,
+            "title": "Theirs",
+            "default": "[확인 필요]"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ours"
+        ],
+        "title": "CFMatchAdd"
+      },
+      "CFMatchPatch": {
+        "properties": {
+          "space": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 60
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Space"
+          },
+          "theirs": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theirs"
+          },
+          "dims": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/CFDimPatch"
+                },
+                "propertyNames": {
+                  "enum": [
+                    "spec",
+                    "price",
+                    "cases",
+                    "esg",
+                    "brand"
+                  ]
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dims"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "title": "CFMatchPatch"
+      },
+      "CFPatch": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "title": "CFPatch"
+      },
+      "CFSource": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Wikipedia · 웹 검색 요약 · 직접 입력 …"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type"
+        ],
+        "title": "CFSource"
+      },
+      "CFStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.ca"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CFFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md"
+        ],
+        "title": "CFStageOut"
+      },
+      "CFVerdictCounts": {
+        "properties": {
+          "oursBetter": {
+            "type": "integer",
+            "title": "Oursbetter"
+          },
+          "similar": {
+            "type": "integer",
+            "title": "Similar"
+          },
+          "oursWorse": {
+            "type": "integer",
+            "title": "Oursworse"
+          },
+          "noData": {
+            "type": "integer",
+            "title": "Nodata"
+          }
+        },
+        "type": "object",
+        "required": [
+          "oursBetter",
+          "similar",
+          "oursWorse",
+          "noData"
+        ],
+        "title": "CFVerdictCounts"
+      },
+      "CFWiki": {
+        "properties": {
+          "hq": {
+            "type": "string",
+            "title": "Hq",
+            "default": "[확인 필요]"
+          },
+          "size": {
+            "type": "string",
+            "title": "Size",
+            "default": "[확인 필요]"
+          },
+          "revenue": {
+            "type": "string",
+            "title": "Revenue",
+            "default": "[위키 값]"
+          },
+          "employees": {
+            "type": "string",
+            "title": "Employees",
+            "default": "[위키 값]"
+          },
+          "industry": {
+            "type": "string",
+            "title": "Industry",
+            "default": "[확인 필요]"
+          },
+          "mainBusiness": {
+            "type": "string",
+            "title": "Mainbusiness",
+            "default": "[확인 필요]"
+          },
+          "b2bOffice": {
+            "type": "string",
+            "title": "B2Boffice",
+            "default": "[확인 필요]"
+          },
+          "source": {
+            "$ref": "#/components/schemas/CFSource"
+          }
+        },
+        "type": "object",
+        "required": [
+          "source"
+        ],
+        "title": "CFWiki"
+      },
+      "CFWikiPatch": {
+        "properties": {
+          "hq": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hq"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          },
+          "revenue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Revenue"
+          },
+          "employees": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Employees"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Industry"
+          },
+          "mainBusiness": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mainbusiness"
+          },
+          "b2bOffice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "B2Boffice"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "type": "object",
+        "title": "CFWikiPatch"
       },
       "CandidateAdd": {
         "properties": {

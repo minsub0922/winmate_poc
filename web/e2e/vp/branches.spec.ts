@@ -85,7 +85,7 @@ test('VP3 한 문장 버전 · VP4 메시지 복사 · VP0 복제(고정 시트 
   await expect(page.getByText('메시지를 복사했어요')).toBeVisible();
 
   // VP0 → 이전 가치 제안 복제
-  await page.goto('/vp');
+  await page.goto('/vp/legacy');
   await page.getByRole('button', { name: /이전 가치 제안 복제/ }).click();
   const dlg = page.getByRole('dialog', { name: '복제할 가치 제안 고르기' });
   await dlg.getByLabel('작업 검색').fill(base);

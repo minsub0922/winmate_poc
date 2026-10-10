@@ -64,7 +64,7 @@ services:
     feature: RQ
     title: 고객 요구사항 — 입력 폼 · 파일로 채우기 · 심층 작성 · 고객 질문 · 정의서 버전
     owns: [services/requirements/**, web/src/features/requirements/**]
-    consumes: [ai-tools, kb, files, jobs, workspace, export]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, storyboard]   # storyboard: 저장하면 Storyboard 자동 생성(새 흐름)
 
   storyboard:
     port: 5102
@@ -73,6 +73,14 @@ services:
     title: 전략 수립 Storyboard — 기획 질문 · 5단 목차 · 요구사항 추적 · 버전 비교 · 일정
     owns: [services/storyboard/**, web/src/features/storyboard/**]
     consumes: [ai-tools, kb, files, jobs, workspace, export, requirements]
+
+  dss:
+    port: 5111
+    worker: false
+    feature: DS
+    title: 공간별 제품 매칭 DSS — 업종 · 공간 · 공간별 제품 · 솔루션(새 콘텐츠 흐름, Storyboard 사전 작업)
+    owns: [services/dss/**, web/src/features/dss/**]
+    consumes: [ai-tools, kb, workspace, storyboard]
 
   mi:
     port: 5103
@@ -104,7 +112,7 @@ services:
     feature: SP
     title: Spec 시트 — 조건으로 모델 찾기 · 고객 스펙 대응표 · 단종·불일치 경고 · 단위 변환
     owns: [services/spec/**, web/src/features/spec/**]
-    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements]
+    consumes: [ai-tools, kb, files, jobs, workspace, export, requirements, storyboard]
 
   image:
     port: 5107

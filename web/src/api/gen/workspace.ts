@@ -582,7 +582,7 @@ export interface components {
              * Feature
              * @enum {string}
              */
-            feature: "RQ" | "SB" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR";
+            feature: "RQ" | "SB" | "DS" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR";
         };
         /** Item */
         Item: {
@@ -592,7 +592,7 @@ export interface components {
              * Feature
              * @enum {string}
              */
-            feature: "RQ" | "SB" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR";
+            feature: "RQ" | "SB" | "DS" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR";
             /** Item Id */
             item_id: string;
             /** Meta */
@@ -625,7 +625,7 @@ export interface components {
              * Feature
              * @enum {string}
              */
-            feature: "RQ" | "SB" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR";
+            feature: "RQ" | "SB" | "DS" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR";
             /** Meta */
             meta?: {
                 [key: string]: unknown;
@@ -662,7 +662,7 @@ export interface components {
         /** ItemUnread */
         ItemUnread: {
             /** Feature */
-            feature?: ("RQ" | "SB" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR") | null;
+            feature?: ("RQ" | "SB" | "DS" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR") | null;
             /** Item Id */
             item_id: string;
             /** Unread */
@@ -813,7 +813,7 @@ export interface components {
         /** NotificationItemRef */
         NotificationItemRef: {
             /** Feature */
-            feature?: ("RQ" | "SB" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR") | null;
+            feature?: ("RQ" | "SB" | "DS" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR") | null;
             /** Id */
             id: string;
         };
@@ -1574,7 +1574,7 @@ export interface operations {
         parameters: {
             query?: {
                 cursor?: string | null;
-                feature?: ("RQ" | "SB" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR") | null;
+                feature?: ("RQ" | "SB" | "DS" | "IMG" | "BE" | "SC" | "MI" | "CA" | "VP" | "SP" | "PR") | null;
                 limit?: number;
                 /** @description me | all | <user id> */
                 owner?: string;

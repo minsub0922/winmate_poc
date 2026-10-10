@@ -626,3 +626,57 @@ a.wm-dtable__title:hover { color: var(--wm-brand); }
 .wm-jsonline > span:first-child { width: 40px; flex-shrink: 0; text-align: right; color: var(--wm-placeholder); padding-right: 14px; user-select: none; }
 .wm-jsonline > span:last-child { white-space: pre-wrap; min-width: 0; }
 .wm-jsonline--add { background: var(--wm-ok-bg); color: #0b4d38; box-shadow: inset 3px 0 0 var(--wm-ok); }
+
+/* JSON 전체 보기 팝업(보드 JsonPopup) · 후속 작업 카드(보드 Done) */
+.wm-jsonpop__head { display: flex; flex-direction: column; gap: 3px; }
+.wm-jsonpop__t { font-family: ui-monospace, Menlo, monospace; font-size: 16px; font-weight: 700; }
+.wm-jsonpop__s { font-size: 12.5px; color: var(--wm-text-muted); font-weight: 400; }
+.wm-jsonpop__tabs { display: flex; gap: 4px; padding: 8px 24px; border-bottom: 1px solid var(--wm-line-tile); flex-shrink: 0; }
+.wm-jsonpop__tab { height: 30px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--wm-line); background: var(--wm-surface); font-size: 12.5px; font-weight: 600; color: var(--wm-text-2); }
+.wm-jsonpop__tab--on { border-color: var(--wm-brand); background: var(--wm-brand-hero); color: var(--wm-brand); }
+.wm-jsonpop__tab:disabled { opacity: .5; }
+.wm-jsonpop__foot { display: flex; align-items: center; gap: 10px; width: 100%; }
+.wm-jsonpop__legend { flex: 1; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--wm-text-muted); }
+.wm-jsonpop__legend span { width: 12px; height: 12px; border-radius: 3px; background: var(--wm-ok-bg-2); border: 1px solid var(--wm-ok-line); }
+.wm-jsonlines { flex: 1; min-height: 0; overflow-y: auto; background: var(--wm-surface-2); padding: 10px 0; }
+.wm-follow { display: flex; align-items: center; gap: 14px; height: 84px; box-sizing: border-box; padding: 0 20px 0 16px; border-radius: 16px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); }
+.wm-follow:hover { border-color: var(--wm-brand); }
+.wm-follow__ic { width: 40px; height: 40px; border-radius: 10px; background: var(--wm-brand); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.wm-follow__txt { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.wm-follow__txt b { font-size: 15px; font-weight: 700; }
+.wm-follow__txt span { font-size: 12.5px; color: var(--wm-text-muted); }
+.wm-follows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+
+/* ── 완료 화면 보드 값(webapp1 Done.dc.html · 2026-10-10, RQ_Done 에서 잰 값을 공용으로) ── */
+.wm-done { padding: 24px 80px 24px 80px; gap: 14px; }
+.wm-done__check { border-radius: 13px; }
+.wm-done__head .wm-flow__desc { font-size: 13.5px; }
+/* 보드 「다시 고치기」 a: height 38 + 테두리 1(content-box) = 그려진 높이 40 */
+.wm-done__head .wm-btn { height: 40px; padding: 0 14px; border-radius: 10px; font-size: 13px; font-weight: 600; }
+.wm-done__card { padding: 16px 18px; gap: 12px; }
+.wm-done__sbrow { gap: 8px; }
+.wm-done__stages { display: flex; gap: 4px; }
+.wm-done__stage { flex: 1 1 0; min-width: 0; height: 44px; padding: 0 8px; justify-content: center; gap: 1px; }
+.wm-done__stage:nth-child(3), .wm-done__stage:nth-child(8) { margin-left: 6px; }
+.wm-done__stage b { font-size: 11px; white-space: nowrap; }
+.wm-done__stage small { font-family: var(--wm-font-num); font-size: 10.5px; font-weight: 700; opacity: 1; }
+.wm-done__stage--none { background: var(--wm-bg); color: var(--wm-text-subtle); border: 1px dashed var(--wm-line-step); }
+.wm-done__json { background: var(--wm-brand-hero); border-color: var(--wm-brand-hero-line); position: relative; }
+.wm-done__json::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 40px; pointer-events: none;
+  background: linear-gradient(rgba(247, 248, 253, 0), var(--wm-brand-hero)); }
+.wm-done__colhead { height: 35px; border-bottom-color: var(--wm-ok-line); }   /* 보드 34 + 선 1(content-box) · 상자 248 + 선 = 250 은 공용 값 그대로 */
+.wm-done__colhead--json { padding: 0 6px 0 12px; border-bottom-color: var(--wm-brand-hero-line); }
+.wm-done__colhead b { font-family: var(--wm-font-num); font-size: 10.5px; font-weight: 800; letter-spacing: 0.06em; }
+.wm-done__colhead span { font-size: 11.5px; }
+.wm-done__jsonbtn { padding: 0 9px; font-size: 11.5px; }
+.wm-done__md pre { font-size: 12px; line-height: 1.65; color: var(--wm-text); }
+.wm-done__json pre { font-size: 11.5px; line-height: 1.6; color: var(--wm-text); overflow: hidden; }
+.wm-done__followh { font-size: 13.5px; }
+.wm-follow { height: auto; min-height: 84px; padding: 14px 16px; border-radius: 14px; }
+.wm-follow:hover { box-shadow: var(--wm-shadow-card-hover); }
+.wm-follow__ic { width: 38px; height: 38px; border-radius: 11px; }
+/* 후속 작업 없음(보드 Done noNext): padding 14 16 · r14 · 점선 #c9d0e6 · 오른쪽 「Storyboard로」 */
+.wm-done__nofollow { display: flex; align-items: center; gap: 12px; box-sizing: border-box; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--wm-brand-line); background: var(--wm-surface); font-size: 13px; color: var(--wm-text-muted); }
+.wm-done__nofollow > span { flex: 1; }
+.wm-done__nofollowlink { border: none; background: none; padding: 0; font-size: 13px; font-weight: 700; color: var(--wm-brand); white-space: nowrap; cursor: pointer; }
+.wm-done__nofollowlink:hover { color: var(--wm-brand-hover, #0f1f80); }

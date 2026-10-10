@@ -118,7 +118,7 @@ export function RunPage() {
         row={
           <div className="mi-dock__row">
             <PromptInput label="진행 방향 메모" placeholder="진행 중에도 방향을 알려주세요 (예: 경쟁사 C는 클라우드 CMS 위주로)" onSend={memo} disabled={!live || !jobId} />
-            <SecButton to="/mi">목록으로</SecButton>
+            <SecButton to="/mi/legacy">목록으로</SecButton>
             <button type="button" className="mi-btn" title="중지하고 설정으로 돌아가요. 정리된 영역은 남겨 둡니다." onClick={() => void stop()} disabled={!live || !jobId || stopping}
               data-testid="mi3g-stop">
               {stopping ? <Spin size={12} /> : <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" /></svg>}중지

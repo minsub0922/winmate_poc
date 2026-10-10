@@ -28,7 +28,22 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
 - API 를 바꾸면 `make contracts SERVICE=requirements` 를 돌리고 `contracts/requirements.json` 변경을 함께 남긴다. 깨지는 변경이면 소비 서비스를 `docs/requests/` 에 알린다.
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
-## 현재 상태 (2026-10-06)
+## 현재 상태 (2026-10-10)
+
+### 새 흐름(2026-10-08) — 보드 webapp1 RQ0 · RQ1 · RQ1_AI · RQ_Done · `docs/scenarios/11-content-flow.md` §6
+- **API** `/v1/rq-flows*`(rqflow.py · api_flow.py, 스키마 `RF*`, DocStore `rq_flows`, id `rqf_…`, 코드 `RQ-NN` — 허브 rq ref 최대값 다음 번호):
+  만들기 · 목록 · 읽기(id 또는 코드) · `PUT` 폼 전체(`expected_version` 409, 채우는 중 409 FILLING) · `:fill` 202(잡 `rq.flow.fill`, 빈 칸만 · 사람 값 보호 · 숫자 가드) ·
+  `deep-questions`(규칙 + `rq.deep_questions.v1`, 질문 = `ai-pending`) · `…/{qid}:answer`(보기 · 직접 입력 → `ai-accepted`, `later` → 확인 필요) · `deep-questions:close` ·
+  `:finish`(처음 = `create_flow` 로 Storyboard 자동 생성 · 다음 = `push_stage("rq")`, ver = 저장 횟수, 제작자 의견은 stage · 요약 · 카드에서 빠짐).
+- **웹** `web/src/features/requirements/flow/`: `/requirements`(RQ0 = `ContentListScreen content="rq"`, 작성 중 = rq-flows 중 내용 있는 초안) ·
+  `/requirements/new`(Gate 없이 바로 RQ1 — 첫 입력 때 만들고 주소를 `/requirements/flow/:id` 로, 빈 초안은 만들지 않음) · `/requirements/flow/:id`(RQ1 · RQ1_AI → 저장 → RQ_Done `FlowDoneView` + 후속 DSS `/dss/new?sb=&auto=1`).
+  폼은 화면이 원본(id 를 화면이 만듦 `k_ · q_`) · 600ms 자동 저장(PUT 응답으로 글자를 덮어쓰지 않음, 답 · 파일 채우기만 폼을 바꿈). 보드 px 그대로 `rqflow.css`(접두어 `rqf-`, 왼쪽 400 · AI 열림 300 · AI 패널 380).
+  RQ_Done 은 공용 FlowDone 을 `.rqf-done` 범위에서 보드 Done 값으로 덮어씀(공용 부품 요청 대상).
+- **이전 흐름 이동**: 목록 · 새로 만들기만 `/requirements/legacy` · `/requirements/legacy/new`. 나머지 `/requirements/:rqId/...` 는 그대로(제안서 handoff).
+- **테스트** `test_requirements_flow.py` 6개(전체 38) · e2e `web/e2e/requirements/rq-flow.spec.ts` 3개(목록 → 파일 → AI 심층 질의 → 저장 → Storyboard 자동 생성 · 폭 측정 · 1920) ·
+  캡처 `__screens__/RQ0-new · RQ1-new · RQ1-empty-new · RQ1_AI-new · RQ1_AI-done-new · RQ_Done-new · RQ_DoneJson-new.png`.
+
+### 이전 흐름(`/v1/requirements*`, 2026-10-06)
 
 **문서와 다른 점(소비자 먼저 볼 것)**
 - 정의서 내용은 `GET /v1/requirements/{id}?version=` 이 아니라 저장 스냅숏 `GET /v1/requirements/{id}/versions/{n|latest}` 로 읽는다.
@@ -60,13 +75,13 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
 - mock 고정 응답 `mocks/ai-tools/rq.*.json`(보드 예시: E 자산운용 용산 AI Ready 오피스). 다른 입력에선 글 대조 · 관련성 · 숫자 가드로 걸러 템플릿/원문으로 내려간다.
 - 선택 설정 `RQ_FILL_SLOT_DELAY_MS`(기본 150, 칸 사이 간격 — RQ1G 처럼 차례로 채워 보임. 테스트는 0).
 
-**웹** — `web/src/features/requirements/`: `/requirements`(RQ0) · `/new` · `/:rqId/form`(RQ1 · RQ1D · RQ1G · RQ2) · `/:rqId/deep/:sid`(RQ3) ·
+**웹** — `web/src/features/requirements/`: `/requirements/legacy`(RQ0) · `/legacy/new` · `/:rqId/form`(RQ1 · RQ1D · RQ1G · RQ2) · `/:rqId/deep/:sid`(RQ3) ·
 `/:rqId/deep/:sid/q`(RQ3A · RQ3B) · `/:rqId/deep/:sid/result`(RQ3C) · `/:rqId/saved`(RQ4) · `/:rqId/questions`(RQ5) · `/:rqId`(RQ6, `?v=`) ·
 `/:rqId/reply`(RQ7) · `/:rqId/reply/:replyId`(RQ7B). 자동 저장 800ms(ops 큐 · 409 다시 적용), 잡 진행 SSE(`useJob`, 새로고침 복구),
 RQ7B 저장 뒤 `pending_sync_links` 마다 storyboard `requirement-sync` 호출(기다리지 않음). 키맨 색은 토큰이 없어 `rq.css` 지역 변수(workspace 요청).
 RQ1 입력형 카드는 카드 안에 포커스가 있는 동안 목록형으로 바뀌지 않는다(타이핑 중 레이아웃 튐 방지). 항목 끌어 옮기기(`move_item`)는 API만.
 
-**테스트** — `make test SERVICE=requirements` 32개(API · 저장소 · 그래프 · 오류 · 플랫폼 실제 앱 in-process; §9.1 AC 1~34) ·
+**테스트** — `make test SERVICE=requirements` 이전 흐름 32개(API · 저장소 · 그래프 · 오류 · 플랫폼 실제 앱 in-process; §9.1 AC 1~34) ·
 `make e2e-feature SERVICE=requirements` 11개(`flow.spec.ts` 기본 흐름 E2E 2 · 6~13, `branches.spec.ts` E2E 1 · 3 · 4 · 5 · 14 · 15 · 16,
 `weights.spec.ts` 가중치 규칙 웹 단위). 화면 캡처 `web/e2e/requirements/__screens__/`. e2e 는 `make dev-bg SERVICE=requirements` 를 띄운 뒤.
 

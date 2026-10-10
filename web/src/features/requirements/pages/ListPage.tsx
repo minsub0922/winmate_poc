@@ -1,4 +1,4 @@
-/** RQ0 — 요구사항 목록 `/requirements?tab=all|in_progress|saved&q=` */
+/** RQ0(이전 흐름) — 요구사항 목록 `/requirements/legacy?tab=all|in_progress|saved&q=` */
 import { useEffect, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
@@ -57,7 +57,7 @@ export function ListPage() {
   return (
     <div className="rq-root">
       <section className="rq-list">
-        <PageHeader title="고객 요구사항" actions={<NewButton to="/requirements/new">새 요구사항</NewButton>} />
+        <PageHeader title="고객 요구사항" actions={<NewButton to="/requirements/legacy/new">새 요구사항</NewButton>} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <FilterTabs value={tab} onChange={setTab} ariaLabel="상태"
             items={TABS.map((t) => ({ ...t, count: counts.data ? counts.data[t.value] : undefined }))} />
@@ -76,7 +76,7 @@ export function ListPage() {
           ))}
           {!list.isLoading && rows.length === 0 && (
             <div className="rq-table__empty">
-              {q ? '찾는 요구사항이 없어요' : <>아직 요구사항이 없어요<NewButton to="/requirements/new">새 요구사항</NewButton></>}
+              {q ? '찾는 요구사항이 없어요' : <>아직 요구사항이 없어요<NewButton to="/requirements/legacy/new">새 요구사항</NewButton></>}
             </div>
           )}
           {rows.map((r) => <Row key={r.id} r={r} />)}

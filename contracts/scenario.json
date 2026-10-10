@@ -3910,7 +3910,7 @@
           "space-sets"
         ],
         "summary": "Create Space Set",
-        "description": "새 묶음. spaces(DSS 공간 · 제품)를 주거나, context_text(요구 문장)로 KB 에서 공간별 제품을 찾는다.",
+        "description": "새 묶음(보드 Gate → SC2). sb_id 만 주면 Storyboard flow.json 의 DSS 공간 · 공간별 제품 · 솔루션으로 시작한다\n(Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다.",
         "operationId": "create_space_set",
         "requestBody": {
           "required": true,
@@ -4277,7 +4277,7 @@
           "space-sets"
         ],
         "summary": "Finish Space Set",
-        "description": "저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). stages.sc 와 요약 md.",
+        "description": "저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). ver(저장 횟수)가 오르고,\nStoryboard 가 있으면 허브 stages.sc · 요약본 · 팝업 카드에 반영한다(flow_sync). 응답: stages.sc · 요약 md · flow_sync.",
         "operationId": "finish_space_set",
         "parameters": [
           {
@@ -7473,7 +7473,8 @@
                 "type": "null"
               }
             ],
-            "title": "Title"
+            "title": "Title",
+            "description": "없으면 Storyboard 이름"
           },
           "sb_id": {
             "anyOf": [
@@ -7484,7 +7485,8 @@
                 "type": "null"
               }
             ],
-            "title": "Sb Id"
+            "title": "Sb Id",
+            "description": "Gate 에서 고른 Storyboard(SB-01 …). spaces 가 없으면 flow.json stages.dss 의 공간 · 제품으로 시작"
           },
           "context_text": {
             "anyOf": [
@@ -7511,7 +7513,7 @@
               }
             ],
             "title": "Spaces",
-            "description": "DSS 공간 · 제품. 없으면 context_text 로 KB S1 에서 공간별 제품을 찾는다"
+            "description": "공간 · 제품을 직접 줄 때. 없으면 Storyboard DSS(sb_id) → context_text 로 KB S1 순으로 찾는다"
           }
         },
         "type": "object",
@@ -7550,6 +7552,37 @@
             ],
             "title": "Sb Id"
           },
+          "dss_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ref",
+            "description": "시작할 때 읽은 Storyboard 의 DSS 코드(공간 목록 머리 「공간 · DSS-01」 · stages.sc.from)"
+          },
+          "dss_items": {
+            "items": {
+              "$ref": "#/components/schemas/SSDssItem"
+            },
+            "type": "array",
+            "title": "Dss Items",
+            "description": "DSS 제품 · 솔루션(고르기 대화상자 묶음)"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
           "context_text": {
             "anyOf": [
               {
@@ -7576,6 +7609,12 @@
             ],
             "title": "Status",
             "default": "draft"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver",
+            "description": "저장(완료)한 횟수 = flow.json stages.sc.ver",
+            "default": 0
           },
           "issues": {
             "items": {
@@ -7613,6 +7652,56 @@
         ],
         "title": "SSDoc"
       },
+      "SSDssItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "product",
+              "solution"
+            ],
+            "title": "Kind",
+            "default": "product"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces",
+            "description": "DSS 에서 이 제품이 있던 공간(솔루션은 links 가 가리킨 공간)"
+          },
+          "links": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Links",
+            "description": "DSS 솔루션의 함께 쓰는 제품(공간 · 제품)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "SSDssItem",
+        "description": "DSS 에서 고른 제품 · 솔루션(SC2_Pick 첫 묶음 `DSS-01 · 제품` · `DSS-01 · 솔루션`)."
+      },
       "SSFieldKV": {
         "properties": {
           "k": {
@@ -7632,6 +7721,28 @@
           "k"
         ],
         "title": "SSFieldKV"
+      },
+      "SSFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added",
+            "description": "Storyboard 요약본에 더해진 부분"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced",
+            "description": "같은 공간 시나리오가 연결돼 함께 바뀐 다른 Storyboard"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added"
+        ],
+        "title": "SSFlowSync"
       },
       "SSIssue": {
         "properties": {
@@ -7733,6 +7844,11 @@
           "status": {
             "type": "string",
             "title": "Status"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver",
+            "default": 0
           },
           "counts": {
             "$ref": "#/components/schemas/SSCounts"
@@ -7945,11 +8061,23 @@
           "stage": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Stage"
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.sc"
           },
           "summary_md": {
             "type": "string",
             "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SSFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Storyboard 허브에 반영된 결과(sb_id 가 없거나 허브가 안 되면 null)"
           }
         },
         "type": "object",

@@ -1149,6 +1149,130 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/mi-flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Mi Flows */
+        get: operations["list_mi_flows"];
+        put?: never;
+        /**
+         * Create Mi Flow
+         * @description Gate 에서 고른 Storyboard 로 MI 를 만들고 Storyboard 분석을 시작한다(CF-08 예외 — MI 는 분석 로딩이 먼저).
+         */
+        post: operations["create_mi_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Mi Flow */
+        get: operations["get_mi_flow"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch Mi Flow */
+        patch: operations["patch_mi_flow"];
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}:analyze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Analyze Mi Flow */
+        post: operations["analyze_mi_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}:finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finish Mi Flow */
+        post: operations["finish_mi_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}:search": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Search Mi Flow */
+        post: operations["search_mi_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}/items/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Patch Mi Flow Item */
+        patch: operations["patch_mi_flow_item"];
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}/stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Mi Flow Stage */
+        get: operations["get_mi_flow_stage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/routing-rules": {
         parameters: {
             query?: never;
@@ -3404,6 +3528,408 @@ export interface components {
             label: string;
             /** Route */
             route?: string | null;
+        };
+        /** MFBasis */
+        MFBasis: {
+            /**
+             * K
+             * @description 고객사 · 업종 · 공간 · 요구
+             */
+            k: string;
+            /** V */
+            v: string;
+        };
+        /** MFCounts */
+        MFCounts: {
+            /**
+             * By Group
+             * @description {시장: [담음, 찾음]} …
+             */
+            by_group?: {
+                [key: string]: number[];
+            };
+            /** Found */
+            found: number;
+            /** Kept */
+            kept: number;
+            /** Numbercheck */
+            numberCheck: number;
+            /** Queries */
+            queries: number;
+        };
+        /** MFCreate */
+        MFCreate: {
+            /**
+             * Sb Id
+             * @description 사전 작업 Storyboard(최소 DSS 까지)
+             */
+            sb_id: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** MFDoc */
+        MFDoc: {
+            /** Analysis Mode */
+            analysis_mode?: ("llm" | "rule") | null;
+            /**
+             * Basis
+             * @description Storyboard 에서 읽은 것(고객사 · 업종 · 공간 · 요구)
+             */
+            basis?: components["schemas"]["MFBasis"][];
+            /**
+             * Code
+             * @description 화면 · flow.json 에 쓰는 짧은 번호(MI-01 …)
+             */
+            code?: string | null;
+            counts: components["schemas"]["MFCounts"];
+            /** Created At */
+            created_at: string;
+            /**
+             * Editing
+             * @description 저장한 MI 를 고치는 중(저장하면 ver+1 · prevVer)
+             * @default false
+             */
+            editing: boolean;
+            filters?: components["schemas"]["MFFilters"];
+            /** Id */
+            id: string;
+            /** Items */
+            items?: components["schemas"]["MFItem"][];
+            /**
+             * Keep Previous
+             * @description 고칠 때: 담은 정보 유지 · 새로 찾은 것만 더하기(false = 처음부터 다시)
+             * @default true
+             */
+            keep_previous: boolean;
+            /**
+             * Phase
+             * @default analyzing
+             * @enum {string}
+             */
+            phase: "analyzing" | "search" | "searching" | "refine" | "done";
+            progress?: components["schemas"]["MFProgress"] | null;
+            queries?: components["schemas"]["MFQueries"];
+            /** Results */
+            results?: components["schemas"]["MFResult"][];
+            /**
+             * Saved Kept
+             * @description 마지막 저장 때 담은 정보 수
+             * @default 0
+             */
+            saved_kept: number;
+            /** Sb Id */
+            sb_id: string;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /**
+             * Ver
+             * @description 저장(완료) 판 — flow.json stages.mi.ver
+             */
+            ver?: number | null;
+            /** Version */
+            version: number;
+            /** Warnings */
+            warnings?: string[];
+        };
+        /** MFFilters */
+        MFFilters: {
+            /**
+             * Period
+             * @default 최근 1년
+             * @enum {string}
+             */
+            period: "최근 1년" | "최근 3년" | "전체";
+            /**
+             * Sourcetypes
+             * @description 뉴스 · 공시 · IR · 리포트 · 정부 통계
+             */
+            sourceTypes?: string[];
+        };
+        /** MFFlowSync */
+        MFFlowSync: {
+            /**
+             * Md Added
+             * @description Storyboard 요약본에 더해진 부분
+             */
+            md_added: string;
+            /**
+             * Synced
+             * @description 같은 MI 가 연결돼 함께 바뀐 다른 Storyboard
+             */
+            synced?: string[];
+        };
+        /** MFItem */
+        MFItem: {
+            /**
+             * Addedin
+             * @description 처음 찾은 판(v1 · v2 …)
+             */
+            addedIn: string;
+            /**
+             * Edited
+             * @default false
+             */
+            edited: boolean;
+            /**
+             * Group
+             * @enum {string}
+             */
+            group: "시장" | "고객사" | "사용자";
+            /** Id */
+            id: string;
+            /**
+             * Kept
+             * @default true
+             */
+            kept: boolean;
+            numberCheck?: components["schemas"]["MFNumberCheck"] | null;
+            /** Query */
+            query?: string | null;
+            /**
+             * Result Id
+             * @description 이 문장을 뽑은 검색 결과(results[].id) — '원문' 보기
+             */
+            result_id?: string | null;
+            source: components["schemas"]["MFSource"];
+            /**
+             * Summary
+             * @description 원문을 줄여 쓴 한 문장(사람이 고칠 수 있음)
+             */
+            summary: string;
+            /**
+             * Summary Orig
+             * @description 검색 결과에서 뽑은 그대로의 문장
+             */
+            summary_orig: string;
+        };
+        /** MFItemPatch */
+        MFItemPatch: {
+            /** Expected Version */
+            expected_version?: number | null;
+            /** Kept */
+            kept?: boolean | null;
+            /**
+             * Summary
+             * @description 문장 고치기(빈 문자열이면 원래 문장으로)
+             */
+            summary?: string | null;
+        };
+        /** MFList */
+        MFList: {
+            /** Items */
+            items: components["schemas"]["MFListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /** MFListItem */
+        MFListItem: {
+            /** Code */
+            code?: string | null;
+            counts: components["schemas"]["MFCounts"];
+            /** Id */
+            id: string;
+            /** Phase */
+            phase: string;
+            /** Sb Id */
+            sb_id: string;
+            /** Status */
+            status: string;
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /** Ver */
+            ver?: number | null;
+        };
+        /** MFNumberCheck */
+        MFNumberCheck: {
+            /**
+             * Note
+             * @default 수치는 원문에서 확인해야 해요
+             */
+            note: string;
+            /**
+             * Values
+             * @description 원문에서 확인해야 하는 수치 표현
+             */
+            values?: string[];
+        };
+        /** MFPatch */
+        MFPatch: {
+            /**
+             * Expected Version
+             * @description 다르면 409 CONFLICT
+             */
+            expected_version?: number | null;
+            filters?: components["schemas"]["MFFilters"] | null;
+            /** Keep Previous */
+            keep_previous?: boolean | null;
+            /**
+             * Phase
+             * @description 검색어 고치기(refine → search) · 정제로 돌아가기
+             */
+            phase?: ("search" | "refine") | null;
+            queries?: components["schemas"]["MFQueries"] | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** MFProgress */
+        MFProgress: {
+            /**
+             * Done
+             * @default 0
+             */
+            done: number;
+            /** Error */
+            error?: string | null;
+            /** Job Id */
+            job_id?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "analyze" | "search";
+            /** Steps */
+            steps?: components["schemas"]["MFStep"][];
+            /**
+             * Total
+             * @default 0
+             */
+            total: number;
+        };
+        /** MFQueries */
+        MFQueries: {
+            /** Customer */
+            customer?: components["schemas"]["MFQuery"][];
+            /** Market */
+            market?: components["schemas"]["MFQuery"][];
+            /** User */
+            user?: components["schemas"]["MFQuery"][];
+        };
+        /** MFQuery */
+        MFQuery: {
+            /**
+             * By
+             * @description ai = AI 분석 · rule = 규칙(모델 없이) · manual = 직접 · prev = 이전 판에서
+             * @default ai
+             * @enum {string}
+             */
+            by: "ai" | "rule" | "manual" | "prev";
+            /**
+             * On
+             * @description false = 뺀 검색어(점선 · 취소선, 다시 넣을 수 있음)
+             * @default true
+             */
+            on: boolean;
+            /** Text */
+            text: string;
+        };
+        /** MFResult */
+        MFResult: {
+            /** Error */
+            error?: string | null;
+            /**
+             * Found
+             * @default 0
+             */
+            found: number;
+            /** Group */
+            group: string;
+            /** Id */
+            id: string;
+            /**
+             * Mode
+             * @default summary_only
+             * @enum {string}
+             */
+            mode: "sources" | "summary_only";
+            /**
+             * Query
+             * @description 실제로 보낸 검색어(검색어 보호를 거친 것)
+             */
+            query: string;
+            /** Sources */
+            sources?: components["schemas"]["MFResultSource"][];
+            /**
+             * Summary
+             * @default
+             */
+            summary: string;
+        };
+        /** MFResultSource */
+        MFResultSource: {
+            /** Snippet */
+            snippet?: string | null;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /** Url */
+            url: string;
+        };
+        /** MFSource */
+        MFSource: {
+            /**
+             * Date
+             * @description YYYY-MM(글에 있을 때만)
+             */
+            date?: string | null;
+            /**
+             * Name
+             * @description 출처 이름 — 검색 결과 글에 있는 문자열만(없으면 '웹 검색 요약')
+             */
+            name: string;
+            /**
+             * Type
+             * @description 뉴스 · 공시 · IR · 리포트 · 정부 통계 · 웹 검색 요약(출처를 글에서 못 읽음)
+             */
+            type: string;
+            /**
+             * Url
+             * @description 검색 도구가 돌려준 URL 만(요약형 검색이면 null)
+             */
+            url?: string | null;
+        };
+        /** MFStageOut */
+        MFStageOut: {
+            /** @description Storyboard 허브에 반영된 결과(허브가 안 되면 null) */
+            flow_sync?: components["schemas"]["MFFlowSync"] | null;
+            /**
+             * Stage
+             * @description Storyboard flow.json 의 stages.mi
+             */
+            stage: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+        };
+        /** MFStep */
+        MFStep: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /**
+             * State
+             * @default wait
+             * @enum {string}
+             */
+            state: "wait" | "run" | "done" | "error";
         };
         /** NamedCount */
         NamedCount: {
@@ -7964,6 +8490,378 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ServiceInfo"];
+                };
+            };
+        };
+    };
+    list_mi_flows: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFList"];
+                };
+            };
+        };
+    };
+    create_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MFCreate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+        };
+    };
+    get_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+        };
+    };
+    patch_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MFPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+        };
+    };
+    analyze_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+        };
+    };
+    finish_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFStageOut"];
+                };
+            };
+        };
+    };
+    search_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+        };
+    };
+    patch_mi_flow_item: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MFItemPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+        };
+    };
+    get_mi_flow_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFStageOut"];
                 };
             };
         };

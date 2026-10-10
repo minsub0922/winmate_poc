@@ -224,9 +224,9 @@ async def handoff_cards(sb_id: str) -> list[dict[str, Any]]:
          "route": f"/proposal/new?sb={sb_id}&rq={rq_id}"},
         {"target": "mi", "title": "Market Intelligence", "done": "mi" in done,
          "description": f"{codes} 근거 — {mi.get('find')}" if codes else f"근거 — {mi.get('find')}",
-         "route": f"/mi/new?rq={rq_id}&sb={sb_id}"},
+         "route": f"/mi/legacy/new?rq={rq_id}&sb={sb_id}"},   # /mi/new 는 새 흐름(Gate) — 이전 흐름 만들기는 legacy
         {"target": "scenario", "title": "공간 시나리오", "done": "scenario" in done, "description": sc_desc,
-         "route": f"/scenario/new?sb={sb_id}"},
+         "route": f"/scenario/legacy/new?sb={sb_id}"},   # /scenario/new 는 새 흐름(Gate)
     ]
 
 

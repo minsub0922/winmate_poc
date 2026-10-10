@@ -15,7 +15,7 @@ test.beforeEach(async ({ request }) => {
 const AMBIGUOUS = '매장 메뉴보드 사이니지';
 
 async function startFree(page: import('@playwright/test').Page, text: string) {
-  await page.goto('/competitor/new');
+  await page.goto('/competitor/legacy/new');
   await page.getByLabel('고객 · 사업 설명').fill(text);
   await expect(page).toHaveURL(new RegExp(`/competitor/${CA_ID.source}/input$`), { timeout: 6_000 });
   await page.getByRole('button', { name: '경쟁사 찾기' }).click();
@@ -73,7 +73,7 @@ test('CA1R 정의서에서 → 덧붙일 내용(꼭 넣을 곳) → 찾기', asy
   const sv = await request.post(`/api/requirements/v1/requirements/${rq.id}/save`, { data: { reason: 'direct' } });
   expect(sv.ok(), await sv.text()).toBeTruthy();
 
-  await page.goto(`/competitor/new?input=requirements&rq=${rq.id}`);
+  await page.goto(`/competitor/legacy/new?input=requirements&rq=${rq.id}`);
   await expect(page.getByRole('tab', { name: '고객 요구사항에서' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByText(/정의서 고르기/)).toBeVisible();
   const radio = page.getByRole('radio', { name: new RegExp(`매장 리뉴얼 ${tag}`) });
@@ -153,7 +153,7 @@ test('CA0 업데이트 배너 → 다시 분석(바뀐 경쟁사만) · CA4D 더
   await api(request, 'POST', `/analyses/${a.id}/recheck`);
   const upd = await waitStatus(request, a.id, ['upd'], 60_000);                      // AC-CA-49
   expect(upd.status_label).toBe('업데이트 필요');
-  await page.goto('/competitor');
+  await page.goto('/competitor/legacy');
   const row = page.locator(`[data-id="${a.id}"]`);
   await expect(row).toContainText('업데이트 필요');
   await expect(row).toContainText(/완료 · 경쟁사 [A-F] 신제품 \d{4}\.\d{2}/);
@@ -180,7 +180,7 @@ test('CA0 업데이트 배너 → 다시 분석(바뀐 경쟁사만) · CA4D 더
 });
 
 test('CA0 MI 작업의 경쟁사에서 — 고르기 시트', async ({ page }) => {
-  await page.goto('/competitor');
+  await page.goto('/competitor/legacy');
   await page.getByRole('button', { name: /MI 작업의 경쟁사에서/ }).click();
   const dlg = page.getByRole('dialog', { name: 'MI 작업의 경쟁사에서 시작' });
   await expect(dlg).toBeVisible();
@@ -191,7 +191,7 @@ test('CA0 MI 작업의 경쟁사에서 — 고르기 시트', async ({ page }) =
 });
 
 test('CA1 새로 시작 · 비어 있는 칩 · 2 / 4(AC-CA-02)', async ({ page }) => {
-  await page.goto('/competitor/new');
+  await page.goto('/competitor/legacy/new');
   await page.getByLabel('고객 · 사업 설명').fill('카페 메뉴보드 사이니지 교체');
   const strip = page.getByRole('group', { name: '입력에서 읽은 것' });
   await expect(strip).toContainText('고객사·비어 있음', { timeout: 15_000 });

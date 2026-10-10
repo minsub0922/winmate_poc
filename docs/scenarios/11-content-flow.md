@@ -1,8 +1,8 @@
 # 11 · 콘텐츠 흐름(Storyboard 중심) — 수용 기준 (2026-10-08)
 
 디자인 원본: `docs/screens/webapp1/*.dc.html`(캔버스 v58) · 그린 화면 `docs/screens/_rendered/webapp1/<보드>.jpg · .txt`.
-이전 보드(v52)는 `docs/screens/_archive/webapp1-v52/` 에 있다. 아직 새 흐름으로 다시 만들지 않은 화면(MI · CA · SP · RQ · DSS · Storyboard)은
-기존 수용 기준(01~09)과 이전 보드를 그대로 따르고, 아래 "단계" 순서대로 옮긴다.
+이전 보드(v52)는 `docs/screens/_archive/webapp1-v52/` 에 있다. 2026-10-10 에 웹앱 ① 의 모든 콘텐츠를 새 흐름으로 옮겼다(§5). 이전 흐름 화면은 `/<base>/legacy` 아래에 남아 있고,
+그 화면의 수용 기준은 기존 문서(01~09)다.
 
 ## 1. 규칙(모든 콘텐츠 공통)
 
@@ -56,12 +56,60 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 | UI-W-03 | 작업 화면(VP2 · SC2)은 높이를 채운다: 헤더 · 바 · 푸터를 뺀 높이를 그리드가 갖고, 패널 안에서만 스크롤. |
 | UI-W-04 | 1440 · 1920 폭에서 e2e 가 폭을 잰다(`values.spec.ts`: 왼쪽 280 · 본문 1180). 새 화면도 같은 방식으로 재고 `__screens__/` 캡처를 `_rendered` 와 나란히 본다. |
 
-## 5. 단계(남은 이전 작업)
+## 5. 구현 현황 (2026-10-10 — 웹앱 ① v58 전부)
 
-| 단계 | 할 일 | 서비스 |
-|---|---|---|
-| 1 | Storyboard `flow.json` · `summary.md` 저장소 + `stages.*` 반영 API(VP · SC 의 `:finish` 결과 `stage` 를 받아 씀) + SBBar 칩의 실제 진행 칸 | storyboard |
-| 2 | Gate(사전 작업 고르기) · 수정/복제본 분기 · Storyboard 에서 바로 만들기 | storyboard + 각 기능 |
-| 3 | 완료 화면 공통(Done · JsonPopup) — `@/ui` `FlowDone` 을 각 기능이 쓴다 | 각 기능 |
-| 4 | DSS(업종 · 공간 · 공간별 제품 → 솔루션) 새 화면 DS0~DS4 | dss(신규) 또는 requirements |
-| 5 | MI(분석 로딩 → 검색 → 정제) · CA(개요 · 비교 · 장단점 탭) · SP · RQ 새 화면 | mi · competitor · spec · requirements |
+모든 콘텐츠가 허브(§6)에 붙었다. 화면은 보드 인라인 px 그대로이고, e2e 가 고정 칸 폭을 숫자로 잰다(`web/e2e/<기능>/<기능>-flow.spec.ts`, 캡처 `__screens__/<보드>-new.png`).
+
+| 콘텐츠 | 보드 | 목록 · 새로 · 편집 | 백엔드(새 자원) | e2e |
+|---|---|---|---|---|
+| 홈 | HomeGrid | `/` — 시작 · 흐름 3 · Storyboard로 만드는 콘텐츠 5 · 비주얼 2 · 최근 작업 2 | — | `shell/layout.spec.ts` H-* |
+| 고객 요구사항 | RQ0 · RQ1 · RQ1_AI · RQ_Done | `/requirements` · `/requirements/new`(바로 RQ1) · `/requirements/flow/:id` | requirements `/v1/rq-flows*` — 첫 저장에 Storyboard 자동 생성 | `requirements/rq-flow.spec.ts` |
+| Storyboard | SB0 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI | `/storyboard` · `/storyboard/flow/:id` | storyboard `/v1/flows*`(허브) | `storyboard/sb-flow.spec.ts` |
+| DSS | DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_Done | `/dss` · `/dss/new` · `/dss/:id`(`?step=solution` = DS4) | dss(신규 서비스, 5111) `/v1/dss*` | `dss/dss-flow.spec.ts` |
+| MI | MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_Done · MI_DoneJson | `/mi` · `/mi/new` · `/mi/flow/:id` | mi `/v1/mi-flows*` | `mi/mi-flow.spec.ts` |
+| 경쟁사 분석 | CA0 · CA1 · CA2 · CA2_Info · CA2_Pc · CA2_AI · CA_Done · CA_DoneJson | `/competitor` · `/competitor/new` · `/competitor/flow/:id`(`?tab=info\|pc`) | competitor `/v1/ca-flows*` | `competitor/ca-flow.spec.ts` |
+| VP | VP0 · VP1 · VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_Done | `/vp` · `/vp/new` · `/vp/values/:id` | vp `/v1/value-maps*` | `vp/values.spec.ts` |
+| Spec 시트 | SP0 · SP1 · SP2 · SP_Done | `/spec` · `/spec/new` · `/spec/flow/:id` | spec `/v1/spec-flows*`(저장 때 XLSX 도 만든다) | `spec/sp-flow.spec.ts` |
+| 공간 시나리오 | SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done | `/scenario` · `/scenario/new` · `/scenario/spaces/:id` | scenario `/v1/space-sets*`(DSS 공간 · 제품으로 미리 채움) | `scenario/sc-flow.spec.ts` |
+
+- 새로 만들기 `/<base>/new?sb=<id>&auto=1` 은 Gate 를 건너뛴다(Storyboard 「만들기」 · 완료 화면 후속 작업 카드).
+- **이전 흐름**은 `/<base>/legacy` · `/<base>/legacy/new` 로 옮겼다. 이전 흐름의 다른 경로(`/<base>/:id/...`)는 그대로다(제안서 handoff 가 읽는다).
+  예전 들어오기 주소(`/vp/new?sb=sb_…` · `?mi=` · `?rq=`, `/mi/new?rq=`, `/competitor/new?input=…`, `/spec/new?models=|from=|pop=`, `/scenario/new?from=|mi=|sb=sb_…`)는 이전 흐름 화면으로 넘긴다.
+- 공용 화면(`@/shell` flow): `ContentListScreen`(초안 줄의 Storyboard 칩도 이름) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowDoneView`(`newStoryboard` · `jsonHead`, 전체 JSON 제목 `SB-nn/flow.json`).
+- 남은 것: 콘텐츠 · 초안 지우기 API(보드에 없음), Storyboard 의 DSS 가 바뀌었을 때 Spec · 시나리오 다시 가져오기(보드에 없음), 웹앱 ② 조감도 2D/3D 재구현(별도).
+
+## 6. Storyboard 허브 · stage 계약 (2026-10-08 구현)
+
+허브: storyboard 서비스 `/v1/flows*`(contracts/storyboard.json, 본체 `services/storyboard/src/winmate_storyboard/flows.py`).
+콘텐츠 서비스는 `winmate_common.flow` 의 `get_flow(sb)` · `push_stage(sb, key, ref=, ver=, res_id=, title=, value=, md=, card=)` 만 쓴다
+(consumes 에 storyboard 필요). 웹은 `@/shell` 의 `useFlow` · `FlowBar` · `GateScreen` · `ContentListScreen` · `FlowDoneView` · `ContentPopup` · `SBPopup`.
+
+| 경로 | 하는 일 |
+|---|---|
+| `GET /v1/flows?content=` | SB0 · Gate 목록(진행 칸 `cells` · `progress` · content 를 주면 `eligible` · `need` · `existing`) |
+| `POST /v1/flows` (internal) | 고객 요구사항 저장 → Storyboard 자동 생성(`rq` stage 포함) |
+| `GET /v1/flows/{id}` | flow.json 전체(`flow_json`) · `summary_md` · `cards` · `history` |
+| `PATCH /v1/flows/{id}` | 이름 · Key message · 요약본 고침(사람 문장 `user_lines` → 다시 써도 `✎` 로 남음) |
+| `PUT /v1/flows/{id}/stages/{key}` (internal) | 콘텐츠 저장 → stages.<key> 실제 값 · 요약 줄 · 팝업 카드. 같은 ref 의 다른 Storyboard 도 반영(`synced`). 사전 작업 없으면 422 `PREREQUISITE_MISSING` |
+| `POST /v1/flows/{id}:branch {stage}` | 복제본 — 새 Storyboard(parent · `분기 B`), 사전 작업 사슬(dss → rq)만 공유(`sharedWith`) |
+| `POST /v1/flows/{id}/key-message:suggest` | 전략 수립 AI 후보 3안(`sb.key_message.v1`, 없으면 규칙 후보) |
+| `GET /v1/flows/contents/{key}` | 보드 List — 저장된 콘텐츠마다 연결된 Storyboard 들 |
+
+편집 화면 경로(허브 `cells[].route`): rq `/requirements/flow/{id}` · dss `/dss/{id}` · mi `/mi/flow/{id}` · ca `/competitor/flow/{id}` · vp `/vp/values/{id}` ·
+sp `/spec/flow/{id}` · sc `/scenario/spaces/{id}`. 목록은 `/<base>`(보드 List), 새로 만들기는 `/<base>/new`(보드 Gate, rq 만 바로 RQ1).
+이전 흐름 화면은 `/<base>/legacy` 아래로 옮긴다(제안서 handoff 가 아직 읽는다).
+
+`push_stage` 의 `value`(= flow.json `stages.<key>`, ref · ver 는 허브가 붙인다) — 콘텐츠끼리 서로 읽으므로 이름을 바꾸지 않는다:
+
+```text
+rq : {customer, title, target, keymen[{role, weight, needs[]}], goals[], requirements[{id, text, status: ok|check, by}], counts{keymen, reqs, check}}
+dss: {industry{value, by, basis}, spaces[{name, by, products[{name, kind: product, ref, qty, by}]}], solutions[{name, ref, by, links[], why}], counts{spaces, products, solutions}}
+mi : {prevVer, queries{market[], customer[], user[]}, filters{period, sourceTypes[]}, counts{found, kept, numberCheck}, items[{id, group, summary, source{type, name, date, url}, kept, addedIn, numberCheck}]}
+ca : {basis{from, categories[]}, dimensions[], competitors[{id, name, by, wiki{…, source}, criteria[{k, v, status}], matches[{space, ours, theirs, dims{spec|price|cases|esg|brand: {verdict, note}}}], pros[], cons[], claims[{axis, text, supports}], candidateEvidence}], counts{competitors, matches, verdicts{oursBetter, similar, oursWorse, noData}}}
+vp : {from, selection{fromDss, excluded, addedOutsideDss}, items[{name, kind, ref, spaces, values[{id, space, message, need{text, by}|null, req, by}]}], importedFrom, counts}
+sp : {from, models[{space, name, model_code, ref, qty, specs{<key>: value}, by}], columns[{key, label}], warnings[{model, text}], counts{models, columns}}
+sc : {from, spaces[{name, products[], scenarios[{id, title, user, products[], steps[{text, product}], fields[{k, v}], by}]}], rules, counts}
+```
+
+`card`(ContentPopup 820×680): `{title, facts[[이름, 값]×3], groups[{h, sub, lines[{t, note}]}], foot, line}` — `line` 은 SB1 연결된 콘텐츠 줄 한 줄 요약.
+`md`: 요약본 절의 본문 줄(`- …`), 머리(`## n. 이름 · ref vN`)는 허브가 붙인다. `ver` 는 그 콘텐츠를 저장(완료)한 횟수.

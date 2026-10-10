@@ -543,7 +543,7 @@ ops/node_modules/.bin/pm2 save && make health
 | 증상 | 확인 | 조치 |
 |---|---|---|
 | `make health` 에서 서비스가 `down` · `degraded` | `make logs SERVICE=x` · `tail -n 200 data/logs/x.log` · `curl -s 127.0.0.1:<포트>/healthz`(토큰 없이 열림, `checks` 에 세부) | 오류를 고친 뒤 `ops/node_modules/.bin/pm2 restart x`. kb 는 처음 5~11초 `warm=false` |
-| `Address already in use` · 포트 충돌 | `ss -ltnp \| grep -E ':(5000\|50[1-6]0\|510[0-9]\|5110\|5379)\b'` | 남은 개발 프로세스는 `make dev-stop SERVICE=x`. 포트를 바꾸려면 `config/services.yaml`(플랫폼 담당) → `make down && make up` |
+| `Address already in use` · 포트 충돌 | `ss -ltnp \| grep -E ':(5000\|50[1-6]0\|510[0-9]\|511[01]\|5379)\b'` | 남은 개발 프로세스는 `make dev-stop SERVICE=x`. 포트를 바꾸려면 `config/services.yaml`(플랫폼 담당) → `make down && make up` |
 | 서비스 포트에 직접 붙으면 401 `UNAUTHENTICATED`("게이트웨이를 거친 요청만") | — | 정상. `http://127.0.0.1:5000/api/<서비스>/…` 로, 스크립트는 `-H "X-Internal-Token: $(cat data/.internal_token)"` |
 | 브라우저가 계속 `/login` 으로 감 | `.env` `AUTH_MODE` · `curl -s localhost:5000/api/_auth/me` | `local` 이면 정상(로그인 필요). 로그인이 429 면 10분 뒤 · 401 이면 아이디 · 비밀번호 · 사용 중지 여부(관리자 「사용자 관리」) |
 | 403 `INTERNAL_ONLY` · `DEPENDENCY_NOT_ALLOWED` | 응답 `error.message` | 브라우저가 서비스 전용 API 를 부름 · `consumes` 밖 호출 — 코드 문제(해당 서비스 담당) |
@@ -574,15 +574,16 @@ API 는 모두 `http://<게이트웨이>:5000/api/<서비스>/v1/…`, 상태는
 | 5040 | `jobs` | 잡 상태 · 진행 이벤트(SSE) · 취소 · 사람 입력 · 예약 실행 · 완료 알림 | | — |
 | 5050 | `workspace` | 사용자 · 프로젝트 · 작업물 색인 · 코멘트 · 검토/승인 · 공유 링크 | | — |
 | 5060 | `export` | PPTX · XLSX · DOCX · PDF · ZIP 생성, 시트 템플릿 카탈로그 | ✓ | files, kb |
-| 5101 | `requirements`(RQ) | 고객 요구사항 | ✓ | ai-tools, kb, files, jobs, workspace, export |
-| 5102 | `storyboard`(SB) | 전략 수립 Storyboard | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements |
-| 5103 | `mi`(MI) | Market Intelligence | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements |
-| 5104 | `competitor`(CA) | 경쟁사 분석 | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements |
+| 5101 | `requirements`(RQ) | 고객 요구사항 | ✓ | ai-tools, kb, files, jobs, workspace, export, storyboard |
+| 5102 | `storyboard`(SB) | 전략 수립 Storyboard · 콘텐츠 흐름 허브(`/v1/flows*` · flow.json · summary.md) | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements |
+| 5111 | `dss`(DS) | 공간별 제품 매칭 DSS(새 콘텐츠 흐름, 2026-10-10) | | ai-tools, kb, workspace, storyboard |
+| 5103 | `mi`(MI) | Market Intelligence | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements, storyboard |
+| 5104 | `competitor`(CA) | 경쟁사 분석 | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements, storyboard, mi |
 | 5105 | `vp`(VP) | Value Proposition | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements, storyboard, mi |
-| 5106 | `spec`(SP) | Spec 시트 | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements |
+| 5106 | `spec`(SP) | Spec 시트 | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements, storyboard |
 | 5107 | `image`(IMG) | 이미지 생성 · 합성 · 부분 수정 · 업스케일 | ✓ | ai-tools, kb, files, jobs, workspace, export |
 | 5108 | `birdseye`(BE) | 공간 조감도 | ✓ | ai-tools, kb, files, jobs, workspace, export, image |
-| 5109 | `scenario`(SC) | 공간 시나리오 | ✓ | ai-tools, kb, files, jobs, workspace, export, image, birdseye |
+| 5109 | `scenario`(SC) | 공간 시나리오 | ✓ | ai-tools, kb, files, jobs, workspace, export, image, birdseye, storyboard |
 | 5110 | `proposal`(PR) | B2B 제안서 · 기존 제안서 활용 · 딸깍 | ✓ | ai-tools, kb, files, jobs, workspace, export, requirements, storyboard, mi, competitor, vp, spec, image, birdseye, scenario |
 | 5001 | web(개발) | Vite 개발 서버 — `make web-dev`(운영은 게이트웨이가 `web/dist` 서빙) | | — |
 | 5379 | redis | 잡 큐(Stream) · 이벤트 · 호출 한도 카운터(`ops/redis/redis.conf`, AOF) | | — |

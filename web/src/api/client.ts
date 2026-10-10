@@ -22,6 +22,7 @@ import type { paths as Requirements } from './gen/requirements';
 import type { paths as Scenario } from './gen/scenario';
 import type { paths as Spec } from './gen/spec';
 import type { paths as Storyboard } from './gen/storyboard';
+import type { paths as Dss } from './gen/dss';
 import type { paths as Vp } from './gen/vp';
 import type { paths as Workspace } from './gen/workspace';
 
@@ -142,6 +143,7 @@ export const api = {
   export: mk<Export>('export'),
   requirements: mk<Requirements>('requirements'),
   storyboard: mk<Storyboard>('storyboard'),
+  dss: mk<Dss>('dss'),
   mi: mk<Mi>('mi'),
   competitor: mk<Competitor>('competitor'),
   vp: mk<Vp>('vp'),

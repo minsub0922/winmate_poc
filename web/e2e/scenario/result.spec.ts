@@ -38,7 +38,8 @@ test('SC4 수정 요청 → 장면 2 v2 · SC4E 「새로」 · 바뀐 곳 1 →
   const ask = page.getByRole('textbox', { name: '수정 요청' });
   await ask.fill('장면 2에 점장이 태블릿으로 재고 확인하는 장면 추가');
   await ask.press('Enter');
-  await expect(page.getByTestId('sc4-scene').nth(1).getByTestId('sc4-rewriting')).toBeVisible({ timeout: 20_000 });
+  // mock 모델은 다시 쓰기가 금방 끝나 「다시 쓰는 중」 표시를 못 볼 수 있다 → 장면 2 가 v2 가 될 때까지 API 로 기다린 뒤 표시가 사라졌는지 본다
+  await expect.poll(async () => (await api(request, 'GET', `/scenarios/${id}/scenes`)).items[1].version, { timeout: 60_000 }).toBe(2);
   await expect(page.getByTestId('sc4-scene').nth(1).getByTestId('sc4-rewriting')).toHaveCount(0, { timeout: 60_000 });
   const scenes = await api(request, 'GET', `/scenarios/${id}/scenes`);
   const s2 = scenes.items[1];
@@ -106,7 +107,7 @@ test('SC5 시트 3장 · DOCX 받기 · 제안서에 넣기 → SC0 「제안서
   // 제안서가 묶음을 읽고 usages 를 등록했으면 SC0 상태가 바뀐다(제안서 쪽 구현에 따름)
   const sc = await api(request, 'GET', `/scenarios/${id}`);
   if (sc.in_proposal) {
-    await page.goto(`/scenario?q=${encodeURIComponent(title)}`);
+    await page.goto(`/scenario/legacy?q=${encodeURIComponent(title)}`);
     await expect(page.locator(`[data-testid="sc0-row"][data-id="${id}"]`).getByTestId('sc0-row-status')).toContainText('제안서에 사용 중');
   }
   test.info().annotations.push({ type: 'proposal-usage', description: sc.in_proposal ? '제안서가 usages 를 등록함' : '제안서가 usages 를 아직 등록하지 않음' });

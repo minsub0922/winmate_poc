@@ -6,7 +6,7 @@
 import type { ReactNode } from 'react';
 import type { RouteObject } from 'react-router';
 
-export type FeatureCode = 'RQ' | 'SB' | 'IMG' | 'BE' | 'SC' | 'MI' | 'CA' | 'VP' | 'SP' | 'PR';
+export type FeatureCode = 'RQ' | 'SB' | 'DS' | 'IMG' | 'BE' | 'SC' | 'MI' | 'CA' | 'VP' | 'SP' | 'PR';
 /** 끌기 · 추가 유형. 키트(@/ui DragType)와 같은 값 */
 export type DragType = 'product' | 'solution' | 'image' | 'case' | 'work_item';
 

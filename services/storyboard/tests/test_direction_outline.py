@@ -128,7 +128,8 @@ async def test_number_guard_and_status_rules(client, world):
     sb = await to_outline(client)
     p12 = section_key(sb, "p1_2")
     assert p12["lines"][2]["text"] == "임대료 프리미엄 [00]% 주장 · 원출처 [확인 필요]"
-    assert "35" not in str(p12) and p12["status"] == "needs_confirmation"
+    # 문장만 본다(섹션 id 는 ULID 라 우연히 '35' 가 들어갈 수 있다)
+    assert "35" not in str([ln["text"] for ln in p12["lines"]]) and p12["status"] == "needs_confirmation"
     st = {s["key"]: s["status"] for s in sb["outline"]["sections"]}
     assert st["p3_1"] == "tbd" and st["intro"] == "reviewing" and st["outro"] == "reviewing" and st["part2"] == "writing"
     assert st["overview"] == "confirmed" and st["p1_1"] == "confirmed"

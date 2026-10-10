@@ -1,9 +1,12 @@
 /**
- * Spec 시트 생성(SP) 기능 모듈 — 소유: spec 서비스 세션. 수용 기준: docs/scenarios/06-spec.md
- * 셸이 자동으로 등록한다(web/src/shell/registry.ts). 라우트: /spec(목록) · /spec/new(/find · /requirements) · /spec/:id/*
+ * Spec 시트 생성(SP) 기능 모듈 — 소유: spec 서비스 세션. 셸이 자동으로 등록한다(web/src/shell/registry.ts).
+ * 새 흐름(2026-10-08 · docs/scenarios/11-content-flow.md §6 · 보드 webapp1 SP0 · SP1 · SP2 · SP_Done) — ./flow/
+ *   /spec(SP0 List) · /spec/new(SP1 Gate · `?sb=&auto=1`) · /spec/flow/:id(SP2 시트 작성 → SP_Done)
+ * 이전 흐름(제안서 handoff 가 아직 읽는다 · 수용 기준 docs/scenarios/06-spec.md):
+ *   /spec/legacy(목록) · /spec/legacy/new(/find · /requirements) — `/spec/new?models=|from=|pop=` 도 이리로 · /spec/:id/*(그대로)
  */
 import { useRef, type ComponentType } from 'react';
-import { useParams } from 'react-router';
+import { Navigate, useLocation, useParams } from 'react-router';
 import { feature } from '@/shell/feature';
 import EditPage from './EditPage';
 import ExportPage from './ExportPage';
@@ -16,10 +19,12 @@ import ProductsPage from './ProductsPage';
 import RequirementsPage from './RequirementsPage';
 import ResultPage from './ResultPage';
 import WarningsPage from './WarningsPage';
+import { SpGateScreen, SpListScreen } from './flow/FlowPages';
+import { SheetPage } from './flow/SheetPage';
 
 /**
  * 다른 작업으로 옮겨 가면 화면 상태를 새로 시작한다(같은 라우트 · 다른 :id).
- * `/spec/new…` 에서 첫 입력으로 작업이 막 만들어져 `/spec/:id/…` 로 바뀔 때는 같은 화면을 이어 간다(진행 중인 잡 · 입력 유지).
+ * `/spec/legacy/new…` 에서 첫 입력으로 작업이 막 만들어져 `/spec/:id/…` 로 바뀔 때는 같은 화면을 이어 간다(진행 중인 잡 · 입력 유지).
  */
 function Keyed({ C }: { C: ComponentType }) {
   const { id } = useParams();
@@ -35,6 +40,12 @@ function Keyed({ C }: { C: ComponentType }) {
 }
 const k = (C: ComponentType) => <Keyed C={C} />;
 
+/** 옛 주소 `/spec/new/find` · `/spec/new/requirements` → 이전 흐름 `/spec/legacy/new/…`(쿼리 유지) */
+function ToLegacy({ sub }: { sub: string }) {
+  const loc = useLocation();
+  return <Navigate to={`/spec/legacy/new/${sub}${loc.search}`} replace state={loc.state} />;
+}
+
 export default feature({
   code: 'SP',
   key: 'spec',
@@ -42,10 +53,16 @@ export default feature({
   order: 9,
   home: { section: 'plan', title: 'Spec 시트', desc: '조건으로 모델 찾기 · 스펙 대응표' },
   routes: [
-    { index: true, element: <ListPage /> },
-    { path: 'new', element: k(ProductsPage) },
-    { path: 'new/find', element: k(FindPage) },
-    { path: 'new/requirements', element: k(RequirementsPage) },
+    { index: true, element: <SpListScreen /> },
+    { path: 'new', element: <SpGateScreen /> },
+    { path: 'flow/:id', element: <SheetPage /> },
+    // 이전 흐름 — 목록 · 새로 만들기만 /legacy 로 옮겼다(나머지 /:id/... 그대로)
+    { path: 'legacy', element: <ListPage /> },
+    { path: 'legacy/new', element: k(ProductsPage) },
+    { path: 'legacy/new/find', element: k(FindPage) },
+    { path: 'legacy/new/requirements', element: k(RequirementsPage) },
+    { path: 'new/find', element: <ToLegacy sub="find" /> },
+    { path: 'new/requirements', element: <ToLegacy sub="requirements" /> },
     { path: ':id', element: k(ResultPage) },
     { path: ':id/products', element: k(ProductsPage) },
     { path: ':id/find', element: k(FindPage) },

@@ -4,7 +4,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from .models import ServiceInfo
-from .routes import compliance, edit, find, generate, handoff, sheets, warnings
+from .routes import compliance, edit, find, flows, generate, handoff, sheets, warnings
 
 router = APIRouter()
 meta = APIRouter(prefix="/v1")
@@ -16,5 +16,5 @@ async def info() -> ServiceInfo:
 
 
 router.include_router(meta)
-for r in (sheets.router, find.router, compliance.router, generate.router, edit.router, warnings.router, handoff.router):
+for r in (sheets.router, find.router, compliance.router, generate.router, edit.router, warnings.router, handoff.router, flows.router):
     router.include_router(r)

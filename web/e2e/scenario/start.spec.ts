@@ -15,7 +15,7 @@ const BE = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'e2e/scenario/
 
 test('SC1T 업종 16 · 검색 · 이 골격으로 시작 → SC2E → SC3 솔루션 미리 채움', async ({ page }) => {
   test.setTimeout(90_000);
-  await page.goto('/scenario/new/template');
+  await page.goto('/scenario/legacy/new/template');
   const tiles = page.getByTestId('sc1t-tile');
   await expect(tiles).toHaveCount(16);
   await expect(tiles.first()).toHaveAttribute('data-code', 'FB');
@@ -55,7 +55,7 @@ test('SC1B 존 4 / 5 · 축 · 동선 순서 바꾸기 → 존으로 장면 만�
     sent = r.request().postDataJSON();
     await r.fulfill({ status: 202, json: { job_id: 'job_e2e_sc1b', scenario_id: target } });
   });
-  await page.goto('/scenario/new/birdseye');
+  await page.goto('/scenario/legacy/new/birdseye');
   await expect(page.getByTestId('sc1b-option')).toHaveCount(3);
   await expect(page.getByTestId('sc1b-option').first()).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByTestId('sc1b-option').first()).toContainText('강남 플래그십 1층 로비');
@@ -93,5 +93,5 @@ test('UC_SC 유스케이스 맵(개발용) — 레인 5 · 카드 17', async ({ 
   await expect(page.getByTestId('sc-uc')).toContainText('기본 흐름 4 · 추가 화면 8 · 다른 기능 5');
   await shot(page, 'UC_SC');
   await page.getByRole('link', { name: /^SC1T / }).click();
-  await expect(page).toHaveURL(/\/scenario\/new\/template$/);
+  await expect(page).toHaveURL(/\/scenario\/legacy\/new\/template$/);
 });

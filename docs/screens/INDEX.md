@@ -7,7 +7,7 @@
 > 웹앱 ③ 의 PRQ · PRS · PRX · *Layout* 보드와 `Stepper` · `Thumb` 는 이제 각자 `.dc.html` 파일로 있다(전에는 다른 파일 안의 변형).
 
 > **웹앱 ① 은 2026-10-08 에 콘텐츠 흐름을 처음부터 다시 그렸다(Storyboard 중심 · 사전 작업 · 완료 JSON · DSS 신규 · VP 가치 · 고객의 니즈 · 공간 → 시나리오 → 장면).**
-> 정본은 `webapp1/`(아티팩트 v58 사본)이고, 규칙은 `docs/scenarios/11-content-flow.md` 가 정본이다. 그 전 웹앱 ① 보드(RQ1~RQ7 · SB1~SB5 · MI1~MI4 · CA1~CA5 · VP1~VP4 · SP1~SP4 등)는
+> 정본은 `webapp1/`(아티팩트 v58 사본)이고, 규칙은 `docs/scenarios/11-content-flow.md` 가 정본이다. 2026-10-10 에 웹앱 ① 의 모든 보드(홈 HomeGrid 포함)를 코드로 옮겼다 — 화면 ↔ 보드 대응은 11-content-flow.md §5 표. 그 전 웹앱 ① 보드(RQ1~RQ7 · SB1~SB5 · MI1~MI4 · CA1~CA5 · VP1~VP4 · SP1~SP4 등)는
 > `_archive/webapp1-v52/` · `_rendered/_archive/webapp1-v52/` 에 참고용으로만 남긴다 — **새로 만들거나 고칠 때는 따르지 않는다.**
 > 웹앱 ② 의 SC0~SC5(옛 공간 시나리오)도 새 흐름(웹앱 ① SC0 · SC1 · SC2)으로 대체됐다. 웹앱 ② 의 이미지는 그대로다.
 > 웹앱 ② 조감도는 2026-10-08 아티팩트에서 **2D(BP1~BP5 · BP1D · BP3Z) / 3D(BR1~BR4 · BR1P · BR3V)** 두 흐름으로 갈렸다 — BE0 은 유형을 고르는 목록이고,

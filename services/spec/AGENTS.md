@@ -29,6 +29,22 @@ make contracts SERVICE=spec    # contracts/spec.json 갱신 + 깨지는 변경 �
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
 ## 현재 상태
+
+### 새 흐름(2026-10-08 · 보드 webapp1 SP0 · SP1 · SP2 · SP_Done · docs/scenarios/11-content-flow.md §6 `sp`)
+- API `/v1/spec-flows*`(스키마 접두어 `SF*`, 본체 `spec_flow.py` · `routes/flows.py`, 저장 컬렉션 `spec_flows` sfl_ …):
+  만들기 `POST {sb_id}`(get_flow → stages.dss 제품 = 행, 솔루션은 행 아님 · 없으면 404 / DSS 없으면 422 `PREREQUISITE_MISSING`) · 고치기 PATCH(형식 · 항목 8칩 · 표기, expected_version 409) ·
+  행 PATCH(넣기/빼기 · 수량 · 모델 바꾸기 — 카탈로그에 없으면 422 `MODEL_NOT_IN_CATALOG` · 모델 비우기) · 행 모델 후보 GET(같은 제품군 / q 검색) · `:finish` · `/stage`.
+- 모델 맞춤은 결정적(DSS ref → 이름 속 모델명 → 없음). 칸 값은 KB 원문에서만, 없으면 `[확인 필요]`(영문 `[To be confirmed]`). 경고: 카탈로그에 없음 · 단종(예정) · 품절 · DSS 이름과 불일치 · 제품군 대표 모델.
+- 수량은 DSS 원문(`2대` · `1식` · `실당 1대` · null)에서 개수가 분명한 것만 더하고, 하나라도 모르면 null(= [확인 필요]) — 원문은 `qty_note`.
+- `:finish` → XLSX(export `POST /v1/exports` xlsx · `SP-01_v1.xlsx`, 못 만들면 null — 저장은 된다) → `push_stage(sp)` 값 = §6 `{from, models[{space, name, model_code, ref, qty, specs, by}], columns, warnings[{model, kind, text}], counts}`
+  + 보드 Done 키 `format · lang · unit · valuesFrom · catalogVersion · file · fileId`. 응답 `{stage, summary_md, flow_sync, file{id, name, url}}`. register_item(feature=SP, route=`/spec/flow/{id}`).
+- 화면 `web/src/features/spec/flow/`: `/spec`(SP0 = ContentListScreen) · `/spec/new`(SP1 = GateScreen · `?sb=&auto=1`) · `/spec/flow/:id`(SheetPage: SP2 → SP_Done = FlowDoneView) ·
+  ModelDialog(보드에 없음 — ProdPicker 760×640 모양: 같은 제품군 · 카탈로그 검색 · 수량 · 모델 비우기). CSS `sheet.css`(접두어 sf-).
+  이전 흐름 목록 · 새로 만들기는 `/spec/legacy` · `/spec/legacy/new(/find · /requirements)`, `/spec/new?models=|from=|pop=` 와 옛 `/spec/new/find|requirements` 도 그리로. `/spec/:id/*` 는 그대로.
+- 보드와 다름: 제품 줄 오른쪽 모델 칩 · 공간 줄 뒤 경고 이름(주황) · 아래 줄 「확인 필요 값 n · 경고 m」 · 미리보기 제품 4개부터 3칸 폭 유지 + 가로 스크롤 · 「제품별 1장」 미리보기 ·
+  Done 설명의 「XLSX로 내보낼 수 있어요」는 내려받기 링크 · 요약 줄에 「확인 필요 값 · 경고」 한 줄 더.
+- 테스트 pytest 60(새 흐름 4: 허브 연동 · 저장 조건 · 수량 원문 · XLSX) · e2e `web/e2e/spec/sp-flow.spec.ts` 2(캡처 `__screens__/SP0 · SP1 · SP2 · SP2_Model · SP2_PerProduct · SP_Done · SP_DoneJson · SP2-1920-new.png`).
+
 (2026-10-06 · 06-spec 전 화면 · API · 워크플로 구현, 테스트 55 · e2e 7 통과)
 
 ### 구조

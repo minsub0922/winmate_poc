@@ -567,6 +567,154 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/rq-flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Rq Flows
+         * @description 새 흐름 요구사항 목록(최근 수정 순) — 목록 화면의 '작성 중' 줄.
+         */
+        get: operations["list_rq_flows"];
+        put?: never;
+        /**
+         * Create Rq Flow
+         * @description 새 요구사항(코드 RQ-NN). 키맨을 주지 않으면 빈 키맨 하나(가중치 100).
+         */
+        post: operations["create_rq_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Rq Flow
+         * @description id(rqf_…) 또는 코드(RQ-NN).
+         */
+        get: operations["get_rq_flow"];
+        /**
+         * Put Rq Flow
+         * @description 폼 전체 고치기(자동 저장). expected_version 이 다르면 409 VERSION_CONFLICT, 파일로 채우는 중이면 409 FILLING.
+         */
+        put: operations["put_rq_flow"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}:fill": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Fill Rq Flow
+         * @description 파일로 폼 채우기(잡 rq.flow.fill) — 빈 칸만 채운다. 끝나면 sources 에 파일이 붙는다.
+         */
+        post: operations["fill_rq_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}:finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish Rq Flow
+         * @description 저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수.
+         */
+        post: operations["finish_rq_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}/deep-questions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Deep Questions
+         * @description AI 심층 질의 — 부족한 곳을 찾아 질문(ai-pending)을 만든다(`rq.deep_questions.v1`, 실패하면 규칙 문장).
+         */
+        post: operations["deep_questions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}/deep-questions:close": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Close Questions
+         * @description 질의 닫기 — 답하지 않은 질문은 버린다.
+         */
+        post: operations["close_questions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}/deep-questions/{question_id}:answer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Answer Question
+         * @description 답(보기 · 직접 입력)을 폼에 반영(ai-accepted) — later=true 면 고객에게 확인으로 남긴다.
+         */
+        post: operations["answer_question"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1922,6 +2070,439 @@ export interface components {
         ReviseResult: {
             proposal: components["schemas"]["Proposal"];
             session: components["schemas"]["DeepSession"];
+        };
+        /** RFAnswer */
+        RFAnswer: {
+            /**
+             * Later
+             * @description 고객에게 확인으로 남기기
+             * @default false
+             */
+            later: boolean;
+            /**
+             * Option
+             * @description 고른 보기 번호
+             */
+            option?: number | null;
+            /**
+             * Text
+             * @description 직접 입력
+             */
+            text?: string | null;
+        };
+        /** RFCounts */
+        RFCounts: {
+            /** Check */
+            check: number;
+            /** Keymen */
+            keymen: number;
+            /**
+             * Pending
+             * @description 아직 답하지 않은 AI 심층 질의
+             */
+            pending: number;
+            /** Reqs */
+            reqs: number;
+            /** Weight Sum */
+            weight_sum: number;
+        };
+        /** RFCreate */
+        RFCreate: {
+            /**
+             * Customer
+             * @default
+             */
+            customer: string;
+            /**
+             * Keymen
+             * @description 없으면 빈 키맨 하나
+             */
+            keymen?: components["schemas"]["RFKeymanIn"][] | null;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /**
+             * Target
+             * @default
+             */
+            target: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+        };
+        /** RFDeep */
+        RFDeep: {
+            /**
+             * Applied
+             * @default 0
+             */
+            applied: number;
+            /**
+             * Asked
+             * @default 0
+             */
+            asked: number;
+            /** At */
+            at: string;
+            /**
+             * Current
+             * @description 다음에 물을 질문 번호(0부터), 다 끝났으면 null
+             */
+            current: number | null;
+            /**
+             * Mode
+             * @default rule
+             * @enum {string}
+             */
+            mode: "llm" | "rule";
+            /** Questions */
+            questions: components["schemas"]["RFDeepQuestion"][];
+        };
+        /** RFDeepOption */
+        RFDeepOption: {
+            /** Label */
+            label: string;
+            /**
+             * Weights
+             * @description 가중치 질문의 보기 — 키맨 순서대로
+             */
+            weights: number[] | null;
+        };
+        /** RFDeepOut */
+        RFDeepOut: {
+            doc: components["schemas"]["RFDoc"];
+            /** Found */
+            found: number;
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "llm" | "rule";
+        };
+        /** RFDeepQuestion */
+        RFDeepQuestion: {
+            /** Answer */
+            answer: string | null;
+            /**
+             * By
+             * @default ai-pending
+             * @enum {string}
+             */
+            by: "manual" | "file" | "ai-pending" | "ai-accepted";
+            /** Id */
+            id: string;
+            /** Options */
+            options: components["schemas"]["RFDeepOption"][];
+            /**
+             * Status
+             * @default pending
+             * @enum {string}
+             */
+            status: "pending" | "applied" | "asked";
+            /**
+             * Tag
+             * @description 어디(최종 제안대상 · 마케팅 리드 · 요구 2 · 가중치)
+             */
+            tag: string;
+            target: components["schemas"]["RFDeepTarget"];
+            /** Text */
+            text: string;
+        };
+        /** RFDeepTarget */
+        RFDeepTarget: {
+            /** Keyman Id */
+            keyman_id: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "target" | "customer" | "title" | "req" | "weights" | "keyman";
+            /** Req Id */
+            req_id: string | null;
+        };
+        /** RFDoc */
+        RFDoc: {
+            /** Code */
+            code: string;
+            counts: components["schemas"]["RFCounts"];
+            /** Created At */
+            created_at: string;
+            /**
+             * Customer
+             * @default
+             */
+            customer: string;
+            /** Customer By */
+            customer_by: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
+            deep: components["schemas"]["RFDeep"] | null;
+            /**
+             * Fill Job
+             * @description 파일 첨부 잡(진행 중일 때)
+             */
+            fill_job: string | null;
+            /** Id */
+            id: string;
+            /** Keymen */
+            keymen: components["schemas"]["RFKeyman"][];
+            /**
+             * Note
+             * @description 제작자 의견 — 고객 문서 · Storyboard 에서 빠진다(internal)
+             * @default
+             */
+            note: string;
+            /** Saved At */
+            saved_at: string | null;
+            /**
+             * Sb Ids
+             * @description 이 요구사항이 연결된 Storyboard(처음 저장 때 자동 생성)
+             */
+            sb_ids: string[];
+            /** Sources */
+            sources: components["schemas"]["RFSource"][];
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /**
+             * Target
+             * @description 최종 제안대상
+             * @default
+             */
+            target: string;
+            /**
+             * Target Ask
+             * @description 최종 제안대상을 고객에게 확인으로 남김
+             * @default false
+             */
+            target_ask: boolean;
+            /** Target By */
+            target_by: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
+            /**
+             * Title
+             * @description 프로젝트명
+             * @default
+             */
+            title: string;
+            /** Title By */
+            title_by: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
+            /** Updated At */
+            updated_at: string;
+            /**
+             * Ver
+             * @description 저장(완료) 횟수 = stage ver
+             * @default 0
+             */
+            ver: number;
+            /** Version */
+            version: number;
+        };
+        /** RFFillIn */
+        RFFillIn: {
+            /** File Ids */
+            file_ids: string[];
+        };
+        /** RFFlowSync */
+        RFFlowSync: {
+            /** Md Added */
+            md_added: string;
+            /** Synced */
+            synced: string[];
+        };
+        /** RFKeyman */
+        RFKeyman: {
+            /** Id */
+            id: string;
+            /** Reqs */
+            reqs: components["schemas"]["RFReq"][];
+            /**
+             * Role
+             * @description 키맨 직함 · 역할(예: 자산관리팀장)
+             * @default
+             */
+            role: string;
+            /**
+             * Weight
+             * @default 0
+             */
+            weight: number;
+            /**
+             * Weight By
+             * @default manual
+             * @enum {string}
+             */
+            weight_by: "manual" | "file" | "ai-pending" | "ai-accepted";
+        };
+        /** RFKeymanIn */
+        RFKeymanIn: {
+            /** Id */
+            id?: string | null;
+            /** Reqs */
+            reqs?: components["schemas"]["RFReqIn"][];
+            /**
+             * Role
+             * @default
+             */
+            role: string;
+            /**
+             * Weight
+             * @default 0
+             */
+            weight: number;
+            /** Weight By */
+            weight_by?: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
+        };
+        /** RFList */
+        RFList: {
+            /** Items */
+            items: components["schemas"]["RFListItem"][];
+            /** Next Cursor */
+            next_cursor: string | null;
+        };
+        /** RFListItem */
+        RFListItem: {
+            /** Code */
+            code: string;
+            counts: components["schemas"]["RFCounts"];
+            /** Customer */
+            customer: string;
+            /** Id */
+            id: string;
+            /** Sb Ids */
+            sb_ids: string[];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /** Ver */
+            ver: number;
+        };
+        /** RFReq */
+        RFReq: {
+            /**
+             * By
+             * @default manual
+             * @enum {string}
+             */
+            by: "manual" | "file" | "ai-pending" | "ai-accepted";
+            /**
+             * Flag
+             * @description none · vague(범위 불명확) · ask(고객에게 확인)
+             * @default none
+             * @enum {string}
+             */
+            flag: "none" | "vague" | "ask";
+            /** Id */
+            id: string;
+            /**
+             * Status
+             * @description ok · check(확인 필요)
+             * @default ok
+             * @enum {string}
+             */
+            status: "ok" | "check";
+            /** Text */
+            text: string;
+        };
+        /** RFReqIn */
+        RFReqIn: {
+            /** By */
+            by?: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
+            /** Flag */
+            flag?: ("none" | "vague" | "ask") | null;
+            /** Id */
+            id?: string | null;
+            /** Status */
+            status?: ("ok" | "check") | null;
+            /**
+             * Text
+             * @default
+             */
+            text: string;
+        };
+        /** RFSource */
+        RFSource: {
+            /** File Id */
+            file_id: string;
+            /**
+             * Filled
+             * @default 0
+             */
+            filled: number;
+            /** Name */
+            name: string;
+            /** Pages */
+            pages: number | null;
+            /** Read At */
+            read_at: string;
+        };
+        /** RFStageOut */
+        RFStageOut: {
+            /**
+             * Created
+             * @description 이번 저장으로 Storyboard 가 새로 만들어졌는지
+             * @default false
+             */
+            created: boolean;
+            doc: components["schemas"]["RFDoc"];
+            /** @description 허브 반영 결과(허브가 안 되면 null) */
+            flow_sync: components["schemas"]["RFFlowSync"] | null;
+            /** Sb Id */
+            sb_id: string | null;
+            /** Sb Name */
+            sb_name: string | null;
+            /**
+             * Stage
+             * @description Storyboard flow.json 의 stages.rq(§6)
+             */
+            stage: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+        };
+        /** RFUpdate */
+        RFUpdate: {
+            /**
+             * Customer
+             * @default
+             */
+            customer: string;
+            /**
+             * Expected Version
+             * @description 다르면 409 VERSION_CONFLICT
+             */
+            expected_version?: number | null;
+            /**
+             * Keymen
+             * @description 없으면 그대로
+             */
+            keymen?: components["schemas"]["RFKeymanIn"][] | null;
+            /**
+             * Note
+             * @default
+             */
+            note: string;
+            /**
+             * Target
+             * @default
+             */
+            target: string;
+            /**
+             * Title
+             * @default
+             */
+            title: string;
         };
         /**
          * RqContext
@@ -4079,6 +4660,382 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["JobAccepted"];
+                };
+            };
+        };
+    };
+    list_rq_flows: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFList"];
+                };
+            };
+        };
+    };
+    create_rq_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["RFCreate"] | null;
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDoc"];
+                };
+            };
+        };
+    };
+    get_rq_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDoc"];
+                };
+            };
+        };
+    };
+    put_rq_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RFUpdate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDoc"];
+                };
+            };
+        };
+    };
+    fill_rq_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RFFillIn"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["JobAccepted"];
+                };
+            };
+        };
+    };
+    finish_rq_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFStageOut"];
+                };
+            };
+        };
+    };
+    deep_questions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDeepOut"];
+                };
+            };
+        };
+    };
+    close_questions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDoc"];
+                };
+            };
+        };
+    };
+    answer_question: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+                question_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RFAnswer"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDoc"];
                 };
             };
         };

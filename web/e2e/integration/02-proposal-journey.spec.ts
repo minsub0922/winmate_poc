@@ -220,7 +220,7 @@ test('SC5 「제안서에 넣기」(표준 → 솔루션 섹션 SXS) → SC0 「
   expect(sx.some((x) => x.role === 'SXS')).toBeTruthy();
   const sc = await until(() => api(request, 'scenario', 'GET', `/scenarios/${W.sc}`), (x: any) => x.in_proposal, 30_000, '시나리오 사용 등록');
   expect(sc.usages.some((u: any) => u.service === 'proposal' && u.ref === pid)).toBeTruthy();
-  await open(page, '/scenario');
+  await open(page, '/scenario/legacy');   // /scenario 는 새 흐름 목록 — 이전 시나리오 목록은 legacy
   await expect(page.locator('#wm-main')).toContainText(`[IT] 로비 방문객 동선 ${T}`);
   await shot(page, 'J2-sc0-usage');
 });

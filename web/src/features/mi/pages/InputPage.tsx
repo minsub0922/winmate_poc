@@ -1,4 +1,4 @@
-/** MI1 — 고객 요구사항 `/mi/new?rq=&sb=` · `/mi/:id/input` (§4.5) */
+/** MI1(이전 흐름) — 고객 요구사항 `/mi/legacy/new?rq=&sb=` · `/mi/:id/input` (§4.5) */
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
@@ -148,7 +148,7 @@ export function InputPage() {
 
   async function pickIndustry() {
     const id = ed.draft.customer_name.trim() || ed.draft.requirements_text.trim() || files.length ? await ed.flush() : aid ?? null;
-    nav(id ? `/mi/${id}/industry` : '/mi/new/industry');
+    nav(id ? `/mi/${id}/industry` : '/mi/legacy/new/industry');
   }
 
   const hasInput = !!(ed.draft.customer_name.trim() || ed.draft.requirements_text.trim() || files.length || cur?.requirements?.length);
@@ -228,7 +228,7 @@ export function InputPage() {
         {cur && (cur.requirements?.length ?? 0) > 0 && !(cur.requirements_text ?? '').trim() && (
           <div className="mi-note">정의서 요구 {cur.requirements.length}개를 기준으로 분석해요.</div>
         )}
-        {a.isError && routeId && <div className="mi-note" role="alert">작업을 불러오지 못했어요. <Link to="/mi">목록으로</Link></div>}
+        {a.isError && routeId && <div className="mi-note" role="alert">작업을 불러오지 못했어요. <Link to="/mi/legacy">목록으로</Link></div>}
       </Agent>
     </MiPage>
   );

@@ -43,7 +43,7 @@ export const RFP_TEXT = `A 커피 프랜차이즈 디지털 메뉴보드 도입 
 
 /** VP1 — 고객사를 적으면 작업이 생기고(`/vp/:id/materials`) RFP 를 붙인다 */
 export async function startDirect(page: Page, customer: string, opts: { rfp?: boolean; note?: string } = {}) {
-  await page.goto('/vp/new');
+  await page.goto('/vp/legacy/new');
   await expect(page.getByText('누구에게 어떤 가치를 말할지 정리할게요.', { exact: false })).toBeVisible();
   await page.getByLabel('고객사').fill(customer);
   await page.waitForURL(/\/vp\/vp_[^/]+\/materials$/, { timeout: 60_000 });

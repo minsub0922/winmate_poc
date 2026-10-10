@@ -273,7 +273,7 @@ export function MaterialsPage() {
           <div className="vp-cov">
             <div className="vp-cov__head">
               <span className="vp-card__title">재료 커버리지 <small style={{ color: 'var(--wm-text-muted)', fontWeight: 500, fontSize: 13 }}>· 연결한 자료 기준 · 4축</small></span>
-              <Link to="/vp/rules" state={{ back: id ? `/vp/${id}/materials` : '/vp/new' }} style={{ fontSize: 12, fontWeight: 600 }}>무엇을 보고 판단하나</Link>
+              <Link to="/vp/rules" state={{ back: id ? `/vp/${id}/materials` : '/vp/legacy/new' }} style={{ fontSize: 12, fontWeight: 600 }}>무엇을 보고 판단하나</Link>
             </div>
             {cov.map((a) => (
               <div key={a.axis} className="vp-cov__row">

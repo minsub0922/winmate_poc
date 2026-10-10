@@ -11,7 +11,7 @@ test('SC0 목록 · 행 상태 · 보내기 아이콘', async ({ page, request }
   test.setTimeout(90_000);
   const done = await makeScenario(request, { title: 'A 커피 매장 하루 시나리오' });
   const draft = await makeScenario(request, { until: 'picked', title: 'B 병원 외래 동선 시나리오' });
-  await page.goto('/scenario');
+  await page.goto('/scenario/legacy');
   const rowDone = page.locator(`[data-testid="sc0-row"][data-id="${done}"]`);
   const rowDraft = page.locator(`[data-testid="sc0-row"][data-id="${draft}"]`);
   await expect(rowDone).toBeVisible();

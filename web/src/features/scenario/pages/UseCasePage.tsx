@@ -18,8 +18,8 @@ const LANES: Lane[] = [
   { no: '01', title: '들어오는 길', sub: '어디서 시나리오를 시작하나', cards: [
     { code: 'HOME', kind: 'other', title: '홈 · 공간 시나리오 생성', desc: '홈 화면 기능 버튼으로 바로 시작', next: 'SC1', to: () => '/' },
     { code: 'SC0', kind: 'extra', title: '시나리오 작업 목록', desc: '최근 작업 · 상태 · 검색 · 이어서 작성', next: 'SC1 · SC1T · SC1B · SC4', to: () => route.list() },
-    { code: 'SC1T', kind: 'extra', title: '업종 템플릿에서 시작', desc: '16개 업종 · 대표 공간 · 장면 프리셋', next: 'SC2E', to: () => '/scenario/new/template' },
-    { code: 'SC1B', kind: 'extra', title: '조감도에서 이어 만들기', desc: '조감도 존 · 배치 제품을 공간으로', next: 'SC2E', to: () => '/scenario/new/birdseye' },
+    { code: 'SC1T', kind: 'extra', title: '업종 템플릿에서 시작', desc: '16개 업종 · 대표 공간 · 장면 프리셋', next: 'SC2E', to: () => route.template() },
+    { code: 'SC1B', kind: 'extra', title: '조감도에서 이어 만들기', desc: '조감도 존 · 배치 제품을 공간으로', next: 'SC2E', to: () => route.fromBirdseye() },
     { code: 'BE6', kind: 'other', title: '조감도 결과에서 보내기', desc: '공간 조감도 → 시나리오로 보내기', next: 'SC1B', to: () => '/birdseye' },
   ] },
   { no: '02', title: '입력 방식', sub: '무엇을 어떻게 넣나', cards: [

@@ -4,8 +4,8 @@
 
 - 포트: **5104** · 게이트웨이 경로: `/api/competitor/v1/...` · 파이썬 모듈: `winmate_competitor`
 - 고칠 수 있는 경로(owns): `services/competitor/**`, `web/src/features/competitor/**`
-- 호출할 수 있는 서비스(consumes): `ai-tools`, `kb`, `files`, `jobs`, `workspace`, `export`, `requirements`
-- 화면 수용 기준: `docs/scenarios/04-competitor.md` · 원본 보드: `docs/screens/` (INDEX.md)
+- 호출할 수 있는 서비스(consumes): `ai-tools`, `kb`, `files`, `jobs`, `workspace`, `export`, `requirements`, `storyboard`(새 흐름 `get_flow` · `push_stage`), `mi`
+- 화면 수용 기준: 새 흐름 `docs/scenarios/11-content-flow.md`(보드 `docs/screens/webapp1/CA*.dc.html`) · 이전 흐름 `docs/scenarios/04-competitor.md` · 원본 보드: `docs/screens/` (INDEX.md)
 
 ## 먼저 읽을 것
 1. 저장소 루트 `AGENTS.md`(전체 규칙) · `docs/ARCHITECTURE.md`(규약)
@@ -29,18 +29,28 @@ make contracts SERVICE=competitor    # contracts/competitor.json 갱신 + 깨지
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
 ## 현재 상태
-- 04-competitor.md 화면 · 흐름 · 수용 기준 AC-CA-01~55 구현(백엔드 · LangGraph · 웹 · 시험). 계약 `contracts/competitor.json`(30 경로).
+- **새 흐름(2026-10-08 · 보드 webapp1 CA0 · CA1 · CA2 · CA2_Info · CA2_Pc · CA2_AI · CA_Done · CA_DoneJson · docs/scenarios/11-content-flow.md §6 `ca`)**
+  - 백엔드 `caflow.py` · `api_flow.py` — `/v1/ca-flows*`(스키마 접두어 `CF*`): 만들기(Storyboard DSS → 비교 기준 제품군 · 개수, 없으면 404 · DSS 전 422) ·
+    경쟁사 직접 추가(웹 검색 요약 위키, 근거 없는 값 `[위키 값]` · `[확인 필요]`) · 비교 쌍(DSS 제품만, 5축 우위/비슷/열위/자료 없음 + 메모) ·
+    AI 경쟁사 후보군 웹 탐색(`ca.flow_candidates_web.v1` → `ca.flow_candidates.v1`, 요약에 이름 · 근거 구절이 있는 후보만 점선 `ai-pending` → 수락 `ai-web`) ·
+    저장 `:finish` → `push_stage(ca)` · 요약 md(주장은 낱말 경계에서 … 로 줄임) · 팝업 카드. 시험 `tests/test_ca_flow.py`(5).
+  - 웹 `web/src/features/competitor/flow/`(`CaFlowPages.tsx` · `Editor.tsx` · `edit.tsx` · `caflow.css` 접두어 `caf-` · `api.ts`):
+    `/competitor`(CA0 List) · `/competitor/new`(CA1 Gate · `?sb=&auto=1`, 이전 `?input=requirements` 는 이전 넣기 화면으로) · `/competitor/flow/:id`(CA2 · `?tab=info|pc` → CA_Done).
+    목록 290 | 상세 1fr · 비교 첫 칸 200 · 보드 px 그대로. 보드에 없는 편집은 글을 눌러서 고치고(판정 알약 = 고르기 메뉴), 더하기는 상자 오른쪽 위 · 빼기는 목록 줄에 올렸을 때 ×.
+  - 이전 흐름 목록 · 새로 만들기는 `/competitor/legacy` · `/competitor/legacy/new`(나머지 `/competitor/:id/...` 그대로 — 제안서 handoff).
+  - e2e `web/e2e/competitor/ca-flow.spec.ts`(2 — 폭 290 · 1180 · 796 · 200 숫자 검사, 화면 `__screens__/CA*-new.png`). 개발 서버 파일 감시가 안 되는 환경이면 Vite(5204)를 다시 띄운다.
+- 04-competitor.md 화면 · 흐름 · 수용 기준 AC-CA-01~55 구현(백엔드 · LangGraph · 웹 · 시험). 계약 `contracts/competitor.json`(이전 30 + 새 흐름 9 = 39 경로).
 - **코드 지도**(`src/winmate_competitor/`)
   - `api.py`(넣기 · 작업 · 찾기 · 후보 · 기준 · 실행 · 셸 추가) · `api_results.py`(결과 · 상세 · 근거 · 넘김 · 묶음 · ProposalHandoff · 내보내기 · 재확인)
   - `graphs/find.py`(ca.find: 칸 읽기 → 묻기 1 interrupt → 빈 칸 → 후보 → 개체 합치기 → 신뢰 → 고르기 → 기준 → 제목) · `graphs/analyze.py`(ca.analyze: 동시 2곳 ·
     사실 5 · 판정 · 강점 · 중지 저장 · 30일 예약) · `graphs/misc.py`(research · candidate_add · recheck · export · source_add)
   - 규칙 `rules.py`(신뢰 Σw·s/Σw · 배지 · 상한 · 글자 · 묻기 · 기준 6) · `verify.py`(인용 대조 · `[00]` 지우기 · 실명 새기 검사) · `reading.py`(네 칸)
   - `evidence.py` · `judging.py` · `results.py` · `bundle.py`(익명 묶음 · 리포트) · `store.py`(DocStore + 낙관적 잠금) · 설정 `config/routing.yaml` · `config/segments.yaml`
-- **웹** `web/src/features/competitor/`: CA0 목록 · CA1/CA1R 넣기 · CA1G · CA2Q · CA2 · CA3 · CA3C · CA4(한눈에 · 비교표 · 삼성 강점) · CA4D(+근거 패널) · CA5.
+- **웹(이전 흐름 — 목록 · 넣기는 `/competitor/legacy`)** `web/src/features/competitor/`: CA0 목록 · CA1/CA1R 넣기 · CA1G · CA2Q · CA2 · CA3 · CA3C · CA4(한눈에 · 비교표 · 삼성 강점) · CA4D(+근거 패널) · CA5.
 - **mock 데모**: `mocks/ai-tools/ca.*.json` 은 `scripts/gen_mocks.py` 로 만든다(인용 구절이 요약 안에 있는지 검사). A 커피 글 → 후보 6(추천 4) → 결과 4곳.
   `매장 메뉴보드 사이니지` → 묻기 1(업종 두 갈래), `카페 메뉴보드 사이니지` → `업종 기준`. 개발 스택은 수집(fetch)이 꺼져 있어 경쟁사 사실은 `확인 필요`(요약뿐)로 나온다.
-- **시험**: `make test SERVICE=competitor`(pytest 95 — AC 별 파일 test_parse/find/candidates/criteria/analyze/handoff/list_recheck + mock 데모 + requirements · mi 실제 통합),
-  `make e2e-feature SERVICE=competitor`(Playwright 14, 화면 `web/e2e/competitor/__screens__/`). 다른 기능 폴더의 없는 import 로 개발 서버가 깨질 때는
+- **시험**: `make test SERVICE=competitor`(pytest 100 — 새 흐름 test_ca_flow 5 + AC 별 파일 test_parse/find/candidates/criteria/analyze/handoff/list_recheck + mock 데모 + requirements · mi 실제 통합),
+  `make e2e-feature SERVICE=competitor`(Playwright 16 — 새 흐름 ca-flow 2 + 이전 14, 화면 `web/e2e/competitor/__screens__/`). 다른 기능 폴더의 없는 import 로 개발 서버가 깨질 때는
   `web/e2e/competitor/vite.e2e.config.ts` 로 5204 를 먼저 띄우면 e2e 가 그 서버를 쓴다. 공유 머신이 바쁘면 첫 요청만으로 수십 초가 걸려
   준비 시간은 파일 머리 `describe.configure({ timeout: SETUP_MS })`, 본문은 `budget(ms)`(그 위에 더하기)로 잡고, 게이트웨이 일시 500(RemoteProtocolError)은 GET 만 다시 묻는다.
 - **결정 · 명세와 다른 점**

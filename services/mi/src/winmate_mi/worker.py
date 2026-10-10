@@ -1,13 +1,13 @@
 """mi 워커 — Redis 큐(wm:q:mi) 소비. `python -m winmate_mi.worker`.
 
 잡 종류(§7.1): mi.design · mi.analyze · mi.revise · mi.fixscan · mi.layout · mi.source_add · mi.competitor_add · mi.onepager · mi.export ·
-mi.recheck · mi.import_ca · mi.facts_research. 모두 LangGraph(winmate_common.graph.run_graph) 로 돈다.
+mi.recheck · mi.import_ca · mi.facts_research · (새 흐름) mi.flow_analyze · mi.flow_search. 모두 LangGraph(winmate_common.graph.run_graph) 로 돈다.
 """
 from __future__ import annotations
 
 from winmate_common.jobs import JobContext, run_worker
 
-from .graphs import analyze, design, misc, revise
+from .graphs import analyze, design, flow, misc, revise
 
 
 async def _noop(ctx: JobContext) -> dict:
@@ -29,6 +29,9 @@ HANDLERS = {
     "mi.recheck": misc.handle_recheck,
     "mi.import_ca": misc.handle_import_ca,
     "mi.facts_research": misc.handle_facts_research,
+    # 새 MI 흐름(웹앱 ① v58): Storyboard 분석 → 웹 검색
+    "mi.flow_analyze": flow.handle_analyze,
+    "mi.flow_search": flow.handle_search,
 }
 
 

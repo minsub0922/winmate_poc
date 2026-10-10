@@ -106,7 +106,7 @@ export function ListPage() {
           <h1>경쟁사 분석 작업</h1>
           <p>{data?.header || '분석 0건 · 업데이트 필요 0건 · 경쟁사는 실명 없이 A · B · C 로 표기해요'}</p>
         </div>
-        <Link to="/competitor/new" className="ca-new"><Icon name="plus" size={15} strokeWidth={2.4} /><span>새 분석</span></Link>
+        <Link to="/competitor/legacy/new" className="ca-new"><Icon name="plus" size={15} strokeWidth={2.4} /><span>새 분석</span></Link>
       </div>
 
       <div className="ca-tools">
@@ -165,7 +165,7 @@ export function ListPage() {
         <b>다른 곳에서 시작</b>
         <small>고객사 · 업종 · 장소 · 제품을 그 작업에서 가져와요</small>
         <span className="ca-starts__sep" />
-        <Link to="/competitor/new?input=requirements" className="ca-start">고객 요구사항 정의서에서<b>{defCount}</b></Link>
+        <Link to="/competitor/legacy/new?input=requirements" className="ca-start">고객 요구사항 정의서에서<b>{defCount}</b></Link>
         <button type="button" className="ca-start" onClick={() => setPickMi(true)}>MI 작업의 경쟁사에서<b>{miCount}</b></button>
       </div>
       <div className="ca-lnote">

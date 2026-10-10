@@ -11,7 +11,7 @@ test('기본 흐름 — 재료 → 가치 구조 → 결과 → 다듬기 → �
   test.setTimeout(300_000);
 
   // VP0 — 작업 목록
-  await page.goto('/vp');
+  await page.goto('/vp/legacy');
   await expect(page.getByRole('heading', { name: 'Value Proposition 작업' })).toBeVisible();
   for (const t of ['직접 입력으로', 'Storyboard에서', 'MI 결과에서', '이전 가치 제안 복제']) await expect(page.getByRole('button', { name: new RegExp(t) })).toBeVisible();
   await expect(page.getByText('Value Props 업종 레이아웃 16종은 제작 중이에요.')).toBeVisible();
@@ -97,7 +97,7 @@ test('기본 흐름 — 재료 → 가치 구조 → 결과 → 다듬기 → �
   if (pid) await page.request.delete(`/api/proposal/v1/proposals/${pid}`).catch(() => undefined);
 
   // 목록에 돌아오면 생성이 끝난 작업으로 보인다(빈 수치가 남았으면 '수치 선택 n' · 답하기 → VP3N)
-  await page.goto('/vp');
+  await page.goto('/vp/legacy');
   const row = page.getByTestId('vp-row').filter({ hasText: customer });
   await expect(row).toHaveCount(1);
   await expect(row).toHaveAttribute('data-status', /done|check|ask/);

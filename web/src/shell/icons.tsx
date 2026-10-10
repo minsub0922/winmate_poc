@@ -4,6 +4,7 @@ import type { FeatureCode } from './types';
 export const FEATURE_ICON: Record<FeatureCode, string> = {
   RQ: 'M9 4h6v3H9z M7 5.5H5V21h14V5.5h-2 M8.5 12h7 M8.5 16h5',
   SB: 'M4 5h16v14H4z M4 11h16 M10 11v8',
+  DS: 'M3 21h18 M5 21V9l7-5 7 5v12 M9 21v-6h6v6',
   IMG: 'M4 5h16v14H4z M9 10.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z M20 15l-5-5-8 8',
   BE: 'M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z M12 12l8-4.5 M12 12v9 M12 12L4 7.5',
   SC: 'M4 6h16v12H4z M10 9l5 3-5 3V9z',

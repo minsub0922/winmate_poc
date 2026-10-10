@@ -4475,6 +4475,498 @@
           }
         }
       }
+    },
+    "/v1/spec-flows": {
+      "get": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "List Spec Flows",
+        "description": "새 흐름 Spec 시트 목록(보드 SP0 의 작성 중 초안).",
+        "operationId": "list_spec_flows",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Create Spec Flow",
+        "description": "Storyboard(DSS 까지 된 것)의 DSS 제품으로 시트를 만든다 — 행마다 KB 모델을 맞추고 카탈로그 값을 채운다.\nStoryboard 가 없으면 404 `STORYBOARD_NOT_FOUND`, DSS 가 없으면 422 `PREREQUISITE_MISSING`.",
+        "operationId": "create_spec_flow",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SFCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spec-flows/{flow_id}": {
+      "get": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Get Spec Flow",
+        "operationId": "get_spec_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Patch Spec Flow",
+        "description": "형식(비교표 · 제품별 1장) · 항목 칩 · 표기(한국어 · mm / 영문 · inch) · 제목. expected_version 이 다르면 409.",
+        "operationId": "patch_spec_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SFPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spec-flows/{flow_id}/rows/{row_key}": {
+      "patch": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Patch Spec Flow Row",
+        "description": "행 넣기 · 빼기 · 수량 · 다른 모델 고르기(카탈로그에 없는 모델이면 422 `MODEL_NOT_IN_CATALOG`) · 모델 비우기.",
+        "operationId": "patch_spec_flow_row",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "row_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SFRowPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spec-flows/{flow_id}/rows/{row_key}/models": {
+      "get": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Spec Flow Row Models",
+        "description": "이 행에 고를 수 있는 모델 — q 가 없으면 같은 제품군 모델, 있으면 카탈로그 검색.",
+        "operationId": "spec_flow_row_models",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "row_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Key"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 80
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFModelOptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spec-flows/{flow_id}:finish": {
+      "post": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Finish Spec Flow",
+        "description": "저장(시트 만들기) → Storyboard flow.json stages.sp · 요약본 · 팝업 카드. 넣은 제품이 없으면 422 `NO_MODELS`, 항목이 없으면 422 `NO_COLUMNS`.",
+        "operationId": "finish_spec_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/spec-flows/{flow_id}/stage": {
+      "get": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Spec Flow Stage",
+        "description": "지금 값으로 만든 stages.sp(저장하지 않음).",
+        "operationId": "spec_flow_stage",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9929,6 +10421,809 @@
         ],
         "title": "RowLine",
         "description": "시트 언어로 그린 줄(영문 · 한/영에서 `화면 크기 · 해상도` · `밝기 · 명암비` 는 두 줄)."
+      },
+      "SFColumn": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "on": {
+            "type": "boolean",
+            "title": "On"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "on"
+        ],
+        "title": "SFColumn"
+      },
+      "SFCounts": {
+        "properties": {
+          "models": {
+            "type": "integer",
+            "title": "Models",
+            "description": "시트에 넣은 행"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "전체 행(DSS 제품)"
+          },
+          "columns": {
+            "type": "integer",
+            "title": "Columns"
+          },
+          "pending_cells": {
+            "type": "integer",
+            "title": "Pending Cells"
+          },
+          "warnings": {
+            "type": "integer",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "models",
+          "total",
+          "columns",
+          "pending_cells",
+          "warnings"
+        ],
+        "title": "SFCounts"
+      },
+      "SFCreate": {
+        "properties": {
+          "sb_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Sb Id",
+            "description": "사전 작업 Storyboard(DSS 까지 된 것)"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sb_id"
+        ],
+        "title": "SFCreate"
+      },
+      "SFDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "화면 · flow.json 짧은 번호(SP-01 …)"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "dss_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ref",
+            "description": "가져온 DSS 참조(DSS-01 …)"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "compare",
+              "per_product"
+            ],
+            "title": "Format",
+            "default": "compare"
+          },
+          "notation": {
+            "type": "string",
+            "enum": [
+              "ko_mm",
+              "en_inch"
+            ],
+            "title": "Notation",
+            "default": "ko_mm"
+          },
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Items",
+            "description": "고른 항목 key(보드 순서)"
+          },
+          "columns": {
+            "items": {
+              "$ref": "#/components/schemas/SFColumn"
+            },
+            "type": "array",
+            "title": "Columns",
+            "description": "항목 칩 전체(이름은 현재 표기 언어)"
+          },
+          "rows": {
+            "items": {
+              "$ref": "#/components/schemas/SFRow"
+            },
+            "type": "array",
+            "title": "Rows"
+          },
+          "catalog_version": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Catalog Version"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver",
+            "description": "저장(완료) 판 — flow.json stages.sp.ver"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/SFCounts"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "counts",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "SFDoc"
+      },
+      "SFFile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "SP-01_v1.xlsx"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "내려받기 경로(files 서비스)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "url"
+        ],
+        "title": "SFFile"
+      },
+      "SFFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added",
+            "description": "Storyboard 요약본에 더해진 부분"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced",
+            "description": "같은 Spec 시트가 연결돼 함께 바뀐 다른 Storyboard"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added"
+        ],
+        "title": "SFFlowSync"
+      },
+      "SFList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SFListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "SFList"
+      },
+      "SFListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/SFCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "counts",
+          "updated_at"
+        ],
+        "title": "SFListItem"
+      },
+      "SFModelOption": {
+        "properties": {
+          "model_code": {
+            "type": "string",
+            "title": "Model Code"
+          },
+          "display_name": {
+            "type": "string",
+            "title": "Display Name"
+          },
+          "family_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Name"
+          },
+          "size_inch": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size Inch"
+          },
+          "current": {
+            "type": "boolean",
+            "title": "Current",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "model_code",
+          "display_name"
+        ],
+        "title": "SFModelOption"
+      },
+      "SFModelOptions": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SFModelOption"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "basis": {
+            "type": "string",
+            "title": "Basis",
+            "description": "family = 같은 제품군 모델 · search = 카탈로그 검색"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "basis"
+        ],
+        "title": "SFModelOptions"
+      },
+      "SFPatch": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "format": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "compare",
+                  "per_product"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Format"
+          },
+          "notation": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ko_mm",
+                  "en_inch"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notation"
+          },
+          "items": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Items",
+            "description": "고를 항목 key(순서는 보드 순서로 맞춘다)"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "다르면 409"
+          }
+        },
+        "type": "object",
+        "title": "SFPatch"
+      },
+      "SFRow": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "시트 안에서 행을 가리키는 키(DSS 제품 이름에서 만든 slug)"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "DSS 제품 이름(보드 제품 줄 제목)"
+          },
+          "spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces",
+            "description": "이 제품이 놓인 DSS 공간들"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty",
+            "description": "수량(DSS 공간별 개수의 합, 사람이 고칠 수 있음) — 개수를 알 수 없으면 null(= [확인 필요])"
+          },
+          "qty_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty Note",
+            "description": "DSS 수량 원문(공간별, 예: 로비 2대 · 라운지 [확인 필요])"
+          },
+          "on": {
+            "type": "boolean",
+            "title": "On",
+            "description": "시트에 넣는다(보드 체크박스)",
+            "default": true
+          },
+          "dss_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ref",
+            "description": "DSS 제품 참조(kb:model:… · kb:family:…)"
+          },
+          "model_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Code",
+            "description": "맞춘 KB 모델코드 — 없으면 카탈로그에서 찾지 못함"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name",
+            "description": "KB 모델 표시명(QM55C …)"
+          },
+          "family_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Id"
+          },
+          "family_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Name"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url",
+            "description": "값 출처(공식 카탈로그 페이지)"
+          },
+          "match": {
+            "type": "string",
+            "enum": [
+              "ref",
+              "code",
+              "family",
+              "manual",
+              "none"
+            ],
+            "title": "Match",
+            "description": "모델을 맞춘 방법: ref · code(이름 속 모델명) · family(제품군 대표 모델) · manual(사람이 고름) · none",
+            "default": "none"
+          },
+          "by": {
+            "type": "string",
+            "title": "By",
+            "description": "출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual",
+            "default": "manual"
+          },
+          "cells": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object",
+            "title": "Cells",
+            "description": "항목 key → 표시 글(현재 표기 기준, 없는 값은 [확인 필요])"
+          },
+          "pending": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Pending",
+            "description": "값을 다 채우지 못한 항목 key"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/SFWarning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "name"
+        ],
+        "title": "SFRow"
+      },
+      "SFRowPatch": {
+        "properties": {
+          "on": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "On"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 9999.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty"
+          },
+          "model_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Code",
+            "description": "이 모델로 바꾼다(KB 모델코드 · 표시명)"
+          },
+          "clear_model": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Clear Model",
+            "description": "모델을 비운다(카탈로그 밖 제품)"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "title": "SFRowPatch"
+      },
+      "SFStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.sp"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SFFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "허브에 반영된 결과(허브가 안 되면 null)"
+          },
+          "file": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SFFile"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "저장 때 만든 XLSX(보드 Done 「XLSX로 내보낼 수 있어요」) — 못 만들었으면 null"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md"
+        ],
+        "title": "SFStageOut"
+      },
+      "SFWarning": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "not_in_catalog",
+              "discontinued",
+              "sold_out",
+              "mismatch",
+              "family_default"
+            ],
+            "title": "Kind"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "text"
+        ],
+        "title": "SFWarning"
       },
       "ServiceInfo": {
         "properties": {

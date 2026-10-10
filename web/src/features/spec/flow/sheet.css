@@ -1,0 +1,109 @@
+/* Spec 시트 · 시트 작성(보드 webapp1 SP2) · 완료(Done content=sp) · 모델 고르기(ProdPicker 모양) — 보드 인라인 스타일 px 그대로. 색은 토큰만. 접두어 sf- */
+
+/* 그리드: 제품 330 | 나머지(보드 grid-template-columns: 330px minmax(0, 1fr) · gap 14) */
+.sf-grid2 { grid-template-columns: 330px minmax(0, 1fr); }
+
+/* 왼쪽 제품(보드: 흰 패널 r14 · 머리 40 · 줄 44) */
+.sf-lhead { height: 40px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 0 14px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.sf-lhead__t { font-size: 13.5px; font-weight: 700; flex-grow: 1; }
+.sf-lhead__n { font-size: 12px; color: var(--wm-text-muted); }
+.sf-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.sf-row { display: flex; align-items: center; gap: 8px; min-height: 44px; box-sizing: border-box; padding: 0 14px 0 0; border-top: 1px solid var(--wm-bg); flex-shrink: 0; }
+.sf-row:hover { background: var(--wm-brand-hero); }
+.sf-row__check { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; min-height: 43px; padding: 0 0 0 14px; border: none; background: transparent;
+  text-align: left; color: var(--wm-text); font: inherit; cursor: pointer; }
+.sf-row__check:focus-visible, .sf-chip:focus-visible, .sf-model:focus-visible, .sf-dlg__opt:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.sf-box { width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 5px; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--wm-brand-line); }
+.sf-box--on { background: var(--wm-brand); border: none; }
+.sf-row__txt { display: flex; flex-direction: column; min-width: 0; flex-grow: 1; }
+.sf-row__t { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-row__sp { font-size: 11.5px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-row__warn { font-style: normal; color: var(--wm-amber); font-weight: 600; }
+/* 모델 칩(보드에 없음): h24 r6 11.5/600 — 모델 없음은 점선 주황 */
+.sf-model { height: 24px; max-width: 104px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid var(--wm-line); background: var(--wm-surface);
+  color: var(--wm-text-2); font: inherit; font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; cursor: pointer; }
+.sf-model:hover { border-color: var(--wm-brand-line); color: var(--wm-brand); }
+.sf-model--warn { border-color: var(--wm-amber-line); color: var(--wm-amber); }
+.sf-model--none { border-style: dashed; border-color: var(--wm-amber-line); color: var(--wm-amber); background: var(--wm-amber-bg); }
+
+/* 오른쪽: 형식 · 항목 · 표기(보드: 패딩 4 16 · 줄 46 · 이름 64 · 칩 30) + 미리보기 */
+.sf-right { display: flex; flex-direction: column; gap: 12px; min-height: 0; min-width: 0; }
+.sf-opts { box-sizing: border-box; flex-shrink: 0; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; padding: 4px 16px; }
+.sf-opt { display: flex; align-items: center; gap: 14px; min-height: 46px; }
+.sf-opt--line { border-top: 1px solid var(--wm-line-soft); }
+.sf-opt__k { width: 64px; flex-shrink: 0; font-size: 13px; font-weight: 600; color: var(--wm-text-2); }
+.sf-opt__vs { display: flex; gap: 6px; flex-wrap: wrap; padding: 6px 0; }
+.sf-chip { height: 30px; box-sizing: border-box; padding: 0 11px; border-radius: 999px; font: inherit; font-size: 12.5px; white-space: nowrap; cursor: pointer;
+  border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text-2); font-weight: 500; }
+.sf-chip:hover { border-color: var(--wm-brand-line); }
+.sf-chip--on, .sf-chip--on:hover { border: 1px solid var(--wm-brand); background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 700; }
+
+.sf-preview { box-sizing: border-box; flex-grow: 1; min-height: 0; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; overflow: hidden;
+  display: flex; flex-direction: column; }
+.sf-preview__h { height: 38px; box-sizing: border-box; display: flex; align-items: center; padding: 0 14px; border-bottom: 1px solid var(--wm-line-soft); font-size: 12.5px; font-weight: 700; flex-shrink: 0; }
+.sf-scroll { flex: 1; min-height: 0; overflow: auto; }
+.sf-grid { display: grid; font-size: 12px; }
+/* 칸(보드: min-height 36 · 패딩 8 10 · 위 선 #f0f2f5 · 한 줄 말줄임) */
+.sf-cell { box-sizing: border-box; min-height: 36px; padding: 8px 10px; border-top: 1px solid var(--wm-line-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  color: var(--wm-text); min-width: 0; background: var(--wm-surface); }
+.sf-cell--head { font-weight: 700; border-top: none; background: var(--wm-surface-2); position: sticky; top: 0; z-index: 1; }
+.sf-cell--label { font-weight: 600; color: var(--wm-text-2); position: sticky; left: 0; z-index: 1; }
+.sf-cell--head.sf-cell--label { color: var(--wm-text-muted); background: var(--wm-surface-2); z-index: 2; }
+.sf-cell--pend { color: var(--wm-text-subtle); }
+
+/* 제품별 1장(보드에 없음 — 형식 칩 「제품별 1장」의 미리보기: 제품마다 130 + 값) */
+.sf-sheets { flex: 1; min-height: 0; overflow-y: auto; padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+.sf-one { border: 1px solid var(--wm-line); border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.sf-one__head { display: flex; align-items: baseline; gap: 8px; padding: 9px 10px; background: var(--wm-surface-2); border-bottom: 1px solid var(--wm-line-soft); min-width: 0; }
+.sf-one__head b { font-size: 13px; white-space: nowrap; }
+.sf-one__head span { font-size: 11.5px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sf-one .sf-grid > [role='row']:first-child > .sf-cell { border-top: none; }
+.sf-one .sf-cell--label { position: static; }
+
+.sf-empty { padding: 24px 16px; font-size: 13px; color: var(--wm-text-muted); text-align: center; }
+
+/* 완료(보드 Done): 설명 줄의 XLSX 받기 · 후속 작업 없음(점선 14 · 13 · 「Storyboard로」 13/700) */
+.sf-dl { color: var(--wm-brand); font-weight: 600; }
+.sf-dl:hover { color: var(--wm-brand-hover); text-decoration: underline; }
+.sf-nofollow { box-sizing: border-box; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--wm-brand-line); background: var(--wm-surface); display: flex;
+  align-items: center; gap: 12px; font-size: 13px; color: var(--wm-text-muted); }
+.sf-nofollow > span { flex-grow: 1; }
+.sf-nofollow > a { font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--wm-brand); }
+.sf-nofollow > a:hover { color: var(--wm-brand-hover); }
+
+/* 모델 고르기(보드 ProdPicker 760×640: 머리 18/700 · 12.5 · 묶음 12/700 · 2열 줄 52 r10 · 점선 찾기 38 · 발 완료 40) */
+.sf-dlg__head { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; min-width: 0; }
+.sf-dlg__t { font-size: 18px; font-weight: 700; }
+.sf-dlg__s { font-size: 12.5px; color: var(--wm-text-muted); font-weight: 400; line-height: 1.5; }
+.sf-dlg__warns { padding: 8px 12px; border-radius: 10px; background: var(--wm-amber-bg); border: 1px solid var(--wm-amber-line); color: var(--wm-amber);
+  font-size: 12px; line-height: 1.5; display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.sf-dlg__warns b { margin-right: 6px; }
+.sf-dlg__group { font-size: 12px; font-weight: 700; color: var(--wm-text-muted); margin-top: 2px; flex-shrink: 0; }
+.sf-dlg__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; flex-shrink: 0; }
+.sf-dlg__opt { display: flex; align-items: center; gap: 10px; box-sizing: border-box; height: 52px; padding: 0 12px; border-radius: 10px; text-align: left; color: var(--wm-text);
+  background: var(--wm-surface); border: 1px solid var(--wm-line); min-width: 0; font: inherit; cursor: pointer; }
+.sf-dlg__opt:hover { background: var(--wm-brand-hero); }
+.sf-dlg__opt:disabled { cursor: default; }
+.sf-dlg__opt--on { border: 1.5px solid var(--wm-brand); }
+.sf-dlg__box { width: 20px; height: 20px; flex-shrink: 0; box-sizing: border-box; border-radius: 999px; display: flex; align-items: center; justify-content: center; border: 2px solid var(--wm-brand-line); }
+.sf-dlg__box--on { background: var(--wm-brand); border: none; }
+.sf-dlg__txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.sf-dlg__name { font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-dlg__where { font-size: 11.5px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-dlg__tag { height: 20px; padding: 0 7px; border-radius: 5px; background: var(--wm-brand-50); color: var(--wm-brand); font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0; }
+.sf-dlg__empty { padding: 18px 12px; border-radius: 10px; background: var(--wm-surface-2); font-size: 13px; color: var(--wm-text-muted); text-align: center; flex-shrink: 0; }
+.sf-dlg__search { flex-shrink: 0; height: 38px; box-sizing: border-box; border: 1px dashed var(--wm-line-dashed); border-radius: 10px; padding: 0 12px; font: inherit; font-size: 13px;
+  color: var(--wm-text); outline: none; background: var(--wm-surface); }
+.sf-dlg__search:focus { border-style: solid; border-color: var(--wm-brand); }
+.sf-dlg__search::placeholder { color: var(--wm-placeholder); }
+.sf-dlg__clear { align-self: flex-start; height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: var(--wm-text-muted); font: inherit;
+  font-size: 12.5px; font-weight: 600; flex-shrink: 0; cursor: pointer; }
+.sf-dlg__clear:hover { color: var(--wm-text); background: var(--wm-surface-2); }
+.sf-dlg__foot { display: flex; align-items: center; gap: 10px; width: 100%; }
+.sf-dlg__qty { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--wm-text-2); flex-shrink: 0; }
+.sf-dlg__qty input { width: 84px; height: 36px; box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 10px; padding: 0 10px; font: inherit; font-size: 13px; color: var(--wm-text); }
+.sf-dlg__qty input::placeholder { color: var(--wm-amber); }
+.sf-dlg__qty input:focus { outline: none; border-color: var(--wm-brand); }
+.sf-dlg__note { flex: 1; min-width: 0; font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sf-dlg__done { font-size: 13.5px; font-weight: 700; padding: 0 20px; }

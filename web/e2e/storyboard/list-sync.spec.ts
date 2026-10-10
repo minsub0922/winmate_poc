@@ -23,7 +23,7 @@ test('SB0 목록 — 탭 숫자 · 단계 알약 · 이어서 · 보기 · 열�
   const r = await request.post(`/api/storyboard/v1/storyboards/${writing.id}/outline`, { data: {} });
   expect(r.status()).toBe(202);
 
-  await page.goto('/storyboard');
+  await page.goto('/storyboard/legacy');   // /storyboard 는 새 흐름 SB0(허브 목록)
   await expect(page.getByRole('heading', { name: '전략 수립 Storyboard' })).toBeVisible();
   const tabs = page.getByRole('tablist', { name: '상태' });
   await expect(tabs.getByRole('tab', { name: /^전체\s*\d+$/ })).toBeVisible();

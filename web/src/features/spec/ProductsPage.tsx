@@ -1,4 +1,4 @@
-/** SP1 — 제품 입력(`/spec/new` → `/spec/:id/products`, 06-spec §4.3) · SP1Product(셸 제품 탐색 팝오버, §4.4) */
+/** SP1 — 제품 입력(`/spec/legacy/new` → `/spec/:id/products`, 06-spec §4.3) · SP1Product(셸 제품 탐색 팝오버, §4.4) */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useOpenPopover } from '@/shell';
@@ -58,7 +58,7 @@ export default function ProductsPage() {
     }
   };
 
-  // `/spec/new?models=…&from=vp:vp_…` — 넘겨받은 제품으로 바로 작업 만들기
+  // `/spec/legacy/new?models=…&from=vp:vp_…`(`/spec/new?models=…` 가 이리로 넘긴다) — 넘겨받은 제품으로 바로 작업 만들기
   const linkDone = useRef(false);
   useEffect(() => {
     if (id || linkDone.current) return;

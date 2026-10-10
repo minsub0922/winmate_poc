@@ -1,5 +1,6 @@
 /**
  * 새 공간 시나리오 흐름(2026-10-08 보드 webapp1 SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done) — 공간 → 시나리오 → 장면.
+ * Storyboard 없이 공간 · 제품을 API 로 준 묶음(허브에 쓰지 않는다 — 허브 연동은 sc-flow.spec.ts).
  * 실제 스택(mock 모델 — 로비 AI 3안은 고정 응답). 칸 폭(196 · 236)이 보드와 같은지 함께 본다.
  */
 import { expect, test } from '@playwright/test';
@@ -9,9 +10,9 @@ import { fileURLToPath } from 'node:url';
 const SCREENS = path.join(path.dirname(fileURLToPath(import.meta.url)), '__screens__');
 const P = (name: string, kind = 'product') => ({ name, kind });
 
-test('공간 → 시나리오 → 장면 — AI 3안 수락 · 제품 없는 공간 막기 · 자유 항목 · 저장', async ({ page, request }) => {
+test('공간 → 시나리오 → 장면(Storyboard 없음) — AI 3안 수락 · 제품 없는 공간 막기 · 자유 항목 · 저장', async ({ page, request }) => {
   test.setTimeout(180_000);
-  const r = await request.post('/api/scenario/v1/space-sets', { data: { title: '용산 AI Ready 오피스', sb_id: 'SB-01', spaces: [
+  const r = await request.post('/api/scenario/v1/space-sets', { data: { title: '용산 AI Ready 오피스', spaces: [
     { name: '로비', products: [P('The Wall IAB 146"'), P('Smart Signage QM55C'), P('삼성 키오스크'), P('MagicINFO', 'solution')] },
     { name: '주차장', products: [P('옥외형 사이니지 OHC55')] },
   ] } });
@@ -20,13 +21,16 @@ test('공간 → 시나리오 → 장면 — AI 3안 수락 · 제품 없는 공
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`/scenario/spaces/${d.id}`);
   await expect(page.getByRole('heading', { name: '공간마다 시나리오를 여러 개 써요' })).toBeVisible();
+  await expect(page.getByText('연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요')).toBeVisible();
+  await expect(page.locator('.ss-spaces__h')).toHaveText('공간 · DSS');
+  await expect(page.getByRole('link', { name: '목록', exact: true })).toHaveAttribute('href', '/scenario');
   expect(Math.round((await page.locator('.ss-spaces').boundingBox())!.width)).toBe(196);
 
   // AI 3안(로비) → 점선 후보 3 → A 수락
   await page.getByRole('button', { name: /AI 시나리오 3안/ }).click();
   await expect(page.locator('.ss-sc--cand')).toHaveCount(3);
   expect(Math.round((await page.locator('.ss-grid2 > .wm-flow__panel').first().boundingBox())!.width)).toBe(236);
-  await page.screenshot({ path: path.join(SCREENS, 'SC2_AI-new.png') });
+  await page.screenshot({ path: path.join(SCREENS, 'SC2_AI-nosb.png') });
   await page.getByRole('status').getByRole('button', { name: '수락' }).click();
   await expect(page.locator('.ss-sc--cand')).toHaveCount(2);
   await expect(page.getByRole('tab', { name: /로비/ })).toContainText('시나리오 1');
@@ -36,11 +40,12 @@ test('공간 → 시나리오 → 장면 — AI 3안 수락 · 제품 없는 공
   await page.getByRole('button', { name: '옥외형 사이니지 OHC55 빼기' }).click();
   await expect(page.getByText('공간마다 제품 · 솔루션이 하나 이상 있어야 해요')).toBeVisible();
   await expect(page.getByRole('button', { name: '저장', exact: true })).toBeDisabled();
-  await page.screenshot({ path: path.join(SCREENS, 'SC2_Empty-new.png') });
+  await page.screenshot({ path: path.join(SCREENS, 'SC2_NoProduct-nosb.png') });
 
   // 다시 넣기(고르기 대화상자 · 직접 추가) → 새 시나리오 · 자유 항목
   await page.getByRole('button', { name: '+ 추가 · 변경' }).click();
   const dlg = page.getByRole('dialog', { name: /주차장 · 제품 · 솔루션 고르기/ });
+  await expect(dlg.getByText('다른 공간의 제품 · 솔루션', { exact: true })).toBeVisible();   // DSS 없이 만든 묶음의 고르기 묶음
   await dlg.locator('#wm-pick-search').fill('옥외형 사이니지 OHC55');
   await dlg.getByRole('checkbox', { name: /옥외형 사이니지 OHC55/ }).first().click();
   await dlg.getByRole('button', { name: '완료' }).click();
@@ -55,9 +60,12 @@ test('공간 → 시나리오 → 장면 — AI 3안 수락 · 제품 없는 공
   await page.getByRole('button', { name: '저장', exact: true }).click();
   await expect(page.getByRole('heading', { name: '공간 시나리오를 저장했어요' })).toBeVisible();
   await expect(page.getByText(/"stages\.sc": \{/)).toBeVisible();
-  await page.screenshot({ path: path.join(SCREENS, 'SC_Done-new.png') });
+  await expect(page.getByText('연결된 Storyboard가 없어요')).toBeVisible();
+  await page.screenshot({ path: path.join(SCREENS, 'SC_Done-nosb.png') });
   const st = await (await request.get(`/api/scenario/v1/space-sets/${d.id}/stage`)).json();
   const park = st.stage.spaces.find((s: { name: string }) => s.name === '주차장');
   expect(park.scenarios[0].steps[0].product).toBe('옥외형 사이니지 OHC55');
   expect(park.scenarios[0].fields).toEqual([{ k: '시간대', v: '오후 9시 이후' }]);
+  expect(st.stage.ver).toBe(1);
+  expect(st.stage.from).toBeNull();
 });

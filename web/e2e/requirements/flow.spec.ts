@@ -13,7 +13,7 @@ test('기본 흐름: 파일 → 채우기 → 심층 작성 → 저장 → 물�
   test.setTimeout(240_000);
 
   // ── RQ1 빈 폼(E2E 1 일부 · 2)
-  await page.goto('/requirements/new');
+  await page.goto('/requirements/legacy/new');
   await expect(page.getByPlaceholder('예) 용산 업무시설 재개발 제안')).toBeVisible();
   await expect(page.getByPlaceholder('키맨 (예: 대표이사)')).toBeVisible();
   await expect(page.locator('.sh-crumbs__cur')).toHaveText('새 요구사항');

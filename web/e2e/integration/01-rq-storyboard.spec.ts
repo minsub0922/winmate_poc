@@ -18,7 +18,7 @@ test.beforeAll(async ({ request }) => {
 
 test('RQ 파일로 채우기 → 바로 저장 v1 → RQ4 「전략 수립 Storyboard」 → SB1 정의서가 골라진 채', async ({ page }) => {
   budget(180_000);
-  await open(page, '/requirements/new');
+  await open(page, '/requirements/legacy/new');
   await page.locator('[data-testid=rq-file-input]').setInputFiles([fixture('requirements', RFP_PPTX), fixture('requirements', MEMO_TXT)]);
   await expect(page).toHaveURL(/\/requirements\/rq_[0-9A-Z]{26}\/form$/, { timeout: 60_000 });
   rqId = page.url().match(ID('rq'))![0];
@@ -96,7 +96,7 @@ test('SB4 「공간 시나리오」 → SC 가 Storyboard 공간 · 고객을 �
   test.skip(!sbId, '앞 단계 실패');
   await open(page, `/storyboard/${sbId}/saved`);
   await page.getByTestId('handoff-scenario').click();
-  await expect(page).toHaveURL(new RegExp(`/scenario/new\\?sb=${sbId}`), { timeout: 30_000 });
+  await expect(page).toHaveURL(new RegExp(`/scenario/legacy/new\\?sb=${sbId}`), { timeout: 30_000 });   // /scenario/new 는 새 흐름(Gate) — 이전 Storyboard 넘기기는 legacy
   await shot(page, 'J1-sc1-from-sb');
   await page.getByTestId('sc1-next').click();
   await expect(page).toHaveURL(/\/scenario\/sc_[0-9A-HJKMNP-TV-Z]{26}\/input$/, { timeout: 30_000 });

@@ -4636,6 +4636,518 @@
           }
         }
       }
+    },
+    "/v1/mi-flows": {
+      "post": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Create Mi Flow",
+        "description": "Gate 에서 고른 Storyboard 로 MI 를 만들고 Storyboard 분석을 시작한다(CF-08 예외 — MI 는 분석 로딩이 먼저).",
+        "operationId": "create_mi_flow",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MFCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "List Mi Flows",
+        "operationId": "list_mi_flows",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}": {
+      "get": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Get Mi Flow",
+        "operationId": "get_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Patch Mi Flow",
+        "operationId": "patch_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MFPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}:analyze": {
+      "post": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Analyze Mi Flow",
+        "operationId": "analyze_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}:search": {
+      "post": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Search Mi Flow",
+        "operationId": "search_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}/items/{item_id}": {
+      "patch": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Patch Mi Flow Item",
+        "operationId": "patch_mi_flow_item",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "item_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Item Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MFItemPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}:finish": {
+      "post": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Finish Mi Flow",
+        "operationId": "finish_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}/stage": {
+      "get": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Get Mi Flow Stage",
+        "operationId": "get_mi_flow_stage",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9373,6 +9885,931 @@
         },
         "type": "object",
         "title": "ListCounts"
+      },
+      "MFBasis": {
+        "properties": {
+          "k": {
+            "type": "string",
+            "title": "K",
+            "description": "고객사 · 업종 · 공간 · 요구"
+          },
+          "v": {
+            "type": "string",
+            "title": "V"
+          }
+        },
+        "type": "object",
+        "required": [
+          "k",
+          "v"
+        ],
+        "title": "MFBasis"
+      },
+      "MFCounts": {
+        "properties": {
+          "found": {
+            "type": "integer",
+            "title": "Found"
+          },
+          "kept": {
+            "type": "integer",
+            "title": "Kept"
+          },
+          "numberCheck": {
+            "type": "integer",
+            "title": "Numbercheck"
+          },
+          "queries": {
+            "type": "integer",
+            "title": "Queries"
+          },
+          "by_group": {
+            "additionalProperties": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "By Group",
+            "description": "{시장: [담음, 찾음]} …"
+          }
+        },
+        "type": "object",
+        "required": [
+          "found",
+          "kept",
+          "numberCheck",
+          "queries"
+        ],
+        "title": "MFCounts"
+      },
+      "MFCreate": {
+        "properties": {
+          "sb_id": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Sb Id",
+            "description": "사전 작업 Storyboard(최소 DSS 까지)"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sb_id"
+        ],
+        "title": "MFCreate"
+      },
+      "MFDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "화면 · flow.json 에 쓰는 짧은 번호(MI-01 …)"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "type": "string",
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "phase": {
+            "type": "string",
+            "enum": [
+              "analyzing",
+              "search",
+              "searching",
+              "refine",
+              "done"
+            ],
+            "title": "Phase",
+            "default": "analyzing"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver",
+            "description": "저장(완료) 판 — flow.json stages.mi.ver"
+          },
+          "editing": {
+            "type": "boolean",
+            "title": "Editing",
+            "description": "저장한 MI 를 고치는 중(저장하면 ver+1 · prevVer)",
+            "default": false
+          },
+          "keep_previous": {
+            "type": "boolean",
+            "title": "Keep Previous",
+            "description": "고칠 때: 담은 정보 유지 · 새로 찾은 것만 더하기(false = 처음부터 다시)",
+            "default": true
+          },
+          "saved_kept": {
+            "type": "integer",
+            "title": "Saved Kept",
+            "description": "마지막 저장 때 담은 정보 수",
+            "default": 0
+          },
+          "analysis_mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "llm",
+                  "rule"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Analysis Mode"
+          },
+          "basis": {
+            "items": {
+              "$ref": "#/components/schemas/MFBasis"
+            },
+            "type": "array",
+            "title": "Basis",
+            "description": "Storyboard 에서 읽은 것(고객사 · 업종 · 공간 · 요구)"
+          },
+          "queries": {
+            "$ref": "#/components/schemas/MFQueries"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/MFFilters"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/MFResult"
+            },
+            "type": "array",
+            "title": "Results"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MFItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/MFCounts"
+          },
+          "progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MFProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "sb_id",
+          "counts",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "MFDoc"
+      },
+      "MFFilters": {
+        "properties": {
+          "period": {
+            "type": "string",
+            "enum": [
+              "최근 1년",
+              "최근 3년",
+              "전체"
+            ],
+            "title": "Period",
+            "default": "최근 1년"
+          },
+          "sourceTypes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sourcetypes",
+            "description": "뉴스 · 공시 · IR · 리포트 · 정부 통계"
+          }
+        },
+        "type": "object",
+        "title": "MFFilters"
+      },
+      "MFFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added",
+            "description": "Storyboard 요약본에 더해진 부분"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced",
+            "description": "같은 MI 가 연결돼 함께 바뀐 다른 Storyboard"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added"
+        ],
+        "title": "MFFlowSync"
+      },
+      "MFItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "시장",
+              "고객사",
+              "사용자"
+            ],
+            "title": "Group"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "description": "원문을 줄여 쓴 한 문장(사람이 고칠 수 있음)"
+          },
+          "summary_orig": {
+            "type": "string",
+            "title": "Summary Orig",
+            "description": "검색 결과에서 뽑은 그대로의 문장"
+          },
+          "source": {
+            "$ref": "#/components/schemas/MFSource"
+          },
+          "kept": {
+            "type": "boolean",
+            "title": "Kept",
+            "default": true
+          },
+          "addedIn": {
+            "type": "string",
+            "title": "Addedin",
+            "description": "처음 찾은 판(v1 · v2 …)"
+          },
+          "numberCheck": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MFNumberCheck"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "result_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Result Id",
+            "description": "이 문장을 뽑은 검색 결과(results[].id) — '원문' 보기"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          },
+          "edited": {
+            "type": "boolean",
+            "title": "Edited",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "group",
+          "summary",
+          "summary_orig",
+          "source",
+          "addedIn"
+        ],
+        "title": "MFItem"
+      },
+      "MFItemPatch": {
+        "properties": {
+          "kept": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kept"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary",
+            "description": "문장 고치기(빈 문자열이면 원래 문장으로)"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "title": "MFItemPatch"
+      },
+      "MFList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MFListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "MFList"
+      },
+      "MFListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "type": "string",
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "phase": {
+            "type": "string",
+            "title": "Phase"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/MFCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "sb_id",
+          "status",
+          "phase",
+          "counts",
+          "updated_at"
+        ],
+        "title": "MFListItem"
+      },
+      "MFNumberCheck": {
+        "properties": {
+          "values": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Values",
+            "description": "원문에서 확인해야 하는 수치 표현"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": "수치는 원문에서 확인해야 해요"
+          }
+        },
+        "type": "object",
+        "title": "MFNumberCheck"
+      },
+      "MFPatch": {
+        "properties": {
+          "title": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "queries": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MFQueries"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "filters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MFFilters"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "keep_previous": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keep Previous"
+          },
+          "phase": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "search",
+                  "refine"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phase",
+            "description": "검색어 고치기(refine → search) · 정제로 돌아가기"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "다르면 409 CONFLICT"
+          }
+        },
+        "type": "object",
+        "title": "MFPatch"
+      },
+      "MFProgress": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "analyze",
+              "search"
+            ],
+            "title": "Kind"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "steps": {
+            "items": {
+              "$ref": "#/components/schemas/MFStep"
+            },
+            "type": "array",
+            "title": "Steps"
+          },
+          "done": {
+            "type": "integer",
+            "title": "Done",
+            "default": 0
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "default": 0
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "MFProgress"
+      },
+      "MFQueries": {
+        "properties": {
+          "market": {
+            "items": {
+              "$ref": "#/components/schemas/MFQuery"
+            },
+            "type": "array",
+            "title": "Market"
+          },
+          "customer": {
+            "items": {
+              "$ref": "#/components/schemas/MFQuery"
+            },
+            "type": "array",
+            "title": "Customer"
+          },
+          "user": {
+            "items": {
+              "$ref": "#/components/schemas/MFQuery"
+            },
+            "type": "array",
+            "title": "User"
+          }
+        },
+        "type": "object",
+        "title": "MFQueries"
+      },
+      "MFQuery": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "on": {
+            "type": "boolean",
+            "title": "On",
+            "description": "false = 뺀 검색어(점선 · 취소선, 다시 넣을 수 있음)",
+            "default": true
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "ai",
+              "rule",
+              "manual",
+              "prev"
+            ],
+            "title": "By",
+            "description": "ai = AI 분석 · rule = 규칙(모델 없이) · manual = 직접 · prev = 이전 판에서",
+            "default": "ai"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "MFQuery"
+      },
+      "MFResult": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "group": {
+            "type": "string",
+            "title": "Group"
+          },
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "실제로 보낸 검색어(검색어 보호를 거친 것)"
+          },
+          "summary": {
+            "type": "string",
+            "title": "Summary",
+            "default": ""
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/MFResultSource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "sources",
+              "summary_only"
+            ],
+            "title": "Mode",
+            "default": "summary_only"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "found": {
+            "type": "integer",
+            "title": "Found",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "group",
+          "query"
+        ],
+        "title": "MFResult"
+      },
+      "MFResultSource": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "snippet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Snippet"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "MFResultSource"
+      },
+      "MFSource": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "뉴스 · 공시 · IR · 리포트 · 정부 통계 · 웹 검색 요약(출처를 글에서 못 읽음)"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "출처 이름 — 검색 결과 글에 있는 문자열만(없으면 '웹 검색 요약')"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date",
+            "description": "YYYY-MM(글에 있을 때만)"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url",
+            "description": "검색 도구가 돌려준 URL 만(요약형 검색이면 null)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "name"
+        ],
+        "title": "MFSource"
+      },
+      "MFStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.mi"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MFFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Storyboard 허브에 반영된 결과(허브가 안 되면 null)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md"
+        ],
+        "title": "MFStageOut"
+      },
+      "MFStep": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "wait",
+              "run",
+              "done",
+              "error"
+            ],
+            "title": "State",
+            "default": "wait"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label"
+        ],
+        "title": "MFStep"
       },
       "MarketBlock": {
         "properties": {

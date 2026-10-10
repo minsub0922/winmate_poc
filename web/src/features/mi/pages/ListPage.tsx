@@ -1,4 +1,4 @@
-/** MI0 — 분석 작업 목록 `/mi?status=&q=&segment=&sort=` (§4.2) */
+/** MI0(이전 흐름) — 분석 작업 목록 `/mi/legacy?status=&q=&segment=&sort=` (§4.2) */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
@@ -127,8 +127,8 @@ export function ListPage() {
           <div className="mi-list__sum" data-testid="mi0-header">{list.data?.header ?? ' '}</div>
         </div>
         <div className="mi-row" style={{ gap: 8 }}>
-          <Link to="/mi/new/industry" className="mi-btn mi-btn--h42"><Ic d={P.grid} size={15} w={2} />업종 인사이트로 시작</Link>
-          <Link to="/mi/new" className="mi-btn mi-btn--primary mi-btn--h42" style={{ fontSize: 13.5, padding: '0 16px', gap: 7 }}>
+          <Link to="/mi/legacy/new/industry" className="mi-btn mi-btn--h42"><Ic d={P.grid} size={15} w={2} />업종 인사이트로 시작</Link>
+          <Link to="/mi/legacy/new" className="mi-btn mi-btn--primary mi-btn--h42" style={{ fontSize: 13.5, padding: '0 16px', gap: 7 }}>
             <Ic d={P.plus} size={15} w={2.4} />새 분석
           </Link>
         </div>
@@ -171,7 +171,7 @@ export function ListPage() {
         {list.isError && <div className="mi-empty" role="alert">잠시 후 다시 시도해 주세요<button type="button" className="mi-mini" onClick={() => void list.refetch()}>다시 시도</button></div>}
         {!list.isLoading && !list.isError && rows.length === 0 && (
           <div className="mi-empty">
-            {q || status !== 'all' || segment ? '찾는 분석이 없어요' : <>아직 분석이 없어요<Link to="/mi/new" className="mi-btn mi-btn--primary mi-btn--h42">새 분석</Link></>}
+            {q || status !== 'all' || segment ? '찾는 분석이 없어요' : <>아직 분석이 없어요<Link to="/mi/legacy/new" className="mi-btn mi-btn--primary mi-btn--h42">새 분석</Link></>}
           </div>
         )}
         {rows.map((r) => <Row key={r.id} r={r} onAction={onAction} onMenu={onMenu} upd={list.data?.upd_changes?.[r.id] as { title?: string; summary?: string } | undefined} />)}
@@ -184,9 +184,9 @@ export function ListPage() {
         <span className="mi-inds__sep" aria-hidden="true" />
         {(segs.data?.home ?? []).map((h) => {
           const it = h as { code: string; short: string; n: number };
-          return <Link key={it.code} to={`/mi/new/industry?segment=${it.code}`} className="mi-indchip">{it.short}<b>{it.n}건</b></Link>;
+          return <Link key={it.code} to={`/mi/legacy/new/industry?segment=${it.code}`} className="mi-indchip">{it.short}<b>{it.n}건</b></Link>;
         })}
-        <Link to="/mi/new/industry" className="mi-link" style={{ height: 30, padding: '0 6px' }}>16개 업종 모두</Link>
+        <Link to="/mi/legacy/new/industry" className="mi-link" style={{ height: 30, padding: '0 6px' }}>16개 업종 모두</Link>
       </div>
       {dialog}
     </div>

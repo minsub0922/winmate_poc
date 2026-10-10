@@ -2697,6 +2697,543 @@
           }
         }
       }
+    },
+    "/v1/rq-flows": {
+      "get": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "List Rq Flows",
+        "description": "새 흐름 요구사항 목록(최근 수정 순) — 목록 화면의 '작성 중' 줄.",
+        "operationId": "list_rq_flows",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Create Rq Flow",
+        "description": "새 요구사항(코드 RQ-NN). 키맨을 주지 않으면 빈 키맨 하나(가중치 100).",
+        "operationId": "create_rq_flow",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RFCreate"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}": {
+      "get": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Get Rq Flow",
+        "description": "id(rqf_…) 또는 코드(RQ-NN).",
+        "operationId": "get_rq_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Put Rq Flow",
+        "description": "폼 전체 고치기(자동 저장). expected_version 이 다르면 409 VERSION_CONFLICT, 파일로 채우는 중이면 409 FILLING.",
+        "operationId": "put_rq_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RFUpdate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}:fill": {
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Fill Rq Flow",
+        "description": "파일로 폼 채우기(잡 rq.flow.fill) — 빈 칸만 채운다. 끝나면 sources 에 파일이 붙는다.",
+        "operationId": "fill_rq_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RFFillIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}/deep-questions": {
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Deep Questions",
+        "description": "AI 심층 질의 — 부족한 곳을 찾아 질문(ai-pending)을 만든다(`rq.deep_questions.v1`, 실패하면 규칙 문장).",
+        "operationId": "deep_questions",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDeepOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}/deep-questions/{question_id}:answer": {
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Answer Question",
+        "description": "답(보기 · 직접 입력)을 폼에 반영(ai-accepted) — later=true 면 고객에게 확인으로 남긴다.",
+        "operationId": "answer_question",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "question_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Question Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RFAnswer"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}/deep-questions:close": {
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Close Questions",
+        "description": "질의 닫기 — 답하지 않은 질문은 버린다.",
+        "operationId": "close_questions",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}:finish": {
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Finish Rq Flow",
+        "description": "저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수.",
+        "operationId": "finish_rq_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -5632,6 +6169,1073 @@
           "id"
         ],
         "title": "QuestionTarget"
+      },
+      "RFAnswer": {
+        "properties": {
+          "option": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Option",
+            "description": "고른 보기 번호"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 300
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text",
+            "description": "직접 입력"
+          },
+          "later": {
+            "type": "boolean",
+            "title": "Later",
+            "description": "고객에게 확인으로 남기기",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "RFAnswer"
+      },
+      "RFCounts": {
+        "properties": {
+          "keymen": {
+            "type": "integer",
+            "title": "Keymen"
+          },
+          "reqs": {
+            "type": "integer",
+            "title": "Reqs"
+          },
+          "check": {
+            "type": "integer",
+            "title": "Check"
+          },
+          "weight_sum": {
+            "type": "integer",
+            "title": "Weight Sum"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending",
+            "description": "아직 답하지 않은 AI 심층 질의"
+          }
+        },
+        "type": "object",
+        "required": [
+          "keymen",
+          "reqs",
+          "check",
+          "weight_sum",
+          "pending"
+        ],
+        "title": "RFCounts"
+      },
+      "RFCreate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "title": "Title",
+            "default": ""
+          },
+          "customer": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Customer",
+            "default": ""
+          },
+          "target": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Target",
+            "default": ""
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "default": ""
+          },
+          "keymen": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RFKeymanIn"
+                },
+                "type": "array",
+                "maxItems": 8
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keymen",
+            "description": "없으면 빈 키맨 하나"
+          }
+        },
+        "type": "object",
+        "title": "RFCreate"
+      },
+      "RFDeep": {
+        "properties": {
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/RFDeepQuestion"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "rule"
+            ],
+            "title": "Mode",
+            "default": "rule"
+          },
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "current": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current",
+            "description": "다음에 물을 질문 번호(0부터), 다 끝났으면 null"
+          },
+          "applied": {
+            "type": "integer",
+            "title": "Applied",
+            "default": 0
+          },
+          "asked": {
+            "type": "integer",
+            "title": "Asked",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "questions",
+          "mode",
+          "at",
+          "current",
+          "applied",
+          "asked"
+        ],
+        "title": "RFDeep"
+      },
+      "RFDeepOption": {
+        "properties": {
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "weights": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weights",
+            "description": "가중치 질문의 보기 — 키맨 순서대로"
+          }
+        },
+        "type": "object",
+        "required": [
+          "label",
+          "weights"
+        ],
+        "title": "RFDeepOption"
+      },
+      "RFDeepOut": {
+        "properties": {
+          "doc": {
+            "$ref": "#/components/schemas/RFDoc"
+          },
+          "found": {
+            "type": "integer",
+            "title": "Found"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "rule"
+            ],
+            "title": "Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc",
+          "found",
+          "mode"
+        ],
+        "title": "RFDeepOut"
+      },
+      "RFDeepQuestion": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "tag": {
+            "type": "string",
+            "title": "Tag",
+            "description": "어디(최종 제안대상 · 마케팅 리드 · 요구 2 · 가중치)"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "target": {
+            "$ref": "#/components/schemas/RFDeepTarget"
+          },
+          "options": {
+            "items": {
+              "$ref": "#/components/schemas/RFDeepOption"
+            },
+            "type": "array",
+            "title": "Options"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "file",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "ai-pending"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "applied",
+              "asked"
+            ],
+            "title": "Status",
+            "default": "pending"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Answer"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "tag",
+          "text",
+          "target",
+          "options",
+          "by",
+          "status",
+          "answer"
+        ],
+        "title": "RFDeepQuestion"
+      },
+      "RFDeepTarget": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "target",
+              "customer",
+              "title",
+              "req",
+              "weights",
+              "keyman"
+            ],
+            "title": "Kind"
+          },
+          "keyman_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keyman Id"
+          },
+          "req_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Req Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind",
+          "keyman_id",
+          "req_id"
+        ],
+        "title": "RFDeepTarget"
+      },
+      "RFDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "프로젝트명",
+            "default": ""
+          },
+          "customer": {
+            "type": "string",
+            "title": "Customer",
+            "default": ""
+          },
+          "target": {
+            "type": "string",
+            "title": "Target",
+            "description": "최종 제안대상",
+            "default": ""
+          },
+          "target_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "file",
+                  "ai-pending",
+                  "ai-accepted"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target By"
+          },
+          "target_ask": {
+            "type": "boolean",
+            "title": "Target Ask",
+            "description": "최종 제안대상을 고객에게 확인으로 남김",
+            "default": false
+          },
+          "customer_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "file",
+                  "ai-pending",
+                  "ai-accepted"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer By"
+          },
+          "title_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "file",
+                  "ai-pending",
+                  "ai-accepted"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title By"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "description": "제작자 의견 — 고객 문서 · Storyboard 에서 빠진다(internal)",
+            "default": ""
+          },
+          "keymen": {
+            "items": {
+              "$ref": "#/components/schemas/RFKeyman"
+            },
+            "type": "array",
+            "title": "Keymen"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/RFSource"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "deep": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RFDeep"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fill_job": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fill Job",
+            "description": "파일 첨부 잡(진행 중일 때)"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver",
+            "description": "저장(완료) 횟수 = stage ver",
+            "default": 0
+          },
+          "sb_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sb Ids",
+            "description": "이 요구사항이 연결된 Storyboard(처음 저장 때 자동 생성)"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/RFCounts"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          },
+          "saved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "code",
+          "title",
+          "customer",
+          "target",
+          "target_by",
+          "target_ask",
+          "customer_by",
+          "title_by",
+          "note",
+          "keymen",
+          "sources",
+          "deep",
+          "fill_job",
+          "status",
+          "ver",
+          "sb_ids",
+          "counts",
+          "created_at",
+          "updated_at",
+          "saved_at"
+        ],
+        "title": "RFDoc"
+      },
+      "RFFillIn": {
+        "properties": {
+          "file_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 5,
+            "minItems": 1,
+            "title": "File Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file_ids"
+        ],
+        "title": "RFFillIn"
+      },
+      "RFFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added",
+          "synced"
+        ],
+        "title": "RFFlowSync"
+      },
+      "RFKeyman": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role",
+            "description": "키맨 직함 · 역할(예: 자산관리팀장)",
+            "default": ""
+          },
+          "weight": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight",
+            "default": 0
+          },
+          "weight_by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "file",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "Weight By",
+            "default": "manual"
+          },
+          "reqs": {
+            "items": {
+              "$ref": "#/components/schemas/RFReq"
+            },
+            "type": "array",
+            "title": "Reqs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "role",
+          "weight",
+          "weight_by",
+          "reqs"
+        ],
+        "title": "RFKeyman"
+      },
+      "RFKeymanIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "role": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Role",
+            "default": ""
+          },
+          "weight": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Weight",
+            "default": 0
+          },
+          "weight_by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "file",
+                  "ai-pending",
+                  "ai-accepted"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight By"
+          },
+          "reqs": {
+            "items": {
+              "$ref": "#/components/schemas/RFReqIn"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Reqs"
+          }
+        },
+        "type": "object",
+        "title": "RFKeymanIn"
+      },
+      "RFList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RFListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "next_cursor"
+        ],
+        "title": "RFList"
+      },
+      "RFListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "customer": {
+            "type": "string",
+            "title": "Customer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver"
+          },
+          "sb_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Sb Ids"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/RFCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "code",
+          "title",
+          "customer",
+          "status",
+          "ver",
+          "sb_ids",
+          "counts",
+          "updated_at"
+        ],
+        "title": "RFListItem"
+      },
+      "RFReq": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ok",
+              "check"
+            ],
+            "title": "Status",
+            "description": "ok · check(확인 필요)",
+            "default": "ok"
+          },
+          "flag": {
+            "type": "string",
+            "enum": [
+              "none",
+              "vague",
+              "ask"
+            ],
+            "title": "Flag",
+            "description": "none · vague(범위 불명확) · ask(고객에게 확인)",
+            "default": "none"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "file",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "status",
+          "flag",
+          "by"
+        ],
+        "title": "RFReq"
+      },
+      "RFReqIn": {
+        "properties": {
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 300,
+            "title": "Text",
+            "default": ""
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ok",
+                  "check"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "flag": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "vague",
+                  "ask"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Flag"
+          },
+          "by": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "manual",
+                  "file",
+                  "ai-pending",
+                  "ai-accepted"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "By"
+          }
+        },
+        "type": "object",
+        "title": "RFReqIn"
+      },
+      "RFSource": {
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "title": "File Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "pages": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pages"
+          },
+          "filled": {
+            "type": "integer",
+            "title": "Filled",
+            "default": 0
+          },
+          "read_at": {
+            "type": "string",
+            "title": "Read At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file_id",
+          "name",
+          "pages",
+          "filled",
+          "read_at"
+        ],
+        "title": "RFSource"
+      },
+      "RFStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.rq(§6)"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RFFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "허브 반영 결과(허브가 안 되면 null)"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "sb_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Name"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created",
+            "description": "이번 저장으로 Storyboard 가 새로 만들어졌는지",
+            "default": false
+          },
+          "doc": {
+            "$ref": "#/components/schemas/RFDoc"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md",
+          "flow_sync",
+          "sb_id",
+          "sb_name",
+          "created",
+          "doc"
+        ],
+        "title": "RFStageOut"
+      },
+      "RFUpdate": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 120,
+            "title": "Title",
+            "default": ""
+          },
+          "customer": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Customer",
+            "default": ""
+          },
+          "target": {
+            "type": "string",
+            "maxLength": 80,
+            "title": "Target",
+            "default": ""
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 2000,
+            "title": "Note",
+            "default": ""
+          },
+          "keymen": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/RFKeymanIn"
+                },
+                "type": "array",
+                "maxItems": 8
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keymen",
+            "description": "없으면 그대로"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "다르면 409 VERSION_CONFLICT"
+          }
+        },
+        "type": "object",
+        "title": "RFUpdate"
       },
       "RemoveItemOp": {
         "properties": {

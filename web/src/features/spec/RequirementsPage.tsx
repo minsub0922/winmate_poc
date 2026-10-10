@@ -1,4 +1,4 @@
-/** SP1R — 고객 요구 스펙 대응표(`/spec/new/requirements` → `/spec/:id/requirements`, 06-spec §4.6) */
+/** SP1R — 고객 요구 스펙 대응표(`/spec/legacy/new/requirements` → `/spec/:id/requirements`, 06-spec §4.6) */
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { uploadFile } from '@/api/client';

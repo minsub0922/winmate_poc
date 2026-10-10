@@ -492,6 +492,193 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/ca-flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Ca Flows
+         * @description 경쟁사 분석(새 흐름) 목록 — 보드 List 의 작성 중 초안.
+         */
+        get: operations["list_ca_flows"];
+        put?: never;
+        /**
+         * Create Ca Flow
+         * @description 새 경쟁사 분석 — Storyboard 의 DSS 로 비교 기준을 채운다. 없는 Storyboard 404 · DSS 전이면 422 PREREQUISITE_MISSING.
+         */
+        post: operations["create_ca_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Ca Flow */
+        get: operations["get_ca_flow"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Patch Ca Flow
+         * @description 제목 고치기(expected_version 이 다르면 409).
+         */
+        patch: operations["patch_ca_flow"];
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}:candidates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Suggest Candidates
+         * @description AI 경쟁사 후보군 웹 탐색 — 웹 검색 요약에 이름 · 근거 구절이 있는 후보만 점선(ai-pending)으로. 웹 · 모델이 안 되면 mode=none · 후보 0.
+         */
+        post: operations["suggest_candidates"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}:finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish
+         * @description 저장 — status=done, Storyboard flow.json stages.ca · 요약 md · 팝업 카드 반영(push_stage). 경쟁사 0이면 422 NO_COMPETITORS.
+         */
+        post: operations["finish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}/competitors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Competitor
+         * @description 경쟁사 직접 추가 — 웹 검색 요약에서 기본 정보(위키)를 불러오고, 겹치는 제품군의 DSS 제품으로 비교 쌍을 만든다. 근거 없는 값은 자리표시.
+         */
+        post: operations["add_competitor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}/competitors/{cid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete Competitor
+         * @description 경쟁사 빼기(AI 후보 빼기도 이것).
+         */
+        delete: operations["delete_competitor"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch Competitor
+         * @description 경쟁사 고치기 — 기본 정보 · 선별 기준 · 장단점 · 주장, AI 후보 목록에 추가(accept).
+         */
+        patch: operations["patch_competitor"];
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}/competitors/{cid}/matches": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Match
+         * @description 비교 쌍 추가 — 우리 제품은 DSS 제품 · 솔루션(아니면 422 NOT_IN_DSS), 판정은 자료 없음으로 시작.
+         */
+        post: operations["add_match"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}/competitors/{cid}/matches/{mid}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Match */
+        delete: operations["delete_match"];
+        options?: never;
+        head?: never;
+        /**
+         * Patch Match
+         * @description 비교 쌍 고치기 — 공간 · 경쟁 제품 · 축별 판정(ours-better · similar · ours-worse · no-data)과 메모.
+         */
+        patch: operations["patch_match"];
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}/stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Stage */
+        get: operations["get_stage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/capabilities": {
         parameters: {
             query?: never;
@@ -1109,6 +1296,471 @@ export interface components {
              * @default
              */
             sources_label: string;
+        };
+        /** CFBasis */
+        CFBasis: {
+            /** Categories */
+            categories: string[];
+            /**
+             * Counts
+             * @description 제품군마다 DSS 제품 · 솔루션 수
+             */
+            counts?: {
+                [key: string]: number;
+            };
+            /**
+             * From
+             * @description DSS 참조(DSS-01)
+             */
+            from?: string | null;
+        };
+        /** CFCandidatesResult */
+        CFCandidatesResult: {
+            /** Added */
+            added: number;
+            flow: components["schemas"]["CFDoc"];
+            /**
+             * Mode
+             * @description web = 웹 검색 요약에서 후보를 찾음 · none = 웹 · 모델이 안 돼 찾지 못함
+             * @enum {string}
+             */
+            mode: "web" | "none";
+            /** Reason */
+            reason?: string | null;
+        };
+        /** CFClaim */
+        CFClaim: {
+            /**
+             * Axis
+             * @description 주장 축(통합 · 사례 · 가격 · ESG · 브랜드 …)
+             */
+            axis: string;
+            /**
+             * Supports
+             * @description 연결 요구(예: RQ-01)
+             */
+            supports?: string | null;
+            /** Text */
+            text: string;
+        };
+        /** CFCompetitor */
+        CFCompetitor: {
+            /**
+             * By
+             * @enum {string}
+             */
+            by: "manual" | "ai-pending" | "ai-web";
+            candidateEvidence?: components["schemas"]["CFEvidence"] | null;
+            /**
+             * Categories
+             * @description 겹치는 비교 기준 제품군
+             */
+            categories?: string[];
+            /**
+             * Claims
+             * @description 그래서 우리가 주장할 것
+             */
+            claims?: components["schemas"]["CFClaim"][];
+            /**
+             * Cons
+             * @description 경쟁사 단점 · 삼성 대비
+             */
+            cons?: string[];
+            /** Criteria */
+            criteria?: components["schemas"]["CFCriterion"][];
+            /**
+             * Id
+             * @description 목록 글자(A · B · C …)
+             */
+            id: string;
+            /**
+             * Industry
+             * @description 목록 한 줄 — 업종
+             * @default [확인 필요]
+             */
+            industry: string;
+            /** Matches */
+            matches?: components["schemas"]["CFMatch"][];
+            /** Name */
+            name: string;
+            /**
+             * Pros
+             * @description 경쟁사 장점 · 삼성 대비
+             */
+            pros?: string[];
+            /**
+             * Size
+             * @description 목록 한 줄 — 규모
+             * @default [확인 필요]
+             */
+            size: string;
+            /**
+             * Spaces
+             * @description 겹치는 DSS 공간
+             */
+            spaces?: string[];
+            /**
+             * Why
+             * @description 목록 둘째 줄 — 겹침 · 공간
+             * @default
+             */
+            why: string;
+            wiki: components["schemas"]["CFWiki"];
+        };
+        /** CFCompetitorAdd */
+        CFCompetitorAdd: {
+            /** Expected Version */
+            expected_version?: number | null;
+            /**
+             * Lookup
+             * @description 웹 검색으로 기본 정보(위키)를 불러온다
+             * @default true
+             */
+            lookup: boolean;
+            /** Name */
+            name: string;
+        };
+        /** CFCompetitorPatch */
+        CFCompetitorPatch: {
+            /**
+             * Accept
+             * @description AI 후보를 목록에 추가(ai-pending → ai-web)
+             */
+            accept?: boolean | null;
+            /** Claims */
+            claims?: components["schemas"]["CFClaim"][] | null;
+            /** Cons */
+            cons?: string[] | null;
+            /** Criteria */
+            criteria?: components["schemas"]["CFCriterion"][] | null;
+            /** Expected Version */
+            expected_version?: number | null;
+            /** Name */
+            name?: string | null;
+            /** Pros */
+            pros?: string[] | null;
+            wiki?: components["schemas"]["CFWikiPatch"] | null;
+        };
+        /** CFCounts */
+        CFCounts: {
+            /** Candidates */
+            candidates: number;
+            /** Competitors */
+            competitors: number;
+            /** Matches */
+            matches: number;
+            verdicts: components["schemas"]["CFVerdictCounts"];
+        };
+        /** CFCreate */
+        CFCreate: {
+            /**
+             * Sb Id
+             * @description 사전 작업 DSS 가 된 Storyboard
+             */
+            sb_id: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** CFCriterion */
+        CFCriterion: {
+            /** K */
+            k: string;
+            /**
+             * Status
+             * @default ok
+             * @enum {string}
+             */
+            status: "ok" | "check";
+            /** V */
+            v: string;
+        };
+        /** CFDim */
+        CFDim: {
+            /**
+             * Note
+             * @default 자료 없음
+             */
+            note: string;
+            /**
+             * Verdict
+             * @default no-data
+             * @enum {string}
+             */
+            verdict: "ours-better" | "similar" | "ours-worse" | "no-data";
+        };
+        /** CFDimPatch */
+        CFDimPatch: {
+            /** Note */
+            note?: string | null;
+            /** Verdict */
+            verdict?: ("ours-better" | "similar" | "ours-worse" | "no-data") | null;
+        };
+        /** CFDims */
+        CFDims: {
+            brand?: components["schemas"]["CFDim"];
+            cases?: components["schemas"]["CFDim"];
+            esg?: components["schemas"]["CFDim"];
+            price?: components["schemas"]["CFDim"];
+            spec?: components["schemas"]["CFDim"];
+        };
+        /** CFDoc */
+        CFDoc: {
+            basis: components["schemas"]["CFBasis"];
+            /**
+             * Code
+             * @description CA-01 …
+             */
+            code?: string | null;
+            /** Competitors */
+            competitors?: components["schemas"]["CFCompetitor"][];
+            counts: components["schemas"]["CFCounts"];
+            /** Created At */
+            created_at: string;
+            /** Customer */
+            customer?: string | null;
+            /**
+             * Dss Items
+             * @description 비교 쌍에 고를 수 있는 DSS 제품 · 솔루션
+             */
+            dss_items?: components["schemas"]["CFDssItem"][];
+            /** Id */
+            id: string;
+            /** Sb Id */
+            sb_id?: string | null;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /**
+             * Ver
+             * @description 저장(완료) 판 — flow.json stages.ca.ver
+             */
+            ver?: number | null;
+            /** Version */
+            version: number;
+        };
+        /** CFDssItem */
+        CFDssItem: {
+            /** Category */
+            category: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /** Name */
+            name: string;
+            /** Ref */
+            ref?: string | null;
+            /** Spaces */
+            spaces?: string[];
+        };
+        /** CFEvidence */
+        CFEvidence: {
+            /** Date */
+            date?: string | null;
+            /**
+             * Quote
+             * @description 웹 검색 요약 원문 구절
+             */
+            quote: string;
+            /**
+             * Source
+             * @description 근거 출처 이름(업계 뉴스 · 회사 소개 페이지 · 조달 공고 …)
+             */
+            source: string;
+            /** Url */
+            url?: string | null;
+        };
+        /** CFFlowSync */
+        CFFlowSync: {
+            /** Md Added */
+            md_added: string;
+            /** Synced */
+            synced?: string[];
+        };
+        /** CFList */
+        CFList: {
+            /** Items */
+            items: components["schemas"]["CFListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /** CFListItem */
+        CFListItem: {
+            /** Code */
+            code?: string | null;
+            counts: components["schemas"]["CFCounts"];
+            /** Id */
+            id: string;
+            /** Sb Id */
+            sb_id?: string | null;
+            /** Status */
+            status: string;
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+        };
+        /** CFMatch */
+        CFMatch: {
+            dims: components["schemas"]["CFDims"];
+            /** Id */
+            id: string;
+            /**
+             * Ours
+             * @description 우리 제품 · 솔루션(DSS)
+             */
+            ours: string;
+            /** Ours Ref */
+            ours_ref?: string | null;
+            /**
+             * Space
+             * @description DSS 공간(또는 쓰임 — 로비 미디어월)
+             */
+            space: string;
+            /**
+             * Theirs
+             * @description 경쟁 제품 한 줄
+             */
+            theirs: string;
+        };
+        /** CFMatchAdd */
+        CFMatchAdd: {
+            /** Expected Version */
+            expected_version?: number | null;
+            /**
+             * Ours
+             * @description 우리 제품 · 솔루션(DSS 이름)
+             */
+            ours: string;
+            /** Space */
+            space?: string | null;
+            /**
+             * Theirs
+             * @default [확인 필요]
+             */
+            theirs: string;
+        };
+        /** CFMatchPatch */
+        CFMatchPatch: {
+            /** Dims */
+            dims?: {
+                [key: string]: components["schemas"]["CFDimPatch"];
+            } | null;
+            /** Expected Version */
+            expected_version?: number | null;
+            /** Space */
+            space?: string | null;
+            /** Theirs */
+            theirs?: string | null;
+        };
+        /** CFPatch */
+        CFPatch: {
+            /** Expected Version */
+            expected_version?: number | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** CFSource */
+        CFSource: {
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @description Wikipedia · 웹 검색 요약 · 직접 입력 …
+             */
+            type: string;
+            /** Url */
+            url?: string | null;
+        };
+        /** CFStageOut */
+        CFStageOut: {
+            flow_sync?: components["schemas"]["CFFlowSync"] | null;
+            /**
+             * Stage
+             * @description Storyboard flow.json 의 stages.ca
+             */
+            stage: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+        };
+        /** CFVerdictCounts */
+        CFVerdictCounts: {
+            /** Nodata */
+            noData: number;
+            /** Oursbetter */
+            oursBetter: number;
+            /** Oursworse */
+            oursWorse: number;
+            /** Similar */
+            similar: number;
+        };
+        /** CFWiki */
+        CFWiki: {
+            /**
+             * B2Boffice
+             * @default [확인 필요]
+             */
+            b2bOffice: string;
+            /**
+             * Employees
+             * @default [위키 값]
+             */
+            employees: string;
+            /**
+             * Hq
+             * @default [확인 필요]
+             */
+            hq: string;
+            /**
+             * Industry
+             * @default [확인 필요]
+             */
+            industry: string;
+            /**
+             * Mainbusiness
+             * @default [확인 필요]
+             */
+            mainBusiness: string;
+            /**
+             * Revenue
+             * @default [위키 값]
+             */
+            revenue: string;
+            /**
+             * Size
+             * @default [확인 필요]
+             */
+            size: string;
+            source: components["schemas"]["CFSource"];
+        };
+        /** CFWikiPatch */
+        CFWikiPatch: {
+            /** B2Boffice */
+            b2bOffice?: string | null;
+            /** Employees */
+            employees?: string | null;
+            /** Hq */
+            hq?: string | null;
+            /** Industry */
+            industry?: string | null;
+            /** Mainbusiness */
+            mainBusiness?: string | null;
+            /** Revenue */
+            revenue?: string | null;
+            /** Size */
+            size?: string | null;
+            /** Source Url */
+            source_url?: string | null;
         };
         /** ChangesOut */
         ChangesOut: {
@@ -4292,6 +4944,560 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Analysis"];
+                };
+            };
+        };
+    };
+    list_ca_flows: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFList"];
+                };
+            };
+        };
+    };
+    create_ca_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CFCreate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    get_ca_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    patch_ca_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CFPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    suggest_candidates: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFCandidatesResult"];
+                };
+            };
+        };
+    };
+    finish: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFStageOut"];
+                };
+            };
+        };
+    };
+    add_competitor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CFCompetitorAdd"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    delete_competitor: {
+        parameters: {
+            query?: {
+                expected_version?: number | null;
+            };
+            header?: never;
+            path: {
+                cid: string;
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    patch_competitor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                cid: string;
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CFCompetitorPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    add_match: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                cid: string;
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CFMatchAdd"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    delete_match: {
+        parameters: {
+            query?: {
+                expected_version?: number | null;
+            };
+            header?: never;
+            path: {
+                cid: string;
+                flow_id: string;
+                mid: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    patch_match: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                cid: string;
+                flow_id: string;
+                mid: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CFMatchPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
+                };
+            };
+        };
+    };
+    get_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFStageOut"];
                 };
             };
         };

@@ -1,7 +1,9 @@
 /**
- * Market Intelligence(MI) 기능 모듈 — 소유: mi 서비스 세션. 수용 기준: docs/scenarios/03-mi.md
+ * Market Intelligence(MI) 기능 모듈 — 소유: mi 서비스 세션. 수용 기준: docs/scenarios/11-content-flow.md(새 흐름) · 03-mi.md(이전 흐름)
  * 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 라우트(§2): /mi(MI0) · /mi/rules(MIR) · /mi/new(MI1) · /mi/new/industry(MI1I) · /mi/:id → 작업의 route
+ * 라우트(새 흐름 · 보드 webapp1 v58): /mi(MI0 List) · /mi/new(MI1 Gate · MI1_Branch) · /mi/flow/:id(MI2_Loading → MI2 → MI3 → MI_Done)
+ * 이전 흐름(제안서 handoff 가 아직 읽는다): /mi/legacy(MI0) · /mi/legacy/new(MI1) · /mi/legacy/new/industry(MI1I · 옛 주소 /mi/new/industry 도 연다)
+ *   /mi/rules(MIR) · /mi/:id → 작업의 route
  *   /mi/:id/input(MI1) · industry(MI1I) · design(MI2A) · design/industry(MI1Q) · scope(MI2) · competitors(MI2C) · run(MI3G)
  *   result(MI3 · `?panel=sources` MI3S) · verify(MI3V) · revise(MI3R) · slides(MI3P) · slides/:sheet(MI3L) · export(MI4) · shared(공유 화면)
  */
@@ -26,6 +28,7 @@ import { ScopePage } from './pages/ScopePage';
 import { SharedPage } from './pages/SharedPage';
 import { SlidesPage } from './pages/SlidesPage';
 import { VerifyPage } from './pages/VerifyPage';
+import { MiFlowPage, MiGateScreen, MiListScreen } from './flow/MiFlowPages';
 import './mi.css';
 
 /** 다른 작업으로 옮겨 가면 화면 상태를 새로 시작한다(같은 라우트 · 다른 :id). MI1 은 만들 때 주소만 바뀌므로 감싸지 않는다 */
@@ -44,7 +47,7 @@ function OpenAnalysis() {
     if (!id) return;
     getAnalysis(id).then((a) => nav(a.route || `/mi/${id}/input`, { replace: true })).catch(() => setErr('작업을 찾지 못했어요'));
   }, [id, nav]);
-  return <MiPage>{err ? <ErrorBand message={err} onRetry={() => nav('/mi')} /> : <LoadingCard lines={4} />}</MiPage>;
+  return <MiPage>{err ? <ErrorBand message={err} onRetry={() => nav('/mi/legacy')} /> : <LoadingCard lines={4} />}</MiPage>;
 }
 
 export default feature({
@@ -54,10 +57,16 @@ export default feature({
   order: 6,
   home: { section: 'plan', title: 'Market Intelligence', desc: '업종 · 시장 · 고객 · 경쟁 분석' },
   routes: [
-    { index: true, element: <ListPage /> },
-    { path: 'rules', element: <RulesPage /> },
-    { path: 'new', element: <InputPage /> },
+    // 새 콘텐츠 흐름(웹앱 ① v58): 목록(MI0) · 사전 작업 고르기(MI1) → 분석 로딩 · 검색(MI2) → 정제(MI3) → 완료
+    { index: true, element: <MiListScreen /> },
+    { path: 'new', element: <MiGateScreen /> },
+    { path: 'flow/:id', element: <MiFlowPage /> },
+    // 이전 MI 흐름 — 목록 · 새로 만들기만 /legacy 로 옮겼다(나머지 /:id/... 그대로)
+    { path: 'legacy', element: <ListPage /> },
+    { path: 'legacy/new', element: <InputPage /> },
+    { path: 'legacy/new/industry', element: <IndustryPage /> },
     { path: 'new/industry', element: <IndustryPage /> },
+    { path: 'rules', element: <RulesPage /> },
     { path: ':id', element: <OpenAnalysis /> },
     { path: ':id/input', element: <InputPage /> },
     { path: ':id/industry', element: k(IndustryPage) },

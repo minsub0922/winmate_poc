@@ -178,7 +178,8 @@ test.describe('제품 상세 시트 (PD)', () => {
   test('PD-16 `Spec 시트 만들기` → /spec/new?models=LH55QMCEBGCXKR', async ({ page }) => {
     await page.goto('/?detail=product:LH55QMCEBGCXKR');
     await productSheet(page).getByRole('link', { name: 'Spec 시트 만들기' }).click();
-    await expect(page).toHaveURL(/\/spec\/new\?models=LH55QMCEBGCXKR$/);
+    // /spec/new?models= 는 이전 흐름(모델로 시작)으로 넘어가 작업을 만든다 → /spec/sp_…/products?models=
+    await expect(page).toHaveURL(/\/spec\/(legacy\/new|sp_[0-9A-HJKMNP-TV-Z]{26}\/products)\?models=LH55QMCEBGCXKR$/);
   });
 
   test('PD-17 Tab 을 계속 눌러도 포커스가 시트 밖으로 나가지 않는다 · 첫 포커스는 선택된 탭', async ({ page }) => {

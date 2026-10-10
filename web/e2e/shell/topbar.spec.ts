@@ -22,9 +22,9 @@ test.describe('상단바 (T)', () => {
     const crumbs = page.getByRole('navigation', { name: '현재 위치' });
     await expect(crumbs).toHaveText('홈');
     await page.goto('/spec/new');
-    await expect(crumbs).toHaveText('홈/Spec 시트 생성/새 작업');
+    await expect(crumbs).toHaveText('홈/Spec 시트 생성/새 Spec 시트');   // /spec/new = 새 흐름 Gate(보드 SP1)
     const cur = crumbs.locator('[aria-current="page"]');
-    await expect(cur).toHaveText('새 작업');
+    await expect(cur).toHaveText('새 Spec 시트');
     expect(await css(cur, 'color')).toBe('rgb(18, 20, 23)');
     expect(await css(cur, 'font-weight')).toBe('600');
   });

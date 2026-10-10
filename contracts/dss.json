@@ -1,0 +1,2402 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "winmate dss",
+    "description": "공간별 제품 매칭 DSS — 업종 · 공간 · 공간별 제품 · 솔루션(새 콘텐츠 흐름, Storyboard 사전 작업)",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "/api/dss"
+    }
+  ],
+  "paths": {
+    "/v1/info": {
+      "get": {
+        "tags": [
+          "meta"
+        ],
+        "summary": "Info",
+        "operationId": "info",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss": {
+      "get": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "List Dss",
+        "description": "DSS 목록(최근 수정 순) — 보드 List 의 초안 줄.",
+        "operationId": "list_dss",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Cursor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Create Dss",
+        "description": "새 DSS — 고른 Storyboard 의 고객 요구사항(rq)을 문맥으로 가져온다. Storyboard 없으면 404, rq 없으면 422 PREREQUISITE_MISSING.",
+        "operationId": "create_dss",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}": {
+      "get": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Get Dss",
+        "description": "DSS 한 건. 허브에만 있는 DSS(id = DSS-nn)는 그 stages.dss 값으로 편집본을 만들어 돌려준다.",
+        "operationId": "get_dss",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/industry": {
+      "put": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Set Industry",
+        "description": "업종 고르기(value) · AI 업종 추론 적용(accept_ai).",
+        "operationId": "set_industry",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSSetIndustry"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/spaces": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Add Space",
+        "description": "공간 추가 — AI 공간 추천에 있던 이름이면 ai-accepted(근거 유지). 같은 이름이 있으면 409 SPACE_EXISTS.",
+        "operationId": "add_space",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSAddSpace"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/spaces/{space_key}": {
+      "patch": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Rename Space",
+        "operationId": "rename_space",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          },
+          {
+            "name": "space_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSPatchSpace"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Delete Space",
+        "operationId": "delete_space",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          },
+          {
+            "name": "space_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Key"
+            }
+          },
+          {
+            "name": "expected_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Expected Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/spaces/{space_key}/candidates": {
+      "get": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Space Candidates",
+        "description": "이 공간의 KB 후보 제품군(S1, 그 공간 관련 요구 문장으로) — 제품 고르기 팝업의 'KB 추천' 묶음.",
+        "operationId": "space_candidates",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          },
+          {
+            "name": "space_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSCandidates"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/spaces/{space_key}/products": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Add Product",
+        "description": "공간에 제품 넣기(직접). 이미 있는 제품이면 그대로(AI 추천이었으면 수락).",
+        "operationId": "add_product",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          },
+          {
+            "name": "space_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Space Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSAddProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/products/{product_id}": {
+      "patch": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Patch Product",
+        "description": "수량 고치기(빈 문자열이면 [확인 필요]) · AI 추천 수락(accept).",
+        "operationId": "patch_product",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Product Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSPatchProduct"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Delete Product",
+        "description": "제품 빼기 — AI 추천 거절도 이것.",
+        "operationId": "delete_product",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Product Id"
+            }
+          },
+          {
+            "name": "expected_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Expected Version"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}:accept-all": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Accept All",
+        "description": "공간별 제품 AI 추천 모두 수락.",
+        "operationId": "accept_all",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/solutions": {
+      "put": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Set Solutions",
+        "description": "고른 솔루션(0개 이상, 카탈로그 id). AI 추천이던 것은 ai-accepted. 함께 쓰는 제품은 서비스가 다시 계산한다.",
+        "operationId": "set_solutions",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSSetSolutions"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/solution-options": {
+      "get": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Solution Options",
+        "description": "솔루션 고르기 카드 — 카탈로그 전체(관련 높은 순) · 함께 쓰는 제품 · 고름 · AI 추천 · 겹침 안내.",
+        "operationId": "solution_options",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSSolutionOptions"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}:suggest": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Suggest",
+        "description": "AI 추가기능(점선 → 수락) — industry: 업종 추론 · spaces: 공간 추천 · products: 공간별 제품 자동 매칭(`ds.industry_spaces.v1`) ·\nsolutions: 솔루션 추천(`ds.solutions.v1`). 모델이 없으면 KB 로 결정적 추천(mode=kb_only).",
+        "operationId": "suggest",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSSuggestBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSSuggestResult"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}:finish": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Finish",
+        "description": "저장 → Storyboard flow.json stages.dss · 요약본 · 팝업 카드(허브 push_stage). 공간 · 제품이 없으면 422.",
+        "operationId": "finish",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}/stage": {
+      "get": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Get Stage",
+        "description": "지금 값으로 만든 stages.dss · 요약 줄(저장하지 않음).",
+        "operationId": "get_stage",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DSAddProduct": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "주면 지금 판과 다를 때 409 VERSION_CONFLICT"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "model_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Code"
+          },
+          "family_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Id"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty"
+          },
+          "why": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 120
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "DSAddProduct"
+      },
+      "DSAddSpace": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "주면 지금 판과 다를 때 409 VERSION_CONFLICT"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "DSAddSpace"
+      },
+      "DSCandidate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "kind": {
+            "type": "string",
+            "const": "product",
+            "title": "Kind",
+            "default": "product"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "model_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Code"
+          },
+          "family_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Id"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "why": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "DSCandidate"
+      },
+      "DSCandidates": {
+        "properties": {
+          "space": {
+            "type": "string",
+            "title": "Space"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DSCandidate"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "space",
+          "items"
+        ],
+        "title": "DSCandidates"
+      },
+      "DSCounts": {
+        "properties": {
+          "spaces": {
+            "type": "integer",
+            "title": "Spaces"
+          },
+          "products": {
+            "type": "integer",
+            "title": "Products"
+          },
+          "solutions": {
+            "type": "integer",
+            "title": "Solutions"
+          },
+          "pending": {
+            "type": "integer",
+            "title": "Pending"
+          }
+        },
+        "type": "object",
+        "required": [
+          "spaces",
+          "products",
+          "solutions",
+          "pending"
+        ],
+        "title": "DSCounts"
+      },
+      "DSCreate": {
+        "properties": {
+          "sb_id": {
+            "type": "string",
+            "title": "Sb Id",
+            "description": "사전 작업(고객 요구사항)이 된 Storyboard"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sb_id"
+        ],
+        "title": "DSCreate"
+      },
+      "DSDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code",
+            "description": "화면 · flow.json 에 쓰는 짧은 번호(DSS-01 …)"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "rq_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rq Ref",
+            "description": "사전 작업 고객 요구사항 ref(근거 표시 RQ-05 1)"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "reqs": {
+            "items": {
+              "$ref": "#/components/schemas/DSReq"
+            },
+            "type": "array",
+            "title": "Reqs",
+            "description": "요구 문장(근거 번호)"
+          },
+          "industry_options": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Industry Options"
+          },
+          "industry": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DSIndustry"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "industry_ai": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DSIndustrySuggestion"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "AI 업종 추론(점선) — 적용해야 들어간다"
+          },
+          "spaces": {
+            "items": {
+              "$ref": "#/components/schemas/DSSpace"
+            },
+            "type": "array",
+            "title": "Spaces"
+          },
+          "space_recs": {
+            "items": {
+              "$ref": "#/components/schemas/DSSpaceRec"
+            },
+            "type": "array",
+            "title": "Space Recs",
+            "description": "AI 공간 추천(점선) — 추가해야 들어간다"
+          },
+          "solutions": {
+            "items": {
+              "$ref": "#/components/schemas/DSSolution"
+            },
+            "type": "array",
+            "title": "Solutions",
+            "description": "고른 솔루션(0개 이상)"
+          },
+          "solution_recs": {
+            "items": {
+              "$ref": "#/components/schemas/DSSolutionRec"
+            },
+            "type": "array",
+            "title": "Solution Recs",
+            "description": "AI 솔루션 추천(점선) — 골라야 들어간다"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "done"
+            ],
+            "title": "Status",
+            "default": "draft"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver",
+            "description": "저장(완료) 판 — flow.json stages.dss.ver"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/DSCounts"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "counts",
+          "version",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "DSDoc"
+      },
+      "DSFlowSync": {
+        "properties": {
+          "md_added": {
+            "type": "string",
+            "title": "Md Added"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced"
+          }
+        },
+        "type": "object",
+        "required": [
+          "md_added"
+        ],
+        "title": "DSFlowSync"
+      },
+      "DSIndustry": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis",
+            "description": "근거(예: RQ-05 ‘입주사 공용 회의실 예약’)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "title": "DSIndustry"
+      },
+      "DSIndustrySuggestion": {
+        "properties": {
+          "value": {
+            "type": "string",
+            "title": "Value"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          },
+          "alt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Alt",
+            "description": "애매할 때 다른 후보 업종"
+          }
+        },
+        "type": "object",
+        "required": [
+          "value"
+        ],
+        "title": "DSIndustrySuggestion"
+      },
+      "DSList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DSListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "DSList"
+      },
+      "DSListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Code"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "sb_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sb Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "counts": {
+            "$ref": "#/components/schemas/DSCounts"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "status",
+          "counts",
+          "updated_at"
+        ],
+        "title": "DSListItem"
+      },
+      "DSPatchProduct": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "주면 지금 판과 다를 때 409 VERSION_CONFLICT"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 30
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty",
+            "description": "빈 문자열이면 수량을 지운다([확인 필요])"
+          },
+          "accept": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accept",
+            "description": "AI 추천 수락(ai-pending → ai-accepted)"
+          }
+        },
+        "type": "object",
+        "title": "DSPatchProduct"
+      },
+      "DSPatchSpace": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "주면 지금 판과 다를 때 409 VERSION_CONFLICT"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "DSPatchSpace"
+      },
+      "DSProduct": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "제품 이름(KB 제품군 · 모델 이름 그대로, 직접 넣은 것은 입력 그대로)"
+          },
+          "kind": {
+            "type": "string",
+            "const": "product",
+            "title": "Kind",
+            "default": "product"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref",
+            "description": "KB 참조 — kb:family:fam_… · kb:model:mdl_… (없으면 KB 에 없는 직접 입력)"
+          },
+          "model_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Code",
+            "description": "대표 모델코드(상세 시트)"
+          },
+          "family_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Family Id"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "qty": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qty",
+            "description": "수량(예: 2대) — 모르면 null(화면은 [확인 필요])"
+          },
+          "why": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why",
+            "description": "용도 · 근거 한 줄"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "DSProduct"
+      },
+      "DSReq": {
+        "properties": {
+          "n": {
+            "type": "integer",
+            "title": "N"
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "n",
+          "text"
+        ],
+        "title": "DSReq"
+      },
+      "DSSetIndustry": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "주면 지금 판과 다를 때 409 VERSION_CONFLICT"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value",
+            "description": "업종(선택지 또는 직접). null 이면 비움"
+          },
+          "accept_ai": {
+            "type": "boolean",
+            "title": "Accept Ai",
+            "description": "AI 업종 추론 적용(value 무시)",
+            "default": false
+          }
+        },
+        "type": "object",
+        "title": "DSSetIndustry"
+      },
+      "DSSetSolutions": {
+        "properties": {
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version",
+            "description": "주면 지금 판과 다를 때 409 VERSION_CONFLICT"
+          },
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Ids",
+            "description": "고를 솔루션 카탈로그 id(0개 이상, 순서대로)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ids"
+        ],
+        "title": "DSSetSolutions"
+      },
+      "DSSolution": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "솔루션 카탈로그 id(magicinfo …)"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref",
+            "description": "kb:solution:sol_…"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          },
+          "links": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Links",
+            "description": "함께 쓰는 제품(공간 · 제품)"
+          },
+          "why": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "DSSolution"
+      },
+      "DSSolutionOption": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "desc": {
+            "type": "string",
+            "title": "Desc"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "links": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Links"
+          },
+          "on": {
+            "type": "boolean",
+            "title": "On",
+            "default": false
+          },
+          "rec": {
+            "type": "boolean",
+            "title": "Rec",
+            "default": false
+          },
+          "why": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why"
+          },
+          "relevant": {
+            "type": "boolean",
+            "title": "Relevant",
+            "description": "함께 쓰는 제품 · 요구 · 업종 중 하나라도 맞음(기본으로 보이는 것)",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "desc"
+        ],
+        "title": "DSSolutionOption"
+      },
+      "DSSolutionOptions": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DSSolutionOption"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "overlap": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Overlap",
+            "description": "고른 솔루션끼리 겹칠 때 안내(예: 둘 다 사이니지 CMS)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "DSSolutionOptions"
+      },
+      "DSSolutionRec": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "why": {
+            "type": "string",
+            "title": "Why"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "why"
+        ],
+        "title": "DSSolutionRec"
+      },
+      "DSSpace": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "by": {
+            "type": "string",
+            "enum": [
+              "manual",
+              "ai-pending",
+              "ai-accepted"
+            ],
+            "title": "By",
+            "default": "manual"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis",
+            "description": "근거(예: RQ-05 1 · 입주사 안내)"
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/DSProduct"
+            },
+            "type": "array",
+            "title": "Products"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "name"
+        ],
+        "title": "DSSpace"
+      },
+      "DSSpaceRec": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "why": {
+            "type": "string",
+            "title": "Why"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          },
+          "ext": {
+            "type": "boolean",
+            "title": "Ext",
+            "description": "요구에는 없는 확장 공간",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "why"
+        ],
+        "title": "DSSpaceRec"
+      },
+      "DSStageOut": {
+        "properties": {
+          "stage": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stage",
+            "description": "Storyboard flow.json 의 stages.dss"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          },
+          "flow_sync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DSFlowSync"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage",
+          "summary_md"
+        ],
+        "title": "DSStageOut"
+      },
+      "DSSuggestBody": {
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": [
+              "industry",
+              "spaces",
+              "products",
+              "solutions"
+            ],
+            "title": "Scope"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scope"
+        ],
+        "title": "DSSuggestBody"
+      },
+      "DSSuggestResult": {
+        "properties": {
+          "doc": {
+            "$ref": "#/components/schemas/DSDoc"
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "kb_only"
+            ],
+            "title": "Mode",
+            "description": "llm = 모델 결과(검증 후) · kb_only = 모델 없이 KB 로 결정적 추천"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "doc",
+          "added",
+          "mode"
+        ],
+        "title": "DSSuggestResult"
+      },
+      "ErrorDetail": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code",
+            "description": "UPPER_SNAKE 오류 코드"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "사람이 읽는 한국어 메시지"
+          },
+          "details": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Details"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorDetail"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse"
+      },
+      "ServiceInfo": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "version": {
+            "type": "string",
+            "title": "Version"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "title",
+          "version"
+        ],
+        "title": "ServiceInfo"
+      }
+    }
+  }
+}

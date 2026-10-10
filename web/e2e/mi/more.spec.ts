@@ -12,7 +12,7 @@ test('MI1I → MI2 — 업종 프리셋으로 요구 4개 · 기준 4개 · 업�
   const down = await backendDown(request);
   test.skip(!!down, down ?? '');
 
-  await page.goto('/mi/new/industry?segment=FB');
+  await page.goto('/mi/legacy/new/industry?segment=FB');
   const tiles = page.getByRole('radiogroup', { name: '업종' });
   await expect(tiles.getByRole('radio', { checked: true })).toContainText('외식 · 카페');
   const reqs = page.getByRole('checkbox');

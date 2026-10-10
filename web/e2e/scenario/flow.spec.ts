@@ -10,10 +10,10 @@ test.describe.configure({ retries: 1 });
 
 test('새 시나리오 → 입력 → 솔루션 · 제품 → 생성 → 결과 → 보내기', async ({ page }) => {
   test.setTimeout(150_000);
-  await page.goto('/scenario');
+  await page.goto('/scenario/legacy');                     // 이전 흐름 목록(새 흐름 목록 · Gate 는 /scenario · /scenario/new)
   await expect(page.getByRole('heading', { name: '공간 시나리오' })).toBeVisible();
   await page.getByTestId('sc0-new').click();
-  await expect(page).toHaveURL(/\/scenario\/new$/);
+  await expect(page).toHaveURL(/\/scenario\/legacy\/new$/);
 
   // SC1
   await expect(page.getByTestId('sc1-with')).toHaveAttribute('aria-checked', 'true');

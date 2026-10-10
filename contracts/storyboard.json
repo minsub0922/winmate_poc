@@ -3230,6 +3230,530 @@
           }
         }
       }
+    },
+    "/v1/flows": {
+      "get": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "List Flows",
+        "description": "Storyboard 목록(SB0) · 사전 작업 고르기(Gate). content= 를 주면 eligible · need · existing 을 채우고 고를 수 있는 것을 위로.",
+        "operationId": "list_flows",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 200,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "rq",
+                    "dss",
+                    "mi",
+                    "ca",
+                    "vp",
+                    "sp",
+                    "sc",
+                    "ppt"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Content"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "flows",
+          "internal"
+        ],
+        "summary": "Create Flow",
+        "description": "고객 요구사항을 저장하면 requirements 가 부른다(Storyboard 자동 생성).",
+        "operationId": "create_flow",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlowCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flows/contents/{key}": {
+      "get": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "List Flow Contents",
+        "description": "콘텐츠 목록(보드 List) — 저장된 콘텐츠마다 연결된 Storyboard 들. 아직 저장 전 초안은 각 서비스 목록에 있다.",
+        "operationId": "list_flow_contents",
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "rq",
+                "dss",
+                "mi",
+                "ca",
+                "vp",
+                "sp",
+                "sc",
+                "ppt"
+              ],
+              "type": "string",
+              "title": "Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowContentList"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flows/{flow_id}": {
+      "get": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "Get Flow",
+        "operationId": "get_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "Patch Flow",
+        "description": "이름 · Key message · 요약본 고침(사람이 더한 문장은 절마다 남겨 ✎ 표시).",
+        "operationId": "patch_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlowPatch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flows/{flow_id}/stages/{key}": {
+      "put": {
+        "tags": [
+          "flows",
+          "internal"
+        ],
+        "summary": "Put Flow Stage",
+        "description": "콘텐츠를 저장하면 그 서비스가 부른다 — stages.<key> 실제 값 · 요약본 줄 · 팝업 카드. 같은 ref 의 다른 Storyboard 도 함께 바뀐다.",
+        "operationId": "put_flow_stage",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "rq",
+                "dss",
+                "mi",
+                "ca",
+                "vp",
+                "sp",
+                "sc",
+                "ppt"
+              ],
+              "type": "string",
+              "title": "Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlowStageIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flows/{flow_id}:branch": {
+      "post": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "Branch Flow",
+        "description": "복제본 만들기 — Storyboard 를 분기하고 앞 단계(사전 작업)는 공유한다. 그 콘텐츠는 새 Storyboard 에서 새로 만든다.",
+        "operationId": "branch_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlowBranch"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/flows/{flow_id}/key-message:suggest": {
+      "post": {
+        "tags": [
+          "flows"
+        ],
+        "summary": "Suggest Key Message",
+        "description": "전략 수립 팝업의 AI 후보 3안(sb.key_message.v1, 모델이 없으면 연결 콘텐츠 문장으로 규칙 후보).",
+        "operationId": "suggest_key_message",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KeyMessageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4238,6 +4762,947 @@
         ],
         "title": "Flag"
       },
+      "FlowBranch": {
+        "properties": {
+          "stage": {
+            "type": "string",
+            "enum": [
+              "rq",
+              "dss",
+              "mi",
+              "ca",
+              "vp",
+              "sp",
+              "sc",
+              "ppt"
+            ],
+            "title": "Stage",
+            "description": "복제본을 만들 콘텐츠 — 그 앞 단계(사전 작업)만 공유한다"
+          }
+        },
+        "type": "object",
+        "required": [
+          "stage"
+        ],
+        "title": "FlowBranch"
+      },
+      "FlowBranchRef": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stage"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "FlowBranchRef",
+        "description": "SB1 「분기 n」 팝오버 한 줄 — SB-02 · MI에서 분기 · MI-02 리테일 테넌트 관점"
+      },
+      "FlowCard": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "facts": {
+            "items": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "array",
+            "title": "Facts",
+            "description": "[[이름, 값]] 3칸"
+          },
+          "groups": {
+            "items": {
+              "$ref": "#/components/schemas/FlowCardGroup"
+            },
+            "type": "array",
+            "title": "Groups"
+          },
+          "foot": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Foot"
+          },
+          "line": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Line",
+            "description": "SB1 연결된 콘텐츠 줄의 한 줄 요약(예: RQ-01 v2 · 키맨 3 · 요구 12 · 확인 필요 4)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "FlowCard",
+        "description": "연결된 콘텐츠 보기 팝업(ContentPopup)에 그대로 그리는 값 — 콘텐츠 서비스가 stage 와 함께 준다."
+      },
+      "FlowCardGroup": {
+        "properties": {
+          "h": {
+            "type": "string",
+            "title": "H"
+          },
+          "sub": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sub"
+          },
+          "lines": {
+            "items": {
+              "$ref": "#/components/schemas/FlowCardLine"
+            },
+            "type": "array",
+            "title": "Lines"
+          }
+        },
+        "type": "object",
+        "required": [
+          "h"
+        ],
+        "title": "FlowCardGroup"
+      },
+      "FlowCardLine": {
+        "properties": {
+          "t": {
+            "type": "string",
+            "title": "T"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note",
+            "description": "오른쪽 꼬리표(확인 필요 · 확장 · 출처 종류 …)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "t"
+        ],
+        "title": "FlowCardLine"
+      },
+      "FlowCell": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "state": {
+            "type": "string",
+            "enum": [
+              "done",
+              "none"
+            ],
+            "title": "State"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver"
+          },
+          "res_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Res Id"
+          },
+          "route": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Route"
+          },
+          "shared": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Shared"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "state"
+        ],
+        "title": "FlowCell"
+      },
+      "FlowContentItem": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "ref": {
+            "type": "string",
+            "title": "Ref"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "res_id": {
+            "type": "string",
+            "title": "Res Id"
+          },
+          "route": {
+            "type": "string",
+            "title": "Route"
+          },
+          "storyboards": {
+            "items": {
+              "$ref": "#/components/schemas/FlowSbRef"
+            },
+            "type": "array",
+            "title": "Storyboards"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "ref",
+          "ver",
+          "title",
+          "res_id",
+          "route",
+          "storyboards",
+          "updated_at"
+        ],
+        "title": "FlowContentItem"
+      },
+      "FlowContentList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FlowContentItem"
+            },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "FlowContentList"
+      },
+      "FlowCreate": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target",
+            "description": "최종 제안대상(대표이사 …)"
+          },
+          "rq": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FlowStageIn"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "title": "FlowCreate"
+      },
+      "FlowDoc": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "target": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target"
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent"
+          },
+          "branch_point": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Branch Point"
+          },
+          "branches": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Branches"
+          },
+          "branch_items": {
+            "items": {
+              "$ref": "#/components/schemas/FlowBranchRef"
+            },
+            "type": "array",
+            "title": "Branch Items",
+            "description": "branches 의 이름 · 분기한 콘텐츠(GET · PATCH 응답에서 채움)"
+          },
+          "key_message": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Message",
+            "description": "{text, by, at, pillars[{text, evidence[]}]}"
+          },
+          "cells": {
+            "items": {
+              "$ref": "#/components/schemas/FlowCell"
+            },
+            "type": "array",
+            "title": "Cells"
+          },
+          "progress": {
+            "type": "string",
+            "title": "Progress"
+          },
+          "contents_done": {
+            "type": "integer",
+            "title": "Contents Done"
+          },
+          "stages": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stages",
+            "description": "flow.json stages — 콘텐츠 실제 값"
+          },
+          "cards": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FlowCard"
+            },
+            "type": "object",
+            "title": "Cards"
+          },
+          "summary_md": {
+            "type": "string",
+            "title": "Summary Md"
+          },
+          "user_lines": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object",
+            "title": "User Lines"
+          },
+          "flow_json": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Flow Json",
+            "description": "flow.json 전체(화면 JSON 보기 · 완료 화면 강조에 그대로 쓴다)"
+          },
+          "history": {
+            "items": {
+              "$ref": "#/components/schemas/FlowHistory"
+            },
+            "type": "array",
+            "title": "History"
+          },
+          "created_at": {
+            "type": "string",
+            "title": "Created At"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "version",
+          "name",
+          "cells",
+          "progress",
+          "contents_done",
+          "stages",
+          "summary_md",
+          "flow_json",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "FlowDoc"
+      },
+      "FlowHistory": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "ref": {
+            "type": "string",
+            "title": "Ref"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver"
+          },
+          "md": {
+            "type": "string",
+            "title": "Md"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "key",
+          "ref",
+          "ver",
+          "md"
+        ],
+        "title": "FlowHistory"
+      },
+      "FlowList": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/FlowListItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_cursor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Cursor"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items"
+        ],
+        "title": "FlowList"
+      },
+      "FlowListItem": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent"
+          },
+          "is_branch": {
+            "type": "boolean",
+            "title": "Is Branch",
+            "default": false
+          },
+          "cells": {
+            "items": {
+              "$ref": "#/components/schemas/FlowCell"
+            },
+            "type": "array",
+            "title": "Cells"
+          },
+          "progress": {
+            "type": "string",
+            "title": "Progress",
+            "description": "요구사항까지 · DSS까지 · DSS + 콘텐츠 n/5"
+          },
+          "contents_done": {
+            "type": "integer",
+            "title": "Contents Done"
+          },
+          "eligible": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eligible",
+            "description": "content= 를 줬을 때: 사전 작업이 됐는지"
+          },
+          "need": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Need",
+            "description": "eligible=false 면 먼저 할 것(rq · dss)"
+          },
+          "existing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FlowCell"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "content= 를 줬을 때: 이미 연결된 그 콘텐츠"
+          },
+          "key_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Message",
+            "description": "SB0 Key message 칸(없으면 null)"
+          },
+          "branch_point": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Branch Point",
+            "description": "분기면 {stage, from_ref} — SB0 「SB-01 · MI에서 분기」"
+          },
+          "updated_at": {
+            "type": "string",
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "cells",
+          "progress",
+          "contents_done",
+          "updated_at"
+        ],
+        "title": "FlowListItem"
+      },
+      "FlowPatch": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "key_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Message"
+          },
+          "key_message_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Message By",
+            "description": "manual · ai-accepted"
+          },
+          "key_pillars": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/KeyPillar"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Pillars",
+            "description": "받쳐 줄 메시지(최대 3) — 빈 칸은 빼고 저장"
+          },
+          "summary_md": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary Md",
+            "description": "사람이 고친 요약본 전체 — 새로 더한 문장만 절마다 남긴다"
+          },
+          "expected_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Expected Version"
+          }
+        },
+        "type": "object",
+        "title": "FlowPatch"
+      },
+      "FlowSbRef": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "is_branch": {
+            "type": "boolean",
+            "title": "Is Branch",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name"
+        ],
+        "title": "FlowSbRef"
+      },
+      "FlowStageIn": {
+        "properties": {
+          "ref": {
+            "type": "string",
+            "title": "Ref",
+            "description": "콘텐츠 코드(RQ-01 · DSS-01 · MI-01 …)"
+          },
+          "ver": {
+            "type": "integer",
+            "title": "Ver",
+            "default": 1
+          },
+          "res_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Res Id",
+            "description": "콘텐츠 서비스 자원 id(편집 화면 라우트에 쓴다). 없으면 ref"
+          },
+          "value": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Value",
+            "description": "stages.<key> 에 들어갈 실제 값(ref · ver 는 따로)"
+          },
+          "md": {
+            "type": "string",
+            "title": "Md",
+            "description": "요약본에 더할 줄(첫 줄이 '## ' 머리면 빼고 쓴다)",
+            "default": ""
+          },
+          "card": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/FlowCard"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ref"
+        ],
+        "title": "FlowStageIn"
+      },
+      "FlowStageOut": {
+        "properties": {
+          "flow": {
+            "$ref": "#/components/schemas/FlowDoc"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "md_added": {
+            "type": "string",
+            "title": "Md Added",
+            "description": "요약본에 더해진 부분(완료 화면 왼쪽)"
+          },
+          "synced": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Synced",
+            "description": "같은 ref 라 함께 바뀐 다른 Storyboard"
+          }
+        },
+        "type": "object",
+        "required": [
+          "flow",
+          "key",
+          "md_added"
+        ],
+        "title": "FlowStageOut"
+      },
       "FollowUp": {
         "properties": {
           "label": {
@@ -4900,6 +6365,50 @@
         ],
         "title": "KeyMessage"
       },
+      "KeyMessageCand": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Basis"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id",
+            "description": "후보 이름(A · B · C)"
+          },
+          "pillars": {
+            "items": {
+              "$ref": "#/components/schemas/KeyPillar"
+            },
+            "type": "array",
+            "title": "Pillars",
+            "description": "받쳐 줄 메시지 3(근거 포함)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "KeyMessageCand"
+      },
       "KeyMessageList": {
         "properties": {
           "items": {
@@ -4915,6 +6424,50 @@
           "items"
         ],
         "title": "KeyMessageList"
+      },
+      "KeyMessageOut": {
+        "properties": {
+          "candidates": {
+            "items": {
+              "$ref": "#/components/schemas/KeyMessageCand"
+            },
+            "type": "array",
+            "title": "Candidates"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "llm",
+              "rule"
+            ],
+            "title": "Mode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "candidates",
+          "mode"
+        ],
+        "title": "KeyMessageOut"
+      },
+      "KeyPillar": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "default": ""
+          },
+          "evidence": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence"
+          }
+        },
+        "type": "object",
+        "title": "KeyPillar",
+        "description": "Key message 를 받쳐 줄 메시지(전략 수립 팝업 · 3칸) — 근거는 연결된 콘텐츠 코드(RQ-01 대표이사 1 · DSS-01 로비 …)"
       },
       "LanguageSetting": {
         "properties": {

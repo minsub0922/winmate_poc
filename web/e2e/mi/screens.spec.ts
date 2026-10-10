@@ -196,7 +196,7 @@ test('MI0 — 머리 집계 · 상태 필터 · 업데이트 배너 · 행 동�
       banner: { n: 2, title: '2건은 다시 분석을 권해요.', text: '분석한 지 30일이 지났고, 그사이 경쟁사 신제품 발표와 시장 리포트 개정이 확인됐어요.', kinds: [], target_ids: [ids[1], ids[4]] },
       header: '분석 5건 · 업데이트 필요 2건 · 확정 필요 수치가 남은 작업 1건' },
   });
-  await page.goto('/mi');
+  await page.goto('/mi/legacy');
   await expect(page.getByTestId('mi0-header')).toHaveText('분석 5건 · 업데이트 필요 2건 · 확정 필요 수치가 남은 작업 1건');
   await expect(page.getByRole('tablist', { name: '상태 필터' }).getByRole('tab')).toHaveText(['전체5', '진행 중1', '완료1', '업데이트 필요2', '작성 중1']);
   await expect(page.getByTestId('mi0-banner')).toContainText('2건은 다시 분석을 권해요. 분석한 지 30일이 지났고, 그사이 경쟁사 신제품 발표와 시장 리포트 개정이 확인됐어요.');
@@ -224,7 +224,7 @@ test('MI1 — 입력 없으면 비활성, 고객사만 넣어도 활성 · 800ms
     [`PATCH /v1/analyses/${AID}`]: () => analysis({ status: 'draft' }),
   });
   await page.route((u) => u.pathname === '/api/workspace/v1/items' && u.searchParams.get('feature') === 'SB', (r) => r.fulfill({ json: { items: [], next_cursor: null } }));
-  await page.goto('/mi/new');
+  await page.goto('/mi/legacy/new');
   const next = page.getByTestId('mi1-next');
   await expect(next).toBeDisabled();
   typedAt = Date.now();

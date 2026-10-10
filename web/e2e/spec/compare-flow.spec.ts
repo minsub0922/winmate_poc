@@ -14,8 +14,8 @@ async function addModel(page: import('@playwright/test').Page, q: string) {
 }
 
 test('모델명 두 개 → 항목 · 형식 → 생성 · 값 확인 → 결과', async ({ page, request }) => {
-  // SP0
-  await page.goto('/spec');
+  // SP0(이전 흐름 목록 — 새 흐름 목록은 /spec · sp-flow.spec.ts)
+  await page.goto('/spec/legacy');
   await expect(page.getByRole('heading', { name: 'Spec 시트 작업' })).toBeVisible();
   await expect(page.getByText('모델명으로 입력')).toBeVisible();
   await expect(page.getByText('조건으로 모델 찾기').first()).toBeVisible();
@@ -23,7 +23,7 @@ test('모델명 두 개 → 항목 · 형식 → 생성 · 값 확인 → 결과
 
   // SP1
   await page.getByRole('button', { name: '새 Spec 시트' }).click();
-  await expect(page).toHaveURL(/\/spec\/new$/);
+  await expect(page).toHaveURL(/\/spec\/legacy\/new$/);
   await ready(page);
   await expect(page.getByText('스펙 시트를 만들 제품을 입력해 주세요.', { exact: false })).toBeVisible();
   await expect(page.getByTestId('sp-dock-title')).toHaveText('제품 입력 · 1 / 3');

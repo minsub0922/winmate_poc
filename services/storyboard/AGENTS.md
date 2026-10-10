@@ -28,7 +28,24 @@ make contracts SERVICE=storyboard    # contracts/storyboard.json 갱신 + 깨지
 - API 를 바꾸면 `make contracts SERVICE=storyboard` 를 돌리고 `contracts/storyboard.json` 변경을 함께 남긴다. 깨지는 변경이면 소비 서비스를 `docs/requests/` 에 알린다.
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
-## 현재 상태 (2026-10-06)
+## 현재 상태 (2026-10-10)
+
+### 새 흐름 허브(2026-10-08 · 보드 정합 2026-10-10) — docs/scenarios/11-content-flow.md §6 · 보드 webapp1 SB0 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI
+- API `/v1/flows*`(본체 `flows.py`, 라우트 `api_flows.py`): 목록(`content=` → eligible · need · existing) · 만들기(internal, requirements) · 읽기 · 고침(이름 · Key message + 받쳐 줄 메시지 ≤ 3 · 요약본 사람 문장 `user_lines`) ·
+  stage 넣기(internal — 같은 ref 의 다른 Storyboard 도 `synced`, 사전 작업 없으면 422 `PREREQUISITE_MISSING`) · `:branch`(사전 작업 사슬만 공유 · Key message 는 복사 안 함) ·
+  `key-message:suggest`(`sb.key_message.v1` 3안, 근거 코드는 이 Storyboard 의 실제 코드로 · 없으면 규칙 후보) · `contents/{key}`(보드 List).
+- 요약본 형식(보드 그대로): 전체 `summary_md` = SB1(`# 이름 — Storyboard 요약` · `고객: … · 최종 제안대상: … · main|분기 B` · `## Key message`(+ 받쳐 줄 메시지 `- …`) ·
+  `## n. 고객 요구사항|DSS|Market Intelligence|경쟁사 분석|Value Proposition|Spec 시트|공간 시나리오 · REF vN` · `## 남은 것` `- 경쟁사 · VP · Spec · 공간 시나리오 → 제안서`).
+  완료 화면 `md_added` = Done 머리(`## 요구사항|DSS|MI|경쟁사|VP|Spec|시나리오 · REF vN`, 번호 없음 — 콘텐츠가 보낸 첫 `## ` 줄은 버린다). 사람 문장은 그 절 끝에 `✎`(번호 머리 · 짧은 머리 둘 다 읽음).
+  flow.json(`flow_json`) 키 순서 = SB1_Json(`keyPillars` 는 있을 때만), `progress` = `rq` · `dss+n/5`(화면 문구는 `FlowDoc.progress`).
+- 웹 `flow/`: `FlowList`(SB0 `/storyboard` — 칸 1fr 480 · 300 · 120 · 110) · `FlowDetail`(SB1 `/storyboard/flow/:id` — 진행 8칸 · Key message · 연결된 콘텐츠 · 요약본 md / json 470 · 후속 작업 PPT ·
+  분기 n 팝오버 → SBPopup · 보기 = 공용 ContentPopup · 만들기 = `/<base>/new?sb=&auto=1` · 요약본 수정(Esc 로 그만)) · `StrategyPopup`(1100×700 · AI 후보 360+1 점선 → 이 안 쓰기 → 저장) · `model.ts` · `sbf.css`.
+  앱은 border-box 라 보드에서 content-box + 테두리인 칸은 테두리만큼 더했다(줄 51 · 머리 41 · 47 · 39 · 근거 칩 28 · 후보 361 · 63).
+- 테스트: pytest `test_flows.py` 10(보드 SB1 요약본 전문 일치 · Done 머리 7종 · 짧은 머리 사람 문장 포함). e2e `web/e2e/storyboard/sb-flow.spec.ts`(API 로 SB-01 모양 + MI 분기 → SB0 → SB1 → 보기 → json → 전략 수립 → AI 3안 → 수락 · 저장 →
+  요약본 수정 ✎ → 경쟁사 저장 뒤에도 유지 → VP 만들기(Gate 건너뜀) → 분기 n → SBPopup → 분기 SB1), 캡처 `__screens__/SB0-new` · `SB1-new` · `SB1_View-new` · `SB1_Json-new` · `SB1_Strat-new` · `SB1_StratAI-new` 외.
+- 보드와 다름: 요약본 Key message 절에 받쳐 줄 메시지 줄을 함께 쓴다(보드 SB1 예시엔 한 줄 메시지만 — PPT 가 요약본을 읽으므로) · json 탭 줄 나눔은 패널 폭(≈60칸)에 맞춘 자동 나눔(보드는 손으로 2줄) ·
+  Key message 가 없을 때 점선 카드 「아직 없음 · …」(보드에 없는 상태) · 분기 Storyboard 머리에 부모 칩(「SB-01 · MI에서 분기」) · 렌더 글꼴 줄 높이 차이로 세로 1~3px.
+- 이전 흐름 링크: SB1 「정의서가 없어요」 → `/requirements/legacy/new?return=storyboard` · SB4 MI · 공간 시나리오 카드 → `/mi/legacy/new?rq=&sb=` · `/scenario/legacy/new?sb=`(`/<base>/new` 는 새 흐름). 이전 e2e `list-sync` 는 `/storyboard/legacy`.
 
 ### API — `/v1` 44 경로(`contracts/storyboard.json`), 오류는 한국어 `{error:{code,message,details}}`
 - 목록 · 만들기: `GET /storyboards`(tab · q · customer · updated_after · cursor 20, 시작 전 초안 제외) · `GET /storyboards/counts` ·
@@ -77,7 +94,7 @@ make contracts SERVICE=storyboard    # contracts/storyboard.json 갱신 + 깨지
 - 섹션 `확인 필요` 는 정의서에서 확인 필요인 항목이 `직접` 연결된 섹션에만 번진다. 제목은 `{고객사} {짧은 이름} 제안 기획`(정의서 제목이 고객사로 시작하면 한 번만).
 - 내보내기 언어(영문 · 병기)는 설정만 넘기고 번역하지 않는다(Q-16 미정). 내부 검토 요청은 검토자를 안 주면 workspace 의 다른 사용자 한 명.
 - `회의 안건에 넣기` = 안건 글 클립보드 복사(Q-8), SB3D `공유` = 공유 링크 복사, SB3 `추가 논의 {n}` → SB3D 추가 논의 줄.
-- 다른 기능 넘기기는 웹 이동 + 기록(`POST handoffs/{target}`): `/proposal/new?sb=&rq=` · `/mi/new?rq=&sb=` · `/scenario/new?sb=`. mi · scenario · competitor 는
+- 다른 기능 넘기기는 웹 이동 + 기록(`POST handoffs/{target}`): `/proposal/new?sb=&rq=` · `/mi/legacy/new?rq=&sb=` · `/scenario/legacy/new?sb=`(2026-10-10 — `/<base>/new` 는 새 흐름 Gate). mi · scenario · competitor 는
   storyboard 를 consumes 하지 않아 웹이 읽어 넘긴다(Q-2 · Q-3, 안내는 `docs/requests/{mi,scenario,competitor,vp,proposal}.md`).
 
 ### 알려진 빈 곳

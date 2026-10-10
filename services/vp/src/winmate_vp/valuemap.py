@@ -21,6 +21,7 @@ from collections.abc import Callable
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+from winmate_common.flow import get_flow, push_stage
 from winmate_common.errors import ApiError, not_found
 from winmate_common.ids import new_id, now_iso
 from winmate_common.platform import register_item
@@ -88,6 +89,7 @@ class VMDoc(BaseModel):
     candidates: list[VMCandidate] = Field(default_factory=list, description="DSS 에서 온 고를 수 있는 제품 · 솔루션")
     items: list[VMItem] = Field(default_factory=list, description="고른 제품 · 솔루션(이 순서로 보인다)")
     status: Literal["draft", "done"] = "draft"
+    ver: int | None = Field(None, description="저장(완료) 판 — flow.json stages.vp.ver")
     counts: VMCounts
     version: int
     created_at: str
@@ -185,9 +187,15 @@ class VMImportValue(BaseModel):
     value_id: str
 
 
+class VMFlowSync(BaseModel):
+    md_added: str = Field(description="Storyboard 요약본에 더해진 부분")
+    synced: list[str] = Field(default_factory=list, description="같은 VP 가 연결돼 함께 바뀐 다른 Storyboard")
+
+
 class VMStageOut(BaseModel):
     stage: dict[str, Any] = Field(description="Storyboard flow.json 의 stages.vp")
     summary_md: str
+    flow_sync: VMFlowSync | None = Field(None, description="Storyboard 허브에 반영된 결과(sb_id 가 없거나 허브가 안 되면 null)")
 
 
 # ── 저장소 ──────────────────────────────────────────────
@@ -271,9 +279,46 @@ async def _kb_candidates(text: str) -> list[dict[str, Any]]:
 
 # ── 작업 ────────────────────────────────────────────────
 
+def dss_candidates(flow: dict[str, Any]) -> list[dict[str, Any]]:
+    """Storyboard flow.json stages.dss → 고를 수 있는 제품 · 솔루션(공간 붙여서)."""
+    dss = (flow.get("stages") or {}).get("dss") or {}
+    out: dict[str, dict[str, Any]] = {}
+    for sp in dss.get("spaces") or []:
+        for p in sp.get("products") or []:
+            name = p.get("name") if isinstance(p, dict) else p
+            if not name:
+                continue
+            c = out.setdefault(name, {"name": name, "kind": "product", "ref": (p.get("ref") if isinstance(p, dict) else None), "spaces": []})
+            if sp.get("name") and sp["name"] not in c["spaces"]:
+                c["spaces"].append(sp["name"])
+    for so in dss.get("solutions") or []:
+        name = so.get("name") if isinstance(so, dict) else so
+        if name:
+            out.setdefault(name, {"name": name, "kind": "solution", "ref": so.get("ref") if isinstance(so, dict) else None, "spaces": []})
+    return list(out.values())
+
+
+def flow_context(flow: dict[str, Any]) -> str:
+    """AI 추천 문맥 — 요약본(md) 앞부분."""
+    return (flow.get("summary_md") or "")[:4000]
+
+
 async def create(body: VMCreate) -> dict[str, Any]:
-    cands = [c.model_dump() for c in body.candidates] if body.candidates is not None else (
-        await _kb_candidates(body.context_text) if body.context_text else [])
+    flow = await get_flow(body.sb_id) if body.sb_id else None
+    if body.sb_id and flow is None and body.candidates is None:
+        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
+    if flow is not None and body.candidates is None and not (flow.get("stages") or {}).get("dss"):
+        raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
+    if body.candidates is not None:
+        cands = [c.model_dump() for c in body.candidates]
+    elif flow is not None:
+        cands = dss_candidates(flow)
+    else:
+        cands = await _kb_candidates(body.context_text) if body.context_text else []
+    if flow is not None and not body.context_text:
+        body.context_text = flow_context(flow)
+    if flow is not None and not body.title:
+        body.title = flow.get("name")
     seen: set[str] = set()
     uniq = []
     for c in cands:
@@ -591,6 +636,18 @@ def stage(d: dict[str, Any]) -> dict[str, Any]:
             "items": items, "counts": {"items": c["items"], "values": c["values"], "needs": c["needs"], "needsMissing": c["needs_missing"]}}
 
 
+def card(d: dict[str, Any], st: dict[str, Any]) -> dict[str, Any]:
+    """연결된 콘텐츠 보기 팝업(ContentPopup) 값."""
+    c = counts(d)
+    groups = []
+    for it in st["items"][:3]:
+        groups.append({"h": it["name"], "sub": f"가치 {len(it['values'])}",
+                       "lines": [{"t": v["message"], "note": None if v.get("need") else "확인 필요"} for v in it["values"][:3]]})
+    return {"title": d.get("title") or "VP", "facts": [["제품 · 솔루션", str(c["items"])], ["가치", str(c["values"])], ["고객의 니즈", f"{c['needs']}/{c['values']}"]],
+            "groups": groups, "foot": "니즈가 빈 가치는 확인 필요로 표시돼요",
+            "line": f"{d.get('code')} v{d.get('ver') or 1} · 제품 · 솔루션 {c['items']} · 가치 {c['values']} · 니즈 {c['needs']}/{c['values']}"}
+
+
 def summary_md(d: dict[str, Any]) -> str:
     c = counts(d)
     st = stage(d)
@@ -610,12 +667,18 @@ async def finish(map_id: str) -> dict[str, Any]:
         raise ApiError(422, "NO_VALUES", "가치를 하나 이상 적어 주세요.")
 
     def fn(doc: dict[str, Any]) -> None:
+        doc["ver"] = int(doc.get("ver") or 0) + 1 if doc.get("status") == "done" or doc.get("saved_at") else 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
     saved = await update(map_id, fn, "저장")
     await register_item(feature="VP", item_id=map_id, title=saved.get("title") or "VP", status="done", route=f"/vp/values/{map_id}",
                         summary=f"가치 {c['values']} · 니즈 {c['needs']}/{c['values']}")
-    return {"stage": stage(saved), "summary_md": summary_md(saved)}
+    st, md = stage(saved), summary_md(saved)
+    sync = None
+    if saved.get("sb_id"):
+        sync = await push_stage(saved["sb_id"], "vp", ref=saved.get("code") or map_id, ver=int(saved.get("ver") or 1), res_id=map_id,
+                                title=saved.get("title"), value=st, md=md, card=card(saved, st))
+    return {"stage": st, "summary_md": md, "flow_sync": {"md_added": sync["md_added"], "synced": sync["synced"]} if sync else None}
 
 
 async def get_stage(map_id: str) -> dict[str, Any]:

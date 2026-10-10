@@ -25,3 +25,13 @@
 - MI3V → 제품 사양 링크에 `from=mi:{analysis_id}`(spec 이 출처를 기록) — `pages/VerifyPage.tsx` · `api_more.py`.
 - `GET /v1/analyses/{id}/design` 이 설계 잡 중간에 500(ResponseValidationError — `decide_competitors` 가 `competitors` 결정에 mode · reason 만 먼저 적음): 완료 —
   `service.design_view` 가 다 만든 결정 줄(key · label)만 보인다. `make test SERVICE=mi` 118 · `make e2e-feature SERVICE=mi` 10 통과.
+
+## 허브 완료 화면 머리 = 보드 Done(짧은 이름) — storyboard · 2026-10-10
+- 바뀐 것(허브 `/v1/flows*`, 응답 모양 그대로): `PUT /v1/flows/{id}/stages/{key}` 의 `md_added`(→ `push_stage` · 각 서비스 `flow_sync.md_added`) 첫 줄을
+  보드 Done 머리(짧은 이름 · 번호 없음)로 바꿨다 — `## 요구사항 · RQ-06 v1` · `## DSS · …` · `## MI · MI-01 v2` · `## 경쟁사 · CA-01 v1` · `## VP · …` · `## Spec · …` · `## 시나리오 · …`.
+  요약본 전체(`summary_md`)는 그대로 보드 SB1 형식(`## 1. 고객 요구사항 · RQ-01 v2` · `## 3. Market Intelligence · MI-01 v1`), 「남은 것」 줄의 시나리오는 `공간 시나리오`.
+  함께: flow.json `progress` 는 보드 값 `rq` · `dss+n/5`(화면 문구 `FlowDoc.progress` 는 그대로), `keyPillars` 는 받쳐 줄 메시지가 있을 때만, 분기(`:branch`)는 Key message 를 복사하지 않는다(보드 SB0 · SBPopup).
+- 맞출 곳: `services/mi/tests/test_mi_flow.py:166` `md_added.startswith(f"## Market Intelligence · {d['code']} v1\n- 시장 2 …")` → `## MI · {code} v1\n…`.
+  (MI 가 보내는 md 첫 줄 `## Market Intelligence · …` 은 허브가 버리고 다시 붙이므로 `miflow.py:702` 는 그대로 둬도 된다.)
+- 함께(이전 흐름): SB4 「다음에 할 일 · Market Intelligence」 카드 경로를 `/mi/new?rq=&sb=` → `/mi/legacy/new?rq=&sb=` 로 바꿨다(`/mi/new` 는 새 흐름 Gate). InputPage 가 `rq` · `sb` 를 그대로 읽는다.
+- 상태: 완료(2026-10-10 플랫폼 통합 때 테스트 기대 문자열을 고침)

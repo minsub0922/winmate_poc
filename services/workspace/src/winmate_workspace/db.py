@@ -6,8 +6,8 @@ from typing import Literal
 from winmate_common import env
 from winmate_common.store import DocStore
 
-FEATURES = ("RQ", "SB", "IMG", "BE", "SC", "MI", "CA", "VP", "SP", "PR")
-Feature = Literal["RQ", "SB", "IMG", "BE", "SC", "MI", "CA", "VP", "SP", "PR"]
+FEATURES = ("RQ", "SB", "DS", "IMG", "BE", "SC", "MI", "CA", "VP", "SP", "PR")
+Feature = Literal["RQ", "SB", "DS", "IMG", "BE", "SC", "MI", "CA", "VP", "SP", "PR"]
 
 _store: DocStore | None = None
 

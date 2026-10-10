@@ -1,0 +1,141 @@
+/* 고객 요구사항 새 흐름 — 보드 webapp1 RQ1 · RQ1_AI · RQ_Done 인라인 스타일 그대로(px). 색은 토큰. 접두어 rqf- */
+
+/* ── 작업 영역: 본문(1fr) | AI 심층 질의(380) ───────────────── */
+.wm-flow__section > .rqf-row { flex: 1 1 0; min-height: 0; display: flex; overflow: hidden; }
+.rqf-main { flex: 1 1 0; min-width: 0; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; overflow: hidden;
+  padding: 22px 40px 24px 40px; }
+.rqf-main--ai { padding: 22px 24px 24px 36px; }
+.rqf-main > * { flex-shrink: 0; }
+.rqf-main > .rqf-grid { flex: 1 1 0; min-height: 0; }
+.rqf-main .wm-flow__summary { font-size: 12.5px; }
+
+.rqf-head { display: flex; align-items: center; gap: 12px; }
+.rqf-head h1 { margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; flex-grow: 1; }
+.rqf-aibtn { height: 40px; padding: 0 14px; border-radius: 10px; border: none; background: var(--wm-brand); color: #fff; font-size: 13.5px; font-weight: 700;
+  display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0; }
+.rqf-aibtn:hover { background: var(--wm-brand-hover); }
+
+/* 파일 끌어 놓기 줄(h64 · 1.5px 점선) */
+.rqf-drop { height: 64px; box-sizing: border-box; border: 1.5px dashed var(--wm-ai-line); border-radius: 14px; background: var(--wm-surface-2);
+  display: flex; align-items: center; gap: 12px; padding: 0 16px; }
+.rqf-drop--over { border-color: var(--wm-brand); background: var(--wm-brand-hero); }
+.rqf-drop__t { font-size: 13.5px; font-weight: 600; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rqf-drop__t span { font-weight: 400; color: var(--wm-text-subtle); }
+.rqf-chip { height: 28px; padding: 0 10px; border-radius: 8px; background: var(--wm-brand-50); color: var(--wm-brand); font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; max-width: 320px; overflow: hidden; text-overflow: ellipsis; }
+.rqf-ghost34 { height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text);
+  font-size: 12.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+.rqf-ghost34:hover:not(:disabled) { background: var(--wm-brand-hero-hover); }
+.rqf-ghost34:disabled { color: var(--wm-text-subtle); }
+
+/* 두 칸: 400px(AI 열림 300px) | 1fr · 간격 16 */
+.rqf-grid { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 16px; }
+.rqf-main--ai .rqf-grid { grid-template-columns: 300px minmax(0, 1fr); }
+.rqf-card { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 16px; display: flex; flex-direction: column;
+  min-height: 0; min-width: 0; }
+
+/* 왼쪽 폼(padding 16 18 · gap 12) */
+.rqf-left { padding: 16px 18px; gap: 12px; overflow-y: auto; }
+.rqf-left > * { flex-shrink: 0; }
+.rqf-field { display: flex; flex-direction: column; gap: 6px; }
+.rqf-left > .rqf-field--grow { flex: 1 1 auto; min-height: 0; }
+.rqf-label { font-size: 13px; font-weight: 600; color: var(--wm-text-2); display: flex; align-items: center; gap: 6px; }
+.rqf-label small { font-size: 11.5px; font-weight: 500; color: var(--wm-text-subtle); }
+.rqf-aitag { height: 18px; padding: 0 6px; border-radius: 4px; background: var(--wm-ok-bg); color: var(--wm-ok); font-size: 10.5px; font-weight: 700;
+  display: flex; align-items: center; white-space: nowrap; }
+.rqf-input { width: 100%; height: 42px; box-sizing: border-box; border-radius: 10px; padding: 0 12px; font-size: 14px; color: var(--wm-text); outline: none;
+  border: 1px solid var(--wm-line); background: var(--wm-surface); }
+.rqf-input--ai { border: 1.5px solid var(--wm-ok); background: var(--wm-ok-bg-2); }
+.rqf-input:focus, .rqf-textarea:focus, .rqf-role:focus { border-color: var(--wm-brand); }
+.rqf-textarea { flex-grow: 1; min-height: 60px; box-sizing: border-box; resize: none; border: 1px solid var(--wm-line); border-radius: 10px; padding: 10px 12px;
+  font-size: 13.5px; line-height: 1.6; color: var(--wm-text); outline: none; background: var(--wm-surface); }
+
+/* 오른쪽 키맨별 요구사항(padding 14 18 · gap 10) */
+.rqf-right { padding: 14px 18px; gap: 10px; overflow: hidden; }
+.rqf-rhead { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.rqf-rhead b { font-size: 14px; font-weight: 700; flex-grow: 1; }
+.rqf-rhead span { font-size: 12px; color: var(--wm-text-subtle); }
+.rqf-rhead span.rqf-warn { color: var(--wm-amber); font-weight: 700; }
+.rqf-kms { flex: 1 1 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.rqf-kms > * { flex-shrink: 0; }
+.rqf-km { position: relative; box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.rqf-kmrow { display: flex; align-items: center; gap: 8px; }
+.rqf-role { flex-grow: 1; min-width: 0; height: 34px; box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 8px; padding: 0 10px;
+  font-size: 13.5px; font-weight: 700; color: var(--wm-text); outline: none; background: var(--wm-surface); }
+.rqf-role::placeholder { font-weight: 400; }
+.rqf-w { height: 28px; box-sizing: border-box; padding: 0 10px; border-radius: 999px; border: none; font-family: var(--wm-font-num); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; flex-shrink: 0; background: var(--wm-brand-50); color: var(--wm-brand); }
+.rqf-w--ai { background: var(--wm-ok-bg); color: var(--wm-ok); }
+button.rqf-w:hover:not(:disabled) { box-shadow: inset 0 0 0 1px var(--wm-brand-hero-line); }
+.rqf-w--edit { padding: 0 8px 0 6px; box-shadow: inset 0 0 0 1.5px var(--wm-brand); }
+.rqf-w--edit input { width: 28px; border: none; background: transparent; outline: none; padding: 0; text-align: right; font: inherit; color: inherit; }
+.rqf-kmx { position: absolute; top: -8px; right: -8px; width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--wm-line); background: var(--wm-surface);
+  color: var(--wm-text-muted); font-size: 13px; line-height: 1; padding: 0; display: flex; align-items: center; justify-content: center; opacity: 0; }
+.rqf-km:hover .rqf-kmx, .rqf-km:focus-within .rqf-kmx { opacity: 1; }
+.rqf-kmx:hover { color: var(--wm-danger); border-color: var(--wm-danger-line); }
+
+/* 요구 줄: 번호(Manrope 11.5/800 · 12px) · 문장 13/1.45 · 꼬리표(h18) */
+.rqf-req { position: relative; display: flex; align-items: center; gap: 8px; padding-left: 4px; }
+.rqf-n { position: relative; width: 12px; flex-shrink: 0; padding: 0; border: none; background: transparent; text-align: left; font-family: var(--wm-font-num);
+  font-size: 11.5px; font-weight: 800; color: var(--wm-text-subtle); line-height: 1.45; cursor: pointer; }
+.rqf-n:disabled { cursor: default; }
+.rqf-n__x { position: absolute; left: -2px; top: 50%; transform: translateY(-50%); font-family: var(--wm-font); font-size: 14px; font-weight: 600; color: var(--wm-danger); display: none; }
+.rqf-req:hover .rqf-n:not(:disabled) .rqf-n__num, .rqf-n:focus-visible .rqf-n__num { visibility: hidden; }
+.rqf-req:hover .rqf-n:not(:disabled) .rqf-n__x, .rqf-n:focus-visible .rqf-n__x { display: block; }
+.rqf-rt { display: block; flex-grow: 1; min-width: 0; height: 19px; margin: 0; padding: 0; border: none; background: transparent; resize: none; overflow: hidden; outline: none;
+  font-family: inherit; font-size: 13px; line-height: 1.45; color: var(--wm-text); }
+.rqf-rt:focus { box-shadow: 0 1px 0 var(--wm-brand); }
+.rqf-rt--ai { color: var(--wm-ok); font-weight: 600; }
+.rqf-tag { height: 18px; box-sizing: border-box; padding: 0 6px; border-radius: 4px; border: none; background: transparent; font-size: 10.5px; font-weight: 700;
+  display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+button.rqf-tag { cursor: pointer; }
+.rqf-tag--vague { background: var(--wm-amber-bg); color: var(--wm-amber); }
+.rqf-tag--ask { height: 20px; border: 1px dashed var(--wm-text-subtle); color: var(--wm-text-muted); }   /* 보드: 18 + 테두리(content-box) = 20 */
+.rqf-tag--ai { background: var(--wm-ok-bg); color: var(--wm-ok); }
+/* 확인 필요 표시(줄에 올렸을 때만) — 보드 모양을 바꾸지 않게 오른쪽 위에 겹친다 */
+.rqf-tag--mark { position: absolute; right: 0; top: 50%; transform: translateY(-50%); border: 1px dashed var(--wm-line-dashed); color: var(--wm-text-muted);
+  background: var(--wm-surface); opacity: 0; pointer-events: none; }
+.rqf-req:hover .rqf-tag--mark, .rqf-tag--mark:focus-visible { opacity: 1; pointer-events: auto; }
+.rqf-addreq { align-self: flex-start; height: 24px; padding: 0 0 0 24px; border: none; background: transparent; color: var(--wm-brand); font-size: 12px; font-weight: 600; }
+.rqf-addkm { height: 40px; border-radius: 10px; border: 1.5px dashed var(--wm-brand-line); background: var(--wm-surface-2); color: var(--wm-brand); font-size: 13px; font-weight: 600; }
+.rqf-addkm:hover:not(:disabled), .rqf-addreq:hover:not(:disabled) { color: var(--wm-brand-hover); }
+.rqf-addkm:disabled, .rqf-addreq:disabled { color: var(--wm-text-subtle); }
+
+/* ── AI 심층 질의(380 · 머리 56) ─────────────────────────── */
+.rqf-ai { width: 380px; flex-shrink: 0; box-sizing: border-box; border-left: 1px solid var(--wm-line); background: var(--wm-surface); display: flex; flex-direction: column; min-height: 0; }
+.rqf-aihead { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 12px 0 20px; border-bottom: 1px solid var(--wm-line-tile); flex-shrink: 0; box-sizing: content-box; }   /* 보드 그대로 56 + 선 1 */
+.rqf-aihead b { font-size: 14.5px; font-weight: 700; flex-grow: 1; }
+.rqf-aiprog { font-family: var(--wm-font-num); font-size: 12px; font-weight: 700; color: var(--wm-text-muted); }
+.rqf-x { width: 34px; height: 34px; border-radius: 9px; border: none; background: transparent; color: var(--wm-text-muted); display: flex; align-items: center; justify-content: center; padding: 0; }
+.rqf-x:hover { background: var(--wm-brand-hero-hover); }
+.rqf-aibody { flex-grow: 1; min-height: 0; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; box-sizing: border-box; }
+.rqf-aibody > * { flex-shrink: 0; }
+.rqf-ailead { font-size: 12px; color: var(--wm-text-muted); }
+.rqf-aiwhere { font-size: 12.5px; font-weight: 700; color: var(--wm-brand); }
+.rqf-aiq { font-size: 18px; font-weight: 700; line-height: 1.4; }
+.rqf-opts { display: flex; flex-direction: column; gap: 6px; }
+.rqf-opt { display: flex; align-items: center; gap: 10px; min-height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; background: var(--wm-surface);
+  text-align: left; color: var(--wm-text); border: 1px solid var(--wm-line); }
+.rqf-opt[aria-pressed='true'] { border: 2px solid var(--wm-brand); }
+.rqf-opt:hover { background: var(--wm-brand-hero-hover); }
+.rqf-radio { width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--wm-brand-line); }
+.rqf-opt[aria-pressed='true'] .rqf-radio { border: 5px solid var(--wm-brand); }
+.rqf-optt { font-size: 13.5px; font-weight: 600; }
+.rqf-etc { display: flex; align-items: center; height: 44px; box-sizing: border-box; padding: 0 12px; border-radius: 10px; border: 1px dashed var(--wm-line-dashed); }
+.rqf-etc:focus-within { border-color: var(--wm-brand); }
+.rqf-etc input { flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13.5px; color: var(--wm-text); outline: none; padding: 0; }
+.rqf-aifoot { display: flex; align-items: center; gap: 8px; padding: 14px 20px 18px 20px; border-top: 1px solid var(--wm-line-tile); flex-shrink: 0; }
+.rqf-later { height: 42px; padding: 0 10px; border-radius: 9px; border: none; background: transparent; color: var(--wm-text-muted); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.rqf-later:hover:not(:disabled) { background: var(--wm-brand-hero-hover); }
+.rqf-apply { height: 42px; padding: 0 16px; border-radius: 10px; border: none; background: var(--wm-brand); color: #fff; font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.rqf-apply:hover:not(:disabled) { background: var(--wm-brand-hover); }
+.rqf-apply--full { width: 100%; }
+.rqf-later:focus-visible, .rqf-apply:focus-visible, .rqf-opt:focus-visible, .rqf-x:focus-visible, .rqf-aibtn:focus-visible, .rqf-ghost34:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.rqf-aidone { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+.rqf-aidone__box { padding: 16px; border-radius: 12px; background: var(--wm-ok-bg); color: var(--wm-ok); display: flex; flex-direction: column; gap: 6px; }
+.rqf-aidone__box b { font-size: 15px; font-weight: 700; }
+.rqf-aidone__box span { font-size: 12.5px; line-height: 1.5; }
+
+/* ── RQ_Done — 완료 화면은 공용 FlowDone(보드 Done 값은 @/ui ui.css 에 있다) ── */
+.rqf-done { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 0; }
+.rqf-follows { display: grid; grid-template-columns: repeat(1, minmax(0, 1fr)); gap: 12px; }

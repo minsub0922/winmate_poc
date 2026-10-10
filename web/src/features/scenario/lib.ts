@@ -5,11 +5,12 @@
 export const SECTION = '공간 시나리오 생성';
 export const STEPS = ['시나리오 유형', '공간 시나리오 입력', '솔루션 · 제품 입력', '시나리오 생성'];
 
+/** 이전 흐름 경로 — 목록 · 새로 만들기는 /scenario/legacy 아래(새 흐름 목록 · Gate 가 /scenario · /scenario/new) */
 export const route = {
-  list: () => '/scenario',
-  newType: () => '/scenario/new',
-  template: (industry?: string | null) => (industry ? `/scenario/new/template?industry=${industry}` : '/scenario/new/template'),
-  fromBirdseye: (beId?: string | null) => (beId ? `/scenario/new/birdseye?birdseye=${beId}` : '/scenario/new/birdseye'),
+  list: () => '/scenario/legacy',
+  newType: () => '/scenario/legacy/new',
+  template: (industry?: string | null) => (industry ? `/scenario/legacy/new/template?industry=${industry}` : '/scenario/legacy/new/template'),
+  fromBirdseye: (beId?: string | null) => (beId ? `/scenario/legacy/new/birdseye?birdseye=${beId}` : '/scenario/legacy/new/birdseye'),
   type: (id: string) => `/scenario/${id}/type`,
   input: (id: string) => `/scenario/${id}/input`,
   timeline: (id: string) => `/scenario/${id}/timeline`,

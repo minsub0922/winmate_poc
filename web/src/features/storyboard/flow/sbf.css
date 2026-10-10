@@ -1,0 +1,196 @@
+/* 새 Storyboard 화면(보드 webapp1 v58 SB0 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI · StrategyPopup) — 보드 인라인 px 그대로, 색은 토큰.
+ * 앱은 모두 border-box 라, 보드에서 box-sizing 없이(content-box) 높이 · 폭 + 테두리를 준 칸은 테두리만큼 더한 값을 쓴다
+ * (연결된 콘텐츠 줄 50+1 · 머리 40+1 · 요약본 머리 46+1 · 바닥 38+1 · 근거 칩 26+2 · AI 후보 360+1 · 후보 머리 62+1). */
+
+/* ── SB0 목록 ─────────────────────────────────────── */
+.sbf-list { padding: 28px 40px 24px 40px; display: flex; flex-direction: column; gap: 18px; color: var(--wm-text); }
+.sbf-listhead { display: flex; align-items: center; gap: 16px; }
+.sbf-listtitles { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0; }
+.sbf-listtitles h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.sbf-listtitles span { font-size: 13.5px; color: var(--wm-text-muted); }
+.sbf-newbtn { height: 44px; padding: 0 18px; border-radius: 12px; background: var(--wm-brand); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px;
+  white-space: nowrap; flex-shrink: 0; text-decoration: none; }
+.sbf-newbtn:hover { background: var(--wm-brand-hover); color: #fff; }
+.sbf-table { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; overflow: hidden; }
+.sbf-tr { display: grid; grid-template-columns: minmax(0, 1fr) 300px 120px 110px; column-gap: 16px; align-items: center; }
+.sbf-th { height: 42px; padding: 0 20px; background: var(--wm-surface-2); font-size: 12px; font-weight: 600; color: var(--wm-text-muted); }
+.sbf-row { min-height: 72px; padding: 10px 20px; box-sizing: border-box; border-top: 1px solid var(--wm-line-tile); color: var(--wm-text); text-decoration: none; }
+.sbf-row:hover { background: var(--wm-brand-hero); color: var(--wm-text); }
+.sbf-row:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: -2px; }
+.sbf-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.sbf-name--branch { padding-left: 20px; }
+.sbf-nametxt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.sbf-nametxt b { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-nametxt small { font-size: 12px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-prog { display: flex; flex-direction: column; gap: 5px; }
+.sbf-dots { display: flex; gap: 3px; }
+.sbf-dot { width: 22px; height: 14px; border-radius: 3px; background: var(--wm-line); }
+.sbf-dot--gap { margin-left: 5px; }
+.sbf-dot--on { background: var(--wm-brand); }
+.sbf-stage { font-size: 12px; color: var(--wm-text-2); font-weight: 600; }
+.sbf-km { font-size: 12px; line-height: 1.4; color: var(--wm-text-subtle); overflow-wrap: anywhere; }
+.sbf-km--on { color: var(--wm-text); font-weight: 600; }
+.sbf-when { font-size: 13px; color: var(--wm-text-muted); white-space: nowrap; }
+.sbf-legend { display: flex; gap: 16px; font-size: 12px; color: var(--wm-text-muted); padding: 0 4px; }
+.sbf-legend > span { display: flex; align-items: center; gap: 6px; }
+.sbf-legend i { width: 10px; height: 14px; border-radius: 2px; background: var(--wm-line); }
+.sbf-legend i.on { background: var(--wm-brand); }
+.sbf-empty { box-sizing: border-box; background: var(--wm-surface); border: 1px dashed var(--wm-line-dashed); border-radius: 14px; padding: 40px 20px; display: flex; flex-direction: column;
+  align-items: center; gap: 8px; text-align: center; font-size: 13.5px; color: var(--wm-text-muted); }
+.sbf-empty b { font-size: 15px; color: var(--wm-text); }
+
+/* ── SB1 상세 ─────────────────────────────────────── */
+.sbf-head { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.sbf-head h1 { margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.sbf-badge { height: 22px; padding: 0 8px; border-radius: 5px; background: var(--wm-dark); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+.sbf-badge--branch { background: var(--wm-brand-50); color: var(--wm-brand); }
+.sbf-headsub { font-size: 13px; color: var(--wm-text-muted); white-space: nowrap; flex-shrink: 0; }
+.sbf-parent { border: none; background: transparent; padding: 0; font: inherit; font-size: 13px; color: var(--wm-brand); font-weight: 600; cursor: pointer; white-space: nowrap; }
+.sbf-parent:hover { text-decoration: underline; }
+.sbf-brwrap { position: relative; flex-shrink: 0; }
+.sbf-brbtn { height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); font: inherit; font-size: 12.5px; font-weight: 600;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer; }
+.sbf-brbtn:hover, .sbf-ghost:hover { background: var(--wm-brand-hero-hover); }
+.sbf-brpop { position: absolute; left: 0; top: 36px; width: 300px; box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 12px;
+  box-shadow: var(--wm-shadow-dropdown); padding: 6px; z-index: 10; display: flex; flex-direction: column; }
+.sbf-bropt { width: 100%; display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 8px; border: none; background: transparent; text-align: left; color: var(--wm-text);
+  font: inherit; cursor: pointer; }
+.sbf-bropt:hover { background: var(--wm-brand-hero-hover); }
+.sbf-bropt b { font-size: 13px; font-weight: 700; }
+.sbf-bropt span { font-size: 12px; color: var(--wm-text-muted); }
+.sbf-auto { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--wm-ok); white-space: nowrap; flex-shrink: 0; }
+.sbf-auto i { width: 8px; height: 8px; border-radius: 50%; background: var(--wm-ok); }
+
+/* 어디까지 입력됐나 — 8칸 */
+.sbf-track { display: flex; gap: 6px; }
+.sbf-cell { flex: 1 1 0; min-width: 0; height: 56px; box-sizing: border-box; padding: 8px 10px; border-radius: 10px; display: flex; flex-direction: column; justify-content: space-between;
+  border: none; font: inherit; text-align: left; cursor: pointer; text-decoration: none; background: var(--wm-surface); color: var(--wm-text-muted); border: 1px dashed var(--wm-brand-line); }
+.sbf-cell:hover { box-shadow: 0 0 0 2px var(--wm-brand-hero-line); color: var(--wm-text-muted); }
+.sbf-cell:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.sbf-cell--done { background: var(--wm-brand); color: #fff; border: none; }
+.sbf-cell--done:hover { color: #fff; }
+.sbf-cell--gap { margin-left: 10px; }
+.sbf-celltop { display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+.sbf-celltop b, .sbf-cell > b { font-size: 12px; font-weight: 700; white-space: nowrap; }
+.sbf-cell small { font-family: var(--wm-font-num); font-size: 11.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* 가운데 2열 */
+.wm-flow__section > .sbf-grid { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 470px; gap: 16px; }
+.sbf-left { display: flex; flex-direction: column; gap: 12px; min-height: 0; min-width: 0; }
+.sbf-kmcard { box-sizing: border-box; flex-shrink: 0; border: 1.5px solid var(--wm-brand); border-radius: 14px; background: var(--wm-surface); padding: 12px 16px; display: flex; align-items: center; gap: 12px; }
+.sbf-kmcard--none { border: 1.5px dashed var(--wm-brand-line); }
+.sbf-kmtxt { display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; }
+.sbf-kmtxt small { font-size: 12px; font-weight: 700; color: var(--wm-brand); display: flex; align-items: center; gap: 6px; }
+.sbf-kmtxt b { font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-kmtxt b.none { color: var(--wm-text-subtle); font-weight: 600; }
+.sbf-kmby { height: 18px; padding: 0 6px; border-radius: 4px; background: var(--wm-ok-bg); color: var(--wm-ok); font-size: 10.5px; font-weight: 700; display: inline-flex; align-items: center; }
+.sbf-ghostbtn { height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--wm-brand-hero-line); background: var(--wm-surface); color: var(--wm-brand); font: inherit; font-size: 13px;
+  font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; cursor: pointer; }
+.sbf-ghostbtn:hover { background: var(--wm-brand-hero-hover); }
+.sbf-contents { box-sizing: border-box; flex-grow: 1; min-height: 0; border: 1px solid var(--wm-line); border-radius: 14px; background: var(--wm-surface); display: flex; flex-direction: column; overflow: hidden; }
+.sbf-conthead { height: 41px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.sbf-conthead b { font-size: 13.5px; font-weight: 700; flex-grow: 1; }
+.sbf-conthead span { font-size: 12px; color: var(--wm-text-subtle); }
+.sbf-contbody { flex: 1; min-height: 0; overflow: auto; }
+.sbf-crow { display: flex; align-items: center; gap: 12px; min-height: 51px; padding: 0 12px 0 16px; border-top: 1px solid var(--wm-bg); }
+.sbf-cdot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; background: var(--wm-brand); box-sizing: border-box; }
+.sbf-cdot--none { background: transparent; border: 1.5px dashed var(--wm-line-dashed); }
+.sbf-clabel { width: 120px; flex-shrink: 0; font-size: 13.5px; font-weight: 700; white-space: nowrap; }
+.sbf-cmain { display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0; }
+.sbf-cmain > span { font-size: 13px; color: var(--wm-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-cmain > span.none { color: var(--wm-text-subtle); }
+.sbf-cmain > small { font-size: 11.5px; color: var(--wm-text-muted); }
+.sbf-cta { height: 30px; padding: 0 12px; border-radius: 8px; font: inherit; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;
+  border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); cursor: pointer; text-decoration: none; }
+.sbf-cta:hover { background: var(--wm-brand-hero-hover); color: var(--wm-text); }
+.sbf-cta--make { border: none; background: var(--wm-brand-50); color: var(--wm-brand); }
+.sbf-cta--make:hover { background: var(--wm-brand-badge); color: var(--wm-brand); }
+
+/* 오른쪽 요약본 · json */
+.sbf-side { box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 14px; background: var(--wm-surface); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+.sbf-sidehead { display: flex; align-items: center; gap: 4px; height: 47px; padding: 0 10px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.sbf-tabs { display: flex; gap: 4px; flex-grow: 1; }
+.sbf-tab { height: 32px; padding: 0 12px; border-radius: 8px; border: none; font: inherit; font-size: 12.5px; white-space: nowrap; background: transparent; color: var(--wm-text-muted); font-weight: 600; cursor: pointer; }
+.sbf-tab[aria-selected='true'] { background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 700; }
+.sbf-tab:focus-visible, .sbf-textbtn:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.sbf-textbtn { height: 32px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: var(--wm-brand); font: inherit; font-size: 12.5px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+.sbf-textbtn:hover { background: var(--wm-brand-hero-hover); }
+.sbf-pre { margin: 0; flex-grow: 1; min-height: 0; padding: 12px 16px; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 12px; line-height: 1.65; color: var(--wm-text);
+  white-space: pre-wrap; overflow: auto; background: var(--wm-surface-2); }
+.sbf-md { flex-grow: 1; min-height: 0; margin: 10px; box-sizing: border-box; resize: none; border: 1.5px solid var(--wm-brand); border-radius: 10px; padding: 10px 12px;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 12px; line-height: 1.65; color: var(--wm-text); outline: none; }
+.sbf-sidefoot { display: flex; align-items: center; gap: 8px; height: 39px; padding: 0 16px; border-top: 1px solid var(--wm-line-soft); font-size: 11.5px; color: var(--wm-text-subtle); flex-shrink: 0; }
+
+/* 후속 작업 */
+.sbf-follow { flex-shrink: 0; box-sizing: border-box; height: 64px; padding: 0 18px; border-radius: 14px; background: var(--wm-surface); border: 1px solid var(--wm-line); color: var(--wm-text);
+  display: flex; align-items: center; gap: 14px; text-decoration: none; }
+.sbf-follow:hover { border-color: var(--wm-brand); color: var(--wm-text); }
+.sbf-follow:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.sbf-followtag { height: 24px; padding: 0 8px; border-radius: 6px; background: var(--wm-surface-3); color: var(--wm-text-2); font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; }
+.sbf-followic { width: 34px; height: 34px; flex-shrink: 0; border-radius: 10px; background: var(--wm-brand); display: flex; align-items: center; justify-content: center; }
+.sbf-followtxt { display: flex; flex-direction: column; gap: 2px; flex-grow: 1; }
+.sbf-followtxt b { font-size: 15px; font-weight: 700; }
+.sbf-followtxt span { font-size: 12.5px; color: var(--wm-text-muted); }
+
+/* ── 전략 수립 팝업(StrategyPopup 1100×700) ─────────── */
+.sbk { display: flex; width: 100%; height: 100%; min-height: 0; color: var(--wm-text); }
+.sbk-main { display: flex; flex-direction: column; min-width: 0; flex-grow: 1; }
+.sbk-head { display: flex; align-items: center; gap: 12px; padding: 18px 16px 14px 24px; border-bottom: 1px solid var(--wm-line-tile); flex-shrink: 0; }
+.sbk-titles { display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; }
+.sbk-titles small { font-size: 12px; font-weight: 600; color: var(--wm-text-muted); }
+.sbk-titles b { font-size: 19px; font-weight: 700; }
+.sbk-ai { height: 38px; padding: 0 13px; border-radius: 10px; border: none; background: var(--wm-brand); color: #fff; font: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center;
+  gap: 6px; white-space: nowrap; cursor: pointer; }
+.sbk-ai:hover { background: var(--wm-brand-hover); }
+.sbk-ai:disabled { opacity: .6; cursor: default; }
+.sbk-x { width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent; color: var(--wm-text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+.sbk-x--sm { width: 32px; height: 32px; border-radius: 8px; }
+.sbk-x:hover { background: var(--wm-brand-hero-hover); }
+.sbk-ai:focus-visible, .sbk-x:focus-visible, .sbk-btn:focus-visible, .sbk-use:focus-visible, .sbk-addev:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.sbk-body { flex-grow: 1; min-height: 0; overflow: auto; padding: 16px 24px; display: flex; flex-direction: column; gap: 12px; }
+.sbk-srcs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.sbk-srcs > small { font-size: 12px; font-weight: 600; color: var(--wm-text-muted); margin-right: 4px; }
+.sbk-src { height: 28px; padding: 0 9px; border-radius: 7px; background: var(--wm-surface); border: 1px solid var(--wm-line); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.sbk-src i { width: 8px; height: 8px; border-radius: 2px; background: var(--wm-brand); }
+.sbk-kmbox { box-sizing: border-box; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; border: 1.5px solid var(--wm-brand); flex-shrink: 0; }
+.sbk-kmbox--ai { border-color: var(--wm-ok); }
+.sbk-kmbox label { font-size: 12.5px; font-weight: 700; color: var(--wm-brand); display: flex; align-items: center; gap: 6px; }
+.sbk-kmbox input { height: 46px; box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 10px; padding: 0 14px; font: inherit; font-size: 17px; font-weight: 700; color: var(--wm-text); outline: none; }
+.sbk-kmbox input:focus, .sbk-pill input:focus { border-color: var(--wm-brand); }
+.sbk-body input::placeholder { color: var(--wm-placeholder); }
+.sbk-h { font-size: 13.5px; font-weight: 700; }
+.sbk-pill { box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.sbk-pillrow { display: flex; align-items: center; gap: 10px; }
+.sbk-n { width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; background: var(--wm-brand-50); color: var(--wm-brand); font-family: var(--wm-font-num); font-size: 11.5px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; }
+.sbk-pill input { flex-grow: 1; min-width: 0; height: 34px; box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 8px; padding: 0 10px; font: inherit; font-size: 13.5px; font-weight: 600;
+  color: var(--wm-text); outline: none; }
+.sbk-evs { display: flex; align-items: center; gap: 6px; padding-left: 32px; flex-wrap: wrap; position: relative; }
+.sbk-evs > small { font-size: 11.5px; color: var(--wm-text-subtle); }
+.sbk-ev { height: 22px; padding: 0 8px; border-radius: 6px; background: var(--wm-bg); font: inherit; font-size: 11.5px; color: var(--wm-text-2); display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  border: none; cursor: pointer; }
+.sbk-ev:hover { background: var(--wm-surface-3); }
+.sbk-addev { height: 22px; padding: 0 8px; border-radius: 6px; border: 1px dashed var(--wm-brand-line); background: var(--wm-surface); color: var(--wm-brand); font: inherit; font-size: 11.5px; font-weight: 600; cursor: pointer; }
+.sbk-evmenu { position: absolute; left: 32px; top: 28px; min-width: 200px; box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 10px;
+  box-shadow: var(--wm-shadow-dropdown); padding: 4px; z-index: 5; display: flex; flex-direction: column; }
+.sbk-evmenu button { border: none; background: transparent; text-align: left; padding: 8px 10px; border-radius: 7px; font: inherit; font-size: 12.5px; color: var(--wm-text); cursor: pointer; }
+.sbk-evmenu button:hover { background: var(--wm-brand-hero-hover); }
+.sbk-foot { display: flex; align-items: center; gap: 10px; padding: 14px 18px 16px 24px; border-top: 1px solid var(--wm-line-tile); background: var(--wm-surface-2); flex-shrink: 0; }
+.sbk-foot > span { font-size: 12.5px; color: var(--wm-text-muted); flex-grow: 1; }
+.sbk-btn { height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); font: inherit; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+.sbk-btn--primary { padding: 0 18px; border: none; background: var(--wm-brand); color: #fff; font-weight: 700; }
+.sbk-btn--primary:hover { background: var(--wm-brand-hover); }
+.sbk-btn:disabled { opacity: .6; cursor: default; }
+.sbk-aside { width: 361px; flex-shrink: 0; border-left: 1px solid var(--wm-line); background: var(--wm-brand-hero); display: flex; flex-direction: column; min-height: 0; }
+.sbk-asidehead { display: flex; align-items: center; gap: 8px; height: 63px; padding: 0 12px 0 18px; border-bottom: 1px solid var(--wm-line-tile); flex-shrink: 0; }
+.sbk-asidehead b { font-size: 14px; font-weight: 700; flex-grow: 1; }
+.sbk-asidebody { flex-grow: 1; min-height: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; overflow: auto; }
+.sbk-asidebody > small { font-size: 11.5px; color: var(--wm-text-muted); }
+.sbk-cand { box-sizing: border-box; padding: 10px 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 4px; border: 1px dashed var(--wm-brand); background: var(--wm-surface); flex-shrink: 0; }
+.sbk-cand--on { border: 2px solid var(--wm-ok); background: var(--wm-ok-bg-2); }
+.sbk-candhead { display: flex; align-items: center; gap: 6px; }
+.sbk-candhead em { font-style: normal; font-family: var(--wm-font-num); font-size: 11.5px; font-weight: 800; color: var(--wm-brand); }
+.sbk-candhead b { font-size: 14px; font-weight: 700; }
+.sbk-cand > span { font-size: 12px; color: var(--wm-text-2); line-height: 1.4; }
+.sbk-use { align-self: flex-end; height: 30px; padding: 0 11px; border-radius: 8px; border: none; background: var(--wm-brand); color: #fff; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.sbk-use--on { background: var(--wm-ok-bg); color: var(--wm-ok); }

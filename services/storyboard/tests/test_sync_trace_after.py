@@ -205,8 +205,10 @@ async def test_handoff_and_review(client, world):
     assert r.status_code == 200 and r.json()["route"].startswith(f"/proposal/new?sb={sb['id']}")
     sb2 = (await client.get(f"/v1/storyboards/{sb['id']}")).json()
     assert sb2["status"] == "shared" and "제안서" in sb2["sub_line"] and sb2["sub_line"] == "제안서로 넘겼어요"
-    await client.post(f"/v1/storyboards/{sb['id']}/handoffs/mi")
-    sb3 = (await client.get(f"/v1/storyboards/{sb['id']}")).json()
+    r = await client.post(f"/v1/storyboards/{sb['id']}/handoffs/mi")
+    assert r.json()["route"].startswith("/mi/legacy/new?rq=")   # /mi/new 는 새 흐름 Gate
+    assert cards[2]["route"] == f"/scenario/legacy/new?sb={sb['id']}"
+    sb3 =(await client.get(f"/v1/storyboards/{sb['id']}")).json()
     assert sb3["sub_line"] == "제안서 · MI로 넘겼어요"
     lst = (await client.get("/v1/storyboards", params={"tab": "done"})).json()["items"]
     assert lst[0]["status_label"] == "완료 · 공유됨" and lst[0]["cta"] == "open"

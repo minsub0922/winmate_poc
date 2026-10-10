@@ -4,8 +4,9 @@
 import { expect, test } from '@playwright/test';
 import { setupShell } from './fixtures/mock';
 
-const GROUPS = ['고객 요구사항', '전략 수립 Storyboard', '이미지 생성', '공간 조감도 생성', '공간 시나리오 생성', 'Market Intelligence', '경쟁사 분석',
-  'Value Proposition', 'Spec 시트 생성', 'B2B 제안서 생성'];
+// 작업 내역 순서 = 콘텐츠 흐름(웹앱 ① v58 Sidebar): 요구사항 → Storyboard → DSS → MI · 경쟁사 · VP · Spec · 시나리오 → 이미지 · 조감도 → 제안서
+const GROUPS = ['고객 요구사항', '전략 수립 Storyboard', '공간별 제품 매칭 DSS', 'Market Intelligence', '경쟁사 분석', 'Value Proposition', 'Spec 시트 생성',
+  '공간 시나리오 생성', '이미지 생성', '공간 조감도 생성', 'B2B 제안서 생성'];
 const css = (loc: import('@playwright/test').Locator, prop: string) => loc.evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
 
 test.describe('레이아웃 (L)', () => {
@@ -167,66 +168,57 @@ test.describe('홈 (H)', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText('좋은 오후예요. 오늘은 무엇을 제안해 볼까요?', { timeout: 15_000 });
   });
 
-  test('H-02 · H-03 부제 · B2B 카드', async ({ page }) => {
+  test('H-02 · H-03 부제 · B2B 카드(보드 v58 HomeGrid)', async ({ page }) => {
     await setupShell(page);
     await page.goto('/');
-    await expect(page.getByText('만들 콘텐츠를 고르면 바로 시작돼요. 고객 요구사항을 먼저 정리해 두면 이후 작업이 그 내용으로 자동으로 채워져요.')).toBeVisible();
+    await expect(page.getByText('고객 요구사항에서 시작하면 Storyboard가 생기고, 모든 콘텐츠가 그 Storyboard에 차곡차곡 쌓여요.')).toBeVisible();
     const hero = page.locator('[data-home-card="proposal"]');
-    await expect(hero).toContainText('B2B 제안서 만들기');
-    await expect(hero).toContainText('핵심 기능');
+    await expect(hero).toContainText('B2B 제안서 만들기 · PPT');
+    await expect(hero).toContainText('Storyboard의 후속 작업이에요.');
     await expect(hero).toContainText('바로 시작');
-    await hero.getByText('유형을 고르고').click();
-    await expect(page).toHaveURL(/\/proposal\/new$/);
+    expect(Math.round((await hero.boundingBox())!.width)).toBe(1040);
+    expect(Math.round((await hero.boundingBox())!.height)).toBe(76);
+    await hero.getByText('Storyboard의 후속 작업이에요.').click();
+    await expect(page).toHaveURL(/\/proposal\/new$/, { timeout: 20_000 });   // 제안서 화면 첫 로드가 무거워 공유 PC 에서 느릴 때가 있다
   });
 
-  test('H-04 · H-05 · H-06 기획·분석 6 · 공간·비주얼 3', async ({ page }) => {
+  test('H-04 · H-05 · H-06 시작 · 흐름 3 · Storyboard로 만드는 콘텐츠 5 · 비주얼 2', async ({ page }) => {
     await setupShell(page);
     await page.goto('/');
-    const plan = page.locator('[data-home-section="plan"] .hcard');
-    await expect(plan).toHaveCount(6);
+    const flow = page.locator('[data-home-section="flow"] .hcard');
+    await expect(flow).toHaveCount(3);
     const want = [
-      ['requirements', '고객 요구사항', '요청서 · 회의록 · 메모를 넣으면 요구사항 정의서로 정리해 드려요.', '모든 콘텐츠가 함께 써요'],
-      ['storyboard', '전략 수립 Storyboard', '요구사항을 기획 방향 · 목차 · 요구 추적표로 바꿔요.', '제안서 목차 · 뼈대'],
-      ['mi', 'Market Intelligence', '시장 · 고객사 · 사용자를 분석해 삼성의 강점을 찾아요.', '제안서 MI 섹션'],
-      ['competitor', '경쟁사 분석', '고객 요구사항이나 한 문단 메모로 경쟁사를 찾고 삼성과 비교해요.', 'MI · Why Samsung 시트'],
-      ['vp', 'Value Proposition', '고객 과제 → 가치 → 기대 효과로 핵심 메시지를 세워요.', '제안서 Value Props 섹션'],
-      ['spec', 'Spec 시트 생성', '제품을 골라 비교 가능한 스펙 시트를 만들어요.', '제안서 제품 스펙 섹션'],
+      ['requirements', '/requirements/new', '고객 요구사항', '요청서 · 회의록을 넣거나 폼에 적어요. 저장하면 Storyboard가 생겨요.', '사전 없음 · 후속 DSS'],
+      ['storyboard', '/storyboard', '전략 수립 Storyboard', '제안 흐름 전체 context.', '사전 요구사항 · 후속 PPT 제작'],
+      ['dss', '/dss', '공간별 제품 매칭 DSS', '업종 · 공간을 정하고 공간마다 제품 · 솔루션을 골라요.', '사전 Storyboard · 후속 시나리오 · Spec'],
     ];
     for (let i = 0; i < want.length; i++) {
-      const c = plan.nth(i);
+      const c = flow.nth(i);
       await expect(c).toHaveAttribute('data-home-card', want[i][0]);
-      for (const t of want[i].slice(1)) await expect(c).toContainText(t);
-      await expect(c).toHaveAttribute('href', `/${want[i][0]}/new`);
+      await expect(c).toHaveAttribute('href', want[i][1]);
+      for (const t of want[i].slice(2)) await expect(c).toContainText(t);
+      expect(Math.round((await c.boundingBox())!.height)).toBe(112);
     }
-    await expect(plan.nth(0)).toContainText('여기서 시작');
-    await expect(plan.nth(3)).toContainText('NEW');
-    expect(await css(plan.nth(3), 'border-top-color')).toBe('rgb(20, 40, 160)');
+    await expect(flow.nth(0)).toContainText('여기서 시작');
+    expect(await css(flow.nth(0), 'border-top-color')).toBe('rgb(20, 40, 160)');
+    const after = page.locator('[data-home-section="after"] .hcard');
+    await expect(after).toHaveCount(5);
+    for (const [i, k, t] of [[0, 'mi', 'Market Intelligence'], [1, 'competitor', '경쟁사 분석'], [2, 'vp', 'Value Proposition'], [3, 'spec', 'Spec 시트'], [4, 'scenario', '공간 시나리오']] as const) {
+      await expect(after.nth(i)).toContainText(t);
+      await expect(after.nth(i)).toHaveAttribute('href', `/${k}`);
+      expect(Math.round((await after.nth(i).boundingBox())!.height)).toBe(118);
+    }
     const vis = page.locator('[data-home-section="visual"] .hcard');
-    await expect(vis).toHaveCount(3);
-    for (const [i, k, t] of [[0, 'image', '이미지 생성'], [1, 'birdseye', '공간 조감도 생성'], [2, 'scenario', '공간 시나리오 생성']] as const) {
+    await expect(vis).toHaveCount(2);
+    for (const [i, k, t] of [[0, 'image', '이미지 생성'], [1, 'birdseye', '공간 조감도']] as const) {
       await expect(vis.nth(i)).toContainText(t);
       await expect(vis.nth(i)).toHaveAttribute('href', `/${k}/new`);
     }
-    await plan.nth(1).click();
-    await expect(page).toHaveURL(/\/storyboard\/new$/);
+    await flow.nth(1).click();
+    await expect(page).toHaveURL(/\/storyboard$/);
   });
 
-  test('H-04b NEW 카드 테두리 1.5px #1428a0(작성값 — 크롬은 계산값을 1px 로 내림)', async ({ page }) => {
-    await setupShell(page);
-    await page.goto('/');
-    const c = page.locator('[data-home-card="competitor"]');
-    await expect(c).toContainText('NEW');
-    expect(await css(c, 'border-top-color')).toBe('rgb(20, 40, 160)');
-    const authored = await page.evaluate(() => {
-      for (const sh of Array.from(document.styleSheets)) {
-        for (const r of Array.from(sh.cssRules)) if (r instanceof CSSStyleRule && r.selectorText === '.hcard--new') return /(^|\s)1\.5px\s/.test(r.style.getPropertyValue('border')) ? '1.5px' : r.style.cssText;
-      }
-      return null;
-    });
-    expect(authored).toBe('1.5px');
-  });
-
-  test('H-07 · H-09 · H-10 최근 작업 3(최신순) · 시점 · 전체 작업 보기', async ({ page }) => {
+  test('H-07 · H-09 · H-10 최근 작업 2(최신순) · 시점 · Storyboard 전체', async ({ page }) => {
     const now = new Date('2026-10-06T14:00:00+09:00');
     const items = [
       { feature: 'RQ', title: 'E 자산운용 용산 AI Ready 오피스', route: '/requirements/rq_e', minutesAgo: 120 },
@@ -237,16 +229,15 @@ test.describe('홈 (H)', () => {
     await setupShell(page, { ws: { now, items } });
     await page.goto('/');
     const rec = page.locator('[data-home-section="recent"] .hcard');
-    await expect(rec).toHaveCount(3);
+    await expect(rec).toHaveCount(2);
     await expect(rec.nth(0)).toContainText('E 자산운용 용산 AI Ready 오피스');
     await expect(rec.nth(0)).toContainText('고객 요구사항 · 2시간 전');
     await expect(rec.nth(1)).toContainText('전략 수립 Storyboard · 어제');
-    await expect(rec.nth(2)).toContainText('경쟁사 분석 · 3일 전');
-    await rec.nth(2).click();
-    await expect(page).toHaveURL(/\/competitor\/ca_a$/);
+    await rec.nth(1).click();
+    await expect(page).toHaveURL(/\/storyboard\/sb_e$/);
     await page.goto('/');
-    await page.getByRole('link', { name: '전체 작업 보기' }).click();
-    await expect(page).toHaveURL(/\/requirements$/);
+    await page.getByRole('link', { name: 'Storyboard 전체' }).click();
+    await expect(page).toHaveURL(/\/storyboard$/);
     // 40일 전(올해) → M/D
     await page.unrouteAll({ behavior: 'ignoreErrors' });
     await setupShell(page, { ws: { now, items: [items[3]] } });
@@ -257,7 +248,7 @@ test.describe('홈 (H)', () => {
   test('H-08 작업 0개 → 최근 작업 영역 없음', async ({ page }) => {
     await setupShell(page, { ws: { empty: true } });
     await page.goto('/');
-    await expect(page.locator('[data-home-section="plan"] .hcard')).toHaveCount(6);
+    await expect(page.locator('[data-home-section="flow"] .hcard')).toHaveCount(3);
     await page.waitForLoadState('networkidle');
     await expect(page.getByText('최근 작업')).toHaveCount(0);
     await expect(page.locator('[data-home-section="recent"]')).toHaveCount(0);

@@ -183,7 +183,7 @@ export function SendPage() {
         <span className="ca-anon__desc">— {a.anonymize ? lettersText : '실명 표기 · 고객 제출물에 넣을 땐 한 번 더 물어요'}</span>
         <span className="ca-anon__lock"><Icon name="lock" size={12} strokeWidth={2.2} />실명은 이 작업 안에서만 보여요</span>
       </div>
-      <FootBar back={{ to: '/competitor', label: '작업 목록', icon: <PathIcon d="M4 6h16 M4 12h16 M4 18h10" size={14} strokeWidth={2.2} /> }}>
+      <FootBar back={{ to: '/competitor/legacy', label: '작업 목록', icon: <PathIcon d="M4 6h16 M4 12h16 M4 18h10" size={14} strokeWidth={2.2} /> }}>
         <BigButton onClick={() => nav('/')}>홈으로</BigButton>
       </FootBar>
 

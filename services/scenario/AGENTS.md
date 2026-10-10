@@ -4,8 +4,8 @@
 
 - 포트: **5109** · 게이트웨이 경로: `/api/scenario/v1/...` · 파이썬 모듈: `winmate_scenario`
 - 고칠 수 있는 경로(owns): `services/scenario/**`, `web/src/features/scenario/**`
-- 호출할 수 있는 서비스(consumes): `ai-tools`, `kb`, `files`, `jobs`, `workspace`, `export`, `image`, `birdseye`
-- 화면 수용 기준: `docs/scenarios/09-scenario.md` · 원본 보드: `docs/screens/` (INDEX.md)
+- 호출할 수 있는 서비스(consumes): `ai-tools`, `kb`, `files`, `jobs`, `workspace`, `export`, `image`, `birdseye`, `storyboard`(새 흐름 허브 — `winmate_common.flow` 로만)
+- 화면 수용 기준: `docs/scenarios/11-content-flow.md` §3 · §6(새 흐름) · `docs/scenarios/09-scenario.md`(이전 흐름) · 원본 보드: `docs/screens/` (INDEX.md)
 
 ## 먼저 읽을 것
 1. 저장소 루트 `AGENTS.md`(전체 규칙) · `docs/ARCHITECTURE.md`(규약)
@@ -30,13 +30,30 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
 
 ## 현재 상태
 
+**새 흐름(2026-10-08) · Storyboard 허브 연결 · 보드 webapp1 v58 SC0 · SC1 · SC2* · SC_Done · SC_DoneJson**
+- 라우트: `/scenario` = SC0(셸 `ContentListScreen content="sc"`, 작성 중 초안은 `/v1/space-sets`) · `/scenario/new` = SC1(셸 `GateScreen`, `?sb=SB-NN&auto=1` 이면 바로 만듦 — DSS 완료 화면의 후속 작업) ·
+  `/scenario/spaces/:id` = SC2(`FlowBar` = 실제 Storyboard) → 저장 → SC_Done(`FlowDoneView` · 전체 JSON · 「Storyboard로」). 코드 `web/src/features/scenario/spaces/`(FlowPages.tsx · SpacesPage.tsx).
+- 이전 흐름 목록 · 새로 만들기는 `/scenario/legacy` · `legacy/new` · `legacy/new/template` · `legacy/new/birdseye`(lib.ts `route.*`). 다른 기능 · 서버 handoff 가 만드는 옛 주소는
+  주소를 바꾸지 않고 이전 화면을 연다: `/scenario?image_version=`(IMG4) · `/scenario/new?sb=sb_…`(이전 Storyboard SB4) · `?from=` · `?mi=` · `?project=`(MI4 · VP4) · `new/template` · `new/birdseye`.
+  `/scenario/:id/...` 는 그대로. `spaces/new` 는 `/scenario/new` 로 넘긴다(NewSpacesPage 는 지움).
+- 만들기 `POST /v1/space-sets {sb_id}` → `get_flow` → `stages.dss` 의 공간 · 공간별 제품을 미리 채움(DSS 솔루션은 links 가 가리킨 공간에, 어디도 안 가리키면 고르기 목록에만).
+  Storyboard 없음 404 `STORYBOARD_NOT_FOUND` · DSS 전 422 `PREREQUISITE_MISSING`. 문서에 `dss_ref`(공간 목록 머리 「공간 · DSS-01」 · `stages.sc.from`) · `dss_items`(SC2_Pick 묶음
+  `DSS-01 · 제품` · `DSS-01 · 솔루션` · `카탈로그 · DSS에 없는 것`) · `customer`(AI 3안 익명화) · 요약본(AI 문맥). `spaces` 를 직접 주는 이전 본문도 그대로 된다.
+- `:finish` → `ver`(저장 횟수) +1 → `push_stage(sb, "sc", ref=SC-NN, ver, res_id, title, value={from, spaces, rules, counts}, md, card)` → `{stage, summary_md, flow_sync}`.
+  card = 공간 · 시나리오 · 시나리오 없는 공간 + 공간 3곳 묶음(`[확인 필요]` 시나리오는 「확인 필요」). 허브 편집 경로는 `/scenario/spaces/{id}`.
+- 화면 보드와 다르게 한 것: 시나리오 지우기(목록 줄 오른쪽 아래) · 항목 빼기(입력칸 안 오른쪽)는 마우스 · 키보드가 머물 때만 보인다(쉴 때 보드와 같은 모습).
+  직접 이름 지은 항목 이름은 라벨처럼 보이는 입력칸. AI 후보 근거는 안내 줄의 툴팁. 스텝바는 보드대로 SC1 · SC_Done 「공간별 시나리오」 · SC2 「공간 · 시나리오」.
+- 시험: `tests/test_sc_flow.py` 3개(실제 storyboard 앱 — 404/422 · DSS 미리 채움 · 저장 → 허브 stages · cells.route · cards · contents · ver 2 · 분기) — pytest 62개.
+  e2e `web/e2e/scenario/sc-flow.spec.ts` 2개(목록 → Gate → SC2 → 저장 → 완료 · 허브 확인 · 폭 196/236/662/908 · 본문 1180 · 높이 728 · auto · 옛 주소) ·
+  `spaces.spec.ts` 는 Storyboard 없는 묶음(허브에 쓰지 않음). 캡처 `__screens__/SC0-new · SC0-list-new · SC1-new · SC2-new · SC2_AI-new · SC2_Pick-new · SC2_Empty-new · SC2_NoProduct-new · SC_Done-new · SC_DoneJson-new`.
+
 **새 흐름 · 공간 → 시나리오 → 장면 (2026-10-08 · `docs/scenarios/11-content-flow.md` §3 · 보드 webapp1 SC2*)**
 - 백엔드 `spaceset.py` + `api_spaces.py` — `/v1/space-sets*`(DocStore `space_sets`, 코드 `SC-NN`). 스키마는 모두 `SS*` 접두.
   - 공간마다 제품 · 솔루션 1개 이상, 시나리오마다 공간 제품 중 1개 이상(어기면 `issues` · `:finish` 422 `SPACE_WITHOUT_PRODUCT` · `SCENARIO_WITHOUT_PRODUCT`).
   - `PUT`(expected_version 409)은 화면이 고친 그대로 저장. 후보 목록은 서버 기준이고 같은 id · cid 후보의 고친 내용만 받는다(수락 전 편집).
   - `spaces/{id}:suggest`: KB D1 사례 + `sc.space_candidates.v1` → 점선 3안 A/B/C. 모델이 없으면 사례 틀 + `[확인 필요]`(`mode=kb_only`). `candidates/{cid}:accept` · `DELETE`.
-  - `:finish` → `stage`(= flow.json `stages.sc`) + `summary_md`.
-- 화면 `web/src/features/scenario/spaces/`(`/scenario/spaces/new` · `/scenario/spaces/:id`, 목록 머리 「공간 → 시나리오 → 장면」). 자동 저장 600ms.
+  - `:finish` → `stage`(= flow.json `stages.sc`) + `summary_md` + 허브 반영(위 절).
+- 화면 `web/src/features/scenario/spaces/`(`/scenario/spaces/:id`). 자동 저장 600ms.
 - 시험: `tests/test_space_sets.py` 4개 · e2e `web/e2e/scenario/spaces.spec.ts`. mock `mocks/ai-tools/sc.space_candidates.v1.json`.
 - 이전 SC0~SC5 흐름은 그대로 둔다(제안서 handoff 가 아직 그것을 읽는다).
 

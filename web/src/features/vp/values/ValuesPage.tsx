@@ -4,10 +4,11 @@
  * 값은 보드 px 그대로(values.css). 본문 열은 셸 규칙(최대 1180 가운데) · 높이는 화면을 채우고 패널 안에서 스크롤.
  */
 import { useEffect, useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { useShellPage } from '@/shell/ShellContext';
+import { FlowBar, FlowDoneView } from '@/shell';
 import {
-  AiBar, AiButton, ByTag, ErrorState, FlowDone, FlowFooter, FlowHead, FlowPanel, FlowScreen, KindTag, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast,
+  AiBar, AiButton, ByTag, ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, KindTag, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast,
   type ByKind, type PickItem,
 } from '@/ui';
 import { useValueMap, useVmActions, type VMDoc, type VMItem, type VMStageOut, type VMValue } from './api';
@@ -179,8 +180,8 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
 
   return (
     <FlowScreen pad="18px 40px" gap={12} className="vv-screen"
-      bar={<LinkedStoryboardBar chips={doc.sb_id ? [{ id: doc.sb_id, name: doc.title, done: ['rq', 'dss'], current: 'vp' }] : []}
-        note={doc.sb_id ? 'Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨' : undefined} emptyText="연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요" />}>
+      bar={doc.sb_id ? <FlowBar sbIds={[doc.sb_id]} current="vp" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" />
+        : <LinkedStoryboardBar chips={[]} emptyText="연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요" />}>
       <FlowHead title="제품 · 솔루션마다 가치와 고객의 니즈를 적어요"
         desc="가치 하나에 고객이 실제로 할 말 같은 니즈 하나 · 예: 학교 · 교실 · 에어컨 → “여름에도 쾌적한 교실 환경이 필요해요”"
         actions={<>
@@ -250,7 +251,6 @@ export function ValuesPage() {
   const { id = '' } = useParams();
   const q = useValueMap(id);
   const [done, setDone] = useState<VMStageOut | null>(null);
-  const nav = useNavigate();
   useShellPage({ section: SECTION, title: q.data ? (q.data.code ? `${q.data.code} · ${q.data.title}` : q.data.title) : '새 VP', hasTask: !done, stepper: { steps: STEPS, current: 2, complete: !!done } });
   if (q.isError) return <div className="wm-page"><ErrorState message="가치 맵을 불러오지 못했어요" onRetry={() => q.refetch()} /></div>;
   if (!q.data) return <div className="wm-page"><Skeleton h={480} r={14} /></div>;
@@ -258,15 +258,10 @@ export function ValuesPage() {
     const c = q.data.counts;
     const d = q.data;
     return (
-      <div className="wm-flow">
-        <LinkedStoryboardBar chips={d.sb_id ? [{ id: d.sb_id, name: d.title, done: ['rq', 'dss', 'vp'], current: 'vp' }] : []} note="요약본이 방금 갱신됐어요"
-          emptyText="연결된 Storyboard가 없어요" />
-        <FlowDone title="가치 제안을 저장했어요" sub={`제품 · 솔루션 ${c.items}개의 가치 ${c.values}개와 고객의 니즈를 Storyboard에 담았어요`}
-          sbName={d.sb_id ? d.title : null}
-          stages={[['rq', '요구사항'], ['dss', 'DSS'], ['mi', 'MI'], ['ca', '경쟁사'], ['vp', 'VP'], ['sp', 'Spec'], ['sc', '시나리오'], ['ppt', '제안서']].map(([k, l]) => ({
-            key: k, label: l, ref: k === 'vp' ? (d.code ?? d.id) : null, state: k === 'vp' ? 'cur' as const : (d.sb_id && (k === 'rq' || k === 'dss')) ? 'done' as const : 'none' as const }))}
-          md={done.summary_md} stageKey="vp" stage={done.stage} onEdit={() => setDone(null)} onOpenStoryboard={() => nav('/storyboard')} />
-      </div>
+      <FlowDoneView sbId={d.sb_id ?? null} stageKey="vp" stage={done.stage} mdAdded={done.flow_sync?.md_added ?? done.summary_md}
+        title="가치 제안을 저장했어요" sub={`제품 · 솔루션 ${c.items}개의 가치 ${c.values}개와 고객의 니즈를 Storyboard에 담았어요`}
+        note={done.flow_sync?.synced?.length ? `연결된 Storyboard ${done.flow_sync.synced.length + 1}개에 반영했어요` : '요약본이 방금 갱신됐어요'}
+        onEdit={() => setDone(null)} />
     );
   }
   return <Editor doc={q.data} onFinished={setDone} />;

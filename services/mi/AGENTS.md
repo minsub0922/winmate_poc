@@ -28,7 +28,29 @@ make contracts SERVICE=mi    # contracts/mi.json 갱신 + 깨지는 변경 검�
 - API 를 바꾸면 `make contracts SERVICE=mi` 를 돌리고 `contracts/mi.json` 변경을 함께 남긴다. 깨지는 변경이면 소비 서비스를 `docs/requests/` 에 알린다.
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
-## 현재 상태 (2026-10-06)
+## 현재 상태 (2026-10-10)
+
+### 새 흐름(2026-10-08 · 웹앱 ① v58 보드 MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_Done · MI_DoneJson)
+수용 기준 `docs/scenarios/11-content-flow.md` §1(CF-08 의 MI 예외: Storyboard 를 고르면 AI 분석 로딩이 먼저) · §4 폭 · §6 stage 계약(`stages.mi`).
+- API `/v1/mi-flows*`(`api_flow.py` · 본체 `miflow.py` · 잡 `graphs/flow.py` = `mi.flow_analyze` · `mi.flow_search`). 단계 analyzing → search → searching → refine → done.
+  화면은 문서 `progress.steps` 를 폴링(0.6초)한다. 저장 `:finish` → `push_stage(sb, "mi")` · 요약 줄(보드: 그룹 수 · 출처 · 확인 필요 수치 2줄).
+- 찾은 정보는 검색 도구가 준 글에서만 — 출처 이름 · 날짜는 글 속 문자열, URL 은 도구가 준 것만(요약형 검색이면 null → 화면 「원문」은 검색 결과 글).
+  고쳐 저장할 때 담은 정보 유지 + 새로 찾은 것만 더하고, 정제 목록은 이번에 찾은 순서(유지 · 새로 찾음이 섞인다).
+- 규칙 대체 검색어(모델 없음)는 고객 계획 수치(예: 20%)를 빼고 업종 낱말을 한 번만 쓴다(`need_query`).
+- mock: `mocks/ai-tools/mi.flow_analyze.v1.json`(고객사 「E 자산운용」 Storyboard 만 — 그 밖은 오류 → 규칙) · `mi.flow_search.v1.json`(검색어별 보드 MI3 예시 문장, 출처 · 날짜 포함 · URL 없음).
+- 웹 `web/src/features/mi/flow/`: `MiFlowPages.tsx`(목록 · Gate · 편집 라우터 · 완료) · `SearchStep.tsx`(MI2_Loading · MI2) · `RefineStep.tsx`(MI3 · 원문) · `pace.ts`(단계 보여 주기 최소 0.8초) · `api.ts` · `miflow.css`(mif-).
+
+| 라우트 | 보드 |
+|---|---|
+| `/mi` | MI0 = 공용 `ContentListScreen`(작성 중 초안은 `/v1/mi-flows`) |
+| `/mi/new` (`?sb=&auto=1` 바로 만들기 · `?rq=` 는 이전 MI1 로) | MI1 · MI1_Branch = 공용 `GateScreen`(만든 문서를 캐시에 먼저 넣어 분석 단계부터 그린다) |
+| `/mi/flow/:id` (`?done=1` 완료) | MI2_Loading → MI2 → (검색 중 같은 단계 카드) → MI3 → MI_Done(`FlowDoneView` · 후속 작업 없음 줄은 보드대로 「Storyboard로」). 저장한 MI 를 열면 Storyboard 를 다시 읽고 고치기(v1 → v2) |
+| `/mi/legacy` · `/mi/legacy/new` · `/mi/legacy/new/industry` | 이전 흐름 목록 · MI1 · MI1I(옛 `/mi/new/industry` 도 연다). 나머지 `/mi/:id/...` 는 그대로 |
+
+- 테스트: pytest `tests/test_mi_flow.py`(허브 연동 · 규칙 대체 · 찾은 순서). e2e `web/e2e/mi/mi-flow.spec.ts` 3개(목록 → Gate → 로딩 → MI2 → MI3 → v1 → 다시 고치기 → v2 · JSON / 복제본 / 바로 만들기 · `?rq=`),
+  폭(본문 1180 · 검색어 칸 (1100 − 24)/3 · 높이 300 · 조건 키 96 · 정제 줄 76 · 완료 카드 1020)을 재고 `__screens__/<보드>-new.png` 를 남긴다.
+
+### 이전 흐름(2026-10-06)
 03-mi 의 보드 18장(UC_MI 유스케이스 맵 · MIC 시나리오 픽스처는 라우트 없음 → 화면 16 + 공유 보기) · 수용 기준 AC-MI-01~94 를 구현했다.
 pytest 118 · e2e 10(실제 스택 5 + API 흉내 5) 통과(MODEL_MODE=mock).
 

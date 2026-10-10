@@ -50,7 +50,7 @@ export function ResultPage() {
     return (
       <MiPage>
         <Agent text="아직 결과가 없어요.">
-          <div className="mi-row"><Link to={`/mi/${aid}/run`} className="mi-btn">진행 보기</Link><Link to="/mi" className="mi-btn">목록으로</Link></div>
+          <div className="mi-row"><Link to={`/mi/${aid}/run`} className="mi-btn">진행 보기</Link><Link to="/mi/legacy" className="mi-btn">목록으로</Link></div>
         </Agent>
       </MiPage>
     );

@@ -81,8 +81,8 @@ export function ProductPickerDialog({ open, title = '제품 · 솔루션 고르�
       <input id="wm-pick-search" className="wm-pick__search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="+ 카탈로그에서 제품 · 솔루션 찾기 (DSS 밖)" />
       {(!!found.length || !!q.trim()) && (
         <div className="wm-pick__grid">
-          {found.filter((f) => !known.has(f.name)).map((it) => <Row key={`${it.kind}:${it.name}`} it={it} on={picked.includes(it.name)} onToggle={() => onToggle(it)} />)}
-          {!!q.trim() && !known.has(q.trim()) && !found.some((f) => f.name === q.trim()) && (
+          {found.filter((f) => !known.has(f.name) && !pickedOutside.includes(f.name)).map((it) => <Row key={`${it.kind}:${it.name}`} it={it} on={picked.includes(it.name)} onToggle={() => onToggle(it)} />)}
+          {!!q.trim() && !known.has(q.trim()) && !pickedOutside.includes(q.trim()) && !found.some((f) => f.name === q.trim()) && (
             <Row it={{ name: q.trim(), kind: 'product', ref: null, where: '직접 추가 · KB 에 없음 · 확인 필요' }} on={picked.includes(q.trim())}
               onToggle={() => onToggle({ name: q.trim(), kind: 'product', ref: null })} />
           )}

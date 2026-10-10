@@ -75,3 +75,31 @@ async def test_linked_other_maps_import_and_finish(client):
     assert st["stage"]["selection"]["fromDss"] == 4 and st["summary_md"].startswith("## VP ·")
     empty = await _new(client)
     assert (await client.post(f"/v1/value-maps/{empty['id']}:finish")).status_code == 422
+
+
+async def test_value_map_from_storyboard_dss_and_finish_pushes_stage(client, apps):
+    """새 흐름: Gate 에서 고른 Storyboard 의 DSS 제품 · 솔루션으로 시작 → 저장하면 flow.json stages.vp · 요약본에 들어간다."""
+    from winmate_common import testing
+    async with testing.api_client(apps["storyboard"]) as sb:
+        f = (await sb.post("/v1/flows", json={"name": "용산 AI Ready 오피스", "customer": "E 자산운용",
+                                               "rq": {"ref": "RQ-01", "ver": 1, "value": {}, "md": "- 요구 12"}})).json()
+        # DSS 전에는 시작 못 함
+        r = await client.post("/v1/value-maps", json={"sb_id": f["id"]})
+        assert r.status_code == 422 and r.json()["error"]["code"] == "PREREQUISITE_MISSING"
+        await sb.put(f"/v1/flows/{f['id']}/stages/dss", json={"ref": "DSS-01", "value": {
+            "industry": {"value": "오피스 · 업무시설", "by": "manual"},
+            "spaces": [{"name": "로비", "products": [{"name": "The Wall IAB 146\"", "kind": "product", "qty": 1}, {"name": "Smart Signage QM55C", "kind": "product", "qty": 2}]},
+                       {"name": "회의실", "products": [{"name": "Smart Signage QM55C", "kind": "product", "qty": 1}]}],
+            "solutions": [{"name": "MagicINFO", "ref": "kb:solution:sol_magicinfo"}]}, "md": "- 공간 2"})
+        d = (await client.post("/v1/value-maps", json={"sb_id": f["id"]})).json()
+        assert d["title"] == "용산 AI Ready 오피스"
+        names = {it["name"]: it for it in d["items"]}
+        assert names["Smart Signage QM55C"]["spaces"] == ["로비", "회의실"] and names["MagicINFO"]["kind"] == "solution"
+        wall = names["The Wall IAB 146\""]["key"]
+        await client.post(f"/v1/value-maps/{d['id']}/items/{wall}/values", json={"space": "로비", "message": "들어서는 순간 AI 비전을 보여 줌", "need": "첫인상으로 각인시키고 싶어요"})
+        out = (await client.post(f"/v1/value-maps/{d['id']}:finish")).json()
+        assert out["flow_sync"]["md_added"].startswith("## VP · VP-")
+        flow = (await sb.get(f"/v1/flows/{f['id']}")).json()
+        assert flow["stages"]["vp"]["items"][0]["values"][0]["need"]["text"] == "첫인상으로 각인시키고 싶어요"
+        assert flow["cells"][4]["route"] == f"/vp/values/{d['id']}" and flow["cards"]["vp"]["facts"][1] == ["가치", "1"]
+        assert (await client.get(f"/v1/value-maps/{d['id']}")).json()["ver"] == 1

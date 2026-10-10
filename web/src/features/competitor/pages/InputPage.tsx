@@ -43,7 +43,7 @@ export function InputPage() {
   }
 
   if (routeId && server.isLoading) return <LoadingCol lines={3} />;
-  if (routeId && server.isError) return <CaPage><Band tone="danger" action={<Link to="/competitor" className="ca-linkbtn ca-linkbtn--brand">작업 목록</Link>}>작업을 찾지 못했어요</Band></CaPage>;
+  if (routeId && server.isError) return <CaPage><Band tone="danger" action={<Link to="/competitor/legacy" className="ca-linkbtn ca-linkbtn--brand">작업 목록</Link>}>작업을 찾지 못했어요</Band></CaPage>;
 
   const running = a && (a.status === 'finding' || a.status === 'ask') && a.current_job_id;
   const analyzing = a?.status === 'analyzing';

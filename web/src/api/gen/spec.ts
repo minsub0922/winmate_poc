@@ -1247,6 +1247,132 @@ export interface paths {
         patch: operations["decide_warning"];
         trace?: never;
     };
+    "/v1/spec-flows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Spec Flows
+         * @description 새 흐름 Spec 시트 목록(보드 SP0 의 작성 중 초안).
+         */
+        get: operations["list_spec_flows"];
+        put?: never;
+        /**
+         * Create Spec Flow
+         * @description Storyboard(DSS 까지 된 것)의 DSS 제품으로 시트를 만든다 — 행마다 KB 모델을 맞추고 카탈로그 값을 채운다.
+         *     Storyboard 가 없으면 404 `STORYBOARD_NOT_FOUND`, DSS 가 없으면 422 `PREREQUISITE_MISSING`.
+         */
+        post: operations["create_spec_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/spec-flows/{flow_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Spec Flow */
+        get: operations["get_spec_flow"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Patch Spec Flow
+         * @description 형식(비교표 · 제품별 1장) · 항목 칩 · 표기(한국어 · mm / 영문 · inch) · 제목. expected_version 이 다르면 409.
+         */
+        patch: operations["patch_spec_flow"];
+        trace?: never;
+    };
+    "/v1/spec-flows/{flow_id}:finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Finish Spec Flow
+         * @description 저장(시트 만들기) → Storyboard flow.json stages.sp · 요약본 · 팝업 카드. 넣은 제품이 없으면 422 `NO_MODELS`, 항목이 없으면 422 `NO_COLUMNS`.
+         */
+        post: operations["finish_spec_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/spec-flows/{flow_id}/rows/{row_key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Patch Spec Flow Row
+         * @description 행 넣기 · 빼기 · 수량 · 다른 모델 고르기(카탈로그에 없는 모델이면 422 `MODEL_NOT_IN_CATALOG`) · 모델 비우기.
+         */
+        patch: operations["patch_spec_flow_row"];
+        trace?: never;
+    };
+    "/v1/spec-flows/{flow_id}/rows/{row_key}/models": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Spec Flow Row Models
+         * @description 이 행에 고를 수 있는 모델 — q 가 없으면 같은 제품군 모델, 있으면 카탈로그 검색.
+         */
+        get: operations["spec_flow_row_models"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/spec-flows/{flow_id}/stage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Spec Flow Stage
+         * @description 지금 값으로 만든 stages.sp(저장하지 않음).
+         */
+        get: operations["spec_flow_stage"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -3277,6 +3403,333 @@ export interface components {
             title: string;
             /** Version */
             version: string;
+        };
+        /** SFColumn */
+        SFColumn: {
+            /** Key */
+            key: string;
+            /** Label */
+            label: string;
+            /** On */
+            on: boolean;
+        };
+        /** SFCounts */
+        SFCounts: {
+            /** Columns */
+            columns: number;
+            /**
+             * Models
+             * @description 시트에 넣은 행
+             */
+            models: number;
+            /** Pending Cells */
+            pending_cells: number;
+            /**
+             * Total
+             * @description 전체 행(DSS 제품)
+             */
+            total: number;
+            /** Warnings */
+            warnings: number;
+        };
+        /** SFCreate */
+        SFCreate: {
+            /**
+             * Sb Id
+             * @description 사전 작업 Storyboard(DSS 까지 된 것)
+             */
+            sb_id: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** SFDoc */
+        SFDoc: {
+            /** Catalog Version */
+            catalog_version?: string | null;
+            /**
+             * Code
+             * @description 화면 · flow.json 짧은 번호(SP-01 …)
+             */
+            code?: string | null;
+            /**
+             * Columns
+             * @description 항목 칩 전체(이름은 현재 표기 언어)
+             */
+            columns?: components["schemas"]["SFColumn"][];
+            counts: components["schemas"]["SFCounts"];
+            /** Created At */
+            created_at: string;
+            /**
+             * Dss Ref
+             * @description 가져온 DSS 참조(DSS-01 …)
+             */
+            dss_ref?: string | null;
+            /**
+             * Format
+             * @default compare
+             * @enum {string}
+             */
+            format: "compare" | "per_product";
+            /** Id */
+            id: string;
+            /**
+             * Items
+             * @description 고른 항목 key(보드 순서)
+             */
+            items?: string[];
+            /**
+             * Notation
+             * @default ko_mm
+             * @enum {string}
+             */
+            notation: "ko_mm" | "en_inch";
+            /** Rows */
+            rows?: components["schemas"]["SFRow"][];
+            /** Sb Id */
+            sb_id?: string | null;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "done";
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+            /**
+             * Ver
+             * @description 저장(완료) 판 — flow.json stages.sp.ver
+             */
+            ver?: number | null;
+            /** Version */
+            version: number;
+        };
+        /** SFFile */
+        SFFile: {
+            /** Id */
+            id: string;
+            /**
+             * Name
+             * @description SP-01_v1.xlsx
+             */
+            name: string;
+            /**
+             * Url
+             * @description 내려받기 경로(files 서비스)
+             */
+            url: string;
+        };
+        /** SFFlowSync */
+        SFFlowSync: {
+            /**
+             * Md Added
+             * @description Storyboard 요약본에 더해진 부분
+             */
+            md_added: string;
+            /**
+             * Synced
+             * @description 같은 Spec 시트가 연결돼 함께 바뀐 다른 Storyboard
+             */
+            synced?: string[];
+        };
+        /** SFList */
+        SFList: {
+            /** Items */
+            items: components["schemas"]["SFListItem"][];
+            /** Next Cursor */
+            next_cursor?: string | null;
+        };
+        /** SFListItem */
+        SFListItem: {
+            /** Code */
+            code?: string | null;
+            counts: components["schemas"]["SFCounts"];
+            /** Id */
+            id: string;
+            /** Sb Id */
+            sb_id?: string | null;
+            /** Status */
+            status: string;
+            /** Title */
+            title: string;
+            /** Updated At */
+            updated_at: string;
+        };
+        /** SFModelOption */
+        SFModelOption: {
+            /**
+             * Current
+             * @default false
+             */
+            current: boolean;
+            /** Display Name */
+            display_name: string;
+            /** Family Name */
+            family_name?: string | null;
+            /** Model Code */
+            model_code: string;
+            /** Size Inch */
+            size_inch?: number | null;
+        };
+        /** SFModelOptions */
+        SFModelOptions: {
+            /**
+             * Basis
+             * @description family = 같은 제품군 모델 · search = 카탈로그 검색
+             */
+            basis: string;
+            /** Items */
+            items: components["schemas"]["SFModelOption"][];
+        };
+        /** SFPatch */
+        SFPatch: {
+            /**
+             * Expected Version
+             * @description 다르면 409
+             */
+            expected_version?: number | null;
+            /** Format */
+            format?: ("compare" | "per_product") | null;
+            /**
+             * Items
+             * @description 고를 항목 key(순서는 보드 순서로 맞춘다)
+             */
+            items?: string[] | null;
+            /** Notation */
+            notation?: ("ko_mm" | "en_inch") | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** SFRow */
+        SFRow: {
+            /**
+             * By
+             * @description 출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual
+             * @default manual
+             */
+            by: string;
+            /**
+             * Cells
+             * @description 항목 key → 표시 글(현재 표기 기준, 없는 값은 [확인 필요])
+             */
+            cells?: {
+                [key: string]: string;
+            };
+            /**
+             * Display Name
+             * @description KB 모델 표시명(QM55C …)
+             */
+            display_name?: string | null;
+            /**
+             * Dss Ref
+             * @description DSS 제품 참조(kb:model:… · kb:family:…)
+             */
+            dss_ref?: string | null;
+            /** Family Id */
+            family_id?: string | null;
+            /** Family Name */
+            family_name?: string | null;
+            /**
+             * Key
+             * @description 시트 안에서 행을 가리키는 키(DSS 제품 이름에서 만든 slug)
+             */
+            key: string;
+            /**
+             * Match
+             * @description 모델을 맞춘 방법: ref · code(이름 속 모델명) · family(제품군 대표 모델) · manual(사람이 고름) · none
+             * @default none
+             * @enum {string}
+             */
+            match: "ref" | "code" | "family" | "manual" | "none";
+            /**
+             * Model Code
+             * @description 맞춘 KB 모델코드 — 없으면 카탈로그에서 찾지 못함
+             */
+            model_code?: string | null;
+            /**
+             * Name
+             * @description DSS 제품 이름(보드 제품 줄 제목)
+             */
+            name: string;
+            /**
+             * On
+             * @description 시트에 넣는다(보드 체크박스)
+             * @default true
+             */
+            on: boolean;
+            /**
+             * Pending
+             * @description 값을 다 채우지 못한 항목 key
+             */
+            pending?: string[];
+            /**
+             * Qty
+             * @description 수량(DSS 공간별 개수의 합, 사람이 고칠 수 있음) — 개수를 알 수 없으면 null(= [확인 필요])
+             */
+            qty?: number | null;
+            /**
+             * Qty Note
+             * @description DSS 수량 원문(공간별, 예: 로비 2대 · 라운지 [확인 필요])
+             */
+            qty_note?: string | null;
+            /**
+             * Source Url
+             * @description 값 출처(공식 카탈로그 페이지)
+             */
+            source_url?: string | null;
+            /**
+             * Spaces
+             * @description 이 제품이 놓인 DSS 공간들
+             */
+            spaces?: string[];
+            /** Warnings */
+            warnings?: components["schemas"]["SFWarning"][];
+        };
+        /** SFRowPatch */
+        SFRowPatch: {
+            /**
+             * Clear Model
+             * @description 모델을 비운다(카탈로그 밖 제품)
+             */
+            clear_model?: boolean | null;
+            /** Expected Version */
+            expected_version?: number | null;
+            /**
+             * Model Code
+             * @description 이 모델로 바꾼다(KB 모델코드 · 표시명)
+             */
+            model_code?: string | null;
+            /** On */
+            on?: boolean | null;
+            /** Qty */
+            qty?: number | null;
+        };
+        /** SFStageOut */
+        SFStageOut: {
+            /** @description 저장 때 만든 XLSX(보드 Done 「XLSX로 내보낼 수 있어요」) — 못 만들었으면 null */
+            file?: components["schemas"]["SFFile"] | null;
+            /** @description 허브에 반영된 결과(허브가 안 되면 null) */
+            flow_sync?: components["schemas"]["SFFlowSync"] | null;
+            /**
+             * Stage
+             * @description Storyboard flow.json 의 stages.sp
+             */
+            stage: {
+                [key: string]: unknown;
+            };
+            /** Summary Md */
+            summary_md: string;
+        };
+        /** SFWarning */
+        SFWarning: {
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "not_in_catalog" | "discontinued" | "sold_out" | "mismatch" | "family_default";
+            /** Text */
+            text: string;
         };
         /** ShareResult */
         ShareResult: {
@@ -6826,6 +7279,341 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Warning"];
+                };
+            };
+        };
+    };
+    list_spec_flows: {
+        parameters: {
+            query?: {
+                cursor?: string | null;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFList"];
+                };
+            };
+        };
+    };
+    create_spec_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SFCreate"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    get_spec_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    patch_spec_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SFPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    finish_spec_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFStageOut"];
+                };
+            };
+        };
+    };
+    patch_spec_flow_row: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+                row_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SFRowPatch"];
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    spec_flow_row_models: {
+        parameters: {
+            query?: {
+                q?: string | null;
+            };
+            header?: never;
+            path: {
+                flow_id: string;
+                row_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFModelOptions"];
+                };
+            };
+        };
+    };
+    spec_flow_stage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFStageOut"];
                 };
             };
         };

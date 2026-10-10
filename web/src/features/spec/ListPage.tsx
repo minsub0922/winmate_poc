@@ -1,4 +1,4 @@
-/** SP0 — 작업 목록(`/spec`, 06-spec §4.2) */
+/** SP0 — 이전 흐름 작업 목록(`/spec/legacy`, 06-spec §4.2 — 새 흐름 목록은 `/spec` = flow/FlowPages.tsx) */
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router';
 import { useShellPage } from '@/shell/ShellContext';
@@ -7,10 +7,10 @@ import { archiveSheet, cloneSheet, errText, patchSheet, useSheetCache, useSheetL
 import { SECTION, StatusIcon, TYPE_ICON } from './ui';
 
 const STARTS = [
-  { title: '모델명으로 입력', desc: '모델명을 넣으면 카탈로그 스펙을 바로 가져와요', to: '/spec/new', base: true, icon: 'M4 7h16M4 12h10M4 17h7 M17 14l3 3-3 3' },
-  { title: '제품 탐색에서 고르기', desc: '시리즈 폴더에서 여러 크기를 한 번에 담아요', to: '/spec/new?pop=product', icon: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z' },
-  { title: '조건으로 모델 찾기', desc: '크기 · 밝기 · 용도 · 설치 조건으로 후보를 비교해요', to: '/spec/new/find', icon: 'M4 5h16l-6 7v6l-4 2v-8L4 5z' },
-  { title: '고객 요구 스펙으로 시작', desc: '규격서를 올리면 요구사항 대응표를 만들어요', to: '/spec/new/requirements', icon: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13l2 2 4-4' },
+  { title: '모델명으로 입력', desc: '모델명을 넣으면 카탈로그 스펙을 바로 가져와요', to: '/spec/legacy/new', base: true, icon: 'M4 7h16M4 12h10M4 17h7 M17 14l3 3-3 3' },
+  { title: '제품 탐색에서 고르기', desc: '시리즈 폴더에서 여러 크기를 한 번에 담아요', to: '/spec/legacy/new?pop=product', icon: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z' },
+  { title: '조건으로 모델 찾기', desc: '크기 · 밝기 · 용도 · 설치 조건으로 후보를 비교해요', to: '/spec/legacy/new/find', icon: 'M4 5h16l-6 7v6l-4 2v-8L4 5z' },
+  { title: '고객 요구 스펙으로 시작', desc: '규격서를 올리면 요구사항 대응표를 만들어요', to: '/spec/legacy/new/requirements', icon: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13l2 2 4-4' },
 ];
 const TABS = [['all', '전체'], ['draft', '작성 중'], ['check', '확인 필요'], ['done', '완료']] as const;
 const SORTS = [['updated_desc', '최근 수정순'], ['title', '이름순'], ['status', '상태순']] as const;
@@ -40,7 +40,7 @@ export default function ListPage() {
           <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, letterSpacing: '-0.01em' }}>{archived ? '보관된 Spec 시트' : 'Spec 시트 작업'}</h1>
           <p style={{ margin: 0, fontSize: 13.5, color: 'var(--wm-text-muted)' }}>제품 스펙 비교표와 단일 제품 시트를 만들고, 제안서 '제품 스펙'으로 보냅니다.</p>
         </div>
-        <Button h={40} variant="primary" icon={<Icon name="plus" size={15} strokeWidth={2.4} />} onClick={() => nav('/spec/new')}>새 Spec 시트</Button>
+        <Button h={40} variant="primary" icon={<Icon name="plus" size={15} strokeWidth={2.4} />} onClick={() => nav('/spec/legacy/new')}>새 Spec 시트</Button>
       </div>
 
       {!archived && (

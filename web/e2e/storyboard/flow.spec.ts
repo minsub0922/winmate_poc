@@ -49,7 +49,7 @@ test('SB1 정의서 미리 선택 · prepare 동안 스켈레톤 · 설정 요�
   await expect(card.locator('.sb-ver')).toHaveText('v1');
   await expect(card).toContainText(/요구 12개 · 확인 필요 \d+개 · (오늘|어제) \d\d:\d\d 저장/);
   await expect(page.getByRole('button', { name: '다음 · 기획 질의 3개' })).toBeEnabled();
-  await expect(page.getByRole('link', { name: /정의서가 없어요 — 요청서 · 메모부터 넣기/ })).toHaveAttribute('href', '/requirements/new?return=storyboard');
+  await expect(page.getByRole('link', { name: /정의서가 없어요 — 요청서 · 메모부터 넣기/ })).toHaveAttribute('href', '/requirements/legacy/new?return=storyboard');
   await shot(page, 'SB1');
   const sb = await getSb(request, sbId);
   expect(sb.started).toBe(false);

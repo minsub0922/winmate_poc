@@ -1,4 +1,4 @@
-/** SP1C — 조건으로 모델 찾기(`/spec/new/find` → `/spec/:id/find`, 06-spec §4.5) */
+/** SP1C — 조건으로 모델 찾기(`/spec/legacy/new/find` → `/spec/:id/find`, 06-spec §4.5) */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useJob } from '@/api/jobs';

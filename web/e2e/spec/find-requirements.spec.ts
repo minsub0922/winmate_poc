@@ -7,7 +7,7 @@ import { expect, test } from '@playwright/test';
 import { api, fileBuffer, shot } from './helpers';
 
 test('조건으로 찾기 → 후보 카드 → 고르기 → 비교표', async ({ page }) => {
-  await page.goto('/spec/new/find');
+  await page.goto('/spec/legacy/new/find');
   await expect(page.getByText('어떤 디스플레이가 필요한지 말해 주세요.', { exact: false })).toBeVisible();
   await expect(page.getByTestId('sp-dock-title')).toHaveText('조건으로 찾기 · 0개 선택 · 1 / 3');
   const input = page.getByLabel('조건 추가');
@@ -52,7 +52,7 @@ test('조건으로 찾기 → 후보 카드 → 고르기 → 비교표', async 
 });
 
 test('규격서 올리기 → 대응표 → 원문 · 묻기 초안 → 시트로', async ({ page, request }) => {
-  await page.goto('/spec/new/requirements');
+  await page.goto('/spec/legacy/new/requirements');
   await expect(page.getByText('고객 요구 규격서를 올려 주세요.', { exact: false })).toBeVisible();
   await page.locator('input[type=file]').first().setInputFiles(fileBuffer('B병원_로비디스플레이_요구규격서.pdf', 'application/pdf'));
   await expect(page).toHaveURL(/\/spec\/sp_[A-Z0-9]+\/requirements/);

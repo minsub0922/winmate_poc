@@ -12,15 +12,15 @@ test('MI1 → MI2A → MI3G → MI3 — 새 분석 한 바퀴', async ({ page, r
   const down = await backendDown(request);
   test.skip(!!down, down ?? '');
 
-  await page.goto('/mi');
+  await page.goto('/mi/legacy');
   await expect(page.getByRole('heading', { name: 'Market Intelligence 작업' })).toBeVisible();
   await expect(page.getByTestId('mi0-header')).toContainText('분석 ');
   await expect(page.getByRole('tablist', { name: '상태 필터' }).getByRole('tab')).toHaveText([/전체/, /진행 중/, /완료/, /업데이트 필요/, /작성 중/]);
   await shot(page, 'mi0-list');
 
-  // 사이드바에도 `새 분석` 같은 제목의 작업이 있을 수 있어(공유 데이터) 머리 버튼(`/mi/new`)을 누른다
-  await page.locator('a[href="/mi/new"]').first().click();
-  await expect(page).toHaveURL(/\/mi\/new$/);
+  // 사이드바에도 `새 분석` 같은 제목의 작업이 있을 수 있어(공유 데이터) 머리 버튼(`/mi/legacy/new`)을 누른다
+  await page.locator('a[href="/mi/legacy/new"]').first().click();
+  await expect(page).toHaveURL(/\/mi\/legacy\/new$/);
   const next = page.getByTestId('mi1-next');
   await expect(next).toBeDisabled();
   await expect(next).toHaveAttribute('title', '고객사 · 요구사항 · 파일 중 하나를 입력해 주세요');

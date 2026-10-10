@@ -1,0 +1,182 @@
+/* 공간별 제품 매칭 DSS — 보드 webapp1 DS2 · DS2_AI · DS4 · DS4_AI · DS_Done 인라인 스타일 그대로(px). 색은 토큰. 접두어 ds-
+ * 보드의 div 는 content-box(높이 + 선)이고 button 은 border-box 다 — 같은 크기로 그려지게 box-sizing 을 보드대로 둔다. */
+
+/* ── 공통: AI 추가기능 버튼(보드 p-aib · o-aib — 칸마다 크기가 다르다) ── */
+.ds-aib { border: 1px solid var(--wm-brand-hero-line); background: var(--wm-surface); color: var(--wm-brand); font-weight: 700; display: flex; align-items: center;
+  white-space: nowrap; flex-shrink: 0; box-sizing: border-box; }
+.ds-aib:hover:not(:disabled) { background: var(--wm-brand-50); }
+.ds-aib:disabled { opacity: 0.6; cursor: default; }
+.ds-aib:focus-visible, .ds-ghost:focus-visible, .ds-btn:focus-visible, .ds-sp:focus-visible, .ds-solbtn:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.ds-aib--38 { height: 38px; padding: 0 12px; border-radius: 10px; font-size: 12.5px; gap: 6px; }    /* AI 업종 추론 */
+.ds-aib--sol { height: 38px; padding: 0 13px; border-radius: 10px; font-size: 13px; gap: 6px; }    /* AI 솔루션 추천 */
+.ds-aib--sp { height: 30px; padding: 0 9px; border-radius: 8px; font-size: 12px; gap: 5px; }       /* AI 공간 추천 */
+.ds-aib--prod { height: 30px; padding: 0 10px; border-radius: 8px; font-size: 12px; gap: 5px; }    /* AI 공간별 제품 자동 매칭 */
+
+.ds-ghost { border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); font-weight: 600; white-space: nowrap; flex-shrink: 0; box-sizing: border-box; }
+.ds-ghost:hover:not(:disabled) { background: var(--wm-brand-hero-hover); }
+.ds-ghost:disabled { color: var(--wm-text-subtle); cursor: default; }
+.ds-ghost--32 { height: 32px; padding: 0 10px; border-radius: 8px; font-size: 12.5px; }
+.ds-ghost--38 { height: 38px; padding: 0 12px; border-radius: 10px; font-size: 12.5px; }
+.ds-btn { border: none; background: var(--wm-brand); color: #fff; font-weight: 700; white-space: nowrap; flex-shrink: 0; box-sizing: border-box; }
+.ds-btn:hover:not(:disabled) { background: var(--wm-brand-hover); }
+.ds-btn:disabled { background: var(--wm-line); color: var(--wm-text-subtle); cursor: default; }
+.ds-btn--28 { height: 28px; padding: 0 12px; border-radius: 7px; font-size: 12px; }
+.ds-btn--32 { height: 32px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; }
+
+/* 작업 화면 본문(보드 section: DS2 padding 18 40 · DS4 22 120 · gap 12) — 위는 FlowScreen */
+.ds-screen .wm-flow__section { gap: 12px; }
+
+/* ── DS2 머리 줄(업종) ─────────────────────────────── */
+.ds-head { display: flex; align-items: center; gap: 10px; position: relative; z-index: 5; }
+.ds-head h1 { margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; flex-grow: 1; min-width: 0; }
+.ds-total { font-size: 13px; color: var(--wm-text-muted); white-space: nowrap; }
+.ds-ind { position: relative; }
+.ds-indbtn { height: 38px; padding: 0 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; white-space: nowrap;
+  box-sizing: border-box; border: 1px dashed var(--wm-line-dashed); background: var(--wm-surface); color: var(--wm-text); }
+.ds-indbtn:hover { background: var(--wm-brand-hero-hover); }
+.ds-indbtn--set { border: 1.5px solid var(--wm-brand); color: var(--wm-brand); }
+.ds-indbtn__k { font-size: 12px; font-weight: 600; color: var(--wm-text-muted); }
+.ds-indmenu { position: absolute; right: 0; top: 42px; width: 220px; box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line);
+  border-radius: 12px; box-shadow: var(--wm-shadow-dropdown); padding: 6px; display: flex; flex-direction: column; }
+.ds-indopt { width: 100%; height: 34px; padding: 0 10px; border-radius: 8px; border: none; text-align: left; font-size: 13px; background: transparent; color: var(--wm-text); flex-shrink: 0; }
+.ds-indopt:hover { background: var(--wm-brand-hero-hover); }
+.ds-indopt--on, .ds-indopt--on:hover { background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 700; }
+
+/* AI 업종 추론 줄(점선 h40) */
+.ds-indai { display: flex; align-items: center; gap: 10px; height: 40px; box-sizing: border-box; padding: 0 8px 0 12px; border-radius: 10px;
+  background: var(--wm-brand-hero); border: 1px dashed var(--wm-ai-line); }
+.ds-indai__v { font-size: 13px; font-weight: 700; white-space: nowrap; }
+.ds-indai__why { font-size: 12px; color: var(--wm-text-muted); flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ── DS2 두 칸: 공간 270 | 제품 1fr · 간격 14 ────────── */
+.ds-grid { grid-template-columns: 270px minmax(0, 1fr); }
+
+/* 공간(270) */
+.ds-sphead { display: flex; align-items: center; gap: 6px; height: 46px; box-sizing: content-box; padding: 0 8px 0 14px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.ds-sphead__t { font-size: 14px; font-weight: 700; flex-grow: 1; }
+.ds-splist { flex: 1 1 0; min-height: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+.ds-splist > * { flex-shrink: 0; }
+.ds-sp { position: relative; display: flex; align-items: center; gap: 8px; width: 100%; height: 44px; box-sizing: border-box; padding: 0 10px; border-radius: 10px;
+  border: none; text-align: left; color: var(--wm-text); background: transparent; cursor: pointer; }
+.ds-sp:hover { background: var(--wm-brand-hero-hover); }
+.ds-sp--on, .ds-sp--on:hover { background: var(--wm-brand-50); }
+.ds-sp__name { font-size: 13.5px; font-weight: 700; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-sp__pend { height: 20px; box-sizing: content-box; padding: 0 6px; border-radius: 999px; border: 1px dashed var(--wm-brand); color: var(--wm-brand); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; white-space: nowrap; }
+.ds-sp__n { min-width: 24px; height: 24px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-family: var(--wm-font-num); font-size: 12px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center; background: var(--wm-surface-3); color: var(--wm-text-2); }
+.ds-sp--on .ds-sp__n { background: var(--wm-brand); color: #fff; }
+.ds-sp .ds-sp__n--zero { background: transparent; border: 1px dashed var(--wm-line-dashed); color: var(--wm-text-muted); }
+/* 공간 빼기(보드에 없음) — 손을 올리거나 키보드로 닿을 때만 개수 자리 위에 보인다 */
+.ds-sp__del { position: absolute; right: 10px; top: 10px; width: 24px; height: 24px; border-radius: 999px; border: 1px solid var(--wm-line); background: var(--wm-surface);
+  color: var(--wm-text-muted); display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; padding: 0; }
+.ds-sp__del:hover { color: var(--wm-danger); border-color: var(--wm-danger-line); }
+.ds-sp:hover .ds-sp__del, .ds-sp__del:focus-visible { opacity: 1; pointer-events: auto; }
+
+/* AI 공간 추천(점선) */
+.ds-rec { display: flex; align-items: center; gap: 8px; min-height: 44px; box-sizing: border-box; padding: 4px 6px 4px 10px; border-radius: 10px;
+  border: 1px dashed var(--wm-ai-line); background: var(--wm-surface-2); }
+.ds-rec__txt { display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0; }
+.ds-rec__t { font-size: 13px; font-weight: 700; color: var(--wm-brand); display: flex; align-items: center; gap: 5px; }
+.ds-rec__ext { height: 16px; box-sizing: content-box; padding: 0 4px; border-radius: 4px; border: 1px solid var(--wm-text); color: var(--wm-text); font-size: 10px; font-weight: 700;
+  display: flex; align-items: center; }
+.ds-rec__why { font-size: 11px; color: var(--wm-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-rec__add { height: 28px; padding: 0 9px; border-radius: 7px; font-size: 11.5px; }
+
+/* 공간 이름으로 추가 */
+.ds-spfoot { padding: 8px 10px 10px 10px; border-top: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.ds-spadd { display: flex; align-items: center; gap: 6px; height: 36px; box-sizing: border-box; padding: 0 4px 0 10px; border-radius: 9px; border: 1px dashed var(--wm-line-dashed); }
+.ds-spadd:focus-within { border-style: solid; border-color: var(--wm-brand); }
+.ds-spadd input { flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 12.5px; color: var(--wm-text); outline: none; padding: 0; }
+.ds-spadd input::placeholder, .ds-psearch input::placeholder { color: var(--wm-placeholder); }
+.ds-spadd button { height: 28px; padding: 0 9px; border-radius: 7px; border: none; background: var(--wm-brand-50); color: var(--wm-brand); font-size: 11.5px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0; }
+.ds-spadd button:disabled { color: var(--wm-text-subtle); background: var(--wm-surface-3); cursor: default; }
+
+/* 선택한 공간의 제품(1fr) */
+.ds-phead { display: flex; align-items: center; gap: 10px; height: 46px; box-sizing: content-box; padding: 0 10px 0 18px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.ds-phead__name { font-size: 15px; font-weight: 700; white-space: nowrap; }
+.ds-phead__line { font-size: 12px; color: var(--wm-text-muted); flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-acceptall { height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: var(--wm-brand); font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+.ds-acceptall:hover { background: var(--wm-brand-hero-hover); }
+.ds-prows { flex: 1 1 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.ds-prows > * { flex-shrink: 0; }
+.ds-prow { display: flex; align-items: center; gap: 12px; min-height: 68px; box-sizing: content-box; padding: 0 14px 0 18px; }
+.ds-prow + .ds-prow { border-top: 1px solid var(--wm-bg); }
+.ds-prow--pend { background: var(--wm-surface-2); outline: 1px dashed var(--wm-brand-hero-line); outline-offset: -6px; border-radius: 12px; }
+.ds-pic { width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px; background: var(--wm-surface-3); display: flex; align-items: center; justify-content: center; }
+.ds-ptxt { display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; }
+.ds-ptop { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ds-pname { font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ds-pwhy { font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* 출처 태그(보드 tagBase: h20 · 점선이면 선이 더해져 22) */
+.ds-tag { height: 20px; box-sizing: content-box; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;
+  background: var(--wm-surface-3); color: var(--wm-text-2); }
+.ds-tag--ai-pending { background: transparent; border: 1px dashed var(--wm-brand); color: var(--wm-brand); }
+.ds-tag--ai-accepted { background: var(--wm-ok-bg); color: var(--wm-ok); }
+/* 수량(누르면 고친다 · 비면 [확인 필요] 주황) */
+.ds-qty { height: 28px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 700; display: flex; align-items: center;
+  white-space: nowrap; flex-shrink: 0; background: var(--wm-surface-3); color: var(--wm-text); cursor: text; }
+.ds-qty--warn { background: var(--wm-amber-bg); color: var(--wm-amber); }
+.ds-qtyin { height: 28px; width: 92px; box-sizing: border-box; border: 1.5px solid var(--wm-brand); border-radius: 8px; padding: 0 8px; font-size: 12.5px; font-weight: 700;
+  color: var(--wm-text); outline: none; flex-shrink: 0; background: var(--wm-surface); }
+.ds-x { width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; color: var(--wm-text-subtle); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ds-x:hover { background: var(--wm-brand-hero-hover); color: var(--wm-text); }
+.ds-pempty { margin: 18px; padding: 18px; border-radius: 12px; border: 1px dashed var(--wm-brand-line); font-size: 13px; color: var(--wm-text-muted); line-height: 1.6; }
+
+/* 제품 추가(검색 · 제품 탐색에서 고르기) */
+.ds-pfoot { display: flex; align-items: center; gap: 10px; padding: 10px 18px 12px 18px; border-top: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.ds-psearch { position: relative; flex-grow: 1; min-width: 0; height: 38px; box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 10px; display: flex; align-items: center;
+  gap: 8px; padding: 0 12px; }
+.ds-psearch:focus-within { border-color: var(--wm-brand); }
+.ds-psearch input { flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: var(--wm-text); outline: none; padding: 0; }
+.ds-psearch input:disabled { cursor: not-allowed; }
+.ds-presults { position: absolute; left: -1px; right: -1px; bottom: calc(100% + 6px); box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line);
+  border-radius: 12px; box-shadow: var(--wm-shadow-popover); padding: 6px; display: flex; flex-direction: column; gap: 2px; z-index: 6; }
+.ds-presults__h { font-size: 11.5px; font-weight: 700; color: var(--wm-text-subtle); padding: 4px 8px 2px; }
+.ds-pres { display: flex; align-items: center; gap: 10px; min-height: 44px; box-sizing: border-box; padding: 4px 10px; border-radius: 8px; border: none; background: transparent;
+  text-align: left; color: var(--wm-text); width: 100%; }
+.ds-pres--on, .ds-pres:hover { background: var(--wm-brand-hero-hover); }
+.ds-pres__txt { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1; }
+.ds-pres__name { font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-pres__meta { font-size: 11.5px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-pres__add { font-size: 11.5px; font-weight: 700; color: var(--wm-brand); white-space: nowrap; flex-shrink: 0; }
+
+/* 아래 줄(뒤로 · 안내 · 다음) — 보드 h48 r12 15/700 · 화살표 */
+.ds-next { height: 48px; padding: 0 24px; border-radius: 12px; border: none; background: var(--wm-brand); color: #fff; font-size: 15px; font-weight: 700;
+  display: flex; align-items: center; gap: 8px; white-space: nowrap; box-sizing: border-box; flex-shrink: 0; }
+.ds-next:hover:not(:disabled) { background: var(--wm-brand-hover); color: #fff; }
+.ds-next:disabled { background: var(--wm-line); color: var(--wm-text-subtle); cursor: default; }
+.ds-next:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+
+/* ── DS4 솔루션(본문 좌우 120 → 940) ───────────────── */
+.ds-solhead { display: flex; align-items: center; gap: 12px; }
+.ds-solhead__t { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0; }
+.ds-solhead__t h1 { margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; }
+.ds-solhead__t span { font-size: 13px; color: var(--wm-text-muted); }
+.ds-overlap { display: flex; align-items: center; gap: 10px; height: 38px; box-sizing: border-box; padding: 0 14px; border-radius: 10px; background: var(--wm-amber-bg);
+  color: var(--wm-amber); font-size: 12.5px; font-weight: 600; }
+.wm-flow__section > .ds-solscroll { flex: 0 1 auto; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.ds-solgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; flex-shrink: 0; }
+.ds-sol { box-sizing: border-box; min-height: 112px; padding: 14px 14px 14px 16px; border-radius: 14px; background: var(--wm-surface); display: flex; gap: 10px; border: 1px solid var(--wm-line); }
+.ds-sol--rec { border: 1.5px dashed var(--wm-brand); }
+.ds-sol--on { border: 2px solid var(--wm-brand); }
+.ds-solbtn { display: flex; align-items: flex-start; gap: 12px; padding: 0; border: none; background: transparent; text-align: left; color: var(--wm-text); flex-grow: 1; min-width: 0;
+  font-size: 13.3333px; }
+.ds-box { width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  border: 2px solid var(--wm-brand-line); background: var(--wm-surface); }
+.ds-box--on { background: var(--wm-brand); border: none; }
+.ds-soltxt { display: flex; flex-direction: column; gap: 5px; min-width: 0; flex-grow: 1; }
+.ds-soltop { display: flex; align-items: center; gap: 8px; }
+.ds-solname { font-size: 15px; font-weight: 700; }
+.ds-soldesc { font-size: 12.5px; color: var(--wm-text-muted); line-height: 1.5; }
+.ds-sollinks { font-size: 12px; color: var(--wm-text-2); }
+.ds-sollinks b { font-weight: 700; }
+.ds-solwhy { font-size: 12px; color: var(--wm-brand); }
+.ds-sol .ds-ghost--32 { align-self: flex-start; }
+.ds-more { align-self: flex-start; height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: var(--wm-brand); font-size: 12.5px; font-weight: 700; flex-shrink: 0; }
+.ds-more:hover { background: var(--wm-brand-hero-hover); }
+.ds-solfoot { margin-top: auto; display: flex; align-items: center; gap: 12px; }
+
+/* ── DS_Done 후속 작업 2칸(보드 nextGrid: repeat(n) · 간격 12) ── */
+.ds-follows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }

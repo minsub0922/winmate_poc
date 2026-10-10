@@ -155,19 +155,65 @@ export function foldJson(v: unknown): unknown {
   return v;
 }
 
+/** flow.json 에서 `stages.<key>` 블록(키 줄 ~ 닫는 괄호) 줄 범위 — 2칸 들여쓰기 JSON 기준 */
+export function stageLineRange(lines: string[], key: string): [number, number] | null {
+  const st = lines.findIndex((l) => l === '  "stages": {');
+  if (st < 0) return null;
+  const i = lines.findIndex((l, j) => j > st && l.startsWith(`    "${key}": `));
+  if (i < 0) return null;
+  if (!/[{[]$/.test(lines[i])) return [i, i];
+  for (let j = i + 1; j < lines.length; j++) if (/^ {4}[}\]]/.test(lines[j])) return [i, j];
+  return [i, i];
+}
+
+/** flow.json 전체 보기 팝업(보드 JsonPopup 900×780) — 전체 / 추가된 값만 · 이번에 추가 · 바뀐 줄 초록 · 복사 */
+export function JsonPopup({ open, onClose, json, highlightKey, highlightAll, title = 'flow.json', sub }: {
+  open: boolean; onClose: () => void; json: unknown; highlightKey?: string | null; title?: string; sub?: ReactNode;
+  /** 새 Storyboard 처럼 전체가 이번에 생긴 값이면 모든 줄을 강조 */
+  highlightAll?: boolean;
+}) {
+  const [only, setOnly] = useStateLocal(false);
+  const lines = JSON.stringify(json ?? {}, null, 2).split('\n');
+  const rg: [number, number] | null = highlightAll ? [0, lines.length - 1] : highlightKey ? stageLineRange(lines, highlightKey) : null;
+  const rows = lines.map((t, i) => ({ n: i + 1, t, add: !!rg && i >= rg[0] && i <= rg[1] })).filter((r) => !only || r.add);
+  const copy = () => { try { void navigator.clipboard.writeText(lines.join('\n')); } catch { /* 복사 못 함 */ } };
+  return (
+    <Modal open={open} onClose={onClose} width={900} height={780} ariaLabel={`${title} 전체 보기`}
+      title={<span className="wm-jsonpop__head"><span className="wm-jsonpop__t">{title}</span><span className="wm-jsonpop__s">{sub ?? (rg ? `초록 줄이 이번에 추가 · 바뀐 값이에요 · ${lines.length}줄` : `${lines.length}줄`)}</span></span>}
+      bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column' }}
+      footer={<div className="wm-jsonpop__foot">
+        <span className="wm-jsonpop__legend"><span aria-hidden />이번에 추가 · 바뀐 줄</span>
+        <button type="button" className="wm-btn wm-btn--h38" onClick={copy}>복사</button>
+        <button type="button" className="wm-btn wm-btn--primary wm-btn--h38" onClick={onClose}>닫기</button>
+      </div>}>
+      <div className="wm-jsonpop__tabs" role="tablist">
+        <button type="button" role="tab" aria-selected={!only} className={cx('wm-jsonpop__tab', !only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(false)}>전체</button>
+        <button type="button" role="tab" aria-selected={only} className={cx('wm-jsonpop__tab', only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(true)} disabled={!rg}>추가된 값만</button>
+      </div>
+      <div className="wm-jsonlines">{rows.map((r) => (
+        <div key={r.n} className={cx('wm-jsonline', r.add && 'wm-jsonline--add')}><span>{r.n}</span><span>{r.t}</span></div>
+      ))}</div>
+    </Modal>
+  );
+}
+
 /**
  * 완료 화면(보드 Done · VP_Done · SC_Done · CA_Done) — 저장했어요 머리 · Storyboard 카드(단계 칸 · 요약 md 더해진 부분 · flow.json 추가 값 접힘)
- * · 전체 JSON 팝업 · 후속 작업. JSON 은 stage(`stages.<key>`)만 받는다.
+ * · 전체 JSON 팝업(fullJson 이 있으면 flow.json 전체에서 stages.<key> 를 강조) · 후속 작업.
  */
-export function FlowDone({ title, sub, sbName, sbStage, stages, md, stageKey, stage, onEdit, follow, onOpenStoryboard }: {
+export function FlowDone({ title, sub, sbName, sbStage, stages, md, stageKey, stage, fullJson, onEdit, follow, onOpenStoryboard, jsonHead, jsonTitle, highlightAll }: {
   title: string; sub?: ReactNode; sbName?: string | null; sbStage?: string; stages: DoneStage[]; md: string; stageKey: string; stage: unknown;
-  onEdit?: () => void; follow?: ReactNode; onOpenStoryboard?: () => void;
+  fullJson?: unknown; onEdit?: () => void; follow?: ReactNode; onOpenStoryboard?: () => void;
+  /** FLOW.JSON 칸 머리 글(기본 `stages.<key> · n줄 추가` · 새 Storyboard 면 `새 Storyboard 전체`) */
+  jsonHead?: ReactNode;
+  /** 전체 JSON 팝업 제목(기본 flow.json · 보드 `SB-06/flow.json`) */
+  jsonTitle?: string;
+  /** 전체 JSON 팝업에서 모든 줄을 이번에 생긴 값으로 강조(새 Storyboard) */
+  highlightAll?: boolean;
 }) {
   const [full, setFull] = useStateLocal(false);
   const folded = `"stages.${stageKey}": ${JSON.stringify(foldJson(stage), null, 2)}`;
-  const fullText = JSON.stringify({ stages: { [stageKey]: stage } }, null, 2);
-  const lines = fullText.split('\n');
-  const addLines = lines.length;
+  const addLines = JSON.stringify(stage ?? {}, null, 2).split('\n').length;
   return (
     <div className="wm-done">
       <div className="wm-done__head">
@@ -190,22 +236,28 @@ export function FlowDone({ title, sub, sbName, sbStage, stages, md, stageKey, st
         <div className="wm-done__cols">
           <div className="wm-done__md"><div className="wm-done__colhead"><b>SUMMARY.MD</b><span>요약본에 더해진 부분</span></div><pre>{md}</pre></div>
           <div className="wm-done__json">
-            <div className="wm-done__colhead wm-done__colhead--json"><b>FLOW.JSON</b><span>stages.{stageKey} · {addLines}줄 추가</span><span style={{ flex: 1 }} />
+            <div className="wm-done__colhead wm-done__colhead--json"><b>FLOW.JSON</b><span>{jsonHead ?? `stages.${stageKey} · ${addLines}줄 추가`}</span><span style={{ flex: 1 }} />
               <button type="button" className="wm-done__jsonbtn" onClick={() => setFull(true)}>전체 JSON 보기</button></div>
             <pre>{folded}</pre>
           </div>
         </div>
       </div>
       <div className="wm-done__follow"><span className="wm-done__followh">후속 작업</span>{follow ?? (
-        <div className="wm-done__nofollow"><span>이 콘텐츠는 후속 작업이 없어요. Storyboard에서 다른 콘텐츠를 이어서 만들 수 있어요.</span></div>
+        <div className="wm-done__nofollow"><span>이 콘텐츠는 후속 작업이 없어요. Storyboard에서 다른 콘텐츠를 이어서 만들 수 있어요.</span>
+          {onOpenStoryboard && <button type="button" className="wm-done__nofollowlink" onClick={onOpenStoryboard}>Storyboard로</button>}</div>
       )}</div>
-      <Modal open={full} onClose={() => setFull(false)} width={900} height={780} ariaLabel="flow.json 전체 보기"
-        title={<span style={{ display: 'flex', flexDirection: 'column', gap: 3 }}><span style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 16 }}>flow.json</span><span style={{ fontSize: 12.5, color: 'var(--wm-text-muted)', fontWeight: 400 }}>초록 줄이 이번에 추가 · 바뀐 값이에요 · {lines.length}줄</span></span>}
-        bodyStyle={{ padding: '10px 0', background: 'var(--wm-surface-2)' }}>
-        <div className="wm-jsonlines">{lines.map((t, i) => (
-          <div key={i} className={cx('wm-jsonline', i > 1 && i < lines.length - 2 && 'wm-jsonline--add')}><span>{i + 1}</span><span>{t}</span></div>
-        ))}</div>
-      </Modal>
+      <JsonPopup open={full} onClose={() => setFull(false)} json={fullJson ?? { stages: { [stageKey]: stage } }} highlightKey={stageKey} highlightAll={highlightAll} title={jsonTitle} />
     </div>
+  );
+}
+
+/** 후속 작업 카드(보드 Done: h84 r16 · 아이콘 40 · 제목 15/700 · 설명 12.5 · →) */
+export function FollowCard({ to, icon, title, desc }: { to: string; icon: string; title: string; desc: string }) {
+  return (
+    <Link className="wm-follow" to={to}>
+      <span className="wm-follow__ic" aria-hidden><PathIcon d={icon} size={18} color="#fff" /></span>
+      <span className="wm-follow__txt"><b>{title}</b><span>{desc}</span></span>
+      <Icon name="arrowRight" size={16} color="var(--wm-brand)" />
+    </Link>
   );
 }
