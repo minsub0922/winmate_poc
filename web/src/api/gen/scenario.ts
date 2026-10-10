@@ -1107,7 +1107,8 @@ export interface paths {
         /**
          * Create Space Set
          * @description 새 묶음(보드 Gate → SC2). sb_id 만 주면 Storyboard flow.json 의 DSS 공간 · 공간별 제품 · 솔루션으로 시작한다
-         *     (Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다.
+         *     (Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). 같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로.
+         *     spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다.
          */
         post: operations["create_space_set"];
         delete?: never;
@@ -1123,7 +1124,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Space Set */
+        /**
+         * Get Space Set
+         * @description 묶음 하나 + `dss_changed`(Storyboard 의 DSS 가 묶음을 만든 뒤 바뀌었으면 그 차이, 아니면 null).
+         */
         get: operations["get_space_set"];
         /**
          * Put Space Set
@@ -1131,7 +1135,11 @@ export interface paths {
          */
         put: operations["put_space_set"];
         post?: never;
-        delete?: never;
+        /**
+         * Delete Space Set
+         * @description 저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 묶음은 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`.
+         */
+        delete: operations["delete_space_set"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1152,6 +1160,27 @@ export interface paths {
          *     Storyboard 가 있으면 허브 stages.sc · 요약본 · 팝업 카드에 반영한다(flow_sync). 응답: stages.sc · 요약 md · flow_sync.
          */
         post: operations["finish_space_set"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/space-sets/{set_id}:resync-dss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resync Space Set Dss
+         * @description DSS 다시 가져오기 — 새 공간 · 새로 놓인 제품은 더하고, 빠진 제품은 쓰는 시나리오가 없을 때만 뺀다(쓰면 남기고 「DSS에서 빠짐」).
+         *     시나리오는 지우지 않는다. 결과는 `last_resync`. Storyboard 없음 404 · DSS 없음 422.
+         */
+        post: operations["resync_space_set_dss"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3164,6 +3193,8 @@ export interface components {
             created_at: string;
             /** Customer */
             customer?: string | null;
+            /** @description 허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null) */
+            dss_changed?: components["schemas"]["SSDssChange"] | null;
             /**
              * Dss Items
              * @description DSS 제품 · 솔루션(고르기 대화상자 묶음)
@@ -3174,6 +3205,16 @@ export interface components {
              * @description 시작할 때 읽은 Storyboard 의 DSS 코드(공간 목록 머리 「공간 · DSS-01」 · stages.sc.from)
              */
             dss_ref?: string | null;
+            /**
+             * Dss Spaces
+             * @description 가져온 DSS 의 공간 이름(다시 가져오기 비교용)
+             */
+            dss_spaces?: string[];
+            /**
+             * Dss Ver
+             * @description 가져온 DSS 판(허브 stages.dss.ver)
+             */
+            dss_ver?: number | null;
             /** Id */
             id: string;
             /**
@@ -3181,6 +3222,7 @@ export interface components {
              * @description 저장을 막는 것(공간 · 시나리오에 제품 · 솔루션 없음)
              */
             issues?: components["schemas"]["SSIssue"][];
+            last_resync?: components["schemas"]["SSResync"] | null;
             /** Sb Id */
             sb_id?: string | null;
             /** Spaces */
@@ -3203,6 +3245,58 @@ export interface components {
             ver: number;
             /** Version */
             version: number;
+        };
+        /**
+         * SSDssChange
+         * @description Storyboard 의 DSS 가 묶음을 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄.
+         */
+        SSDssChange: {
+            /**
+             * Added
+             * @description 새로 들어온 DSS 제품 · 솔루션
+             */
+            added: number;
+            /** Added Names */
+            added_names?: string[];
+            /**
+             * Changed
+             * @description 놓인 공간이 바뀐 제품 · 솔루션
+             * @default 0
+             */
+            changed: number;
+            /**
+             * From
+             * @description 묶음이 가져온 DSS(DSS-01 v1)
+             */
+            from: string;
+            /**
+             * Ref Changed
+             * @description DSS 자체가 바뀜(분기 등으로 다른 DSS)
+             * @default false
+             */
+            ref_changed: boolean;
+            /**
+             * Removed
+             * @description DSS 에서 빠진 제품 · 솔루션
+             */
+            removed: number;
+            /** Removed Names */
+            removed_names?: string[];
+            /**
+             * Spaces Added
+             * @default 0
+             */
+            spaces_added: number;
+            /**
+             * Spaces Removed
+             * @default 0
+             */
+            spaces_removed: number;
+            /**
+             * To
+             * @description 허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)
+             */
+            to: string;
         };
         /**
          * SSDssItem
@@ -3298,6 +3392,11 @@ export interface components {
         /** SSProduct */
         SSProduct: {
             /**
+             * Dss Status
+             * @description DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 놓임 · removed = DSS 에서 빠졌지만 시나리오가 써서 남겨 둠
+             */
+            dss_status?: ("added" | "removed") | null;
+            /**
              * Kind
              * @default product
              * @enum {string}
@@ -3323,6 +3422,45 @@ export interface components {
              * @description 공간 · 시나리오 · 장면 전체(화면이 고친 그대로). candidates 는 서버 목록을 유지하고 같은 id·cid 의 고친 내용만 반영
              */
             spaces: components["schemas"]["SSSpace"][];
+        };
+        /**
+         * SSResync
+         * @description 마지막 DSS 다시 가져오기 결과(토스트 · 표시). 항목은 「공간 · 제품」.
+         */
+        SSResync: {
+            /**
+             * Added
+             * @description 공간에 더한 제품 · 솔루션
+             */
+            added?: string[];
+            /** At */
+            at: string;
+            /** From */
+            from: string;
+            /**
+             * Kept
+             * @description DSS 에서 빠졌지만 시나리오가 써서 남긴 제품 · 솔루션(「DSS에서 빠짐」)
+             */
+            kept?: string[];
+            /**
+             * Removed
+             * @description 쓰는 시나리오가 없어 공간에서 뺀 제품 · 솔루션
+             */
+            removed?: string[];
+            /** Spaces Added */
+            spaces_added?: string[];
+            /**
+             * Spaces Kept
+             * @description DSS 에서 빠졌지만 시나리오 · 제품이 있어 남긴 공간
+             */
+            spaces_kept?: string[];
+            /**
+             * Spaces Removed
+             * @description DSS 에서 빠지고 시나리오 · 제품도 없어 뺀 공간
+             */
+            spaces_removed?: string[];
+            /** To */
+            to: string;
         };
         /** SSScenario */
         SSScenario: {
@@ -3366,6 +3504,11 @@ export interface components {
              * @description AI 3안(수락 전, 점선)
              */
             candidates?: components["schemas"]["SSCandidate"][];
+            /**
+             * Dss Status
+             * @description added = DSS 다시 가져오기로 새로 생긴 공간 · removed = DSS 에서 빠졌지만 시나리오 · 제품이 있어 남겨 둠
+             */
+            dss_status?: ("added" | "removed") | null;
             /** Id */
             id: string;
             /** Name */
@@ -6469,6 +6612,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Gate(sb_id 만)로 시작했는데 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
+                };
+            };
             /** @description Successful Response */
             201: {
                 headers: {
@@ -6564,6 +6716,44 @@ export interface operations {
             };
         };
     };
+    delete_space_set: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     finish_space_set: {
         parameters: {
             query?: never;
@@ -6600,6 +6790,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SSStageOut"];
+                };
+            };
+        };
+    };
+    resync_space_set_dss: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SSDoc"];
                 };
             };
         };

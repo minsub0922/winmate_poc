@@ -20,6 +20,8 @@ export type RfpView = S['RfpView'];
 export type RfpField = S['RfpField'];
 export type RelatedWorks = S['RelatedWorks'];
 export type RelatedWork = S['RelatedWork'];
+export type HubInfo = S['HubInfo'];
+export type HubContent = S['HubContent'];
 export type FillPreview = S['FillPreview'];
 export type LinksOut = S['LinksOut'];
 

@@ -106,3 +106,6 @@ export function handoffFeature(sp: URLSearchParams, fallback?: string | null): s
   if (h.startsWith('vho_')) return 'vp';
   return fallback ?? (h.startsWith('hof_') ? 'mi' : '');
 }
+
+/** 허브 Storyboard id(새 콘텐츠 흐름 `SB-nn`) — 이전 Storyboard 는 `sb_…` */
+export const isHubId = (id: string | null | undefined): boolean => !!id && /^SB-\d+$/.test(id.trim());

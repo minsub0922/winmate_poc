@@ -16,6 +16,7 @@ export interface paths {
         /**
          * Create Dss
          * @description 새 DSS — 고른 Storyboard 의 고객 요구사항(rq)을 문맥으로 가져온다. Storyboard 없으면 404, rq 없으면 422 PREREQUISITE_MISSING.
+         *     같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로 돌려준다(Gate 를 다시 거쳐도 초안이 늘지 않음).
          */
         post: operations["create_dss"];
         delete?: never;
@@ -38,7 +39,12 @@ export interface paths {
         get: operations["get_dss"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete Dss
+         * @description 저장 전 초안 지우기(목록 줄 ×, 소프트 삭제 · 작업물 색인도 지움) — 한 번도 저장하지 않은 것만.
+         *     저장한 DSS 는 Storyboard 에 연결돼 있어 409 SAVED_CONTENT, 없으면 404 NOT_FOUND.
+         */
+        delete: operations["delete_dss"];
         options?: never;
         head?: never;
         patch?: never;
@@ -883,6 +889,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description 이 Storyboard 의 저장 전 초안이 이미 있음 — 그 초안(새로 만들지 않음) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DSDoc"];
+                };
+            };
             /** @description Successful Response */
             201: {
                 headers: {
@@ -931,6 +946,47 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["DSDoc"];
                 };
+            };
+        };
+    };
+    delete_dss: {
+        parameters: {
+            query?: {
+                /** @description 주면 지금 판과 다를 때 409 VERSION_CONFLICT */
+                expected_version?: number | null;
+            };
+            header?: never;
+            path: {
+                dss_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

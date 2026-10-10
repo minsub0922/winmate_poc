@@ -7,6 +7,10 @@ Storyboard(고객 요구사항까지)에서 시작해 업종 → 공간 → 공�
   업종 = A2, 공간 = S1 공간 + 업종 기본 공간(space-types), 제품 = 공간마다 S1 후보 제품군, 솔루션 = 지원 기기 제품군 · 요구 낱말 · 업종.
 - 사실을 지어내지 않는다: 제품은 KB 후보 키로만, 솔루션은 카탈로그 id 로만, 수량은 요구 문장에 있는 수치일 때만(없으면 null → `[확인 필요]`).
 
+- 같은 Storyboard 로 다시 만들면(Gate 를 다시 거쳐도) 그 Storyboard 의 저장 전 초안을 돌려준다(200 · 새로 만들지 않음).
+  복제본(분기)은 Storyboard 가 새로 생기므로 새 DSS 가 된다.
+- 지우기는 한 번도 저장하지 않은 초안만(status draft · ver 없음). 저장한 DSS 는 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
+
 저장소: DocStore("dss") 컬렉션 `dss`(dss_ …). 쓰기는 낙관적 잠금 + 재시도, `expected_version` 을 주면 맞지 않을 때 409.
 """
 from __future__ import annotations
@@ -24,7 +28,7 @@ from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
 from winmate_common.client import ServiceClient
-from winmate_common.platform import register_item
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import DocStore, VersionConflict
 
 from . import kbx, llm
@@ -437,21 +441,69 @@ async def _next_code() -> str:
     return f"DSS-{n:02d}"
 
 
-async def create(body: DSCreate) -> dict[str, Any]:
-    flow = await get_flow(body.sb_id)
-    if flow is None:
-        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
-    if not (flow.get("stages") or {}).get("rq"):
-        raise ApiError(422, "PREREQUISITE_MISSING", "고객 요구사항이 연결된 Storyboard에서 시작할 수 있어요.", {"need": "rq"})
-    rq = flow["stages"]["rq"]
-    doc = {"code": await _next_code(), "title": body.title or flow.get("name") or "새 DSS", "sb_id": body.sb_id,
-           "rq_ref": rq.get("ref"), "customer": rq.get("customer") or flow.get("customer"), "reqs": _reqs_from_flow(flow),
-           "summary_md": (flow.get("summary_md") or "")[:3000],
-           "industry": None, "industry_ai": None, "spaces": [], "space_recs": [], "solutions": [], "solution_recs": [], "status": "draft"}
-    doc_id = new_id("dss")
-    saved = await asyncio.to_thread(_store().put, COLL, doc_id, doc, note="만듦")
+def is_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(:finish)했는지 — 저장하면 Storyboard 에 연결된다(허브에서 가져온 것도 저장한 것)."""
+    return d.get("status") == "done" or bool(d.get("saved_at")) or d.get("ver") is not None
+
+
+def _draft_for(sb_id: str) -> dict[str, Any] | None:
+    """이 Storyboard 의 저장 전 초안(가장 최근에 고친 것)."""
+    items, _ = _store().list(COLL, where={"sb_id": sb_id, "status": "draft"}, limit=20)
+    return next((d for d in items if not is_saved(d)), None)
+
+
+_creating: dict[tuple[int, str], asyncio.Lock] = {}
+
+
+def _sb_lock(sb_id: str) -> asyncio.Lock:
+    """같은 Storyboard 로 동시에 만들기(두 번 누름 · 탭 두 개)가 초안을 둘 만들지 않게."""
+    return _creating.setdefault((id(asyncio.get_running_loop()), sb_id), asyncio.Lock())
+
+
+async def create(body: DSCreate) -> tuple[dict[str, Any], bool]:
+    """(문서, 새로 만들었는지). 이 Storyboard 에 저장 전 초안이 있으면 그것을 돌려준다(Gate 를 다시 거쳐도 초안이 늘지 않게)."""
+    async with _sb_lock(body.sb_id):
+        draft = await asyncio.to_thread(_draft_for, body.sb_id)
+        if draft:
+            return to_api(draft), False
+        flow = await get_flow(body.sb_id)
+        if flow is None:
+            raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
+        if not (flow.get("stages") or {}).get("rq"):
+            raise ApiError(422, "PREREQUISITE_MISSING", "고객 요구사항이 연결된 Storyboard에서 시작할 수 있어요.", {"need": "rq"})
+        rq = flow["stages"]["rq"]
+        doc = {"code": await _next_code(), "title": body.title or flow.get("name") or "새 DSS", "sb_id": body.sb_id,
+               "rq_ref": rq.get("ref"), "customer": rq.get("customer") or flow.get("customer"), "reqs": _reqs_from_flow(flow),
+               "summary_md": (flow.get("summary_md") or "")[:3000],
+               "industry": None, "industry_ai": None, "spaces": [], "space_recs": [], "solutions": [], "solution_recs": [], "status": "draft"}
+        doc_id = new_id("dss")
+        saved = await asyncio.to_thread(_store().put, COLL, doc_id, doc, note="만듦")
     await register_item(feature="DS", item_id=doc_id, title=saved["title"], status="draft", route=f"/dss/{doc_id}", summary="업종 · 공간 · 공간별 제품 · 솔루션")
-    return to_api(saved)
+    return to_api(saved), True
+
+
+SAVED_MSG = "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+
+
+async def delete(doc_id: str, expected_version: int | None = None) -> None:
+    """저장 전 초안 지우기(소프트 삭제 + 작업물 색인 지우기). 저장한 DSS 는 409 SAVED_CONTENT, 없으면 404."""
+    await load(doc_id)                                # 없으면 404(허브에만 있는 DSS-nn 은 가져와져 저장한 것 → 409)
+
+    def _do() -> dict[str, Any]:
+        cur = _get(doc_id)
+        if cur is None:
+            raise not_found("DSS", doc_id)
+        if expected_version is not None and cur["version"] != expected_version:
+            raise ApiError(409, "VERSION_CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 해 주세요.", {"current": cur["version"]})
+        if is_saved(cur):
+            raise ApiError(409, "SAVED_CONTENT", SAVED_MSG, {"code": cur.get("code"), "ver": cur.get("ver"), "sb_id": cur.get("sb_id")})
+        try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+            _store().delete(COLL, doc_id, expected_version=cur["version"])
+        except VersionConflict as exc:
+            raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+        return cur
+    cur = await asyncio.to_thread(_do)
+    await unregister_item(cur["id"])
 
 
 async def _adopt(code: str) -> dict[str, Any] | None:

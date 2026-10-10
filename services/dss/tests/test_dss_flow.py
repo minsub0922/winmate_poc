@@ -43,9 +43,59 @@ async def test_create_requires_rq_and_storyboard(client, apps):
     assert d["industry_options"][0] == "오피스 · 업무시설" and d["counts"] == {"spaces": 0, "products": 0, "solutions": 0, "pending": 0}
     lst = (await client.get("/v1/dss")).json()
     assert lst["items"][0]["id"] == d["id"]
-    # 두 번째는 번호가 겹치지 않는다
-    d2 = (await client.post("/v1/dss", json={"sb_id": d["sb_id"]})).json()
+    # 다른 Storyboard 의 두 번째는 번호가 겹치지 않는다
+    d2 = (await client.post("/v1/dss", json={"sb_id": await _sb(apps)})).json()
     assert d2["code"] == "DSS-02"
+
+
+async def test_create_reuses_draft_of_same_storyboard(client, apps):
+    """같은 Storyboard 로 다시 만들면(Gate 를 다시 거침) 저장 전 초안을 200 으로 돌려준다 — 저장한 뒤 · 분기 Storyboard 는 새로 만든다."""
+    d = await _new(client, apps)
+    d = (await client.post(f"/v1/dss/{d['id']}/spaces", json={"name": "로비"})).json()
+    r = await client.post("/v1/dss", json={"sb_id": d["sb_id"]})
+    assert r.status_code == 200 and r.json()["id"] == d["id"] and r.json()["spaces"][0]["name"] == "로비"
+    assert len([x for x in (await client.get("/v1/dss")).json()["items"] if x["sb_id"] == d["sb_id"]]) == 1
+    # 분기(복제본) Storyboard 는 새 DSS
+    async with testing.api_client(apps["storyboard"]) as sb:
+        br = (await sb.post(f"/v1/flows/{d['sb_id']}:branch", json={"stage": "dss"})).json()
+    r = await client.post("/v1/dss", json={"sb_id": br["id"]})
+    assert r.status_code == 201 and r.json()["id"] != d["id"] and r.json()["sb_id"] == br["id"]
+    # 저장한 DSS 는 초안이 아니다 → 같은 Storyboard 로 만들면 새로
+    i = d["id"]
+    await client.post(f"/v1/dss/{i}/spaces/{d['spaces'][0]['key']}/products", json={"name": "Smart Signage QM55C", "qty": "2대"})
+    assert (await client.post(f"/v1/dss/{i}:finish")).status_code == 200
+    r = await client.post("/v1/dss", json={"sb_id": d["sb_id"]})
+    assert r.status_code == 201 and r.json()["id"] != i
+
+
+async def test_delete_draft_only(client, apps):
+    """저장 전 초안만 지운다(204 · 목록 · 작업물 색인에서 빠짐) — 낡은 판 409 · 없으면 404 · 저장한 것 409 SAVED_CONTENT."""
+    d = await _new(client, apps)
+    i = d["id"]
+    async with testing.api_client(apps["workspace"]) as ws:
+        assert (await ws.get(f"/v1/items/{i}")).status_code == 200
+        r = await client.delete(f"/v1/dss/{i}", params={"expected_version": d["version"] + 5})
+        assert r.status_code == 409 and r.json()["error"]["code"] == "VERSION_CONFLICT"
+        r = await client.delete(f"/v1/dss/{i}", params={"expected_version": d["version"]})
+        assert r.status_code == 204 and r.content == b""
+        assert (await ws.get(f"/v1/items/{i}")).status_code == 404
+    assert (await client.get(f"/v1/dss/{i}")).status_code == 404
+    assert i not in {x["id"] for x in (await client.get("/v1/dss")).json()["items"]}
+    assert (await client.delete(f"/v1/dss/{i}")).status_code == 404
+    assert (await client.delete("/v1/dss/dss_nope")).status_code == 404
+    # 지운 뒤 같은 Storyboard 로 만들면 새 초안
+    n = await client.post("/v1/dss", json={"sb_id": d["sb_id"]})
+    assert n.status_code == 201 and n.json()["id"] != i
+    # 저장한 DSS(Storyboard 에 연결)는 지울 수 없다
+    s = n.json()
+    s = (await client.post(f"/v1/dss/{s['id']}/spaces", json={"name": "로비"})).json()
+    await client.post(f"/v1/dss/{s['id']}/spaces/{s['spaces'][0]['key']}/products", json={"name": "Smart Signage QM55C", "qty": "2대"})
+    assert (await client.post(f"/v1/dss/{s['id']}:finish")).status_code == 200
+    r = await client.delete(f"/v1/dss/{s['id']}")
+    err = r.json()["error"]
+    assert r.status_code == 409 and err["code"] == "SAVED_CONTENT" and err["message"] == "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+    assert err["details"] == {"code": s["code"], "ver": 1, "sb_id": s["sb_id"]}
+    assert (await client.get(f"/v1/dss/{s['id']}")).json()["status"] == "done"
 
 
 async def test_edit_industry_spaces_products(client, apps):
@@ -255,3 +305,6 @@ async def test_adopt_hub_only_dss(client, apps):
     # 새 DSS 번호는 허브 ref 와 겹치지 않는다
     n = (await client.post("/v1/dss", json={"sb_id": sb_id})).json()
     assert n["code"] not in ("DSS-07",)
+    # 허브에서 가져온 DSS 는 저장한 것 — 지울 수 없다
+    r = await client.delete("/v1/dss/DSS-07")
+    assert r.status_code == 409 and r.json()["error"]["code"] == "SAVED_CONTENT"

@@ -38,6 +38,19 @@ make contracts SERVICE=vp    # contracts/vp.json 갱신 + 깨지는 변경 검�
 - 화면 `web/src/features/vp/values/`(`/vp/values/new` · `/vp/values/:id`, 목록 머리 「가치 · 고객의 니즈」). `@/ui` FlowScreen · ProductPickerDialog · FlowDone 사용.
 - 시험: `tests/test_value_maps.py` 3개 · e2e `web/e2e/vp/values.spec.ts`(폭 280 · 1180 도 잰다). mock `mocks/ai-tools/vp.need_infer.v1.json`.
 - 남은 것: Storyboard `flow.json` 에 `stage` 를 써 넣는 일(storyboard 단계 1) · Gate. 이전 VP 화면(VP0~)은 그대로 둔다.
+- **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
+  - Storyboard(Gate · `sb_id` 만)로 만든 맵은 `dss_ref` · `dss_ver` 를 남기고 `candidates` 가 DSS 후보다(후보를 직접 준 맵은 `dss_ref` null → 대상 아님).
+    `GET /v1/value-maps/{id}` 는 후보와 허브의 지금 stages.dss 를 견줘 `dss_changed{from, to, ref_changed, added, removed, changed, added_names, removed_names}`(없으면 null).
+    다른 고침 응답의 `dss_changed` 는 null(웹 `useVmActions` 가 앞의 값을 잇는다).
+  - `POST …/{id}:resync-dss`: 새 DSS 제품 · 솔루션 → 후보에만(`candidates[].dss_status: added` · 자동으로 고르지 않음), 골라 둔 것이 DSS 에서 빠짐 → 가치와 함께 남기고
+    `items[].dss_status: removed` · `from_dss: false`(다시 골라도 표시 유지), 고르지 않은 빠진 후보 → 후보에서 뺌, 골라 둔 것의 DSS 공간 → DSS 값.
+    결과 `last_resync{from, to, added, removed, kept, updated}`. `stages.vp.selection` 에 `droppedFromDss` 를 더했다(`addedOutsideDss` 에서는 뺌). 대상이 아니면 422 `NO_STORYBOARD`.
+  - `DELETE /v1/value-maps/{id}` 204 — 한 번도 저장하지 않은 것만(아니면 409 `SAVED_CONTENT`), `unregister_item`. `POST /v1/value-maps {sb_id}`(candidates 없이)는 같은 Storyboard 의
+    저장 전 초안이 있으면 200 으로 그것. 코드 VP-NN 은 남은 코드 최댓값 + 1(지운 초안 번호는 허브에 간 적 없어 다시 써도 됨).
+  - 화면: VP2 머리 아래 안내 줄(AiBar · 「다시 가져오기」 — 줄(38 + 12)만큼 그리드만 줄고 280 · 1180 그대로) · 토스트 · 왼쪽 줄 · 오른쪽 머리 「DSS에서 빠짐」(주황) ·
+    고르기 대화상자 새 후보 「DSS · 로비 · 새로」. VP0 저장 전 초안 줄은 `DraftRow.onDelete`.
+  - 시험 pytest 36(+2: 후보 추가 · 빠짐 표시 · droppedFromDss · ref 바뀜 · 대상 아님 / 지우기 · 이어 쓰기 · 분기) · e2e `web/e2e/vp/vp-resync.spec.ts` 1
+    (캡처 `__screens__/VP2-resync-new.png` · `VP2-resynced-new.png`).
 - **완성(1차)** — 05-vp 의 화면 13(VP0 · VPR · VP1 · VP1A · VP1Q · VP2 · VP3G · VP3 · VP3L · VP3N · VPI · VP4 + `/vp/:id` 이어 열기) · API 48 경로 · 잡 6종.
 - 코드 지도(`src/winmate_vp/`): `api.py`(라우트 · 202 잡) · `models.py`(요청/응답) · `service.py`(문서 · 파생 값 · 저장 지점 · 플랜) · `ops_work.py`(작업 · 재료 · 되묻기 · 플랜)
   · `ops_result.py`(결과 다듬기 · 수치 · 이미지 · 내보내기 · 넘김 · 업종판) · `workflows.py`(LangGraph: `vp.materials` · `vp.generate` · `vp.revise` · `vp.images` · `vp.export` · `vp.pack_offer`)

@@ -45,6 +45,12 @@ async def put_flow_stage(flow_id: str, key: fl.StageKey, body: fl.FlowStageIn) -
     return await fl.put_stage(flow_id, key, body)
 
 
+@router.delete("/flows/{flow_id}/stages/{key}", response_model=fl.FlowStageOut, tags=["internal"])
+async def clear_flow_stage(flow_id: str, key: fl.StageKey, ref: str | None = None) -> dict[str, Any]:
+    """칸 비우기 — 지금은 `ppt`(제안서를 지우면 proposal 이 부른다)만. `ref` 를 주면 그 ref 일 때만 비운다. 같은 ref 의 다른 Storyboard 도 함께."""
+    return await fl.clear_stage(flow_id, key, ref)
+
+
 @router.post("/flows/{flow_id}:branch", response_model=fl.FlowDoc, status_code=201)
 async def branch_flow(flow_id: str, body: fl.FlowBranch) -> dict[str, Any]:
     """복제본 만들기 — Storyboard 를 분기하고 앞 단계(사전 작업)는 공유한다. 그 콘텐츠는 새 Storyboard 에서 새로 만든다."""

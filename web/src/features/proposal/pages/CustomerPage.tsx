@@ -42,7 +42,9 @@ function useRecentStoryboard(customer: string) {
       const r = unwrap(await api.workspace.GET('/v1/items', { params: { query: { feature: 'SB', limit: 20 } } }));
       const cut = Date.now() - 30 * 86_400_000;
       const c = customer.trim();
-      return (r.items ?? []).find((it) => Date.parse(it.updated_at) >= cut && (!c || it.title.includes(c) || String((it.meta as Record<string, unknown> | null)?.customer ?? '').includes(c))) ?? null;
+      // 허브 Storyboard(SB-nn)는 고객사를 요약(「SB-06 · E 자산운용 · DSS까지」)에 둔다
+      return (r.items ?? []).find((it) => Date.parse(it.updated_at) >= cut && (!c || it.title.includes(c) || String((it.meta as Record<string, unknown> | null)?.customer ?? '').includes(c)
+        || String(it.summary ?? '').includes(c))) ?? null;
     },
     staleTime: 30_000, retry: 0,
   });

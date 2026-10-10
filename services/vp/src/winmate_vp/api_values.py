@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Response
 
 from . import valuemap as vm
 
@@ -15,15 +15,35 @@ async def list_value_maps(limit: int = Query(50, ge=1, le=200), cursor: str | No
     return await vm.list_maps(limit, cursor)
 
 
-@router.post("/value-maps", response_model=vm.VMDoc, status_code=201)
-async def create_value_map(body: vm.VMCreate) -> dict[str, Any]:
-    """새 가치 맵. candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다."""
-    return await vm.create(body)
+@router.post("/value-maps", response_model=vm.VMDoc, status_code=201,
+             responses={200: {"model": vm.VMDoc, "description": "Storyboard(Gate)로 시작했는데 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안"}})
+async def create_value_map(body: vm.VMCreate, response: Response) -> dict[str, Any]:
+    """새 가치 맵. sb_id 만 주면 Storyboard 의 DSS 제품 · 솔루션으로(같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로),
+    candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다."""
+    doc, created = await vm.create(body)
+    if not created:
+        response.status_code = 200
+    return doc
 
 
 @router.get("/value-maps/{map_id}", response_model=vm.VMDoc)
 async def get_value_map(map_id: str) -> dict[str, Any]:
-    return vm.to_api(await vm.load(map_id))
+    """맵 하나 + `dss_changed`(Storyboard 로 만든 맵의 DSS 가 바뀌었으면 그 차이, 아니면 null)."""
+    return await vm.get_with_status(map_id)
+
+
+@router.delete("/value-maps/{map_id}", status_code=204)
+async def delete_value_map(map_id: str) -> Response:
+    """저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 맵은 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`."""
+    await vm.delete(map_id)
+    return Response(status_code=204)
+
+
+@router.post("/value-maps/{map_id}:resync-dss", response_model=vm.VMDoc)
+async def resync_value_map_dss(map_id: str) -> dict[str, Any]:
+    """DSS 다시 가져오기 — 새 DSS 제품 · 솔루션은 고를 수 있는 후보로만(자동으로 고르지 않음), 골라 둔 것이 DSS 에서 빠지면 남기고 「DSS에서 빠짐」.
+    결과는 `last_resync`. Storyboard 로 만든 맵이 아니면 422 `NO_STORYBOARD` · Storyboard 없음 404 · DSS 없음 422."""
+    return await vm.resync(map_id)
 
 
 @router.put("/value-maps/{map_id}/items", response_model=vm.VMDoc)

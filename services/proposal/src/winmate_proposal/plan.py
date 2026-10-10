@@ -11,7 +11,7 @@ from typing import Any
 
 from winmate_common.ids import new_id
 
-from . import clients, config, core, defs, repo, templates
+from . import clients, config, core, defs, hub, repo, templates
 
 log = logging.getLogger("winmate.proposal.plan")
 
@@ -65,6 +65,14 @@ async def compute_context(p: dict[str, Any]) -> dict[str, Any]:
     links = [ln for ln in await repo.alist("links", {"proposal_id": pid}) if ln.get("status", "linked") == "linked"]
     user = p.get("ctx_user") or {}
     rq = await requirements(p)
+    # 허브 Storyboard(SB-nn) 연결 — 정의서(rq_ref)가 없으면 stages.rq 요구사항을 쓴다(R1…)
+    hubs = [ln.get("handoff") or {} for ln in links if hub.is_hub_link(ln) and (ln.get("handoff") or {}).get("kind") == "flow"]
+    if not rq.get("items"):
+        for snap in hubs:
+            if snap.get("rq_items"):
+                rq = {**rq, "items": snap["rq_items"], "customer_name": (snap.get("customer") or {}).get("name"),
+                      "project_name": snap.get("project_name"), "source": "storyboard", "sb_id": (snap.get("source") or {}).get("ref_id")}
+                break
     ctx: dict[str, Any] = {"rq": rq}
     text = " ".join([p.get("title") or "", (p.get("customer") or {}).get("name") or "", rq_text(ctx)])
 
@@ -83,6 +91,13 @@ async def compute_context(p: dict[str, Any]) -> dict[str, Any]:
                     spaces.append({"key": key, "name": name, "source": ln["feature"], "products": s.get("products") or [],
                                    "scenes": s.get("scenes") or []})
             space_source = space_source or ln["feature"]
+    for snap in hubs:   # 허브 stages.dss(+ sc) 공간 · 공간 제품
+        for s in snap.get("spaces") or []:
+            if s.get("name") and not any(x["key"] == s["key"] for x in spaces):
+                spaces.append({"key": s["key"], "name": s["name"], "source": "storyboard", "products": s.get("products") or [],
+                               "scenes": s.get("scenes") or []})
+        if snap.get("spaces"):
+            space_source = space_source or "storyboard"
     for s in user.get("spaces_added") or []:
         if not any(x["key"] == s["key"] for x in spaces):
             spaces.append({**s, "source": "user"})
@@ -120,6 +135,10 @@ async def compute_context(p: dict[str, Any]) -> dict[str, Any]:
             for pr in (ln.get("handoff") or {}).get("products") or []:
                 if not any(x.get("model") == pr.get("model") for x in products):
                     products.append({**pr, "source": ln["feature"]})
+    for snap in hubs:   # DSS 공간 제품(공간 키) + Spec 시트에만 있는 모델
+        for pr in snap.get("products") or []:
+            if not any(x.get("model") == pr.get("model") and x.get("space_key") == pr.get("space_key") for x in products):
+                products.append({**pr, "source": pr.get("source") or "storyboard"})
     for s in spaces:
         for pr in s.get("products") or []:
             if not any(x.get("model") == pr.get("model") and x.get("space_key") == s["key"] for x in products):
@@ -150,9 +169,9 @@ async def compute_context(p: dict[str, Any]) -> dict[str, Any]:
             code = defs.solution_code_of(ln.get("ref_id"), ln.get("title"))
             if code:
                 sols[code] = {"state": "on", "why": defs.SOLUTION_SRC_ON, "link_id": ln["id"]}
-        if ln.get("feature") == "scenario":
+        if ln.get("feature") == "scenario" or (hub.is_hub_link(ln) and (ln.get("handoff") or {}).get("kind") == "flow"):
             for s in (ln.get("handoff") or {}).get("solutions") or []:
-                code = defs.solution_code_of(s.get("id"), s.get("name"))
+                code = s.get("code") or defs.solution_code_of(s.get("id"), s.get("name"))
                 if code and code not in sols:
                     sols[code] = {"state": "on", "why": defs.SOLUTION_SRC_ON}
     low = text.lower()
@@ -166,6 +185,11 @@ async def compute_context(p: dict[str, Any]) -> dict[str, Any]:
     ctx["solutions"] = sols
     ctx["store_count"] = store_count(p, ctx)
     ctx["has"] = {f: any(ln.get("feature") == f for ln in links) for f in defs.WORK_FEATURES}
+    for snap in hubs:   # 허브 콘텐츠도 그 기능 작업이 연결된 것으로(추천 유형 · 템플릿 신호)
+        for k in snap.get("stages") or {}:
+            if hub.STAGE_FEATURE.get(k):
+                ctx["has"][hub.STAGE_FEATURE[k]] = True
+    ctx["hub"] = [{"sb_id": (s.get("source") or {}).get("ref_id"), "stages": list((s.get("stages") or {}).keys())} for s in hubs]
     ctx["text_hash"] = hash(text)
     return ctx
 

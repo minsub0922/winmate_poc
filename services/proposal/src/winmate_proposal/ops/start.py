@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .. import clients, config, core, defs, handoff, industry, links as L, plan, repo
+from .. import clients, config, core, defs, handoff, hub, industry, links as L, plan, repo
 from .. import models as M
 from ..errors import file_too_large, not_found, unprocessable, unsupported_file
 from ..graphs import common as G
@@ -195,11 +195,31 @@ STATE_RANK = {"new": 0, "partial": 1, "full": 2}
 FILL_LABEL = {"full": "채움", "partial": "일부", "new": "새로 작성"}
 
 
-async def fill_preview(p: dict[str, Any], on_features: list[str], snaps: dict[str, dict[str, Any]] | None = None) -> M.FillPreview:
+async def fill_preview(p: dict[str, Any], on_features: list[str], snaps: dict[str, dict[str, Any]] | None = None,
+                       hubs: list[dict[str, Any]] | None = None) -> M.FillPreview:
+    """PR1L 「연결하면 채워지는 것」. hubs = 연결할 허브 Storyboard 스냅숏(hub.snapshot) — stage 마다 섹션 채움(hub.STAGE_FILL)."""
+    hubs = [h for h in hubs or [] if h]
     has = {f: f in on_features for f in defs.WORK_FEATURES}
+    stage_map: dict[str, dict[str, Any]] = {}
+    for h in hubs:
+        has["storyboard"] = True
+        for k, sv in (h.get("stages") or {}).items():
+            stage_map.setdefault(k, sv)
+            if hub.STAGE_FEATURE.get(k):
+                has[hub.STAGE_FEATURE[k]] = True
     ctx = {**(p.get("ctx") or {}), "has": has}
+    if hubs and not ((ctx.get("rq") or {}).get("items")):
+        ctx["rq"] = {"items": next((h.get("rq_items") for h in hubs if h.get("rq_items")), [])}
+    if hubs:
+        sols = dict(ctx.get("solutions") or {})
+        for h in hubs:
+            for so in h.get("solutions") or []:
+                if so.get("code"):
+                    sols.setdefault(so["code"], {"state": "on", "why": defs.SOLUTION_SRC_ON})
+        ctx["solutions"] = sols
     rec = await industry.recommend_type({**p, "start_mode": "works"}, ctx)
     keys = core.type_sections(rec["type"])
+    hub_fill = hub.fill_states(stage_map)
     sections = []
     for k in keys:
         state, src = "new", ("새로 찾기" if k == "cases" else "새로 작성")
@@ -207,21 +227,23 @@ async def fill_preview(p: dict[str, Any], on_features: list[str], snaps: dict[st
             for key, st, label in FILL_SECTIONS.get(f, []):
                 if key == k and STATE_RANK[st] > STATE_RANK[state]:
                     state, src = st, label
+        if k in hub_fill and STATE_RANK[hub_fill[k][0]] > STATE_RANK[state]:
+            state, src = hub_fill[k]
         sections.append(M.FillPreviewSection(key=k, name=defs.SECTIONS[k]["name"], state=state, state_label=FILL_LABEL[state], source_label=src))
     counts = M.FillCounts(full=sum(1 for s in sections if s.state == "full"), partial=sum(1 for s in sections if s.state == "partial"),
                           new=sum(1 for s in sections if s.state == "new"))
     cust_from = None
     c = dict(p.get("customer") or {})
-    if "storyboard" in on_features:
+    if "storyboard" in on_features or hubs:
         cust_from = M.CustomerFrom(feature="storyboard", label="고객 · 프로젝트 · Storyboard에서")
-        sb = (snaps or {}).get("storyboard") or {}
-        for k2, v in (sb.get("customer") or {}).items():
-            if v and not c.get(k2):
-                c[k2] = v
+        for sb in [*hubs, (snaps or {}).get("storyboard") or {}]:
+            for k2, v in (sb.get("customer") or {}).items():
+                if v and not c.get(k2):
+                    c[k2] = v
     elif "requirements" in on_features:
         cust_from = M.CustomerFrom(feature="requirements", label="고객 · 프로젝트 · 요구사항에서")
     ind = defs.INDUSTRIES.get(c.get("industry_code") or "", {}).get("name") or core.industry_label(p)
-    rq_n = len(((p.get("ctx") or {}).get("rq") or {}).get("items") or [])
+    rq_n = len((ctx.get("rq") or {}).get("items") or [])
     summary = " · ".join(x for x in (c.get("name"), ind, c.get("scale_text"), f"요구사항 {rq_n}건" if rq_n else "") if x)
     return M.FillPreview(customer_from=cust_from, customer_summary=summary,
                          recommended_type=M.RecommendedType(type=rec["type"], name=defs.TYPES[rec["type"]]["name"], reason=rec["reason"]),
@@ -238,23 +260,76 @@ def _customer_match(item: dict[str, Any], cust: str) -> bool:
     return bool(key) and key in re.sub(r"\s+", "", hay)
 
 
+HUB_ROWS_MAX = {"customer": 5, "all": 8}   # PR1L 에 보여 줄 허브 Storyboard 수(최근 순 · 연결한 것은 늘 포함) — 하나씩 GET /v1/flows/{id}
+
+
+async def _hub_works(p: dict[str, Any], *, scope: str, q: str | None, cust: str, rec_type: str,
+                     links: dict[tuple[Any, Any], dict[str, Any]]) -> tuple[list[M.RelatedWork], dict[str, dict[str, Any]]]:
+    """허브 Storyboard(GET /v1/flows) → 기존 작업 줄(Storyboard 줄 + 연결된 콘텐츠 · 넣을 곳). → (줄, {SB id: 스냅숏})"""
+    from winmate_common.flow import get_flow
+    flows = await hub.list_flows(q)
+    linked_hub = {ref for (f, ref), ln in links.items() if f == "storyboard" and hub.is_hub_id(ref)
+                  and (ln.get("status") or "linked") in ("candidate", "linked")}
+    out: list[M.RelatedWork] = []
+    snaps: dict[str, dict[str, Any]] = {}
+    default_given = bool(linked_hub)
+    cap = HUB_ROWS_MAX.get(scope, 5)
+    for it in sorted(flows, key=lambda x: x["id"] not in linked_hub):   # 연결한 것 먼저, 나머지는 허브 순서(최근 수정 순)
+        sid = it["id"]
+        match = _customer_match({"meta": {"customer": it.get("customer")}, "title": it.get("name")}, cust)
+        if sid not in linked_hub and ((scope == "customer" and not match) or len(out) >= cap):
+            continue
+        snap = None
+        ln = links.get(("storyboard", sid))
+        if ln and (ln.get("handoff") or {}).get("kind") == "flow" and not ln.get("stale"):
+            snap = ln["handoff"]
+        if snap is None:
+            flow = await get_flow(sid)
+            snap = hub.snapshot(flow, rec_type) if flow else None
+        if snap:
+            snaps[sid] = snap
+        default_on = False
+        if not default_given and match and (scope == "customer" or bool(cust)):
+            default_on = default_given = True      # 같은 고객 허브 중 가장 최근 하나만 기본으로 켠다(분기까지 겹쳐 넣지 않게)
+        on = (ln.get("status") in ("candidate", "linked")) if ln else default_on
+        stages = (snap or {}).get("stages") or {c["key"]: {"ref": c.get("ref"), "ver": c.get("ver")} for c in it.get("cells") or []
+                                                 if c.get("state") == "done" and c.get("key") in hub.ORDER}
+        tsecs = sorted({k for st in stages for k in hub.targets(st, rec_type)}, key=lambda k: defs.TYPES[rec_type]["sections"].index(k))
+        contents = [M.HubContent(**c) for c in hub.contents({"stages": stages}, rec_type)]
+        when = config.when_label(it.get("updated_at"))
+        out.append(M.RelatedWork(
+            feature="storyboard", ref_id=sid, title=it.get("name") or sid, tool_label=defs.FEATURE_LABEL["storyboard"],
+            meta=" · ".join(x for x in (sid, it.get("progress") or "", when) if x), updated_at=it.get("updated_at"), version=None,
+            target_sections=tsecs, target_label="고객 정보" + (f" · 섹션 {len(tsecs)}" if tsecs else ""), default_on=default_on, on=on,
+            customer_match=match, route=f"/storyboard/flow/{sid}",
+            hub=M.HubInfo(id=sid, progress=it.get("progress") or "", key_message=it.get("key_message"), customer=it.get("customer"),
+                          parent=it.get("parent"), contents=contents)))
+    return out, snaps
+
+
 async def related_works(pid: str, *, scope: str = "customer", q: str | None = None) -> M.RelatedWorks:
     p = await core.load(pid)
     cust = ((p.get("customer") or {}).get("name") or "").strip()
     items = await clients.ws_items(owner="all", q=q, limit=100)
     links = {(ln.get("feature"), ln.get("ref_id")): ln for ln in await repo.alist("links", {"proposal_id": pid})}
     rec_type = ((p.get("recommended_type") or {}).get("type")) or p.get("type") or "standard"
-    works = []
+    hub_rows, hub_snaps = await _hub_works(p, scope=scope, q=q, cust=cust, rec_type=rec_type, links=links)
+    hub_ids = {w.ref_id for w in hub_rows}
+    works = list(hub_rows)
     for it in items:
         f = defs.CODE_FEATURE.get(it.get("feature") or "")
         if not f or f == "proposal" or f not in defs.WORK_TARGETS:
             continue
+        if f == "storyboard" and (it["item_id"] in hub_ids or (hub_rows and hub.is_hub_id(it["item_id"]))):
+            continue                      # 허브 Storyboard 는 위 허브 줄로(연결된 콘텐츠까지)
         match = _customer_match(it, cust)
         if scope == "customer" and not match:
             continue
         ln = links.get((f, it["item_id"]))
         tgt = defs.WORK_TARGETS[f]
         default_on = f in defs.WORK_DEFAULT_ON and match and (scope == "customer" or bool(cust))
+        if f == "storyboard" and any(w.on for w in hub_rows):
+            default_on = False            # 허브 Storyboard 를 켰으면 이전 Storyboard 는 기본으로 끈다(Value Props 겹침 방지)
         on = (ln.get("status") in ("candidate", "linked")) if ln else False
         when = config.when_label(it.get("updated_at"))
         works.append(M.RelatedWork(feature=f, ref_id=it["item_id"], title=it.get("title") or "", tool_label=defs.FEATURE_LABEL.get(f, f),
@@ -263,8 +338,9 @@ async def related_works(pid: str, *, scope: str = "customer", q: str | None = No
                                    target_sections=list(tgt.get(rec_type) or []), target_label=tgt.get("label") or "",
                                    default_on=default_on, on=on if ln else default_on, customer_match=match, route=it.get("route")))
     works.sort(key=lambda w: (not w.customer_match, list(defs.WORK_TARGETS).index(w.feature) if w.feature in defs.WORK_TARGETS else 99))
-    on_feats = [w.feature for w in works if w.on]
-    preview = await fill_preview(p, on_feats)
+    on_feats = [w.feature for w in works if w.on and not w.hub]
+    preview = await fill_preview(p, on_feats, hubs=[hub_snaps.get(w.ref_id) or {"stages": {c.key: {"ref": c.ref} for c in w.hub.contents}}
+                                                    for w in works if w.on and w.hub])
     n_on = sum(1 for w in works if w.on)
     return M.RelatedWorks(scope=scope, customer_name=cust, works=works, work_count=len(works), on_count=n_on,
                           header_label=f"연결할 작업 {n_on} / {len(works)}",
@@ -280,8 +356,10 @@ async def links_out(pid: str, *, section_key: str | None = None, with_preview: b
         lns = [ln for ln in lns if section_key in L.sections_for(ln, p.get("type"))]
     preview = None
     if with_preview:
-        snaps = {ln["feature"]: ln.get("handoff") or {} for ln in lns if ln.get("handoff")}
-        preview = await fill_preview(p, sorted({ln["feature"] for ln in lns}), snaps)
+        plain = [ln for ln in lns if not hub.is_hub_link(ln)]
+        snaps = {ln["feature"]: ln.get("handoff") or {} for ln in plain if ln.get("handoff")}
+        hubs = [ln.get("handoff") or {"stages": {}} for ln in lns if hub.is_hub_link(ln)]
+        preview = await fill_preview(p, sorted({ln["feature"] for ln in plain}), snaps, hubs=hubs)
     return M.LinksOut(links=[L.view(ln) for ln in lns], preview=preview, on_count=len(lns))
 
 

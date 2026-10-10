@@ -1263,6 +1263,7 @@ export interface paths {
         /**
          * Create Spec Flow
          * @description Storyboard(DSS 까지 된 것)의 DSS 제품으로 시트를 만든다 — 행마다 KB 모델을 맞추고 카탈로그 값을 채운다.
+         *     같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로 돌려준다(Gate 에서 다시 시작해도 초안이 둘이 되지 않게).
          *     Storyboard 가 없으면 404 `STORYBOARD_NOT_FOUND`, DSS 가 없으면 422 `PREREQUISITE_MISSING`.
          */
         post: operations["create_spec_flow"];
@@ -1279,11 +1280,18 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Spec Flow */
+        /**
+         * Get Spec Flow
+         * @description 시트 하나 + `dss_changed`(Storyboard 의 DSS 가 시트를 만든 뒤 바뀌었으면 그 차이, 아니면 null).
+         */
         get: operations["get_spec_flow"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete Spec Flow
+         * @description 저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 시트는 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`.
+         */
+        delete: operations["delete_spec_flow"];
         options?: never;
         head?: never;
         /**
@@ -1313,6 +1321,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/spec-flows/{flow_id}:resync-dss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resync Spec Flow Dss
+         * @description DSS 다시 가져오기 — 허브의 지금 stages.dss 로 행을 맞춘다(새 제품은 행 추가 · 빠진 제품은 남기고 경고 「DSS에서 빠짐」 ·
+         *     수량은 사람이 고치지 않은 행만). 결과는 `last_resync`. Storyboard 없음 404 · DSS 없음 422.
+         */
+        post: operations["resync_spec_flow_dss"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/spec-flows/{flow_id}/rows/{row_key}": {
         parameters: {
             query?: never;
@@ -1323,7 +1352,11 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete Spec Flow Row
+         * @description DSS 에서 빠진 행 지우기(경고 「DSS에서 빠짐」). DSS 에 있는 제품 행이면 422 `ROW_IN_DSS`(체크를 빼서 시트에서 뺀다).
+         */
+        delete: operations["delete_spec_flow_row"];
         options?: never;
         head?: never;
         /**
@@ -3459,11 +3492,18 @@ export interface components {
             counts: components["schemas"]["SFCounts"];
             /** Created At */
             created_at: string;
+            /** @description 허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null) */
+            dss_changed?: components["schemas"]["SFDssChange"] | null;
             /**
              * Dss Ref
              * @description 가져온 DSS 참조(DSS-01 …)
              */
             dss_ref?: string | null;
+            /**
+             * Dss Ver
+             * @description 가져온 DSS 판(허브 stages.dss.ver)
+             */
+            dss_ver?: number | null;
             /**
              * Format
              * @default compare
@@ -3477,6 +3517,7 @@ export interface components {
              * @description 고른 항목 key(보드 순서)
              */
             items?: string[];
+            last_resync?: components["schemas"]["SFResync"] | null;
             /**
              * Notation
              * @default ko_mm
@@ -3504,6 +3545,48 @@ export interface components {
             ver?: number | null;
             /** Version */
             version: number;
+        };
+        /**
+         * SFDssChange
+         * @description Storyboard 의 DSS 가 시트를 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄.
+         */
+        SFDssChange: {
+            /**
+             * Added
+             * @description 새로 들어온 DSS 제품
+             */
+            added: number;
+            /** Added Names */
+            added_names?: string[];
+            /**
+             * Changed
+             * @description 공간 · 수량 원문이 바뀐 제품
+             * @default 0
+             */
+            changed: number;
+            /**
+             * From
+             * @description 시트가 가져온 DSS(DSS-01 v1)
+             */
+            from: string;
+            /**
+             * Ref Changed
+             * @description DSS 자체가 바뀜(분기 등으로 다른 DSS)
+             * @default false
+             */
+            ref_changed: boolean;
+            /**
+             * Removed
+             * @description DSS 에서 빠진 제품
+             */
+            removed: number;
+            /** Removed Names */
+            removed_names?: string[];
+            /**
+             * To
+             * @description 허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)
+             */
+            to: string;
         };
         /** SFFile */
         SFFile: {
@@ -3601,11 +3684,43 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /**
+         * SFResync
+         * @description 마지막 DSS 다시 가져오기 결과(토스트 · 표시).
+         */
+        SFResync: {
+            /**
+             * Added
+             * @description 더한 행(DSS 제품 이름)
+             */
+            added?: string[];
+            /** At */
+            at: string;
+            /** From */
+            from: string;
+            /**
+             * Kept Qty
+             * @description 사람이 고친 수량이라 그대로 둔 행
+             */
+            kept_qty?: string[];
+            /**
+             * Removed
+             * @description DSS 에서 빠져 경고를 붙인 행
+             */
+            removed?: string[];
+            /** To */
+            to: string;
+            /**
+             * Updated
+             * @description 공간 · 수량을 DSS 값으로 바꾼 행
+             */
+            updated?: string[];
+        };
         /** SFRow */
         SFRow: {
             /**
              * By
-             * @description 출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual
+             * @description 출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual, DSS 다시 가져오기로 더한 행은 dss
              * @default manual
              */
             by: string;
@@ -3626,6 +3741,11 @@ export interface components {
              * @description DSS 제품 참조(kb:model:… · kb:family:…)
              */
             dss_ref?: string | null;
+            /**
+             * Dss Status
+             * @description DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 들어옴 · removed = DSS 에서 빠짐(남겨 둠, 사람이 지울 수 있음)
+             */
+            dss_status?: ("added" | "removed") | null;
             /** Family Id */
             family_id?: string | null;
             /** Family Name */
@@ -3668,6 +3788,12 @@ export interface components {
              * @description 수량(DSS 공간별 개수의 합, 사람이 고칠 수 있음) — 개수를 알 수 없으면 null(= [확인 필요])
              */
             qty?: number | null;
+            /**
+             * Qty Edited
+             * @description 사람이 수량을 고쳤다(DSS 다시 가져오기가 수량을 덮지 않는다)
+             * @default false
+             */
+            qty_edited: boolean;
             /**
              * Qty Note
              * @description DSS 수량 원문(공간별, 예: 로비 2대 · 라운지 [확인 필요])
@@ -3727,7 +3853,7 @@ export interface components {
              * Kind
              * @enum {string}
              */
-            kind: "not_in_catalog" | "discontinued" | "sold_out" | "mismatch" | "family_default";
+            kind: "not_in_catalog" | "discontinued" | "sold_out" | "mismatch" | "family_default" | "dss_removed";
             /** Text */
             text: string;
         };
@@ -7355,6 +7481,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안(새로 만들지 않음) */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
             /** @description Successful Response */
             201: {
                 headers: {
@@ -7403,6 +7538,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["SFDoc"];
                 };
+            };
+        };
+    };
+    delete_spec_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -7486,6 +7659,87 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SFStageOut"];
+                };
+            };
+        };
+    };
+    resync_spec_flow_dss: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    delete_spec_flow_row: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+                row_key: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
                 };
             };
         };

@@ -2,6 +2,8 @@
  * VP · 가치 · 고객의 니즈(보드 webapp1 VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_Done) — `/vp/values/:id`
  * 왼쪽 고른 제품 · 솔루션(280) | 오른쪽 선택한 것의 가치 카드 여러 장. 가치마다 고객의 니즈(직접 · AI 추론, 점선 → 수락).
  * 값은 보드 px 그대로(values.css). 본문 열은 셸 규칙(최대 1180 가운데) · 높이는 화면을 채우고 패널 안에서 스크롤.
+ * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 칸 폭은 그대로.
+ * 다시 가져온 뒤 새 DSS 후보는 고르기 대화상자에 「새로」, 골라 둔 것이 DSS 에서 빠지면 왼쪽 줄 · 머리에 「DSS에서 빠짐」(주황).
  */
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
@@ -11,7 +13,7 @@ import {
   AiBar, AiButton, ByTag, ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, KindTag, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast,
   type ByKind, type PickItem,
 } from '@/ui';
-import { useValueMap, useVmActions, type VMDoc, type VMItem, type VMStageOut, type VMValue } from './api';
+import { dssChangeText, resyncToast, useValueMap, useVmActions, type VMDoc, type VMItem, type VMStageOut, type VMValue } from './api';
 import { VpDetailDialog } from './VpDetailDialog';
 import './values.css';
 
@@ -139,6 +141,7 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
   const [inferring, setInferring] = useState<string | null>(null);
   const [aiBusy, setAiBusy] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const items = doc.items;
   const cur = items.find((i) => i.key === selKey) ?? items[0] ?? null;
   useEffect(() => { if (!cur && items[0]) setSelKey(items[0].key); }, [cur, items]);
@@ -153,8 +156,9 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
     const prods = cands.filter((x) => x.kind === 'product');
     const sols = cands.filter((x) => x.kind === 'solution');
     const g = [] as Array<{ label: string; items: PickItem[] }>;
-    if (prods.length) g.push({ label: 'DSS · 제품', items: prods.map((x) => ({ name: x.name, kind: 'product', ref: x.ref, where: `DSS · ${(x.spaces ?? []).join(' · ') || '공간 미정'}` })) });
-    if (sols.length) g.push({ label: 'DSS · 솔루션', items: sols.map((x) => ({ name: x.name, kind: 'solution', ref: x.ref, where: `DSS · ${(x.spaces ?? []).join(' · ') || '여러 공간'}` })) });
+    const fresh = (x: (typeof cands)[number]) => (x.dss_status === 'added' ? ' · 새로' : '');
+    if (prods.length) g.push({ label: 'DSS · 제품', items: prods.map((x) => ({ name: x.name, kind: 'product', ref: x.ref, where: `DSS · ${(x.spaces ?? []).join(' · ') || '공간 미정'}${fresh(x)}` })) });
+    if (sols.length) g.push({ label: 'DSS · 솔루션', items: sols.map((x) => ({ name: x.name, kind: 'solution', ref: x.ref, where: `DSS · ${(x.spaces ?? []).join(' · ') || '여러 공간'}${fresh(x)}` })) });
     return g;
   }, [doc.candidates]);
 
@@ -172,6 +176,11 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
       if (!r.added_values && !r.added_needs) toast('더할 추천이 없어요. 이미 가치가 충분하거나 근거 메시지가 없어요.');
       else if (r.mode === 'kb_only') toast(`KB 원문 메시지로 가치 후보 ${r.added_values}개를 넣었어요 · 지금은 AI 니즈 추론을 쓸 수 없어요`);
     } catch { toast('AI 가치 매칭 추천에 실패했어요. 잠시 후 다시 시도해 주세요.'); } finally { setAiBusy(false); }
+  };
+  const resync = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    try { toast(resyncToast((await actions.resync()).last_resync)); } catch (e) { toast((e as Error).message || 'DSS를 다시 가져오지 못했어요.'); } finally { setSyncing(false); }
   };
   const save = async () => {
     setSaving(true);
@@ -191,6 +200,12 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
           </button>
           <AiButton onClick={runAi} busy={aiBusy}>AI 가치 매칭 추천</AiButton>
         </>} />
+      {doc.dss_changed && (
+        <AiBar actionLabel={syncing ? '가져오는 중…' : '다시 가져오기'} onAction={resync}>
+          <span data-testid="vv-dss-changed" title={(doc.dss_changed.added_names ?? []).map((n) => `+ ${n}`).concat((doc.dss_changed.removed_names ?? []).map((n) => `− ${n}`)).join('\n') || undefined}>
+            {dssChangeText(doc.dss_changed)}</span>
+        </AiBar>
+      )}
       {(pendV + pendN) > 0 && (
         <AiBar onAction={() => actions.acceptAll()}>Storyboard context(요구 · 공간 · MI)로 가치 {pendV}개와 니즈 {pendN}개를 추천했어요. 점선은 수락해야 들어가요.</AiBar>
       )}
@@ -207,7 +222,8 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
                   <KindTag kind={it.kind} />
                   <span className="vv-item__txt">
                     <span className="vv-item__name">{it.name}</span>
-                    <span className={cx('vv-item__count', !done.length && 'vv-item__count--warn')}>{done.length ? `가치 ${done.length} · 니즈 ${needs}/${done.length}` : '가치 없음'}</span>
+                    <span className={cx('vv-item__count', !done.length && 'vv-item__count--warn')}>{done.length ? `가치 ${done.length} · 니즈 ${needs}/${done.length}` : '가치 없음'}
+                      {it.dss_status === 'removed' && <em className="vv-item__gone"> · DSS에서 빠짐</em>}</span>
                   </span>
                   {pend > 0 && <span className="vv-item__pend">추천 {pend}</span>}
                 </button>
@@ -221,7 +237,7 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
               <div className="vv-rhead">
                 <span className="vv-rhead__txt">
                   <span className="vv-rhead__title"><span className="vv-rhead__name">{cur.name}</span><KindTag kind={cur.kind} /></span>
-                  <span className="vv-rhead__where">{doc.sb_id ? 'DSS 공간 · ' : '공간 · '}{(cur.spaces ?? []).join(' · ') || '정하지 않음'}{cur.from_dss ? '' : ' · DSS 밖에서 더함'}</span>
+                  <span className="vv-rhead__where">{doc.sb_id ? 'DSS 공간 · ' : '공간 · '}{(cur.spaces ?? []).join(' · ') || '정하지 않음'}{cur.dss_status === 'removed' ? ' · DSS에서 빠짐' : cur.from_dss ? '' : ' · DSS 밖에서 더함'}</span>
                 </span>
                 <button type="button" className="vv-ghost34" onClick={() => setPop('detail')}>연결된 가치 전체 보기<span className="vv-badge">이 제안 {cur.values.filter((v) => v.by !== 'ai-pending').length}</span></button>
               </div>

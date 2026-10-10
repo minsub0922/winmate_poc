@@ -609,7 +609,12 @@ export interface paths {
          */
         put: operations["put_rq_flow"];
         post?: never;
-        delete?: never;
+        /**
+         * Delete Rq Flow
+         * @description 저장 전 초안 지우기(목록 줄 ×, 소프트 삭제 · 작업물 색인도 지움) — 한 번도 저장하지 않은 것만.
+         *     저장한 요구사항은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT, 없으면 404 NOT_FOUND.
+         */
+        delete: operations["delete_rq_flow"];
         options?: never;
         head?: never;
         patch?: never;
@@ -4828,6 +4833,47 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["RFDoc"];
                 };
+            };
+        };
+    };
+    delete_rq_flow: {
+        parameters: {
+            query?: {
+                /** @description 주면 지금 판과 다를 때 409 VERSION_CONFLICT */
+                expected_version?: number | null;
+            };
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

@@ -53,8 +53,20 @@ export function useCaFlows() {
   return useQuery({ queryKey: cfListKey, queryFn: async () => unwrap(await api.competitor.GET('/v1/ca-flows', { params: { query: { limit: 50 } } })) });
 }
 
-export async function createCaFlow(body: S['CFCreate']): Promise<CFDoc> {
-  return normalize(unwrap(await api.competitor.POST('/v1/ca-flows', { body })));
+/** 만들기 — 이 Storyboard 의 저장 전 초안이 이미 있으면 서버가 그것을 200 으로 돌려준다(reused) */
+export async function createCaFlow(body: S['CFCreate']): Promise<{ doc: CFDoc; reused: boolean }> {
+  const res = await api.competitor.POST('/v1/ca-flows', { body });
+  return { doc: normalize(unwrap(res)), reused: res.response.status === 200 };
+}
+
+/** 목록 줄 × — 저장 전 초안을 지우고(204, 저장한 것은 409 SAVED_CONTENT) 목록 · 사이드바 작업 이력을 새로 읽게 한다 */
+export function useCfDelete() {
+  const qc = useQueryClient();
+  return async (id: string) => {
+    unwrap(await api.competitor.DELETE('/v1/ca-flows/{flow_id}', P(id)));
+    qc.removeQueries({ queryKey: cfKey(id) });
+    for (const queryKey of [cfListKey, ['ws', 'items'], ['ws', 'recent'], ['ws', 'counts']]) void qc.invalidateQueries({ queryKey });
+  };
 }
 
 /** 문서를 돌려주는 호출 묶음 — 성공하면 캐시를 그 문서로 바꾼다 */

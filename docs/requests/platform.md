@@ -164,3 +164,19 @@
   `pm2 restart export export-worker`(그러면 위 테스트들이 실제 변환 잡을 탄다). 글꼴: 이 컨테이너 fontconfig 는 `Noto Sans KR` → `Inter`(Noto Sans CJK KR 은 깔려 있음) —
   OPERATIONS 의 fontconfig 별칭이 필요. export 는 우리 덱을 PDF · 그림으로 만들 때 이 경우 경고를 붙인다. 새로 LibreOffice 를 쓰는 곳: 고객사 .xls · .ods 양식 읽기(잡).
   SVG 로고는 코드 변화 없음(cairosvg 보류 그대로).
+
+## 저장 전 초안 지우기 — `DocStore.delete` 판 확인(선택) — requirements · dss · mi · competitor · 2026-10-10
+- 한 것: 새 흐름 4개 자원에 `DELETE /v1/{rq-flows|dss|mi-flows|ca-flows}/{id}`(저장 전 초안만 204 · 저장한 것 409 `SAVED_CONTENT`)를 만들고,
+  작업물 색인은 `winmate_common.platform.unregister_item` 으로 지운다(있어서 요청 없음). 목록은 셸 `ContentListScreen` 의 `DraftRow.onDelete` 를 쓴다.
+- 필요(선택 · 급하지 않음): `DocStore.delete(collection, id)` 에 `expected_version` 이 없어 "초안인지 확인 → 지우기" 가 한 트랜잭션이 아니다
+  (확인과 지우기 사이에 다른 요청이 저장(:finish)하면 막 저장한 것을 지울 수 있는 아주 짧은 틈 — 지금은 같은 스레드 호출 안에서 바로 이어 불러 틈을 줄였다).
+- 제안: `DocStore.delete(collection, doc_id, *, expected_version: int | None = None)` — `BEGIN IMMEDIATE` 안에서 판이 다르면 `VersionConflict`. 생기면 4개 서비스가 바로 쓴다.
+- spec · scenario · vp(2026-10-10): 같은 방식으로 `DELETE /v1/{spec-flows|space-sets|value-maps}/{id}` 를 만들었다(확인 · 지우기를 한 스레드 호출 안에서 이어 부름).
+  위 `expected_version` 이 생기면 세 서비스도 바로 쓴다 — 따로 요청 없음.
+- 상태: 완료(2026-10-10) — `DocStore.delete(collection, doc_id, *, expected_version=None)`(같은 `BEGIN IMMEDIATE` 안에서 판이 다르면 `VersionConflict` · 없거나 이미 지운 것은 False). 7개 서비스 DELETE 가 `expected_version=` 을 넘기고 `VersionConflict` 는 409 `VERSION_CONFLICT`.
+
+## Gate — 저장 전 초안이 있는 Storyboard 표시(선택) — spec · scenario · vp · 2026-10-10
+- 한 것: `POST /v1/{spec-flows|space-sets|value-maps}` 에 `sb_id` 만 주면(Gate) 같은 Storyboard 의 저장 전 초안이 있을 때 새로 만들지 않고 그 초안을 **200** 으로 돌려준다
+  (새로 만들면 201). Gate 「복제본 만들기」는 새 분기 Storyboard 라 그대로 새 자원이다. 그래서 지금 Gate 의 「이 Storyboard로 시작」을 다시 눌러도 초안이 둘이 되지 않는다.
+- 필요(선택): 셸 `GateScreen` 줄에 「작성 중 초안 있음 · 이어 쓰기」 같은 표시가 있으면 사용자가 새로 시작하는 줄 알지 않는다. 허브 `GET /v1/flows?content=` 의 `existing` 은 저장된 것만 알아
+  초안 여부는 각 서비스 목록(`GET /v1/<자원>?…` 의 `sb_id` · `status` · `ver`)에서 알 수 있다 — 셸이 기능에서 `drafts`(DraftRow 와 같은 모양)를 받아 줄에 표시해 주면 세 기능이 넘긴다.

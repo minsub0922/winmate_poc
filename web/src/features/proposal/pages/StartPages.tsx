@@ -1,6 +1,7 @@
 /**
  * `/proposal/new` — 시작 방식이 정해지는 순간 제안서를 만든다(§3.1 · AC-002) → 그 시작 화면으로.
  *   ?start=rfp|works|reuse(&source=pr_…)  PR0 「시작하는 방법」 · 「복제해서 시작」
+ *   ?sb=SB-nn(&auto=1)  허브 Storyboard(새 콘텐츠 흐름 · SB1 후속 작업 「PPT 제작 · B2B 제안서」) → start_mode=works + 그 Storyboard 연결 → PR1L
  *   ?handoff=sho_…(SP4) · ?handoff=vho_…(VP4) · ?handoff=hof_…&link=mi_…|ca_…(MI4 · CA5 — hof_ 는 분석 id 필요, 기능은 분석 id 접두사로) · ?sb=sb_…&rq=rq_…(SB4) · ?image_version=imv_…(IMG4)
  *   · ?link=<id>&feature=<서비스>  → start_mode=handoff → PR1
  * `/proposal/:id` — 제안서가 지금 있는 화면(「이어서 작성」 · 사이드바 항목, E2)으로.
@@ -14,7 +15,7 @@ import type { ProposalCreate } from '../api/types';
 type CreateBody = Loose<ProposalCreate>;
 import { errText } from '../api/http';
 import { ErrorBand, LoadingCard, PrPage } from '../components/parts';
-import { currentRoute, featureOfRef, handoffFeature, normalizeRoute, R } from '../lib/routes';
+import { currentRoute, featureOfRef, handoffFeature, isHubId, normalizeRoute, R } from '../lib/routes';
 import { useProposalShell } from '../lib/useProposalShell';
 
 // 같은 주소로 두 번 만들지 않는다(StrictMode · 뒤로 가기)
@@ -22,6 +23,11 @@ const inflight = new Map<string, Promise<string>>();
 
 function bodyFrom(sp: URLSearchParams): { body: CreateBody; next: 'customer' | 'rfp' | 'works' | 'reuse' } {
   const start = sp.get('start');
+  const sbHub = sp.get('sb');
+  // 허브 Storyboard(SB-nn) — 기존 작업에서 시작(PR1L)으로, 그 Storyboard 를 연결한 채(고객 정보는 stages.rq 에서 서버가 채움)
+  if (sbHub && isHubId(sbHub) && !sp.get('handoff') && !sp.get('link')) {
+    return { body: { start_mode: 'works', links: [{ feature: 'storyboard', ref_id: sbHub }], rq_ref: sp.get('rq') ? { rq_id: sp.get('rq')! } : undefined }, next: 'works' };
+  }
   if (start === 'rfp') return { body: { start_mode: 'rfp' }, next: 'rfp' };
   if (start === 'works') return { body: { start_mode: 'works' }, next: 'works' };
   if (start === 'reuse') return { body: { start_mode: 'reuse', source_proposal_id: sp.get('source') ?? undefined }, next: 'reuse' };

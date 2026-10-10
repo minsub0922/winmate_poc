@@ -9,6 +9,8 @@ Storyboard(사전 작업 DSS)의 제품 · 공간을 기준으로 경쟁사를 �
 - AI 경쟁사 후보군 웹 탐색(`ca.flow_candidates_web.v1` 웹 검색 → `ca.flow_candidates.v1` 정리): 요약에 이름 · 근거 구절이 실제로 있는 후보만.
   모델 · 웹이 안 되면 후보 0(지어내지 않는다) — `mode=none` · reason.
 - 저장(:finish) → Storyboard flow.json `stages.ca`(docs/scenarios/11-content-flow.md §6 `ca`) · 요약 md · 팝업 카드.
+- 같은 Storyboard 로 다시 만들면(Gate 를 다시 거쳐도) 그 Storyboard 의 저장 전 초안을 돌려준다(200 · 새로 만들지 않음). 복제본(분기)은 새 Storyboard → 새 분석.
+- 지우기는 한 번도 저장하지 않은 초안만(status draft · ver 없음). 저장한 분석은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
 
 저장소: competitor DocStore 컬렉션 `ca_flows`(cflow_ …, 코드 CA-NN). 쓰기는 낙관적 잠금 + 재시도, expected_version 을 주면 다르면 409.
 """
@@ -22,10 +24,11 @@ from collections.abc import Callable
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+from winmate_common.client import ServiceClient
 from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
-from winmate_common.platform import register_item
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import VersionConflict
 
 from . import aix
@@ -377,25 +380,87 @@ def basis_of(flow: dict[str, Any], items: list[dict[str, Any]]) -> dict[str, Any
     return {"from": dss.get("ref"), "categories": cats, "counts": {c: cnt[c] for c in cats}}
 
 
-async def create(body: CFCreate) -> dict[str, Any]:
-    flow = await get_flow(body.sb_id)
-    if flow is None:
-        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
-    if not (flow.get("stages") or {}).get("dss"):
-        raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
-    items = dss_items(flow)
-    rq = (flow.get("stages") or {}).get("rq") or {}
-    n = await asyncio.to_thread(store().count, COLL)
-    doc = {"code": f"CA-{n + 1:02d}", "title": (body.title or "").strip() or f"{flow.get('name') or body.sb_id} 경쟁사",
-           "sb_id": body.sb_id, "customer": flow.get("customer") or rq.get("customer"),
-           "industry": (((flow.get("stages") or {}).get("dss") or {}).get("industry") or {}).get("value"),
-           "context_text": (flow.get("summary_md") or "")[:4000],
-           "basis": basis_of(flow, items), "dss_items": items, "competitors": [], "status": "draft"}
-    fid = new_id("cflow")
-    saved = await asyncio.to_thread(store().put, COLL, fid, doc, note="만듦")
+def is_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(:finish)했는지 — 저장하면 Storyboard 에 연결된다."""
+    return d.get("status") == "done" or bool(d.get("saved_at")) or d.get("ver") is not None
+
+
+def _draft_for(sb_id: str) -> dict[str, Any] | None:
+    """이 Storyboard 의 저장 전 초안(가장 최근에 고친 것)."""
+    items, _ = store().list(COLL, where={"sb_id": sb_id, "status": "draft"}, limit=20)
+    return next((d for d in items if not is_saved(d)), None)
+
+
+_creating: dict[tuple[int, str], asyncio.Lock] = {}
+
+
+def _sb_lock(sb_id: str) -> asyncio.Lock:
+    """같은 Storyboard 로 동시에 만들기(두 번 누름 · 탭 두 개)가 초안을 둘 만들지 않게."""
+    return _creating.setdefault((id(asyncio.get_running_loop()), sb_id), asyncio.Lock())
+
+
+async def _next_code() -> str:
+    """CA-NN — 이 서비스 번호 · 허브 ref 중 가장 큰 것 다음(초안을 지워도 번호가 겹치지 않게. 같은 ref = 같은 콘텐츠로 동기화된다)."""
+    top = 0
+    items, _ = await asyncio.to_thread(store().list, COLL, limit=1000)
+    refs = [x.get("code") or "" for x in items]
+    try:
+        hub = await ServiceClient("storyboard", timeout=10).get("/v1/flows/contents/ca")
+        refs += [x.get("ref") or "" for x in (hub or {}).get("items") or []]
+    except Exception as exc:  # noqa: BLE001
+        log.info("허브 경쟁사 목록을 읽지 못함(번호는 로컬만): %s", exc)
+    for r in refs:
+        m = re.fullmatch(r"CA-(\d+)", r)
+        if m:
+            top = max(top, int(m.group(1)))
+    return f"CA-{top + 1:02d}"
+
+
+async def create(body: CFCreate) -> tuple[dict[str, Any], bool]:
+    """(문서, 새로 만들었는지). 이 Storyboard 에 저장 전 초안이 있으면 그것을 돌려준다(Gate 를 다시 거쳐도 초안이 늘지 않게)."""
+    async with _sb_lock(body.sb_id):
+        draft = await asyncio.to_thread(_draft_for, body.sb_id)
+        if draft:
+            return to_api(draft), False
+        flow = await get_flow(body.sb_id)
+        if flow is None:
+            raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
+        if not (flow.get("stages") or {}).get("dss"):
+            raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
+        items = dss_items(flow)
+        rq = (flow.get("stages") or {}).get("rq") or {}
+        doc = {"code": await _next_code(), "title": (body.title or "").strip() or f"{flow.get('name') or body.sb_id} 경쟁사",
+               "sb_id": body.sb_id, "customer": flow.get("customer") or rq.get("customer"),
+               "industry": (((flow.get("stages") or {}).get("dss") or {}).get("industry") or {}).get("value"),
+               "context_text": (flow.get("summary_md") or "")[:4000],
+               "basis": basis_of(flow, items), "dss_items": items, "competitors": [], "status": "draft"}
+        fid = new_id("cflow")
+        saved = await asyncio.to_thread(store().put, COLL, fid, doc, note="만듦")
     await register_item(feature="CA", item_id=fid, title=saved["title"], status="draft", route=f"/competitor/flow/{fid}",
                         summary="경쟁사 리스트업 · 제안 기준 비교")
-    return to_api(saved)
+    return to_api(saved), True
+
+
+SAVED_MSG = "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+
+
+def _delete_sync(fid: str, expected: int | None) -> dict[str, Any]:
+    cur = _get(fid)
+    if expected is not None and cur["version"] != expected:
+        raise ApiError(409, "CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 고쳐 주세요.", {"current_version": cur["version"]})
+    if is_saved(cur):
+        raise ApiError(409, "SAVED_CONTENT", SAVED_MSG, {"code": cur.get("code"), "ver": cur.get("ver"), "sb_id": cur.get("sb_id")})
+    try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+        store().delete(COLL, fid, expected_version=cur["version"])
+    except VersionConflict as exc:
+        raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+    return cur
+
+
+async def delete(fid: str, expected: int | None = None) -> None:
+    """저장 전 초안 지우기(소프트 삭제 + 작업물 색인 지우기). 저장한 분석은 409 SAVED_CONTENT, 없으면 404."""
+    await asyncio.to_thread(_delete_sync, fid, expected)
+    await unregister_item(fid)
 
 
 async def list_flows(limit: int, cursor: str | None) -> dict[str, Any]:

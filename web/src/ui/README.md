@@ -30,6 +30,7 @@
 | 바탕 · 선 | `--wm-bg` · `--wm-surface` · `-surface-2` · `-surface-3` · `--wm-line`(#e2e5ea) · `-line-hover` · `-line-soft` · `-line-tile` · `-line-disabled` · `-line-step`(#d5d9e0) · `-line-dashed` |
 | 어두운 면 | `--wm-dark` · `--wm-dark-divider` · `--wm-dark-text-2` · `--wm-scrim` · `--wm-photo-badge` · `--wm-grip-chip` |
 | 상태 | `--wm-ok`/`-ok-bg`/`-ok-bg-2`/`-ok-line` · `--wm-warn`/`-warn-bg`/`-warn-line` · `--wm-danger`/`-danger-bg`/`-danger-line`(보드에 없음 Q-UI-1) · `--wm-ai`/`-ai-bg`(AI 추론 배지) |
+| 호박(흐름 화면, ui.css) | `--wm-amber`/`-amber-bg`/`-amber-line`(「있음」 · 확인 필요) · `--wm-amber-dot`(#d98a00, 경고 점) · `--wm-amber-soft-bg`(#fff9ec) · `--wm-amber-soft-line`(#f1dfb3)(보드 CA2 장점 상자) · `--wm-ai-line` |
 | 그림자 | `--wm-shadow-popover` · `-sheet` · `-dialog` · `-ghost` · `-dropdown` · `-composer` · `-card-hover` · `-card-new` · `--wm-ring` · `-ring-soft` · `-ring-drop` · `--wm-elev-1` · `--wm-shadow-choice`(선택 카드) · `--wm-shadow-panel`(오른쪽 근거 패널) · `--wm-shadow-side`(오른쪽 시트) |
 | 키맨 색(보드 COL) | `--wm-km-{0..4}-bg` · `--wm-km-{0..4}-fg` — 0 brand/흰 · 1 `#5468d8`/흰 · 2 `--wm-brand-hero-line`/brand · 3 `#8b9be6`/흰 · 4 `--wm-brand-badge`/brand. 키맨 `color_index`(0..4 순환) → `kmClass(i)` · `kmColors(i)` |
 | 글꼴 | `--wm-font`(Noto Sans KR) · `--wm-font-num`(Manrope) |
@@ -301,18 +302,18 @@ return <>{/* 화면 */}{dialog}</>;
 | `LinkedStoryboardBar` | `chips: { id, name, done[], current }[]`, `note?`, `emptyText?` | 화면 위 연결된 Storyboard 바(높이 52 · 진행 칸 RQ→DSS→MI·CA·VP·SP·SC) |
 | `FlowScreen` | `bar?`, `pad = '18px 40px'`, `gap = 12`, `className?` | 바 + 높이를 채우는 작업 영역(`.wm-flow`, 본문 열 1180 안) |
 | `FlowHead` | `title`, `desc?`, `actions?` | 작업 머리(제목 · 설명 13px · 오른쪽 버튼) |
-| `AiButton` | `onClick`, `busy?`, `disabled?`, `size = 38` | AI 추가기능 버튼(파란 테두리 + ✦) |
+| `AiButton` | `onClick`, `busy?`, `disabled?`, `size = 38`(30 · 34 · 38 — ✦ 12 · 13 · 14) | AI 추가기능 버튼(파란 테두리 + ✦) |
 | `AiBar` | `children`, `actionLabel = '모두 수락'`, `onAction?` | 점선 결과 안내 줄(`role=status`) |
 | `ByTag` · `KindTag` | `by`(manual · ai-accepted · ai-pending · ai-web) · `kind` | 출처 · 종류 태그 |
 | `FlowPanel` | `dashed?` | 흰 패널(r 16). `dashed` 는 AI 점선 |
-| `FlowFooter` | `back: { to, label }`, `summary`, `summaryTone?`, `primary` | 하단 줄(목록 · 요약 · 저장 48px) |
+| `FlowFooter` | `back: { to, label }`, `summary`, `summaryTone?`, `primary: { label, onClick?, to?, disabled?, busy?, icon?, busyLabel? }` | 하단 줄(목록 · 요약 · 주 버튼 48px — 아이콘은 글 앞, 간격 8) |
 | `FlowDone` | `title`, `sbName`, `stages`, `md`, `stageKey`, `stage`, `follow?` … | 완료 화면 — 요약본 추가분 + 접힌 JSON(`foldJson`) + 전체 JSON 팝업 |
 | ↳ `FlowDone` 추가 props | `jsonHead?` · `jsonTitle?` · `highlightAll?` · `onOpenStoryboard?` | FLOW.JSON 칸 머리 글 · 전체 JSON 팝업 제목(`SB-nn/flow.json`) · 새 Storyboard 면 전체 줄 강조 · 후속 작업 없음 칸의 「Storyboard로」 |
-| `JsonPopup` | `json`, `highlightKey?`, `highlightAll?`, `title?`, `sub?` | flow.json 전체 900×780 — 이번에 더해진 `stages.<key>` 줄(또는 전체)을 초록으로 · 전체 / 추가된 값만 |
+| `JsonPopup` | `json`, `highlightKey?`, `highlightAll?`, `title?`, `sub?` | flow.json 전체 900×780 — 이번에 더해진 `stages.<key>` 줄(또는 전체)을 초록으로 · 머리 오른쪽 탭 전체 / 추가된 값만(보드 JsonPopup — `sub` 는 줬을 때만) |
 | `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
 
 **셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List · 초안 줄의 Storyboard 칩도 이름) ·
-`GateScreen({content, onStart, initialSb, autoStart})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
+`GateScreen({content, onStart, initialSb, autoStart, drafts?})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
 `SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다) · `FlowDoneView({sbId, stageKey, mdAdded, title, sub, onEdit, follow, newStoryboard?, jsonHead?})` ·
 `CONTENT`(콘텐츠별 이름 · base · 스텝 이름 = 보드 Gate META) · `useFlow` · `useFlows` · `FlowDots` · `whenText`.
 

@@ -48,7 +48,7 @@ imports(extract · apply) · one_click · confirm(research) · review(suggest ·
 **반입 · 넘김(기능별)**: mi(넘김 v1 · 사이드바 추출 · facts:lookup) · storyboard · competitor(익명, why) · vp(vho_ ack) · spec(sho_ ack · lifecycle) · birdseye · scenario(v1 섹션별 + 사용 등록/해제) ·
 image(버전 · 사용 등록) · requirements(rq_ref · 링크 · 고객 질문) · kb(제품 · 사례 · 솔루션 · 이미지 · E3 메시지/사례). handoff_id 만 와도 spec · vp 는 원본 id 를 찾는다(mi · competitor 는 ref_id 필요).
 
-**테스트**: `tests/` 26개(시작 · 구성 · 섹션 · 생성 PPTX(export in-process) · RFP · 기존 작업 · 반입 · 딸깍 · 확인 · 검토 · 버전 · 내보내기 · 기존 제안서 활용 5) — `make test SERVICE=proposal` 통과.
+**테스트**: `tests/` 32개(시작 · 구성 · 섹션 · 생성 PPTX(export in-process) · RFP · 기존 작업 · 반입 · 딸깍 · 확인 · 검토 · 버전 · 내보내기 · 기존 제안서 활용 5 · 허브에서 시작 6 — 지우면 ppt 칸 비움 · 콘텐츠 판으로만 「업데이트됨」) — `make test SERVICE=proposal` 통과.
 가짜 서비스는 `tests/pr_stubs.py`(계약 검증 통과 모양, ai-tools 기록 프록시 · task 별 오류 흉내). mock 고정 응답: `mocks/ai-tools/pr.*.json` 19개(섹션 초안 · 다듬기 · 요청 라우팅 · 노트 · 줄이기 ·
 RFP · 익명 · 고객 질문 · 조사 3 · 코멘트 수정안 · 영문 · reuse 6).
 
@@ -65,3 +65,24 @@ RFP · 익명 · 고객 질문 · 조사 3 · 코멘트 수정안 · 영문 · r
 - 만들기: 넘긴 작업(rq_ref · links · 이미지 작업)의 workspace 항목에서 `project_id` 이어받기, `rq_ref` 면 정의서 고객 · 제목. 지우기: birdseye · scenario · image 사용 등록과 requirements 링크를 푼다.
 - VP: 링크 제목 = VP 제목, ack 에 `proposal_id` · `proposal_title`. 기존 제안서 활용 `plan:confirm` 은 유형 · 섹션(filling)을 먼저 적용하고 잡에 신호.
 - 웹: `lib/routes.handoffFeature`(넘김 id → 기능), `/birdseye/new?return_to=`.
+
+**허브에서 시작(2026-10-10)** — 새 콘텐츠 흐름(`docs/scenarios/11-content-flow.md` §5 · §6)의 Storyboard 허브(`SB-nn`)를 제안서 재료로
+- 연결: 허브 Storyboard 도 연결 자료 하나(`feature=storyboard`, `ref_id=SB-nn`). `handoff.fetch` 가 id 모양으로 갈라 `hub.fetch` → `get_flow(sb)` → `hub.snapshot(flow, 유형)`
+  (kind=`flow`: 고객 · 요구사항 R1… · 공간 · 공간 제품(수량 문자열, 모르면 `[확인 필요]`) · 솔루션 코드 · Key message · stage 목록 · `target_section` 이 달린 섹션 항목).
+  이전 Storyboard(`sb_…` · `…/proposal-handoff`)와 기능별 넘김은 그대로.
+- stage → 섹션(`hub.STAGE_TARGETS`, 유형별): rq → 고객 정보(고객사 · 의사결정자 = 최종 제안대상 + 키맨 · 프로젝트명 · 업종(DSS 업종 값)) + 섹션 초안 요구사항(`ctx.rq`, 정의서 없을 때) ·
+  dss → 공간별 제품(SM 표 · PI 공간마다 · 문맥 공간/제품) · 솔루션 제안(SXI 이유 · 함께 쓰는 제품, 솔루션 on) · Solution형은 공간별 가치 시나리오(SS) ·
+  Key message(+ 받쳐 줄 메시지) → Value Props VP 머리 · 기둥 + 표지 부제 · mi → MI/대규모 MI(담은 정보만, 그룹 시장 MS · 고객 CB · 사용자 US, 출처 종류 · 이름 · 날짜 · URL, 수치 확인은 `[수치 확정 필요]` → 확정 필요) ·
+  ca → Why Samsung(CM 항목 × 경쟁사 판정 · 메모 · 표시, ST = claims, 장단점 줄, 경쟁사 익명 + `real_names`) · MI 가 있으면 CP(경쟁사 개요) ·
+  vp → Value Props(VP = 가치 메시지 · 니즈 · 공간, CH = 고객 니즈) · sp → 제품 스펙(SC 모델 × 항목 · 경고 각주, SD 모델마다 · 주력 = Spec 모델) ·
+  sc → 솔루션 제안(SXS 솔루션별 시나리오 · OP) · Solution형 공간별 가치 시나리오(SS 장면 · VM 공간 × 솔루션). 빈 stage 는 항목을 만들지 않는다(섹션 「새로 작성」).
+- 섹션 칩 = 「Storyboard · MI-01」(그 섹션에 들어간 stage 코드), 초안 프롬프트에 「재료 출처: Storyboard 허브 …」(mock `pr.section_draft` 는 그때 시트를 고치지 않음 — 허브 값 그대로).
+- PR1L(`related-works`): 허브 목록(`GET /v1/flows`) → 같은 고객 최근 5개(모든 고객 8 · 연결한 것은 늘) Storyboard 줄 + `hub.contents`(stage 마다 넣을 곳), 같은 고객 허브 하나만 기본 켬 ·
+  허브를 켜면 이전 Storyboard 는 기본 끔. 미리보기 = stage 채움(`hub.STAGE_FILL`, 출처 글자 = stage 코드). `RelatedWork.hub`(HubInfo · HubContent) 추가(계약 갱신).
+- 허브 ppt 칸: 허브 Storyboard 를 연결해 만들거나(`POST /proposals`) 연결 확정(`links:apply`)하면 `push_stage(sb, "ppt", ref=PR-nn, res_id=pr_…)` · 제안서 `hub`(sb_id · Key message) 기록.
+  제안서를 지우면(`_release_usages`) `hub.clear_ppt` → storyboard `DELETE /v1/flows/{sb}/stages/ppt?ref=PR-nn` 로 칸을 비운다(요청 완료 2026-10-10).
+  「Storyboard 업데이트됨」: 스냅숏 `source.version` = 허브 `content_rev`(= 색인 `meta.version`, ppt 칸 기록으로는 오르지 않음) → `links.check_stale` 이 판으로 견준다.
+- 목록 마감순: 마감 없는 제안서를 최근 만든 순으로(limit=20 「보낼 제안서」 목록에서 방금 만든 제안서가 빠지던 통합 e2e).
+- 웹: `/proposal/new?sb=SB-nn` → start_mode=works + 그 Storyboard 연결 → PR1L(Storyboard 줄 아래 연결된 콘텐츠 줄 · 넣을 곳 · 연결하면 채워지는 것), 고객 정보는 rq 로 미리 채움.
+  테스트 `tests/test_hub_start.py`(허브 in-process), e2e `web/e2e/proposal/pr-hub.spec.ts`(캡처 `__screens__/*-hub-new.png`).
+

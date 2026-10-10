@@ -5,7 +5,7 @@ from typing import Any
 
 from winmate_common.ids import new_id
 
-from . import clients, config, core, defs, handoff, repo
+from . import clients, config, core, defs, handoff, hub, repo
 from . import models as M
 
 
@@ -13,6 +13,9 @@ def sections_for(ln: dict[str, Any], type_: str | None) -> list[str]:
     """연결 자료가 들어가는 섹션 — 명시(section_key)가 있으면 그것, 없으면 기능별 「넣을 곳」(§10.7)."""
     if ln.get("section_key"):
         return [ln["section_key"]]
+    if hub.is_hub_link(ln):
+        # 허브 Storyboard — 저장된 콘텐츠(stage)마다 맞는 섹션(hub.STAGE_TARGETS)
+        return hub.sections_for(ln.get("handoff"), type_)
     rule = defs.WORK_TARGETS.get(ln.get("feature") or "")
     if not rule:
         return []

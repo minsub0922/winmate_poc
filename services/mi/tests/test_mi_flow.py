@@ -216,6 +216,76 @@ async def test_sources_mode_uses_returned_urls(flow_env):
     assert r.status_code == 422 and r.json()["error"]["code"] == "NO_ITEMS"
 
 
+async def test_create_reuses_draft_of_same_storyboard(flow_env):
+    """「‹ Storyboard」 → Gate → 다시 시작: 같은 Storyboard 의 저장 전 초안을 200 으로 돌려준다(분석 잡을 다시 넣지 않음)."""
+    env = flow_env
+    sb = await _storyboard(env.sb)
+    a = await _ready(env, sb)
+    n_calls = len(env.ai.llm_calls("mi.flow_analyze.v1"))
+    r = await env.c.post("/v1/mi-flows", json={"sb_id": sb})
+    assert r.status_code == 200 and r.json()["id"] == a["id"] and r.json()["phase"] == "search"
+    assert await env.drain() == 0 and len(env.ai.llm_calls("mi.flow_analyze.v1")) == n_calls
+    assert [i["id"] for i in (await env.c.get("/v1/mi-flows")).json()["items"] if i["sb_id"] == sb] == [a["id"]]
+
+
+async def test_delete_draft_only(flow_env):
+    """저장 전 초안만 지운다(204 · 목록 · 작업물 색인에서 빠짐, 분석 잡 취소) — 낡은 판 409 · 없으면 404 · 저장한 것 409 SAVED_CONTENT."""
+    env = flow_env
+    sb = await _storyboard(env.sb)
+    # 분석 중(잡 대기)에 지우면 잡을 취소한다
+    r = await env.c.post("/v1/mi-flows", json={"sb_id": sb})
+    d = r.json()
+    job_id = d["progress"]["job_id"]
+    async with testing.api_client(env.apps["workspace"]) as ws:
+        assert (await ws.get(f"/v1/items/{d['id']}")).status_code == 200
+        r = await env.c.delete(f"/v1/mi-flows/{d['id']}", params={"expected_version": d["version"] + 3})
+        assert r.status_code == 409 and r.json()["error"]["code"] == "CONFLICT"
+        r = await env.c.delete(f"/v1/mi-flows/{d['id']}", params={"expected_version": d["version"]})
+        assert r.status_code == 204 and r.content == b""
+        assert (await ws.get(f"/v1/items/{d['id']}")).status_code == 404
+    assert (await env.job(job_id)).status == "canceled"
+    await env.drain()
+    assert (await env.c.get(f"/v1/mi-flows/{d['id']}")).status_code == 404
+    assert d["id"] not in {i["id"] for i in (await env.c.get("/v1/mi-flows")).json()["items"]}
+    assert (await env.c.delete(f"/v1/mi-flows/{d['id']}")).status_code == 404
+    assert (await env.c.delete("/v1/mi-flows/mif_nope")).status_code == 404
+
+    # 지운 뒤 같은 Storyboard 로 만들면 새 초안 · 번호는 남은 것과 겹치지 않는다(개수 대신 가장 큰 번호 다음)
+    a = await _ready(env, sb)
+    b = await _ready(env, await _storyboard(env.sb))
+    assert a["id"] != d["id"] and a["code"] != b["code"]
+    assert (await env.c.delete(f"/v1/mi-flows/{a['id']}")).status_code == 204
+    c = await _ready(env, await _storyboard(env.sb))
+    assert c["code"] not in (b["code"],) and int(c["code"][3:]) == int(b["code"][3:]) + 1
+
+    # 저장한 MI(Storyboard 에 연결)는 지울 수 없다 — 고치는 중(editing)이어도
+    await env.c.post(f"/v1/mi-flows/{b['id']}:search")
+    await env.drain()
+    assert (await env.c.post(f"/v1/mi-flows/{b['id']}:finish")).status_code == 200
+    r = await env.c.delete(f"/v1/mi-flows/{b['id']}")
+    err = r.json()["error"]
+    assert r.status_code == 409 and err["code"] == "SAVED_CONTENT" and err["message"] == "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+    assert err["details"] == {"code": b["code"], "ver": 1, "sb_id": b["sb_id"]}
+    await env.c.post(f"/v1/mi-flows/{b['id']}:analyze")
+    assert (await env.c.delete(f"/v1/mi-flows/{b['id']}")).status_code == 409
+    await env.drain()
+    # 저장한 MI 가 있는 Storyboard 로 만들면(복제본 아님) 초안이 아니므로 새로 만든다
+    r = await env.c.post("/v1/mi-flows", json={"sb_id": b["sb_id"]})
+    assert r.status_code == 201 and r.json()["id"] != b["id"]
+
+
+async def test_job_ends_canceled_when_draft_vanishes(flow_env):
+    """잡이 문서를 쓰려는 때 이미 지워져 있으면(취소 표시 없이) 되살리지 않고 취소로 끝낸다."""
+    env = flow_env
+    from winmate_mi import miflow as F
+
+    d = (await env.c.post("/v1/mi-flows", json={"sb_id": await _storyboard(env.sb)})).json()
+    F._st().delete(F.COLL, d["id"])
+    await env.drain()
+    assert (await env.job(d["progress"]["job_id"])).status == "canceled"
+    assert F._st().get(F.COLL, d["id"]) is None
+
+
 async def test_list_and_branch_gets_new_code(flow_env):
     env = flow_env
     sb = await _storyboard(env.sb)

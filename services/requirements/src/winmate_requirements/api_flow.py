@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Response
 
 from . import rqflow as rf
 from .models import JobAccepted
@@ -33,6 +33,14 @@ async def get_rq_flow(flow_id: str) -> dict[str, Any]:
 async def put_rq_flow(flow_id: str, body: rf.RFUpdate) -> dict[str, Any]:
     """폼 전체 고치기(자동 저장). expected_version 이 다르면 409 VERSION_CONFLICT, 파일로 채우는 중이면 409 FILLING."""
     return await rf.put_form(flow_id, body)
+
+
+@router.delete("/rq-flows/{flow_id}", status_code=204, response_class=Response)
+async def delete_rq_flow(flow_id: str, expected_version: int | None = Query(None, description="주면 지금 판과 다를 때 409 VERSION_CONFLICT")) -> Response:
+    """저장 전 초안 지우기(목록 줄 ×, 소프트 삭제 · 작업물 색인도 지움) — 한 번도 저장하지 않은 것만.
+    저장한 요구사항은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT, 없으면 404 NOT_FOUND."""
+    await rf.delete(flow_id, expected_version)
+    return Response(status_code=204)
 
 
 @router.post("/rq-flows/{flow_id}:fill", response_model=JobAccepted, status_code=202)

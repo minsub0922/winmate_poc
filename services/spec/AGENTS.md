@@ -44,6 +44,20 @@ make contracts SERVICE=spec    # contracts/spec.json 갱신 + 깨지는 변경 �
 - 보드와 다름: 제품 줄 오른쪽 모델 칩 · 공간 줄 뒤 경고 이름(주황) · 아래 줄 「확인 필요 값 n · 경고 m」 · 미리보기 제품 4개부터 3칸 폭 유지 + 가로 스크롤 · 「제품별 1장」 미리보기 ·
   Done 설명의 「XLSX로 내보낼 수 있어요」는 내려받기 링크 · 요약 줄에 「확인 필요 값 · 경고」 한 줄 더.
 - 테스트 pytest 60(새 흐름 4: 허브 연동 · 저장 조건 · 수량 원문 · XLSX) · e2e `web/e2e/spec/sp-flow.spec.ts` 2(캡처 `__screens__/SP0 · SP1 · SP2 · SP2_Model · SP2_PerProduct · SP_Done · SP_DoneJson · SP2-1920-new.png`).
+- **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
+  - 시트는 만든(다시 가져온) DSS 의 `dss_ref` · `dss_ver` 를 남긴다. `GET /v1/spec-flows/{id}` 는 허브(`get_flow`)의 지금 stages.dss 와 행을 견줘
+    `dss_changed{from: "DSS-01 v1", to: "DSS-01 v2", ref_changed, added, removed, changed, added_names, removed_names}`(바뀐 것 없으면 null — 판만 올랐으면 null,
+    DSS ref 가 바뀌면(분기 등) 내용이 같아도 알림). 다른 고침 응답의 `dss_changed` 는 계산하지 않아 늘 null(웹은 앞의 값을 잇는다).
+  - `POST …/{id}:resync-dss`: 새 DSS 제품 → 행 추가(모델 맞춤 · 카탈로그 값 · `by: dss` · `dss_status: added`), DSS 에서 빠진 제품 → 행은 남기고 `dss_status: removed`
+    + 경고 kind `dss_removed` 「DSS에서 빠짐」(첫 경고), 남은 제품 → 공간 · 수량 원문은 DSS 값, 수량은 사람이 고치지 않은 행만(`qty_edited` — 행 PATCH qty 때 true),
+    DSS ref 가 바뀌었고 모델을 사람이 고르지 않았으면 모델을 다시 맞춤. 결과 `last_resync{from, to, added, removed, updated, kept_qty}`. 빠졌던 제품이 돌아오면 added.
+    `DELETE …/{id}/rows/{key}` 는 빠진 행만(아니면 422 `ROW_IN_DSS`).
+  - `DELETE /v1/spec-flows/{id}` 204 — 한 번도 저장하지 않은 것만(`ver` · `saved_at` · done 이면 409 `SAVED_CONTENT` 「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」),
+    workspace 색인 `unregister_item`. `POST /v1/spec-flows {sb_id}` 는 같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로(새로 만들면 201). 코드 SP-NN 은 남은 코드 최댓값 + 1.
+  - 화면: SP2 머리 아래 안내 줄(`@/ui` AiBar · 「Storyboard의 DSS가 바뀌었어요 · DSS-01 v1 → v2 · 제품 1 추가 · 1 빠짐」 · 「다시 가져오기」) — 줄(38 + 12)만큼 그리드만 준다.
+    다시 가져오면 토스트, 새 행 공간 줄 「DSS에서 새로」, 빠진 행 「DSS에서 빠짐」 + ×(지우기). SP0 저장 전 초안 줄은 `DraftRow.onDelete`(셸 × · 확인).
+  - 테스트 pytest 63(+3: 다시 가져오기 합치기 · 사람 수량 유지 · ref 바뀜 · 돌아온 제품 / 404 / 지우기 · 이어 쓰기 · 분기) ·
+    e2e `web/e2e/spec/sp-resync.spec.ts` 1(캡처 `__screens__/SP2-resync-new.png` · `SP2-resynced-new.png`).
 
 (2026-10-06 · 06-spec 전 화면 · API · 워크플로 구현, 테스트 55 · e2e 7 통과)
 

@@ -8,6 +8,11 @@
   LLM 이 없거나(mock · 장애) 답이 비면 KB 원문 메시지를 그대로 가치 후보로 쓰고(출처 표시), 니즈는 비워 둔다(지어내지 않는다).
 - 연결된 가치 전체 = 이 맵 + 같은 제품 · 솔루션을 쓴 다른 맵의 가치 + KB 공식 메시지. 다른 맵 가치는 가져오기(복사)할 수 있다.
 - 저장하면 Storyboard flow.json 의 `stages.vp` 모양(`stage()`)을 만든다.
+- DSS 다시 가져오기(2026-10-10 · 보드에 없음): Storyboard(Gate)로 만든 맵은 가져온 DSS ref · ver(`dss_ref` · `dss_ver`)와 DSS 후보(`candidates`)를 남기고,
+  GET 때 허브의 지금 stages.dss 와 견줘 `dss_changed` 를 알려 준다. `:resync-dss` — 새 DSS 제품 · 솔루션은 고를 수 있는 후보로만 더하고(자동으로 고르지 않음),
+  골라 둔 것이 DSS 에서 빠지면 가치와 함께 남기고 「DSS에서 빠짐」 표시. 고르지 않은 빠진 후보는 후보에서 뺀다.
+- 초안 지우기 · 같은 Storyboard 초안 이어 쓰기: 한 번도 저장하지 않은 맵만 지운다(저장한 것은 409 `SAVED_CONTENT`).
+  Gate 에서 같은 Storyboard 로 다시 만들면 저장 전 초안을 돌려준다(복제본은 새 Storyboard 라 새 맵).
 
 저장소: DocStore("vp") 컬렉션 `value_maps`(vmap_ …). 쓰기는 낙관적 잠금 + 재시도.
 """
@@ -20,11 +25,11 @@ import re
 from collections.abc import Callable
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.errors import ApiError, not_found
 from winmate_common.ids import new_id, now_iso
-from winmate_common.platform import register_item
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import VersionConflict
 
 from . import kbx, llm, repo
@@ -62,6 +67,7 @@ class VMItem(BaseModel):
     ref: str | None = Field(None, description="KB 참조 — kb:family:fam_… · kb:solution:sol_… · kb:model:…")
     spaces: list[str] = Field(default_factory=list)
     from_dss: bool = True
+    dss_status: Literal["removed"] | None = Field(None, description="removed = 골라 둔 것이 Storyboard 의 DSS 에서 빠짐(가치와 함께 남겨 둠)")
     values: list[VMValue] = Field(default_factory=list)
 
 
@@ -70,6 +76,7 @@ class VMCandidate(BaseModel):
     kind: Literal["product", "solution"]
     ref: str | None = None
     spaces: list[str] = Field(default_factory=list)
+    dss_status: Literal["added"] | None = Field(None, description="added = DSS 다시 가져오기로 새로 들어온 후보(고르지 않은 채로)")
 
 
 class VMCounts(BaseModel):
@@ -80,11 +87,41 @@ class VMCounts(BaseModel):
     pending: int
 
 
+class VMDssChange(BaseModel):
+    """Storyboard 의 DSS 가 맵을 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄."""
+    model_config = ConfigDict(populate_by_name=True)
+    from_: str = Field(alias="from", description="맵이 가져온 DSS(DSS-01 v1)")
+    to: str = Field(description="허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)")
+    ref_changed: bool = Field(False, description="DSS 자체가 바뀜(분기 등으로 다른 DSS)")
+    added: int = Field(description="새로 들어온 DSS 제품 · 솔루션")
+    removed: int = Field(description="DSS 에서 빠진 제품 · 솔루션")
+    changed: int = Field(0, description="놓인 공간이 바뀐 제품")
+    added_names: list[str] = Field(default_factory=list)
+    removed_names: list[str] = Field(default_factory=list)
+
+
+class VMResync(BaseModel):
+    """마지막 DSS 다시 가져오기 결과(토스트 · 표시)."""
+    model_config = ConfigDict(populate_by_name=True)
+    at: str
+    from_: str = Field(alias="from")
+    to: str
+    added: list[str] = Field(default_factory=list, description="새 후보(고르기 대화상자에 「새로」) — 자동으로 고르지 않음")
+    removed: list[str] = Field(default_factory=list, description="고르지 않은 채 DSS 에서 빠져 후보에서 뺀 것")
+    kept: list[str] = Field(default_factory=list, description="골라 둔 것이 DSS 에서 빠져 남기고 「DSS에서 빠짐」 표시한 것")
+    updated: list[str] = Field(default_factory=list, description="DSS 공간이 바뀐 고른 것")
+
+
 class VMDoc(BaseModel):
     id: str
     code: str | None = Field(None, description="화면 · flow.json 에 쓰는 짧은 번호(VP-01 …)")
     title: str
     sb_id: str | None = None
+    dss_ref: str | None = Field(None, description="Storyboard(Gate)로 만들 때 가져온 DSS 코드(DSS-01 …) — 없으면 DSS 다시 가져오기 대상이 아님")
+    dss_ver: int | None = Field(None, description="가져온 DSS 판(허브 stages.dss.ver)")
+    dss_changed: VMDssChange | None = Field(
+        None, description="허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null)")
+    last_resync: VMResync | None = None
     context_text: str | None = Field(None, description="요구 · Storyboard 요약(AI 추천 문맥)")
     candidates: list[VMCandidate] = Field(default_factory=list, description="DSS 에서 온 고를 수 있는 제품 · 솔루션")
     items: list[VMItem] = Field(default_factory=list, description="고른 제품 · 솔루션(이 순서로 보인다)")
@@ -242,15 +279,17 @@ def counts(d: dict[str, Any]) -> dict[str, int]:
     return {"items": len(d.get("items") or []), "values": len(done), "needs": len(needs), "needs_missing": len(done) - len(needs), "pending": pending}
 
 
-def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    return {**d, "counts": counts(d)}
+def to_api(d: dict[str, Any], dss_changed: dict[str, Any] | None = None) -> dict[str, Any]:
+    return {**d, "counts": counts(d), "dss_changed": dss_changed}
 
 
 def _item_from(c: dict[str, Any], keep: dict[str, dict[str, Any]], from_dss: bool) -> dict[str, Any]:
     k = slug(c["name"])
     old = keep.get(k)
+    # DSS 에서 빠져 남겨 둔 것은 다시 골라도 표시를 잇는다(후보에 없으니 DSS 밖으로 잘못 세지 않게)
+    gone = None if from_dss else ("removed" if (old or {}).get("dss_status") == "removed" else None)
     return {"key": k, "name": c["name"], "kind": c["kind"], "ref": c.get("ref") or (old or {}).get("ref"),
-            "spaces": list(c.get("spaces") or (old or {}).get("spaces") or []), "from_dss": from_dss,
+            "spaces": list(c.get("spaces") or (old or {}).get("spaces") or []), "from_dss": from_dss, "dss_status": gone,
             "values": list((old or {}).get("values") or [])}
 
 
@@ -303,12 +342,47 @@ def flow_context(flow: dict[str, Any]) -> str:
     return (flow.get("summary_md") or "")[:4000]
 
 
-async def create(body: VMCreate) -> dict[str, Any]:
+def ever_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(허브 stages.vp 반영)했는가 — 했으면 Storyboard 에 연결돼 지울 수 없다."""
+    return bool(d.get("ver")) or bool(d.get("saved_at")) or d.get("status") == "done"
+
+
+def _open_draft(sb_id: str) -> dict[str, Any] | None:
+    """같은 Storyboard(Gate)로 만든 저장 전 초안(가장 최근 것) — Gate 에서 다시 시작해도 초안이 둘이 되지 않게."""
+    items, _ = _store().list(COLL, where={"sb_id": sb_id}, limit=50)
+    return next((d for d in items if d.get("dss_ref") and not ever_saved(d)), None)
+
+
+def _next_code() -> str:
+    """VP-NN — 지운 초안이 있어도 겹치지 않게 남은 코드 중 가장 큰 번호 + 1(지운 초안은 허브에 간 적 없어 번호를 다시 써도 된다)."""
+    items, _ = _store().list(COLL, limit=10000, order_by="-created_at")
+    nums = [int(m.group(1)) for d in items if (m := re.fullmatch(r"VP-(\d+)", d.get("code") or ""))]
+    return f"VP-{max(nums, default=0) + 1:02d}"
+
+
+def _uniq(cands: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    out = []
+    for c in cands:
+        if slug(c["name"]) not in seen:
+            seen.add(slug(c["name"]))
+            out.append(c)
+    return out
+
+
+async def create(body: VMCreate) -> tuple[dict[str, Any], bool]:
+    """(맵, 새로 만들었나). Storyboard(Gate · candidates 없이)로 시작할 때 같은 Storyboard 의 저장 전 초안이 있으면 그것을 돌려준다."""
     flow = await get_flow(body.sb_id) if body.sb_id else None
     if body.sb_id and flow is None and body.candidates is None:
         raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
-    if flow is not None and body.candidates is None and not (flow.get("stages") or {}).get("dss"):
+    dss = ((flow or {}).get("stages") or {}).get("dss")
+    if flow is not None and body.candidates is None and not dss:
         raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
+    from_hub = flow is not None and body.candidates is None
+    if from_hub and body.sb_id:
+        existing = await asyncio.to_thread(_open_draft, body.sb_id)
+        if existing:
+            return to_api(existing, dss_diff(existing, flow)), False
     if body.candidates is not None:
         cands = [c.model_dump() for c in body.candidates]
     elif flow is not None:
@@ -319,20 +393,113 @@ async def create(body: VMCreate) -> dict[str, Any]:
         body.context_text = flow_context(flow)
     if flow is not None and not body.title:
         body.title = flow.get("name")
-    seen: set[str] = set()
-    uniq = []
-    for c in cands:
-        if slug(c["name"]) not in seen:
-            seen.add(slug(c["name"]))
-            uniq.append(c)
-    n = await asyncio.to_thread(_store().count, COLL)
-    doc = {"code": f"VP-{n + 1:02d}", "title": body.title or "새 VP", "sb_id": body.sb_id, "context_text": body.context_text, "candidates": uniq,
-           "items": [_item_from(c, {}, True) for c in uniq] if body.select_all else [], "status": "draft"}
+    uniq = _uniq(cands)
+    doc = {"code": await asyncio.to_thread(_next_code), "title": body.title or "새 VP", "sb_id": body.sb_id, "context_text": body.context_text, "candidates": uniq,
+           "items": [_item_from(c, {}, True) for c in uniq] if body.select_all else [], "status": "draft",
+           "dss_ref": (dss or {}).get("ref") if from_hub else None, "dss_ver": (dss or {}).get("ver") if from_hub else None}
     map_id = new_id("vmap")
     saved = await asyncio.to_thread(_store().put, COLL, map_id, doc, note="만듦")
     await register_item(feature="VP", item_id=map_id, title=saved["title"], status="draft", route=f"/vp/values/{map_id}",
                         summary="제품 · 솔루션 가치 · 고객의 니즈")
-    return to_api(saved)
+    return to_api(saved), True
+
+
+async def get_with_status(map_id: str) -> dict[str, Any]:
+    """GET — Storyboard(Gate)로 만든 맵이면 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null."""
+    d = await load(map_id)
+    flow = await get_flow(d["sb_id"]) if d.get("sb_id") and d.get("dss_ref") else None
+    return to_api(d, dss_diff(d, flow) if flow else None)
+
+
+async def delete(map_id: str) -> None:
+    def _do() -> None:   # 확인과 지우기를 한 번에 — DocStore.delete(expected_version) 가 같은 트랜잭션에서 판을 본다
+        d = _get(map_id)
+        if ever_saved(d):
+            raise ApiError(409, "SAVED_CONTENT", "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요",
+                           {"ref": d.get("code"), "sb_id": d.get("sb_id")})
+        try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+            _store().delete(COLL, map_id, expected_version=d["version"])
+        except VersionConflict as exc:
+            raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+    await asyncio.to_thread(_do)
+    await unregister_item(map_id)
+
+
+# ── DSS 다시 가져오기 ────────────────────────────────────
+
+def dss_label(ref: str | None, ver: Any) -> str:
+    if not ref:
+        return "DSS"
+    return f"{ref} v{ver}" if ver else ref
+
+
+def dss_diff(d: dict[str, Any], flow: dict[str, Any] | None) -> dict[str, Any] | None:
+    """맵이 가져온 DSS 후보(candidates) ↔ 허브의 지금 stages.dss. 바뀐 것이 없으면 None(고르기 · 가치는 사람 몫이라 차이가 아니다).
+    DSS 자체가 바뀌면(분기 등 ref 다름) 내용이 같아도 알린다."""
+    dss = ((flow or {}).get("stages") or {}).get("dss")
+    if not dss or not d.get("dss_ref"):
+        return None
+    new = {slug(c["name"]): c for c in dss_candidates(flow or {})}
+    old = {slug(c["name"]): c for c in d.get("candidates") or []}
+    added = [c["name"] for k, c in new.items() if k not in old]
+    removed = [c["name"] for k, c in old.items() if k not in new]
+    changed = [c["name"] for k, c in new.items() if k in old and set(c.get("spaces") or []) != set(old[k].get("spaces") or [])]
+    ref_changed = dss.get("ref") != d.get("dss_ref")
+    if not (added or removed or changed or ref_changed):
+        return None
+    return {"from": dss_label(d.get("dss_ref"), d.get("dss_ver")), "to": dss_label(dss.get("ref"), dss.get("ver")), "ref_changed": ref_changed,
+            "added": len(added), "removed": len(removed), "changed": len(changed), "added_names": added[:20], "removed_names": removed[:20]}
+
+
+async def resync(map_id: str) -> dict[str, Any]:
+    """허브의 지금 DSS 로 후보를 맞춘다(사람이 고른 것 · 가치는 남긴다).
+    - 새 DSS 제품 · 솔루션 → 후보에만 더한다(표시 added · 자동으로 고르지 않음).
+    - 골라 둔 것이 DSS 에서 빠짐 → 가치와 함께 남기고 「DSS에서 빠짐」(dss_status removed). 고르지 않은 빠진 후보는 후보에서 뺀다.
+    - 골라 둔 것의 DSS 공간이 바뀌면 공간만 DSS 값으로.
+    """
+    d = await load(map_id)
+    if not d.get("sb_id") or not d.get("dss_ref"):
+        raise ApiError(422, "NO_STORYBOARD", "Storyboard(DSS)로 만든 맵이 아니에요.")
+    flow = await get_flow(d["sb_id"])
+    if flow is None:
+        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {d['sb_id']}")
+    dss = (flow.get("stages") or {}).get("dss")
+    if not dss:
+        raise ApiError(422, "PREREQUISITE_MISSING", "Storyboard에 DSS가 없어요.", {"need": "dss"})
+    new_c = _uniq(dss_candidates(flow))
+    frm = dss_label(d.get("dss_ref"), d.get("dss_ver"))
+    log_: dict[str, list[str]] = {k: [] for k in ("added", "removed", "kept", "updated")}
+
+    def fn(doc: dict[str, Any]) -> None:
+        for v in log_.values():
+            v.clear()
+        old = {slug(c["name"]): c for c in doc.get("candidates") or []}
+        new = {slug(c["name"]): c for c in new_c}
+        chosen = {it["key"] for it in doc.get("items") or []}
+        cands = []
+        for c in new_c:
+            k = slug(c["name"])
+            cands.append({**c, "dss_status": "added" if k not in old else None})
+            if k not in old:
+                log_["added"].append(c["name"])
+        log_["removed"] += [c["name"] for k, c in old.items() if k not in new and k not in chosen]
+        for it in doc.get("items") or []:
+            nc = new.get(it["key"])
+            if nc is not None:
+                if set(it.get("spaces") or []) != set(nc.get("spaces") or []):
+                    log_["updated"].append(it["name"])
+                it["spaces"] = list(nc.get("spaces") or [])
+                it["ref"] = it.get("ref") or nc.get("ref")
+                it["from_dss"], it["dss_status"] = True, None
+            elif it["key"] in old or it.get("dss_status") == "removed":
+                if it.get("dss_status") != "removed":
+                    log_["kept"].append(it["name"])
+                it["from_dss"], it["dss_status"] = False, "removed"
+        doc["candidates"] = cands
+        doc["dss_ref"], doc["dss_ver"] = dss.get("ref"), dss.get("ver")
+        doc["last_resync"] = {"at": now_iso(), "from": frm, "to": dss_label(dss.get("ref"), dss.get("ver")), **{k: list(v) for k, v in log_.items()}}
+    saved = await update(map_id, fn, "DSS 다시 가져오기")
+    return to_api(saved, dss_diff(saved, flow))
 
 
 async def list_maps(limit: int, cursor: str | None) -> dict[str, Any]:
@@ -632,7 +799,8 @@ def stage(d: dict[str, Any]) -> dict[str, Any]:
     c = counts(d)
     return {"ref": d.get("code") or d["id"], "id": d["id"], "ver": d.get("version"), "from": d.get("sb_id"),
             "selection": {"fromDss": len(chosen & dss), "excluded": [x["name"] for x in d.get("candidates") or [] if slug(x["name"]) not in chosen],
-                          "addedOutsideDss": [it["name"] for it in d.get("items") or [] if it["key"] not in dss]},
+                          "addedOutsideDss": [it["name"] for it in d.get("items") or [] if it["key"] not in dss and it.get("dss_status") != "removed"],
+                          "droppedFromDss": [it["name"] for it in d.get("items") or [] if it.get("dss_status") == "removed"]},
             "items": items, "counts": {"items": c["items"], "values": c["values"], "needs": c["needs"], "needsMissing": c["needs_missing"]}}
 
 

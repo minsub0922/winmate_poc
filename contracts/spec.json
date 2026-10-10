@@ -4552,7 +4552,7 @@
           "spec-flows"
         ],
         "summary": "Create Spec Flow",
-        "description": "Storyboard(DSS 까지 된 것)의 DSS 제품으로 시트를 만든다 — 행마다 KB 모델을 맞추고 카탈로그 값을 채운다.\nStoryboard 가 없으면 404 `STORYBOARD_NOT_FOUND`, DSS 가 없으면 422 `PREREQUISITE_MISSING`.",
+        "description": "Storyboard(DSS 까지 된 것)의 DSS 제품으로 시트를 만든다 — 행마다 KB 모델을 맞추고 카탈로그 값을 채운다.\n같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로 돌려준다(Gate 에서 다시 시작해도 초안이 둘이 되지 않게).\nStoryboard 가 없으면 404 `STORYBOARD_NOT_FOUND`, DSS 가 없으면 422 `PREREQUISITE_MISSING`.",
         "operationId": "create_spec_flow",
         "requestBody": {
           "required": true,
@@ -4594,6 +4594,16 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안(새로 만들지 않음)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
           }
         }
       }
@@ -4604,6 +4614,7 @@
           "spec-flows"
         ],
         "summary": "Get Spec Flow",
+        "description": "시트 하나 + `dss_changed`(Storyboard 의 DSS 가 시트를 만든 뒤 바뀌었으면 그 차이, 아니면 null).",
         "operationId": "get_spec_flow",
         "parameters": [
           {
@@ -4626,6 +4637,50 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Delete Spec Flow",
+        "description": "저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 시트는 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`.",
+        "operationId": "delete_spec_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "4XX": {
             "description": "요청 오류",
@@ -4711,6 +4766,59 @@
         }
       }
     },
+    "/v1/spec-flows/{flow_id}:resync-dss": {
+      "post": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Resync Spec Flow Dss",
+        "description": "DSS 다시 가져오기 — 허브의 지금 stages.dss 로 행을 맞춘다(새 제품은 행 추가 · 빠진 제품은 남기고 경고 「DSS에서 빠짐」 ·\n수량은 사람이 고치지 않은 행만). 결과는 `last_resync`. Storyboard 없음 404 · DSS 없음 422.",
+        "operationId": "resync_spec_flow_dss",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/spec-flows/{flow_id}/rows/{row_key}": {
       "patch": {
         "tags": [
@@ -4749,6 +4857,66 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "spec-flows"
+        ],
+        "summary": "Delete Spec Flow Row",
+        "description": "DSS 에서 빠진 행 지우기(경고 「DSS에서 빠짐」). DSS 에 있는 제품 행이면 422 `ROW_IN_DSS`(체크를 빼서 시트에서 뺀다).",
+        "operationId": "delete_spec_flow_row",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "row_key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Row Key"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -10552,6 +10720,39 @@
             "title": "Dss Ref",
             "description": "가져온 DSS 참조(DSS-01 …)"
           },
+          "dss_ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ver",
+            "description": "가져온 DSS 판(허브 stages.dss.ver)"
+          },
+          "dss_changed": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SFDssChange"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null)"
+          },
+          "last_resync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SFResync"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "format": {
             "type": "string",
             "enum": [
@@ -10651,6 +10852,65 @@
           "updated_at"
         ],
         "title": "SFDoc"
+      },
+      "SFDssChange": {
+        "properties": {
+          "from": {
+            "type": "string",
+            "title": "From",
+            "description": "시트가 가져온 DSS(DSS-01 v1)"
+          },
+          "to": {
+            "type": "string",
+            "title": "To",
+            "description": "허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)"
+          },
+          "ref_changed": {
+            "type": "boolean",
+            "title": "Ref Changed",
+            "description": "DSS 자체가 바뀜(분기 등으로 다른 DSS)",
+            "default": false
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added",
+            "description": "새로 들어온 DSS 제품"
+          },
+          "removed": {
+            "type": "integer",
+            "title": "Removed",
+            "description": "DSS 에서 빠진 제품"
+          },
+          "changed": {
+            "type": "integer",
+            "title": "Changed",
+            "description": "공간 · 수량 원문이 바뀐 제품",
+            "default": 0
+          },
+          "added_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added Names"
+          },
+          "removed_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed Names"
+          }
+        },
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "added",
+          "removed"
+        ],
+        "title": "SFDssChange",
+        "description": "Storyboard 의 DSS 가 시트를 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄."
       },
       "SFFile": {
         "properties": {
@@ -10922,6 +11182,62 @@
         "type": "object",
         "title": "SFPatch"
       },
+      "SFResync": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "from": {
+            "type": "string",
+            "title": "From"
+          },
+          "to": {
+            "type": "string",
+            "title": "To"
+          },
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added",
+            "description": "더한 행(DSS 제품 이름)"
+          },
+          "removed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed",
+            "description": "DSS 에서 빠져 경고를 붙인 행"
+          },
+          "updated": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Updated",
+            "description": "공간 · 수량을 DSS 값으로 바꾼 행"
+          },
+          "kept_qty": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Kept Qty",
+            "description": "사람이 고친 수량이라 그대로 둔 행"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "from",
+          "to"
+        ],
+        "title": "SFResync",
+        "description": "마지막 DSS 다시 가져오기 결과(토스트 · 표시)."
+      },
       "SFRow": {
         "properties": {
           "key": {
@@ -11059,8 +11375,30 @@
           "by": {
             "type": "string",
             "title": "By",
-            "description": "출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual",
+            "description": "출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual, DSS 다시 가져오기로 더한 행은 dss",
             "default": "manual"
+          },
+          "qty_edited": {
+            "type": "boolean",
+            "title": "Qty Edited",
+            "description": "사람이 수량을 고쳤다(DSS 다시 가져오기가 수량을 덮지 않는다)",
+            "default": false
+          },
+          "dss_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "added",
+                  "removed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Status",
+            "description": "DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 들어옴 · removed = DSS 에서 빠짐(남겨 둠, 사람이 지울 수 있음)"
           },
           "cells": {
             "additionalProperties": {
@@ -11209,7 +11547,8 @@
               "discontinued",
               "sold_out",
               "mismatch",
-              "family_default"
+              "family_default",
+              "dss_removed"
             ],
             "title": "Kind"
           },

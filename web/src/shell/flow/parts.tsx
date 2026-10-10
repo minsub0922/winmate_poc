@@ -5,7 +5,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useShellPage } from '../ShellContext';
-import { ErrorState, FlowDone, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, type DoneStage } from '@/ui';
+import { ErrorState, FlowDone, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, useConfirm, type DoneStage } from '@/ui';
 import {
   CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, useFlow, useFlowContents, useFlowInvalidate, useFlows, useFlowsById,
   type ContentKey, type FlowCell, type FlowDoc, type FlowListItem, type StageKey,
@@ -130,7 +130,11 @@ export function ContentPopup({ flow, stage, onClose }: { flow: FlowDoc | undefin
 
 // ── 목록(보드 List) ───────────────────────────────────
 
-export interface DraftRow { title: string; ref?: string | null; to: string; sbIds: string[]; when?: string | null }
+export interface DraftRow {
+  title: string; ref?: string | null; to: string; sbIds: string[]; when?: string | null;
+  /** 아직 저장 전 초안 지우기(보드에 없음 — 줄에 손을 올리면 × · 확인 뒤 지운다). 없으면 × 를 그리지 않는다 */
+  onDelete?: () => Promise<unknown>;
+}
 
 /** 콘텐츠 목록(보드 List) — 저장된 콘텐츠(허브)와 아직 저장 전 초안(drafts) */
 export function ContentListScreen({ content, drafts = [], extra }: { content: ContentKey; drafts?: DraftRow[]; extra?: ReactNode }) {
@@ -138,13 +142,19 @@ export function ContentListScreen({ content, drafts = [], extra }: { content: Co
   useShellPage({ section: m.label, title: '', hasTask: false });
   const q = useFlowContents(content);
   const [pop, setPop] = useState<string | null>(null);
-  const saved = (q.data?.items ?? []).map((it) => ({ title: it.title, ref: `${it.ref} v${it.ver}`, to: it.route, sbs: it.storyboards.map((s) => ({ id: s.id, name: s.name })), when: it.updated_at }));
+  const { confirm, dialog } = useConfirm();
+  const [gone, setGone] = useState<Set<string>>(() => new Set());
+  const saved = (q.data?.items ?? []).map((it) => ({ title: it.title, ref: `${it.ref} v${it.ver}`, to: it.route, sbs: it.storyboards.map((s) => ({ id: s.id, name: s.name })), when: it.updated_at, onDelete: undefined as DraftRow['onDelete'] }));
   const savedRoutes = new Set(saved.map((r) => r.to));
   // 초안 줄의 Storyboard 칩은 id 대신 이름(보드 List) — 허브에서 읽는다
   const draftSbIds = useMemo(() => [...new Set(drafts.flatMap((d) => d.sbIds))], [drafts]);
   const draftSbs = useFlowsById(draftSbIds);
   const sbName = (id: string) => draftSbs[draftSbIds.indexOf(id)]?.data?.name ?? id;
-  const rows = [...saved, ...drafts.filter((d) => !savedRoutes.has(d.to)).map((d) => ({ title: d.title, ref: d.ref ? `${d.ref} · 작성 중` : '작성 중', to: d.to, sbs: d.sbIds.map((id) => ({ id, name: sbName(id) })), when: d.when ?? null }))];
+  const rows = [...saved, ...drafts.filter((d) => !savedRoutes.has(d.to) && !gone.has(d.to)).map((d) => ({ title: d.title, ref: d.ref ? `${d.ref} · 작성 중` : '작성 중', to: d.to, sbs: d.sbIds.map((id) => ({ id, name: sbName(id) })), when: d.when ?? null, onDelete: d.onDelete }))];
+  const del = async (r: { title: string; to: string; onDelete?: DraftRow['onDelete'] }) => {
+    if (!r.onDelete || !(await confirm({ title: '작성 중인 초안을 지울까요?', message: `‘${r.title || '이름 없음'}’ 초안을 지워요. 저장하지 않은 내용이라 되돌릴 수 없어요.`, confirmLabel: '지우기', tone: 'danger' }))) return;
+    try { await r.onDelete(); setGone((g) => new Set(g).add(r.to)); toast('초안을 지웠어요'); } catch (e) { toast((e as Error).message || '지우지 못했어요'); }
+  };
   const newTo = `/${m.base}/new`;
   return (
     <div className="fl-list">
@@ -169,6 +179,7 @@ export function ContentListScreen({ content, drafts = [], extra }: { content: Co
               ))}</div>
               <span className="fl-when">{whenText(r.when)}</span>
               <Link className="fl-open" to={r.to}>열기</Link>
+              {r.onDelete && <button type="button" className="fl-del" aria-label={`${r.title || '초안'} 지우기`} onClick={() => del(r)}><Icon name="x" size={13} strokeWidth={2.4} /></button>}
             </div>
           ))}
         </div>
@@ -178,6 +189,7 @@ export function ContentListScreen({ content, drafts = [], extra }: { content: Co
           <Link className="fl-emptybtn" to={newTo}>{m.newLabel}</Link></div>
       )}
       <SBPopup id={pop} onClose={() => setPop(null)} />
+      {dialog}
     </div>
   );
 }
@@ -190,10 +202,12 @@ export interface GateStart { sbId: string; flow: FlowListItem }
  * 사전 작업 Storyboard 고르기(보드 Gate · MI1 · MI1_Branch) — 고를 수 없는 Storyboard 는 아래(점선), 같은 콘텐츠가 있으면 수정 / 복제본.
  * onStart: 새로 만들 때(새 Storyboard 또는 분기 뒤) 콘텐츠 자원을 만들고 그 편집 경로를 돌려준다.
  */
-export function GateScreen({ content, onStart, initialSb, autoStart }: {
+export function GateScreen({ content, onStart, initialSb, autoStart, drafts = [] }: {
   content: Exclude<ContentKey, 'rq'>; onStart: (s: GateStart) => Promise<string>; initialSb?: string | null;
   /** Storyboard 화면의 「만들기」(`?sb=&auto=1`) — 그 Storyboard 에 아직 이 콘텐츠가 없으면 고르기를 건너뛰고 바로 만든다(CF-07) */
   autoStart?: boolean;
+  /** 이 기능의 저장 전 초안(목록과 같은 모양) — 그 Storyboard 줄에 「작성 중 초안」을 띄우고 시작 버튼은 「초안 이어 쓰기」(새로 만들지 않고 그 초안을 연다) */
+  drafts?: DraftRow[];
 }) {
   const m = CONTENT[content];
   const nav = useNavigate();
@@ -208,24 +222,30 @@ export function GateScreen({ content, onStart, initialSb, autoStart }: {
   const [busy, setBusy] = useState(false);
   const cur = items.find((x) => x.id === (sel ?? (initialSb && items.some((y) => y.id === initialSb && y.eligible) ? initialSb : firstOk)));
   const ex = cur?.existing ?? null;
+  const draftOf = (id?: string | null) => (id ? drafts.find((d) => d.sbIds.includes(id)) ?? null : null);
+  const dr = ex ? null : draftOf(cur?.id);
   const exRef = ex ? `${ex.ref} v${ex.ver}` : '';
   const sharedN = useMemo(() => (ex ? 1 + (ex.shared?.length ?? 0) : 0), [ex]);
-  const cta = !cur ? '이 Storyboard로 시작' : !ex ? '이 Storyboard로 시작' : choice === 'edit' ? `${ex.ref} 수정하기` : '분기 만들고 시작';
+  const cta = !cur ? '이 Storyboard로 시작' : dr ? '초안 이어 쓰기' : !ex ? '이 Storyboard로 시작' : choice === 'edit' ? `${ex.ref} 수정하기` : '분기 만들고 시작';
   const nextLetter = 'BCDEFGH'[Math.min(items.filter((x) => x.parent === cur?.id).length, 6)];
-  const foot = !cur ? '' : !ex ? `${cur.name}에 ${m.short}${josa(m.short, '이', '가')} 연결돼요` : choice === 'edit' ? '수정 내용은 요약본에 바로 반영돼요' : `‘${cur.name} · 분기 ${nextLetter}’가 새로 생겨요`;
+  const foot = !cur ? '' : dr ? `작성 중이던 ${dr.ref ?? m.short} 초안을 이어서 열어요` : !ex ? `${cur.name}에 ${m.short}${josa(m.short, '이', '가')} 연결돼요` : choice === 'edit' ? '수정 내용은 요약본에 바로 반영돼요' : `‘${cur.name} · 분기 ${nextLetter}’가 새로 생겨요`;
   const autoRef = useRef(false);
   useEffect(() => {
     if (!autoStart || autoRef.current || !initialSb || !q.data) return;
     const it = q.data.items.find((x) => x.id === initialSb);
     if (!it || !it.eligible || it.existing) return;
     autoRef.current = true;
+    const d0 = draftOf(it.id);
+    if (d0) { nav(d0.to, { replace: true }); return; }
     setBusy(true);
     onStart({ sbId: it.id, flow: it }).then((to) => nav(to, { replace: true })).catch((e) => { toast((e as Error).message || '시작하지 못했어요'); setBusy(false); });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 초안 목록은 첫 자동 시작 때 한 번만 본다
   }, [autoStart, initialSb, q.data, onStart, nav]);
   const go = async () => {
     if (!cur || busy) return;
     setBusy(true);
     try {
+      if (dr) { nav(dr.to); return; }
       if (ex && choice === 'edit' && ex.route) { nav(ex.route); return; }
       if (ex && choice === 'branch') {
         const b = await branchFlow(cur.id, content);
@@ -253,6 +273,7 @@ export function GateScreen({ content, onStart, initialSb, autoStart }: {
           const can = !!r.eligible;
           const on = can && cur?.id === r.id;
           const has = r.existing;
+          const rd = has ? null : draftOf(r.id);
           return (
             <div key={r.id} className={cx('fl-grow', !can && 'fl-grow--off', on && 'fl-grow--on')}>
               <button type="button" className="fl-growbtn" role="radio" aria-checked={on} aria-disabled={!can} onClick={() => { if (can) { setSel(r.id); setChoice('edit'); } }}>
@@ -261,7 +282,7 @@ export function GateScreen({ content, onStart, initialSb, autoStart }: {
                   <span className="fl-growname"><b>{r.name}</b>{r.is_branch && <span className="fl-branch">분기</span>}</span>
                   <span className="fl-growmeta"><span>{r.customer ?? ''}</span><FlowDots cells={r.cells} /><span>{r.progress}</span></span>
                 </span>
-                <span className={cx('fl-pill', !can ? 'fl-pill--off' : has ? 'fl-pill--has' : 'fl-pill--go')}>{!can ? `${m.preShort} 먼저` : has ? `${has.ref} v${has.ver} 있음` : '이어서 만들기'}</span>
+                <span className={cx('fl-pill', !can ? 'fl-pill--off' : has ? 'fl-pill--has' : rd ? 'fl-pill--draft' : 'fl-pill--go')}>{!can ? `${m.preShort} 먼저` : has ? `${has.ref} v${has.ver} 있음` : rd ? '작성 중 초안 있음' : '이어서 만들기'}</span>
               </button>
               {!can && <Link className="fl-prego" to={m.preHref}>{m.preShort} 하러 가기</Link>}
               <button type="button" className="fl-ghost" onClick={() => setPop(r.id)} aria-label={`${r.name} 요약 보기`}>요약</button>

@@ -2,7 +2,7 @@
  * 고객 요구사항 새 흐름 API — contracts/requirements.json `/v1/rq-flows*` → @/api/gen/requirements(RF* 스키마).
  * 화면은 문서 하나(RFDoc)를 읽고, 바꾸는 호출은 모두 고친 문서를 돌려준다.
  */
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, unwrap } from '@/api/client';
 import type { components } from '@/api/gen/requirements';
 
@@ -47,4 +47,16 @@ export const rfApi = {
     unwrap(await rq.POST('/v1/rq-flows/{flow_id}/deep-questions/{question_id}:answer', { params: { path: { flow_id: id, question_id: qid } }, body })),
   closeDeep: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}/deep-questions:close', P(id))),
   finish: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}:finish', P(id))),
+  /** 저장 전 초안 지우기(204) — 저장한 것은 409 SAVED_CONTENT */
+  remove: async (id: string) => { unwrap(await rq.DELETE('/v1/rq-flows/{flow_id}', P(id))); },
 };
+
+/** 목록 줄 × — 초안을 지우고 목록 · 사이드바 작업 이력(workspace 색인)을 새로 읽게 한다 */
+export function useRfDelete() {
+  const qc = useQueryClient();
+  return async (id: string) => {
+    await rfApi.remove(id);
+    qc.removeQueries({ queryKey: rfKey(id) });
+    for (const queryKey of [rfListKey, ['ws', 'items'], ['ws', 'recent'], ['ws', 'counts']]) void qc.invalidateQueries({ queryKey });
+  };
+}

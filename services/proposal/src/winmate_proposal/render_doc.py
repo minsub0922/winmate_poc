@@ -224,7 +224,9 @@ async def build(pid: str, *, sheet_ids: list[str] | None = None, language: str =
         "slides": slides,
     }
     if include_cover:
-        document["cover"] = {"title": core.title_display(p), "subtitle": core.type_name(p.get("type")) or "", "customer": cust,
+        # 허브 Storyboard 에서 시작했으면 Key message 가 표지 부제(없으면 유형 이름)
+        km = (((p.get("hub") or {}).get("key_message")) or {}).get("text")
+        document["cover"] = {"title": core.title_display(p), "subtitle": km or core.type_name(p.get("type")) or "", "customer": cust,
                              "date": f"{today.year}.{today.month:02d}.{today.day:02d}", "presenter": p.get("owner_name") or "",
                              **({"image": cover_file} if cover_file else {})}
     design = {"brand_hex": d.get("brand_hex") or defs.BRAND_BLUE, "master_id": master_id or d.get("master_id") or defs.DEFAULT_MASTER,

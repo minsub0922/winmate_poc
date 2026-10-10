@@ -56,7 +56,13 @@ export function useMiFlows() {
 }
 
 export const mfApi = {
-  create: async (sbId: string) => unwrap(await mi.POST('/v1/mi-flows', { body: { sb_id: sbId } })),
+  /** 만들기 — 이 Storyboard 의 저장 전 초안이 이미 있으면 서버가 그것을 200 으로 돌려준다(reused · 분석을 다시 돌리지 않음) */
+  create: async (sbId: string) => {
+    const res = await mi.POST('/v1/mi-flows', { body: { sb_id: sbId } });
+    return { doc: unwrap(res), reused: res.response.status === 200 };
+  },
+  /** 저장 전 초안 지우기(204 · 돌고 있는 잡 취소) — 저장한 것은 409 SAVED_CONTENT */
+  remove: async (id: string) => { unwrap(await mi.DELETE('/v1/mi-flows/{flow_id}', P(id))); },
   get: async (id: string) => unwrap(await mi.GET('/v1/mi-flows/{flow_id}', P(id))),
   patch: async (id: string, body: S['MFPatch']) => unwrap(await mi.PATCH('/v1/mi-flows/{flow_id}', { ...P(id), body })),
   analyze: async (id: string) => unwrap(await mi.POST('/v1/mi-flows/{flow_id}:analyze', P(id))),
@@ -66,6 +72,16 @@ export const mfApi = {
   finish: async (id: string) => unwrap(await mi.POST('/v1/mi-flows/{flow_id}:finish', P(id))),
   stage: async (id: string) => unwrap(await mi.GET('/v1/mi-flows/{flow_id}/stage', P(id))),
 };
+
+/** 목록 줄 × — 초안을 지우고 목록 · 사이드바 작업 이력(workspace 색인)을 새로 읽게 한다 */
+export function useMfDelete() {
+  const qc = useQueryClient();
+  return async (id: string) => {
+    await mfApi.remove(id);
+    qc.removeQueries({ queryKey: mfKey(id) });
+    for (const queryKey of [mfListKey, ['ws', 'items'], ['ws', 'recent'], ['ws', 'counts']]) void qc.invalidateQueries({ queryKey });
+  };
+}
 
 /** 바꾸는 호출 → 돌려받은 문서를 캐시에 넣는다(목록 · 허브 캐시는 새로) */
 export function useMfActions(id: string) {

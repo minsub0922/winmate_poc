@@ -3637,6 +3637,93 @@
             }
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "flows",
+          "internal"
+        ],
+        "summary": "Clear Flow Stage",
+        "description": "칸 비우기 — 지금은 `ppt`(제안서를 지우면 proposal 이 부른다)만. `ref` 를 주면 그 ref 일 때만 비운다. 같은 ref 의 다른 Storyboard 도 함께.",
+        "operationId": "clear_flow_stage",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "rq",
+                "dss",
+                "mi",
+                "ca",
+                "vp",
+                "sp",
+                "sc",
+                "ppt"
+              ],
+              "type": "string",
+              "title": "Key"
+            }
+          },
+          {
+            "name": "ref",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Ref"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/v1/flows/{flow_id}:branch": {
@@ -5149,6 +5236,12 @@
           "version": {
             "type": "integer",
             "title": "Version"
+          },
+          "content_rev": {
+            "type": "integer",
+            "title": "Content Rev",
+            "description": "콘텐츠 판 — stage(제안서 ppt 칸 제외) · Key message · 요약본이 바뀔 때만 오른다(제안서의 「Storyboard 업데이트됨」 비교용)",
+            "default": 0
           },
           "name": {
             "type": "string",

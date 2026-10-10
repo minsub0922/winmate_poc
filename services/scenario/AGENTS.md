@@ -46,6 +46,21 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
 - 시험: `tests/test_sc_flow.py` 3개(실제 storyboard 앱 — 404/422 · DSS 미리 채움 · 저장 → 허브 stages · cells.route · cards · contents · ver 2 · 분기) — pytest 62개.
   e2e `web/e2e/scenario/sc-flow.spec.ts` 2개(목록 → Gate → SC2 → 저장 → 완료 · 허브 확인 · 폭 196/236/662/908 · 본문 1180 · 높이 728 · auto · 옛 주소) ·
   `spaces.spec.ts` 는 Storyboard 없는 묶음(허브에 쓰지 않음). 캡처 `__screens__/SC0-new · SC0-list-new · SC1-new · SC2-new · SC2_AI-new · SC2_Pick-new · SC2_Empty-new · SC2_NoProduct-new · SC_Done-new · SC_DoneJson-new`.
+- **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
+  - 묶음은 마지막으로 가져온 DSS 를 남긴다: `dss_ref` · `dss_ver` · `dss_spaces`(공간 이름) · `dss_items`(제품 · 솔루션과 놓인 공간). `GET /v1/space-sets/{id}` 는 이것과
+    허브의 지금 stages.dss 를 견줘 `dss_changed{from, to, ref_changed, added, removed, changed, spaces_added, spaces_removed, added_names, removed_names}`(사람이 공간 제품을
+    고친 것은 차이가 아님 · 없으면 null · DSS 로 만들지 않은 묶음은 늘 null). 다른 고침 응답(PUT 등)의 `dss_changed` 는 null(웹이 앞의 값을 잇는다).
+  - `POST …/{id}:resync-dss`: DSS 에 새로 생긴 공간 → 공간 추가(`dss_status: added`), 있던 공간에 새로 놓인 제품 · 솔루션 → 공간 제품에 추가(added — 비교는 지난 DSS 기준이라
+    사람이 일부러 뺀 DSS 제품은 DSS 가 그대로면 다시 넣지 않음), DSS 에서 빠진 (공간 · 제품) → 그 공간 시나리오 · 장면이 안 쓰면 빼고 쓰면 남겨 `dss_status: removed`(「DSS에서 빠짐」),
+    시나리오는 지우지 않음, DSS 에서 빠진 공간은 시나리오도 제품도 없으면 빼고 아니면 removed. 지난 added 표시는 다음 다시 가져오기에서 지움. 저장한 묶음이면 status → draft.
+    결과 `last_resync{from, to, added, removed, kept, spaces_added, spaces_removed, spaces_kept}`(항목은 「공간 · 제품」). `SSProduct` · `SSSpace` 에 `dss_status`(PUT 으로도 오간다).
+  - `DELETE /v1/space-sets/{id}` 204 — 한 번도 저장하지 않은 것만(`ver` > 0 이면 저장 뒤 고쳐 draft 여도 409 `SAVED_CONTENT`), `unregister_item`.
+    `POST /v1/space-sets {sb_id}`(Gate · spaces 없이)는 같은 Storyboard 의 DSS 로 시작한 저장 전 초안이 있으면 200 으로 그것(spaces 를 직접 주는 이전 시작은 이어 쓰지 않음). 코드 SC-NN 은 최댓값 + 1.
+  - 화면: SC2 머리 아래 안내 줄(AiBar · 「Storyboard의 DSS가 바뀌었어요 · DSS-01 v1 → v2 · 제품 1 추가 · 1 빠짐 · 놓인 공간 1 바뀜 · 공간 1 추가」 · 「다시 가져오기」 —
+    대기 중 자동 저장을 먼저 보내고 부른다). 줄(38 + 12)만큼 그리드만 줄고 칸 폭 196 · 236 · 662 · 본문 높이 728 그대로. 다시 가져오면 토스트 · 공간 줄 「새 공간」/「DSS에서 빠짐 · 시나리오 n」 ·
+    공간 제품 칩 「새로」/「DSS에서 빠짐」(주황). SC0 저장 전 초안(ver 0) 줄은 `DraftRow.onDelete`.
+  - 시험 pytest 64(+2: 다시 가져오기 합치기 · 시나리오 유지 · 새 공간 · 빈 공간 빼기 · ref 바뀜 / 지우기 · 이어 쓰기) · e2e `web/e2e/scenario/sc-resync.spec.ts` 1
+    (캡처 `__screens__/SC2-resync-new.png` · `SC2-resynced-new.png`).
 
 **새 흐름 · 공간 → 시나리오 → 장면 (2026-10-08 · `docs/scenarios/11-content-flow.md` §3 · 보드 webapp1 SC2*)**
 - 백엔드 `spaceset.py` + `api_spaces.py` — `/v1/space-sets*`(DocStore `space_sets`, 코드 `SC-NN`). 스키마는 모두 `SS*` 접두.

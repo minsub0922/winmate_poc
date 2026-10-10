@@ -4643,7 +4643,7 @@
           "mi-flows"
         ],
         "summary": "Create Mi Flow",
-        "description": "Gate 에서 고른 Storyboard 로 MI 를 만들고 Storyboard 분석을 시작한다(CF-08 예외 — MI 는 분석 로딩이 먼저).",
+        "description": "Gate 에서 고른 Storyboard 로 MI 를 만들고 Storyboard 분석을 시작한다(CF-08 예외 — MI 는 분석 로딩이 먼저).\n같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로 돌려준다(「‹ Storyboard」 → Gate → 다시 시작해도 초안이 늘지 않음).",
         "operationId": "create_mi_flow",
         "requestBody": {
           "required": true,
@@ -4682,6 +4682,16 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "이 Storyboard 의 저장 전 초안이 이미 있음 — 그 초안(새로 만들지 않고 분석도 다시 돌리지 않음)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
                 }
               }
             }
@@ -4786,6 +4796,68 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Delete Mi Flow",
+        "description": "저장 전 초안 지우기(목록 줄 ×, 소프트 삭제 · 작업물 색인도 지움 · 돌고 있는 분석/검색 잡 취소) — 한 번도 저장하지 않은 것만.\n저장한 MI 는 Storyboard 에 연결돼 있어 409 SAVED_CONTENT, 없으면 404 NOT_FOUND.",
+        "operationId": "delete_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "expected_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "주면 지금 판과 다를 때 409 CONFLICT",
+              "title": "Expected Version"
+            },
+            "description": "주면 지금 판과 다를 때 409 CONFLICT"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "4XX": {
             "description": "요청 오류",

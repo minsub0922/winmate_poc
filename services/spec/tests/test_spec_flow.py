@@ -222,3 +222,124 @@ async def test_spec_flow_dss_text_qty_and_xlsx_on_finish(client, env):
     # 두 번째 저장 → v2 파일
     out2 = (await client.post(f"/v1/spec-flows/{d['id']}:finish")).json()
     assert out2["file"]["name"] == "SP-01_v2.xlsx" and out2["stage"]["ver"] == 2
+
+
+# ── DSS 다시 가져오기 · 초안 지우기 · 같은 Storyboard 초안 이어 쓰기(2026-10-10) ──
+
+def _dss_v2() -> dict[str, Any]:
+    """DSS_VALUE 에서 The Wall 을 빼고(로비) QH55C 를 더하고, QB43C 수량 3 → 4 · QM55C 로비 수량 2 → 3."""
+    import copy
+    v = copy.deepcopy(DSS_VALUE)
+    lobby = v["spaces"][0]["products"]
+    v["spaces"][0]["products"] = [p for p in lobby if not p["name"].startswith("The Wall")] + [{"name": "Smart Signage QH55C", "kind": "product", "qty": 2}]
+    v["spaces"][0]["products"][0]["qty"] = 3
+    v["spaces"][2]["products"][0]["qty"] = 4
+    return v
+
+
+async def test_spec_flow_resync_dss_merges_and_keeps_user_edits(client, env):
+    async with testing.api_client(env["storyboard"]) as sb:
+        f = await _sb(sb)
+        d = (await client.post("/v1/spec-flows", json={"sb_id": f["id"]})).json()
+        assert d["dss_ref"] == "DSS-01" and d["dss_ver"] == 1
+        assert (await client.get(f"/v1/spec-flows/{d['id']}")).json()["dss_changed"] is None
+        rows = {x["name"]: x for x in d["rows"]}
+        # 사람이 QM55C 수량을 5 로 고침(→ 다시 가져와도 그대로) · QB43C 는 그대로(→ DSS 값 4)
+        d = (await client.patch(f"/v1/spec-flows/{d['id']}/rows/{rows['Smart Signage QM55C']['key']}", json={"qty": 5})).json()
+        assert next(x for x in d["rows"] if x["name"] == "Smart Signage QM55C")["qty_edited"] is True
+
+        r = await sb.put(f"/v1/flows/{f['id']}/stages/dss", json={"ref": "DSS-01", "ver": 2, "value": _dss_v2(), "md": "- 공간 3"})
+        assert r.status_code == 200, r.text
+        g = (await client.get(f"/v1/spec-flows/{d['id']}")).json()
+        ch = g["dss_changed"]
+        assert ch == {"from": "DSS-01 v1", "to": "DSS-01 v2", "ref_changed": False, "added": 1, "removed": 1, "changed": 2,
+                      "added_names": ["Smart Signage QH55C"], "removed_names": ["The Wall IAB 146\""]}
+        # 다른 고침 응답은 차이를 계산하지 않는다(null) — 화면은 GET 값을 유지
+        assert (await client.patch(f"/v1/spec-flows/{d['id']}", json={"title": "용산 시트"})).json()["dss_changed"] is None
+
+        r = await client.post(f"/v1/spec-flows/{d['id']}:resync-dss")
+        assert r.status_code == 200, r.text
+        d = r.json()
+        assert d["dss_changed"] is None and d["dss_ver"] == 2
+        rows = {x["name"]: x for x in d["rows"]}
+        assert list(rows) == ["The Wall IAB 146\"", "Smart Signage QM55C", "Smart Signage QB43C", "Smart Signage QH55C"]
+        wall = rows["The Wall IAB 146\""]
+        assert wall["dss_status"] == "removed" and wall["warnings"][0]["kind"] == "dss_removed" and wall["warnings"][0]["text"].startswith("DSS에서 빠짐")
+        new = rows["Smart Signage QH55C"]
+        assert new["by"] == "dss" and new["dss_status"] == "added" and new["qty"] == 2 and new["spaces"] == ["로비"]
+        assert new["display_name"] == "QH55C" and new["match"] == "code" and new["cells"]["size_resolution"].startswith('55"')
+        assert rows["Smart Signage QM55C"]["qty"] == 5 and rows["Smart Signage QM55C"]["qty_note"] == "로비 3 · 라운지 1"   # 원문은 DSS, 수량은 사람 값
+        assert rows["Smart Signage QB43C"]["qty"] == 4 and rows["Smart Signage QB43C"]["by"] == "ai-accepted"
+        lr = d["last_resync"]
+        assert lr["from"] == "DSS-01 v1" and lr["to"] == "DSS-01 v2"
+        assert lr["added"] == ["Smart Signage QH55C"] and lr["removed"] == ["The Wall IAB 146\""] and lr["kept_qty"] == ["Smart Signage QM55C"]
+        assert "Smart Signage QB43C" in lr["updated"]
+        assert d["counts"]["total"] == 4 and d["counts"]["warnings"] >= 2
+        assert (await client.get(f"/v1/spec-flows/{d['id']}")).json()["dss_changed"] is None
+        # 빠진 행만 지울 수 있다
+        r = await client.delete(f"/v1/spec-flows/{d['id']}/rows/{rows['Smart Signage QM55C']['key']}")
+        assert r.status_code == 422 and r.json()["error"]["code"] == "ROW_IN_DSS"
+        d = (await client.delete(f"/v1/spec-flows/{d['id']}/rows/{wall['key']}")).json()
+        assert [x["name"] for x in d["rows"]] == ["Smart Signage QM55C", "Smart Signage QB43C", "Smart Signage QH55C"]
+        assert (await client.get(f"/v1/spec-flows/{d['id']}")).json()["dss_changed"] is None
+
+        # DSS 자체가 바뀜(분기 등 다른 ref) — 내용이 같아도 알리고, 다시 가져오면 stages.sp.from 이 새 DSS
+        await sb.put(f"/v1/flows/{f['id']}/stages/dss", json={"ref": "DSS-02", "ver": 1, "value": _dss_v2(), "md": "- 공간 3"})
+        ch = (await client.get(f"/v1/spec-flows/{d['id']}")).json()["dss_changed"]
+        assert ch["ref_changed"] is True and ch["from"] == "DSS-01 v2" and ch["to"] == "DSS-02 v1" and ch["added"] == ch["removed"] == 0
+        d = (await client.post(f"/v1/spec-flows/{d['id']}:resync-dss")).json()
+        assert d["dss_ref"] == "DSS-02" and d["last_resync"]["added"] == [] and d["dss_changed"] is None
+        out = (await client.post(f"/v1/spec-flows/{d['id']}:finish")).json()
+        assert out["stage"]["from"] == "DSS-02" and [m["name"] for m in out["stage"]["models"]][-1] == "Smart Signage QH55C"
+        assert out["stage"]["models"][-1]["by"] == "dss"
+        # 다시 가져온 DSS 에 빠졌던 제품이 돌아오면 표시가 added 로 바뀐다(경고 없음)
+        await sb.put(f"/v1/flows/{f['id']}/stages/dss", json={"ref": "DSS-02", "ver": 2, "value": DSS_VALUE, "md": "- 공간 3"})
+        d = (await client.post(f"/v1/spec-flows/{d['id']}:resync-dss")).json()
+        rows = {x["name"]: x for x in d["rows"]}
+        assert rows["The Wall IAB 146\""]["dss_status"] == "added" and rows["Smart Signage QH55C"]["dss_status"] == "removed"
+        assert not any(w["kind"] == "dss_removed" for w in rows["The Wall IAB 146\""]["warnings"])
+
+
+async def test_spec_flow_resync_needs_storyboard_dss(client, env):
+    async with testing.api_client(env["storyboard"]) as sb:
+        f = await _sb(sb)
+        d = (await client.post("/v1/spec-flows", json={"sb_id": f["id"]})).json()
+    r = await client.post("/v1/spec-flows/sfl_nope:resync-dss")
+    assert r.status_code == 404
+    assert (await client.get("/v1/spec-flows/sfl_nope")).status_code == 404
+    assert d["id"]
+
+
+async def test_spec_flow_draft_delete_and_dedupe(client, env):
+    async with testing.api_client(env["storyboard"]) as sb, testing.api_client(env["workspace"]) as ws:
+        f = await _sb(sb)
+        r = await client.post("/v1/spec-flows", json={"sb_id": f["id"]})
+        assert r.status_code == 201
+        a = r.json()
+        # 같은 Storyboard 로 다시 시작(Gate) → 저장 전 초안을 돌려준다(200, 같은 id)
+        r = await client.post("/v1/spec-flows", json={"sb_id": f["id"]})
+        assert r.status_code == 200 and r.json()["id"] == a["id"] and r.json()["code"] == a["code"]
+        assert len((await client.get("/v1/spec-flows")).json()["items"]) == 1
+        assert (await ws.get(f"/v1/items/{a['id']}")).status_code == 200
+        # 초안 지우기 → 204 · 목록 · workspace 색인에서 빠짐 · 다시 지우면 404
+        assert (await client.delete(f"/v1/spec-flows/{a['id']}")).status_code == 204
+        assert (await client.get(f"/v1/spec-flows/{a['id']}")).status_code == 404
+        assert (await client.delete(f"/v1/spec-flows/{a['id']}")).status_code == 404
+        assert (await ws.get(f"/v1/items/{a['id']}")).status_code == 404
+        assert (await client.get("/v1/spec-flows")).json()["items"] == []
+        # 새 초안 → 저장 → 저장한 시트는 지울 수 없다(409 SAVED_CONTENT) · 다시 시작하면 새 초안(저장한 것은 Gate 가 「수정」으로 연다)
+        b = (await client.post("/v1/spec-flows", json={"sb_id": f["id"]})).json()
+        assert b["id"] != a["id"]
+        assert (await client.post(f"/v1/spec-flows/{b['id']}:finish")).status_code == 200
+        r = await client.delete(f"/v1/spec-flows/{b['id']}")
+        assert r.status_code == 409 and r.json()["error"]["code"] == "SAVED_CONTENT"
+        assert r.json()["error"]["message"] == "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+        r = await client.post("/v1/spec-flows", json={"sb_id": f["id"]})
+        assert r.status_code == 201 and r.json()["id"] != b["id"]
+        c = r.json()
+        # 지운 초안이 있어도 코드는 저장한 시트와 겹치지 않는다
+        assert c["code"] != b["code"]
+        # 복제본(분기 Storyboard)은 새 시트
+        br = (await sb.post(f"/v1/flows/{f['id']}:branch", json={"stage": "sp"})).json()
+        r = await client.post("/v1/spec-flows", json={"sb_id": br["id"]})
+        assert r.status_code == 201 and r.json()["id"] not in (b["id"], c["id"])

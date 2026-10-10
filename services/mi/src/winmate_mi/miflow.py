@@ -10,6 +10,9 @@ Storyboard(최소 DSS 까지)를 고르면 AI 가 먼저 Storyboard 를 읽고(C
   찾은 정보(items)는 검색 도구가 돌려준 글에서만 만든다 — 출처 이름 · 날짜 · URL 은 그 글에 있는 문자열만 쓰고(없으면 '웹 검색 요약' · null),
   수치가 들어간 문장은 모두 `numberCheck`(원문에서 확인)로 표시한다. 지어내지 않는다.
 - 저장: `push_stage(sb, "mi", value=§6 mi 모양)`, 코드 MI-01 …, ver = 저장 횟수, 고쳐 저장하면 prevVer.
+- 같은 Storyboard 로 다시 만들면(「‹ Storyboard」 → Gate → 다시 시작) 그 Storyboard 의 저장 전 초안을 돌려준다(200 · 분석을 다시 돌리지 않음).
+  복제본(분기)은 Storyboard 가 새로 생기므로 새 MI 가 된다.
+- 지우기는 한 번도 저장하지 않은 초안만(status draft · ver 없음) — 돌고 있는 분석 · 검색 잡은 취소한다. 저장한 MI 는 409 SAVED_CONTENT.
 
 저장소: DocStore("mi") 컬렉션 `mi_flows`(mif_ …). 쓰기는 낙관적 잠금 + 재시도.
 """
@@ -23,10 +26,11 @@ from collections.abc import Callable
 from typing import Any, Literal
 
 from pydantic import BaseModel, Field
+from winmate_common.client import ServiceClient
 from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
-from winmate_common.platform import register_item
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import VersionConflict
 
 from . import rules
@@ -553,28 +557,104 @@ async def _job_active(job_id: str | None) -> bool:
     return bool(j and j.status not in TERMINAL)
 
 
-async def create(body: MFCreate) -> dict[str, Any]:
-    flow = await get_flow(body.sb_id)
-    if flow is None:
-        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
-    if not (flow.get("stages") or {}).get("dss"):
-        raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
-    snap = flow_snapshot(flow)
-    n = await asyncio.to_thread(_st().count, COLL)
-    title = (body.title or "").strip() or f"{flow.get('name') or body.sb_id} 시장 분석"
-    fid = new_id("mif")
-    doc = {"code": f"MI-{n + 1:02d}", "title": title, "sb_id": body.sb_id, "status": "draft", "phase": "analyzing", "ver": None, "editing": False,
-           "keep_previous": True, "saved_kept": 0, "analysis_mode": None, "basis": [], "queries": {"market": [], "customer": [], "user": []},
-           "filters": MFFilters().model_dump(), "results": [], "items": [], "saved_items": [], "saved_queries": None, "snapshot": snap,
-           "progress": analyze_progress(body.sb_id, None), "warnings": []}
-    await asyncio.to_thread(_st().put, COLL, fid, doc, note="만듦", keep_history=False)
+def is_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(:finish)했는지 — 저장하면 Storyboard 에 연결된다(고치는 중이어도 저장한 것)."""
+    return d.get("status") == "done" or d.get("ver") is not None or bool(d.get("saved_at"))
+
+
+def _draft_for(sb_id: str) -> dict[str, Any] | None:
+    """이 Storyboard 의 저장 전 초안(가장 최근에 고친 것)."""
+    items, _ = _st().list(COLL, where={"sb_id": sb_id, "status": "draft"}, limit=20)
+    return next((d for d in items if not is_saved(d)), None)
+
+
+_creating: dict[tuple[int, str], asyncio.Lock] = {}
+
+
+def _sb_lock(sb_id: str) -> asyncio.Lock:
+    """같은 Storyboard 로 동시에 만들기(두 번 누름 · 탭 두 개)가 초안을 둘 만들지 않게."""
+    return _creating.setdefault((id(asyncio.get_running_loop()), sb_id), asyncio.Lock())
+
+
+async def _next_code() -> str:
+    """MI-NN — 이 서비스 번호 · 허브 ref 중 가장 큰 것 다음(초안을 지워도 번호가 겹치지 않게. 같은 ref = 같은 콘텐츠로 동기화된다)."""
+    top = 0
+    items, _ = await asyncio.to_thread(_st().list, COLL, limit=1000)
+    refs = [x.get("code") or "" for x in items]
+    try:
+        hub = await ServiceClient("storyboard", timeout=10).get("/v1/flows/contents/mi")
+        refs += [x.get("ref") or "" for x in (hub or {}).get("items") or []]
+    except Exception as exc:  # noqa: BLE001
+        log.info("허브 MI 목록을 읽지 못함(번호는 로컬만): %s", exc)
+    for r in refs:
+        m = re.fullmatch(r"MI-(\d+)", r)
+        if m:
+            top = max(top, int(m.group(1)))
+    return f"MI-{top + 1:02d}"
+
+
+async def create(body: MFCreate) -> tuple[dict[str, Any], bool]:
+    """(문서, 새로 만들었는지). 이 Storyboard 에 저장 전 초안이 있으면 그것을 돌려준다(분석을 다시 돌리지 않는다)."""
+    async with _sb_lock(body.sb_id):
+        draft = await asyncio.to_thread(_draft_for, body.sb_id)
+        if draft:
+            return to_api(draft), False
+        flow = await get_flow(body.sb_id)
+        if flow is None:
+            raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
+        if not (flow.get("stages") or {}).get("dss"):
+            raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
+        snap = flow_snapshot(flow)
+        title = (body.title or "").strip() or f"{flow.get('name') or body.sb_id} 시장 분석"
+        fid = new_id("mif")
+        doc = {"code": await _next_code(), "title": title, "sb_id": body.sb_id, "status": "draft", "phase": "analyzing", "ver": None, "editing": False,
+               "keep_previous": True, "saved_kept": 0, "analysis_mode": None, "basis": [], "queries": {"market": [], "customer": [], "user": []},
+               "filters": MFFilters().model_dump(), "results": [], "items": [], "saved_items": [], "saved_queries": None, "snapshot": snap,
+               "progress": analyze_progress(body.sb_id, None), "warnings": []}
+        await asyncio.to_thread(_st().put, COLL, fid, doc, note="만듦", keep_history=False)
     job_id = await _enqueue("mi.flow_analyze", {"id": fid, "title": title})
 
     def fn(d: dict[str, Any]) -> None:
         d["progress"]["job_id"] = job_id
     saved = await update(fid, fn)
     await register_item(feature="MI", item_id=fid, title=title, status="draft", route=f"/mi/flow/{fid}", summary="Storyboard 분석 · 시장 · 고객사 · 사용자 검색")
-    return to_api(saved)
+    return to_api(saved), True
+
+
+SAVED_MSG = "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+
+
+def _delete_sync(fid: str, expected: int | None) -> dict[str, Any]:
+    cur = _get(fid)
+    if expected is not None and cur["version"] != expected:
+        raise ApiError(409, "CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 해 주세요.", {"version": cur["version"]})
+    if is_saved(cur):
+        raise ApiError(409, "SAVED_CONTENT", SAVED_MSG, {"code": cur.get("code"), "ver": cur.get("ver"), "sb_id": cur.get("sb_id")})
+    try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+        _st().delete(COLL, fid, expected_version=cur["version"])
+    except VersionConflict as exc:
+        raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+    return cur
+
+
+async def delete(fid: str, expected: int | None = None) -> None:
+    """저장 전 초안 지우기(소프트 삭제 + 작업물 색인 지우기). 돌고 있는 분석 · 검색 잡은 취소. 저장한 MI 는 409 SAVED_CONTENT, 없으면 404."""
+    cur = await asyncio.to_thread(_delete_sync, fid, expected)
+    job_id = (cur.get("progress") or {}).get("job_id")
+    if cur.get("phase") in ("analyzing", "searching") and job_id:
+        from winmate_common.jobs import jobs
+
+        try:
+            if await _job_active(job_id):
+                await jobs().cancel(job_id)
+        except Exception as exc:  # noqa: BLE001 — 잡 취소 실패가 지우기를 막지 않는다
+            log.info("MI 흐름 잡 취소 실패 %s: %s", job_id, exc)
+    await unregister_item(fid)
+
+
+def gone(fid: str) -> bool:
+    """지운(또는 없는) 초안인지 — 잡이 도는 사이 지워졌으면 되살리지 않고 끝낸다."""
+    return _st().get(COLL, fid) is None
 
 
 async def list_flows(limit: int, cursor: str | None) -> dict[str, Any]:

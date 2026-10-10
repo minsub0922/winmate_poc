@@ -16,12 +16,17 @@ from winmate_common.errors import ApiError
 from winmate_common.flow import get_flow
 from winmate_common.graph import run_graph
 from winmate_common.ids import new_id
-from winmate_common.jobs import JobContext
+from winmate_common.jobs import JobCanceled, JobContext
 
 from .. import aix
 from .. import miflow as F
 
 log = logging.getLogger("winmate.mi.flowjobs")
+
+
+async def _deleted(fid: str) -> bool:
+    """잡이 도는 사이 초안을 지웠는지(DELETE) — 그러면 문서를 되살리지 않고 잡을 취소로 끝낸다."""
+    return await asyncio.to_thread(F.gone, fid)
 
 ANALYZE_SYSTEM = (
     "너는 삼성 B2B 제안서용 시장 조사(Market Intelligence) 도우미다. 한국어로 쓴다. "
@@ -156,6 +161,8 @@ async def handle_analyze(ctx: JobContext) -> dict[str, Any]:
         await run_graph(ctx, _linear([("read", _a_read), ("extract", _a_extract), ("queries", _a_queries)]), {"flow_id": fid, "data": {}},
                         step_labels={"read": "Storyboard 읽기", "extract": "고객사 · 업종 · 공간 · 요구 뽑기", "queries": "검색어 만들기"})
     except Exception as exc:  # noqa: BLE001 — 실패해도 화면이 멈추지 않게: 검색 단계로 넘기고 알린다
+        if await _deleted(fid):
+            raise JobCanceled("초안이 지워졌어요") from exc
         log.exception("MI 흐름 분석 실패 %s", fid)
 
         def fn(d: dict[str, Any]) -> None:
@@ -279,13 +286,17 @@ async def _s_organize(state: S) -> dict[str, Any]:
 
 async def handle_search(ctx: JobContext) -> dict[str, Any]:
     fid = ctx.payload["flow_id"]
+    if await _deleted(fid):
+        raise JobCanceled("초안이 지워졌어요")
     d = await F.load(fid)
     groups = [g for g, _ in F.GROUPS if F.active_queries(d)[g]]
     steps = [(g, _group_node(g)) for g in groups] + [("organize", _s_organize)]
     try:
         await run_graph(ctx, _linear(steps), {"flow_id": fid, "data": {}},
                         step_labels={**{g: f"{F.GROUP_LABEL[g]} 검색" for g in groups}, "organize": "찾은 정보 정리"})
-    except Exception:
+    except Exception as exc:
+        if await _deleted(fid):
+            raise JobCanceled("초안이 지워졌어요") from exc
         log.exception("MI 흐름 검색 실패 %s", fid)
 
         def fn(doc: dict[str, Any]) -> None:

@@ -218,6 +218,57 @@ async def test_finish_creates_storyboard_then_pushes_stage(hub, app):
         assert out2["doc"]["sb_ids"] == [sb_id]
 
 
+async def test_delete_draft_only(hub, app):
+    """저장 전 초안만 지운다(204 · 목록 · 색인에서 빠짐) — 낡은 판 409 VERSION_CONFLICT · 없으면 404 · 저장한 것은 409 SAVED_CONTENT."""
+    async with testing.api_client(app) as c, testing.api_client(hub.rec["storyboard"].app) as sb:
+        d = await _put(c, await _new(c), BOARD_FORM)
+        r = await c.delete(f"/v1/rq-flows/{d['id']}", params={"expected_version": 1})
+        assert r.status_code == 409 and r.json()["error"]["code"] == "VERSION_CONFLICT"
+        r = await c.delete(f"/v1/rq-flows/{d['id']}", params={"expected_version": d["version"]})
+        assert r.status_code == 204 and r.content == b""
+        assert (await c.get(f"/v1/rq-flows/{d['id']}")).status_code == 404
+        assert d["id"] not in {i["id"] for i in (await c.get("/v1/rq-flows")).json()["items"]}
+        assert hub.rec["workspace"].find("DELETE", f"/v1/items/{d['id']}")
+        assert (await c.delete(f"/v1/rq-flows/{d['id']}")).status_code == 404
+        assert (await c.delete("/v1/rq-flows/rqf_nope")).status_code == 404
+
+        # 저장한 요구사항(Storyboard 자동 생성 · 연결)은 지울 수 없다
+        s = await _put(c, await _new(c), BOARD_FORM)
+        out = (await c.post(f"/v1/rq-flows/{s['id']}:finish")).json()
+        r = await c.delete(f"/v1/rq-flows/{s['id']}")
+        err = r.json()["error"]
+        assert r.status_code == 409 and err["code"] == "SAVED_CONTENT" and err["message"] == "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+        assert err["details"]["sb_ids"] == [out["sb_id"]] and err["details"]["ver"] == 1
+        assert (await c.get(f"/v1/rq-flows/{s['id']}")).json()["status"] == "done"
+        assert (await sb.get(f"/v1/flows/{out['sb_id']}")).json()["stages"]["rq"]["ref"] == s["code"]
+        # 지운 초안의 번호는 다시 쓰지 않는다(카운터)
+        e = await _new(c)
+        assert int(e["code"][3:]) > int(s["code"][3:]) > int(d["code"][3:])
+
+
+async def test_delete_cancels_fill_job(hub, app):
+    """파일로 채우는 중에 초안을 지우면 잡을 취소하고, 지운 문서를 되살리지 않는다."""
+    from winmate_common.jobs import jobs
+
+    async with testing.api_client(app) as c:
+        d = await _new(c, customer="K 리츠")
+        fid = await upload("회의록_K리츠.txt", K_MEMO.encode(), "text/plain")
+        job_id = (await c.post(f"/v1/rq-flows/{d['id']}:fill", json={"file_ids": [fid]})).json()["job_id"]
+        assert (await c.delete(f"/v1/rq-flows/{d['id']}")).status_code == 204
+        await drain()
+        assert (await jobs().get(job_id)).status == "canceled"
+        assert (await c.get(f"/v1/rq-flows/{d['id']}")).status_code == 404
+        # 잡이 문서를 쓰려는 때 이미 지워져 있으면(취소 표시 없이) 되살리지 않고 취소로 끝낸다
+        from winmate_requirements import rqflow
+
+        d2 = await _new(c, customer="K 리츠")
+        job2 = (await c.post(f"/v1/rq-flows/{d2['id']}:fill", json={"file_ids": [fid]})).json()["job_id"]
+        rqflow._store().delete(rqflow.COLL, d2["id"])
+        await drain()
+        assert (await jobs().get(job2)).status == "canceled"
+        assert rqflow._store().get(rqflow.COLL, d2["id"]) is None
+
+
 async def test_finish_without_hub_keeps_saving(ai, app):
     """허브가 없으면(storyboard 연결 실패) 저장은 되고 flow_sync=null · 다음 저장에서 다시 만든다."""
     async with testing.api_client(app) as c:

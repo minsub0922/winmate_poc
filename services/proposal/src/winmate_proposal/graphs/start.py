@@ -8,7 +8,7 @@ from typing import Any
 
 from winmate_common.jobs import JobContext
 
-from .. import clients, config, core, defs, handoff, industry, links as L, plan, prompts, repo
+from .. import clients, config, core, defs, handoff, hub, industry, links as L, plan, prompts, repo
 from . import common as G
 
 log = logging.getLogger("winmate.proposal.start")
@@ -229,6 +229,8 @@ async def apply_links(pid: str, *, job: str | None = None) -> dict[str, Any]:
     order = sorted(linked, key=lambda x: {"storyboard": 0, "requirements": 1}.get(x.get("feature") or "", 2))
     for ln in order:
         await L.apply_customer(pid, ln.get("handoff"))
+    for ln in linked:
+        await hub.on_linked(pid, ln)      # 허브 Storyboard — 제안서에 Key message · 허브 ppt 칸 기록
     ctx = await plan.refresh_context(pid)
     from ..ops.proposals import redetect_industry
     await redetect_industry(pid)

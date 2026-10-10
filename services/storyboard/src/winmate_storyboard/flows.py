@@ -159,6 +159,7 @@ class FlowBranchRef(BaseModel):
 class FlowDoc(BaseModel):
     id: str
     version: int
+    content_rev: int = Field(0, description="콘텐츠 판 — stage(제안서 ppt 칸 제외) · Key message · 요약본이 바뀔 때만 오른다(제안서의 「Storyboard 업데이트됨」 비교용)")
     name: str
     customer: str | None = None
     target: str | None = None
@@ -352,7 +353,7 @@ def flow_json(d: dict[str, Any]) -> dict[str, Any]:
 
 def to_api(d: dict[str, Any], branch_items: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     p, n = progress(d)
-    return {"id": d["id"], "version": d["version"], "name": d["name"], "customer": d.get("customer"), "target": d.get("target"),
+    return {"id": d["id"], "version": d["version"], "content_rev": int(d.get("content_rev") or 0), "name": d["name"], "customer": d.get("customer"), "target": d.get("target"),
             "parent": d.get("parent"), "branch_point": d.get("branch_point"), "branches": d.get("branches") or [],
             "branch_items": branch_items or [],
             "key_message": d.get("key_message"), "cells": cells(d), "progress": p, "contents_done": n,
@@ -405,7 +406,9 @@ async def index(d: dict[str, Any]) -> None:
     p, _ = progress(d)
     await register_item(feature="SB", item_id=d["id"], title=(d.get("name") or d["id"])[:200], status="in_progress",
                         route=f"/storyboard/flow/{d['id']}", summary=f"{d['id']} · {d.get('customer') or ''} · {p}".replace(" ·  · ", " · "),
-                        meta={"kind": "flow", "parent": d.get("parent"), "key_message": (d.get("key_message") or {}).get("text")})
+                        meta={"kind": "flow", "parent": d.get("parent"), "key_message": (d.get("key_message") or {}).get("text"),
+                              # 고객사 · 판(stage 를 넣고 뺄 때마다 오름) — 제안서가 고객사로 거르고 「Storyboard 업데이트됨」을 판으로 비교한다(요청 proposal · 2026-10-10)
+                              "customer": d.get("customer"), "version": int(d.get("content_rev") or 0)})
 
 
 # ── 동작 ────────────────────────────────────────────────
@@ -436,6 +439,7 @@ async def create(body: FlowCreate) -> dict[str, Any]:
              "key_message": None, "created_at": t, "updated_at": t}
         if body.rq:
             _apply_stage(d, "rq", body.rq, "요구사항 저장 · Storyboard 자동 생성")
+        d["content_rev"] = 1
         return _st().put(COLL, code, d)
     saved = await asyncio.to_thread(_do)
     await index(saved)
@@ -479,6 +483,8 @@ async def put_stage(fid: str, key: str, body: FlowStageIn) -> dict[str, Any]:
         if need and not (d.get("stages") or {}).get(need) and key != "ppt":
             raise ApiError(422, "PREREQUISITE_MISSING", f"사전 작업({NAME[need]})이 먼저 있어야 해요.", {"need": need})
         holder["md"] = _apply_stage(d, key, body)
+        if key != "ppt":
+            d["content_rev"] = int(d.get("content_rev") or 0) + 1
     saved = await update(fid, fn, note=f"{key} {body.ref} v{body.ver}")
     await index(saved)
     # 같은 ref 를 가진 다른 Storyboard 도 같이(수정 = 연결된 모든 Storyboard)
@@ -488,10 +494,47 @@ async def put_stage(fid: str, key: str, body: FlowStageIn) -> dict[str, Any]:
             continue
         s = (other.get("stages") or {}).get(key)
         if s and s.get("ref") == body.ref:
-            o2 = await update(other["id"], lambda d: _apply_stage(d, key, body, f"{fid} 에서 고친 내용 반영"))
+            o2 = await update(other["id"], lambda d: (_apply_stage(d, key, body, f"{fid} 에서 고친 내용 반영"),
+                                                      d.update({"content_rev": int(d.get("content_rev") or 0) + (key != "ppt")})))
             await index(o2)
             synced.append(other["id"])
     return {"flow": to_api(saved), "key": key, "md_added": holder.get("md", ""), "synced": synced}
+
+
+CLEARABLE = {"ppt"}   # 지금은 제안서 칸만 — 콘텐츠 칸은 저장 이력이라 비우지 않는다
+
+
+def _clear_stage(d: dict[str, Any], key: str, note: str) -> None:
+    old = (d.get("stages") or {}).pop(key, None)
+    for k in ("stage_meta", "md_sections", "cards"):
+        (d.get(k) or {}).pop(key, None)
+    (d.get("user_lines") or {}).pop(key, None)
+    if old:
+        d.setdefault("history", []).append({"at": now_iso(), "key": key, "ref": old.get("ref"), "ver": old.get("ver"), "md": "", "note": note})
+        d["history"] = d["history"][-60:]
+
+
+async def clear_stage(fid: str, key: str, ref: str | None) -> dict[str, Any]:
+    """stages.<key> 비우기(internal) — 제안서를 지우면 proposal 이 부른다. `ref` 를 주면 그 ref 일 때만. 같은 ref 를 가진 다른 Storyboard 도 함께."""
+    if key not in CLEARABLE:
+        raise ApiError(422, "STAGE_NOT_CLEARABLE", f"{NAME.get(key, key)} 칸은 비울 수 없어요(저장 이력).", {"key": key, "allowed": sorted(CLEARABLE)})
+    cur = await load(fid)
+    st = (cur.get("stages") or {}).get(key)
+    if not st or (ref and st.get("ref") != ref):
+        return {"flow": to_api(cur), "key": key, "md_added": "", "synced": []}
+    the_ref = st.get("ref")
+    saved = await update(fid, lambda d: _clear_stage(d, key, f"{the_ref} 연결 끊김"), note=f"{key} {the_ref} 비움")
+    await index(saved)
+    synced = []
+    for other in await asyncio.to_thread(_list_all):
+        if other["id"] == fid:
+            continue
+        s2 = (other.get("stages") or {}).get(key)
+        if s2 and s2.get("ref") == the_ref:
+            o2 = await update(other["id"], lambda d: _clear_stage(d, key, f"{fid} 에서 {the_ref} 연결 끊김"))
+            await index(o2)
+            synced.append(other["id"])
+    return {"flow": to_api(saved), "key": key, "md_added": "", "synced": synced}
 
 
 async def patch(fid: str, body: FlowPatch) -> dict[str, Any]:
@@ -508,6 +551,8 @@ async def patch(fid: str, body: FlowPatch) -> dict[str, Any]:
             d["key_message"] = {**old, "pillars": pills, "at": now_iso()}
         if body.summary_md is not None:
             d["user_lines"] = _user_lines(d, body.summary_md)
+        if body.key_message is not None or body.key_pillars is not None or body.summary_md is not None:
+            d["content_rev"] = int(d.get("content_rev") or 0) + 1
     saved = await update(fid, fn, expected=body.expected_version, note="고침")
     if body.name is not None or body.key_message is not None:
         await index(saved)
@@ -585,6 +630,7 @@ async def branch(fid: str, body: FlowBranch) -> dict[str, Any]:
              "history": [{"at": t, "key": key, "ref": "", "ver": 0, "md": f"{fid} 에서 분기 · {NAME[key]} 복제본", "note": "분기"}],
              # Key message 는 콘텐츠로 세우는 전략이라 분기에서 새로 세운다(보드 SB0 · SBPopup: SB-02 Key message 「아직 없음」)
              "key_message": None, "created_at": t, "updated_at": t}
+        d["content_rev"] = 1
         return _st().put(COLL, code, d)
     new = await asyncio.to_thread(_do)
 

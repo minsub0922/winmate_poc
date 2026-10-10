@@ -3,7 +3,7 @@
 생산 기능마다 경로 · 모양이 조금씩 다르다. 모두 하나의 스냅숏 모양으로 바꾼다:
   {source, target, customer, rq_ref, items[], facts[], assets[], spaces[], solutions[], products[], key_messages[], strategy, live_link,
    handoff_id, kind}
-- storyboard · mi · competitor · spec: `GET …/proposal-handoff`(v1)
+- storyboard · mi · competitor · spec: `GET …/proposal-handoff`(v1) — 허브 Storyboard(`SB-nn`)는 `GET /v1/flows/{id}` → hub.snapshot
 - vp: `GET /v1/handoffs/{vho}`(넘김 기록) 또는 `GET /v1/vps/{id}/package?proposal_type=` → Package(sheets)
 - birdseye: `GET /v1/birdseyes/{id}/handoff`(cuts · zones · quantities · sheet_map)
 - scenario: `GET /v1/scenarios/{id}/handoff`(scenes · solutions · sheet_plan)
@@ -16,7 +16,7 @@ import logging
 import re
 from typing import Any
 
-from . import clients, defs
+from . import clients, defs, hub
 
 log = logging.getLogger("winmate.proposal.handoff")
 
@@ -197,6 +197,9 @@ async def fetch(feature: str, ref_id: str | None, *, proposal_type: str | None, 
     feature = defs.norm_feature(feature) or feature
     ptype = proposal_type or "standard"
     try:
+        if feature == "storyboard" and hub.is_hub_id(ref_id):
+            # 새 콘텐츠 흐름의 Storyboard 허브(SB-nn) — flow.json stages 를 스냅숏으로(hub.py)
+            return await hub.fetch(str(ref_id).strip(), ptype)
         if feature == "storyboard":
             sec = {"spaceScenario": "space_scenario", "spaceProducts": "space_products"}.get(section or "", section)
             raw = await clients.call("storyboard", "GET", f"/v1/storyboards/{ref_id}/proposal-handoff",

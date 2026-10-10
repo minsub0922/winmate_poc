@@ -8,11 +8,11 @@
 | 라우트 | 화면(파일) | 보드 |
 |---|---|---|
 | `/proposal` | 목록 `pages/ListPage` | PR0 |
-| `/proposal/new?start=rfp\|works\|reuse&source=` · `?handoff=` · `?link=` · `?sb=&rq=` · `?image_version=` | 시작 방식이 정해지는 순간 만들기 `pages/StartPages#NewPage` | (PR0 → PR1 · PR1F · PR1L · PR1C, 다른 기능 「새 제안서로 시작」) |
+| `/proposal/new?start=rfp\|works\|reuse&source=` · `?handoff=` · `?link=` · `?sb=sb_…&rq=` · `?sb=SB-nn`(허브 → PR1L) · `?image_version=` | 시작 방식이 정해지는 순간 만들기 `pages/StartPages#NewPage` | (PR0 → PR1 · PR1F · PR1L · PR1C, 다른 기능 「새 제안서로 시작」, SB1 후속 작업 「PPT 제작 · B2B 제안서」) |
 | `/proposal/:id` | 지금 있는 단계로 이동 `pages/StartPages#OpenPage` | (사이드바 · 「이어서 작성」) |
 | `/proposal/:id/customer` | 고객 · 프로젝트(자동 저장) `pages/CustomerPage` | PR1 |
 | `/proposal/:id/rfp` | RFP로 시작 `pages/RfpPage` | PR1F |
-| `/proposal/:id/works?check=` | 기존 작업에서 시작 `pages/WorksPage` | PR1L |
+| `/proposal/:id/works?check=` | 기존 작업에서 시작 `pages/WorksPage`(허브 Storyboard 줄 + 연결된 콘텐츠 · 넣을 곳) | PR1L |
 | `/proposal/:id/reuse?source=` | 기존 제안서로 시작 `reuse/ReuseStartPage` | PR1C |
 | `/proposal/:id/reuse/analysis` · `/:no` | 기준별 분석 · 기준 상세 `reuse/ReuseAnalysisPage` | PRU2 · PRU2F |
 | `/proposal/:id/reuse/plan?mode=improve\|borrow` | 활용 계획 `reuse/ReusePlanPage` | PRU3A · PRU3B |
@@ -69,6 +69,7 @@ make typecheck SERVICE=proposal
 
 - `flow.spec.ts`(실제 백엔드 · mock 모델) — PR0 → PR1 자동 저장 → PR2 → PR3 → PR3I → 섹션 → 템플릿 고정 → 8섹션 확정 → PR6(HEX 검증) → 생성 → PR7(썸네일 10 · [수치 확정 필요]) → PR7X → PR7P 표 행 PATCH(If-Match).
 - `backend.spec.ts`(실제 백엔드) — PR1F TXT RFP 9항목 · 딸깍 진행 → 완료 · PR7Q 확정 · PR7V 저장 · 비교 · PR7C 작성 모드 · 기존 제안서 활용(PR1C → PRU2 → PRU3 → PRU4) · PPTX 내보내기.
+- `pr-hub.spec.ts`(실제 백엔드 · 허브 Storyboard, 2026-10-10) — 허브(rq · dss · Key message · mi · ca · vp · sp · sc) → `/proposal/new?sb=` → PR1L(연결된 콘텐츠 · 넣을 곳 · 채워지는 것 · 보드 px) → PR2 → PR3 → 섹션 5개가 stage 값으로 · PR7P 미리보기 · 허브 ppt 칸 · 홈 → PR1 카드 → PR1L. 캡처 `*-hub-new.png`.
 - `screens.spec.ts`(**MOCK** — `page.route` 로 보드 예시 값을 덮음, 테스트 이름에 「(MOCK)」) — PR1F · PR1F 403 · PR1L · PR1C · PRU2 · PRU2F · PRU3A/B · PRU4/4B · PRU5 · OneClickGen/Done · PR7Q · PR7C · PR7V · PR1(실제).
 - 스크린샷 `__screens__/<보드>.png`(MOCK) · `flow-*.png` · `real-*.png` ↔ `docs/screens/webapp3/<보드>.dc.html`.
 - 공유 데이터: 테스트는 자기 제안서를 API 로 만들고 끝나면 지운다(목록이 비어 있다고 가정하지 않음).

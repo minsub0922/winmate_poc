@@ -11,6 +11,12 @@
   (DSS 솔루션은 links 가 가리키는 공간에 붙인다). Storyboard 가 없으면 404, DSS 전이면 422 PREREQUISITE_MISSING.
 - 저장(`:finish`)하면 Storyboard flow.json 의 `stages.sc` 모양(`stage()`)을 만들어 허브에 `push_stage` 하고(요약 줄 · ContentPopup 카드 포함),
   `ver` 는 저장한 횟수다(docs/scenarios/11-content-flow.md §6).
+- DSS 다시 가져오기(2026-10-10 · 보드에 없음): 만든(다시 가져온) DSS 의 ref · ver · 공간 · 제품(`dss_ref` · `dss_ver` · `dss_spaces` · `dss_items`)을 남기고,
+  GET 때 허브의 지금 stages.dss 와 견줘 `dss_changed` 를 알려 준다. `:resync-dss` 는 사람이 한 일을 지우지 않고 합친다 —
+  새 공간 · 공간에 새로 놓인 제품은 더하고, DSS 에서 빠진 제품은 그 공간의 시나리오 · 장면이 쓰지 않을 때만 빼고(쓰면 남기고 「DSS에서 빠짐」),
+  시나리오는 지우지 않는다. DSS 에서 빠진 공간은 시나리오도 제품도 없을 때만 뺀다.
+- 초안 지우기 · 같은 Storyboard 초안 이어 쓰기: 한 번도 저장하지 않은 묶음만 지운다(저장한 것은 409 `SAVED_CONTENT`).
+  Gate 에서 같은 Storyboard 로 다시 만들면 저장 전 초안을 돌려준다(복제본은 새 Storyboard 라 새 묶음).
 
 저장소: DocStore("scenario") 컬렉션 `space_sets`(scs_ …).
 """
@@ -20,14 +26,15 @@ import asyncio
 import copy
 import json
 import logging
+import re
 from collections.abc import Callable
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from winmate_common.errors import ApiError
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
-from winmate_common.platform import register_item
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import VersionConflict
 
 from . import kbq, llm, repo
@@ -40,10 +47,15 @@ FIELD_PRESETS = ["시간대", "기대 효과", "연결 요구", "페인 포인�
 
 # ── 모델(API) ───────────────────────────────────────────
 
+DssStatus = Literal["added", "removed"]
+
+
 class SSProduct(BaseModel):
     name: str
     kind: Literal["product", "solution"] = "product"
     ref: str | None = Field(None, description="KB 참조 kb:family:… · kb:solution:…")
+    dss_status: DssStatus | None = Field(
+        None, description="DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 놓임 · removed = DSS 에서 빠졌지만 시나리오가 써서 남겨 둠")
 
 
 class SSStep(BaseModel):
@@ -78,6 +90,7 @@ class SSSpace(BaseModel):
     products: list[SSProduct] = Field(default_factory=list)
     scenarios: list[SSScenario] = Field(default_factory=list)
     candidates: list[SSCandidate] = Field(default_factory=list, description="AI 3안(수락 전, 점선)")
+    dss_status: DssStatus | None = Field(None, description="added = DSS 다시 가져오기로 새로 생긴 공간 · removed = DSS 에서 빠졌지만 시나리오 · 제품이 있어 남겨 둠")
 
 
 class SSDssItem(BaseModel):
@@ -103,12 +116,46 @@ class SSCounts(BaseModel):
     spaces_without_product: int
 
 
+class SSDssChange(BaseModel):
+    """Storyboard 의 DSS 가 묶음을 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄."""
+    model_config = ConfigDict(populate_by_name=True)
+    from_: str = Field(alias="from", description="묶음이 가져온 DSS(DSS-01 v1)")
+    to: str = Field(description="허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)")
+    ref_changed: bool = Field(False, description="DSS 자체가 바뀜(분기 등으로 다른 DSS)")
+    added: int = Field(description="새로 들어온 DSS 제품 · 솔루션")
+    removed: int = Field(description="DSS 에서 빠진 제품 · 솔루션")
+    changed: int = Field(0, description="놓인 공간이 바뀐 제품 · 솔루션")
+    spaces_added: int = 0
+    spaces_removed: int = 0
+    added_names: list[str] = Field(default_factory=list)
+    removed_names: list[str] = Field(default_factory=list)
+
+
+class SSResync(BaseModel):
+    """마지막 DSS 다시 가져오기 결과(토스트 · 표시). 항목은 「공간 · 제품」."""
+    model_config = ConfigDict(populate_by_name=True)
+    at: str
+    from_: str = Field(alias="from")
+    to: str
+    added: list[str] = Field(default_factory=list, description="공간에 더한 제품 · 솔루션")
+    removed: list[str] = Field(default_factory=list, description="쓰는 시나리오가 없어 공간에서 뺀 제품 · 솔루션")
+    kept: list[str] = Field(default_factory=list, description="DSS 에서 빠졌지만 시나리오가 써서 남긴 제품 · 솔루션(「DSS에서 빠짐」)")
+    spaces_added: list[str] = Field(default_factory=list)
+    spaces_removed: list[str] = Field(default_factory=list, description="DSS 에서 빠지고 시나리오 · 제품도 없어 뺀 공간")
+    spaces_kept: list[str] = Field(default_factory=list, description="DSS 에서 빠졌지만 시나리오 · 제품이 있어 남긴 공간")
+
+
 class SSDoc(BaseModel):
     id: str
     code: str | None = Field(None, description="화면 · flow.json 에 쓰는 짧은 번호(SC-01 …)")
     title: str
     sb_id: str | None = None
     dss_ref: str | None = Field(None, description="시작할 때 읽은 Storyboard 의 DSS 코드(공간 목록 머리 「공간 · DSS-01」 · stages.sc.from)")
+    dss_ver: int | None = Field(None, description="가져온 DSS 판(허브 stages.dss.ver)")
+    dss_spaces: list[str] = Field(default_factory=list, description="가져온 DSS 의 공간 이름(다시 가져오기 비교용)")
+    dss_changed: SSDssChange | None = Field(
+        None, description="허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null)")
+    last_resync: SSResync | None = None
     dss_items: list[SSDssItem] = Field(default_factory=list, description="DSS 제품 · 솔루션(고르기 대화상자 묶음)")
     customer: str | None = None
     context_text: str | None = None
@@ -224,8 +271,8 @@ def counts(d: dict[str, Any]) -> dict[str, int]:
             "spaces_without_product": sum(1 for s in sps if not s.get("products"))}
 
 
-def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    return {**d, "issues": issues(d), "counts": counts(d)}
+def to_api(d: dict[str, Any], dss_changed: dict[str, Any] | None = None) -> dict[str, Any]:
+    return {**d, "issues": issues(d), "counts": counts(d), "dss_changed": dss_changed}
 
 
 def _clean(d: dict[str, Any]) -> None:
@@ -298,7 +345,30 @@ def dss_spaces(dss: dict[str, Any]) -> tuple[list[dict[str, Any]], list[dict[str
     return spaces, list(items.values())
 
 
-async def create(body: SSCreate) -> dict[str, Any]:
+def ever_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(허브 stages.sc 반영)했는가 — 했으면 Storyboard 에 연결돼 지울 수 없다(저장 뒤 고쳐 status 가 draft 여도)."""
+    return bool(d.get("ver")) or bool(d.get("saved_at")) or d.get("status") == "done"
+
+
+def _from_dss(d: dict[str, Any]) -> bool:
+    return bool(d.get("dss_ref") or d.get("dss_items"))
+
+
+def _open_draft(sb_id: str) -> dict[str, Any] | None:
+    """같은 Storyboard 의 DSS 로 시작한 저장 전 초안(가장 최근 것) — Gate 에서 다시 시작해도 초안이 둘이 되지 않게."""
+    items, _ = repo.store().list(COLL, where={"sb_id": sb_id}, limit=50)
+    return next((d for d in items if _from_dss(d) and not ever_saved(d)), None)
+
+
+def _next_code() -> str:
+    """SC-NN — 지운 초안이 있어도 겹치지 않게 남은 코드 중 가장 큰 번호 + 1(지운 초안은 허브에 간 적 없어 번호를 다시 써도 된다)."""
+    items, _ = repo.store().list(COLL, limit=10000, order_by="-created_at")
+    nums = [int(m.group(1)) for d in items if (m := re.fullmatch(r"SC-(\d+)", d.get("code") or ""))]
+    return f"SC-{max(nums, default=0) + 1:02d}"
+
+
+async def create(body: SSCreate) -> tuple[dict[str, Any], bool]:
+    """(묶음, 새로 만들었나). Gate(sb_id 만)로 시작할 때 같은 Storyboard 의 저장 전 초안이 있으면 그것을 돌려준다."""
     flow = await get_flow(body.sb_id) if body.sb_id else None
     dss = ((flow or {}).get("stages") or {}).get("dss") or None
     if body.sb_id and body.spaces is None:
@@ -306,6 +376,9 @@ async def create(body: SSCreate) -> dict[str, Any]:
             raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}", {"sb_id": body.sb_id})
         if not dss:
             raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
+        existing = await asyncio.to_thread(_open_draft, body.sb_id)
+        if existing:
+            return to_api(existing, dss_diff(existing, flow)), False
     dss_items: list[dict[str, Any]] = []
     if dss:
         from_dss, dss_items = dss_spaces(dss)
@@ -318,16 +391,164 @@ async def create(body: SSCreate) -> dict[str, Any]:
     if not spaces:
         spaces = [{"name": "공간 1", "products": []}]
     context = body.context_text or ((flow or {}).get("summary_md") or "")[:4000] or None
-    n = await asyncio.to_thread(repo.store().count, COLL)
-    doc = {"code": f"SC-{n + 1:02d}", "title": body.title or (flow or {}).get("name") or "새 공간 시나리오", "sb_id": body.sb_id,
-           "dss_ref": (dss or {}).get("ref"), "dss_items": dss_items, "customer": (flow or {}).get("customer"),
+    doc = {"code": await asyncio.to_thread(_next_code), "title": body.title or (flow or {}).get("name") or "새 공간 시나리오", "sb_id": body.sb_id,
+           "dss_ref": (dss or {}).get("ref"), "dss_ver": (dss or {}).get("ver"), "dss_spaces": [s["name"] for s in from_dss] if dss else [],
+           "dss_items": dss_items, "customer": (flow or {}).get("customer"),
            "context_text": context, "status": "draft", "ver": 0,
            "spaces": [{"id": new_id("sp"), "name": s["name"], "products": s.get("products") or [], "scenarios": [], "candidates": []} for s in spaces]}
     set_id = new_id("scs")
     saved = await asyncio.to_thread(repo.store().put, COLL, set_id, doc, note="만듦")
     await register_item(feature="SC", item_id=set_id, title=saved["title"], status="draft", route=f"/scenario/spaces/{set_id}",
                         summary=f"공간 {len(spaces)}")
-    return to_api(saved)
+    return to_api(saved), True
+
+
+async def get_with_status(set_id: str) -> dict[str, Any]:
+    """GET — 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null."""
+    d = await load(set_id)
+    flow = await get_flow(d["sb_id"]) if d.get("sb_id") and _from_dss(d) else None
+    return to_api(d, dss_diff(d, flow) if flow else None)
+
+
+async def delete(set_id: str) -> None:
+    def _do() -> None:   # 확인과 지우기를 한 번에 — DocStore.delete(expected_version) 가 같은 트랜잭션에서 판을 본다
+        d = _get(set_id)
+        if ever_saved(d):
+            raise ApiError(409, "SAVED_CONTENT", "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요",
+                           {"ref": d.get("code"), "sb_id": d.get("sb_id")})
+        try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+            repo.store().delete(COLL, set_id, expected_version=d["version"])
+        except VersionConflict as exc:
+            raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+    await asyncio.to_thread(_do)
+    await unregister_item(set_id)
+
+
+# ── DSS 다시 가져오기 ────────────────────────────────────
+
+def dss_label(ref: str | None, ver: Any) -> str:
+    if not ref:
+        return "DSS"
+    return f"{ref} v{ver}" if ver else ref
+
+
+def _old_dss(d: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], set[tuple[str, str]], list[str]]:
+    """묶음이 마지막으로 가져온 DSS — (이름 → 항목, (공간, 제품) 자리, 공간 이름). 공간 이름이 없던 문서는 항목이 놓인 공간에서."""
+    items = {i["name"]: i for i in d.get("dss_items") or []}
+    pairs = {(s, i["name"]) for i in items.values() for s in i.get("spaces") or []}
+    spaces = list(d.get("dss_spaces") or []) or list(dict.fromkeys(s for i in items.values() for s in i.get("spaces") or []))
+    return items, pairs, spaces
+
+
+def dss_diff(d: dict[str, Any], flow: dict[str, Any] | None) -> dict[str, Any] | None:
+    """마지막으로 가져온 DSS ↔ 허브의 지금 stages.dss(사람이 공간 제품을 고친 것은 차이가 아니다). 바뀐 것이 없으면 None.
+    DSS 자체가 바뀌면(분기 등 ref 다름) 내용이 같아도 알린다 — 다시 가져와야 stages.sc.from 이 맞는다."""
+    dss = ((flow or {}).get("stages") or {}).get("dss")
+    if not dss or not _from_dss(d):
+        return None
+    new_spaces, new_items = dss_spaces(dss)
+    old_items, _, old_spaces = _old_dss(d)
+    new_by = {i["name"]: i for i in new_items}
+    added = [n for n in new_by if n not in old_items]
+    removed = [n for n in old_items if n not in new_by]
+    changed = [n for n in new_by if n in old_items and set(new_by[n].get("spaces") or []) != set(old_items[n].get("spaces") or [])]
+    names = [s["name"] for s in new_spaces]
+    sp_add = [n for n in names if n not in old_spaces]
+    sp_rm = [n for n in old_spaces if n not in names]
+    ref_changed = bool(d.get("dss_ref")) and dss.get("ref") != d.get("dss_ref")
+    if not (added or removed or changed or sp_add or sp_rm or ref_changed):
+        return None
+    return {"from": dss_label(d.get("dss_ref"), d.get("dss_ver")), "to": dss_label(dss.get("ref"), dss.get("ver")), "ref_changed": ref_changed,
+            "added": len(added), "removed": len(removed), "changed": len(changed), "spaces_added": len(sp_add), "spaces_removed": len(sp_rm),
+            "added_names": added[:20], "removed_names": removed[:20]}
+
+
+def _uses(sp: dict[str, Any], name: str) -> bool:
+    """이 공간의 시나리오 · 장면이 이 제품을 쓰는가(AI 후보는 시나리오가 아니다)."""
+    return any(name in (sc.get("products") or []) or any(st.get("product") == name for st in sc.get("steps") or [])
+               for sc in sp.get("scenarios") or [])
+
+
+async def resync(set_id: str) -> dict[str, Any]:
+    """허브의 지금 DSS 로 공간 · 공간 제품을 맞춘다(사람이 한 일은 남긴다).
+    - DSS 에 새로 생긴 공간 → 공간 추가(DSS 제품 그대로, 표시 added). 있던 공간에 새로 놓인 제품 · 솔루션 → 그 공간 제품에 추가(표시 added).
+      비교는 마지막으로 가져온 DSS 기준이라, 사람이 일부러 뺀 DSS 제품은 DSS 가 그대로면 다시 넣지 않는다.
+    - DSS 에서 빠진 자리(공간 · 제품) → 그 공간의 시나리오 · 장면이 쓰지 않으면 빼고, 쓰면 남겨 「DSS에서 빠짐」(removed). 시나리오는 지우지 않는다.
+    - DSS 에서 빠진 공간 → 시나리오도 제품도 남지 않으면 빼고, 아니면 남겨 removed.
+    """
+    d = await load(set_id)
+    if not d.get("sb_id"):
+        raise ApiError(422, "NO_STORYBOARD", "Storyboard에 연결되지 않은 묶음이에요.")
+    flow = await get_flow(d["sb_id"])
+    if flow is None:
+        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {d['sb_id']}", {"sb_id": d["sb_id"]})
+    dss = (flow.get("stages") or {}).get("dss")
+    if not dss:
+        raise ApiError(422, "PREREQUISITE_MISSING", "Storyboard에 DSS가 없어요.", {"need": "dss"})
+    new_spaces, new_items = dss_spaces(dss)
+    new_pairs = {(s["name"], p["name"]) for s in new_spaces for p in s["products"]}
+    new_by_space = {s["name"]: s for s in new_spaces}
+    frm = dss_label(d.get("dss_ref"), d.get("dss_ver"))
+    log_: dict[str, list[str]] = {k: [] for k in ("added", "removed", "kept", "spaces_added", "spaces_removed", "spaces_kept")}
+
+    def fn(doc: dict[str, Any]) -> None:
+        for v in log_.values():
+            v.clear()
+        _, old_pairs, old_spaces = _old_dss(doc)
+        out: list[dict[str, Any]] = []
+        for sp in doc.get("spaces") or []:
+            if sp.get("dss_status") == "added":
+                sp["dss_status"] = None
+            prods: list[dict[str, Any]] = []
+            for p in sp.get("products") or []:
+                if p.get("dss_status") == "added":
+                    p["dss_status"] = None
+                pair = (sp["name"], p["name"])
+                if pair in old_pairs and pair not in new_pairs:
+                    if _uses(sp, p["name"]):
+                        if p.get("dss_status") != "removed":
+                            log_["kept"].append(f"{sp['name']} · {p['name']}")
+                        p["dss_status"] = "removed"
+                    else:
+                        log_["removed"].append(f"{sp['name']} · {p['name']}")
+                        continue
+                elif pair in new_pairs and p.get("dss_status") == "removed":
+                    p["dss_status"] = None                       # DSS 에 돌아옴
+                prods.append(p)
+            ns = new_by_space.get(sp["name"])
+            if ns:
+                for np in ns["products"]:
+                    if (sp["name"], np["name"]) not in old_pairs and not any(x["name"] == np["name"] for x in prods):
+                        prods.append({**np, "dss_status": "added"})
+                        log_["added"].append(f"{sp['name']} · {np['name']}")
+                if sp.get("dss_status") == "removed":
+                    sp["dss_status"] = None
+            elif sp["name"] in old_spaces:
+                if not sp.get("scenarios") and not prods:
+                    log_["spaces_removed"].append(sp["name"])
+                    continue
+                if sp.get("dss_status") != "removed":
+                    log_["spaces_kept"].append(sp["name"])
+                sp["dss_status"] = "removed"
+            sp["products"] = prods
+            out.append(sp)
+        have = {s["name"] for s in out}
+        for ns in new_spaces:
+            if ns["name"] in have:
+                continue
+            out.append({"id": new_id("sp"), "name": ns["name"], "products": [{**p, "dss_status": "added"} for p in ns["products"]],
+                        "scenarios": [], "candidates": [], "dss_status": "added"})
+            log_["spaces_added"].append(ns["name"])
+            log_["added"] += [f"{ns['name']} · {p['name']}" for p in ns["products"]]
+        doc["spaces"] = out
+        _clean(doc)
+        doc["dss_items"], doc["dss_spaces"] = new_items, [s["name"] for s in new_spaces]
+        doc["dss_ref"], doc["dss_ver"] = dss.get("ref"), dss.get("ver")
+        doc["last_resync"] = {"at": now_iso(), "from": frm, "to": dss_label(dss.get("ref"), dss.get("ver")), **{k: list(v) for k, v in log_.items()}}
+        if doc.get("status") == "done":
+            doc["status"] = "draft"
+    saved = await update(set_id, fn, "DSS 다시 가져오기")
+    return to_api(saved, dss_diff(saved, flow))
 
 
 async def list_sets(limit: int, cursor: str | None) -> dict[str, Any]:

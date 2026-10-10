@@ -143,3 +143,107 @@ async def test_branch_storyboard_gets_own_space_set(clients: tuple[Any, Any]) ->
     assert out["flow_sync"] is not None and out["flow_sync"]["synced"] == []
     assert (await sb.get(f"/v1/flows/{f['id']}")).json()["stages"]["sc"]["ref"] == a["code"]
     assert (await sb.get(f"/v1/flows/{b['id']}")).json()["stages"]["sc"]["ref"] == d["code"]
+
+
+# ── DSS 다시 가져오기 · 초안 지우기 · 같은 Storyboard 초안 이어 쓰기(2026-10-10) ──
+
+def _dss_v2() -> dict[str, Any]:
+    """로비: 삼성 키오스크 빠짐 · Smart Signage QH55C 새로 / 회의실: QB55C 빠짐 / 라운지 새 공간(QM55C) / 주차장 빠짐."""
+    import copy
+    v = copy.deepcopy(DSS)
+    lobby, meet = v["spaces"][0], v["spaces"][1]
+    lobby["products"] = [p for p in lobby["products"] if p["name"] != "삼성 키오스크"] + [
+        {"name": "Smart Signage QH55C", "kind": "product", "ref": None, "qty": "1대", "by": "manual"}]
+    meet["products"] = [p for p in meet["products"] if p["name"] != "Smart Signage QB55C"]
+    v["spaces"] = [lobby, meet, {"name": "라운지", "by": "manual", "products": [
+        {"name": "Smart Signage QM55C", "kind": "product", "ref": "kb:model:mdl_LH55QMCEBGCXKR", "qty": "1대", "by": "manual"}]}]
+    return v
+
+
+async def test_resync_dss_merges_spaces_and_keeps_scenarios(clients: tuple[Any, Any]) -> None:
+    c, sb = clients
+    f = await _flow(sb)
+    d = (await c.post("/v1/space-sets", json={"sb_id": f["id"]})).json()
+    assert d["dss_ver"] == 1 and d["dss_spaces"] == ["로비", "회의실", "주차장"]
+    assert (await c.get(f"/v1/space-sets/{d['id']}")).json()["dss_changed"] is None
+    # 사람: 로비에 키오스크를 쓰는 시나리오 · DSS 제품 The Wall 을 로비에서 뺌
+    d["spaces"][0]["scenarios"] = [{"id": "scn_kiosk", "title": "무인 방문 접수", "user": "방문객", "products": ["삼성 키오스크", "MagicINFO"],
+                                    "steps": [{"text": "키오스크에서 접수", "product": "삼성 키오스크"}], "fields": [], "by": "manual"}]
+    d["spaces"][0]["products"] = [p for p in d["spaces"][0]["products"] if not p["name"].startswith("The Wall")]
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    # 사람이 고친 것은 DSS 차이가 아니다
+    assert (await c.get(f"/v1/space-sets/{d['id']}")).json()["dss_changed"] is None
+
+    r = await sb.put(f"/v1/flows/{f['id']}/stages/dss", json={"ref": "DSS-01", "ver": 2, "value": _dss_v2(), "md": "- 공간 3"})
+    assert r.status_code == 200, r.text
+    ch = (await c.get(f"/v1/space-sets/{d['id']}")).json()["dss_changed"]
+    assert ch == {"from": "DSS-01 v1", "to": "DSS-01 v2", "ref_changed": False, "added": 1, "removed": 3, "changed": 1,
+                  "spaces_added": 1, "spaces_removed": 1, "added_names": ["Smart Signage QH55C"],
+                  "removed_names": ["삼성 키오스크", "Smart Signage QB55C", "옥외형 사이니지 OHC55"]}
+
+    r = await c.post(f"/v1/space-sets/{d['id']}:resync-dss")
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["dss_changed"] is None and d["dss_ver"] == 2 and d["dss_spaces"] == ["로비", "회의실", "라운지"]
+    sp = {s["name"]: s for s in d["spaces"]}
+    assert list(sp) == ["로비", "회의실", "라운지"]                                  # 주차장: DSS 에서 빠지고 시나리오 · 제품도 없어 뺌
+    lobby = {p["name"]: p.get("dss_status") for p in sp["로비"]["products"]}
+    # 키오스크는 시나리오가 써서 남김(「DSS에서 빠짐」) · QH55C 새로 · 사람이 뺀 The Wall 은 DSS 가 그대로라 다시 넣지 않음
+    assert lobby == {"Smart Signage QM55C": None, "삼성 키오스크": "removed", "MagicINFO": None, "Smart Signage QH55C": "added"}
+    assert [p["name"] for p in sp["회의실"]["products"]] == ["Flip Pro WA75D"]           # 쓰는 시나리오 없는 QB55C 는 뺌
+    assert sp["라운지"]["dss_status"] == "added" and [(p["name"], p["dss_status"]) for p in sp["라운지"]["products"]] == [("Smart Signage QM55C", "added")]
+    scn = sp["로비"]["scenarios"][0]
+    assert scn["id"] == "scn_kiosk" and scn["products"] == ["삼성 키오스크", "MagicINFO"] and scn["steps"][0]["product"] == "삼성 키오스크"
+    lr = d["last_resync"]
+    assert lr["from"] == "DSS-01 v1" and lr["to"] == "DSS-01 v2"
+    assert lr["added"] == ["로비 · Smart Signage QH55C", "라운지 · Smart Signage QM55C"]
+    assert lr["removed"] == ["회의실 · Smart Signage QB55C", "주차장 · 옥외형 사이니지 OHC55"]
+    assert lr["kept"] == ["로비 · 삼성 키오스크"] and lr["spaces_added"] == ["라운지"] and lr["spaces_removed"] == ["주차장"]
+    assert {i["name"] for i in d["dss_items"]} == {"The Wall IAB 146\"", "Smart Signage QM55C", "Smart Signage QH55C", "Flip Pro WA75D", "MagicINFO", "SmartThings Pro"}
+    assert (await c.get(f"/v1/space-sets/{d['id']}")).json()["dss_changed"] is None
+    # 화면이 고쳐 저장하면 표시도 그대로 오간다 · 저장하면 허브에도 새 공간
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    assert next(s for s in d["spaces"] if s["name"] == "라운지")["dss_status"] == "added"
+    out = (await c.post(f"/v1/space-sets/{d['id']}:finish")).json()
+    assert [s["name"] for s in out["stage"]["spaces"]] == ["로비", "회의실", "라운지"] and out["stage"]["from"] == "DSS-01"
+
+    # DSS 자체가 바뀜(분기 등 다른 ref) — 내용이 같아도 알리고, 다시 가져오면 from 이 새 DSS · 저장 뒤 고친 것이라 초안 상태
+    await sb.put(f"/v1/flows/{f['id']}/stages/dss", json={"ref": "DSS-02", "ver": 1, "value": _dss_v2(), "md": "- 공간 3"})
+    ch = (await c.get(f"/v1/space-sets/{d['id']}")).json()["dss_changed"]
+    assert ch["ref_changed"] is True and ch["from"] == "DSS-01 v2" and ch["to"] == "DSS-02 v1" and ch["added"] == ch["removed"] == 0
+    d = (await c.post(f"/v1/space-sets/{d['id']}:resync-dss")).json()
+    assert d["dss_ref"] == "DSS-02" and d["status"] == "draft" and d["ver"] == 1
+    # 다음 다시 가져오기에서는 지난번 「새로」 표시가 지워진다
+    assert all(p.get("dss_status") != "added" for s in d["spaces"] for p in s["products"]) and all(s.get("dss_status") != "added" for s in d["spaces"])
+    assert (await c.get(f"/v1/space-sets/{d['id']}")).json()["dss_changed"] is None
+
+
+async def test_space_set_draft_delete_and_dedupe(clients: tuple[Any, Any], hub_world: World) -> None:
+    c, sb = clients
+    f = await _flow(sb)
+    r = await c.post("/v1/space-sets", json={"sb_id": f["id"]})
+    assert r.status_code == 201
+    a = r.json()
+    # Gate 에서 같은 Storyboard 로 다시 시작 → 저장 전 초안(200, 같은 id)
+    r = await c.post("/v1/space-sets", json={"sb_id": f["id"]})
+    assert r.status_code == 200 and r.json()["id"] == a["id"]
+    async with testing.api_client(hub_world.apps["workspace"]) as ws:
+        assert (await ws.get(f"/v1/items/{a['id']}")).status_code == 200
+        assert (await c.delete(f"/v1/space-sets/{a['id']}")).status_code == 204
+        assert (await ws.get(f"/v1/items/{a['id']}")).status_code == 404
+    assert (await c.get(f"/v1/space-sets/{a['id']}")).status_code == 404
+    assert (await c.delete(f"/v1/space-sets/{a['id']}")).status_code == 404
+    # 저장한 묶음은 지울 수 없다(저장 뒤 고쳐 초안 상태여도)
+    b = (await c.post("/v1/space-sets", json={"sb_id": f["id"]})).json()
+    assert b["id"] != a["id"]
+    assert (await c.post(f"/v1/space-sets/{b['id']}:finish")).status_code == 200
+    b = (await c.put(f"/v1/space-sets/{b['id']}", json={"spaces": (await c.get(f"/v1/space-sets/{b['id']}")).json()["spaces"]})).json()
+    assert b["status"] == "draft" and b["ver"] == 1
+    r = await c.delete(f"/v1/space-sets/{b['id']}")
+    assert r.status_code == 409 and r.json()["error"]["code"] == "SAVED_CONTENT"
+    assert r.json()["error"]["message"] == "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+    # 저장한 묶음만 있으면 새 초안 · 지운 초안이 있어도 코드가 겹치지 않음 · 공간을 직접 준 이전 시작은 이어 쓰지 않는다
+    r = await c.post("/v1/space-sets", json={"sb_id": f["id"]})
+    assert r.status_code == 201 and r.json()["id"] != b["id"] and r.json()["code"] != b["code"]
+    r2 = await c.post("/v1/space-sets", json={"sb_id": f["id"], "spaces": [{"name": "로비", "products": [{"name": "MagicINFO", "kind": "solution"}]}]})
+    assert r2.status_code == 201 and r2.json()["id"] != r.json()["id"]

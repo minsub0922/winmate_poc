@@ -226,6 +226,67 @@ async def test_candidates_fallback_and_grounding(fake):
     assert m["wiki"]["hq"] == "[확인 필요]" and m["matches"] == []
 
 
+@pytest.fixture
+async def hub_ws(tmp_path):
+    """hub 와 같고 workspace(작업물 색인) 클라이언트도 — 지우기가 색인을 지우는지 본다."""
+    with testing.environment(tmp_path, service="competitor", WEB_FETCH_ENABLED="false"):
+        testing.use_fake_redis()
+        from winmate_competitor import aix
+
+        aix.reset_caps()
+        apps = {**testing.platform_apps(), "storyboard": testing.load_service_app("storyboard")}
+        with testing.inprocess(apps):
+            from winmate_competitor.main import app
+
+            async with testing.api_client(app) as c, testing.api_client(apps["storyboard"]) as sb, testing.api_client(apps["workspace"]) as ws:
+                yield c, sb, ws
+
+
+async def test_create_reuses_draft_of_same_storyboard(hub_ws):
+    """같은 Storyboard 로 다시 만들면(Gate 를 다시 거침) 저장 전 초안을 200 으로 — 분기(복제본) Storyboard · 저장한 뒤는 새로 만든다."""
+    c, sb, _ = hub_ws
+    sid = await _storyboard(sb)
+    d = (await c.post("/v1/ca-flows", json={"sb_id": sid})).json()
+    d = (await c.post(f"/v1/ca-flows/{d['id']}/competitors", json={"name": "경쟁사 A", "lookup": False})).json()
+    r = await c.post("/v1/ca-flows", json={"sb_id": sid})
+    assert r.status_code == 200 and r.json()["id"] == d["id"] and r.json()["competitors"][0]["name"] == "경쟁사 A"
+    assert [i["id"] for i in (await c.get("/v1/ca-flows")).json()["items"] if i["sb_id"] == sid] == [d["id"]]
+    br = (await sb.post(f"/v1/flows/{sid}:branch", json={"stage": "ca"})).json()
+    r = await c.post("/v1/ca-flows", json={"sb_id": br["id"]})
+    assert r.status_code == 201 and r.json()["id"] != d["id"] and r.json()["code"] != d["code"]
+    assert (await c.post(f"/v1/ca-flows/{d['id']}:finish")).status_code == 200
+    r = await c.post("/v1/ca-flows", json={"sb_id": sid})
+    assert r.status_code == 201 and r.json()["id"] != d["id"]
+
+
+async def test_delete_draft_only(hub_ws):
+    """저장 전 초안만 지운다(204 · 목록 · 작업물 색인에서 빠짐) — 낡은 판 409 · 없으면 404 · 저장한 것 409 SAVED_CONTENT · 번호는 겹치지 않는다."""
+    c, sb, ws = hub_ws
+    a = (await c.post("/v1/ca-flows", json={"sb_id": await _storyboard(sb)})).json()
+    b = (await c.post("/v1/ca-flows", json={"sb_id": await _storyboard(sb)})).json()
+    assert (await ws.get(f"/v1/items/{a['id']}")).status_code == 200
+    r = await c.delete(f"/v1/ca-flows/{a['id']}", params={"expected_version": a["version"] + 2})
+    assert r.status_code == 409 and r.json()["error"]["code"] == "CONFLICT"
+    r = await c.delete(f"/v1/ca-flows/{a['id']}", params={"expected_version": a["version"]})
+    assert r.status_code == 204 and r.content == b""
+    assert (await ws.get(f"/v1/items/{a['id']}")).status_code == 404
+    assert (await c.get(f"/v1/ca-flows/{a['id']}")).status_code == 404
+    assert a["id"] not in {i["id"] for i in (await c.get("/v1/ca-flows")).json()["items"]}
+    assert (await c.delete(f"/v1/ca-flows/{a['id']}")).status_code == 404
+    assert (await c.delete("/v1/ca-flows/cflow_nope")).status_code == 404
+    # 지운 뒤 새로 만들어도 남은 분석과 번호가 겹치지 않는다(개수 대신 가장 큰 번호 다음)
+    n = (await c.post("/v1/ca-flows", json={"sb_id": await _storyboard(sb)})).json()
+    assert n["code"] != b["code"] and int(n["code"][3:]) == int(b["code"][3:]) + 1
+    # 저장한 분석(Storyboard 에 연결)은 지울 수 없다
+    await c.post(f"/v1/ca-flows/{b['id']}/competitors", json={"name": "경쟁사 B", "lookup": False})
+    assert (await c.post(f"/v1/ca-flows/{b['id']}:finish")).status_code == 200
+    r = await c.delete(f"/v1/ca-flows/{b['id']}")
+    err = r.json()["error"]
+    assert r.status_code == 409 and err["code"] == "SAVED_CONTENT" and err["message"] == "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+    assert err["details"] == {"code": b["code"], "ver": 1, "sb_id": b["sb_id"]}
+    assert (await c.get(f"/v1/ca-flows/{b['id']}")).json()["status"] == "done"
+
+
 def test_md_lines_short_claims():
     """요약 줄의 주장은 낱말 경계에서 자르고 … 를 붙인다(보드 CA_Done 요약본 한 줄)."""
     from winmate_competitor import caflow as cf

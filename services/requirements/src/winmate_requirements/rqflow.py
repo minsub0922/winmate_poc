@@ -9,6 +9,8 @@
   질문은 `ai-pending`(점선) — 답하면(폼에 반영) `ai-accepted` 로 폼에 들어가고, "고객에게 확인으로 남기기" 면 확인 필요로 남는다.
 - 저장(`:finish`) — 처음이면 `create_flow` 로 Storyboard 를 만들고(sb_ids 에 저장), 다음부터는 `push_stage(sb, "rq")`(같은 ref 의 다른 Storyboard 는 허브가 함께 고친다).
   stage 값은 §6 `rq` 모양. ver = 저장 횟수.
+- 지우기(`DELETE`) — 한 번도 저장하지 않은 초안만(status draft · ver 0 · sb_ids 없음). 저장한 것은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
+  소프트 삭제 + workspace 색인 지우기, 파일로 채우는 잡이 돌고 있으면 취소한다.
 """
 from __future__ import annotations
 
@@ -28,8 +30,8 @@ from winmate_common.errors import ApiError
 from winmate_common.flow import create_flow, push_stage
 from winmate_common.graph import run_graph
 from winmate_common.ids import new_id, now_iso
-from winmate_common.jobs import JobContext, current_job, jobs
-from winmate_common.platform import register_item
+from winmate_common.jobs import JobCanceled, JobContext, current_job, jobs
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import VersionConflict
 
 from . import llm, platform_calls, repo
@@ -431,6 +433,45 @@ async def put_form(fid: str, body: RFUpdate) -> dict[str, Any]:
     return to_api(saved)
 
 
+# ── 지우기(저장 전 초안만) ───────────────────────────────
+
+SAVED_MSG = "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요"
+
+
+def is_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(:finish)했는지 — 저장하면 Storyboard 에 연결된다(status done · ver ≥ 1 · sb_ids)."""
+    return d.get("status") == "done" or int(d.get("ver") or 0) > 0 or bool(d.get("sb_ids"))
+
+
+def _delete_sync(fid: str, expected: int | None) -> dict[str, Any]:
+    cur = _get(fid)
+    if expected is not None and cur["version"] != expected:
+        raise ApiError(409, "VERSION_CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러와 주세요.", {"version": cur["version"]})
+    if is_saved(cur):
+        raise ApiError(409, "SAVED_CONTENT", SAVED_MSG, {"code": cur["code"], "ver": int(cur.get("ver") or 0), "sb_ids": cur.get("sb_ids") or []})
+    try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+        _store().delete(COLL, cur["id"], expected_version=cur["version"])
+    except VersionConflict as exc:
+        raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+    return cur
+
+
+async def delete(fid: str, expected: int | None = None) -> None:
+    """저장 전 초안 지우기(소프트 삭제) — 저장한 것은 409 SAVED_CONTENT, 없으면 404. 채우는 잡은 취소하고 색인도 지운다."""
+    cur = await asyncio.to_thread(_delete_sync, fid, expected)
+    if cur.get("fill_job"):
+        try:
+            await jobs().cancel(cur["fill_job"])
+        except Exception as exc:  # noqa: BLE001 — 잡 취소 실패가 지우기를 막지 않는다
+            log.info("채우기 잡 취소 실패 %s: %s", cur["fill_job"], exc)
+    await unregister_item(cur["id"])
+
+
+def gone(fid: str) -> bool:
+    """지운(또는 없는) 초안인지 — 잡이 도는 사이 지워졌으면 조용히 끝낸다."""
+    return _store().get(COLL, fid) is None
+
+
 # ── 파일 첨부(잡 rq.flow.fill) ───────────────────────────
 
 class _ExReq(BaseModel):
@@ -662,7 +703,10 @@ async def handle_fill(ctx: JobContext) -> dict[str, Any]:
     try:
         final = await run_graph(ctx, _fill_graph(), {"rq_flow_id": fid, "file_ids": list(ctx.payload.get("file_ids") or [])},
                                 step_labels={"read": "파일 읽기", "extract": "값 뽑기", "merge": "폼에 넣기"})
-    except BaseException:
+    except BaseException as exc:
+        if isinstance(exc, Exception) and await asyncio.to_thread(gone, fid):   # 채우는 사이 초안을 지웠다 — 되살리지 않고 취소로 끝낸다
+            log.info("지운 초안의 채우기 잡을 끝냄 %s", fid)
+            raise JobCanceled("초안이 지워졌어요") from exc
         await update(fid, lambda d: d.update(fill_job=None))
         raise
     await ctx.progress(100, "완료")

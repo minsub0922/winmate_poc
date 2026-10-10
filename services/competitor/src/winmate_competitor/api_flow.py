@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Response
 
 from . import caflow as cf
 
@@ -16,15 +16,28 @@ async def list_ca_flows(limit: int = Query(50, ge=1, le=200), cursor: str | None
     return await cf.list_flows(limit, cursor)
 
 
-@router.post("/ca-flows", response_model=cf.CFDoc, status_code=201)
-async def create_ca_flow(body: cf.CFCreate) -> dict[str, Any]:
-    """새 경쟁사 분석 — Storyboard 의 DSS 로 비교 기준을 채운다. 없는 Storyboard 404 · DSS 전이면 422 PREREQUISITE_MISSING."""
-    return await cf.create(body)
+@router.post("/ca-flows", response_model=cf.CFDoc, status_code=201,
+             responses={200: {"model": cf.CFDoc, "description": "이 Storyboard 의 저장 전 초안이 이미 있음 — 그 초안(새로 만들지 않음)"}})
+async def create_ca_flow(body: cf.CFCreate, response: Response) -> dict[str, Any]:
+    """새 경쟁사 분석 — Storyboard 의 DSS 로 비교 기준을 채운다. 없는 Storyboard 404 · DSS 전이면 422 PREREQUISITE_MISSING.
+    같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로 돌려준다(Gate 를 다시 거쳐도 초안이 늘지 않음)."""
+    doc, created = await cf.create(body)
+    if not created:
+        response.status_code = 200
+    return doc
 
 
 @router.get("/ca-flows/{flow_id}", response_model=cf.CFDoc)
 async def get_ca_flow(flow_id: str) -> dict[str, Any]:
     return cf.to_api(await cf.load(flow_id))
+
+
+@router.delete("/ca-flows/{flow_id}", status_code=204, response_class=Response)
+async def delete_ca_flow(flow_id: str, expected_version: int | None = Query(None, description="주면 지금 판과 다를 때 409 CONFLICT")) -> Response:
+    """저장 전 초안 지우기(목록 줄 ×, 소프트 삭제 · 작업물 색인도 지움) — 한 번도 저장하지 않은 것만.
+    저장한 경쟁사 분석은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT, 없으면 404 NOT_FOUND."""
+    await cf.delete(flow_id, expected_version)
+    return Response(status_code=204)
 
 
 @router.patch("/ca-flows/{flow_id}", response_model=cf.CFDoc)

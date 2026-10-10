@@ -41,7 +41,10 @@ make contracts SERVICE=storyboard    # contracts/storyboard.json 갱신 + 깨지
 - 웹 `flow/`: `FlowList`(SB0 `/storyboard` — 칸 1fr 480 · 300 · 120 · 110) · `FlowDetail`(SB1 `/storyboard/flow/:id` — 진행 8칸 · Key message · 연결된 콘텐츠 · 요약본 md / json 470 · 후속 작업 PPT ·
   분기 n 팝오버 → SBPopup · 보기 = 공용 ContentPopup · 만들기 = `/<base>/new?sb=&auto=1` · 요약본 수정(Esc 로 그만)) · `StrategyPopup`(1100×700 · AI 후보 360+1 점선 → 이 안 쓰기 → 저장) · `model.ts` · `sbf.css`.
   앱은 border-box 라 보드에서 content-box + 테두리인 칸은 테두리만큼 더했다(줄 51 · 머리 41 · 47 · 39 · 근거 칩 28 · 후보 361 · 63).
-- 테스트: pytest `test_flows.py` 10(보드 SB1 요약본 전문 일치 · Done 머리 7종 · 짧은 머리 사람 문장 포함). e2e `web/e2e/storyboard/sb-flow.spec.ts`(API 로 SB-01 모양 + MI 분기 → SB0 → SB1 → 보기 → json → 전략 수립 → AI 3안 → 수락 · 저장 →
+- 제안서 칸 비우기 · 콘텐츠 판(2026-10-10, 요청 proposal): `DELETE /v1/flows/{id}/stages/{key}?ref=`(internal · 지금은 `ppt` 만, 다른 키 422 `STAGE_NOT_CLEARABLE` ·
+  ref 가 다르면 그대로 · 같은 ref 의 다른 Storyboard 도 비움) — proposal 이 제안서를 지울 때 부른다. `content_rev`(FlowDoc · 응답 · 색인 `meta.version`)는
+  stage(ppt 칸 제외) · Key message · 받쳐 줄 메시지 · 요약본이 바뀔 때만 오른다 — 제안서가 ppt 칸에 자기를 적어도 「Storyboard 업데이트됨」이 뜨지 않게. 색인 `meta.customer` 도 있다.
+- 테스트: pytest `test_flows.py` 11(ppt 칸 비우기 포함 · 보드 SB1 요약본 전문 일치 · Done 머리 7종 · 짧은 머리 사람 문장 포함). e2e `web/e2e/storyboard/sb-flow.spec.ts`(API 로 SB-01 모양 + MI 분기 → SB0 → SB1 → 보기 → json → 전략 수립 → AI 3안 → 수락 · 저장 →
   요약본 수정 ✎ → 경쟁사 저장 뒤에도 유지 → VP 만들기(Gate 건너뜀) → 분기 n → SBPopup → 분기 SB1), 캡처 `__screens__/SB0-new` · `SB1-new` · `SB1_View-new` · `SB1_Json-new` · `SB1_Strat-new` · `SB1_StratAI-new` 외.
 - 보드와 다름: 요약본 Key message 절에 받쳐 줄 메시지 줄을 함께 쓴다(보드 SB1 예시엔 한 줄 메시지만 — PPT 가 요약본을 읽으므로) · json 탭 줄 나눔은 패널 폭(≈60칸)에 맞춘 자동 나눔(보드는 손으로 2줄) ·
   Key message 가 없을 때 점선 카드 「아직 없음 · …」(보드에 없는 상태) · 분기 Storyboard 머리에 부모 칩(「SB-01 · MI에서 분기」) · 렌더 글꼴 줄 높이 차이로 세로 1~3px.

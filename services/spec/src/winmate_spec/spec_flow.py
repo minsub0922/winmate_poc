@@ -9,6 +9,12 @@
 - 저장(`:finish`) → XLSX(export 서비스 · 보드 Done `file: "SP-01_v1.xlsx"`, 못 만들면 null) → Storyboard flow.json `stages.sp`(§6 모양) · 요약 줄 · 팝업 카드(push_stage)
   · workspace 색인(feature=SP, route=/spec/flow/{id}).
 
+- DSS 다시 가져오기(2026-10-10 · 보드에 없음): 시트를 만든 DSS ref · ver 를 남기고(`dss_ref` · `dss_ver`), GET 때 허브의 지금 stages.dss 와 견줘
+  `dss_changed`(추가 · 빠짐 · 바뀜)를 알려 준다. `:resync-dss` 는 사람이 한 일을 지우지 않고 합친다 — 새 DSS 제품은 행으로 더하고(by `dss`),
+  DSS 에서 빠진 제품은 남겨 두고 경고 「DSS에서 빠짐」(사람이 지울 수 있음), 수량은 사람이 고치지 않은 행만 DSS 값으로 바꾼다.
+- 초안 지우기 · 같은 Storyboard 초안 이어 쓰기: 한 번도 저장(허브 반영)하지 않은 시트만 지울 수 있다(저장한 것은 409 `SAVED_CONTENT`).
+  같은 Storyboard 로 다시 만들면 저장 전 초안을 돌려준다(Gate 복제본은 새 Storyboard 라 새 시트).
+
 저장소: DocStore("spec") 컬렉션 `spec_flows`(sfl_ …). 쓰기는 낙관적 잠금 + 재시도, PATCH 는 expected_version(409).
 """
 from __future__ import annotations
@@ -20,12 +26,12 @@ import re
 from collections.abc import Callable
 from typing import Any, Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from winmate_common.client import ServiceClient
 from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
-from winmate_common.platform import register_item
+from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import VersionConflict
 
 from . import ops, repo
@@ -66,7 +72,7 @@ Match = Literal["ref", "code", "family", "manual", "none"]
 # ── 모델(API) ───────────────────────────────────────────
 
 class SFWarning(BaseModel):
-    kind: Literal["not_in_catalog", "discontinued", "sold_out", "mismatch", "family_default"]
+    kind: Literal["not_in_catalog", "discontinued", "sold_out", "mismatch", "family_default", "dss_removed"]
     text: str
 
 
@@ -84,7 +90,10 @@ class SFRow(BaseModel):
     family_name: str | None = None
     source_url: str | None = Field(None, description="값 출처(공식 카탈로그 페이지)")
     match: Match = Field("none", description="모델을 맞춘 방법: ref · code(이름 속 모델명) · family(제품군 대표 모델) · manual(사람이 고름) · none")
-    by: str = Field("manual", description="출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual")
+    by: str = Field("manual", description="출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual, DSS 다시 가져오기로 더한 행은 dss")
+    qty_edited: bool = Field(False, description="사람이 수량을 고쳤다(DSS 다시 가져오기가 수량을 덮지 않는다)")
+    dss_status: Literal["added", "removed"] | None = Field(
+        None, description="DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 들어옴 · removed = DSS 에서 빠짐(남겨 둠, 사람이 지울 수 있음)")
     cells: dict[str, str] = Field(default_factory=dict, description="항목 key → 표시 글(현재 표기 기준, 없는 값은 [확인 필요])")
     pending: list[str] = Field(default_factory=list, description="값을 다 채우지 못한 항목 key")
     warnings: list[SFWarning] = Field(default_factory=list)
@@ -104,12 +113,41 @@ class SFCounts(BaseModel):
     warnings: int
 
 
+class SFDssChange(BaseModel):
+    """Storyboard 의 DSS 가 시트를 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄."""
+    model_config = ConfigDict(populate_by_name=True)
+    from_: str = Field(alias="from", description="시트가 가져온 DSS(DSS-01 v1)")
+    to: str = Field(description="허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)")
+    ref_changed: bool = Field(False, description="DSS 자체가 바뀜(분기 등으로 다른 DSS)")
+    added: int = Field(description="새로 들어온 DSS 제품")
+    removed: int = Field(description="DSS 에서 빠진 제품")
+    changed: int = Field(0, description="공간 · 수량 원문이 바뀐 제품")
+    added_names: list[str] = Field(default_factory=list)
+    removed_names: list[str] = Field(default_factory=list)
+
+
+class SFResync(BaseModel):
+    """마지막 DSS 다시 가져오기 결과(토스트 · 표시)."""
+    model_config = ConfigDict(populate_by_name=True)
+    at: str
+    from_: str = Field(alias="from")
+    to: str
+    added: list[str] = Field(default_factory=list, description="더한 행(DSS 제품 이름)")
+    removed: list[str] = Field(default_factory=list, description="DSS 에서 빠져 경고를 붙인 행")
+    updated: list[str] = Field(default_factory=list, description="공간 · 수량을 DSS 값으로 바꾼 행")
+    kept_qty: list[str] = Field(default_factory=list, description="사람이 고친 수량이라 그대로 둔 행")
+
+
 class SFDoc(BaseModel):
     id: str
     code: str | None = Field(None, description="화면 · flow.json 짧은 번호(SP-01 …)")
     title: str
     sb_id: str | None = None
     dss_ref: str | None = Field(None, description="가져온 DSS 참조(DSS-01 …)")
+    dss_ver: int | None = Field(None, description="가져온 DSS 판(허브 stages.dss.ver)")
+    dss_changed: SFDssChange | None = Field(
+        None, description="허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null)")
+    last_resync: SFResync | None = None
     format: Format = "compare"
     notation: Notation = "ko_mm"
     items: list[str] = Field(default_factory=list, description="고른 항목 key(보드 순서)")
@@ -324,6 +362,8 @@ def _codes_in(name: str) -> list[str]:
 
 def row_warnings(r: dict[str, Any]) -> list[dict[str, str]]:
     out: list[dict[str, str]] = []
+    if r.get("dss_status") == "removed":   # 제품 줄 · 팝업은 첫 경고 이름을 쓴다 → 맨 앞
+        out.append({"kind": "dss_removed", "text": "DSS에서 빠짐 · Storyboard의 DSS에 이 제품이 없어요 · 필요 없으면 지워 주세요"})
     if not r.get("model_code"):
         out.append({"kind": "not_in_catalog", "text": "공식 카탈로그에서 모델을 찾지 못했어요 · 모델을 골라 주세요(값은 [확인 필요])"})
         return out
@@ -364,11 +404,12 @@ def counts(d: dict[str, Any]) -> dict[str, int]:
             "pending_cells": sum(len(r["pending"]) for r in on), "warnings": sum(len(r["warnings"]) for r in on)}
 
 
-def to_api(d: dict[str, Any]) -> dict[str, Any]:
+def to_api(d: dict[str, Any], dss_changed: dict[str, Any] | None = None) -> dict[str, Any]:
     notation = d.get("notation") or "ko_mm"
     items = d.get("items") or []
     return {**d, "rows": [to_row(r, notation, items) for r in d.get("rows") or []],
-            "columns": [{"key": k, "label": item_label(k, notation), "on": k in items} for k in ITEM_KEYS], "counts": counts(d)}
+            "columns": [{"key": k, "label": item_label(k, notation), "on": k in items} for k in ITEM_KEYS], "counts": counts(d),
+            "dss_changed": dss_changed}
 
 
 # ── 모델 맞추기 ──────────────────────────────────────────
@@ -471,14 +512,25 @@ def dss_rows(flow: dict[str, Any]) -> list[dict[str, Any]]:
 
 # ── 작업 ────────────────────────────────────────────────
 
-async def create(body: SFCreate) -> dict[str, Any]:
-    flow = await get_flow(body.sb_id)
-    if flow is None:
-        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
-    dss = (flow.get("stages") or {}).get("dss")
-    if not dss:
-        raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
-    rows = dss_rows(flow)
+def ever_saved(d: dict[str, Any]) -> bool:
+    """한 번이라도 저장(허브 stages.sp 반영)했는가 — 했으면 Storyboard 에 연결돼 지울 수 없다."""
+    return bool(d.get("ver")) or bool(d.get("saved_at")) or d.get("status") == "done"
+
+
+def _open_draft(sb_id: str) -> dict[str, Any] | None:
+    """같은 Storyboard 의 저장 전 초안(가장 최근 것) — Gate 에서 다시 시작해도 초안이 둘이 되지 않게."""
+    items, _ = _store().list(COLL, where={"sb_id": sb_id}, limit=50)
+    return next((d for d in items if not ever_saved(d)), None)
+
+
+def _next_code() -> str:
+    """SP-NN — 지운 초안이 있어도 겹치지 않게 지금 남은 코드 중 가장 큰 번호 + 1(지운 초안은 허브에 간 적 없어 번호를 다시 써도 된다)."""
+    items, _ = _store().list(COLL, limit=10000, order_by="-created_at")
+    nums = [int(m.group(1)) for d in items if (m := re.fullmatch(r"SP-(\d+)", d.get("code") or ""))]
+    return f"SP-{max(nums, default=0) + 1:02d}"
+
+
+async def _matched_rows(rows: list[dict[str, Any]]) -> None:
     sem = asyncio.Semaphore(4)
 
     async def one(r: dict[str, Any]) -> None:
@@ -486,19 +538,168 @@ async def create(body: SFCreate) -> dict[str, Any]:
             code, how = await match_model(r["name"], r.get("dss_ref"))
             await _fill(r, code, how)
     await asyncio.gather(*(one(r) for r in rows))
+
+
+async def create(body: SFCreate) -> tuple[dict[str, Any], bool]:
+    """(시트, 새로 만들었나). 같은 Storyboard 의 저장 전 초안이 있으면 그것을 돌려준다."""
+    flow = await get_flow(body.sb_id)
+    if flow is None:
+        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {body.sb_id}")
+    dss = (flow.get("stages") or {}).get("dss")
+    if not dss:
+        raise ApiError(422, "PREREQUISITE_MISSING", "DSS까지 된 Storyboard에서 시작할 수 있어요.", {"need": "dss"})
+    existing = await asyncio.to_thread(_open_draft, body.sb_id)
+    if existing:
+        return to_api(existing, dss_diff(existing, flow)), False
+    rows = dss_rows(flow)
+    await _matched_rows(rows)
     try:
         cver = await catalog().version()
     except ApiError:
         cver = None
-    n = await asyncio.to_thread(_store().count, COLL)
-    doc = {"code": f"SP-{n + 1:02d}", "title": body.title or flow.get("name") or "새 Spec 시트", "sb_id": body.sb_id,
-           "dss_ref": dss.get("ref"), "format": "compare", "notation": "ko_mm", "items": list(DEFAULT_ITEMS), "rows": rows,
+    doc = {"code": await asyncio.to_thread(_next_code), "title": body.title or flow.get("name") or "새 Spec 시트", "sb_id": body.sb_id,
+           "dss_ref": dss.get("ref"), "dss_ver": dss.get("ver"), "format": "compare", "notation": "ko_mm", "items": list(DEFAULT_ITEMS), "rows": rows,
            "catalog_version": cver, "status": "draft"}
     fid = new_id("sfl")
     saved = await asyncio.to_thread(_store().put, COLL, fid, doc, note="만듦")
     await register_item(feature="SP", item_id=fid, title=saved["title"], status="draft", route=f"/spec/flow/{fid}",
                         summary=f"DSS 제품 {len(rows)} · 스펙 시트 작성 중")
-    return to_api(saved)
+    return to_api(saved), True
+
+
+async def get_with_status(fid: str) -> dict[str, Any]:
+    """GET — 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null(화면은 그대로)."""
+    d = await load(fid)
+    flow = await get_flow(d["sb_id"]) if d.get("sb_id") else None
+    return to_api(d, dss_diff(d, flow) if flow else None)
+
+
+async def delete(fid: str) -> None:
+    def _do() -> None:   # 확인과 지우기를 한 번에 — DocStore.delete(expected_version) 가 같은 트랜잭션에서 판을 본다
+        d = _get(fid)
+        if ever_saved(d):
+            raise ApiError(409, "SAVED_CONTENT", "저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요",
+                           {"ref": d.get("code"), "sb_id": d.get("sb_id")})
+        try:   # 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(DocStore 판 확인, 같은 트랜잭션)
+            _store().delete(COLL, fid, expected_version=d["version"])
+        except VersionConflict as exc:
+            raise ApiError(409, "VERSION_CONFLICT", "방금 다른 곳에서 저장했어요. 새로 불러와 주세요.", {}) from exc
+    await asyncio.to_thread(_do)
+    await unregister_item(fid)
+
+
+# ── DSS 다시 가져오기 ────────────────────────────────────
+
+def dss_label(ref: str | None, ver: Any) -> str:
+    if not ref:
+        return "DSS"
+    return f"{ref} v{ver}" if ver else ref
+
+
+def dss_diff(d: dict[str, Any], flow: dict[str, Any] | None) -> dict[str, Any] | None:
+    """시트 행(= DSS 제품) ↔ 허브의 지금 stages.dss. 바뀐 것이 없으면 None(판만 오르고 제품 · 공간 · 수량 원문이 같으면 알릴 것 없음).
+    DSS 자체가 바뀌면(분기 등 ref 다름) 내용이 같아도 알린다 — 다시 가져와야 stages.sp.from 이 맞는다."""
+    dss = ((flow or {}).get("stages") or {}).get("dss")
+    if not dss:
+        return None
+    new = {r["key"]: r for r in dss_rows(flow or {})}
+    rows = {r["key"]: r for r in d.get("rows") or []}
+    added = [r["name"] for k, r in new.items() if k not in rows or rows[k].get("dss_status") == "removed"]
+    removed = [r["name"] for k, r in rows.items() if k not in new and r.get("dss_status") != "removed"]
+    changed = [r["name"] for k, r in new.items() if k in rows and rows[k].get("dss_status") != "removed" and (
+        list(rows[k].get("spaces") or []) != r["spaces"] or (rows[k].get("qty_note") or None) != (r.get("qty_note") or None)
+        or (rows[k].get("dss_ref") or None) != (r.get("dss_ref") or None))]
+    ref_changed = bool(d.get("dss_ref")) and dss.get("ref") != d.get("dss_ref")
+    if not (added or removed or changed or ref_changed):
+        return None
+    return {"from": dss_label(d.get("dss_ref"), d.get("dss_ver")), "to": dss_label(dss.get("ref"), dss.get("ver")), "ref_changed": ref_changed,
+            "added": len(added), "removed": len(removed), "changed": len(changed), "added_names": added[:20], "removed_names": removed[:20]}
+
+
+_MODEL_KEYS = ("model_code", "display_name", "family_id", "family_name", "source_url", "values", "lifecycle", "match")
+
+
+async def resync(fid: str) -> dict[str, Any]:
+    """허브의 지금 DSS 로 시트를 맞춘다(사람이 한 일은 남긴다).
+    - 새 DSS 제품 → 행 더함(모델 맞춤 · 카탈로그 값, by `dss`, 표시 added).
+    - DSS 에서 빠진 제품 → 행은 그대로 두고 표시 removed(경고 「DSS에서 빠짐」 · 사람이 지울 수 있음).
+    - 남은 제품 → 공간 · 수량 원문은 DSS 값으로, 수량은 사람이 고치지 않은 행만 DSS 값으로. DSS 참조가 바뀌었고 모델을 사람이 고르지 않았으면 모델을 다시 맞춘다.
+    """
+    d = await load(fid)
+    if not d.get("sb_id"):
+        raise ApiError(422, "NO_STORYBOARD", "Storyboard에 연결되지 않은 시트예요.")
+    flow = await get_flow(d["sb_id"])
+    if flow is None:
+        raise ApiError(404, "STORYBOARD_NOT_FOUND", f"Storyboard를 찾을 수 없어요: {d['sb_id']}")
+    dss = (flow.get("stages") or {}).get("dss")
+    if not dss:
+        raise ApiError(422, "PREREQUISITE_MISSING", "Storyboard에 DSS가 없어요.", {"need": "dss"})
+    new_rows = dss_rows(flow)
+    cur = {r["key"]: r for r in d.get("rows") or []}
+    rematch = [r for r in new_rows if r["key"] not in cur
+               or (cur[r["key"]].get("match") != "manual" and (cur[r["key"]].get("dss_ref") or None) != (r.get("dss_ref") or None))]
+    await _matched_rows(rematch)
+    matched = {r["key"]: r for r in rematch}
+    log_: dict[str, list[str]] = {"added": [], "removed": [], "updated": [], "kept_qty": []}
+    frm = dss_label(d.get("dss_ref"), d.get("dss_ver"))
+
+    def fn(doc: dict[str, Any]) -> None:
+        for v in log_.values():
+            v.clear()
+        new = {r["key"]: r for r in new_rows}
+        out: list[dict[str, Any]] = []
+        for row in doc.get("rows") or []:
+            nr = new.get(row["key"])
+            if nr is None:
+                if row.get("dss_status") != "removed":
+                    log_["removed"].append(row["name"])
+                row["dss_status"] = "removed"
+                out.append(row)
+                continue
+            back = row.get("dss_status") == "removed"
+            touched = list(row.get("spaces") or []) != nr["spaces"] or (row.get("qty_note") or None) != (nr.get("qty_note") or None)
+            row["spaces"], row["qty_note"] = nr["spaces"], nr.get("qty_note")
+            if (row.get("dss_ref") or None) != (nr.get("dss_ref") or None):
+                row["dss_ref"] = nr.get("dss_ref")
+                touched = True
+                if nr["key"] in matched:
+                    row.update({k: matched[nr["key"]].get(k) for k in _MODEL_KEYS})
+            if row.get("qty_edited"):
+                if row.get("qty") != nr.get("qty"):
+                    log_["kept_qty"].append(row["name"])
+            elif row.get("qty") != nr.get("qty"):
+                row["qty"] = nr.get("qty")
+                touched = True
+            row["dss_status"] = "added" if back else None
+            if back:
+                log_["added"].append(row["name"])
+            elif touched:
+                log_["updated"].append(row["name"])
+            out.append(row)
+        have = {r["key"] for r in out}
+        for nr in new_rows:
+            if nr["key"] in have:
+                continue
+            row = {**matched[nr["key"]], "by": "dss", "qty_edited": False, "dss_status": "added"}
+            out.append(row)
+            log_["added"].append(row["name"])
+        doc["rows"] = out
+        doc["dss_ref"], doc["dss_ver"] = dss.get("ref"), dss.get("ver")
+        doc["last_resync"] = {"at": now_iso(), "from": frm, "to": dss_label(dss.get("ref"), dss.get("ver")), **{k: list(v) for k, v in log_.items()}}
+    saved = await update(fid, fn, "DSS 다시 가져오기")
+    return to_api(saved, dss_diff(saved, flow))
+
+
+async def delete_row(fid: str, key: str) -> dict[str, Any]:
+    """DSS 에서 빠진 행 지우기(경고 「DSS에서 빠짐」의 「지우기」). DSS 에 있는 제품 행은 체크를 빼서 시트에서 뺀다."""
+    def fn(doc: dict[str, Any]) -> None:
+        r = next((x for x in doc.get("rows") or [] if x["key"] == key), None)
+        if r is None:
+            raise not_found("제품 행", key)
+        if r.get("dss_status") != "removed":
+            raise ApiError(422, "ROW_IN_DSS", "DSS에 있는 제품은 지울 수 없어요 · 체크를 빼서 시트에서 빼 주세요.", {"row": key})
+        doc["rows"] = [x for x in doc["rows"] if x["key"] != key]
+    return to_api(await update(fid, fn, "DSS에서 빠진 행 지움"))
 
 
 async def list_flows(limit: int, cursor: str | None) -> dict[str, Any]:
@@ -543,6 +744,7 @@ async def patch_row(fid: str, key: str, body: SFRowPatch) -> dict[str, Any]:
             r["on"] = body.on
         if body.qty is not None:
             r["qty"] = body.qty
+            r["qty_edited"] = True          # DSS 다시 가져오기가 덮지 않는다
         if filled is not None:
             r.update(filled)
             r["by"] = "manual"

@@ -8,7 +8,7 @@ from typing import Any
 from winmate_common.context import current_user
 from winmate_common.platform import unregister_item
 
-from .. import clients, config, core, defs, industry, links as L, plan, repo
+from .. import clients, config, core, defs, hub, industry, links as L, plan, repo
 from .. import models as M
 from ..errors import proposal_not_found
 
@@ -92,7 +92,10 @@ async def list_proposals(*, tab: str, q: str | None, owner: str, type_: str | No
     if sort == "updated_desc":
         rows.sort(key=lambda p: p.get("touched_at") or "", reverse=True)
     else:
-        rows.sort(key=_sort_key_due)
+        # 마감 임박순 — 마감 있는 것(가까운 순) → 마감 없는 것(최근 만든 순) → 완료(최근 순).
+        # 마감 없는 것을 오래된 순으로 두면 limit=20 목록(IMG4 · BE6 「보낼 제안서」)에서 방금 만든 제안서가 빠진다(통합).
+        rows.sort(key=lambda p: p.get("created_iso") or "", reverse=True)
+        rows.sort(key=lambda p: _sort_key_due(p)[:2])
     today = config.today_kst()
     due14 = 0
     for p in allp:
@@ -198,12 +201,15 @@ async def create_proposal(body: M.ProposalCreate) -> M.Proposal:
     if body.customer and body.customer.industry_chip:
         await _apply_chip(pid, body.customer.industry_chip)
     work_refs: list[str] = [body.rq_ref.rq_id] if body.rq_ref else []
+    hub_links: list[dict[str, Any]] = []
     for ln in body.links:
         link = await L.add_link(pid, feature=ln.feature, ref_id=ln.ref_id, section_key=ln.section_key, version=ln.version,
                                 handoff_id=ln.handoff_id, title=ln.title, via="handoff" if body.start_mode == "handoff" else "start")
         await L.apply_customer(pid, link.get("handoff"))
         if link.get("ref_id"):
             work_refs.append(str(link["ref_id"]))
+        if hub.is_hub_link(link):
+            hub_links.append(link)      # 허브 Storyboard(SB-nn)에서 시작 — 고객 · 요구사항 · 섹션 재료는 stages 에서
     if body.image_version:
         ver = await clients.call("image", "GET", f"/v1/versions/{body.image_version}", quiet=True)
         if ver and ver.get("image_id"):
@@ -231,6 +237,8 @@ async def create_proposal(body: M.ProposalCreate) -> M.Proposal:
     await plan.refresh_context(pid)
     await redetect_industry(pid)
     await core.index(pid, force=True)
+    for link in hub_links:
+        await hub.on_linked(pid, link)
     return await core.proposal_view(pid)
 
 
@@ -309,6 +317,8 @@ async def _release_usages(pid: str, p: dict[str, Any]) -> None:
         rq = (p.get("rq_ref") or {}).get("rq_id")
         if rq:
             await H.unregister_usage("requirements", rq, proposal_id=pid)
+        from .. import hub
+        await hub.clear_ppt(p)            # 허브 Storyboard 「PPT 제작」 칸(2026-10-10 — storyboard DELETE …/stages/ppt?ref=)
     except Exception as exc:  # noqa: BLE001
         log.warning("사용 등록 거두기 실패 %s: %s", pid, exc)
 

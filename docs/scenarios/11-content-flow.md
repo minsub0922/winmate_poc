@@ -75,8 +75,20 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 - 새로 만들기 `/<base>/new?sb=<id>&auto=1` 은 Gate 를 건너뛴다(Storyboard 「만들기」 · 완료 화면 후속 작업 카드).
 - **이전 흐름**은 `/<base>/legacy` · `/<base>/legacy/new` 로 옮겼다. 이전 흐름의 다른 경로(`/<base>/:id/...`)는 그대로다(제안서 handoff 가 읽는다).
   예전 들어오기 주소(`/vp/new?sb=sb_…` · `?mi=` · `?rq=`, `/mi/new?rq=`, `/competitor/new?input=…`, `/spec/new?models=|from=|pop=`, `/scenario/new?from=|mi=|sb=sb_…`)는 이전 흐름 화면으로 넘긴다.
-- 공용 화면(`@/shell` flow): `ContentListScreen`(초안 줄의 Storyboard 칩도 이름) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowDoneView`(`newStoryboard` · `jsonHead`, 전체 JSON 제목 `SB-nn/flow.json`).
-- 남은 것: 콘텐츠 · 초안 지우기 API(보드에 없음), Storyboard 의 DSS 가 바뀌었을 때 Spec · 시나리오 다시 가져오기(보드에 없음), 웹앱 ② 조감도 2D/3D 재구현(별도).
+- 공용 화면(`@/shell` flow): `ContentListScreen`(초안 줄의 Storyboard 칩도 이름 · 초안 ×) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동 · 초안 이어 쓰기) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowDoneView`(`newStoryboard` · `jsonHead`, 전체 JSON 제목 `SB-nn/flow.json`).
+- **저장 전 초안 지우기 · 이어 쓰기(2026-10-10 · 보드에 없음)**: 7개 자원 `DELETE /v1/{rq-flows|dss|mi-flows|ca-flows|value-maps|spec-flows|space-sets}/{id}`
+  — 한 번도 저장하지 않은 초안만 204, 저장한 것 409 `SAVED_CONTENT`(「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」), 확인과 지우기 사이에 저장이 끼면 409 `VERSION_CONFLICT`
+  (`DocStore.delete(expected_version=)` 한 트랜잭션). 목록(보드 List)은 초안 줄에 손을 올리면 × → 확인 → 지움(`DraftRow.onDelete`). Gate 로 같은 Storyboard 를 다시 시작하면
+  새로 만들지 않고 그 초안을 연다(`POST {sb_id}` → 200 기존 초안 · 새로면 201) — Gate 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」(`GateScreen drafts`). 코드 번호는 남은 최댓값 + 1.
+- **DSS 다시 가져오기(2026-10-10 · 보드에 없음)**: Spec 시트 · 공간 시나리오 · VP 는 만든 DSS(`dss_ref` · `dss_ver`)를 남기고, 열 때(`GET`) 허브의 지금 `stages.dss` 와 견줘
+  `dss_changed{from, to, added, removed, changed, …}` 를 준다. 편집 화면 머리 아래 안내 줄(AiBar 「Storyboard의 DSS가 바뀌었어요 · DSS-01 v1 → v2 · 제품 1 추가 · 1 빠짐」 · 「다시 가져오기」)
+  → `POST …/{id}:resync-dss`: 새 제품(공간)은 더하고, 빠진 제품은 사람이 쓴 내용(시트 값 · 시나리오 · 가치)과 함께 남겨 「DSS에서 빠짐」으로 표시(지우기는 사람이), 사람이 고친 수량은 그대로.
+  그리드 높이만 안내 줄(38 + 12)만큼 줄고 칸 폭은 보드 그대로.
+- **제안서 ← 허브(2026-10-10)**: `/proposal/new?sb=SB-nn` · PR1L 「최근 Storyboard」 줄에서 허브 Storyboard 를 연결하면 `stages.*` 가 섹션 재료가 된다(proposal `hub.py` `STAGE_TARGETS` —
+  rq → 고객 정보 · 요구사항, dss → 공간별 제품 · 솔루션, Key message → Value Props · 표지 부제, mi → MI, ca → Why Samsung, vp → Value Props, sp → 제품 스펙, sc → 솔루션 시나리오;
+  빈 stage 는 「새로 작성」). 제안서는 허브 「PPT 제작 · B2B 제안서」 칸에 자기를 적고(`stages.ppt`), 지우면 칸을 비운다(`DELETE /v1/flows/{id}/stages/ppt?ref=`).
+  「Storyboard 업데이트됨」은 허브 `content_rev`(ppt 칸 기록 제외)로 견준다.
+- 남은 것: 웹앱 ② 조감도 2D/3D 재구현(별도).
 
 ## 6. Storyboard 허브 · stage 계약 (2026-10-08 구현)
 

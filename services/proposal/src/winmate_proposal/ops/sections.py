@@ -7,7 +7,7 @@ import json
 import re
 from typing import Any
 
-from .. import clients, config, content as C, core, defs, facts as F, inputs, links as L, repo, templates
+from .. import clients, config, content as C, core, defs, facts as F, hub, inputs, links as L, repo, templates
 from .. import models as M
 from ..errors import not_found, rev_conflict, section_not_in_type, sheet_not_found, unprocessable
 from ..graphs import common as G
@@ -121,6 +121,15 @@ def sheet_from(sh: dict[str, Any], links_by_id: dict[str, dict[str, Any]]) -> M.
     return None
 
 
+def _chip_label(ln: dict[str, Any], key: str, type_: str | None) -> str:
+    """연결 자료 칩 이름 — 허브 Storyboard 는 이 섹션에 들어간 콘텐츠 코드(「Storyboard · MI-01」)."""
+    if hub.is_hub_link(ln):
+        refs = hub.stage_refs_for(ln.get("handoff"), key, type_)
+        if refs:
+            return f"Storyboard · {' · '.join(refs)}"
+    return L.link_label(ln)
+
+
 async def section_view(pid: str, key: str) -> M.SectionView:
     p, keys, sec = await _ctx(pid, key)
     secs = {s["key"]: s for s in await core.sections_of(pid)}
@@ -142,7 +151,7 @@ async def section_view(pid: str, key: str) -> M.SectionView:
     lns = await L.section_links(pid, key, p.get("type"))
     links_by_id = {ln["id"]: ln for ln in lns}
     sources = [M.SourceChip(id=ln["id"], feature=ln.get("feature") or "", feature_label=defs.FEATURE_LABEL.get(ln.get("feature") or "", ""),
-                            label=L.link_label(ln), stale=bool(ln.get("stale")),
+                            label=_chip_label(ln, key, p.get("type")), stale=bool(ln.get("stale")),
                             route=((ln.get("handoff") or {}).get("source") or {}).get("route") or ln.get("route"), ref=L.shell_ref(ln))
                for ln in lns if (ln.get("feature") or "") != "requirements"]
     open_by = await core.open_confirm_by_sheet(pid)

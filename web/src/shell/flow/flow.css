@@ -61,7 +61,7 @@
 .fl-newbtn { height: 44px; padding: 0 18px; border-radius: 12px; background: var(--wm-brand); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0; }
 .fl-newbtn:hover { color: #fff; filter: brightness(1.08); }
 .fl-table { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; overflow: hidden; }
-.fl-tr { display: grid; grid-template-columns: minmax(0, 1fr) 360px 110px 80px; column-gap: 16px; align-items: center; min-height: 72px; padding: 10px 20px; box-sizing: border-box; border-top: 1px solid var(--wm-line-tile); }
+.fl-tr { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 360px 110px 80px; column-gap: 16px; align-items: center; min-height: 72px; padding: 10px 20px; box-sizing: border-box; border-top: 1px solid var(--wm-line-tile); }
 .fl-th { min-height: 42px; height: 42px; padding: 0 20px; border-top: none; background: var(--wm-surface-2); font-size: 12px; font-weight: 600; color: var(--wm-text-muted); }
 .fl-tdtitle { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .fl-tdtitle a { font-size: 14px; font-weight: 600; color: var(--wm-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -105,6 +105,8 @@
 .fl-pill--off { border: 1px dashed var(--wm-line-dashed); color: var(--wm-text-subtle); }
 .fl-pill--has { background: var(--wm-amber-bg); color: var(--wm-amber); }
 .fl-pill--go { background: var(--wm-brand-hero); color: var(--wm-brand); }
+/* 저장 전 초안이 있는 Storyboard(보드에 없음 — Gate 「초안 이어 쓰기」) */
+.fl-pill--draft { border: 1px solid var(--wm-brand-line); color: var(--wm-brand); background: var(--wm-surface); }
 .fl-prego { height: 32px; margin-right: 8px; padding: 0 10px; border-radius: 8px; color: var(--wm-brand); font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
 .fl-ghost { height: 32px; margin-right: 12px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); font-size: 12.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0; }
 .fl-ghost:hover { background: var(--wm-brand-hero); }
@@ -140,3 +142,8 @@
 .fl-popfoot--cp { border-top: 1px solid var(--wm-line-tile); background: var(--wm-surface-2); }
 .fl-popbtn14 { padding: 0 14px; }
 .fl-popbtn18 { padding: 0 18px; }
+/* 초안 지우기(보드에 없음) — 줄에 손을 올리거나 키보드로 들어올 때만 보인다(평소 화면은 보드 List 그대로) */
+.fl-del { position: absolute; right: 1px; top: 50%; transform: translateY(-50%); width: 18px; height: 24px; border-radius: 6px; border: none; background: transparent; color: var(--wm-text-subtle); display: flex; align-items: center; justify-content: center; opacity: 0; cursor: pointer; }
+.fl-tr:hover .fl-del, .fl-del:focus-visible { opacity: 1; }
+.fl-del:hover { background: var(--wm-surface-3); color: var(--wm-danger, #c4320a); }
+.fl-del:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 1px; }

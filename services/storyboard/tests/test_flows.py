@@ -202,3 +202,20 @@ async def test_user_lines_under_short_or_numbered_headers(client):
     d = (await client.patch(f"/v1/flows/{d['id']}", json={"summary_md": md})).json()
     assert d["user_lines"] == {"dss": ["- 회의실 수량은 11월 실사 뒤", "- 로비 동선은 현장 확인 후 확정"]}
     assert "- 회의실 수량은 11월 실사 뒤 ✎\n- 로비 동선은 현장 확인 후 확정 ✎" in d["summary_md"]
+
+
+async def test_clear_ppt_stage_only_matching_ref(client):
+    """제안서를 지우면 proposal 이 「PPT 제작」 칸을 비운다 — ref 가 같을 때만 · 콘텐츠 칸은 비울 수 없다."""
+    d = await _new(client)
+    sid = d["id"]
+    r = await client.put(f"/v1/flows/{sid}/stages/ppt", json={"ref": "PR-03", "res_id": "pr_x", "value": {"title": "제안서"}, "md": "- 표준 제안서"})
+    assert r.status_code == 200 and next(c for c in r.json()["flow"]["cells"] if c["key"] == "ppt")["state"] == "done"
+    out = (await client.delete(f"/v1/flows/{sid}/stages/ppt", params={"ref": "PR-99"})).json()        # 다른 제안서 → 그대로
+    assert next(c for c in out["flow"]["cells"] if c["key"] == "ppt")["ref"] == "PR-03"
+    out = (await client.delete(f"/v1/flows/{sid}/stages/ppt", params={"ref": "PR-03"})).json()
+    cell = next(c for c in out["flow"]["cells"] if c["key"] == "ppt")
+    assert cell["state"] == "none" and out["flow"]["stages"].get("ppt") is None and "ppt" not in out["flow"]["cards"]
+    assert out["flow"]["history"][-1]["note"] == "PR-03 연결 끊김"
+    r = await client.delete(f"/v1/flows/{sid}/stages/rq")
+    assert r.status_code == 422 and r.json()["error"]["code"] == "STAGE_NOT_CLEARABLE"
+    assert (await client.delete(f"/v1/flows/{sid}/stages/ppt")).status_code == 200                   # 이미 비었으면 그대로

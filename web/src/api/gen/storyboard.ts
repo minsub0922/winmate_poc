@@ -99,7 +99,11 @@ export interface paths {
          */
         put: operations["put_flow_stage"];
         post?: never;
-        delete?: never;
+        /**
+         * Clear Flow Stage
+         * @description 칸 비우기 — 지금은 `ppt`(제안서를 지우면 proposal 이 부른다)만. `ref` 를 주면 그 ref 일 때만 비운다. 같은 ref 의 다른 Storyboard 도 함께.
+         */
+        delete: operations["clear_flow_stage"];
         options?: never;
         head?: never;
         patch?: never;
@@ -1562,6 +1566,12 @@ export interface components {
             };
             /** Cells */
             cells: components["schemas"]["FlowCell"][];
+            /**
+             * Content Rev
+             * @description 콘텐츠 판 — stage(제안서 ppt 칸 제외) · Key message · 요약본이 바뀔 때만 오른다(제안서의 「Storyboard 업데이트됨」 비교용)
+             * @default 0
+             */
+            content_rev: number;
             /** Contents Done */
             contents_done: number;
             /** Created At */
@@ -3685,6 +3695,49 @@ export interface operations {
                 "application/json": components["schemas"]["FlowStageIn"];
             };
         };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FlowStageOut"];
+                };
+            };
+        };
+    };
+    clear_flow_stage: {
+        parameters: {
+            query?: {
+                ref?: string | null;
+            };
+            header?: never;
+            path: {
+                flow_id: string;
+                key: "rq" | "dss" | "mi" | "ca" | "vp" | "sp" | "sc" | "ppt";
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description 요청 오류 */
             "4XX": {

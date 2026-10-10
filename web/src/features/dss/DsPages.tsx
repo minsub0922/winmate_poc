@@ -8,8 +8,8 @@ import { useState } from 'react';
 import { useParams, useSearchParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { CONTENT, ContentListScreen, FlowDoneView, GateScreen, useShellPage, type DraftRow, type ShellPageConfig } from '@/shell';
-import { ErrorState, FollowCard, Skeleton, josa } from '@/ui';
-import { createDss, dsListKey, dsRoute, useDsActions, useDss, useDssList, type DSDoc, type DSStageOut } from './api';
+import { ErrorState, FollowCard, Skeleton, josa, toast } from '@/ui';
+import { createDss, dsListKey, dsRoute, useDsActions, useDsDelete, useDss, useDssList, type DSDoc, type DSStageOut } from './api';
 import { dsShell } from './shellcfg';
 import { SolutionsStep } from './SolutionsStep';
 import { SpacesStep } from './SpacesStep';
@@ -20,23 +20,29 @@ const M = CONTENT.dss;
 const IC_SC = 'M4 6h16v12H4z M10 9l5 3-5 3V9z';
 const IC_SP = 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7';
 
-/** DS0 — 보드 List(content=dss). 작성 중(저장 전) DSS 는 초안 줄 */
+/** DS0 — 보드 List(content=dss). 작성 중(저장 전) DSS 는 초안 줄 — 손을 올리면 ×(지우기) */
 export function DsListScreen() {
   const list = useDssList();
+  const remove = useDsDelete();
   const drafts: DraftRow[] = (list.data?.items ?? []).filter((d) => d.status !== 'done')
-    .map((d) => ({ title: d.title, ref: d.code ?? null, to: dsRoute(d.id), sbIds: d.sb_id ? [d.sb_id] : [], when: d.updated_at }));
+    .map((d) => ({ title: d.title, ref: d.code ?? null, to: dsRoute(d.id), sbIds: d.sb_id ? [d.sb_id] : [], when: d.updated_at, onDelete: () => remove(d.id) }));
   return <ContentListScreen content="dss" drafts={drafts} />;
 }
 
-/** DS1 — 보드 Gate(content=dss). Storyboard 화면의 「만들기」는 `?sb=<id>&auto=1` 로 와서 고르기를 건너뛴다(CF-07) */
+/** DS1 — 보드 Gate(content=dss). Storyboard 화면의 「만들기」는 `?sb=<id>&auto=1` 로 와서 고르기를 건너뛴다(CF-07).
+ *  같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 돌려준다 → 이어서 연다(초안이 늘지 않음) */
 export function DsGateScreen() {
   const [sp] = useSearchParams();
   const qc = useQueryClient();
-  return <GateScreen content="dss" initialSb={sp.get('sb')} autoStart={sp.get('auto') === '1'}
+  const list = useDssList();
+  const drafts: DraftRow[] = (list.data?.items ?? []).filter((d) => d.status !== 'done')
+    .map((d) => ({ title: d.title, ref: d.code ?? null, to: dsRoute(d.id), sbIds: d.sb_id ? [d.sb_id] : [], when: d.updated_at }));
+  return <GateScreen content="dss" initialSb={sp.get('sb')} autoStart={sp.get('auto') === '1'} drafts={drafts}
     onStart={async ({ sbId }) => {
-      const d = await createDss(sbId);
+      const { doc: d, reused } = await createDss(sbId);
       qc.setQueryData(['dss', 'doc', d.id], d);
       void qc.invalidateQueries({ queryKey: dsListKey });
+      if (reused) toast(`작성 중이던 ${d.code ?? 'DSS'} 초안을 이어서 열어요`);
       return dsRoute(d.id);
     }} />;
 }

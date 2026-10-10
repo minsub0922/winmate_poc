@@ -34,14 +34,19 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
 - **API** `/v1/rq-flows*`(rqflow.py · api_flow.py, 스키마 `RF*`, DocStore `rq_flows`, id `rqf_…`, 코드 `RQ-NN` — 허브 rq ref 최대값 다음 번호):
   만들기 · 목록 · 읽기(id 또는 코드) · `PUT` 폼 전체(`expected_version` 409, 채우는 중 409 FILLING) · `:fill` 202(잡 `rq.flow.fill`, 빈 칸만 · 사람 값 보호 · 숫자 가드) ·
   `deep-questions`(규칙 + `rq.deep_questions.v1`, 질문 = `ai-pending`) · `…/{qid}:answer`(보기 · 직접 입력 → `ai-accepted`, `later` → 확인 필요) · `deep-questions:close` ·
-  `:finish`(처음 = `create_flow` 로 Storyboard 자동 생성 · 다음 = `push_stage("rq")`, ver = 저장 횟수, 제작자 의견은 stage · 요약 · 카드에서 빠짐).
-- **웹** `web/src/features/requirements/flow/`: `/requirements`(RQ0 = `ContentListScreen content="rq"`, 작성 중 = rq-flows 중 내용 있는 초안) ·
+  `:finish`(처음 = `create_flow` 로 Storyboard 자동 생성 · 다음 = `push_stage("rq")`, ver = 저장 횟수, 제작자 의견은 stage · 요약 · 카드에서 빠짐) ·
+  `DELETE /v1/rq-flows/{id}`(2026-10-10 · 저장 전 초안만 204 — status draft · ver 0 · sb_ids 없음. 저장한 것은 409 `SAVED_CONTENT`
+  「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」, `?expected_version=` 이 다르면 409 VERSION_CONFLICT, 없으면 404.
+  소프트 삭제 + `unregister_item`, 채우는 잡이 있으면 취소 — 워커는 문서가 사라졌으면 되살리지 않고 잡을 canceled 로 끝냄. 번호 카운터는 그대로라 지운 번호를 다시 쓰지 않음).
+  요구사항은 만들 때 Storyboard 가 없어 같은 Storyboard 중복 막기는 해당 없음.
+- **웹** `web/src/features/requirements/flow/`: `/requirements`(RQ0 = `ContentListScreen content="rq"`, 작성 중 = rq-flows 중 내용 있는 초안 — 저장 전 초안 줄은 `onDelete`(손을 올리면 × · 확인 → `useRfDelete` → 목록 · 사이드바 색인 새로)) ·
   `/requirements/new`(Gate 없이 바로 RQ1 — 첫 입력 때 만들고 주소를 `/requirements/flow/:id` 로, 빈 초안은 만들지 않음) · `/requirements/flow/:id`(RQ1 · RQ1_AI → 저장 → RQ_Done `FlowDoneView` + 후속 DSS `/dss/new?sb=&auto=1`).
   폼은 화면이 원본(id 를 화면이 만듦 `k_ · q_`) · 600ms 자동 저장(PUT 응답으로 글자를 덮어쓰지 않음, 답 · 파일 채우기만 폼을 바꿈). 보드 px 그대로 `rqflow.css`(접두어 `rqf-`, 왼쪽 400 · AI 열림 300 · AI 패널 380).
   RQ_Done 은 공용 FlowDone 을 `.rqf-done` 범위에서 보드 Done 값으로 덮어씀(공용 부품 요청 대상).
 - **이전 흐름 이동**: 목록 · 새로 만들기만 `/requirements/legacy` · `/requirements/legacy/new`. 나머지 `/requirements/:rqId/...` 는 그대로(제안서 handoff).
-- **테스트** `test_requirements_flow.py` 6개(전체 38) · e2e `web/e2e/requirements/rq-flow.spec.ts` 3개(목록 → 파일 → AI 심층 질의 → 저장 → Storyboard 자동 생성 · 폭 측정 · 1920) ·
-  캡처 `__screens__/RQ0-new · RQ1-new · RQ1-empty-new · RQ1_AI-new · RQ1_AI-done-new · RQ_Done-new · RQ_DoneJson-new.png`.
+- **테스트** `test_requirements_flow.py` 8개(전체 40 — 지우기 · 채우기 잡 취소 포함) · e2e `web/e2e/requirements/rq-flow.spec.ts` 3개(목록 → 파일 → AI 심층 질의 → 저장 → Storyboard 자동 생성 · 폭 측정 · 1920) ·
+  `rq-draft.spec.ts` 1개(첫 입력 초안 → 목록 × → 확인 → 빠짐 · 저장한 것은 × 없음 + API 409) ·
+  캡처 `__screens__/RQ0-new · RQ1-new · RQ1-empty-new · RQ1_AI-new · RQ1_AI-done-new · RQ_Done-new · RQ_DoneJson-new · RQ0-draft-delete.png`.
 
 ### 이전 흐름(`/v1/requirements*`, 2026-10-06)
 

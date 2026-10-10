@@ -10,7 +10,7 @@ import { Link, Navigate, useParams, useSearchParams } from 'react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { CONTENT, ContentListScreen, FlowBar, FlowDoneView, GateScreen, useShellPage, type DraftRow } from '@/shell';
 import { ErrorState, FlowScreen, Skeleton, josa, toast } from '@/ui';
-import { GROUPS, isBusy, mfApi, mfKey, mfRoute, nOn, qsOf, useMfActions, useMiFlow, useMiFlows, type MFDoc, type MFStageOut } from './api';
+import { GROUPS, isBusy, mfApi, mfKey, mfListKey, mfRoute, nOn, qsOf, useMfActions, useMfDelete, useMiFlow, useMiFlows, type MFDoc, type MFStageOut } from './api';
 import { usePacedSteps } from './pace';
 import { RefineView } from './RefineStep';
 import { LoadingView, SearchView } from './SearchStep';
@@ -19,22 +19,34 @@ import './miflow.css';
 const SECTION = CONTENT.mi.label;
 const STEPS = CONTENT.mi.steps;
 
-/** MI0 — 보드 List(content=mi). 저장 전 초안은 「작성 중」 */
+/** MI0 — 보드 List(content=mi). 저장 전 초안은 「작성 중」 — 손을 올리면 ×(지우기) */
 export function MiListScreen() {
   const flows = useMiFlows();
+  const remove = useMfDelete();
   const drafts: DraftRow[] = (flows.data?.items ?? []).filter((m) => m.status !== 'done')
-    .map((m) => ({ title: m.title, ref: m.code ?? null, to: mfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at }));
+    .map((m) => ({ title: m.title, ref: m.code ?? null, to: mfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at,
+      onDelete: m.ver == null ? () => remove(m.id) : undefined }));
   return <ContentListScreen content="mi" drafts={drafts} />;
 }
 
-/** MI1 · MI1_Branch — 보드 Gate(content=mi). 이전 흐름 링크(`/mi/new?rq=` — 요구사항 정의서의 「Market Intelligence」)는 이전 MI1 로 */
+/** MI1 · MI1_Branch — 보드 Gate(content=mi). 이전 흐름 링크(`/mi/new?rq=` — 요구사항 정의서의 「Market Intelligence」)는 이전 MI1 로.
+ *  같은 Storyboard 의 저장 전 초안이 있으면(「‹ Storyboard」 → Gate → 다시 시작) 서버가 그 초안을 돌려준다 → 이어서 연다 */
 export function MiGateScreen() {
   const [sp] = useSearchParams();
   const qc = useQueryClient();
+  const flows = useMiFlows();
+  const drafts: DraftRow[] = (flows.data?.items ?? []).filter((m) => m.status !== 'done' && m.ver == null)
+    .map((m) => ({ title: m.title, ref: m.code ?? null, to: mfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at }));
   if (sp.get('rq') && !sp.get('sb')) return <Navigate to={`/mi/legacy/new?${sp.toString()}`} replace />;
   // 만든 문서(분석 중)를 캐시에 먼저 넣어 편집 화면이 분석 단계부터 그리게 한다(빠른 모델이면 첫 조회 때 이미 끝나 있다)
-  return <GateScreen content="mi" initialSb={sp.get('sb')} autoStart={sp.get('auto') === '1'}
-    onStart={async ({ sbId }) => { const d = await mfApi.create(sbId); qc.setQueryData(mfKey(d.id), d); return mfRoute(d.id); }} />;
+  return <GateScreen content="mi" initialSb={sp.get('sb')} autoStart={sp.get('auto') === '1'} drafts={drafts}
+    onStart={async ({ sbId }) => {
+      const { doc: d, reused } = await mfApi.create(sbId);
+      qc.setQueryData(mfKey(d.id), d);
+      void qc.invalidateQueries({ queryKey: mfListKey });
+      if (reused) toast(`작성 중이던 ${d.code ?? 'MI'} 초안을 이어서 열어요`);
+      return mfRoute(d.id);
+    }} />;
 }
 
 /** 저장한 MI 를 열어 다시 읽기 시작하기 전(응답 전) — 서버 분석 단계와 같은 이름 */

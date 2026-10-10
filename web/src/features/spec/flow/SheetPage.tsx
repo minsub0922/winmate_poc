@@ -2,12 +2,13 @@
  * Spec 시트 · 시트 작성(보드 webapp1 SP2) → 완료(보드 Done content=sp · SP_Done) — `/spec/flow/:id`
  * 왼쪽 DSS 제품(330 · 체크 = 시트에 넣기, 오른쪽 모델 칩 = 모델 고르기 · 바꾸기 · 수량) | 오른쪽 형식 · 항목 · 표기 칩 + 미리보기(130 + 제품 칸).
  * 값은 공식 카탈로그(KB)에서만, 없는 값은 [확인 필요]. 보드 px 그대로(sheet.css). 본문 열은 셸 규칙(1180) · 패널 안에서만 스크롤.
+ * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 나머지 칸은 그대로.
  */
 import { useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router';
 import { FlowBar, FlowDoneView, useShellPage } from '@/shell';
-import { ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, LinkedStoryboardBar, Skeleton, cx, toast } from '@/ui';
-import { ITEM_KO, WARN_SHORT, useSfActions, useSpecFlow, type SFDoc, type SFRow, type SFStageOut } from './api';
+import { AiBar, ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, LinkedStoryboardBar, Skeleton, cx, toast } from '@/ui';
+import { ITEM_KO, WARN_SHORT, dssChangeText, resyncToast, useSfActions, useSpecFlow, type SFDoc, type SFRow, type SFStageOut } from './api';
 import { ModelDialog } from './ModelDialog';
 import './sheet.css';
 
@@ -27,20 +28,25 @@ function Check({ on }: { on: boolean }) {
   );
 }
 
-/** 제품 줄(보드 s-row: 44 · 체크 20 · 이름 13/600 · 공간 11.5) + 모델 칩(보드에 없음 — 모델 고르기 · 바꾸기) */
-function ProductRow({ r, onToggle, onModel }: { r: SFRow; onToggle: () => void; onModel: () => void }) {
+/** 제품 줄(보드 s-row: 44 · 체크 20 · 이름 13/600 · 공간 11.5) + 모델 칩(보드에 없음 — 모델 고르기 · 바꾸기)
+ *  DSS 다시 가져오기 표시(보드에 없음): 새로 들어온 행은 공간 줄 뒤 「DSS에서 새로」, 빠진 행은 경고 「DSS에서 빠짐」 + 지우기 × */
+function ProductRow({ r, onToggle, onModel, onRemove }: { r: SFRow; onToggle: () => void; onModel: () => void; onRemove: () => void }) {
   const warn = r.warnings[0];
   const chip = r.display_name ?? '모델 고르기';
+  const gone = r.dss_status === 'removed';
   return (
-    <div className="sf-row" data-testid="sf-row" data-row={r.name}>
+    <div className={cx('sf-row', gone && 'sf-row--gone')} data-testid="sf-row" data-row={r.name} data-dss={r.dss_status ?? undefined}>
       <button type="button" className="sf-row__check" role="checkbox" aria-checked={r.on} aria-label={r.name} onClick={onToggle}>
         <Check on={r.on} />
         <span className="sf-row__txt">
           <span className="sf-row__t">{r.name}</span>
           <span className="sf-row__sp">{r.spaces.join(' · ') || '공간 없음'}
+            {r.dss_status === 'added' && <em className="sf-row__new"> · DSS에서 새로</em>}
             {warn && <em className="sf-row__warn" title={r.warnings.map((w) => w.text).join('\n')}> · {WARN_SHORT[warn.kind] ?? '확인 필요'}</em>}</span>
         </span>
       </button>
+      {gone && <button type="button" className="sf-rowdel" onClick={onRemove} aria-label={`${r.name} 지우기`} title="DSS에서 빠진 제품 · 시트에서 지우기">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" aria-hidden><path d="M6 6l12 12M18 6L6 18" /></svg></button>}
       <button type="button" className={cx('sf-model', !r.model_code && 'sf-model--none', !!warn && r.model_code && 'sf-model--warn')} onClick={onModel}
         aria-label={`${r.name} 모델 ${r.model_code ? '바꾸기' : '고르기'}`} title={r.model_code ? `${r.display_name} · ${r.model_code}` : '공식 카탈로그 모델을 골라 주세요'}>
         {chip}
@@ -109,6 +115,7 @@ function Editor({ doc, onFinished }: { doc: SFDoc; onFinished: (r: SFStageOut) =
   const act = useSfActions(doc.id);
   const [modelKey, setModelKey] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const on = doc.rows.filter((r) => r.on).length;
   const c = doc.counts;
   const fail = (e: unknown) => toast(errText(e, '바꾸지 못했어요'));
@@ -120,6 +127,12 @@ function Editor({ doc, onFinished }: { doc: SFDoc; onFinished: (r: SFStageOut) =
     setSaving(true);
     try { onFinished(await act.finish()); } catch (e) { toast(errText(e, '저장하지 못했어요.')); } finally { setSaving(false); }
   };
+  const resync = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    try { toast(resyncToast((await act.resync()).last_resync)); } catch (e) { toast(errText(e, 'DSS를 다시 가져오지 못했어요.')); } finally { setSyncing(false); }
+  };
+  const removeRow = (r: SFRow) => act.deleteRow(r.key).then(() => toast(`${r.name}을(를) 시트에서 지웠어요`)).catch(fail);
   const fmtLabel = FORMATS.find(([k]) => k === doc.format)?.[1] ?? '비교표';
   const summary = on && (c.warnings || c.pending_cells) ? `확인 필요 값 ${c.pending_cells} · 경고 ${c.warnings}` : undefined;
   const why = !on ? '시트에 넣을 제품을 골라 주세요' : !doc.items.length ? '항목을 하나 이상 골라 주세요' : undefined;
@@ -128,11 +141,17 @@ function Editor({ doc, onFinished }: { doc: SFDoc; onFinished: (r: SFStageOut) =
       bar={doc.sb_id ? <FlowBar sbIds={[doc.sb_id]} current="sp" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" />
         : <LinkedStoryboardBar chips={[]} emptyText="연결된 Storyboard가 없어요" />}>
       <FlowHead title="DSS 제품으로 스펙 시트를 만들어요" desc={`${doc.dss_ref ?? 'DSS'}에서 고른 제품을 그대로 가져왔어요. 값은 공식 카탈로그에서 채워요.`} />
+      {doc.dss_changed && (
+        <AiBar actionLabel={syncing ? '가져오는 중…' : '다시 가져오기'} onAction={resync}>
+          <span data-testid="sf-dss-changed" title={[...doc.dss_changed.added_names ?? []].map((n) => `+ ${n}`).concat((doc.dss_changed.removed_names ?? []).map((n) => `− ${n}`)).join('\n') || undefined}>
+            {dssChangeText(doc.dss_changed)}</span>
+        </AiBar>
+      )}
       <div className="wm-flow__grid sf-grid2">
         <FlowPanel className="sf-products" data-testid="sf-products">
           <div className="sf-lhead"><span className="sf-lhead__t">제품</span><span className="sf-lhead__n">{on} / {doc.rows.length} 선택</span></div>
           <div className="sf-list" role="group" aria-label="시트에 넣을 제품">
-            {doc.rows.map((r) => <ProductRow key={r.key} r={r} onToggle={() => toggleRow(r)} onModel={() => setModelKey(r.key)} />)}
+            {doc.rows.map((r) => <ProductRow key={r.key} r={r} onToggle={() => toggleRow(r)} onModel={() => setModelKey(r.key)} onRemove={() => removeRow(r)} />)}
             {!doc.rows.length && <div className="sf-empty">DSS에 제품이 없어요 · DSS에서 공간별 제품을 먼저 골라 주세요</div>}
           </div>
         </FlowPanel>

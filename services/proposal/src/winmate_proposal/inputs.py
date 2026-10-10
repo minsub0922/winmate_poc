@@ -245,15 +245,24 @@ async def base_bodies(p: dict[str, Any], key: str, sheets: list[dict[str, Any]],
             if prods:
                 sources.append({"kind": "kb" if prods[0].get("kb") else "link", "ref": sp.get("key"), "label": f"{sp.get('name')} 제품"})
         elif role == "SM":
-            body["spaces"] = [{"name": s["name"], "body": " · ".join(x.get("model") or x.get("name") or "" for x in
+            def sm_name(x: dict[str, Any]) -> str:
+                # 허브 DSS 제품은 제품 이름(모델 코드는 스펙 시트에서) + 담긴 수량 문자열
+                if x.get("source") == "storyboard":
+                    return x.get("name") or x.get("model") or ""
+                return x.get("model") or x.get("name") or ""
+
+            def sm_line(x: dict[str, Any]) -> str:
+                q = x.get("qty")
+                return f"{sm_name(x)} {q}" if x.get("source") == "storyboard" and q and not x.get("qty_confirm") else sm_name(x)
+            body["spaces"] = [{"name": s["name"], "body": " · ".join(sm_line(x) for x in
                                                                      [y for y in ctx.get("products") or [] if y.get("space_key") == s["key"]][:3]),
-                               "chips": [x.get("model") or x.get("name") for x in ctx.get("products") or [] if x.get("space_key") == s["key"]][:3]}
+                               "chips": [sm_name(x) for x in ctx.get("products") or [] if x.get("space_key") == s["key"]][:3]}
                               for s in spaces]
             body["title"] = body.get("title") or f"공간 {len(spaces)}곳 · 어디에 무엇을"
             body.setdefault("signals", {})["spaces"] = len(spaces)
             if any(x.get("qty") for x in ctx.get("products") or []):
                 body["signals"]["qty_table"] = bool(it and (it.get("template_hint") or {}).get("code") == "SM-B")
-            has_input = has_input or bool(spaces and (ctx.get("space_source") in ("birdseye", "scenario", "requirements")))
+            has_input = has_input or bool(spaces and (ctx.get("space_source") in ("birdseye", "scenario", "requirements", "storyboard")))
         elif role in ("SXI", "SXD", "SXS"):
             code = sh.get("solution_code") or ""
             s = defs.SOLUTIONS.get(code) or {}
@@ -354,7 +363,7 @@ def section_has_input(key: str, lns: list[dict[str, Any]], p: dict[str, Any]) ->
     if key == "cases":
         return True
     if key == "spaceProducts":
-        return bool(ctx.get("spaces")) and ctx.get("space_source") in ("birdseye", "scenario", "requirements", "user")
+        return bool(ctx.get("spaces")) and ctx.get("space_source") in ("birdseye", "scenario", "requirements", "user", "storyboard")
     if key == "spec":
         return bool([x for x in ctx.get("products") or [] if x.get("model")])
     if key == "solution":

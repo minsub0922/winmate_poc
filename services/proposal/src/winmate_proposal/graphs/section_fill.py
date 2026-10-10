@@ -11,7 +11,7 @@ from typing import Any
 
 from winmate_common.jobs import JobContext
 
-from .. import clients, config, content as C, core, defs, facts as F, inputs, plan, prompts, repo, templates, validate as V
+from .. import clients, config, content as C, core, defs, facts as F, hub, inputs, plan, prompts, repo, templates, validate as V
 from . import common as G
 
 log = logging.getLogger("winmate.proposal.section_fill")
@@ -124,7 +124,8 @@ async def prepare(pid: str, key: str, *, mode: str = "draft", sheet_ids: list[st
                                                                                       for it in (ln.get("handoff") or {}).get("items") or []
                                                                                       if (it.get("content") or {}).get("real_names")]}}
                       for ln in bases["links"]],
-            "features": sorted({ln.get("feature") for ln in bases["links"] if ln.get("feature")})}
+            "features": sorted({ln.get("feature") for ln in bases["links"] if ln.get("feature")}),
+            "hub": sorted({ln.get("ref_id") for ln in bases["links"] if hub.is_hub_link(ln)})}
 
 
 # ── 2. 초안(LLM) ───────────────────────────────────────────
@@ -175,6 +176,8 @@ async def draft(pid: str, key: str, prep: dict[str, Any], *, mode: str, request:
         extra.append("연결 자료가 없는 시트는 요구사항 · 고객 정보로 방향만 쓰고 수치는 모두 자리표시로 둔다.")
     if mode == "reuse_borrow":
         extra.append("원본 문장 · 고유명사 · 수치를 쓰지 않는다(흐름만 차용). 수치는 이번 고객 자료에 없으면 [00] 자리표시.")
+    if prep.get("hub"):
+        extra.append(f"재료 출처: Storyboard 허브 {', '.join(prep['hub'])} — 콘텐츠 값(제품 · 수량 · 출처 · 판정)은 그대로 두고 문장만 다듬는다.")
     extra += [x for x in extra_lines or [] if x]
     user = prompts.section_draft(section_key=key, section_name=defs.SECTIONS[key]["name"], mode=mode,
                                  customer=(p.get("customer") or {}).get("name") or "(고객 미정)", project=p.get("title") or "",

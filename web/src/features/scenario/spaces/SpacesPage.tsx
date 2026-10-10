@@ -4,13 +4,18 @@
  * 공간 · 공간 제품은 Gate 에서 고른 Storyboard 의 DSS 로 미리 채워진다. 입력 폼은 고정하지 않는다(단계 수 · 항목 자유).
  * 고칠 때마다 자동 저장(PUT, 낙관적 잠금 · 600ms). 제품 · 솔루션이 빈 공간이 있으면 저장 버튼이 막힌다(보드 canSave).
  * 저장 → 허브 stages.sc · 요약본 반영 → 완료(보드 Done: FlowDoneView · 전체 JSON).
+ * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 칸 폭은 그대로.
+ * 다시 가져온 뒤 새로 놓인 제품 · 공간은 「새로」, 시나리오가 써서 남긴 빠진 제품 · 공간은 「DSS에서 빠짐」(주황).
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { FlowBar, FlowDoneView, useFlowInvalidate, useShellPage } from '@/shell';
-import { AiButton, ErrorState, FlowFooter, FlowPanel, FlowScreen, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast, type PickGroup, type PickItem } from '@/ui';
-import { acceptCandidate, dropCandidate, finishSpaceSet, putSpaceSet, ssKey, suggestScenarios, useSpaceSet, type SSCandidate, type SSDoc, type SSScenario, type SSSpace, type SSStageOut } from './api';
+import { AiBar, AiButton, ErrorState, FlowFooter, FlowPanel, FlowScreen, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast, type PickGroup, type PickItem } from '@/ui';
+import {
+  acceptCandidate, dropCandidate, dssChangeText, finishSpaceSet, putSpaceSet, resyncSpaceSet, resyncToast, ssKey, suggestScenarios, useSpaceSet,
+  type SSCandidate, type SSDoc, type SSScenario, type SSSpace, type SSStageOut,
+} from './api';
 import { GATE_STEPS } from './FlowPages';
 import './spaces.css';
 
@@ -93,14 +98,16 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: (s: SSStageOut) =
   const [pick, setPick] = useState(false);
   const [aiBusy, setAiBusy] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const timer = useRef<number | null>(null);
   const pending = useRef<SSSpace[] | null>(null);
   const verRef = useRef(doc.version);
 
-  const apply = useCallback((d: SSDoc, replace = true) => {
+  /** 응답 문서를 캐시에 — dss_changed 는 GET · 다시 가져오기 응답에만 계산돼 오므로 다른 응답에서는 앞의 값을 잇는다 */
+  const apply = useCallback((d: SSDoc, replace = true, keepDss = true) => {
     if (replace) setSpaces(d.spaces);
     verRef.current = d.version;
-    qc.setQueryData(ssKey(d.id), d);
+    qc.setQueryData<SSDoc>(ssKey(d.id), (prev) => (keepDss ? { ...d, dss_changed: d.dss_changed ?? prev?.dss_changed ?? null } : d));
   }, [qc]);
 
   const flush = useCallback(async () => {
@@ -175,6 +182,16 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: (s: SSStageOut) =
     setSp({ scenarios: [...sp.scenarios, sc] });
     setCur((c) => ({ ...c, [sp.id]: sc.id }));
   };
+  const resync = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    try {
+      await flush();
+      const d = await resyncSpaceSet(doc.id);
+      apply(d, true, false);
+      toast(resyncToast(d.last_resync));
+    } catch (e) { toast((e as Error).message || 'DSS를 다시 가져오지 못했어요.'); } finally { setSyncing(false); }
+  };
   const save = async () => {
     const bad = firstScenarioIssue(spaces);
     if (bad) {
@@ -204,6 +221,12 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: (s: SSStageOut) =
         <h1 className="ss-h1">공간마다 시나리오를 여러 개 써요</h1>
         <span className="ss-hint">공간 → 시나리오 → 장면 · 공간과 시나리오마다 제품 · 솔루션을 골라요</span>
       </div>
+      {doc.dss_changed && (
+        <AiBar actionLabel={syncing ? '가져오는 중…' : '다시 가져오기'} onAction={resync}>
+          <span data-testid="ss-dss-changed" title={(doc.dss_changed.added_names ?? []).map((n) => `+ ${n}`).concat((doc.dss_changed.removed_names ?? []).map((n) => `− ${n}`)).join('\n') || undefined}>
+            {dssChangeText(doc.dss_changed)}</span>
+        </AiBar>
+      )}
       <div className="wm-flow__grid ss-grid" style={{ gridTemplateColumns: '196px minmax(0, 1fr)', gap: 12 }}>
         <FlowPanel className="ss-spaces" role="tablist" aria-orientation="vertical" aria-label="공간">
           <span className="ss-spaces__h">공간 · {doc.dss_ref ?? 'DSS'}</span>
@@ -213,7 +236,10 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: (s: SSStageOut) =
             return (
               <button key={s.id} type="button" role="tab" aria-selected={s.id === sp?.id} className={cx('ss-sp', s.id === sp?.id && 'ss-sp--on')} onClick={() => setSpId(s.id)}>
                 <span className="ss-sp__top"><span className="ss-sp__name">{s.name}</span>{!pn && <span className="ss-sp__warn" aria-label="제품 · 솔루션 없음" />}</span>
-                <span className={cx('ss-sp__sub', !pn && 'ss-sp__sub--warn', pn && !n && 'ss-sp__sub--empty')}>{pn ? `시나리오 ${n} · 제품 ${pn}` : '제품 · 솔루션 없음'}</span>
+                {s.dss_status === 'removed'
+                  ? <span className="ss-sp__sub ss-sp__sub--warn" title="DSS에서 빠졌지만 시나리오 · 제품이 있어 남겨 뒀어요">DSS에서 빠짐 · 시나리오 {n}</span>
+                  : <span className={cx('ss-sp__sub', !pn && 'ss-sp__sub--warn', pn && !n && 'ss-sp__sub--empty')}>{pn ? `시나리오 ${n} · 제품 ${pn}` : '제품 · 솔루션 없음'}
+                    {s.dss_status === 'added' && <em className="ss-flag ss-flag--new" title="DSS 다시 가져오기로 새로 생긴 공간"> · 새 공간</em>}</span>}
               </button>
             );
           })}
@@ -228,7 +254,10 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: (s: SSStageOut) =
               </div>
               <div className="ss-pchips">
                 {sp.products.map((p) => (
-                  <span key={p.name} className="ss-pchip"><span className={cx('ss-pchip__kind', p.kind === 'solution' && 'ss-pchip__kind--sol')}>{p.kind === 'solution' ? '솔루션' : '제품'}</span>{p.name}
+                  <span key={p.name} className={cx('ss-pchip', p.dss_status === 'removed' && 'ss-pchip--gone')} data-dss={p.dss_status ?? undefined}
+                    title={p.dss_status === 'removed' ? 'DSS에서 빠졌지만 이 공간의 시나리오가 써서 남겨 뒀어요 · 필요 없으면 빼 주세요' : p.dss_status === 'added' ? 'DSS 다시 가져오기로 새로 들어왔어요' : undefined}>
+                    <span className={cx('ss-pchip__kind', p.kind === 'solution' && 'ss-pchip__kind--sol')}>{p.kind === 'solution' ? '솔루션' : '제품'}</span>{p.name}
+                    {p.dss_status === 'removed' && <span className="ss-pchip__flag">DSS에서 빠짐</span>}{p.dss_status === 'added' && <span className="ss-pchip__flag ss-pchip__flag--new">새로</span>}
                     <button type="button" className="ss-x" aria-label={`${p.name} 빼기`} onClick={() => setSp({ products: sp.products.filter((x) => x.name !== p.name) })}><X s={10} w={3} /></button></span>
                 ))}
                 <button type="button" className="ss-dash" onClick={() => setPick(true)}>+ 추가 · 변경</button>

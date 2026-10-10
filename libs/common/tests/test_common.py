@@ -44,6 +44,23 @@ def test_store_versions(env):
     assert items2[0]["id"] != items[0]["id"]
 
 
+
+def test_store_delete_expected_version(env):
+    """초안인지 확인 → 지우기 사이에 저장이 끼면 지우지 않는다(같은 트랜잭션에서 판 확인)."""
+    from winmate_common.store import VersionConflict
+    s = DocStore(env / "d.sqlite")
+    a = s.put("drafts", "d1", {"title": "초안"})
+    s.patch("drafts", "d1", {"status": "done"})                 # 다른 요청이 저장(판 2)
+    with pytest.raises(VersionConflict):
+        s.delete("drafts", "d1", expected_version=a["version"])
+    assert s.get("drafts", "d1")["status"] == "done"
+    assert s.delete("drafts", "d1", expected_version=2) is True and s.get("drafts", "d1") is None
+    assert s.delete("drafts", "d1", expected_version=2) is False   # 이미 지움
+    assert s.delete("drafts", "nope", expected_version=1) is False
+    s.put("drafts", "d2", {"title": "B"})
+    assert s.delete("drafts", "d2") is True                       # 판을 안 주면 예전처럼
+
+
 def _kb_app():
     app = create_app("kb")
     router = APIRouter(prefix="/v1")

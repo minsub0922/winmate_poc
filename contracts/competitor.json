@@ -2498,7 +2498,7 @@
           "ca-flows"
         ],
         "summary": "Create Ca Flow",
-        "description": "새 경쟁사 분석 — Storyboard 의 DSS 로 비교 기준을 채운다. 없는 Storyboard 404 · DSS 전이면 422 PREREQUISITE_MISSING.",
+        "description": "새 경쟁사 분석 — Storyboard 의 DSS 로 비교 기준을 채운다. 없는 Storyboard 404 · DSS 전이면 422 PREREQUISITE_MISSING.\n같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로 돌려준다(Gate 를 다시 거쳐도 초안이 늘지 않음).",
         "operationId": "create_ca_flow",
         "requestBody": {
           "required": true,
@@ -2540,6 +2540,16 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "이 Storyboard 의 저장 전 초안이 이미 있음 — 그 초안(새로 만들지 않음)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
           }
         }
       }
@@ -2572,6 +2582,68 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Delete Ca Flow",
+        "description": "저장 전 초안 지우기(목록 줄 ×, 소프트 삭제 · 작업물 색인도 지움) — 한 번도 저장하지 않은 것만.\n저장한 경쟁사 분석은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT, 없으면 404 NOT_FOUND.",
+        "operationId": "delete_ca_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          },
+          {
+            "name": "expected_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "주면 지금 판과 다를 때 409 CONFLICT",
+              "title": "Expected Version"
+            },
+            "description": "주면 지금 판과 다를 때 409 CONFLICT"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "4XX": {
             "description": "요청 오류",

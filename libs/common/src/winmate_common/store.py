@@ -202,10 +202,28 @@ class DocStore:
         cur.update(changes)
         return self.put(collection, doc_id, cur, **kw)
 
-    def delete(self, collection: str, doc_id: str) -> bool:
-        cur = self._conn().execute("UPDATE docs SET deleted=1, updated_at=? WHERE collection=? AND id=? AND deleted=0",
-                                   (now_iso(), collection, doc_id))
-        return cur.rowcount > 0
+    def delete(self, collection: str, doc_id: str, *, expected_version: int | None = None) -> bool:
+        """소프트 삭제. `expected_version` 을 주면 같은 트랜잭션 안에서 판을 확인한다 — 다르면 VersionConflict
+        (예: "저장 전 초안인지 확인 → 지우기" 사이에 다른 요청이 저장한 경우)."""
+        if expected_version is None:
+            cur = self._conn().execute("UPDATE docs SET deleted=1, updated_at=? WHERE collection=? AND id=? AND deleted=0",
+                                       (now_iso(), collection, doc_id))
+            return cur.rowcount > 0
+        conn = self._conn()
+        conn.execute("BEGIN IMMEDIATE")
+        try:
+            row = conn.execute("SELECT version, deleted FROM docs WHERE collection=? AND id=?", (collection, doc_id)).fetchone()
+            if row is None or row["deleted"]:
+                conn.execute("COMMIT")
+                return False
+            if row["version"] != expected_version:
+                raise VersionConflict(f"{collection}/{doc_id} 버전 {row['version']} ≠ 기대 {expected_version}")
+            conn.execute("UPDATE docs SET deleted=1, updated_at=? WHERE collection=? AND id=?", (now_iso(), collection, doc_id))
+            conn.execute("COMMIT")
+            return True
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
 
     # ── 버전 ───────────────────────────────────────────
     def versions(self, collection: str, doc_id: str) -> list[dict[str, Any]]:

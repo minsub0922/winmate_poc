@@ -3910,7 +3910,7 @@
           "space-sets"
         ],
         "summary": "Create Space Set",
-        "description": "새 묶음(보드 Gate → SC2). sb_id 만 주면 Storyboard flow.json 의 DSS 공간 · 공간별 제품 · 솔루션으로 시작한다\n(Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다.",
+        "description": "새 묶음(보드 Gate → SC2). sb_id 만 주면 Storyboard flow.json 의 DSS 공간 · 공간별 제품 · 솔루션으로 시작한다\n(Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). 같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로.\nspaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다.",
         "operationId": "create_space_set",
         "requestBody": {
           "required": true,
@@ -3952,6 +3952,16 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Gate(sb_id 만)로 시작했는데 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
           }
         }
       }
@@ -3962,6 +3972,7 @@
           "space-sets"
         ],
         "summary": "Get Space Set",
+        "description": "묶음 하나 + `dss_changed`(Storyboard 의 DSS 가 묶음을 만든 뒤 바뀌었으면 그 차이, 아니면 null).",
         "operationId": "get_space_set",
         "parameters": [
           {
@@ -3984,6 +3995,50 @@
                 }
               }
             }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Delete Space Set",
+        "description": "저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 묶음은 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`.",
+        "operationId": "delete_space_set",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
           },
           "4XX": {
             "description": "요청 오류",
@@ -4035,6 +4090,59 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/space-sets/{set_id}:resync-dss": {
+      "post": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Resync Space Set Dss",
+        "description": "DSS 다시 가져오기 — 새 공간 · 새로 놓인 제품은 더하고, 빠진 제품은 쓰는 시나리오가 없을 때만 뺀다(쓰면 남기고 「DSS에서 빠짐」).\n시나리오는 지우지 않는다. 결과는 `last_resync`. Storyboard 없음 404 · DSS 없음 422.",
+        "operationId": "resync_space_set_dss",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -7564,6 +7672,47 @@
             "title": "Dss Ref",
             "description": "시작할 때 읽은 Storyboard 의 DSS 코드(공간 목록 머리 「공간 · DSS-01」 · stages.sc.from)"
           },
+          "dss_ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ver",
+            "description": "가져온 DSS 판(허브 stages.dss.ver)"
+          },
+          "dss_spaces": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Dss Spaces",
+            "description": "가져온 DSS 의 공간 이름(다시 가져오기 비교용)"
+          },
+          "dss_changed": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SSDssChange"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null)"
+          },
+          "last_resync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SSResync"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "dss_items": {
             "items": {
               "$ref": "#/components/schemas/SSDssItem"
@@ -7651,6 +7800,75 @@
           "updated_at"
         ],
         "title": "SSDoc"
+      },
+      "SSDssChange": {
+        "properties": {
+          "from": {
+            "type": "string",
+            "title": "From",
+            "description": "묶음이 가져온 DSS(DSS-01 v1)"
+          },
+          "to": {
+            "type": "string",
+            "title": "To",
+            "description": "허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)"
+          },
+          "ref_changed": {
+            "type": "boolean",
+            "title": "Ref Changed",
+            "description": "DSS 자체가 바뀜(분기 등으로 다른 DSS)",
+            "default": false
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added",
+            "description": "새로 들어온 DSS 제품 · 솔루션"
+          },
+          "removed": {
+            "type": "integer",
+            "title": "Removed",
+            "description": "DSS 에서 빠진 제품 · 솔루션"
+          },
+          "changed": {
+            "type": "integer",
+            "title": "Changed",
+            "description": "놓인 공간이 바뀐 제품 · 솔루션",
+            "default": 0
+          },
+          "spaces_added": {
+            "type": "integer",
+            "title": "Spaces Added",
+            "default": 0
+          },
+          "spaces_removed": {
+            "type": "integer",
+            "title": "Spaces Removed",
+            "default": 0
+          },
+          "added_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added Names"
+          },
+          "removed_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed Names"
+          }
+        },
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "added",
+          "removed"
+        ],
+        "title": "SSDssChange",
+        "description": "Storyboard 의 DSS 가 묶음을 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄."
       },
       "SSDssItem": {
         "properties": {
@@ -7894,6 +8112,22 @@
             ],
             "title": "Ref",
             "description": "KB 참조 kb:family:… · kb:solution:…"
+          },
+          "dss_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "added",
+                  "removed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Status",
+            "description": "DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 놓임 · removed = DSS 에서 빠졌지만 시나리오가 써서 남겨 둠"
           }
         },
         "type": "object",
@@ -7930,6 +8164,77 @@
           "spaces"
         ],
         "title": "SSPut"
+      },
+      "SSResync": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "from": {
+            "type": "string",
+            "title": "From"
+          },
+          "to": {
+            "type": "string",
+            "title": "To"
+          },
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added",
+            "description": "공간에 더한 제품 · 솔루션"
+          },
+          "removed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed",
+            "description": "쓰는 시나리오가 없어 공간에서 뺀 제품 · 솔루션"
+          },
+          "kept": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Kept",
+            "description": "DSS 에서 빠졌지만 시나리오가 써서 남긴 제품 · 솔루션(「DSS에서 빠짐」)"
+          },
+          "spaces_added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces Added"
+          },
+          "spaces_removed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces Removed",
+            "description": "DSS 에서 빠지고 시나리오 · 제품도 없어 뺀 공간"
+          },
+          "spaces_kept": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Spaces Kept",
+            "description": "DSS 에서 빠졌지만 시나리오 · 제품이 있어 남긴 공간"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "from",
+          "to"
+        ],
+        "title": "SSResync",
+        "description": "마지막 DSS 다시 가져오기 결과(토스트 · 표시). 항목은 「공간 · 제품」."
       },
       "SSScenario": {
         "properties": {
@@ -8025,6 +8330,22 @@
             "type": "array",
             "title": "Candidates",
             "description": "AI 3안(수락 전, 점선)"
+          },
+          "dss_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "added",
+                  "removed"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Status",
+            "description": "added = DSS 다시 가져오기로 새로 생긴 공간 · removed = DSS 에서 빠졌지만 시나리오 · 제품이 있어 남겨 둠"
           }
         },
         "type": "object",

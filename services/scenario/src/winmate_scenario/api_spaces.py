@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Response
 
 from . import spaceset as ss
 
@@ -15,16 +15,36 @@ async def list_space_sets(limit: int = Query(50, ge=1, le=200), cursor: str | No
     return await ss.list_sets(limit, cursor)
 
 
-@router.post("/space-sets", response_model=ss.SSDoc, status_code=201)
-async def create_space_set(body: ss.SSCreate) -> dict[str, Any]:
+@router.post("/space-sets", response_model=ss.SSDoc, status_code=201,
+             responses={200: {"model": ss.SSDoc, "description": "Gate(sb_id 만)로 시작했는데 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안"}})
+async def create_space_set(body: ss.SSCreate, response: Response) -> dict[str, Any]:
     """새 묶음(보드 Gate → SC2). sb_id 만 주면 Storyboard flow.json 의 DSS 공간 · 공간별 제품 · 솔루션으로 시작한다
-    (Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다."""
-    return await ss.create(body)
+    (Storyboard 없음 404 STORYBOARD_NOT_FOUND · DSS 전 422 PREREQUISITE_MISSING). 같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로.
+    spaces 를 직접 주거나 context_text(요구 문장)로 KB 에서 찾을 수도 있다."""
+    doc, created = await ss.create(body)
+    if not created:
+        response.status_code = 200
+    return doc
 
 
 @router.get("/space-sets/{set_id}", response_model=ss.SSDoc)
 async def get_space_set(set_id: str) -> dict[str, Any]:
-    return ss.to_api(await ss.load(set_id))
+    """묶음 하나 + `dss_changed`(Storyboard 의 DSS 가 묶음을 만든 뒤 바뀌었으면 그 차이, 아니면 null)."""
+    return await ss.get_with_status(set_id)
+
+
+@router.delete("/space-sets/{set_id}", status_code=204)
+async def delete_space_set(set_id: str) -> Response:
+    """저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 묶음은 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`."""
+    await ss.delete(set_id)
+    return Response(status_code=204)
+
+
+@router.post("/space-sets/{set_id}:resync-dss", response_model=ss.SSDoc)
+async def resync_space_set_dss(set_id: str) -> dict[str, Any]:
+    """DSS 다시 가져오기 — 새 공간 · 새로 놓인 제품은 더하고, 빠진 제품은 쓰는 시나리오가 없을 때만 뺀다(쓰면 남기고 「DSS에서 빠짐」).
+    시나리오는 지우지 않는다. 결과는 `last_resync`. Storyboard 없음 404 · DSS 없음 422."""
+    return await ss.resync(set_id)
 
 
 @router.put("/space-sets/{set_id}", response_model=ss.SSDoc)

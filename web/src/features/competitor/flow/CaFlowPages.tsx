@@ -7,29 +7,42 @@
  */
 import { useState } from 'react';
 import { Link, Navigate, useParams, useSearchParams } from 'react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { ContentListScreen, FlowDoneView, GateScreen, useShellPage, type DraftRow } from '@/shell';
-import { ErrorState, Skeleton } from '@/ui';
-import { cfRoute, createCaFlow, useCaFlow, useCaFlows, type CFDoc, type CFStageOut } from './api';
+import { ErrorState, Skeleton, toast } from '@/ui';
+import { cfKey, cfListKey, cfRoute, createCaFlow, useCaFlow, useCaFlows, useCfDelete, type CFDoc, type CFStageOut } from './api';
 import { Editor } from './Editor';
 import './caflow.css';
 
 const SECTION = '경쟁사 분석';
 const STEPS = ['Storyboard', '경쟁사 리스트업'];
 
-/** CA0 — 보드 List(content=ca). 작성 중 초안은 이 서비스 목록에서 */
+/** CA0 — 보드 List(content=ca). 작성 중 초안은 이 서비스 목록에서 — 손을 올리면 ×(지우기) */
 export function CaListScreen() {
   const flows = useCaFlows();
+  const remove = useCfDelete();
   const drafts: DraftRow[] = (flows.data?.items ?? []).filter((m) => m.status !== 'done')
-    .map((m) => ({ title: m.title, ref: m.code ?? null, to: cfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at }));
+    .map((m) => ({ title: m.title, ref: m.code ?? null, to: cfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at, onDelete: () => remove(m.id) }));
   return <ContentListScreen content="ca" drafts={drafts} />;
 }
 
-/** CA1 — 보드 Gate(content=ca). 이전 흐름의 정의서 진입(`?input=requirements&rq=`)은 이전 화면으로 */
+/** CA1 — 보드 Gate(content=ca). 이전 흐름의 정의서 진입(`?input=requirements&rq=`)은 이전 화면으로.
+ *  같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 돌려준다 → 이어서 연다(초안이 늘지 않음) */
 export function CaGateScreen() {
   const [sp] = useSearchParams();
+  const qc = useQueryClient();
+  const flows = useCaFlows();
+  const drafts: DraftRow[] = (flows.data?.items ?? []).filter((m) => m.status !== 'done')
+    .map((m) => ({ title: m.title, ref: m.code ?? null, to: cfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at }));
   if (sp.get('input')) return <Navigate to={`/competitor/legacy/new?${sp.toString()}`} replace />;
-  return <GateScreen content="ca" initialSb={sp.get('sb')} autoStart={sp.get('auto') === '1'}
-    onStart={async ({ sbId }) => cfRoute((await createCaFlow({ sb_id: sbId })).id)} />;
+  return <GateScreen content="ca" initialSb={sp.get('sb')} autoStart={sp.get('auto') === '1'} drafts={drafts}
+    onStart={async ({ sbId }) => {
+      const { doc: d, reused } = await createCaFlow({ sb_id: sbId });
+      qc.setQueryData(cfKey(d.id), d);
+      void qc.invalidateQueries({ queryKey: cfListKey });
+      if (reused) toast(`작성 중이던 ${d.code ?? '경쟁사 분석'} 초안을 이어서 열어요`);
+      return cfRoute(d.id);
+    }} />;
 }
 
 /** CA_Done — 보드 Done(content=ca): 후속 작업 없음 · 「Storyboard로」 */

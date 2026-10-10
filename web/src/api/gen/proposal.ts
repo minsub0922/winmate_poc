@@ -2804,6 +2804,77 @@ export interface components {
             /** Title */
             title: string;
         };
+        /**
+         * HubContent
+         * @description 허브 Storyboard 에 연결된 콘텐츠 한 줄(PR1L Storyboard 줄 아래) — stage 마다 「넣을 곳」.
+         */
+        HubContent: {
+            /**
+             * Key
+             * @description stage(rq · dss · km(Key message) · mi · ca · vp · sp · sc)
+             */
+            key: string;
+            /**
+             * Label
+             * @description 짧은 이름(요구사항 · DSS · MI · 경쟁사 · VP · Spec · 시나리오)
+             */
+            label: string;
+            /**
+             * Line
+             * @description 허브 카드 한 줄 요약(SB1 연결된 콘텐츠 줄)
+             * @default
+             */
+            line: string;
+            /** Ref */
+            ref?: string | null;
+            /** Route */
+            route?: string | null;
+            /**
+             * Target Label
+             * @description 「넣을 곳」 섹션 이름(유형 기준) · rq 는 「고객 정보」
+             * @default
+             */
+            target_label: string;
+            /** Target Sections */
+            target_sections?: string[];
+            /**
+             * Title
+             * @default
+             */
+            title: string;
+            /**
+             * Tool Label
+             * @description 콘텐츠 이름(고객 요구사항 · Market Intelligence …)
+             */
+            tool_label: string;
+            /** Ver */
+            ver?: number | null;
+        };
+        /**
+         * HubInfo
+         * @description 허브 Storyboard(SB-nn, 새 콘텐츠 흐름) 요약 — 연결하면 stage 값이 섹션마다 들어간다.
+         */
+        HubInfo: {
+            /** Contents */
+            contents?: components["schemas"]["HubContent"][];
+            /** Customer */
+            customer?: string | null;
+            /** Id */
+            id: string;
+            /** Key Message */
+            key_message?: string | null;
+            /**
+             * Parent
+             * @description 분기면 원본 Storyboard id
+             */
+            parent?: string | null;
+            /**
+             * Progress
+             * @description 요구사항까지 · DSS까지 · DSS + 콘텐츠 n/5
+             * @default
+             */
+            progress: string;
+        };
         /** ImageSlot */
         ImageSlot: {
             /** Name */
@@ -4320,6 +4391,8 @@ export interface components {
             default_on: boolean;
             /** Feature */
             feature: string;
+            /** @description 허브 Storyboard(SB-nn)면 연결된 콘텐츠 · 넣을 곳(2026-10-10) */
+            hub?: components["schemas"]["HubInfo"] | null;
             /**
              * Meta
              * @default

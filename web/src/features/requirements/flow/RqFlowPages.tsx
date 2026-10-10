@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { CONTENT, ContentListScreen, FlowDoneView, useFlow, useShellPage, type DraftRow } from '@/shell';
 import { ErrorState, FollowCard, Skeleton, josa } from '@/ui';
-import { rfKey, rfRoute, useRqFlow, useRqFlows, type RFDoc, type RFStageOut } from './api';
+import { rfKey, rfRoute, useRfDelete, useRqFlow, useRqFlows, type RFDoc, type RFStageOut } from './api';
 import { Editor } from './Editor';
 import { euro } from './form';
 import './rqflow.css';
@@ -17,12 +17,14 @@ import './rqflow.css';
 const SECTION = '고객 요구사항';
 const STEPS = ['요구사항 입력', '저장'];
 
-/** RQ0 — 보드 List(content=rq). 아무것도 적지 않은 초안은 보이지 않는다 */
+/** RQ0 — 보드 List(content=rq). 아무것도 적지 않은 초안은 보이지 않는다 · 저장 전 초안은 줄에 손을 올리면 ×(지우기) */
 export function RqListScreen() {
   const flows = useRqFlows();
+  const remove = useRfDelete();
   const drafts: DraftRow[] = (flows.data?.items ?? [])
     .filter((m) => m.status !== 'done' && (m.title !== '새 요구사항' || m.counts.reqs > 0))
-    .map((m) => ({ title: m.title, ref: m.code, to: rfRoute(m.id), sbIds: m.sb_ids, when: m.updated_at }));
+    .map((m) => ({ title: m.title, ref: m.code, to: rfRoute(m.id), sbIds: m.sb_ids, when: m.updated_at,
+      onDelete: m.ver === 0 && !m.sb_ids.length ? () => remove(m.id) : undefined }));
   return <ContentListScreen content="rq" drafts={drafts} />;
 }
 

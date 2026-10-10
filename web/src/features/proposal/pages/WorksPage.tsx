@@ -3,6 +3,8 @@
  * 같은 고객 작업(workspace 색인)을 체크로 연결 → 오른쪽 「연결하면 채워지는 것」(FillPreview: 고객 출처 · 추천 유형 · 섹션 8행)을 서버가 다시 계산.
  * 사이드바 작업을 목록에 끌어 놓아도 연결(on). `?check=<item_id>` = PR1 최근 Storyboard 카드에서 온 경우 그 작업을 켠 채로 연다.
  * 「연결 · 다음: 제안서 유형」 → `links:apply`(잡: 고객 정보 채움 · 섹션 연결) → stage=type → PR2.
+ * 허브 Storyboard(SB-nn, 새 콘텐츠 흐름 · 2026-10-10): 보드 작업 줄 모양 그대로 Storyboard 줄을 두고, 켜져 있으면 그 아래에 연결된 콘텐츠
+ * (요구사항 · DSS · Key message · MI · 경쟁사 · VP · Spec · 시나리오)를 같은 줄 모양(체크 자리는 비움)으로 「넣을 곳」과 함께 보여 준다.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
@@ -11,14 +13,37 @@ import { Icon, Modal, PathIcon, cx, toast, useDropTarget, type DragPayload } fro
 import { applyLinks, patchProposal, putLinks, qk, useProposal, useRelatedWorks } from '../api/proposal';
 import { errText, isMissing, jobErrText } from '../api/http';
 import { useJobEvents } from '../api/jobs';
-import type { FillPreview, RelatedWork } from '../api/types';
+import type { FillPreview, HubContent, RelatedWork } from '../api/types';
 import { Agent, Dock, ErrorBand, LoadingCard, NextButton, PrPage } from '../components/parts';
 import { FEATURE_KEY, SRC_ICON } from '../lib/catalog';
 import { isAhead, R } from '../lib/routes';
 import { useProposalShell } from '../lib/useProposalShell';
 
 const ICON_OF: Record<string, string> = { mi: 'mi', market: 'mi', storyboard: 'storyboard', birdseye: 'birdseye', scenario: 'scenario', image: 'image', spec: 'spec', vp: 'vp', competitor: 'competitor', requirements: 'requirements' };
+/** 허브 stage → 아이콘 */
+const HUB_ICON: Record<string, string> = { rq: 'requirements', dss: 'product', km: 'storyboard', mi: 'mi', ca: 'competitor', vp: 'vp', sp: 'spec', sc: 'scenario' };
+
+/** 허브 Storyboard 에 연결된 콘텐츠 한 줄 — 작업 줄(보드 PR1L) 모양 그대로, 체크 자리만 비움(Storyboard 체크를 따른다) */
+function HubContentRow({ c, on }: { c: HubContent; on: boolean }) {
+  const sub = c.key === 'km' ? c.tool_label : [c.tool_label, c.ref ? `${c.ref}${c.ver ? ` v${c.ver}` : ''}` : ''].filter(Boolean).join(' · ');
+  return (
+    <div className={cx('pr-workrow', 'pr-workrow--hub', !on && 'pr-workrow--off')} data-testid="pr1l-hub-content" data-key={c.key}>
+      <span className="pr-workrow__nobox" aria-hidden="true" />
+      <span className={cx('pr-workrow__icon', on && 'pr-workrow__icon--on')}><PathIcon d={SRC_ICON[HUB_ICON[c.key] ?? 'file'] ?? SRC_ICON.file} size={15} color={on ? 'var(--wm-brand)' : 'var(--wm-text-muted)'} strokeWidth={2} /></span>
+      <span className="pr-colflex pr-grow" style={{ gap: 1 }}>
+        <span className="pr-ell" style={{ fontSize: 11, color: 'var(--wm-text-muted)' }}>{[sub, c.line].filter(Boolean).join(' · ')}</span>
+        <span className="pr-ell pr-workrow__title">{c.title}</span>
+      </span>
+      <span className="pr-workrow__to">
+        <span style={{ fontSize: 10.5, color: 'var(--wm-text-subtle)' }}>넣을 곳</span>
+        <span className={cx('pr-tochip', (!on || (c.key !== 'rq' && !c.target_sections?.length)) && 'pr-tochip--off')}>{c.target_label}</span>
+      </span>
+    </div>
+  );
+}
 const SIDEBAR_CODES = Object.keys(FEATURE_KEY).filter((c) => c !== 'PR');
+/** 「고객 · 프로젝트 · Storyboard에서」 — 서버는 문장 전체를 준다(옛 값 「Storyboard」 도 받는다) */
+const custFrom = (label?: string | null) => (!label ? '고객 · 프로젝트' : label.startsWith('고객') ? label : `고객 · 프로젝트 · ${label}에서`);
 const keyOf = (w: { feature: string; ref_id: string }) => `${w.feature}:${w.ref_id}`;
 
 export function WorksPage() {
@@ -155,19 +180,25 @@ export function WorksPage() {
                 : works.length === 0 ? <div className="pr-empty" style={{ padding: '28px 14px' }}>{qd ? `「${qd}」 작업을 찾지 못했어요` : '이어진 작업이 없어요. 「모든 고객」에서 찾거나 사이드바 작업을 끌어 놓아 주세요.'}</div>
                   : works.map((w) => {
                     const on = isOn(w);
+                    const hub = w.hub;
+                    const contents = hub?.contents ?? [];
+                    const meta = hub && !on && contents.length ? `${w.meta} · 콘텐츠 ${contents.length}` : w.meta;
                     return (
-                      <label key={keyOf(w)} className={cx('pr-workrow', !on && 'pr-workrow--off')} data-testid="pr1l-work" data-on={on || undefined}>
-                        <input type="checkbox" checked={on} aria-label={w.title} onChange={(e) => void toggle([{ feature: w.feature, ref_id: w.ref_id, on: e.target.checked }])} disabled={!!job} />
-                        <span className={cx('pr-workrow__icon', on && 'pr-workrow__icon--on')}><PathIcon d={SRC_ICON[ICON_OF[w.feature] ?? 'file'] ?? SRC_ICON.file} size={15} color={on ? 'var(--wm-brand)' : 'var(--wm-text-muted)'} strokeWidth={2} /></span>
-                        <span className="pr-colflex pr-grow" style={{ gap: 1 }}>
-                          <span className="pr-ell" style={{ fontSize: 11, color: 'var(--wm-text-muted)' }}>{[w.tool_label, w.meta].filter(Boolean).join(' · ')}</span>
-                          <span className="pr-ell pr-workrow__title">{w.title}</span>
-                        </span>
-                        <span className="pr-workrow__to">
-                          <span style={{ fontSize: 10.5, color: 'var(--wm-text-subtle)' }}>넣을 곳</span>
-                          {w.target_label ? <span className={cx('pr-tochip', !on && 'pr-tochip--off')}>{w.target_label}</span> : <span className="pr-subtle" style={{ fontSize: 11 }}>—</span>}
-                        </span>
-                      </label>
+                      <div key={keyOf(w)} role="presentation" className={cx(hub && 'pr-hubwork', hub && on && 'pr-hubwork--on')} data-testid={hub ? 'pr1l-hub' : undefined} data-ref={hub ? w.ref_id : undefined}>
+                        <label className={cx('pr-workrow', !on && 'pr-workrow--off')} data-testid="pr1l-work" data-on={on || undefined}>
+                          <input type="checkbox" checked={on} aria-label={w.title} onChange={(e) => void toggle([{ feature: w.feature, ref_id: w.ref_id, on: e.target.checked }])} disabled={!!job} />
+                          <span className={cx('pr-workrow__icon', on && 'pr-workrow__icon--on')}><PathIcon d={SRC_ICON[ICON_OF[w.feature] ?? 'file'] ?? SRC_ICON.file} size={15} color={on ? 'var(--wm-brand)' : 'var(--wm-text-muted)'} strokeWidth={2} /></span>
+                          <span className="pr-colflex pr-grow" style={{ gap: 1 }}>
+                            <span className="pr-ell" style={{ fontSize: 11, color: 'var(--wm-text-muted)' }}>{[w.tool_label, meta].filter(Boolean).join(' · ')}</span>
+                            <span className="pr-ell pr-workrow__title">{w.title}</span>
+                          </span>
+                          <span className="pr-workrow__to">
+                            <span style={{ fontSize: 10.5, color: 'var(--wm-text-subtle)' }}>넣을 곳</span>
+                            {w.target_label ? <span className={cx('pr-tochip', !on && 'pr-tochip--off')}>{w.target_label}</span> : <span className="pr-subtle" style={{ fontSize: 11 }}>—</span>}
+                          </span>
+                        </label>
+                        {hub && on && contents.map((c) => <HubContentRow key={c.key} c={c} on={on} />)}
+                      </div>
                     );
                   })}
             <div className="pr-workbox__foot">
@@ -181,7 +212,7 @@ export function WorksPage() {
             {!pv ? <LoadingCard lines={3} /> : (
               <>
                 <div className="pr-fillcard__cust">
-                  <span style={{ fontSize: 11, color: 'var(--wm-text-muted)' }}>고객 · 프로젝트{pv.customer_from ? ` · ${pv.customer_from.label}에서` : ''}</span>
+                  <span style={{ fontSize: 11, color: 'var(--wm-text-muted)' }} data-testid="pr1l-cust-from">{custFrom(pv.customer_from?.label)}</span>
                   <span style={{ fontSize: 12.5, fontWeight: 600, lineHeight: 1.5 }}>{pv.customer_summary || '연결한 작업에 고객 정보가 없어요'}</span>
                 </div>
                 {pv.recommended_type && (

@@ -60,8 +60,20 @@ export async function fetchCandidates(id: string, spaceKey: string) {
   return unwrap(await ds.GET('/v1/dss/{dss_id}/spaces/{space_key}/candidates', { params: { path: { dss_id: id, space_key: spaceKey } } }));
 }
 
+/** 만들기 — 이 Storyboard 의 저장 전 초안이 이미 있으면 서버가 그것을 200 으로 돌려준다(reused) */
 export async function createDss(sbId: string) {
-  return norm(unwrap(await ds.POST('/v1/dss', { body: { sb_id: sbId } })));
+  const res = await ds.POST('/v1/dss', { body: { sb_id: sbId } });
+  return { doc: norm(unwrap(res)), reused: res.response.status === 200 };
+}
+
+/** 목록 줄 × — 저장 전 초안을 지우고(204, 저장한 것은 409 SAVED_CONTENT) 목록 · 사이드바 작업 이력을 새로 읽게 한다 */
+export function useDsDelete() {
+  const qc = useQueryClient();
+  return async (id: string) => {
+    unwrap(await ds.DELETE('/v1/dss/{dss_id}', P(id)));
+    qc.removeQueries({ queryKey: dsKey(id) });
+    for (const queryKey of [dsListKey, ['ws', 'items'], ['ws', 'recent'], ['ws', 'counts']]) void qc.invalidateQueries({ queryKey });
+  };
 }
 
 /** 문서 하나를 고치는 호출 묶음 — 결과 문서를 캐시에 넣고, 솔루션 카드(함께 쓰는 제품 · 겹침)는 새로 읽게 한다 */

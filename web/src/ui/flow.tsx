@@ -89,7 +89,7 @@ export function AiButton({ children, onClick, busy, disabled, size = 38, title }
   { children: ReactNode; onClick: () => void; busy?: boolean; disabled?: boolean; size?: 30 | 34 | 38; title?: string }) {
   return (
     <button type="button" className={cx('wm-aib', `wm-aib--h${size}`)} onClick={onClick} disabled={disabled || busy} aria-busy={busy || undefined} title={title}>
-      <svg width={size === 30 ? 12 : 14} height={size === 30 ? 12 : 14} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z" /></svg>
+      <svg width={size === 30 ? 12 : size === 34 ? 13 : 14} height={size === 30 ? 12 : size === 34 ? 13 : 14} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z" /></svg>
       {busy ? 'AI가 찾는 중…' : children}
     </button>
   );
@@ -123,11 +123,13 @@ export function FlowFooter({ back, summary, summaryTone, primary }: {
   back?: { to: string; label: string };
   summary?: ReactNode;
   summaryTone?: 'warn';
-  primary: { label: string; onClick?: () => void; to?: string; disabled?: boolean; busy?: boolean };
+  /** icon: 글 앞 아이콘(보드 MI2 「🔍 웹 검색 후 정제로」 같은 것) · busyLabel: 진행 중 글(기본 「저장 중…」) */
+  primary: { label: string; onClick?: () => void; to?: string; disabled?: boolean; busy?: boolean; icon?: ReactNode; busyLabel?: string };
 }) {
   const btn = primary.to && !primary.disabled
-    ? <Link className="wm-flow__primary" to={primary.to}>{primary.label}</Link>
-    : <button type="button" className="wm-flow__primary" onClick={primary.onClick} disabled={primary.disabled || primary.busy} aria-busy={primary.busy || undefined}>{primary.busy ? '저장 중…' : primary.label}</button>;
+    ? <Link className="wm-flow__primary" to={primary.to}>{primary.icon}{primary.label}</Link>
+    : <button type="button" className="wm-flow__primary" onClick={primary.onClick} disabled={primary.disabled || primary.busy} aria-busy={primary.busy || undefined}>
+      {primary.icon}{primary.busy ? primary.busyLabel ?? '저장 중…' : primary.label}</button>;
   return (
     <div className="wm-flow__foot">
       {back && <Link className="wm-flow__back" to={back.to}><Icon name="chevronLeft" size={14} strokeWidth={2.4} />{back.label}</Link>}
@@ -179,17 +181,20 @@ export function JsonPopup({ open, onClose, json, highlightKey, highlightAll, tit
   const copy = () => { try { void navigator.clipboard.writeText(lines.join('\n')); } catch { /* 복사 못 함 */ } };
   return (
     <Modal open={open} onClose={onClose} width={900} height={780} ariaLabel={`${title} 전체 보기`}
-      title={<span className="wm-jsonpop__head"><span className="wm-jsonpop__t">{title}</span><span className="wm-jsonpop__s">{sub ?? (rg ? `초록 줄이 이번에 추가 · 바뀐 값이에요 · ${lines.length}줄` : `${lines.length}줄`)}</span></span>}
+      // 보드 JsonPopup: 머리 = 제목(mono 16/700) · 오른쪽 탭(전체 · 추가된 값만) · ×
+      title={<span className="wm-jsonpop__head">
+        <span className="wm-jsonpop__titles"><span className="wm-jsonpop__t">{title}</span>{sub && <span className="wm-jsonpop__s">{sub}</span>}</span>
+        <span className="wm-jsonpop__tabs" role="tablist" aria-label="보기">
+          <button type="button" role="tab" aria-selected={!only} className={cx('wm-jsonpop__tab', !only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(false)}>전체</button>
+          <button type="button" role="tab" aria-selected={only} className={cx('wm-jsonpop__tab', only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(true)} disabled={!rg}
+            title={rg ? `${rows.length}줄` : '이번에 추가 · 바뀐 값이 없어요'}>추가된 값만</button>
+        </span></span>}
       bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column' }}
       footer={<div className="wm-jsonpop__foot">
         <span className="wm-jsonpop__legend"><span aria-hidden />이번에 추가 · 바뀐 줄</span>
         <button type="button" className="wm-btn wm-btn--h38" onClick={copy}>복사</button>
         <button type="button" className="wm-btn wm-btn--primary wm-btn--h38" onClick={onClose}>닫기</button>
       </div>}>
-      <div className="wm-jsonpop__tabs" role="tablist">
-        <button type="button" role="tab" aria-selected={!only} className={cx('wm-jsonpop__tab', !only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(false)}>전체</button>
-        <button type="button" role="tab" aria-selected={only} className={cx('wm-jsonpop__tab', only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(true)} disabled={!rg}>추가된 값만</button>
-      </div>
       <div className="wm-jsonlines">{rows.map((r) => (
         <div key={r.n} className={cx('wm-jsonline', r.add && 'wm-jsonline--add')}><span>{r.n}</span><span>{r.t}</span></div>
       ))}</div>

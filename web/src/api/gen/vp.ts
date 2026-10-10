@@ -154,7 +154,8 @@ export interface paths {
         put?: never;
         /**
          * Create Value Map
-         * @description 새 가치 맵. candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다.
+         * @description 새 가치 맵. sb_id 만 주면 Storyboard 의 DSS 제품 · 솔루션으로(같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로),
+         *     candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다.
          */
         post: operations["create_value_map"];
         delete?: never;
@@ -170,11 +171,18 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Value Map */
+        /**
+         * Get Value Map
+         * @description 맵 하나 + `dss_changed`(Storyboard 로 만든 맵의 DSS 가 바뀌었으면 그 차이, 아니면 null).
+         */
         get: operations["get_value_map"];
         put?: never;
         post?: never;
-        delete?: never;
+        /**
+         * Delete Value Map
+         * @description 저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 맵은 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`.
+         */
+        delete: operations["delete_value_map"];
         options?: never;
         head?: never;
         patch?: never;
@@ -211,6 +219,27 @@ export interface paths {
          * @description 저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다.
          */
         post: operations["finish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}:resync-dss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Resync Value Map Dss
+         * @description DSS 다시 가져오기 — 새 DSS 제품 · 솔루션은 고를 수 있는 후보로만(자동으로 고르지 않음), 골라 둔 것이 DSS 에서 빠지면 남기고 「DSS에서 빠짐」.
+         *     결과는 `last_resync`. Storyboard 로 만든 맵이 아니면 422 `NO_STORYBOARD` · Storyboard 없음 404 · DSS 없음 422.
+         */
+        post: operations["resync_value_map_dss"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3590,6 +3619,11 @@ export interface components {
         /** VMCandidate */
         VMCandidate: {
             /**
+             * Dss Status
+             * @description added = DSS 다시 가져오기로 새로 들어온 후보(고르지 않은 채로)
+             */
+            dss_status?: "added" | null;
+            /**
              * Kind
              * @enum {string}
              */
@@ -3654,6 +3688,18 @@ export interface components {
             counts: components["schemas"]["VMCounts"];
             /** Created At */
             created_at: string;
+            /** @description 허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null) */
+            dss_changed?: components["schemas"]["VMDssChange"] | null;
+            /**
+             * Dss Ref
+             * @description Storyboard(Gate)로 만들 때 가져온 DSS 코드(DSS-01 …) — 없으면 DSS 다시 가져오기 대상이 아님
+             */
+            dss_ref?: string | null;
+            /**
+             * Dss Ver
+             * @description 가져온 DSS 판(허브 stages.dss.ver)
+             */
+            dss_ver?: number | null;
             /** Id */
             id: string;
             /**
@@ -3661,6 +3707,7 @@ export interface components {
              * @description 고른 제품 · 솔루션(이 순서로 보인다)
              */
             items?: components["schemas"]["VMItem"][];
+            last_resync?: components["schemas"]["VMResync"] | null;
             /** Sb Id */
             sb_id?: string | null;
             /**
@@ -3680,6 +3727,48 @@ export interface components {
             ver?: number | null;
             /** Version */
             version: number;
+        };
+        /**
+         * VMDssChange
+         * @description Storyboard 의 DSS 가 맵을 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄.
+         */
+        VMDssChange: {
+            /**
+             * Added
+             * @description 새로 들어온 DSS 제품 · 솔루션
+             */
+            added: number;
+            /** Added Names */
+            added_names?: string[];
+            /**
+             * Changed
+             * @description 놓인 공간이 바뀐 제품
+             * @default 0
+             */
+            changed: number;
+            /**
+             * From
+             * @description 맵이 가져온 DSS(DSS-01 v1)
+             */
+            from: string;
+            /**
+             * Ref Changed
+             * @description DSS 자체가 바뀜(분기 등으로 다른 DSS)
+             * @default false
+             */
+            ref_changed: boolean;
+            /**
+             * Removed
+             * @description DSS 에서 빠진 제품 · 솔루션
+             */
+            removed: number;
+            /** Removed Names */
+            removed_names?: string[];
+            /**
+             * To
+             * @description 허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)
+             */
+            to: string;
         };
         /** VMFlowSync */
         VMFlowSync: {
@@ -3710,6 +3799,11 @@ export interface components {
         };
         /** VMItem */
         VMItem: {
+            /**
+             * Dss Status
+             * @description removed = 골라 둔 것이 Storyboard 의 DSS 에서 빠짐(가치와 함께 남겨 둠)
+             */
+            dss_status?: "removed" | null;
             /**
              * From Dss
              * @default true
@@ -3842,6 +3936,38 @@ export interface components {
             req?: string | null;
             /** Space */
             space?: string | null;
+        };
+        /**
+         * VMResync
+         * @description 마지막 DSS 다시 가져오기 결과(토스트 · 표시).
+         */
+        VMResync: {
+            /**
+             * Added
+             * @description 새 후보(고르기 대화상자에 「새로」) — 자동으로 고르지 않음
+             */
+            added?: string[];
+            /** At */
+            at: string;
+            /** From */
+            from: string;
+            /**
+             * Kept
+             * @description 골라 둔 것이 DSS 에서 빠져 남기고 「DSS에서 빠짐」 표시한 것
+             */
+            kept?: string[];
+            /**
+             * Removed
+             * @description 고르지 않은 채 DSS 에서 빠져 후보에서 뺀 것
+             */
+            removed?: string[];
+            /** To */
+            to: string;
+            /**
+             * Updated
+             * @description DSS 공간이 바뀐 고른 것
+             */
+            updated?: string[];
         };
         /** VMSetItems */
         VMSetItems: {
@@ -4543,6 +4669,15 @@ export interface operations {
                     "application/json": components["schemas"]["ErrorResponse"];
                 };
             };
+            /** @description Storyboard(Gate)로 시작했는데 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안 */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
             /** @description Successful Response */
             201: {
                 headers: {
@@ -4591,6 +4726,44 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["VMDoc"];
                 };
+            };
+        };
+    };
+    delete_value_map: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
@@ -4670,6 +4843,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VMStageOut"];
+                };
+            };
+        };
+    };
+    resync_value_map_dss: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
                 };
             };
         };

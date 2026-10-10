@@ -10027,6 +10027,151 @@
         ],
         "title": "GuideStep"
       },
+      "HubContent": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "title": "Key",
+            "description": "stage(rq · dss · km(Key message) · mi · ca · vp · sp · sc)"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "짧은 이름(요구사항 · DSS · MI · 경쟁사 · VP · Spec · 시나리오)"
+          },
+          "tool_label": {
+            "type": "string",
+            "title": "Tool Label",
+            "description": "콘텐츠 이름(고객 요구사항 · Market Intelligence …)"
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "line": {
+            "type": "string",
+            "title": "Line",
+            "description": "허브 카드 한 줄 요약(SB1 연결된 콘텐츠 줄)",
+            "default": ""
+          },
+          "target_sections": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Target Sections"
+          },
+          "target_label": {
+            "type": "string",
+            "title": "Target Label",
+            "description": "「넣을 곳」 섹션 이름(유형 기준) · rq 는 「고객 정보」",
+            "default": ""
+          },
+          "route": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Route"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "label",
+          "tool_label"
+        ],
+        "title": "HubContent",
+        "description": "허브 Storyboard 에 연결된 콘텐츠 한 줄(PR1L Storyboard 줄 아래) — stage 마다 「넣을 곳」."
+      },
+      "HubInfo": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "progress": {
+            "type": "string",
+            "title": "Progress",
+            "description": "요구사항까지 · DSS까지 · DSS + 콘텐츠 n/5",
+            "default": ""
+          },
+          "key_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Key Message"
+          },
+          "customer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer"
+          },
+          "parent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Parent",
+            "description": "분기면 원본 Storyboard id"
+          },
+          "contents": {
+            "items": {
+              "$ref": "#/components/schemas/HubContent"
+            },
+            "type": "array",
+            "title": "Contents"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "title": "HubInfo",
+        "description": "허브 Storyboard(SB-nn, 새 콘텐츠 흐름) 요약 — 연결하면 stage 값이 섹션마다 들어간다."
+      },
       "ImageSlot": {
         "properties": {
           "sheet_id": {
@@ -13878,6 +14023,17 @@
               }
             ],
             "title": "Route"
+          },
+          "hub": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/HubInfo"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "허브 Storyboard(SB-nn)면 연결된 콘텐츠 · 넣을 곳(2026-10-10)"
           }
         },
         "type": "object",

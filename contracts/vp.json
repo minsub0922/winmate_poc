@@ -3515,7 +3515,7 @@
           "value-maps"
         ],
         "summary": "Create Value Map",
-        "description": "새 가치 맵. candidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다.",
+        "description": "새 가치 맵. sb_id 만 주면 Storyboard 의 DSS 제품 · 솔루션으로(같은 Storyboard 의 저장 전 초안이 있으면 그것을 200 으로),\ncandidates(DSS 제품 · 솔루션)를 주거나, context_text(요구 문장)로 KB 에서 공간별 후보를 찾는다.",
         "operationId": "create_value_map",
         "requestBody": {
           "required": true,
@@ -3557,6 +3557,16 @@
                 }
               }
             }
+          },
+          "200": {
+            "description": "Storyboard(Gate)로 시작했는데 같은 Storyboard 의 저장 전 초안이 이미 있으면 그 초안",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
           }
         }
       }
@@ -3567,7 +3577,105 @@
           "value-maps"
         ],
         "summary": "Get Value Map",
+        "description": "맵 하나 + `dss_changed`(Storyboard 로 만든 맵의 DSS 가 바뀌었으면 그 차이, 아니면 null).",
         "operationId": "get_value_map",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Delete Value Map",
+        "description": "저장 전 초안 지우기(workspace 색인도 지운다). 한 번이라도 저장한 맵은 Storyboard 에 연결돼 있어 409 `SAVED_CONTENT`.",
+        "operationId": "delete_value_map",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}:resync-dss": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Resync Value Map Dss",
+        "description": "DSS 다시 가져오기 — 새 DSS 제품 · 솔루션은 고를 수 있는 후보로만(자동으로 고르지 않음), 골라 둔 것이 DSS 에서 빠지면 남기고 「DSS에서 빠짐」.\n결과는 `last_resync`. Storyboard 로 만든 맵이 아니면 422 `NO_STORYBOARD` · Storyboard 없음 404 · DSS 없음 422.",
+        "operationId": "resync_value_map_dss",
         "parameters": [
           {
             "name": "map_id",
@@ -10559,6 +10667,19 @@
             },
             "type": "array",
             "title": "Spaces"
+          },
+          "dss_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "added"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Status",
+            "description": "added = DSS 다시 가져오기로 새로 들어온 후보(고르지 않은 채로)"
           }
         },
         "type": "object",
@@ -10695,6 +10816,51 @@
             ],
             "title": "Sb Id"
           },
+          "dss_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ref",
+            "description": "Storyboard(Gate)로 만들 때 가져온 DSS 코드(DSS-01 …) — 없으면 DSS 다시 가져오기 대상이 아님"
+          },
+          "dss_ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Ver",
+            "description": "가져온 DSS 판(허브 stages.dss.ver)"
+          },
+          "dss_changed": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VMDssChange"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "허브의 DSS 가 바뀌었으면 그 차이(GET · :resync-dss 응답에서만 계산 — 다른 고침 응답은 null)"
+          },
+          "last_resync": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VMResync"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "context_text": {
             "anyOf": [
               {
@@ -10770,6 +10936,65 @@
           "updated_at"
         ],
         "title": "VMDoc"
+      },
+      "VMDssChange": {
+        "properties": {
+          "from": {
+            "type": "string",
+            "title": "From",
+            "description": "맵이 가져온 DSS(DSS-01 v1)"
+          },
+          "to": {
+            "type": "string",
+            "title": "To",
+            "description": "허브의 지금 DSS(DSS-01 v2 · 분기로 바뀌면 DSS-02 v1)"
+          },
+          "ref_changed": {
+            "type": "boolean",
+            "title": "Ref Changed",
+            "description": "DSS 자체가 바뀜(분기 등으로 다른 DSS)",
+            "default": false
+          },
+          "added": {
+            "type": "integer",
+            "title": "Added",
+            "description": "새로 들어온 DSS 제품 · 솔루션"
+          },
+          "removed": {
+            "type": "integer",
+            "title": "Removed",
+            "description": "DSS 에서 빠진 제품 · 솔루션"
+          },
+          "changed": {
+            "type": "integer",
+            "title": "Changed",
+            "description": "놓인 공간이 바뀐 제품",
+            "default": 0
+          },
+          "added_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added Names"
+          },
+          "removed_names": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed Names"
+          }
+        },
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "added",
+          "removed"
+        ],
+        "title": "VMDssChange",
+        "description": "Storyboard 의 DSS 가 맵을 만든(다시 가져온) 뒤 바뀌었다 — 편집 화면 위 안내 줄."
       },
       "VMFlowSync": {
         "properties": {
@@ -10887,6 +11112,19 @@
             "type": "boolean",
             "title": "From Dss",
             "default": true
+          },
+          "dss_status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "removed"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dss Status",
+            "description": "removed = 골라 둔 것이 Storyboard 의 DSS 에서 빠짐(가치와 함께 남겨 둠)"
           },
           "values": {
             "items": {
@@ -11226,6 +11464,62 @@
         },
         "type": "object",
         "title": "VMPatchValue"
+      },
+      "VMResync": {
+        "properties": {
+          "at": {
+            "type": "string",
+            "title": "At"
+          },
+          "from": {
+            "type": "string",
+            "title": "From"
+          },
+          "to": {
+            "type": "string",
+            "title": "To"
+          },
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Added",
+            "description": "새 후보(고르기 대화상자에 「새로」) — 자동으로 고르지 않음"
+          },
+          "removed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Removed",
+            "description": "고르지 않은 채 DSS 에서 빠져 후보에서 뺀 것"
+          },
+          "kept": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Kept",
+            "description": "골라 둔 것이 DSS 에서 빠져 남기고 「DSS에서 빠짐」 표시한 것"
+          },
+          "updated": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Updated",
+            "description": "DSS 공간이 바뀐 고른 것"
+          }
+        },
+        "type": "object",
+        "required": [
+          "at",
+          "from",
+          "to"
+        ],
+        "title": "VMResync",
+        "description": "마지막 DSS 다시 가져오기 결과(토스트 · 표시)."
       },
       "VMSetItems": {
         "properties": {

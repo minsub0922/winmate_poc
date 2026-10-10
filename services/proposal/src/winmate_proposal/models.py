@@ -432,6 +432,30 @@ class RfpFieldPut(_M):
     value: str
 
 
+class HubContent(_M):
+    """허브 Storyboard 에 연결된 콘텐츠 한 줄(PR1L Storyboard 줄 아래) — stage 마다 「넣을 곳」."""
+    key: str = Field(description="stage(rq · dss · km(Key message) · mi · ca · vp · sp · sc)")
+    label: str = Field(description="짧은 이름(요구사항 · DSS · MI · 경쟁사 · VP · Spec · 시나리오)")
+    tool_label: str = Field(description="콘텐츠 이름(고객 요구사항 · Market Intelligence …)")
+    ref: str | None = None
+    ver: int | None = None
+    title: str = ""
+    line: str = Field("", description="허브 카드 한 줄 요약(SB1 연결된 콘텐츠 줄)")
+    target_sections: list[str] = Field(default_factory=list)
+    target_label: str = Field("", description="「넣을 곳」 섹션 이름(유형 기준) · rq 는 「고객 정보」")
+    route: str | None = None
+
+
+class HubInfo(_M):
+    """허브 Storyboard(SB-nn, 새 콘텐츠 흐름) 요약 — 연결하면 stage 값이 섹션마다 들어간다."""
+    id: str
+    progress: str = Field("", description="요구사항까지 · DSS까지 · DSS + 콘텐츠 n/5")
+    key_message: str | None = None
+    customer: str | None = None
+    parent: str | None = Field(None, description="분기면 원본 Storyboard id")
+    contents: list[HubContent] = Field(default_factory=list)
+
+
 class RelatedWork(_M):
     feature: str
     ref_id: str
@@ -446,6 +470,7 @@ class RelatedWork(_M):
     on: bool = False
     customer_match: bool = True
     route: str | None = None
+    hub: HubInfo | None = Field(None, description="허브 Storyboard(SB-nn)면 연결된 콘텐츠 · 넣을 곳(2026-10-10)")
 
 
 class FillPreviewSection(_M):

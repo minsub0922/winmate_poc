@@ -34,6 +34,11 @@ make contracts SERVICE=mi    # contracts/mi.json 갱신 + 깨지는 변경 검�
 수용 기준 `docs/scenarios/11-content-flow.md` §1(CF-08 의 MI 예외: Storyboard 를 고르면 AI 분석 로딩이 먼저) · §4 폭 · §6 stage 계약(`stages.mi`).
 - API `/v1/mi-flows*`(`api_flow.py` · 본체 `miflow.py` · 잡 `graphs/flow.py` = `mi.flow_analyze` · `mi.flow_search`). 단계 analyzing → search → searching → refine → done.
   화면은 문서 `progress.steps` 를 폴링(0.6초)한다. 저장 `:finish` → `push_stage(sb, "mi")` · 요약 줄(보드: 그룹 수 · 출처 · 확인 필요 수치 2줄).
+- 초안(2026-10-10): `POST /v1/mi-flows` 는 같은 Storyboard 의 저장 전 초안(status draft · ver 없음)이 있으면 그 초안을 **200** 으로 돌려준다(분석 잡을 다시 넣지 않음 —
+  「‹ Storyboard」 → Gate → 다시 시작해도 초안이 늘지 않음, 같은 Storyboard 동시 만들기는 잠금, 복제본은 분기 Storyboard 라 새 MI).
+  `DELETE /v1/mi-flows/{id}` 저장 전 초안만 204(소프트 삭제 + `unregister_item` · 돌고 있는 분석/검색 잡 취소) — 저장한 MI(고치는 중 포함)는 409 `SAVED_CONTENT`
+  「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」, `?expected_version=` 다르면 409 CONFLICT, 없으면 404. 워커(`graphs/flow.py`)는 문서가 사라졌으면 되살리지 않고 잡을 canceled 로 끝낸다.
+  코드 `MI-NN` 은 개수 대신 (이 서비스 번호 · 허브 mi ref) 가장 큰 것 + 1 — 초안을 지워도 남은 MI 와 번호가 겹치지 않는다.
 - 찾은 정보는 검색 도구가 준 글에서만 — 출처 이름 · 날짜는 글 속 문자열, URL 은 도구가 준 것만(요약형 검색이면 null → 화면 「원문」은 검색 결과 글).
   고쳐 저장할 때 담은 정보 유지 + 새로 찾은 것만 더하고, 정제 목록은 이번에 찾은 순서(유지 · 새로 찾음이 섞인다).
 - 규칙 대체 검색어(모델 없음)는 고객 계획 수치(예: 20%)를 빼고 업종 낱말을 한 번만 쓴다(`need_query`).
@@ -42,13 +47,14 @@ make contracts SERVICE=mi    # contracts/mi.json 갱신 + 깨지는 변경 검�
 
 | 라우트 | 보드 |
 |---|---|
-| `/mi` | MI0 = 공용 `ContentListScreen`(작성 중 초안은 `/v1/mi-flows`) |
-| `/mi/new` (`?sb=&auto=1` 바로 만들기 · `?rq=` 는 이전 MI1 로) | MI1 · MI1_Branch = 공용 `GateScreen`(만든 문서를 캐시에 먼저 넣어 분석 단계부터 그린다) |
+| `/mi` | MI0 = 공용 `ContentListScreen`(작성 중 초안은 `/v1/mi-flows` · 저장 전 초안 줄은 `onDelete` — 손을 올리면 × · 확인 → `useMfDelete` → 목록 · 사이드바 색인 새로) |
+| `/mi/new` (`?sb=&auto=1` 바로 만들기 · `?rq=` 는 이전 MI1 로) | MI1 · MI1_Branch = 공용 `GateScreen`(만든 문서를 캐시에 먼저 넣어 분석 단계부터 그린다 · 기존 초안이면(200) 「작성 중이던 MI-NN 초안을 이어서 열어요」) |
 | `/mi/flow/:id` (`?done=1` 완료) | MI2_Loading → MI2 → (검색 중 같은 단계 카드) → MI3 → MI_Done(`FlowDoneView` · 후속 작업 없음 줄은 보드대로 「Storyboard로」). 저장한 MI 를 열면 Storyboard 를 다시 읽고 고치기(v1 → v2) |
 | `/mi/legacy` · `/mi/legacy/new` · `/mi/legacy/new/industry` | 이전 흐름 목록 · MI1 · MI1I(옛 `/mi/new/industry` 도 연다). 나머지 `/mi/:id/...` 는 그대로 |
 
-- 테스트: pytest `tests/test_mi_flow.py`(허브 연동 · 규칙 대체 · 찾은 순서). e2e `web/e2e/mi/mi-flow.spec.ts` 3개(목록 → Gate → 로딩 → MI2 → MI3 → v1 → 다시 고치기 → v2 · JSON / 복제본 / 바로 만들기 · `?rq=`),
+- 테스트: pytest `tests/test_mi_flow.py` 10개(허브 연동 · 규칙 대체 · 찾은 순서 · 같은 Storyboard 초안 다시 쓰기 · 지우기 · 사라진 초안의 잡 취소). e2e `web/e2e/mi/mi-flow.spec.ts` 3개(목록 → Gate → 로딩 → MI2 → MI3 → v1 → 다시 고치기 → v2 · JSON / 복제본 / 바로 만들기 · `?rq=`),
   폭(본문 1180 · 검색어 칸 (1100 − 24)/3 · 높이 300 · 조건 키 96 · 정제 줄 76 · 완료 카드 1020)을 재고 `__screens__/<보드>-new.png` 를 남긴다.
+  `mi-draft.spec.ts` 1개(「‹ Storyboard」 → Gate → 다시 시작 = 같은 초안 · 새 분석 잡 없음 → 목록 × → 확인 → 빠짐, 캡처 `MI0-draft-delete.png`).
 
 ### 이전 흐름(2026-10-06)
 03-mi 의 보드 18장(UC_MI 유스케이스 맵 · MIC 시나리오 픽스처는 라우트 없음 → 화면 16 + 공유 보기) · 수용 기준 AC-MI-01~94 를 구현했다.
@@ -104,7 +110,7 @@ pytest 118 · e2e 10(실제 스택 5 + API 흉내 5) 통과(MODEL_MODE=mock).
 - proposal: imports(`source.handoff_id`) · 섹션 경로 · PR 항목 `meta.proposal_type`. platform: storyboard 간선(선택) · consumes 확인.
 
 ### 테스트
-- `make test SERVICE=mi`: pytest 118(`tests/scenario.py` 공용 시나리오 = MIC 1번 · 플랫폼 앱 in-process · kb 실데이터 · requirements 통합 1 · `test_mock_demo` 는 실제 목 픽스처로 한 바퀴 ·
+- `make test SERVICE=mi`: pytest 130(2026-10-10 기준 · 새 흐름 `test_mi_flow.py` 10 포함 · `tests/scenario.py` 공용 시나리오 = MIC 1번 · 플랫폼 앱 in-process · kb 실데이터 · requirements 통합 1 · `test_mock_demo` 는 실제 목 픽스처로 한 바퀴 ·
   `test_rules.py` 의 MIC 12케이스 업종 판별 표).
 - `make e2e-feature SERVICE=mi`(약 1분): `web/e2e/mi/` flow(실제 스택 2 — MI3S~MI4 · Key Message 근거 시트 포함) · more(실제 스택 3: 프리셋 · 가중치 · 재분석 → 제안서) ·
   screens(API 흉내 5: MI1Q · MI3G 미리 보기 · MI3S 배지 · MI0 보드 · MI1 draft). 제안서 imports · storyboard 는 `page.route` 흉내.
