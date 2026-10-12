@@ -84,7 +84,27 @@ async def test_content_list_groups_storyboards(client):
     items = (await client.get("/v1/flows/contents/dss")).json()["items"]
     assert len(items) == 1 and items[0]["title"] == "용산 오피스 공간별 제품" and items[0]["route"] == "/dss/dss_1"
     assert [s["id"] for s in items[0]["storyboards"]] == [d["id"], b["id"]]
-    assert (await client.get("/v1/flows/contents/rq")).json()["items"][0]["ref"] == "RQ-01"
+    assert items[0]["card"] is None   # DSS 는 카드 없이 저장 → 썸네일 재료 없음
+    rq = (await client.get("/v1/flows/contents/rq")).json()["items"][0]
+    assert rq["ref"] == "RQ-01" and rq["card"]["title"] == "용산 업무시설 재개발 AI Ready 오피스" and rq["card"]["facts"] == [["고객사", "E 자산운용"]]
+    # 고친 카드(가장 최근 저장분)가 목록 썸네일이 된다
+    card2 = {**DSS, "title": "용산 오피스 공간별 제품", "res_id": "dss_1", "ver": 2,
+             "card": {"title": "용산 오피스 공간별 제품", "facts": [["업종", "오피스 · 업무시설"], ["공간 · 제품", "7 · 12"], ["솔루션", "3"]],
+                      "groups": [{"h": "로비", "sub": "제품 3", "lines": [{"t": "The Wall IAB 146\" · 1식"}]}]}}
+    await client.put(f"/v1/flows/{d['id']}/stages/dss", json=card2)
+    it = (await client.get("/v1/flows/contents/dss")).json()["items"][0]
+    assert it["ver"] == 2 and it["card"]["groups"][0]["h"] == "로비"
+
+
+async def test_sb0_list_summary_head(client):
+    """SB0 작업 내역 썸네일 — 요약본 앞 줄(빈 줄 빼고 12줄까지). Gate 목록(content=)에는 싣지 않는다."""
+    d = await _new(client)
+    await client.put(f"/v1/flows/{d['id']}/stages/dss", json=DSS)
+    it = (await client.get("/v1/flows")).json()["items"][0]
+    head = it["summary_head"]
+    assert head[0] == "# 용산 AI Ready 오피스 — Storyboard 요약" and all(ln.strip() for ln in head) and len(head) <= 12
+    assert any(ln.startswith("## 2. DSS · DSS-01 v1") for ln in head)
+    assert (await client.get("/v1/flows", params={"content": "mi"})).json()["items"][0]["summary_head"] == []
 
 
 async def test_sb1_branch_items_list_key_message_and_pillars(client):

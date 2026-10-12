@@ -118,39 +118,40 @@ test('SB0 · SB1 — 목록 · 진행 8칸 · 보기 팝업 · json · 전략 �
   const sb = await seed(request);
   const { refs } = sb;
 
-  // ── SB0 — 목록 · 어디까지 입력됐나(메인 바로 아래 분기) ──
+  // ── SB0 — 목록(보드 SB0 v61): 가운데 시작 · 작업 내역 카드(메인 바로 뒤에 분기) ──
   await page.goto('/storyboard');
   await expect(page.getByRole('heading', { name: '전략 수립 Storyboard', level: 1 })).toBeVisible();
   await expect(page.getByText('제안서 흐름 전체를 담는 context예요. 고객 요구사항을 저장하면 생기고, 콘텐츠의 복제본을 만들면 분기돼요.')).toBeVisible();
-  const newBtn = page.getByRole('link', { name: '새 고객 요구사항으로 시작' });
+  const newBtn = page.locator('.fl-hero');
+  await expect(newBtn.locator('.fl-hero__label')).toHaveText('새 고객 요구사항으로 시작');
   await expect(newBtn).toHaveAttribute('href', '/requirements/new');
-  const row = page.locator(`.sbf-row[data-sb="${sb.id}"]`);
-  const brow = page.locator(`.sbf-row[data-sb="${sb.branch}"]`);
+  const row = page.locator(`.sbf-card[data-sb="${sb.id}"]`);
+  const brow = page.locator(`.sbf-card[data-sb="${sb.branch}"]`);
   await expect(row).toBeVisible();
-  await expect(row.locator('.sbf-nametxt b')).toHaveText(NAME);
-  await expect(row.locator('.sbf-nametxt small')).toHaveText(`${sb.id} · E 자산운용`);
-  await expect(row.locator('.sbf-stage')).toHaveText('DSS + MI');
-  await expect(row.locator('.sbf-km')).toHaveText(KM);
-  await expect(row.locator('.sbf-when')).toHaveText(/^오늘 \d\d:\d\d$/);
-  await expect(row.locator('.sbf-dot--on')).toHaveCount(3);
-  await expect(brow.locator('.sbf-nametxt b')).toHaveText(`${NAME} · 분기 B`);
-  await expect(brow.locator('.sbf-nametxt small')).toHaveText(`${sb.branch} · E 자산운용 · ${sb.id} · MI에서 분기`);
-  await expect(brow.locator('.sbf-km')).toHaveText('아직 없음');   // 분기는 Key message 를 새로 세운다(보드 SB0)
-  const rows = page.locator('.sbf-row');
+  await expect(row.locator('.sbf-cardname b')).toHaveText(NAME);
+  await expect(row.locator('.sbf-cardname small')).toHaveText(`${sb.id} · E 자산운용`);
+  await expect(row.locator('.fl-steptxt')).toHaveText('3/8단계· DSS + MI');
+  await expect(row.locator('.sbf-km')).toHaveText(`Key message · ${KM}`);
+  await expect(row.locator('.fl-when')).toHaveText(/^오늘 \d\d:\d\d$/);
+  await expect(row.locator('.fl-seg--done')).toHaveCount(3);
+  await expect(row.locator('.sbf-mcell--on')).toHaveCount(3);
+  await expect(brow.locator('.sbf-cardname b')).toHaveText(`${NAME} · 분기 B`);
+  await expect(brow.locator('.sbf-cardname small')).toHaveText(`${sb.branch} · E 자산운용 · ${sb.id} · MI에서 분기`);
+  await expect(brow.locator('.fl-thumb__badge')).toHaveText('분기');
+  await expect(brow.locator('.sbf-km')).toHaveText('Key message 아직 없음');   // 분기는 Key message 를 새로 세운다(보드 SB0)
+  const rows = page.locator('.sbf-card');
   const ids = await rows.evaluateAll((els) => els.map((e) => e.getAttribute('data-sb')));
   expect(ids.indexOf(sb.branch)).toBe(ids.indexOf(sb.id) + 1);
-  await expect(page.locator('.sbf-legend')).toHaveText('입력됨아직순서 · 요구사항 → DSS → MI · 경쟁사 · VP · Spec · 시나리오 → 제안서');
-  // 보드 SB0: 본문 1100(1180 − 40×2) · 칸 minmax(0,1fr) 480 | 300 | 120 | 110(간격 16 · 안쪽 20) · 머리 42 · 줄 72 · 칸 22×14(간격 3 · 3번째 · 8번째 앞 +5) · 버튼 44
-  expect(await w(page.locator('.sbf-table'))).toBe(1100);
-  const th = page.locator('.sbf-th > span');
-  expect([await w(th.nth(0)), await w(th.nth(1)), await w(th.nth(2)), await w(th.nth(3))]).toEqual([480, 300, 120, 110]);
-  expect(await h(page.locator('.sbf-th'))).toBe(42);
-  expect(await h(row)).toBe(72);
-  expect(await h(newBtn)).toBe(44);
-  const dots = row.locator('.sbf-dot');
-  expect([await w(dots.first()), await h(dots.first())]).toEqual([22, 14]);
-  expect(await x(dots.nth(1)) - await x(dots.nth(0))).toBe(25);
-  expect(await x(dots.nth(2)) - await x(dots.nth(1))).toBe(30);
+  await expect(page.locator('.fl-seglegend')).toHaveText('입력됨아직요구사항 → DSS → MI · 경쟁사 · VP · Spec · 시나리오 → 제안서');
+  // 보드 SB0 v61: 새로 만들기 1100×156 · 작업 내역 44 아래 · 카드 260(간격 20) · 썸네일 148 · 막대 8칸(간격 4 · 3번째 · 8번째 앞 +4)
+  expect([await w(newBtn), await h(newBtn)]).toEqual([1100, 156]);
+  expect(await w(row)).toBe(260);
+  expect(await h(row.locator('.fl-thumb'))).toBe(148);
+  const segs = row.locator('.fl-seg');
+  await expect(segs).toHaveCount(8);
+  const sb1 = (await segs.nth(1).boundingBox())!;
+  const sb2 = (await segs.nth(2).boundingBox())!;
+  expect(Math.round(sb2.x - (sb1.x + sb1.width))).toBe(8);
   await settle(page);
   await shot(page, 'SB0-new');
 
@@ -368,5 +369,5 @@ test('SB0 · SB1 — 목록 · 진행 8칸 · 보기 팝업 · json · 전략 �
   expect(Math.round(fb.y + fb.height)).toBe(1080 - 22);
   await page.goto('/storyboard');
   await expect(row).toBeVisible();
-  expect(await w(page.locator('.sbf-table'))).toBe(1100);
+  expect([await w(page.locator('.fl-hero')), await w(row)]).toEqual([1100, 260]);
 });

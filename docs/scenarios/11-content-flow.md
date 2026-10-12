@@ -73,13 +73,21 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 | 공간 시나리오 | SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done | `/scenario` · `/scenario/new` · `/scenario/spaces/:id` | scenario `/v1/space-sets*`(DSS 공간 · 제품으로 미리 채움) | `scenario/sc-flow.spec.ts` |
 
 - **고객 요구사항의 AI 심층 질의(폼 개선 과정 · 보드 RQ1_AI)는 2026-10-12 에 뺐다**(아티팩트 v59 · `deep-questions` API · `rq.deep_questions.v1` 도 없음) — RQ1 은 폼 입력 · 파일로 채우기 · 저장만. 확인 필요 표시는 사람이 요구 줄의 「확인 필요」로 단다.
+- **목록 v61(2026-10-12 · 보드 List · SB0)**: 7개 콘텐츠 목록과 Storyboard 목록은 같은 틀이다.
+  머리(이름 · 설명 · 사전 / 후속) 아래 22 에 **본문 폭 전체 · 가운데 「새 ○○ 만들기」**(1100×156 · 브랜드 바탕 · 아래 줄에 그 콘텐츠의 단계 흐름 ① → ② → ③ · 「모두 N단계」),
+  그 아래 44 에 「작업 내역 n」, 16 아래 **그리드 카드 260 × 4(간격 20)**. 카드 = 썸네일 258×148(회색 바탕 위 흰 문서 — 허브가 가진 그 콘텐츠의 보기 팝업 카드
+  `card{facts, groups}` 를 472 폭으로 그려 반으로 줄인 것 · 오른쪽 아래 「완성」/「작성 중」) · 제목(2줄) · 코드 · 수정 시각 · **n/N 단계**(막대 N칸: 지난 · 지금 · 남은)
+  · 연결된 Storyboard 첫 칩 + 「+n」. 저장한 것은 N/N 「완성」, 저장 전 초안은 지금 단계 — 사전 작업이 있는 콘텐츠는 2(Storyboard 를 골랐으니), DSS 는 솔루션을 골랐으면 3,
+  MI 는 정제(`phase=refine`) 중이면 3, 요구사항 초안은 1(`DraftRow.step`). 카드가 없는 저장분 · 초안은 빈 틀 썸네일. 최근 수정 순, 빈 목록은 점선 안내(범례 없음).
+  Storyboard 목록(SB0)은 「새 고객 요구사항으로 시작」 · 카드 썸네일 = 진행 8칸 + 요약본 앞 줄(`FlowListItem.summary_head`) · **n/8 단계**(입력된 칸 수 · 막대 8칸) · Key message.
+  공용 부품 `@/shell` `ListHero` · `HistoryHead` · `SegLegend` · `StepMeter` · `ThumbFrame` · `CardMini`(`web/src/shell/flow/list.tsx`), e2e `shell/content-list.spec.ts`.
 - 새로 만들기 `/<base>/new?sb=<id>&auto=1` 은 Gate 를 건너뛴다(Storyboard 「만들기」 · 완료 화면 후속 작업 카드).
 - **이전 흐름**은 `/<base>/legacy` · `/<base>/legacy/new` 로 옮겼다. 이전 흐름의 다른 경로(`/<base>/:id/...`)는 그대로다(제안서 handoff 가 읽는다).
   예전 들어오기 주소(`/vp/new?sb=sb_…` · `?mi=` · `?rq=`, `/mi/new?rq=`, `/competitor/new?input=…`, `/spec/new?models=|from=|pop=`, `/scenario/new?from=|mi=|sb=sb_…`)는 이전 흐름 화면으로 넘긴다.
-- 공용 화면(`@/shell` flow): `ContentListScreen`(초안 줄의 Storyboard 칩도 이름 · 초안 ×) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동 · 초안 이어 쓰기) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowDoneView`(`newStoryboard` · `jsonHead`, 전체 JSON 제목 `SB-nn/flow.json`).
+- 공용 화면(`@/shell` flow): `ContentListScreen`(목록 v61 — 위 · 초안 카드의 Storyboard 칩도 이름 · 초안 ×) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동 · 초안 이어 쓰기) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowDoneView`(`newStoryboard` · `jsonHead`, 전체 JSON 제목 `SB-nn/flow.json`).
 - **저장 전 초안 지우기 · 이어 쓰기(2026-10-10 · 보드에 없음)**: 7개 자원 `DELETE /v1/{rq-flows|dss|mi-flows|ca-flows|value-maps|spec-flows|space-sets}/{id}`
   — 한 번도 저장하지 않은 초안만 204, 저장한 것 409 `SAVED_CONTENT`(「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」), 확인과 지우기 사이에 저장이 끼면 409 `VERSION_CONFLICT`
-  (`DocStore.delete(expected_version=)` 한 트랜잭션). 목록(보드 List)은 초안 줄에 손을 올리면 × → 확인 → 지움(`DraftRow.onDelete`). Gate 로 같은 Storyboard 를 다시 시작하면
+  (`DocStore.delete(expected_version=)` 한 트랜잭션). 목록(보드 List)은 초안 카드에 손을 올리면 오른쪽 위 × → 확인 → 지움(`DraftRow.onDelete`). Gate 로 같은 Storyboard 를 다시 시작하면
   새로 만들지 않고 그 초안을 연다(`POST {sb_id}` → 200 기존 초안 · 새로면 201) — Gate 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」(`GateScreen drafts`). 코드 번호는 남은 최댓값 + 1.
 - **DSS 다시 가져오기(2026-10-10 · 보드에 없음)**: Spec 시트 · 공간 시나리오 · VP 는 만든 DSS(`dss_ref` · `dss_ver`)를 남기고, 열 때(`GET`) 허브의 지금 `stages.dss` 와 견줘
   `dss_changed{from, to, added, removed, changed, …}` 를 준다. 편집 화면 머리 아래 안내 줄(AiBar 「Storyboard의 DSS가 바뀌었어요 · DSS-01 v1 → v2 · 제품 1 추가 · 1 빠짐」 · 「다시 가져오기」)
@@ -99,14 +107,14 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 
 | 경로 | 하는 일 |
 |---|---|
-| `GET /v1/flows?content=` | SB0 · Gate 목록(진행 칸 `cells` · `progress` · content 를 주면 `eligible` · `need` · `existing`) |
+| `GET /v1/flows?content=` | SB0 · Gate 목록(진행 칸 `cells` · `progress` · content 를 주면 `eligible` · `need` · `existing`, 안 주면 SB0 썸네일 `summary_head`) |
 | `POST /v1/flows` (internal) | 고객 요구사항 저장 → Storyboard 자동 생성(`rq` stage 포함) |
 | `GET /v1/flows/{id}` | flow.json 전체(`flow_json`) · `summary_md` · `cards` · `history` |
 | `PATCH /v1/flows/{id}` | 이름 · Key message · 요약본 고침(사람 문장 `user_lines` → 다시 써도 `✎` 로 남음) |
 | `PUT /v1/flows/{id}/stages/{key}` (internal) | 콘텐츠 저장 → stages.<key> 실제 값 · 요약 줄 · 팝업 카드. 같은 ref 의 다른 Storyboard 도 반영(`synced`). 사전 작업 없으면 422 `PREREQUISITE_MISSING` |
 | `POST /v1/flows/{id}:branch {stage}` | 복제본 — 새 Storyboard(parent · `분기 B`), 사전 작업 사슬(dss → rq)만 공유(`sharedWith`) |
 | `POST /v1/flows/{id}/key-message:suggest` | 전략 수립 AI 후보 3안(`sb.key_message.v1`, 없으면 규칙 후보) |
-| `GET /v1/flows/contents/{key}` | 보드 List — 저장된 콘텐츠마다 연결된 Storyboard 들 |
+| `GET /v1/flows/contents/{key}` | 보드 List — 저장된 콘텐츠마다 연결된 Storyboard 들 · 썸네일 `card`(가장 최근 저장분의 보기 팝업 카드) |
 
 편집 화면 경로(허브 `cells[].route`): rq `/requirements/flow/{id}` · dss `/dss/{id}` · mi `/mi/flow/{id}` · ca `/competitor/flow/{id}` · vp `/vp/values/{id}` ·
 sp `/spec/flow/{id}` · sc `/scenario/spaces/{id}`. 목록은 `/<base>`(보드 List), 새로 만들기는 `/<base>/new`(보드 Gate, rq 만 바로 RQ1).

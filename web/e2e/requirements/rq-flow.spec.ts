@@ -123,7 +123,7 @@ test('RQ 새 흐름 — 목록 · 입력 · 파일 · 저장 · Storyboard 자�
   const code = (await (await request.get(`/api/requirements/v1/rq-flows/${flowId}`)).json()).code as string;
   await page.getByRole('link', { name: '목록' }).click();
   await expect(page).toHaveURL(/\/requirements$/);
-  const row = page.getByRole('row').filter({ hasText: `${code} v1` });
+  const row = page.locator('.fl-card').filter({ hasText: `${code} v1` });
   await expect(row).toBeVisible();
   await expect(row.getByRole('button', { name: '성수 플래그십 리테일' })).toBeVisible();
   await page.mouse.move(10, 890);

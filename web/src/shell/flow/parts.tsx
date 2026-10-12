@@ -1,15 +1,16 @@
 /**
- * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · List · Gate · Done) — 데이터는 Storyboard 허브(`./api`).
+ * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate · Done) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`.
  * 기능 화면은 이것만 조합한다. 보드 px 그대로(본문 열 1180 안에서).
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useShellPage } from '../ShellContext';
-import { ErrorState, FlowDone, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, useConfirm, type DoneStage } from '@/ui';
+import { ErrorState, FlowDone, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, type DoneStage } from '@/ui';
 import {
-  CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, useFlow, useFlowContents, useFlowInvalidate, useFlows, useFlowsById,
+  CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, useFlow, useFlowInvalidate, useFlows, useFlowsById,
   type ContentKey, type FlowCell, type FlowDoc, type FlowListItem, type StageKey,
 } from './api';
+import type { DraftRow } from './list';
 import './flow.css';
 
 const SB_ICON = 'M4 5h16v14H4z M4 11h16 M10 11v8';
@@ -125,72 +126,6 @@ export function ContentPopup({ flow, stage, onClose }: { flow: FlowDoc | undefin
         {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={cell.route} onClick={onClose}>편집 화면에서 고치기</Link>}
         <button type="button" className="wm-btn wm-btn--primary wm-btn--h42 fl-popbtn18" onClick={onClose}>닫기</button></div>
     </Modal>
-  );
-}
-
-// ── 목록(보드 List) ───────────────────────────────────
-
-export interface DraftRow {
-  title: string; ref?: string | null; to: string; sbIds: string[]; when?: string | null;
-  /** 아직 저장 전 초안 지우기(보드에 없음 — 줄에 손을 올리면 × · 확인 뒤 지운다). 없으면 × 를 그리지 않는다 */
-  onDelete?: () => Promise<unknown>;
-}
-
-/** 콘텐츠 목록(보드 List) — 저장된 콘텐츠(허브)와 아직 저장 전 초안(drafts) */
-export function ContentListScreen({ content, drafts = [], extra }: { content: ContentKey; drafts?: DraftRow[]; extra?: ReactNode }) {
-  const m = CONTENT[content];
-  useShellPage({ section: m.label, title: '', hasTask: false });
-  const q = useFlowContents(content);
-  const [pop, setPop] = useState<string | null>(null);
-  const { confirm, dialog } = useConfirm();
-  const [gone, setGone] = useState<Set<string>>(() => new Set());
-  const saved = (q.data?.items ?? []).map((it) => ({ title: it.title, ref: `${it.ref} v${it.ver}`, to: it.route, sbs: it.storyboards.map((s) => ({ id: s.id, name: s.name })), when: it.updated_at, onDelete: undefined as DraftRow['onDelete'] }));
-  const savedRoutes = new Set(saved.map((r) => r.to));
-  // 초안 줄의 Storyboard 칩은 id 대신 이름(보드 List) — 허브에서 읽는다
-  const draftSbIds = useMemo(() => [...new Set(drafts.flatMap((d) => d.sbIds))], [drafts]);
-  const draftSbs = useFlowsById(draftSbIds);
-  const sbName = (id: string) => draftSbs[draftSbIds.indexOf(id)]?.data?.name ?? id;
-  const rows = [...saved, ...drafts.filter((d) => !savedRoutes.has(d.to) && !gone.has(d.to)).map((d) => ({ title: d.title, ref: d.ref ? `${d.ref} · 작성 중` : '작성 중', to: d.to, sbs: d.sbIds.map((id) => ({ id, name: sbName(id) })), when: d.when ?? null, onDelete: d.onDelete }))];
-  const del = async (r: { title: string; to: string; onDelete?: DraftRow['onDelete'] }) => {
-    if (!r.onDelete || !(await confirm({ title: '작성 중인 초안을 지울까요?', message: `‘${r.title || '이름 없음'}’ 초안을 지워요. 저장하지 않은 내용이라 되돌릴 수 없어요.`, confirmLabel: '지우기', tone: 'danger' }))) return;
-    try { await r.onDelete(); setGone((g) => new Set(g).add(r.to)); toast('초안을 지웠어요'); } catch (e) { toast((e as Error).message || '지우지 못했어요'); }
-  };
-  const newTo = `/${m.base}/new`;
-  return (
-    <div className="fl-list">
-      <div className="fl-listhead">
-        <div className="fl-listtitles">
-          <h1>{m.label}</h1>
-          <div className="fl-listdesc"><span>{m.desc}</span><span className="fl-tag fl-tag--brand">사전 작업 · {m.pre}</span><span className="fl-tag">후속 작업 · {m.post}</span></div>
-        </div>
-        {extra}
-        <Link className="fl-newbtn" to={newTo}><Icon name="plus" size={15} strokeWidth={2.4} />{m.newLabel}</Link>
-      </div>
-      {q.isError && <ErrorState message="목록을 불러오지 못했어요" onRetry={() => q.refetch()} />}
-      {q.isLoading && <Skeleton h={220} r={14} />}
-      {!q.isLoading && rows.length > 0 && (
-        <div className="fl-table" role="table" aria-label={`${m.label} 목록`}>
-          <div className="fl-tr fl-th" role="row"><span>{m.short}</span><span>연결된 Storyboard</span><span>수정</span><span /></div>
-          {rows.map((r) => (
-            <div key={r.to} className="fl-tr" role="row">
-              <div className="fl-tdtitle"><Link to={r.to}>{r.title}</Link><span>{r.ref}</span></div>
-              <div className="fl-chips">{r.sbs.map((b) => (
-                <button key={b.id} type="button" className="fl-sbchip" onClick={() => setPop(b.id)}><PathIcon d={SB_ICON} size={12} color="var(--wm-brand)" strokeWidth={2.2} />{b.name}</button>
-              ))}</div>
-              <span className="fl-when">{whenText(r.when)}</span>
-              <Link className="fl-open" to={r.to}>열기</Link>
-              {r.onDelete && <button type="button" className="fl-del" aria-label={`${r.title || '초안'} 지우기`} onClick={() => del(r)}><Icon name="x" size={13} strokeWidth={2.4} /></button>}
-            </div>
-          ))}
-        </div>
-      )}
-      {!q.isLoading && !q.isError && rows.length === 0 && (
-        <div className="fl-empty"><b>아직 만든 {m.short}{josa(m.short, '이', '가')} 없어요</b><span>{content === 'rq' ? '고객 요구사항을 저장하면 Storyboard가 자동으로 만들어져요.' : `${m.pre}이 된 Storyboard를 골라 시작해요.`}</span>
-          <Link className="fl-emptybtn" to={newTo}>{m.newLabel}</Link></div>
-      )}
-      <SBPopup id={pop} onClose={() => setPop(null)} />
-      {dialog}
-    </div>
   );
 }
 

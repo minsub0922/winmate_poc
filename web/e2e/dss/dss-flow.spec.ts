@@ -320,9 +320,9 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
   await expect(page).not.toHaveURL(/step=solution/);
   await page.goto('/dss');
-  const listRow = page.getByRole('row').filter({ hasText: name });
+  const listRow = page.locator('.fl-card').filter({ hasText: name });
   await expect(listRow).toContainText(`${st.ref} v1`);
-  await expect(listRow.getByRole('link', { name: '열기' })).toHaveAttribute('href', `/dss/${dssId}`);
+  await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/dss/${dssId}`);
   await page.goto('/dss/new');
   await expect(page.getByRole('radio', { name: new RegExp(name) })).toContainText(`${st.ref} v1 있음`);
 });

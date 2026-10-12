@@ -89,7 +89,7 @@ test('Spec 시트 — DSS 다시 가져오기(안내 줄 · 행 추가 · DSS에
 
   // 목록(SP0) — 저장 전 초안 줄의 × → 확인 → 지움(허브에는 간 적 없음)
   await page.goto('/spec');
-  const row = page.getByRole('row').filter({ hasText: name });
+  const row = page.locator('.fl-card').filter({ hasText: name });
   await expect(row).toContainText('작성 중');
   await row.hover();
   await row.getByRole('button', { name: `${name} 지우기` }).click();
@@ -97,7 +97,7 @@ test('Spec 시트 — DSS 다시 가져오기(안내 줄 · 행 추가 · DSS에
   await expect(dlg).toBeVisible();
   await dlg.getByRole('button', { name: '지우기' }).click();
   await expect(page.locator('.wm-toast').filter({ hasText: '초안을 지웠어요' })).toBeVisible();
-  await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(0);
+  await expect(page.locator('.fl-card').filter({ hasText: name })).toHaveCount(0);
   expect((await request.get(`/api/spec/v1/spec-flows/${fid}`)).status()).toBe(404);
   // 저장한 시트는 지울 수 없다(409) — 목록 줄에도 × 가 없다
   const made = await (await request.post('/api/spec/v1/spec-flows', { data: { sb_id: sb.id } })).json();
@@ -106,7 +106,7 @@ test('Spec 시트 — DSS 다시 가져오기(안내 줄 · 행 추가 · DSS에
   expect(del.status()).toBe(409);
   expect((await del.json()).error).toMatchObject({ code: 'SAVED_CONTENT', message: '저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요' });
   await page.reload();
-  const savedRow = page.getByRole('row').filter({ hasText: `${made.code} v1` });
+  const savedRow = page.locator('.fl-card').filter({ hasText: `${made.code} v1` });
   await expect(savedRow).toBeVisible();
   await expect(savedRow.locator('.fl-del')).toHaveCount(0);
 });

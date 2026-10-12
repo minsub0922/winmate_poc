@@ -25,7 +25,7 @@ test('SC 새 흐름 — 목록 → Gate → 공간 · 시나리오 → 저장 �
   await expect(page.getByText('Storyboard의 공간마다 사용자 시나리오를 만들어요.')).toBeVisible();
   await expect(page.getByText('사전 작업 · 최소 DSS까지 된 Storyboard')).toBeVisible();
   await shot(page, 'SC0-new');
-  await page.locator('.fl-newbtn').click();
+  await page.locator('.fl-hero').click();
   await expect(page).toHaveURL(/\/scenario\/new$/);
 
   // ── SC1 Gate — 스텝바 「Storyboard · 공간별 시나리오」(보드 Gate META) ──
@@ -180,9 +180,9 @@ test('SC 새 흐름 — 목록 → Gate → 공간 · 시나리오 → 저장 �
 
   // 목록 — 저장된 공간 시나리오 줄 · 연결된 Storyboard 칩
   await page.goto('/scenario');
-  const listRow = page.locator('.fl-tr', { hasText: `${set.code} v1` });
+  const listRow = page.locator('.fl-card', { hasText: `${set.code} v1` });
   await expect(listRow).toContainText(sb.name);
-  await expect(listRow.getByRole('link', { name: '열기' })).toHaveAttribute('href', `/scenario/spaces/${setId}`);
+  await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/scenario/spaces/${setId}`);
   await shot(page, 'SC0-list-new');
 
   // Gate — 이미 SC 가 있는 Storyboard 는 수정 / 복제본

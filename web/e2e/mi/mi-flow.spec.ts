@@ -210,10 +210,10 @@ test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → �
 
   // ── 목록에 저장된 MI(허브) — 연결된 Storyboard 칩
   await page.goto('/mi');
-  const line = page.locator('.fl-tr', { hasText: `${CODE} v2` });
+  const line = page.locator('.fl-card', { hasText: `${CODE} v2` });
   await expect(line).toHaveCount(1);
   await expect(line.locator('.fl-sbchip')).toHaveText(SB.name);
-  await expect(line.getByRole('link', { name: '열기' })).toHaveAttribute('href', `/mi/flow/${mid}`);
+  await expect(line.locator('.fl-cardtitle')).toHaveAttribute('href', `/mi/flow/${mid}`);
   await shot(page, 'MI0-new');
 });
 

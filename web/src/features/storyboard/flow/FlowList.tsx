@@ -1,33 +1,52 @@
 /**
- * SB0 — Storyboard 목록 · 어디까지 입력됐나(보드 webapp1 SB0). 허브 `GET /v1/flows`(메인 바로 아래 분기, 최근 수정 순).
- * 칸: Storyboard minmax(0,1fr) · 어디까지 입력됐나 300 · Key message 120 · 수정 110(간격 16).
+ * SB0 — Storyboard 목록(보드 webapp1 SB0 v61). 허브 `GET /v1/flows`(메인 바로 아래 분기, 최근 수정 순).
+ * 가운데 「새 고객 요구사항으로 시작」(1100×156) → 44 → 작업 내역 그리드(260 × 4 · 간격 20).
+ * 카드 = 썸네일(진행 8칸 + 요약본 앞부분 `summary_head`) · 이름 · 코드 · 고객 · n/8 단계 · Key message · 수정.
  */
 import { Link } from 'react-router';
-import { useShellPage, useFlows, whenText, type FlowListItem } from '@/shell';
-import { ErrorState, Icon, Skeleton, cx } from '@/ui';
-import { ORDER8, SECTION, isDone, stageName, stageText } from './model';
+import { HistoryHead, ListHero, SegLegend, StepMeter, ThumbFrame, useShellPage, useFlows, whenText, type FlowListItem, type SegState } from '@/shell';
+import { ErrorState, Skeleton, cx } from '@/ui';
+import { ORDER8, SECTION, TRACK_LABEL, isDone, stageName, stageText } from './model';
 import './sbf.css';
 
-const BRANCH_D = 'M6 3v10a4 4 0 0 0 4 4h8 M15 14l3 3-3 3';
+/** 썸네일 안(472 폭을 반으로) — 보드 SB0: 진행 8칸(입력됨 = 브랜드 · 아직 = 점선) + 요약본 앞 9줄 */
+function Mini({ r }: { r: FlowListItem }) {
+  const head = (r.summary_head ?? []).slice(0, 9);
+  return (
+    <>
+      <span className="sbf-mtrack">
+        {ORDER8.map((k, i) => {
+          const c = r.cells.find((x) => x.key === k);
+          const on = c?.state === 'done';
+          return <span key={k} className={cx('sbf-mcell', on && 'sbf-mcell--on', (i === 2 || i === 7) && 'sbf-mcell--gap')}><b>{TRACK_LABEL[k]}</b><small>{on ? c?.ref ?? '—' : '—'}</small></span>;
+        })}
+      </span>
+      <span className="sbf-mmd">
+        {head.map((ln, i) => <span key={i} className={cx(ln.startsWith('# ') && 'sbf-mmd--h1', ln.startsWith('## ') && 'sbf-mmd--h2')}>{ln}</span>)}
+      </span>
+    </>
+  );
+}
 
-function Row({ r }: { r: FlowListItem }) {
+function Card({ r }: { r: FlowListItem }) {
   const from = r.is_branch ? `${r.parent ?? ''} · ${stageName(r.branch_point?.stage as string | undefined)}에서 분기` : '';
   const sub = [r.id, r.customer, from].filter(Boolean).join(' · ');
+  const n = ORDER8.filter((k) => isDone(r.cells, k)).length;
+  const segs: SegState[] = ORDER8.map((k) => (isDone(r.cells, k) ? 'done' : 'todo'));
   return (
-    <Link to={`/storyboard/flow/${r.id}`} className="sbf-tr sbf-row" role="row" data-sb={r.id}>
-      <div className={cx('sbf-name', r.is_branch && 'sbf-name--branch')} role="cell">
-        {r.is_branch && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--wm-text-subtle)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }} aria-label="분기"><path d={BRANCH_D} /></svg>}
-        <span className="sbf-nametxt"><b>{r.name}</b><small>{sub}</small></span>
-      </div>
-      <div className="sbf-prog" role="cell">
-        <span className="sbf-dots" aria-label={`입력됨 ${ORDER8.filter((k) => isDone(r.cells, k)).length} / 8`}>
-          {ORDER8.map((k, i) => <span key={k} data-key={k} className={cx('sbf-dot', (i === 2 || i === 7) && 'sbf-dot--gap', isDone(r.cells, k) && 'sbf-dot--on')} />)}
+    <li className="fl-card sbf-card" data-sb={r.id}>
+      <Link to={`/storyboard/flow/${r.id}`} className="sbf-cardlink">
+        <ThumbFrame badge={r.is_branch ? '분기' : undefined} tone="line"><Mini r={r} /></ThumbFrame>
+        <span className="fl-cardbody">
+          <span className="sbf-cardname"><b>{r.name}</b><small>{sub}</small></span>
+          <StepMeter n={n} total={8} text={stageText(r.cells)} segs={segs} gaps={[2, 7]} />
+          <span className="sbf-cardfoot">
+            <span className={cx('sbf-km', r.key_message && 'sbf-km--on')}>{r.key_message ? `Key message · ${r.key_message}` : 'Key message 아직 없음'}</span>
+            <span className="fl-when">{whenText(r.updated_at)}</span>
+          </span>
         </span>
-        <span className="sbf-stage">{stageText(r.cells)}</span>
-      </div>
-      <span role="cell" className={cx('sbf-km', r.key_message && 'sbf-km--on')}>{r.key_message || '아직 없음'}</span>
-      <span role="cell" className="sbf-when">{whenText(r.updated_at)}</span>
-    </Link>
+      </Link>
+    </li>
   );
 }
 
@@ -36,30 +55,21 @@ export function FlowListScreen() {
   const q = useFlows();
   const rows = q.data?.items ?? [];
   return (
-    <div className="sbf-list">
-      <div className="sbf-listhead">
-        <div className="sbf-listtitles">
+    <div className="fl-list sbf-list">
+      <div className="fl-listhead">
+        <div className="fl-listtitles">
           <h1>전략 수립 Storyboard</h1>
-          <span>제안서 흐름 전체를 담는 context예요. 고객 요구사항을 저장하면 생기고, 콘텐츠의 복제본을 만들면 분기돼요.</span>
+          <span className="sbf-listdesc">제안서 흐름 전체를 담는 context예요. 고객 요구사항을 저장하면 생기고, 콘텐츠의 복제본을 만들면 분기돼요.</span>
         </div>
-        <Link to="/requirements/new" className="sbf-newbtn"><Icon name="plus" size={15} strokeWidth={2.4} />새 고객 요구사항으로 시작</Link>
       </div>
-      {q.isLoading && <Skeleton h={300} r={14} />}
+      <ListHero to="/requirements/new" label="새 고객 요구사항으로 시작" steps={['고객 요구사항', 'Storyboard 생성', 'DSS · 콘텐츠', '제안서']} note="저장하면 Storyboard가 자동으로 생겨요" />
+      <HistoryHead count={rows.length} legend={<SegLegend items={[['done', '입력됨'], ['todo', '아직']]} tail="요구사항 → DSS → MI · 경쟁사 · VP · Spec · 시나리오 → 제안서" />} />
+      {q.isLoading && <Skeleton h={320} r={14} />}
       {q.isError && <ErrorState message="Storyboard 목록을 불러오지 못했어요" onRetry={() => void q.refetch()} />}
       {!q.isLoading && !q.isError && rows.length === 0 && (
-        <div className="sbf-empty"><b>아직 Storyboard가 없어요</b><span>고객 요구사항을 저장하면 Storyboard가 자동으로 만들어져요.</span></div>
+        <div className="fl-empty fl-empty--hist"><b>아직 Storyboard가 없어요</b><span>위 「새 고객 요구사항으로 시작」 — 고객 요구사항을 저장하면 Storyboard가 자동으로 만들어져요.</span></div>
       )}
-      {rows.length > 0 && (
-        <div className="sbf-table" role="table" aria-label="Storyboard 목록">
-          <div className="sbf-tr sbf-th" role="row"><span role="columnheader">Storyboard</span><span role="columnheader">어디까지 입력됐나</span><span role="columnheader">Key message</span><span role="columnheader">수정</span></div>
-          {rows.map((r) => <Row key={r.id} r={r} />)}
-        </div>
-      )}
-      <div className="sbf-legend">
-        <span><i className="on" />입력됨</span>
-        <span><i />아직</span>
-        <span>순서 · 요구사항 → DSS → MI · 경쟁사 · VP · Spec · 시나리오 → 제안서</span>
-      </div>
+      {rows.length > 0 && <ul className="fl-grid" aria-label="Storyboard 작업 내역">{rows.map((r) => <Card key={r.id} r={r} />)}</ul>}
     </div>
   );
 }

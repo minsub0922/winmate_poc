@@ -1512,6 +1512,8 @@ export interface components {
         };
         /** FlowContentItem */
         FlowContentItem: {
+            /** @description 목록(보드 List) 썸네일 — 연결된 콘텐츠 보기 팝업과 같은 카드(가장 최근에 저장한 Storyboard 의 것) */
+            card?: components["schemas"]["FlowCard"] | null;
             /** Key */
             key: string;
             /** Ref */
@@ -1692,6 +1694,11 @@ export interface components {
              * @description 요구사항까지 · DSS까지 · DSS + 콘텐츠 n/5
              */
             progress: string;
+            /**
+             * Summary Head
+             * @description SB0 작업 내역 썸네일 — 요약본(summary.md) 앞 줄(빈 줄 빼고 12줄까지)
+             */
+            summary_head?: string[];
             /** Updated At */
             updated_at: string;
         };

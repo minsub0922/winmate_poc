@@ -1,43 +1,31 @@
-/* 새 Storyboard 화면(보드 webapp1 v58 SB0 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI · StrategyPopup) — 보드 인라인 px 그대로, 색은 토큰.
+/* 새 Storyboard 화면(보드 webapp1 v58 · SB0 v61 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI · StrategyPopup) — 보드 인라인 px 그대로, 색은 토큰.
  * 앱은 모두 border-box 라, 보드에서 box-sizing 없이(content-box) 높이 · 폭 + 테두리를 준 칸은 테두리만큼 더한 값을 쓴다
  * (연결된 콘텐츠 줄 50+1 · 머리 40+1 · 요약본 머리 46+1 · 바닥 38+1 · 근거 칩 26+2 · AI 후보 360+1 · 후보 머리 62+1). */
 
-/* ── SB0 목록 ─────────────────────────────────────── */
-.sbf-list { padding: 28px 40px 24px 40px; display: flex; flex-direction: column; gap: 18px; color: var(--wm-text); }
-.sbf-listhead { display: flex; align-items: center; gap: 16px; }
-.sbf-listtitles { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0; }
-.sbf-listtitles h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
-.sbf-listtitles span { font-size: 13.5px; color: var(--wm-text-muted); }
-.sbf-newbtn { height: 44px; padding: 0 18px; border-radius: 12px; background: var(--wm-brand); color: #fff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px;
-  white-space: nowrap; flex-shrink: 0; text-decoration: none; }
-.sbf-newbtn:hover { background: var(--wm-brand-hover); color: #fff; }
-.sbf-table { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; overflow: hidden; }
-.sbf-tr { display: grid; grid-template-columns: minmax(0, 1fr) 300px 120px 110px; column-gap: 16px; align-items: center; }
-.sbf-th { height: 42px; padding: 0 20px; background: var(--wm-surface-2); font-size: 12px; font-weight: 600; color: var(--wm-text-muted); }
-.sbf-row { min-height: 72px; padding: 10px 20px; box-sizing: border-box; border-top: 1px solid var(--wm-line-tile); color: var(--wm-text); text-decoration: none; }
-.sbf-row:hover { background: var(--wm-brand-hero); color: var(--wm-text); }
-.sbf-row:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: -2px; }
-.sbf-name { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.sbf-name--branch { padding-left: 20px; }
-.sbf-nametxt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.sbf-nametxt b { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sbf-nametxt small { font-size: 12px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.sbf-prog { display: flex; flex-direction: column; gap: 5px; }
-.sbf-dots { display: flex; gap: 3px; }
-.sbf-dot { width: 22px; height: 14px; border-radius: 3px; background: var(--wm-line); }
-.sbf-dot--gap { margin-left: 5px; }
-.sbf-dot--on { background: var(--wm-brand); }
-.sbf-stage { font-size: 12px; color: var(--wm-text-2); font-weight: 600; }
-.sbf-km { font-size: 12px; line-height: 1.4; color: var(--wm-text-subtle); overflow-wrap: anywhere; }
+/* ── SB0 목록(보드 SB0 v61) — 틀 · 새로 만들기 · 작업 내역 · 카드 · n/8 단계는 공용 @/shell 목록(fl-*), 여기는 Storyboard 카드 안만 ── */
+.sbf-listdesc { font-size: 13.5px; color: var(--wm-text-muted); }
+.sbf-cardlink { display: flex; flex-direction: column; color: var(--wm-text); text-decoration: none; }
+.sbf-cardlink:hover { color: var(--wm-text); }
+.sbf-cardlink:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: -2px; border-radius: 14px; }
+.sbf-cardname { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.sbf-cardname b { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-cardname small { font-size: 12px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-cardfoot { display: flex; align-items: center; gap: 8px; font-size: 12px; min-width: 0; }
+.sbf-km { flex: 1; min-width: 0; font-size: 12px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sbf-km--on { color: var(--wm-text); font-weight: 600; }
-.sbf-when { font-size: 13px; color: var(--wm-text-muted); white-space: nowrap; }
-.sbf-legend { display: flex; gap: 16px; font-size: 12px; color: var(--wm-text-muted); padding: 0 4px; }
-.sbf-legend > span { display: flex; align-items: center; gap: 6px; }
-.sbf-legend i { width: 10px; height: 14px; border-radius: 2px; background: var(--wm-line); }
-.sbf-legend i.on { background: var(--wm-brand); }
-.sbf-empty { box-sizing: border-box; background: var(--wm-surface); border: 1px dashed var(--wm-line-dashed); border-radius: 14px; padding: 40px 20px; display: flex; flex-direction: column;
-  align-items: center; gap: 8px; text-align: center; font-size: 13.5px; color: var(--wm-text-muted); }
-.sbf-empty b { font-size: 15px; color: var(--wm-text); }
+/* 썸네일 안(472 폭 · 반으로 줄임): 진행 8칸 34 높이 · 요약본 앞부분 */
+.sbf-mtrack { display: flex; gap: 3px; }
+.sbf-mcell { flex: 1 1 0; min-width: 0; height: 34px; box-sizing: border-box; padding: 0 5px; border-radius: 6px; display: flex; flex-direction: column; justify-content: center; gap: 1px;
+  background: var(--wm-bg); color: var(--wm-text-subtle); border: 1px dashed var(--wm-line-step); }
+.sbf-mcell b { font-size: 10px; font-weight: 700; white-space: nowrap; overflow: hidden; }
+.sbf-mcell small { font-family: var(--wm-font-num); font-size: 9.5px; font-weight: 700; white-space: nowrap; opacity: .85; overflow: hidden; }
+.sbf-mcell--on { background: var(--wm-brand); color: #fff; border-color: var(--wm-brand); }
+.sbf-mcell--gap { margin-left: 4px; }
+.sbf-mmd { box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 10px; background: var(--wm-surface-2); padding: 10px 12px; display: flex; flex-direction: column; gap: 2px;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 11.5px; line-height: 1.6; color: var(--wm-text-2); }
+.sbf-mmd > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sbf-mmd--h1 { font-weight: 700; color: var(--wm-text); }
+.sbf-mmd--h2 { font-weight: 700; color: var(--wm-brand); }
 
 /* ── SB1 상세 ─────────────────────────────────────── */
 .sbf-head { display: flex; align-items: center; gap: 10px; min-width: 0; }

@@ -13,52 +13,141 @@
 body{margin:0;background:#f5f6f8}
 a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
 button{font-family:inherit;cursor:pointer}
+.l-new:hover{background:#0f1f80 !important;color:#ffffff !important}
+.l-new:focus-visible{outline:3px solid #9db4ff;outline-offset:3px}
+.l-card:hover{border-color:#1428a0 !important;box-shadow:0 6px 18px rgba(20,40,160,0.10)}
+.l-card a:focus-visible,.l-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 .l-chip:hover{border-color:#1428a0}
-.l-chip:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
   <dc-import name="Sidebar" group="{{group}}" current="" hint-size="260px,900px"></dc-import>
   <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
     <dc-import name="TopBar" section="{{label}}" title="" popover="none" hint-size="1180px,64px"></dc-import>
-    <section style="width: 1180px; height: 836px; box-sizing: border-box; padding: 28px 40px 24px 40px; display: flex; flex-direction: column; gap: 18px; overflow: hidden">
-      <div style="display: flex; align-items: center; gap: 16px; flex-shrink: 0">
-        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
-          <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">{{label}}</h1>
-          <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #596170; flex-wrap: wrap">
-            <span>{{desc}}</span>
-            <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">사전 작업 · {{pre}}</span>
-            <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">후속 작업 · {{post}}</span>
-          </div>
+    <section style="width: 1180px; height: 836px; box-sizing: border-box; padding: 32px 40px 40px 40px; display: flex; flex-direction: column; overflow: hidden">
+      <!-- 머리: 이름 · 설명 · 사전 / 후속 -->
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">{{label}}</h1>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #596170; flex-wrap: wrap">
+          <span>{{desc}}</span>
+          <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">사전 작업 · {{pre}}</span>
+          <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">후속 작업 · {{post}}</span>
         </div>
-        <a href="{{newHref}}" style="height: 44px; padding: 0 18px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>{{newLabel}}</a>
+      </div>
+
+      <!-- 새로 만들기: 본문 폭 전체 · 가운데 · 가장 눈에 띄게 -->
+      <a href="{{newHref}}" class="l-new" style="margin-top: 22px; width: 1100px; height: 156px; box-sizing: border-box; flex-shrink: 0; border-radius: 18px; background: #1428a0; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; box-shadow: 0 10px 28px rgba(20,40,160,0.22)">
+        <span style="display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span style="font-size: 25px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">{{newLabel}} 만들기</span>
+        </span>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #d6ddff">
+          <sc-for list="{{flow}}" as="f" hint-placeholder-count="3">
+            <sc-if value="{{f.arrow}}" hint-placeholder-val="{{true}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9db4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg></sc-if>
+            <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.18); color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{f.n}}</span>{{f.t}}</span>
+          </sc-for>
+          <span style="width: 1px; height: 14px; background: rgba(255,255,255,0.28); margin: 0 4px"></span>
+          <span style="white-space: nowrap">{{flowNote}}</span>
+        </span>
+      </a>
+
+      <!-- 작업 내역: 아래로 넉넉히 띄워 그리드 -->
+      <div style="margin-top: 44px; display: flex; align-items: center; gap: 10px; flex-shrink: 0">
+        <span style="font-size: 16px; font-weight: 700">작업 내역</span>
+        <span style="height: 22px; min-width: 22px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #e9ecf1; color: #3d4452; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{count}}</span>
+        <span style="flex-grow: 1"></span>
+        <sc-if value="{{has}}" hint-placeholder-val="{{true}}"><span style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170">
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 6px; border-radius: 3px; background: #1428a0"></span>지난 단계</span>
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 6px; border-radius: 3px; background: #9aa8e6"></span>지금 단계</span>
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 6px; border-radius: 3px; background: #e2e5ea"></span>남은 단계</span>
+          <span style="color: #8a91a0">최근 수정 순</span>
+        </span></sc-if>
       </div>
 
       <sc-if value="{{has}}" hint-placeholder-val="{{true}}">
-        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; flex-shrink: 0">
-          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 360px 110px 80px; column-gap: 16px; align-items: center; height: 42px; padding: 0 20px; background: #fbfbfc; font-size: 12px; font-weight: 600; color: #596170"><span>{{short}}</span><span>연결된 Storyboard</span><span>수정</span><span></span></div>
+        <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(4, 260px); gap: 20px; flex-shrink: 0">
           <sc-for list="{{rows}}" as="r" hint-placeholder-count="4">
-            <div style="display: grid; grid-template-columns: minmax(0, 1fr) 360px 110px 80px; column-gap: 16px; align-items: center; min-height: 72px; padding: 10px 20px; box-sizing: border-box; border-top: 1px solid #eef0f3">
-              <div style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
-                <a href="{{r.href}}" style="font-size: 14px; font-weight: 600; color: #121417; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.title}}</a>
-                <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 700; color: #8a91a0">{{r.ref}}</span>
+            <div class="l-card" style="width: 260px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
+              <!-- 썸네일: 콘텐츠 보기를 줄여 그린 미리보기 -->
+              <a href="{{r.href}}" tabindex="-1" aria-hidden="true" style="position: relative; display: block; width: 258px; height: 148px; box-sizing: border-box; padding: 12px 11px 0 11px; background: #eef1f6; overflow: hidden">
+                <span style="display: block; width: 236px; height: 136px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-bottom: none; border-radius: 8px 8px 0 0; box-shadow: 0 1px 3px rgba(18,20,23,0.06); overflow: hidden">
+                  <span style="display: flex; flex-direction: column; gap: 8px; width: 472px; box-sizing: border-box; padding: 14px 14px 0 14px; transform: scale(0.5); transform-origin: top left">
+                    <sc-if value="{{r.hasCard}}" hint-placeholder-val="{{true}}">
+                      <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+                        <sc-for list="{{r.facts}}" as="x" hint-placeholder-count="3">
+                          <span style="box-sizing: border-box; padding: 8px 10px; border-radius: 8px; background: #f5f6f8; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+                            <span style="font-size: 11px; color: #596170; white-space: nowrap">{{x.k}}</span>
+                            <span style="font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{x.v}}</span>
+                          </span>
+                        </sc-for>
+                      </span>
+                      <sc-for list="{{r.groups}}" as="g" hint-placeholder-count="3">
+                        <span style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; padding: 8px 12px; display: flex; gap: 12px">
+                          <span style="width: 104px; flex-shrink: 0; display: flex; flex-direction: column; gap: 4px">
+                            <span style="font-size: 12.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{g.h}}</span>
+                            <span style="align-self: flex-start; height: 18px; padding: 0 6px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{g.sub}}</span>
+                          </span>
+                          <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+                            <sc-for list="{{g.lines}}" as="l" hint-placeholder-count="3">
+                              <span style="display: flex; align-items: center; gap: 6px; min-height: 20px">
+                                <span style="font-size: 12px; line-height: 1.4; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{l.t}}</span>
+                                <sc-if value="{{l.hasNote}}" hint-placeholder-val="{{false}}"><span style="{{l.noteStyle}}">{{l.note}}</span></sc-if>
+                              </span>
+                            </sc-for>
+                          </span>
+                        </span>
+                      </sc-for>
+                    </sc-if>
+                    <sc-if value="{{r.draft}}" hint-placeholder-val="{{false}}">
+                      <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+                        <span style="height: 44px; border-radius: 8px; background: #f5f6f8"></span>
+                        <span style="height: 44px; border-radius: 8px; background: #f5f6f8"></span>
+                        <span style="height: 44px; border-radius: 8px; border: 1.5px dashed #d5d9e0"></span>
+                      </span>
+                      <span style="height: 92px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; padding: 12px; display: flex; flex-direction: column; gap: 9px">
+                        <span style="width: 62%; height: 10px; border-radius: 5px; background: #e2e5ea"></span>
+                        <span style="width: 84%; height: 10px; border-radius: 5px; background: #eef0f3"></span>
+                        <span style="width: 48%; height: 10px; border-radius: 5px; background: #eef0f3"></span>
+                      </span>
+                      <span style="height: 92px; box-sizing: border-box; border: 1.5px dashed #d5d9e0; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #8a91a0">{{r.draftNote}}</span>
+                    </sc-if>
+                  </span>
+                </span>
+                <span style="{{r.badgeStyle}}">{{r.badge}}</span>
+              </a>
+              <!-- 몸통: 제목 · 코드 · n/N 단계 · 연결된 Storyboard -->
+              <div style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 16px 16px; box-sizing: border-box">
+                <a href="{{r.href}}" style="font-size: 14px; font-weight: 600; line-height: 1.4; color: #121417; height: 39px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; word-break: keep-all">{{r.title}}</a>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 12px">
+                  <span style="font-family: Manrope, sans-serif; font-weight: 700; color: #8a91a0; white-space: nowrap">{{r.ref}}</span>
+                  <span style="flex-grow: 1"></span>
+                  <span style="color: #596170; white-space: nowrap">{{r.when}}</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 6px">
+                  <div style="display: flex; align-items: baseline; gap: 6px; font-size: 12px; min-width: 0">
+                    <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0; white-space: nowrap">{{r.stepNum}}</span>
+                    <span style="font-weight: 700; color: #121417; white-space: nowrap">단계</span>
+                    <span style="color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">· {{r.stepText}}</span>
+                  </div>
+                  <div style="display: flex; gap: 4px" aria-hidden="true">
+                    <sc-for list="{{r.segs}}" as="s" hint-placeholder-count="3"><span style="{{s}}"></span></sc-for>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 6px; flex-wrap: nowrap; min-width: 0">
+                  <sc-for list="{{r.sbs}}" as="b" hint-placeholder-count="2">
+                    <button class="l-chip" onClick="{{b.open}}" style="height: 26px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; gap: 5px; white-space: nowrap; min-width: 0; max-width: 170px; overflow: hidden"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 5h16v14H4z M4 11h16 M10 11v8"/></svg><span style="overflow: hidden; text-overflow: ellipsis">{{b.name}}</span></button>
+                  </sc-for>
+                  <sc-if value="{{r.more}}" hint-placeholder-val="{{false}}"><span style="height: 26px; padding: 0 7px; border-radius: 7px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{r.moreText}}</span></sc-if>
+                </div>
               </div>
-              <div style="display: flex; flex-wrap: wrap; gap: 6px">
-                <sc-for list="{{r.sbs}}" as="b" hint-placeholder-count="2">
-                  <button class="l-chip" onClick="{{b.open}}" style="height: 28px; box-sizing: border-box; padding: 0 9px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M4 11h16 M10 11v8"/></svg>{{b.name}}</button>
-                </sc-for>
-              </div>
-              <span style="font-size: 13px; color: #596170; white-space: nowrap">{{r.when}}</span>
-              <a href="{{r.href}}" style="justify-self: end; height: 32px; padding: 0 12px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">열기</a>
             </div>
           </sc-for>
         </div>
       </sc-if>
       <sc-if value="{{empty}}" hint-placeholder-val="{{false}}">
-        <div style="box-sizing: border-box; padding: 40px; border-radius: 16px; border: 1.5px dashed #c9d0e6; background: #ffffff; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
-          <span style="font-size: 16px; font-weight: 700">아직 만든 {{short}}가 없어요</span>
-          <span style="font-size: 13.5px; color: #596170">{{pre}}이 된 Storyboard를 골라 시작해요.</span>
-          <a href="{{newHref}}" style="margin-top: 6px; height: 42px; padding: 0 16px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 700; display: flex; align-items: center">{{newLabel}}</a>
+        <div style="margin-top: 16px; box-sizing: border-box; height: 168px; border-radius: 16px; border: 1.5px dashed #c9d0e6; background: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; flex-shrink: 0">
+          <span style="font-size: 16px; font-weight: 700">아직 만든 {{short}}{{josa}} 없어요</span>
+          <span style="font-size: 13.5px; color: #596170">{{emptyNote}}</span>
         </div>
       </sc-if>
     </section>
@@ -75,27 +164,90 @@ button{font-family:inherit;cursor:pointer}
 class Component extends DCLogic {
   renderVals() {
     const NAME = { 'SB-01': '용산 AI Ready 오피스', 'SB-02': '용산 · 분기 B', 'SB-03': 'A 커피 매장 리뉴얼', 'SB-04': '동탄 시니어 복합단지', 'SB-05': '판교 스타트업 단지' };
-    // [이름, 짧은 이름, 설명, 사전, 후속, 새로 만들기 링크, 새로 만들기 이름, 저장된 줄을 여는 화면(그 콘텐츠 보기), 사이드바 그룹, 목록[[제목, 참조, Storyboard, 수정]]]
+    // 썸네일 재료 = 콘텐츠 보기 팝업 카드(facts 3 · groups[[머리, 부제, 줄[[글, 꼬리표]]]]) — 허브가 콘텐츠마다 가진 값 그대로
+    const C = {
+      'RQ-01': [[['고객사', 'E 자산운용'], ['최종 제안대상', '대표이사'], ['요구', '12 · 확인 필요 4']],
+        [['대표이사', '50%', [['사용자를 인식하고 반응하는 AI Ready 오피스', ''], ['최초 AI Ready 공간으로 알리기', ''], ['에너지 사용량 20% 절감 · 실측 증빙', '']]],
+         ['공간컨텐츠실장', '30%', [['오피스를 업무환경 플랫폼으로', '확인 필요'], ['예측 · 반응형 공간', ''], ['건물 가치 · 임대 선호도 제고', '']]],
+         ['개발사업팀장', '20%', [['AI 인프라를 설계 단계에 반영', ''], ['시공 · 운영 유지보수 부담 최소화', '']]]]],
+      'RQ-03': [[['고객사', 'A 커피 프랜차이즈'], ['최종 제안대상', '가맹사업본부장'], ['요구', '9']],
+        [['가맹사업본부장', '60%', [['메뉴 변경을 전 매장에 한 번에', ''], ['피크 시간 주문 대기 줄이기', ''], ['리뉴얼 예산 안에서 단계 도입', '']]],
+         ['매장 운영팀장', '40%', [['직원 손이 덜 가는 메뉴보드', ''], ['매장 화면 상태 원격 확인', '']]]]],
+      'RQ-04': [[['고객사', 'F 시행사'], ['최종 제안대상', '[확인 필요]'], ['요구', '9 · 확인 필요 7']],
+        [['사업총괄', '60%', [['입주민 안전 · 낙상 감지', '확인 필요'], ['커뮤니티 시설 예약 · 안내', '확인 필요'], ['세대 스마트홈 연동', '확인 필요']]],
+         ['상품기획팀장', '40%', [['관리비 절감', '확인 필요'], ['단지 브랜드 차별화', '']]]]],
+      'RQ-05': [[['고객사', 'G 공사'], ['최종 제안대상', '단지운영실장'], ['요구', '3 · 확인 필요 1']],
+        [['단지운영실장', '100%', [['입주 기업 공용 회의 공간', ''], ['단지 안내 · 행사 홍보', ''], ['공용부 에너지 관제', '확인 필요']]]]],
+      'DSS-01': [[['업종', '오피스 · 업무시설'], ['공간 · 제품', '7 · 12'], ['솔루션', 'MagicINFO · SmartThings Pro · b.IoT']],
+        [['로비', '제품 3', [['The Wall IAB 146" · 1식', ''], ['Smart Signage QM55C · 2대', ''], ['삼성 키오스크 · 1대', '']]],
+         ['회의실 · 사무실', '제품 4', [['Flip Pro WA75D · 실 수', '확인 필요'], ['Smart Signage QB55C · 실당 1대', ''], ['스마트 모니터 · 좌석 수', '확인 필요']]],
+         ['그 밖의 공간', '제품 5', [['라운지 QM55C · 중앙관제실 비디오월 VM55B', ''], ['공용공간 SmartThings 센서 · QB43C', ''], ['주차장 옥외형 사이니지 OHC55', '확장']]]]],
+      'DSS-03': [[['업종', '외식 · 카페'], ['공간 · 제품', '3 · 5'], ['솔루션', 'MagicINFO']],
+        [['카운터', '제품 2', [['Smart Signage QM55C · 3대', ''], ['삼성 키오스크 · 2대', '']]],
+         ['매장 입구', '제품 1', [['옥외형 사이니지 OHC55 · 1대', '']]],
+         ['좌석 · 픽업', '제품 2', [['Smart Signage QB43C · 1대', ''], ['Smart Signage QB55C · 수량', '확인 필요']]]]],
+      'MI-01': [[['담은 정보', '11'], ['출처', '11 · 링크 포함'], ['수치 원문 확인', '2']],
+        [['시장', '4', [['프라임 오피스 스마트 빌딩 도입 증가', '리포트'], ['AI 도입 기업의 회의 · 협업 공간 확대', '리포트'], ['오피스 로비의 브랜드 공간화', '뉴스']]],
+         ['고객사', '4', [['E 자산운용 용산 재개발 사업 개요', '뉴스'], ['ESG 보고서의 에너지 절감 목표', '확인 필요'], ['보유 오피스 포트폴리오', '공시 · IR']]],
+         ['사용자', '3', [['하이브리드 근무 뒤 회의실 수요 변화', '리포트'], ['임차인이 선호하는 오피스 설비', '리포트'], ['실내 쾌적성 만족도', '확인 필요']]]]],
+      'MI-02': [[['담은 정보', '9'], ['출처', '9 · 링크 포함'], ['수치 원문 확인', '1']],
+        [['시장', '3', [['오피스 저층부 리테일 테넌트 구성 변화', '리포트'], ['F&B · 라이프스타일 매장의 오피스 입점', '뉴스'], ['체험형 매장 확대', '리포트']]],
+         ['고객사', '3', [['E 자산운용 용산 재개발 사업 개요', '뉴스'], ['저층부 상업시설 운영 계획', '확인 필요'], ['보유 자산의 리테일 비중', '공시 · IR']]],
+         ['사용자', '3', [['오피스 근로자의 점심 · 퇴근길 소비', '리포트'], ['방문객 동선과 매장 체류 시간', '리포트'], ['매장 디지털 사이니지 선호', '확인 필요']]]]],
+      'CA-03': [[['경쟁사', '4'], ['비교 쌍', '6'], ['우위 · 열위', '9 · 4']],
+        [['경쟁사 A', '직접 · 비교 쌍 2', [['통합 · 메뉴보드와 키오스크를 같은 CMS로', ''], ['Smart Signage QM55C ↔ 보급형 메뉴보드', '']]],
+         ['경쟁사 B', 'AI 웹 탐색 · 2', [['가격 · 원격 관리로 매장 운영비 절감', ''], ['삼성 키오스크 ↔ 주문 키오스크', '확인 필요']]],
+         ['경쟁사 C', 'AI 웹 탐색 · 1', [['옥외형 사이니지 OHC55 ↔ 옥외 LED 간판', '']]]]],
+      'SP-03': [[['제품', '5'], ['항목', '6'], ['형식', '비교표 · 한글 · mm']],
+        [['카운터', '제품 2', [['Smart Signage QM55C', ''], ['삼성 키오스크', '확인 필요']]],
+         ['매장 입구', '제품 1', [['옥외형 사이니지 OHC55', '']]],
+         ['좌석 · 픽업', '제품 2', [['Smart Signage QB43C', ''], ['Smart Signage QB55C', '']]]]]
+    };
+    // [이름, 짧은 이름, 조사, 설명, 사전, 후속, 새로 만들기 링크, 새로 만들기 이름, 저장한 것을 여는 화면(콘텐츠 보기), 초안을 여는 화면(편집), 사이드바 그룹, 단계, 목록[[제목, 코드, Storyboard, 수정, 초안이면 지금 단계(저장한 것 0)]]]
     const M = {
-      rq: ['고객 요구사항', '요구사항', '가장 첫 단위예요. 저장하면 Storyboard가 자동으로 만들어져요.', '없음', 'DSS', 'RQ1.dc.html', '새 요구사항', 'RQ_View.dc.html', 'requirements',
-        [['E 자산운용 · 용산 업무시설 재개발 AI Ready 오피스', 'RQ-01 v2', ['SB-01', 'SB-02'], '오늘 13:40'], ['A 커피 프랜차이즈 · 매장 리뉴얼', 'RQ-03 v1', ['SB-03'], '어제'], ['F 시행사 · 동탄 시니어 복합단지', 'RQ-04 v1', ['SB-04'], '오늘 11:20'], ['G 공사 · 판교 스타트업 단지', 'RQ-05 v1', ['SB-05'], '11/2']]],
-      dss: ['공간별 제품 매칭 DSS', 'DSS', 'Storyboard에 공간별 제품 · 솔루션을 골라 넣어요.', 'Storyboard (고객 요구사항)', '공간 시나리오 · Spec 시트', 'DS1.dc.html', '새 DSS', 'DS_View.dc.html', 'dss',
-        [['용산 오피스 공간별 제품', 'DSS-01 v1', ['SB-01', 'SB-02'], '오늘 10:10'], ['A 커피 매장 공간별 제품', 'DSS-03 v1', ['SB-03'], '어제']]],
-      mi: ['Market Intelligence', 'MI', 'Storyboard를 바탕으로 웹에서 시장 · 고객사 · 사용자 정보를 모아 정리해요.', '최소 DSS까지 된 Storyboard', '없음', 'MI1.dc.html', '새 MI', 'MI_View.dc.html', 'market',
-        [['용산 오피스 시장 분석', 'MI-01 v1', ['SB-01'], '오늘 12:30'], ['용산 오피스 시장 분석 · 리테일 테넌트 관점', 'MI-02 v1', ['SB-02'], '오늘 14:05']]],
-      ca: ['경쟁사 분석', '경쟁사 분석', 'Storyboard의 제품 · 공간을 기준으로 B2B 경쟁사를 리스트업해요.', '최소 DSS까지 된 Storyboard', '없음', 'CA1.dc.html', '새 경쟁사 분석', 'CA_View.dc.html', 'competitor',
-        [['A 커피 메뉴보드 경쟁사', 'CA-03 v1', ['SB-03'], '어제']]],
-      vp: ['Value Proposition', 'VP', '제품 · 솔루션마다 고객에게 줄 가치를 뽑아요.', '최소 DSS까지 된 Storyboard', '없음', 'VP1.dc.html', '새 VP', 'VP_View.dc.html', 'value', []],
-      sp: ['Spec 시트 생성', 'Spec 시트', 'DSS에서 고른 제품의 스펙 시트를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SP1.dc.html', '새 Spec 시트', 'SP_View.dc.html', 'spec',
-        [['A 커피 메뉴보드 스펙', 'SP-03 v1', ['SB-03'], '어제']]],
-      sc: ['공간 시나리오 생성', '공간 시나리오', 'Storyboard의 공간마다 사용자 시나리오를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SC1.dc.html', '새 공간 시나리오', 'SC_View.dc.html', 'scenario', []]
+      rq: ['고객 요구사항', '요구사항', '이', '가장 첫 단위예요. 저장하면 Storyboard가 자동으로 만들어져요.', '없음', 'DSS', 'RQ1.dc.html', '새 요구사항', 'RQ_View.dc.html', 'RQ1.dc.html', 'requirements', ['요구사항 입력', '저장'],
+        [['E 자산운용 · 용산 업무시설 재개발 AI Ready 오피스', 'RQ-01 v2', ['SB-01', 'SB-02'], '오늘 13:40', 0], ['F 시행사 · 동탄 시니어 복합단지', 'RQ-04 v1', ['SB-04'], '오늘 11:20', 0], ['A 커피 프랜차이즈 · 매장 리뉴얼', 'RQ-03 v1', ['SB-03'], '어제', 0], ['G 공사 · 판교 스타트업 단지', 'RQ-05 v1', ['SB-05'], '11/2', 0]]],
+      dss: ['공간별 제품 매칭 DSS', 'DSS', '가', 'Storyboard에 공간별 제품 · 솔루션을 골라 넣어요.', 'Storyboard (고객 요구사항)', '공간 시나리오 · Spec 시트', 'DS1.dc.html', '새 DSS', 'DS_View.dc.html', 'DS2.dc.html', 'dss', ['Storyboard', '공간 · 제품', '솔루션'],
+        [['판교 스타트업 단지 DSS', 'DSS-05', ['SB-05'], '방금', 2], ['용산 오피스 공간별 제품', 'DSS-01 v1', ['SB-01', 'SB-02'], '오늘 10:10', 0], ['A 커피 매장 공간별 제품', 'DSS-03 v1', ['SB-03'], '어제', 0]]],
+      mi: ['Market Intelligence', 'MI', '가', 'Storyboard를 바탕으로 웹에서 시장 · 고객사 · 사용자 정보를 모아 정리해요.', '최소 DSS까지 된 Storyboard', '없음', 'MI1.dc.html', '새 MI', 'MI_View.dc.html', 'MI2.dc.html', 'market', ['Storyboard', '검색', '정제'],
+        [['용산 오피스 시장 분석 · 리테일 테넌트 관점', 'MI-02 v1', ['SB-02'], '오늘 14:05', 0], ['용산 오피스 시장 분석', 'MI-01 v1', ['SB-01'], '오늘 12:30', 0]]],
+      ca: ['경쟁사 분석', '경쟁사 분석', '이', 'Storyboard의 제품 · 공간을 기준으로 B2B 경쟁사를 리스트업해요.', '최소 DSS까지 된 Storyboard', '없음', 'CA1.dc.html', '새 경쟁사 분석', 'CA_View.dc.html', 'CA2.dc.html', 'competitor', ['Storyboard', '경쟁사 리스트업'],
+        [['A 커피 메뉴보드 경쟁사', 'CA-03 v1', ['SB-03'], '어제', 0]]],
+      vp: ['Value Proposition', 'VP', '가', '제품 · 솔루션마다 고객에게 줄 가치를 뽑아요.', '최소 DSS까지 된 Storyboard', '없음', 'VP1.dc.html', '새 VP', 'VP_View.dc.html', 'VP2.dc.html', 'value', ['Storyboard', '가치 · 고객의 니즈'], []],
+      sp: ['Spec 시트 생성', 'Spec 시트', '가', 'DSS에서 고른 제품의 스펙 시트를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SP1.dc.html', '새 Spec 시트', 'SP_View.dc.html', 'SP2.dc.html', 'spec', ['Storyboard', '시트 작성'],
+        [['A 커피 메뉴보드 스펙', 'SP-03 v1', ['SB-03'], '어제', 0]]],
+      sc: ['공간 시나리오 생성', '공간 시나리오', '가', 'Storyboard의 공간마다 사용자 시나리오를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SC1.dc.html', '새 공간 시나리오', 'SC_View.dc.html', 'SC2.dc.html', 'scenario', ['Storyboard', '공간별 시나리오'], []]
     };
     const key = this.props.content ?? 'rq';
-    const [label, short, desc, pre, post, newHref, newLabel, viewHref, group, L] = M[key] || M.rq;
+    const [label, short, josa, desc, pre, post, newHref, newLabel, viewHref, editHref, group, steps, L] = M[key] || M.rq;
     const s = this.state || {};
-    const rows = L.map(([title, ref, sbs, when]) => ({ title, ref, when, href: viewHref, sbs: sbs.map((id) => ({ name: NAME[id], open: () => this.setState({ pop: id }) })) }));
+    const N = steps.length;
+    const noteStyle = (n) => 'height: 18px; padding: 0 6px; border-radius: 999px; font-size: 10px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (n === '확인 필요' ? ' background: #fff4dc; color: #7a4f00;' : n === '확장' ? ' border: 1px solid #121417; color: #121417;' : ' background: #f0f2f5; color: #3d4452;');
+    const badgeBase = 'position: absolute; right: 10px; bottom: 10px; height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; box-shadow: 0 1px 2px rgba(18,20,23,0.12);';
+    const seg = (on) => 'flex: 1 1 0; height: 6px; border-radius: 3px; background: ' + on + ';';
+    const rows = L.map(([title, ref, sbs, when, step]) => {
+      const draft = step > 0;
+      const cur = draft ? step : N;
+      const code = ref.split(' ')[0];
+      const card = draft ? null : C[code];
+      return {
+        title, ref: draft ? ref + ' · 작성 중' : ref, when, href: draft ? editHref : viewHref, draft, hasCard: !!card,
+        draftNote: '작성 중 · ' + steps[cur - 1] + ' 단계',
+        badge: draft ? '작성 중' : '완성',
+        badgeStyle: badgeBase + (draft ? ' background: #fff4dc; color: #7a4f00;' : ' background: #1428a0; color: #ffffff;'),
+        stepNum: cur + '/' + N, stepText: draft ? steps[cur - 1] : '완성',
+        segs: steps.map((_, i) => seg(i + 1 < cur || !draft ? '#1428a0' : i + 1 === cur ? '#9aa8e6' : '#e2e5ea')),
+        facts: card ? card[0].map(([k, v]) => ({ k, v })) : [],
+        groups: card ? card[1].map(([h, sub, lines]) => ({ h, sub, lines: lines.map(([t, n]) => ({ t, note: n, hasNote: !!n, noteStyle: noteStyle(n) })) })) : [],
+        sbs: sbs.slice(0, 1).map((id) => ({ name: NAME[id], open: () => this.setState({ pop: id }) })),
+        more: sbs.length > 1, moreText: '+' + (sbs.length - 1)
+      };
+    });
+    const flow = steps.map((t, i) => ({ n: i + 1, t, arrow: i > 0 }));
     return {
-      label, short, desc, pre, post, newHref, newLabel, group, rows, has: rows.length > 0, empty: rows.length === 0,
+      label, short, josa, desc, pre, post, newHref, newLabel, group, rows, flow, flowNote: '모두 ' + N + '단계',
+      count: String(rows.length), has: rows.length > 0, empty: rows.length === 0,
+      emptyNote: key === 'rq' ? '위 「새 요구사항 만들기」로 시작해요 · 저장하면 Storyboard가 자동으로 만들어져요.' : '위 「' + newLabel + ' 만들기」로 시작해요 · ' + pre + '가 있어야 해요.',
       popOpen: !!s.pop, pop: s.pop || 'SB-01', closePop: () => this.setState({ pop: '' })
     };
   }

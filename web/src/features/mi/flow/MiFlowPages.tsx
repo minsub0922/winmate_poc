@@ -25,6 +25,8 @@ export function MiListScreen() {
   const remove = useMfDelete();
   const drafts: DraftRow[] = (flows.data?.items ?? []).filter((m) => m.status !== 'done')
     .map((m) => ({ title: m.title, ref: m.code ?? null, to: mfRoute(m.id), sbIds: m.sb_id ? [m.sb_id] : [], when: m.updated_at,
+      // 지금 단계(보드 List v61 n/3): 정제 중이면 3, 분석 · 검색 중이면 2
+      step: m.phase === 'refine' ? 3 : 2,
       onDelete: m.ver == null ? () => remove(m.id) : undefined }));
   return <ContentListScreen content="mi" drafts={drafts} />;
 }

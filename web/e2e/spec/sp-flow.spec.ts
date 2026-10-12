@@ -229,10 +229,10 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   await expect(page.getByRole('heading', { name: 'DSS 제품으로 스펙 시트를 만들어요' })).toBeVisible();
   await expect(page.locator('.sf-lhead__n')).toHaveText('5 / 6 선택');
   await page.goto('/spec');
-  const listRow = page.getByRole('row').filter({ hasText: `${code} v1` });
+  const listRow = page.locator('.fl-card').filter({ hasText: `${code} v1` });
   await expect(listRow).toBeVisible();
   await expect(listRow.getByRole('button', { name: sb.name })).toBeVisible();
-  await expect(listRow.getByRole('link', { name: '열기' })).toHaveAttribute('href', `/spec/flow/${fid}`);
+  await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/spec/flow/${fid}`);
   await page.goto('/spec/new');
   const again = page.getByRole('radio', { name: new RegExp(name) });
   await expect(again).toContainText(`${code} v1 있음`);

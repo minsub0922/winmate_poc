@@ -25,7 +25,9 @@ export function DsListScreen() {
   const list = useDssList();
   const remove = useDsDelete();
   const drafts: DraftRow[] = (list.data?.items ?? []).filter((d) => d.status !== 'done')
-    .map((d) => ({ title: d.title, ref: d.code ?? null, to: dsRoute(d.id), sbIds: d.sb_id ? [d.sb_id] : [], when: d.updated_at, onDelete: () => remove(d.id) }));
+    .map((d) => ({ title: d.title, ref: d.code ?? null, to: dsRoute(d.id), sbIds: d.sb_id ? [d.sb_id] : [], when: d.updated_at, onDelete: () => remove(d.id),
+      // 지금 단계(보드 List v61 n/3): 솔루션을 하나라도 골랐으면 3 솔루션, 아니면 2 공간 · 제품
+      step: d.counts.solutions > 0 ? 3 : 2 }));
   return <ContentListScreen content="dss" drafts={drafts} />;
 }
 

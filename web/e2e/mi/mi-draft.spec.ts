@@ -13,7 +13,7 @@ const draftsOf = async (request: APIRequestContext, sbId: string) =>
 
 /** 목록의 초안 줄 — 손을 올려야 × 가 보이고, 확인창에서 「지우기」를 누르면 줄이 빠진다 */
 async function deleteDraftRow(page: Page, title: string, name?: string) {
-  const row = page.locator('.fl-tr').filter({ hasText: title });
+  const row = page.locator('.fl-card').filter({ hasText: title });
   await expect(row).toHaveCount(1);
   await expect(row).toContainText('작성 중');
   const x = row.getByRole('button', { name: `${title} 지우기` });
@@ -68,6 +68,6 @@ test('MI 초안 — 「‹ Storyboard」 → Gate → 다시 시작해도 같은
   expect((await request.get(`/api/mi/v1/mi-flows/${id}`)).status()).toBe(404);
   await page.reload();
   await expect(page.getByRole('heading', { level: 1, name: 'Market Intelligence' })).toBeVisible();
-  await expect(page.locator('.fl-tr').filter({ hasText: title })).toHaveCount(0);
+  await expect(page.locator('.fl-card').filter({ hasText: title })).toHaveCount(0);
   expect(await draftsOf(request, sb.id)).toEqual([]);
 });

@@ -86,13 +86,13 @@ test('VP — DSS 다시 가져오기(안내 줄 · 새 후보 · DSS에서 빠�
 
   // 목록(VP0) — 저장 전 초안 줄의 × → 확인 → 지움
   await page.goto('/vp');
-  const row = page.getByRole('row').filter({ hasText: name });
+  const row = page.locator('.fl-card').filter({ hasText: name });
   await expect(row).toContainText('작성 중');
   await row.hover();
   await row.getByRole('button', { name: `${name} 지우기` }).click();
   await page.getByRole('dialog').filter({ hasText: '작성 중인 초안을 지울까요?' }).getByRole('button', { name: '지우기' }).click();
   await expect(page.locator('.wm-toast').filter({ hasText: '초안을 지웠어요' })).toBeVisible();
-  await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(0);
+  await expect(page.locator('.fl-card').filter({ hasText: name })).toHaveCount(0);
   expect((await request.get(`/api/vp/v1/value-maps/${mapId}`)).status()).toBe(404);
   // 저장한 맵은 지울 수 없다(409 SAVED_CONTENT)
   const made = await (await request.post('/api/vp/v1/value-maps', { data: { sb_id: sb.id } })).json();

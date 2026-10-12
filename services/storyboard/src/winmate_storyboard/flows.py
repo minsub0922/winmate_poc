@@ -130,6 +130,7 @@ class FlowListItem(BaseModel):
     existing: FlowCell | None = Field(None, description="content= 를 줬을 때: 이미 연결된 그 콘텐츠")
     key_message: str | None = Field(None, description="SB0 Key message 칸(없으면 null)")
     branch_point: dict[str, Any] | None = Field(None, description="분기면 {stage, from_ref} — SB0 「SB-01 · MI에서 분기」")
+    summary_head: list[str] = Field(default_factory=list, description="SB0 작업 내역 썸네일 — 요약본(summary.md) 앞 줄(빈 줄 빼고 12줄까지)")
     updated_at: str
 
 
@@ -368,6 +369,8 @@ def list_item(d: dict[str, Any], content: str | None = None) -> dict[str, Any]:
     it = {"id": d["id"], "name": d["name"], "customer": d.get("customer"), "parent": d.get("parent"), "is_branch": bool(d.get("parent")),
           "cells": cs, "progress": p, "contents_done": n, "key_message": (d.get("key_message") or {}).get("text") or None,
           "branch_point": d.get("branch_point") if d.get("parent") else None, "updated_at": d["updated_at"]}
+    if not content:   # SB0 썸네일(Gate 목록에는 쓰지 않는다)
+        it["summary_head"] = [ln for ln in summary(d).split("\n") if ln.strip()][:12]
     if content:
         need = NEEDS.get(content)
         ok = not need or bool((d.get("stages") or {}).get(need))
@@ -778,6 +781,7 @@ class FlowContentItem(BaseModel):
     route: str
     storyboards: list[FlowSbRef]
     updated_at: str
+    card: FlowCard | None = Field(None, description="목록(보드 List) 썸네일 — 연결된 콘텐츠 보기 팝업과 같은 카드(가장 최근에 저장한 Storyboard 의 것)")
 
 
 class FlowContentList(BaseModel):
@@ -794,12 +798,16 @@ async def list_contents(key: str) -> dict[str, Any]:
         meta = (d.get("stage_meta") or {}).get(key) or {}
         ref = s.get("ref")
         res = meta.get("res_id") or ref
+        card = (d.get("cards") or {}).get(key)
         it = by.setdefault(ref, {"key": key, "ref": ref, "ver": s.get("ver") or 1, "title": meta.get("title") or ref, "res_id": res,
-                                 "route": ROUTE[key].format(ref=res), "storyboards": [], "updated_at": meta.get("at") or d.get("updated_at")})
+                                 "route": ROUTE[key].format(ref=res), "storyboards": [], "updated_at": meta.get("at") or d.get("updated_at"), "card": card})
         it["ver"] = max(it["ver"], s.get("ver") or 1)
         if meta.get("at") and meta["at"] > (it["updated_at"] or ""):
             it["updated_at"] = meta["at"]
             it["title"] = meta.get("title") or it["title"]
+            it["card"] = card or it["card"]
+        elif not it["card"]:
+            it["card"] = card
         it["storyboards"].append({"id": d["id"], "name": d["name"], "is_branch": bool(d.get("parent"))})
     out = sorted(by.values(), key=lambda x: x["updated_at"] or "", reverse=True)
     return {"items": out}

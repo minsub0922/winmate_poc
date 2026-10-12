@@ -346,10 +346,10 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await expect(page.getByRole('heading', { name: '경쟁사를 리스트업하고 우리 제안과 비교해요' })).toBeVisible();
   await expect(page.locator('.caf-row')).toHaveCount(4);
   await page.goto('/competitor');
-  const row = page.getByRole('row').filter({ hasText: `${doc.code} v1` });
+  const row = page.locator('.fl-card').filter({ hasText: `${doc.code} v1` });
   await expect(row).toBeVisible();
   await expect(row.getByRole('button', { name: sb.name })).toBeVisible();
-  await expect(row.getByRole('link', { name: '열기' })).toHaveAttribute('href', `/competitor/flow/${fid}`);
+  await expect(row.locator('.fl-cardtitle')).toHaveAttribute('href', `/competitor/flow/${fid}`);
 });
 
 test('CA 새 흐름 — Storyboard 「만들기」(?sb=&auto=1) · 1920 폭 · AI 후보 없음 · 이전 흐름 경로', async ({ page, request }) => {

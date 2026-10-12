@@ -34,7 +34,7 @@ const draftsOf = async (request: APIRequestContext, sbId: string) =>
 
 /** 목록의 초안 줄 — 손을 올려야 × 가 보이고, 확인창에서 「지우기」를 누르면 줄이 빠진다 */
 async function deleteDraftRow(page: Page, title: string, shot?: string) {
-  const row = page.locator('.fl-tr').filter({ hasText: title });
+  const row = page.locator('.fl-card').filter({ hasText: title });
   await expect(row).toHaveCount(1);
   await expect(row).toContainText('작성 중');
   const x = row.getByRole('button', { name: `${title} 지우기` });
@@ -83,7 +83,7 @@ test('DSS 초안 — Gate 를 다시 거쳐도 같은 초안 · 목록에서 × 
   expect((await request.get(`/api/dss/v1/dss/${id}`)).status()).toBe(404);
   await page.reload();
   await expect(page.getByRole('heading', { name: '공간별 제품 매칭 DSS', exact: true })).toBeVisible();
-  await expect(page.locator('.fl-tr').filter({ hasText: name })).toHaveCount(0);
+  await expect(page.locator('.fl-card').filter({ hasText: name })).toHaveCount(0);
 
   // 지운 뒤 다시 시작하면 새 초안
   const id2 = await startFromGate(page, name);

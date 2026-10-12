@@ -312,7 +312,7 @@ return <>{/* 화면 */}{dialog}</>;
 | `JsonPopup` | `json`, `highlightKey?`, `highlightAll?`, `title?`, `sub?` | flow.json 전체 900×780 — 이번에 더해진 `stages.<key>` 줄(또는 전체)을 초록으로 · 머리 오른쪽 탭 전체 / 추가된 값만(보드 JsonPopup — `sub` 는 줬을 때만) |
 | `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
 
-**셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List · 초안 줄의 Storyboard 칩도 이름) ·
+**셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List v61 — 가운데 「새 ○○ 만들기」 · 작업 내역 그리드 · 썸네일 = 허브 `card` · n/N 단계, `DraftRow.step` 으로 초안의 지금 단계 · 초안 카드의 Storyboard 칩도 이름) · 목록 부품 `ListHero({to, label, steps, note})` · `HistoryHead({count, legend})` · `SegLegend` · `StepMeter({n, total, text, segs, gaps})` · `ThumbFrame({to?, badge, tone})` · `CardMini({card, note})`(SB0 도 쓴다) ·
 `GateScreen({content, onStart, initialSb, autoStart, drafts?})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
 `SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다) · `FlowDoneView({sbId, stageKey, mdAdded, title, sub, onEdit, follow, newStoryboard?, jsonHead?})` ·
 `CONTENT`(콘텐츠별 이름 · base · 스텝 이름 = 보드 Gate META) · `useFlow` · `useFlows` · `FlowDots` · `whenText`.

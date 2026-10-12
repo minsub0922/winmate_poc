@@ -11,7 +11,7 @@ const tag = () => Date.now().toString(36).slice(-4);
 
 /** 목록의 초안 줄 — 손을 올려야 × 가 보이고, 확인창에서 「지우기」를 누르면 줄이 빠진다 */
 async function deleteDraftRow(page: Page, title: string, name?: string) {
-  const row = page.locator('.fl-tr').filter({ hasText: title });
+  const row = page.locator('.fl-card').filter({ hasText: title });
   await expect(row).toHaveCount(1);
   await expect(row).toContainText('작성 중');
   const x = row.getByRole('button', { name: `${title} 지우기` });
@@ -49,7 +49,7 @@ test('RQ 초안 — 새 요구사항 첫 입력 → 목록 초안 줄 × 로 지
   expect((await request.get(`/api/requirements/v1/rq-flows/${id}`)).status()).toBe(404);
   await page.reload();
   await expect(page.getByRole('heading', { name: '고객 요구사항', exact: true })).toBeVisible();
-  await expect(page.locator('.fl-tr').filter({ hasText: title })).toHaveCount(0);
+  await expect(page.locator('.fl-card').filter({ hasText: title })).toHaveCount(0);
 
   // 저장한 요구사항(Storyboard 에 연결) — 목록 줄에 × 가 없고, 지우려 하면 409 SAVED_CONTENT
   const savedTitle = `성수 저장 ${tag()}`;
@@ -60,7 +60,7 @@ test('RQ 초안 — 새 요구사항 첫 입력 → 목록 초안 줄 × 로 지
   expect(del.status()).toBe(409);
   expect((await del.json()).error).toMatchObject({ code: 'SAVED_CONTENT', message: '저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요' });
   await page.reload();
-  const savedRow = page.locator('.fl-tr').filter({ hasText: savedTitle });
+  const savedRow = page.locator('.fl-card').filter({ hasText: savedTitle });
   await expect(savedRow).toHaveCount(1);
   await expect(savedRow).toContainText(`${s.code} v1`);
   await savedRow.hover();
