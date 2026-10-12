@@ -1,9 +1,12 @@
 /**
- * Spec 시트 새 흐름(2026-10-08 보드 webapp1 SP0 · SP1 · SP2 · 2026-10-12 SP_View · JsonPopup) — 실제 스택(KB 실데이터 · export · storyboard 허브).
- * Storyboard(rq → dss, API · web/e2e/shell/flowkit DSS: Smart Signage QM55C 에 KB ref) → 목록 → Gate → SP2(제품 체크 · 모델 바꾸기 · 모델 고르기 ·
- * 수량 · 항목 · 형식 · 표기) → 시트 만들기 → 같은 주소의 보기(SP_View · 완료 안내 없음 · XLSX 내려받기 · flow.json) · 허브 stages.sp
- * → 편집(?edit=1) → 다시 저장 → 보기 · 목록 「열기」 · 새로고침도 보기.
- * 보드 SP2 고정 칸(330 · 머리 40 · 줄 44 · 선택 줄 46 · 미리보기 머리 38 · 항목 칸 130 · 칸 36 · 버튼 48) · View 칸(띠 44 · 190 · 160 · 머리 40 · 줄 44)을 숫자로 재고 __screens__/<보드>-new.png 로 남긴다.
+ * Spec 시트 새 흐름(보드 webapp1 v62 — SP0 · 최종본 View content=sp(SP_View · SP_Draft) + 단계 팝업 SP1 · SP2 · SP2_Edit · JsonPopup) —
+ * 실제 스택(KB 실데이터 · export · storyboard 허브).
+ * Storyboard(rq → dss, API · web/e2e/shell/flowkit DSS: Smart Signage QM55C 에 KB ref) → 목록 → 새로 만들기(빈 최종본 + ① Gate 팝업) → ② 시트 작성 팝업
+ * (제품 체크 · 모델 바꾸기 · 모델 고르기 · 수량 · 항목 · 형식 · 표기) → 시트 만들기 → 팝업이 닫히고 최종본(XLSX 내려받기 · 옵션 줄 · 비교표 · flow.json) ·
+ * 허브 stages.sp → 단계 칩으로 고치기 팝업(저장 · v2 · 닫기 물음).
+ * 상세에는 페이지 이동이 없다(같은 주소 · `?step=sheet`). 팝업은 1440×900 에서 (130, 50) 1180×800 — 칸 좌표는 예전 SP2 페이지에서 x −130 · y −50
+ * (팝업 머리 72 − 상단바 · 스텝바 · SB 바 172 + 팝업 위 50). 보드 SP2 고정 칸(330 · 머리 40 · 줄 44 · 선택 줄 46 · 미리보기 머리 38 · 항목 칸 130 · 칸 36 · 버튼 48)과
+ * 보드 View(옵션 줄 44 · 비교표 190 · 160 · 머리 40 · 줄 44)를 숫자로 재고 __screens__/<보드>-new.png 로 남긴다.
  * 실행: cd web && PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers WM_E2E_SUITE=spec WM_E2E_DEV=1 WM_E2E_PORT=5206 npx playwright test e2e/spec/sp-flow.spec.ts --workers=1
  */
 import path from 'node:path';
@@ -18,7 +21,7 @@ const w = async (l: Locator) => Math.round((await l.boundingBox())!.width);
 const h = async (l: Locator) => Math.round((await l.boundingBox())!.height);
 const P = '[확인 필요]';
 
-test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수량 · 항목 · 형식 · 표기) · 저장 → 보기 · 편집 · 허브 stages.sp', async ({ page, request }) => {
+test('Spec 시트 새 흐름 — 목록 · Gate 팝업 · 시트 작성 팝업(모델 · 수량 · 항목 · 형식 · 표기) · 저장 → 최종본 · 허브 stages.sp · 고치기 v2', async ({ page, request }) => {
   test.setTimeout(300_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   const name = `용산 AI Ready 오피스 ${tag()}`;
@@ -35,9 +38,20 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   await shot(page, 'SP0-new');
   await page.getByRole('link', { name: '새 Spec 시트' }).first().click();
 
-  // SP1 — 사전 작업 고르기(보드 Gate content=sp)
+  // SP1 — 빈 최종본(새로 만들기 · ② 자리표시) 위 ① Storyboard 팝업(보드 SP1 = Gate content=sp)
   await expect(page).toHaveURL(/\/spec\/new$/);
+  const gateDlg = page.getByRole('dialog', { name: '새 Spec 시트 · Storyboard' });
+  await expect(gateDlg).toBeVisible();
+  expect(await box(gateDlg)).toEqual({ x: 130, y: 50, w: 1180, h: 800 });
+  await expect(gateDlg.locator('.fl-shead__mode')).toHaveText('새로 만들기');
+  await expect(gateDlg.locator('.fl-shead__pos')).toHaveText('단계 1/2');
+  await expect(gateDlg.locator('.fl-shead__note')).toHaveText('Storyboard를 고르면 Spec 시트가 그 Storyboard에 연결돼요 · 고르기 전에 닫으면 목록으로');
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'new');
+  await expect(page.locator('.fl-detail .fl-dver')).toHaveText('새로 만들기');
+  await expect(page.locator('.fl-slot')).toHaveCount(1);
+  await expect(page.locator('.sh-crumbs__cur')).toHaveText('새로 만들기');
   await expect(page.getByRole('heading', { name: '어느 Storyboard로 만들까요?' })).toBeVisible();
+  await expect(gateDlg.locator('.wm-flow__back')).toHaveCount(0);                  // 팝업 안에서는 「목록」 링크 없음(×로 닫는다)
   await expect(page.getByText('최소 DSS까지 완료된 Storyboard이 있어야 시작할 수 있어요.', { exact: false })).toBeVisible();
   const gateRow = page.getByRole('radio', { name: new RegExp(name) });
   await gateRow.click();
@@ -46,14 +60,25 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   await shot(page, 'SP1-new');
   await page.getByRole('button', { name: '이 Storyboard로 시작' }).click();
 
-  // SP2 — 시트 작성: DSS 제품 6개(공간 · 수량 원문) · KB 모델 맞춤 · 카탈로그 값
-  await expect(page).toHaveURL(/\/spec\/flow\/sfl_[0-9A-Za-z]+$/, { timeout: 30_000 });
-  const fid = page.url().split('/').pop()!;
+  // SP2 — ② 시트 작성 팝업(같은 최종본 위 · 주소는 ?step=sheet): DSS 제품 6개(공간 · 수량 원문) · KB 모델 맞춤 · 카탈로그 값
+  await expect(page).toHaveURL(/\/spec\/flow\/sfl_[0-9A-Za-z]+\?step=sheet$/, { timeout: 30_000 });
+  const fid = page.url().split('/').pop()!.split('?')[0];
   await expect(page.getByRole('heading', { name: 'DSS 제품으로 스펙 시트를 만들어요' })).toBeVisible();
   await expect(page.getByText(`${dssRef}에서 고른 제품을 그대로 가져왔어요. 값은 공식 카탈로그에서 채워요.`)).toBeVisible();
-  await expect(page.locator('.wm-sbbar__chip')).toContainText(name);
-  await expect(page.locator('.wm-sbbar__note')).toHaveText('Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨');
-  await expect(page.locator('.sh-crumbs__cur')).toHaveText('새 Spec 시트');
+  const stepDlg = page.locator('.fl-stepdlg');
+  expect(await box(stepDlg)).toEqual({ x: 130, y: 50, w: 1180, h: 800 });
+  await expect(stepDlg.locator('.fl-shead__row b')).toHaveText(name);
+  await expect(stepDlg.locator('.fl-shead__sb')).toContainText(name);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText('Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨');
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText('새로 만들기');
+  await expect(stepDlg.locator('.fl-shead__pos')).toHaveText('단계 2/2');
+  await expect(stepDlg.locator('.wm-sbbar')).toHaveCount(0);
+  await expect(stepDlg.locator('.wm-flow__back')).toHaveCount(0);                  // 팝업 안에서는 「Storyboard」 뒤로 링크 없음
+  await expect(page.locator('.sh-crumbs__cur')).toHaveText('새로 만들기');
+  // 팝업 뒤 최종본: 아직 저장 전(새로 만들기) · ② 자리표시(다음 단계 · 「이어서」는 닫은 뒤에만)
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'new');
+  await expect(page.locator('.fl-detail .fl-dhead__meta')).toHaveText('아직 저장 전 · 단계 2/2 진행 중 · 팝업을 닫아도 작성 중으로 남아요');
+  await expect(page.locator('[data-slot="2"]')).toContainText('DSS 제품의 스펙 비교표 · XLSX — 이 단계를 마치면 여기에 채워져요');
   const rows = page.getByTestId('sf-row');
   await expect(rows).toHaveCount(6);
   await expect(rows.locator('.sf-row__t')).toHaveText(['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', 'Smart Signage QB55C', '옥외형 사이니지 OHC55']);
@@ -78,13 +103,13 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   await expect(pv.getByText('55" · 3840×2160').first()).toBeVisible();
   await expect(pv.locator('.sf-cell--pend').first()).toHaveText(P);
   await expect(page.locator('.wm-flow__summary')).toHaveText(/^확인 필요 값 \d+ · 경고 \d+$/);
-  // 보드 SP2(1440 × 900) 칸: 본문 1180 · 제품 330 | 오른쪽 756(1100 − 330 − 14) · 머리 40 · 줄 44 · 선택 줄 46 · 미리보기 머리 38 · 항목 칸 130 · 칸 36 ·
-  // 제품 칸 3개 폭((754 − 130) / 3 = 208, 넘치면 가로 스크롤) · 시트 만들기 48(y 832 = 900 − 20 − 48).
-  // 세로 위치는 앱과 같은 Noto Sans KR(줄 높이 normal: h1 34 · 설명 19 → 머리 57)로 잰 값 — 보드 jpg 는 머리 54(그리드 y 258 · 선택 180 · 미리보기 y 450).
-  expect(await w(page.locator('.wm-flow'))).toBe(1180);
-  expect(await box(page.getByTestId('sf-products'))).toEqual({ x: 300, y: 261, w: 330, h: 559 });
-  expect(await box(page.getByTestId('sf-options'))).toEqual({ x: 644, y: 261, w: 756, h: 181 });   // 46 + 79(칩 두 줄 78 + 선) + 46 + 패딩 8 + 선 2
-  expect(await box(pv)).toEqual({ x: 644, y: 454, w: 756, h: 366 });
+  // 보드 SP2(팝업 1180 × 800 · 본문 728) 칸: 본문 1180 · 제품 330 | 오른쪽 756(1100 − 330 − 14) · 머리 40 · 줄 44 · 선택 줄 46 · 미리보기 머리 38 · 항목 칸 130 · 칸 36 ·
+  // 제품 칸 3개 폭((754 − 130) / 3 = 208, 넘치면 가로 스크롤) · 시트 만들기 48(y 782 = 50 + 800 − 20 − 48).
+  // 세로 위치는 앱과 같은 Noto Sans KR(줄 높이 normal: h1 34 · 설명 19 → 머리 57)로 잰 값 — 보드 jpg 는 머리 54(그리드 y 208 · 미리보기 y 400).
+  expect(await w(page.locator('.fl-sbody .wm-flow'))).toBe(1180);
+  expect(await box(page.getByTestId('sf-products'))).toEqual({ x: 170, y: 211, w: 330, h: 559 });
+  expect(await box(page.getByTestId('sf-options'))).toEqual({ x: 514, y: 211, w: 756, h: 181 });   // 46 + 79(칩 두 줄 78 + 선) + 46 + 패딩 8 + 선 2
+  expect(await box(pv)).toEqual({ x: 514, y: 404, w: 756, h: 366 });
   expect(await box(page.locator('.sf-lhead'))).toMatchObject({ w: 328, h: 40 });
   expect(await box(rows.first())).toMatchObject({ w: 328, h: 44 });
   expect(await h(page.locator('.sf-opt').first())).toBe(46);
@@ -94,7 +119,7 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   expect(await box(pv.locator('.sf-cell--head').first())).toMatchObject({ w: 130, h: 36 });
   expect(await w(pv.locator('.sf-cell--head').nth(1))).toBe(208);
   expect(await h(pv.locator('.sf-cell--label').nth(1))).toBe(36);
-  expect(await box(page.getByRole('button', { name: '시트 만들기' }))).toMatchObject({ y: 832, h: 48 });
+  expect(await box(page.getByRole('button', { name: '시트 만들기' }))).toMatchObject({ y: 782, h: 48 });
   await shot(page, 'SP2-new');
 
   // 모델 바꾸기(같은 제품군) — QM55C → QM65C: 불일치 경고 · 값 다시 채움 → 수량 · QM55C 로 되돌리기
@@ -171,62 +196,55 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   expect(doc).toMatchObject({ format: 'compare', notation: 'ko_mm', items: ['size_resolution', 'brightness_contrast', 'io_ports', 'power', 'size_weight', 'operation_hours'] });
   expect(doc.counts).toMatchObject({ models: 5, total: 6, columns: 6 });
 
-  // 시트 만들기 → SP_View(보드 View content=sp) — 같은 주소의 그 시트 보기(완료 안내 없음) · XLSX · 허브 flow.json stages.sp
+  // 시트 만들기 → 팝업이 닫히고 같은 주소의 최종본(보드 SP_View · 완료 화면 없음) · XLSX · 허브 flow.json stages.sp
   await page.getByRole('button', { name: '시트 만들기' }).click();
-  const code = doc.code as string;
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v1`, { timeout: 30_000 });
+  await expect(stepDlg).toHaveCount(0, { timeout: 30_000 });
   await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}$`));
-  await expect(page.getByText(/저장했어요|만들었어요|완료됐|완성됐/)).toHaveCount(0);
-  await expect(page.locator('.wm-done__card, .wm-done__md, .wm-done__json, .sf-nofollow')).toHaveCount(0);
-  await expect(page.getByRole('heading', { name, level: 1 })).toBeVisible();
-  await expect(page.locator('.fl-view__meta')).toHaveText(/^오늘 \d\d:\d\d 저장 · 제품 5 · 항목 6 · 비교표$/);
+  await expect(page.getByRole('heading', { name: 'Spec 시트를 만들었어요' })).toHaveCount(0);
+  const code = doc.code as string;
+  const view = page.locator('.fl-detail');
+  await expect(view).toHaveAttribute('data-status', 'saved');
+  await expect(view.locator('h1')).toHaveText(name);
+  await expect(view.locator('.fl-dver')).toHaveText(`${code} v1`);
+  await expect(view.locator('.fl-dhead__meta')).toHaveText(/^오늘 \d\d:\d\d 저장 · 제품 5 · 항목 6 · 비교표$/);
+  await expect(view.locator('.fl-dnav__label')).toHaveText('단계별 고치기');
   await expect(page.locator('.sh-crumbs__cur')).toHaveText(code);
   await expect(page.locator('.wm-sbbar__chip').first()).toContainText(name);
-  await expect(page.locator('.fl-view__follow')).toHaveCount(0);                        // 후속 작업 없음
-  // 띠: 형식 · 표기 · 값 · 파일 | 경고 알약(주황)
-  const strip = page.getByTestId('spv-strip');
-  await expect(strip.locator('.spv-opt')).toHaveText(['형식비교표', '표기한국어 · mm', '값공식 카탈로그', `파일${code}_v1.xlsx`]);
-  await expect(strip.locator('.spv-warn').first()).toHaveText('The Wall IAB 146" · 카탈로그에 없음');
-  // 표: 머리(제품 · 공간 · 수량 · 항목 6) · 넣은 제품 5줄 · 값은 문서 그대로(카탈로그에 없는 칸 [확인 필요] 주황)
-  const card = page.getByTestId('spv-card');
-  await expect(card.getByRole('columnheader')).toHaveText(['제품', '공간 · 수량', '화면 크기 · 해상도', '밝기 · 명암비', '입출력 단자', '소비전력', '크기 · 무게', '운영 시간']);
-  await expect(card.getByRole('rowheader')).toHaveText(['The Wall IAB 146"', 'Smart Signage QM55C', 'Flip Pro WA75D', 'Smart Signage QB55C', '옥외형 사이니지 OHC55']);
-  const vrow = (n: string) => card.locator(`[role="row"][data-row="${n.replace(/"/g, '\\"')}"]`);
-  await expect(vrow('The Wall IAB 146"').getByRole('cell')).toHaveText(['로비 · 1식', ...Array(6).fill(P)]);
-  await expect(vrow('The Wall IAB 146"').getByRole('rowheader')).toHaveClass(/spv-cell--warnname/);
-  await expect(vrow('The Wall IAB 146"').locator('.spv-cell--pend')).toHaveCount(6);
-  await expect(vrow('Smart Signage QM55C').getByRole('cell').nth(0)).toHaveText('로비 · 3대');
-  await expect(vrow('Smart Signage QM55C').getByRole('cell').nth(1)).toHaveText('55" · 3840×2160');
-  // 나머지 칸도 문서(GET spec-flows) 값 그대로
-  const saved = await (await request.get(`/api/spec/v1/spec-flows/${fid}`)).json();
-  for (const r of saved.rows.filter((x: { on: boolean }) => x.on)) {
-    await expect(vrow(r.name).getByRole('cell')).toHaveText([/ · /, ...saved.items.map((k: string) => r.cells[k])]);
-  }
-  await expect(vrow('Smart Signage QM55C').getByRole('rowheader')).not.toHaveClass(/spv-cell--warnname/);
-  await expect(vrow('Flip Pro WA75D').getByRole('cell').nth(0)).toHaveText(`회의실 · ${P}`);  // DSS 수량 없음 → 지어내지 않는다
-  await expect(vrow('Smart Signage QB55C').getByRole('cell').nth(0)).toHaveText('회의실 · 실당 1대');  // 개수로 못 읽는 원문은 그대로
-  await expect(vrow('옥외형 사이니지 OHC55').getByRole('cell').nth(0)).toHaveText(`주차장 · ${P}`);
-  await expect(page.locator('.fl-vnote')).toHaveText('값은 공식 카탈로그에서 채워요 · 카탈로그에 없는 값은 [확인 필요]로 남겨요');
-  // 보드 View(1440 × 900): 본문 1100 · 띠 h44 · 표 190 · 160 · 항목 (1100 − 2 − 350) / 6 · 머리 h40 · 줄 h44 · 버튼 38
-  expect(await box(strip)).toMatchObject({ w: 1100, h: 44 });
-  expect(await w(card)).toBe(1100);
-  const heads = card.getByRole('columnheader');
-  expect(await box(heads.nth(0))).toMatchObject({ w: 190, h: 40 });
-  expect(await box(heads.nth(1))).toMatchObject({ w: 160, h: 40 });
-  expect(await w(heads.nth(2))).toBe(Math.round((1100 - 2 - 350) / 6));
-  expect(await h(card.getByRole('rowheader').first())).toBe(44);
-  expect(await h(page.locator('.spv-warn').first())).toBe(24);
-  const xbtn = page.getByRole('link', { name: 'XLSX 내려받기' });
-  expect(await h(xbtn)).toBe(38);
-  expect(await h(page.getByRole('link', { name: '편집' }))).toBe(38);
+  // 머리: XLSX 내려받기(단계 칩 앞) · flow.json
+  const dl = view.getByRole('link', { name: 'XLSX 내려받기' });
+  await expect(dl).toHaveAttribute('download', `${code}_v1.xlsx`, { timeout: 15_000 });
+  const headBtns = await view.locator('.fl-dhead > .fl-dbtn, .fl-dhead > .fl-dnav').evaluateAll((els) => els.map((e) => (e.classList.contains('fl-dnav') ? '단계' : e.textContent?.trim())));
+  expect(headBtns).toEqual(['XLSX 내려받기', '단계', '{ }flow.json']);              // 보드 View: XLSX 내려받기 → 단계 칩 → flow.json
+  // 본문: 옵션 줄(형식 · 표기 · 값 · 파일 + 경고 칩) → 비교표(제품 · 공간 · 수량 · 항목 6) → 아래 안내
+  const opt = view.getByTestId('spv-options');
+  await expect(opt.locator('.spv-opt')).toHaveText(['형식비교표', '표기한국어 · mm', '값공식 카탈로그', `파일${code}_v1.xlsx`]);
+  await expect(opt.locator('.spv-warn').first()).toHaveText('The Wall IAB 146" · 카탈로그에 없음');
+  const tbl = view.getByTestId('spv-table');
+  await expect(tbl.getByRole('columnheader')).toHaveText(['제품', '공간 · 수량', '화면 크기 · 해상도', '밝기 · 명암비', '입출력 단자', '소비전력', '크기 · 무게', '운영 시간']);
+  await expect(tbl.getByRole('rowheader')).toHaveText(['The Wall IAB 146"', 'Smart Signage QM55C', 'Flip Pro WA75D', 'Smart Signage QB55C', '옥외형 사이니지 OHC55']);
+  const vqm = tbl.locator('[data-vrow="Smart Signage QM55C"]');
+  await expect(vqm.getByRole('cell')).toHaveText(['로비 · 3대', '55" · 3840×2160', /.+/, /.+/, /.+/, /.+/, /.+/]);     // 고친 수량(3) · 카탈로그 값
+  await expect(tbl.getByText('24/7').first()).toBeVisible();
+  const vwall = tbl.locator('[data-vrow="The Wall IAB 146\\""]');
+  await expect(vwall.getByRole('cell').first()).toHaveText('로비 · 1식');
+  await expect(vwall.locator('.spv-c--pend')).toHaveCount(6);                                   // 카탈로그에 없는 제품 → 값은 [확인 필요](주황)
+  await expect(vwall.locator('.spv-c--pend').first()).toHaveText(P);
+  await expect(vwall.getByRole('rowheader')).toHaveClass(/spv-c--pw/);
+  await expect(tbl.locator('[data-vrow="Flip Pro WA75D"]').getByRole('cell').first()).toHaveText(`회의실 · ${P}`);
+  await expect(tbl.locator('[data-vrow="Smart Signage QB55C"]').getByRole('cell').first()).toHaveText('회의실 · 실당 1대');
+  await expect(view.locator('.fl-vfoot')).toHaveText('값은 공식 카탈로그에서 채워요 · 카탈로그에 없는 값은 [확인 필요]로 남겨요');
+  await expect(view.locator('.fl-dfollow')).toHaveCount(0);                                    // 후속 작업 없음
+  // 보드 View(content=sp): 본문 1100 · 옵션 줄 44 · 비교표 190 | 160 | 항목(1098 − 350) / 6 · 머리 40 · 줄 44 · 아래 안내까지 화면 안
+  expect(await box(opt)).toMatchObject({ x: 300, w: 1100, h: 44 });
+  expect(await w(tbl)).toBe(1100);
+  expect(await box(tbl.getByRole('columnheader').nth(0))).toMatchObject({ w: 190, h: 40 });
+  expect(await w(tbl.getByRole('columnheader').nth(1))).toBe(160);
+  expect(await w(tbl.getByRole('columnheader').nth(2))).toBe(125);
+  expect(await h(tbl.getByRole('rowheader').first())).toBe(44);
+  expect(await h(dl)).toBe(38);
+  const foot = await box(view.locator('.fl-vfoot'));
+  expect(foot.y + foot.h).toBeLessThanOrEqual(900 - 24);
   await shot(page, 'SP_View-new');
-  // XLSX 내려받기(저장 때 만든 파일 · files 서비스 · 게이트웨이)
-  await expect(xbtn).toHaveAttribute('download', `${code}_v1.xlsx`);
-  const xr = await request.get((await xbtn.getAttribute('href'))!);
-  expect(xr.status()).toBe(200);
-  expect(xr.headers()['content-type']).toContain('spreadsheetml');
-  const [dlEvt] = await Promise.all([page.waitForEvent('download'), xbtn.click()]);
-  expect(dlEvt.suggestedFilename()).toBe(`${code}_v1.xlsx`);
 
   const flow = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
   const ssp = flow.stages.sp;
@@ -246,69 +264,97 @@ test('Spec 시트 새 흐름 — 목록 · Gate · 시트 작성(모델 · 수�
   const cell = flow.cells.find((c: { key: string }) => c.key === 'sp');
   expect(cell).toMatchObject({ state: 'done', ref: code, route: `/spec/flow/${fid}` });
   expect(flow.cards.sp.facts[0]).toEqual(['제품', '5']);
+  await expect(page.locator('.wm-sbbar__stage').first()).toContainText('DSS');
+  // XLSX 내려받기(files 서비스 · 게이트웨이)
+  const xr = await request.get((await dl.getAttribute('href'))!);
+  expect(xr.status()).toBe(200);
+  expect(xr.headers()['content-type']).toContain('spreadsheetml');
 
-  // flow.json — 허브 전체에서 stages.sp 강조
-  await page.getByRole('button', { name: 'flow.json' }).click();
+  // flow.json(보드 JsonPopup 900 × 780 · stages.sp 강조)
+  await view.getByRole('button', { name: 'flow.json' }).click();
   const jd = page.getByRole('dialog', { name: /flow\.json/ });
   await expect(jd).toBeVisible();
+  expect(await box(jd)).toMatchObject({ w: 900, h: 780 });
   await expect(jd.getByText('"sp": {').first()).toBeVisible();
-  await expect(jd.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
   await expect(jd.locator('.wm-jsonline--add').first()).toBeVisible();
   await shot(page, 'SP_ViewJson-new');
   await jd.getByRole('button', { name: '닫기' }).last().click();
+  await expect(jd).toHaveCount(0);
 
-  // 편집 → ?edit=1 시트 작성(같은 시트) → 다시 저장(v2) → ?edit 없는 보기
-  await page.getByRole('link', { name: '편집' }).click();
-  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}\\?edit=1$`));
-  await expect(page.getByRole('heading', { name: 'DSS 제품으로 스펙 시트를 만들어요' })).toBeVisible();
+  // 단계 칩 「시트 작성」 → 고치기 팝업(보드 SP2_Edit: SP-nn v1 고치기 · 저장 · v2 · 뒤로 링크 없음) — 고치지 않고 닫으면 묻지 않는다
+  await view.getByRole('button', { name: /^시트 작성 · / }).click();
+  await expect(page).toHaveURL(/step=sheet/);
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText(`${code} v1 고치기`);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText(`저장하면 ${code} v2 · ${sb.id}에 반영돼요`);
+  await expect(stepDlg.locator('.fl-shead__pos')).toHaveText('단계 2/2');
+  await expect(stepDlg.getByRole('button', { name: '저장 · v2' })).toBeVisible();
+  await expect(stepDlg.getByRole('button', { name: '시트 만들기' })).toHaveCount(0);
+  await expect(stepDlg.locator('.wm-flow__back')).toHaveCount(0);
   await expect(page.locator('.sf-lhead__n')).toHaveText('5 / 6 선택');
-  await expect(page.locator('.sh-crumbs__cur')).toHaveText(code);
-  await page.getByRole('button', { name: '시트 만들기' }).click();
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v2`, { timeout: 30_000 });
-  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}$`));
-  await expect(page.getByTestId('spv-strip').locator('.spv-opt').last()).toHaveText(`파일${code}_v2.xlsx`);
-  await expect(page.getByText(/저장했어요|만들었어요|완료됐|완성됐/)).toHaveCount(0);
+  expect(await box(page.getByRole('button', { name: '저장 · v2' }))).toMatchObject({ y: 782, h: 48 });
+  await shot(page, 'SP2_Edit-new');
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(stepDlg).toHaveCount(0);
+  await expect(page.getByRole('dialog', { name: '고친 내용을 저장할까요?' })).toHaveCount(0);
+  // 고친 뒤 닫으면 저장할지 묻는다(한 번) → 「저장 · v2」 → 최종본 v2 · XLSX v2(설치 방식 항목 다시 넣기)
+  await view.getByRole('button', { name: /^시트 작성 · / }).click();
+  await expect(stepDlg).toBeVisible();
+  await stepDlg.getByRole('group', { name: '항목' }).getByRole('button', { name: '설치 방식' }).click();
+  await expect(stepDlg.getByRole('group', { name: '항목' }).getByRole('button', { name: '설치 방식' })).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(async () => (await (await request.get(`/api/spec/v1/spec-flows/${fid}`)).json()).items.length).toBe(7);
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  const ask = page.getByRole('dialog', { name: '고친 내용을 저장할까요?' });
+  await expect(ask).toBeVisible();
+  await expect(ask.getByRole('button')).toHaveText(['계속 고치기', '저장하지 않고 닫기', '저장 · v2']);
+  await shot(page, 'SP2_EditAsk-new');
+  await ask.getByRole('button', { name: '저장 · v2' }).click();
+  await expect(ask).toHaveCount(0);
+  await expect(stepDlg).toHaveCount(0, { timeout: 30_000 });
+  await expect(view.locator('.fl-dver')).toHaveText(`${code} v2`);
+  await expect(view.locator('.fl-dhead__meta')).toContainText('제품 5 · 항목 7 · 비교표');
+  await expect(view.getByRole('link', { name: 'XLSX 내려받기' })).toHaveAttribute('download', `${code}_v2.xlsx`);
+  await expect(tbl.getByRole('columnheader')).toHaveCount(9);
+  expect((await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json()).stages.sp).toMatchObject({ ver: 2, file: `${code}_v2.xlsx` });
 
-  // 목록 「열기」 → 보기 · 새로고침해도 보기 · Gate 는 「있음 · 수정」 → 편집 화면(?edit=1)
+  // 목록에 저장된 줄(코드 v2 · Storyboard 칩) · Gate 는 「있음 · 수정」 → 최종본 위 고치기 팝업으로
   await page.goto('/spec');
   const listRow = page.locator('.fl-card').filter({ hasText: `${code} v2` });
   await expect(listRow).toBeVisible();
   await expect(listRow.getByRole('button', { name: sb.name })).toBeVisible();
   await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/spec/flow/${fid}`);
-  await listRow.locator('.fl-cardtitle').click();
-  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}$`));
-  await expect(page.getByTestId('spv-card').getByRole('rowheader')).toHaveCount(5);
-  await expect(page.getByTestId('sf-products')).toHaveCount(0);
-  await page.reload();
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v2`);
-  await expect(page.getByTestId('spv-card').getByRole('rowheader')).toHaveCount(5);
-  await expect(page.getByRole('link', { name: 'XLSX 내려받기' })).toHaveAttribute('download', `${code}_v2.xlsx`);
   await page.goto('/spec/new');
   const again = page.getByRole('radio', { name: new RegExp(name) });
   await expect(again).toContainText(`${code} v2 있음`);
   await again.click();
-  await expect(page.getByText(`이 Storyboard에는 Spec 시트 ${code} v2가 이미 있어요`)).toBeVisible();
+  await expect(page.getByText(new RegExp(`이 Storyboard에는 Spec 시트 ${code} v2[이가] 이미 있어요`))).toBeVisible();
   await page.getByRole('button', { name: `${code} 수정하기` }).click();
-  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}\\?edit=1$`));
-  await expect(page.getByRole('heading', { name: 'DSS 제품으로 스펙 시트를 만들어요' })).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}\\?step=sheet$`));
   await expect(page.locator('.sh-crumbs__cur')).toHaveText(code);
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText(`${code} v2 고치기`);
+  // 저장된 것을 그냥 열면 최종본만(팝업 없음)
+  await page.goto(`/spec/flow/${fid}`);
+  await expect(view).toHaveAttribute('data-status', 'saved');
+  await expect(stepDlg).toHaveCount(0);
 });
 
-test('Spec 시트 새 흐름 — DSS 보기 후속 작업 「만들기」(?sb=&auto=1) · 1920 폭 · 이전 흐름 경로', async ({ page, request }) => {
+test('Spec 시트 새 흐름 — Storyboard · DSS 의 「만들기」(?sb=&auto=1)는 Gate 를 건너뛰고 ② 팝업 · 1920 폭 · 작성 중 닫기 · 이전 흐름 경로', async ({ page, request }) => {
   test.setTimeout(180_000);
-  const sb = await makeStoryboard(request, { dss: true, name: `용산 AI Ready 오피스 ${tag()}` });
-  // CF-07: Gate 를 건너뛰고 바로 만든다
+  const name = `용산 AI Ready 오피스 ${tag()}`;
+  const sb = await makeStoryboard(request, { dss: true, name });
+  // CF-07: Gate 를 건너뛰고 바로 만든다 → 빈 최종본 위 ② 시트 작성 팝업
   await page.setViewportSize({ width: 1920, height: 1080 });
   await page.goto(`/spec/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(/\/spec\/flow\/sfl_[0-9A-Za-z]+$/, { timeout: 30_000 });
+  await expect(page).toHaveURL(/\/spec\/flow\/sfl_[0-9A-Za-z]+\?step=sheet$/, { timeout: 30_000 });
   await expect(page.getByRole('heading', { name: 'DSS 제품으로 스펙 시트를 만들어요' })).toBeVisible();
+  await expect(page.locator('.fl-shead__sb')).toContainText(name);
   await expect(page.getByTestId('sf-row')).toHaveCount(6);
-  // 1920 폭: 본문 열은 1180 그대로(셸이 가운데) · 제품 330 · 높이는 화면을 채운다(패널 안에서만 스크롤)
-  expect(await w(page.locator('.wm-flow'))).toBe(1180);
-  expect(await w(page.getByTestId('sf-products'))).toBe(330);
+  // 1920 × 1080: 팝업은 가운데 1180 × 800 그대로 · 제품 330 | 오른쪽 756 · 시트 만들기는 팝업 바닥에서 20 위
+  expect(await box(page.locator('.fl-stepdlg'))).toEqual({ x: 370, y: 140, w: 1180, h: 800 });
+  expect(await w(page.locator('.fl-sbody .wm-flow'))).toBe(1180);
+  expect(await box(page.getByTestId('sf-products'))).toMatchObject({ w: 330, h: 559 });
   expect(await w(page.getByTestId('sf-preview'))).toBe(756);
   const btn = await box(page.getByRole('button', { name: '시트 만들기' }));
-  expect(btn.y + btn.h).toBe(1080 - 20);
+  expect(btn.y + btn.h).toBe(140 + 800 - 20);
   expect(await page.evaluate(() => document.scrollingElement!.scrollHeight <= window.innerHeight + 1)).toBe(true);
   await shot(page, 'SP2-1920-new');
 
@@ -323,6 +369,40 @@ test('Spec 시트 새 흐름 — DSS 보기 후속 작업 「만들기」(?sb=&a
   await items.getByRole('button', { name: '보증' }).click();
   await expect(page.getByRole('button', { name: '시트 만들기' })).toBeEnabled();
   await expect(page.getByTestId('sf-preview').locator('.sf-cell--label:not(.sf-cell--head)')).toHaveText(['보증']);
+
+  // 저장 전에 닫으면 작성 중 최종본(보드 SP_Draft: 작성 중 1/2 · ② 자리표시에 「이어서 · 시트 작성」) → 다시 열면 같은 팝업
+  await page.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(page.locator('.fl-stepdlg')).toHaveCount(0);
+  await expect(page).not.toHaveURL(/step=/);
+  await expect(page.getByRole('dialog', { name: '고친 내용을 저장할까요?' })).toHaveCount(0);   // 저장 전 초안은 묻지 않는다
+  const view = page.locator('.fl-detail');
+  await expect(view).toHaveAttribute('data-status', 'draft');
+  await expect(view.locator('.fl-dver')).toHaveText('작성 중 1/2');
+  await expect(view.locator('.fl-dhead__meta')).toHaveText(new RegExp(`^작성 중 · 2단계 중 1단계 마침 · 오늘 \\d\\d:\\d\\d · 저장하면 ${sb.id}에 연결돼요$`));
+  await expect(view.locator('.fl-dnav__label')).toHaveText('단계 1/2');
+  await expect(view.getByRole('link', { name: 'XLSX 내려받기' })).toHaveCount(0);
+  await expect(view.getByRole('button', { name: 'flow.json' })).toHaveCount(0);
+  await expect(page.locator('.sh-crumbs__cur')).toHaveText(name);
+  const slot = page.locator('[data-slot="2"]');
+  await expect(slot).toContainText('시트 작성 단계');
+  expect(await box(slot)).toMatchObject({ x: 300, w: 1100 });
+  const sbox = await box(slot);
+  expect(sbox.y + sbox.h).toBe(900 - 24);                                                      // 큰 자리표시가 본문 아래까지
+  await shot(page, 'SP_Draft-new');
+  await slot.getByRole('button', { name: '이어서 · 시트 작성' }).click();
+  await expect(page).toHaveURL(/step=sheet/);
+  await expect(page.locator('.fl-stepdlg .fl-shead__mode')).toHaveText('새로 만들기');
+  await expect(page.getByRole('group', { name: '항목' }).locator('[aria-pressed="true"]')).toHaveCount(1);
+  // 작성 중을 주소로(목록 · 작업 내역) 열면 ② 팝업이 열린 채로
+  const fid = page.url().split('/').pop()!.split('?')[0];
+  await page.goto(`/spec/flow/${fid}`);
+  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}\\?step=sheet$`));
+  await expect(page.locator('.fl-stepdlg')).toBeVisible();
+  // ① 고르기 팝업을 고르기 전에 닫으면 목록
+  await page.goto('/spec/new');
+  await page.getByRole('dialog', { name: '새 Spec 시트 · Storyboard' }).getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(page).toHaveURL(/\/spec$/);
+  expect((await request.delete(`/api/spec/v1/spec-flows/${fid}`)).status()).toBe(204);     // 정리
 
   // 이전 흐름: 목록 · 새로 만들기는 /spec/legacy · 넘겨받은 모델(`/spec/new?models=`)은 이전 입력 화면으로
   await page.goto('/spec/legacy');

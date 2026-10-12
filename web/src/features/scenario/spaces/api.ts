@@ -49,8 +49,10 @@ export async function getSpaceSet(id: string): Promise<SSDoc> {
   return normalize(unwrap(await api.scenario.GET('/v1/space-sets/{set_id}', P(id))));
 }
 
-export async function createSpaceSet(body: S['SSCreate']): Promise<SSDoc> {
-  return normalize(unwrap(await api.scenario.POST('/v1/space-sets', { body })));
+/** 만들기 — 같은 Storyboard 의 저장 전 초안이 있으면 그 초안을 200 으로 돌려준다(reused) */
+export async function createSpaceSet(body: S['SSCreate']): Promise<{ doc: SSDoc; reused: boolean }> {
+  const res = await api.scenario.POST('/v1/space-sets', { body });
+  return { doc: normalize(unwrap(res)), reused: res.response.status === 200 };
 }
 
 export async function putSpaceSet(id: string, spaces: SSSpace[], expected?: number): Promise<SSDoc> {

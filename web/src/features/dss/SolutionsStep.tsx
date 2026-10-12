@@ -34,7 +34,11 @@ function SolutionCard({ o, on, accepted, onToggle }: { o: DSSolutionOption; on: 
   );
 }
 
-export function SolutionsStep({ doc, actions, onBack, onSaved }: { doc: DSDoc; actions: DsActions; onBack: () => void; onSaved: (out: Awaited<ReturnType<DsActions['finish']>>) => void | Promise<void> }) {
+export function SolutionsStep({ doc, actions, onBack, onSaved, backLabel = '공간 · 제품', saveLabel = 'DSS 저장' }: {
+  doc: DSDoc; actions: DsActions; onBack: () => void; onSaved: (out: Awaited<ReturnType<DsActions['finish']>>) => void;
+  /** 팝업(보드 v62 DS4 · DS4_Edit): 새로 만들기 「이전 · 공간 · 제품」 · 「DSS 저장」, 고치기 「공간 · 제품 고치기」 · 「저장 · vN」 */
+  backLabel?: string; saveLabel?: string;
+}) {
   const q = useSolutionOptions(doc.id);
   useShellPage(dsShell(doc, 3, { addable: ['solution'], added: addedRefs(doc), onAdd: dsOnAdd(doc, actions, null) }));
   const [aiBusy, setAiBusy] = useState(false);
@@ -73,7 +77,7 @@ export function SolutionsStep({ doc, actions, onBack, onSaved }: { doc: DSDoc; a
   };
   const save = async () => {
     setSaving(true);
-    try { await onSaved(await actions.finish()); } catch (e) { toast(errMsg(e, '저장하지 못했어요')); setSaving(false); }
+    try { onSaved(await actions.finish()); } catch (e) { toast(errMsg(e, '저장하지 못했어요')); setSaving(false); }
   };
   const noProducts = c.products === 0;
 
@@ -99,12 +103,12 @@ export function SolutionsStep({ doc, actions, onBack, onSaved }: { doc: DSDoc; a
         </div>
       )}
       <div className="ds-solfoot">
-        <button type="button" className="wm-flow__back" style={{ border: 'none', background: 'none', padding: 0 }} onClick={onBack}><BackIcon />공간 · 제품</button>
+        <button type="button" className="wm-flow__back" style={{ border: 'none', background: 'none', padding: 0 }} onClick={onBack}><BackIcon />{backLabel}</button>
         <span style={{ flex: 1 }} />
         <span className={cx('wm-flow__summary', noProducts && 'wm-flow__summary--warn')}>
           {noProducts ? '공간에 제품을 하나 이상 넣어야 저장할 수 있어요' : selected.length ? `솔루션 ${selected.length}개 선택` : '솔루션 없이 저장해도 돼요'}
         </span>
-        <button type="button" className="wm-flow__primary" onClick={() => void save()} disabled={saving || noProducts} aria-busy={saving || undefined}>{saving ? '저장 중…' : 'DSS 저장'}</button>
+        <button type="button" className="wm-flow__primary" onClick={() => void save()} disabled={saving || noProducts} aria-busy={saving || undefined}>{saving ? '저장 중…' : saveLabel}</button>
       </div>
     </FlowScreen>
   );

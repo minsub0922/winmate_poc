@@ -21,11 +21,10 @@ input::placeholder{color:#a3a9b5}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="value" current="" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="Value Proposition" title="새 VP" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
-    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" on-open="{{openSb}}" hint-size="1180px,52px"></dc-import>
+  <dc-import name="View" content="{{hd.content}}" status="{{hd.bg}}" done="{{hd.bgDone}}" hint-size="1440px,900px"></dc-import>
+  <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 40"></div>
+  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 130px; top: 50px; width: 1180px; height: 800px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
+    <dc-import name="StepHead" content="{{hd.content}}" title="{{hd.title}}" mode="{{hd.mode}}" ver="{{hd.ver}}" sb="{{hd.sb}}" note="{{hd.note}}" current="{{hd.current}}" done="{{hd.done}}" close-href="{{hd.close}}" on-sb="{{hd.onSb}}" hint-size="1180px,72px"></dc-import>
     <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 18px 40px 18px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
       <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0">
         <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
@@ -115,32 +114,32 @@ input::placeholder{color:#a3a9b5}
       </div>
 
       <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
-        <a href="SB1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
+        <sc-if value="{{ft.hasBack}}" hint-placeholder-val="{{true}}"><a href="{{ft.backHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>{{ft.back}}</a></sc-if>
         <span style="flex-grow: 1"></span>
         <span style="font-size: 13px; color: #596170; white-space: nowrap">{{fillLine}}</span>
-        <a class="v-btn" href="VP_View.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</a>
+        <a class="v-btn" href="{{ft.saveHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{ft.save}}</a>
       </div>
     </section>
-  </main>
+  </div>
 
   <sc-if value="{{sbOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
       <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
     </div>
   </sc-if>
   <sc-if value="{{pickOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
       <dc-import name="ProdPicker" title="VP에 넣을 제품 · 솔루션 고르기" sub="DSS-01에서 고른 것 중 가치를 적을 것을 고르세요. DSS에 없는 제품 · 솔루션도 카탈로그에서 더할 수 있어요." picked="{{picked}}" min="{{one}}" on-toggle="{{togglePick}}" on-close="{{closePop}}" hint-size="760px,640px"></dc-import>
     </div>
   </sc-if>
   <sc-if value="{{detailOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
       <dc-import name="VpDetail" name-of="{{cur.name}}" kind="{{cur.kind}}" where="{{cur.where}}" values="{{cur.plain}}" on-close="{{closePop}}" hint-size="900px,720px"></dc-import>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"pop":{"editor":"enum","options":["","pick","detail"],"default":""},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["new","edit"],"default":"new"},"ai":{"editor":"boolean","default":false},"pop":{"editor":"enum","options":["","pick","detail"],"default":""},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const pai = !!this.props.ai;
@@ -244,7 +243,11 @@ class Component extends DCLogic {
       put({ accV, accN });
     };
     const togglePick = (n) => { const has = picked.indexOf(n) >= 0; const next = has ? picked.filter((x) => x !== n) : picked.concat([n]); if (next.length) put({ picked: next, sel: Math.min(s.sel, next.length - 1) }); };
-    return {
+    const EDIT = this.props.mode === 'edit';
+    const HD = (R) => ({ content: 'vp', label: '가치 · 고객의 니즈', bg: EDIT ? 'saved' : 'new', bgDone: 1, title: EDIT ? '용산 오피스 가치 제안' : '용산 오피스 가치 제안', mode: EDIT ? 'edit' : 'new', ver: 'VP-01 v1',
+      sb: EDIT ? 'SB-01' : 'SB-01', note: EDIT ? '저장하면 VP-01 v2 · SB-01에 반영돼요' : 'Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨', current: 2, done: 1, close: EDIT ? 'VP_View.dc.html' : 'VP_Draft.dc.html', onSb: R.openPop || R.openSb || (() => {}) });
+    const FT = { hasBack: false, backHref: '', back: '', saveHref: 'VP_View.dc.html', save: EDIT ? '저장 · v2' : '저장' };
+    const R = {
       steps: ['Storyboard', '가치 · 고객의 니즈'], two: 2, one: 1,
       nSel: picked.length, items, picked,
       cur: { name: selName, kind: cb.kind, kindStyle: kindStyle(cb.kind), where: cb.where, values, plain, empty: values.length === 0, linked: '이 제안 ' + plain.length },
@@ -254,6 +257,9 @@ class Component extends DCLogic {
       runAi: () => put({ ai: true }), acceptAll, togglePick,
       openSb: () => put({ pop: 'sb' }), openPick: () => put({ pop: 'pick' }), openDetail: () => put({ pop: 'detail' }), closePop: () => put({ pop: '' })
     };
+    R.hd = HD(R);
+    R.ft = FT;
+    return R;
   }
 }
 </script>

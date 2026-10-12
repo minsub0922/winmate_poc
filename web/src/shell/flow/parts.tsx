@@ -1,13 +1,14 @@
 /**
- * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate · View) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`.
+ * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`,
+ * 콘텐츠 상세(최종본 View + 단계 팝업 · 보드 v62)는 `./detail`.
  * 기능 화면은 이것만 조합한다. 보드 px 그대로(본문 열 1180 안에서).
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useShellPage } from '../ShellContext';
-import { ErrorState, FollowCard, Icon, JsonPopup, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast } from '@/ui';
+import { ErrorState, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, useInStepPopup } from '@/ui';
 import {
-  CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, editRoute, useFlow, useFlowInvalidate, useFlows, useFlowsById,
+  CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, useFlow, useFlowInvalidate, useFlows, useFlowsById,
   type ContentKey, type FlowCell, type FlowDoc, type FlowListItem, type StageKey,
 } from './api';
 import type { DraftRow } from './list';
@@ -120,10 +121,10 @@ export function ContentPopup({ flow, stage, onClose }: { flow: FlowDoc | undefin
               <div className="fl-grouplines">{g.lines?.map((l, i) => <div key={i}><span>{l.t}</span>{l.note && <em className={cx('fl-note', l.note === '확인 필요' && 'fl-note--warn', l.note === '확장' && 'fl-note--ext')}>{l.note}</em>}</div>)}</div></div>
           ))}
         </>}
-        {!card && <span className="fl-muted">이 콘텐츠의 요약 카드가 아직 없어요 · 편집 화면에서 다시 저장하면 생겨요</span>}
+        {!card && <span className="fl-muted">이 콘텐츠의 요약 카드가 아직 없어요 · 콘텐츠에서 다시 저장하면 생겨요</span>}
       </div>
       <div className="fl-popfoot fl-popfoot--cp"><span>{card?.foot ?? ''}</span>
-        {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={editRoute(cell.route)} onClick={onClose}>편집 화면에서 고치기</Link>}
+        {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={cell.route} onClick={onClose}>콘텐츠 열기 · 단계별로 고치기</Link>}
         <button type="button" className="wm-btn wm-btn--primary wm-btn--h42 fl-popbtn18" onClick={onClose}>닫기</button></div>
     </Modal>
   );
@@ -137,8 +138,10 @@ export interface GateStart { sbId: string; flow: FlowListItem }
  * 사전 작업 Storyboard 고르기(보드 Gate · MI1 · MI1_Branch) — 고를 수 없는 Storyboard 는 아래(점선), 같은 콘텐츠가 있으면 수정 / 복제본.
  * onStart: 새로 만들 때(새 Storyboard 또는 분기 뒤) 콘텐츠 자원을 만들고 그 편집 경로를 돌려준다.
  */
-export function GateScreen({ content, onStart, initialSb, autoStart, drafts = [] }: {
+export function GateScreen({ content, onStart, initialSb, autoStart, drafts = [], openStep }: {
   content: Exclude<ContentKey, 'rq'>; onStart: (s: GateStart) => Promise<string>; initialSb?: string | null;
+  /** 이미 있는 콘텐츠 「수정」 · 초안 이어 쓰기로 열 때 붙일 단계(`?step=<키>`) — 최종본 위에 그 단계 팝업이 열린다(보드 v62) */
+  openStep?: string;
   /** Storyboard 화면의 「만들기」(`?sb=&auto=1`) — 그 Storyboard 에 아직 이 콘텐츠가 없으면 고르기를 건너뛰고 바로 만든다(CF-07) */
   autoStart?: boolean;
   /** 이 기능의 저장 전 초안(목록과 같은 모양) — 그 Storyboard 줄에 「작성 중 초안」을 띄우고 시작 버튼은 「초안 이어 쓰기」(새로 만들지 않고 그 초안을 연다) */
@@ -147,6 +150,8 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
   const m = CONTENT[content];
   const nav = useNavigate();
   const inval = useFlowInvalidate();
+  const inPop = useInStepPopup();
+  const withStep = (to: string) => (openStep ? `${to}${to.includes('?') ? '&' : '?'}step=${openStep}` : to);
   useShellPage({ section: m.label, title: `새 ${m.short}`, hasTask: false, stepper: { steps: m.steps, current: 1 } });
   const q = useFlows(content);
   const items = q.data?.items ?? [];
@@ -171,7 +176,7 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
     if (!it || !it.eligible || it.existing) return;
     autoRef.current = true;
     const d0 = draftOf(it.id);
-    if (d0) { nav(d0.to, { replace: true }); return; }
+    if (d0) { nav(withStep(d0.to), { replace: true }); return; }
     setBusy(true);
     onStart({ sbId: it.id, flow: it }).then((to) => nav(to, { replace: true })).catch((e) => { toast((e as Error).message || '시작하지 못했어요'); setBusy(false); });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- 초안 목록은 첫 자동 시작 때 한 번만 본다
@@ -180,20 +185,20 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
     if (!cur || busy) return;
     setBusy(true);
     try {
-      if (dr) { nav(dr.to); return; }
-      if (ex && choice === 'edit' && ex.route) { nav(editRoute(ex.route)); return; }
+      if (dr) { nav(withStep(dr.to), { replace: inPop }); return; }
+      if (ex && choice === 'edit' && ex.route) { nav(withStep(ex.route), { replace: inPop }); return; }
       if (ex && choice === 'branch') {
         const b = await branchFlow(cur.id, content);
         inval();
         const to = await onStart({ sbId: b.id, flow: { ...cur, id: b.id, name: b.name, parent: cur.id, is_branch: true } });
-        nav(to);
+        nav(to, { replace: inPop });
         return;
       }
-      nav(await onStart({ sbId: cur.id, flow: cur }));
+      nav(await onStart({ sbId: cur.id, flow: cur }), { replace: inPop });
     } catch (e) { toast((e as Error).message || '시작하지 못했어요'); } finally { setBusy(false); }
   };
   return (
-    <div className="fl-gate">
+    <div className={cx('fl-gate', inPop && 'fl-gate--pop')}>
       <div className="fl-gatehead">
         <h1>어느 Storyboard로 만들까요?</h1>
         <div className="fl-gatedesc"><span className="fl-tag fl-tag--brand fl-tag--h24">사전 작업</span><span>{m.preDesc}이 있어야 시작할 수 있어요. 없으면 먼저 만들고 와 주세요.</span></div>
@@ -239,82 +244,12 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
         </div>
       )}
       <div className="fl-gatefoot">
-        <Link className="wm-flow__back" to={`/${m.base}`}><Icon name="chevronLeft" size={14} strokeWidth={2.4} />목록</Link>
+        {!inPop && <Link className="wm-flow__back" to={`/${m.base}`}><Icon name="chevronLeft" size={14} strokeWidth={2.4} />목록</Link>}
         <span style={{ flex: 1 }} />
         <span className="fl-footline">{foot}</span>
         <button type="button" className="fl-cta" onClick={go} disabled={!cur || busy} aria-busy={busy || undefined}>{busy ? '여는 중…' : cta}<Icon name="arrowRight" size={16} strokeWidth={2.2} /></button>
       </div>
       <SBPopup id={pop} onClose={() => setPop(null)} />
-    </div>
-  );
-}
-
-// ── 콘텐츠 보기(보드 View · *_View) ──────────────────────
-
-/** 후속 작업 한 칸 — 그 Storyboard 에 이미 있으면 그 콘텐츠를 열고(ref · 열기), 없으면 사전 작업 고르기를 건너뛰고 바로 만든다 */
-export interface FollowSpec { key: ContentKey; desc: string }
-
-/**
- * 콘텐츠 보기(보드 View) — 저장 뒤 · 목록 · 작업 내역에서 그 콘텐츠를 열면 이 화면이다. 「저장했어요」 같은 완료 안내는 없다.
- * 머리 = 아이콘 · 이름 · 참조 v · 저장 시각 · 수 · (actions) · flow.json · 편집, 본문 = 기능이 그리는 콘텐츠 그 자체, 맨 아래 = 후속 작업(있을 때만).
- *   <FlowContentView stageKey="dss" sbIds={[sb]} title="…" refVer="DSS-01 v1" meta={['오늘 10:10 저장', '공간 7', …]}
- *     follow={[{ key: 'sc', desc: '공간 7개에서 …' }, { key: 'sp', desc: '…' }]}>{본문}</FlowContentView>
- */
-export function FlowContentView({ stageKey, sbIds, title, refVer, meta, editTo, actions, follow, children, bodyClassName }: {
-  stageKey: ContentKey; sbIds: string[]; title: string; refVer: string; meta: (string | null | undefined | false)[];
-  /** 편집 화면 경로(기본: 지금 경로 + `?edit=1`) */
-  editTo?: string;
-  /** flow.json 앞에 오는 버튼(Spec 시트의 XLSX 내려받기 등) */
-  actions?: ReactNode;
-  follow?: FollowSpec[];
-  children: ReactNode;
-  bodyClassName?: string;
-}) {
-  const loc = useLocation();
-  const sbId = sbIds[0] ?? null;
-  const q = useFlow(sbId);
-  const d = q.data;
-  const [json, setJson] = useState(false);
-  const meta1 = CONTENT[stageKey];
-  const jsonLines = d?.flow_json ? JSON.stringify(d.flow_json, null, 2).split('\n').length : 0;
-  const nexts = (follow ?? []).map((f) => {
-    const c = d?.cells.find((x) => x.key === f.key);
-    const has = !!c && c.state === 'done' && !!c.route;
-    const m = CONTENT[f.key];
-    return { key: f.key, title: m.label, icon: m.icon,
-      to: has ? c!.route! : `/${m.base}/new?sb=${encodeURIComponent(sbId ?? '')}&auto=1`,
-      refLabel: has ? `${c!.ref}${c!.ver ? ` v${c!.ver}` : ''}` : undefined,
-      desc: has ? (d?.cards?.[f.key]?.title ?? m.desc) : f.desc, cta: has ? '열기' : '만들기' };
-  });
-  return (
-    <div className="wm-flow fl-view">
-      {sbIds.length ? <FlowBar sbIds={sbIds} current={stageKey} /> : <LinkedStoryboardBar chips={[]} emptyText="연결된 Storyboard가 없어요" />}
-      <section className="fl-view__section">
-        <div className="fl-view__head">
-          <span className="fl-view__ic" aria-hidden><PathIcon d={meta1.icon} size={21} color="var(--wm-brand)" /></span>
-          <span className="fl-view__titles">
-            <span className="fl-view__titlerow"><h1 className="fl-view__h1">{title}</h1><span className="fl-view__ref">{refVer}</span></span>
-            <span className="fl-view__meta">{meta.filter(Boolean).join(' · ')}</span>
-          </span>
-          {actions}
-          {sbId && <button type="button" className="fl-view__btn" onClick={() => setJson(true)} disabled={!d?.flow_json}
-            title={d?.flow_json ? undefined : 'Storyboard를 불러오는 중이에요'}>
-            <span className="fl-view__jsonic" aria-hidden>{'{ }'}</span>flow.json</button>}
-          <Link className="fl-view__btn" to={editTo ?? editRoute(loc.pathname)}><Icon name="edit" size={14} strokeWidth={2.2} />편집</Link>
-        </div>
-        <div className={cx('fl-view__body', bodyClassName)}>{children}</div>
-        {nexts.length > 0 && (
-          <div className="fl-view__follow">
-            <span className="fl-view__followh">후속 작업</span>
-            <div className="fl-view__follows" style={{ gridTemplateColumns: `repeat(${nexts.length}, minmax(0, 1fr))` }}>
-              {nexts.map((n) => <FollowCard key={n.key} to={n.to} icon={n.icon} title={n.title} desc={n.desc} refLabel={n.refLabel} cta={n.cta} />)}
-            </div>
-          </div>
-        )}
-      </section>
-      <JsonPopup open={json} onClose={() => setJson(false)} json={d?.flow_json ?? {}} highlightKey={stageKey}
-        title={d?.id ? `${d.id}/flow.json` : 'flow.json'} sub={`초록 줄이 이 콘텐츠(stages.${stageKey})예요 · 전체 ${jsonLines}줄`}
-        legend="이 콘텐츠가 담긴 줄" onlyLabel="이 콘텐츠만" />
     </div>
   );
 }

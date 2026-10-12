@@ -1,9 +1,8 @@
 /**
  * 새 콘텐츠 흐름(docs/scenarios/11-content-flow.md)의 Storyboard 허브 — contracts/storyboard.json `/v1/flows*` → @/api/gen/storyboard.
- * 콘텐츠 화면은 이 훅과 셸 흐름 화면(ContentListScreen · GateScreen · FlowBar · FlowContentView)만 쓴다.
+ * 콘텐츠 화면은 이 훅과 셸 흐름 화면(ContentListScreen · GateScreen · FlowBar · ContentDetail · StepModal)만 쓴다.
  */
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useSearchParams } from 'react-router';
 import { api, unwrap } from '@/api/client';
 import type { components } from '@/api/gen/storyboard';
 
@@ -28,7 +27,7 @@ export interface ContentMeta {
   newLabel: string;
   /** 기능 URL 첫 조각 */
   base: string;
-  /** Gate 스텝바(1 = Storyboard) */
+  /** 단계(보드 v62 단계 팝업 · 최종본 머리 단계 칩 · 1 = Storyboard, 고객 요구사항은 입력 한 단계) */
   steps: string[];
   /** 사전 작업 키 · 설명 · 짧은 이름 · 하러 가기 경로 */
   preKey: 'rq' | 'dss' | null;
@@ -40,7 +39,7 @@ export interface ContentMeta {
 
 export const CONTENT: Record<ContentKey, ContentMeta> = {
   rq: { key: 'rq', label: '고객 요구사항', short: '요구사항', desc: '가장 첫 단위예요. 저장하면 Storyboard가 자동으로 만들어져요.', pre: '없음', post: 'DSS',
-    newLabel: '새 요구사항', base: 'requirements', steps: ['요구사항 입력', '저장'], preKey: null, preDesc: '', preShort: '', preHref: '', icon: 'M9 4h6v3H9z M7 5.5H5V21h14V5.5h-2 M8.5 12h7 M8.5 16h5' },
+    newLabel: '새 요구사항', base: 'requirements', steps: ['요구사항 입력'], preKey: null, preDesc: '', preShort: '', preHref: '', icon: 'M9 4h6v3H9z M7 5.5H5V21h14V5.5h-2 M8.5 12h7 M8.5 16h5' },
   dss: { key: 'dss', label: '공간별 제품 매칭 DSS', short: 'DSS', desc: 'Storyboard에 공간별 제품 · 솔루션을 골라 넣어요.', pre: 'Storyboard (고객 요구사항)', post: '공간 시나리오 · Spec 시트',
     newLabel: '새 DSS', base: 'dss', steps: ['Storyboard', '공간 · 제품', '솔루션'], preKey: 'rq', preDesc: '고객 요구사항이 연결된 Storyboard', preShort: '요구사항', preHref: '/requirements/new',
     icon: 'M3 21h18 M5 21V9l7-5 7 5v12 M9 21v-6h6v6' },
@@ -56,7 +55,7 @@ export const CONTENT: Record<ContentKey, ContentMeta> = {
     newLabel: '새 Spec 시트', base: 'spec', steps: ['Storyboard', '시트 작성'], preKey: 'dss', preDesc: '최소 DSS까지 완료된 Storyboard', preShort: 'DSS', preHref: '/dss/new',
     icon: 'M6 3h9l4 4v14H6z M14 3v5h5 M9 13h7 M9 17h5' },
   sc: { key: 'sc', label: '공간 시나리오 생성', short: '공간 시나리오', desc: 'Storyboard의 공간마다 사용자 시나리오를 만들어요.', pre: '최소 DSS까지 된 Storyboard', post: '없음',
-    newLabel: '새 공간 시나리오', base: 'scenario', steps: ['Storyboard', '공간별 시나리오'], preKey: 'dss', preDesc: '최소 DSS까지 완료된 Storyboard', preShort: 'DSS', preHref: '/dss/new',
+    newLabel: '새 공간 시나리오', base: 'scenario', steps: ['Storyboard', '공간 · 시나리오'], preKey: 'dss', preDesc: '최소 DSS까지 완료된 Storyboard', preShort: 'DSS', preHref: '/dss/new',
     icon: 'M3 5h18v14H3z M10 9l5 3-5 3z' },
 };
 
@@ -108,24 +107,3 @@ export function useFlowInvalidate() {
 export const ORDER: StageKey[] = ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'];
 export const doneKeys = (cells: FlowCell[]) => cells.filter((c) => c.state === 'done').map((c) => c.key);
 
-// ── 보기 ↔ 편집(보드 View · *_View) ─────────────────────────
-// 저장된 콘텐츠의 경로(허브 cells[].route · 목록 · 작업 내역)는 그 콘텐츠 보기로 열린다. 편집 화면은 `?edit=1`.
-// 저장 전 초안은 경로 그대로 편집 화면이다(보여 줄 완성본이 없다).
-
-/** 콘텐츠 경로 → 편집 화면 경로(`?edit=1`, 다른 검색 조건은 버린다) */
-export function editRoute(route: string) {
-  try { const u = new URL(route, 'http://x'); return `${u.pathname}?edit=1`; } catch { return `${route}?edit=1`; }
-}
-
-/** 지금 화면이 편집인지(`?edit=1`) · 편집으로 · 보기로(저장 뒤, 기록을 남기지 않고 바꾼다) */
-export function useEditMode() {
-  const [sp, setSp] = useSearchParams();
-  const editing = sp.get('edit') === '1';
-  const toView = (drop: string[] = []) => setSp((prev) => {
-    const n = new URLSearchParams(prev);
-    n.delete('edit');
-    for (const k of drop) n.delete(k);
-    return n;
-  }, { replace: true });
-  return { editing, toView };
-}

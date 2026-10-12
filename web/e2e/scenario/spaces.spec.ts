@@ -1,6 +1,6 @@
 /**
- * 새 공간 시나리오 흐름(2026-10-08 보드 webapp1 SC2 · SC2_AI · SC2_Pick · SC2_Empty · View content=sc) — 공간 → 시나리오 → 장면 → 저장 → 보기.
- * Storyboard 없이 공간 · 제품을 API 로 준 묶음(허브에 쓰지 않는다 — 허브 연동은 sc-flow.spec.ts).
+ * 공간 시나리오 — Storyboard 없이 공간 · 제품을 API 로 준 묶음(허브에 쓰지 않는다 — 허브 연동은 sc-flow.spec.ts) · 보드 v62 팝업 모델.
+ * 주소를 열면(작성 중) 최종본 위 ② 공간 · 시나리오 팝업이 열린 채로 → AI 3안 수락 · 제품 없는 공간 막기 · 자유 항목 · 저장 → 팝업이 닫히고 최종본.
  * 실제 스택(mock 모델 — 로비 AI 3안은 고정 응답). 칸 폭(196 · 236)이 보드와 같은지 함께 본다.
  */
 import { expect, test } from '@playwright/test';
@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const SCREENS = path.join(path.dirname(fileURLToPath(import.meta.url)), '__screens__');
 const P = (name: string, kind = 'product') => ({ name, kind });
 
-test('공간 → 시나리오 → 장면(Storyboard 없음) — AI 3안 수락 · 제품 없는 공간 막기 · 자유 항목 · 저장 → 보기', async ({ page, request }) => {
+test('공간 → 시나리오 → 장면(Storyboard 없음) — AI 3안 수락 · 제품 없는 공간 막기 · 자유 항목 · 저장 → 최종본', async ({ page, request }) => {
   test.setTimeout(180_000);
   const r = await request.post('/api/scenario/v1/space-sets', { data: { title: '용산 AI Ready 오피스', spaces: [
     { name: '로비', products: [P('The Wall IAB 146"'), P('Smart Signage QM55C'), P('삼성 키오스크'), P('MagicINFO', 'solution')] },
@@ -20,10 +20,14 @@ test('공간 → 시나리오 → 장면(Storyboard 없음) — AI 3안 수락 �
   const d = await r.json();
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`/scenario/spaces/${d.id}`);
-  await expect(page.getByRole('heading', { name: '공간마다 시나리오를 여러 개 써요' })).toBeVisible();
-  await expect(page.getByText('연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요')).toBeVisible();
+  await expect(page).toHaveURL(/step=spaces/);                                      // 작성 중 → ② 팝업이 열린 채로
+  const stepDlg = page.locator('.fl-stepdlg');
+  await expect(stepDlg.getByRole('heading', { name: '공간마다 시나리오를 여러 개 써요' })).toBeVisible();
+  await expect(stepDlg.locator('.fl-shead__sb')).toHaveCount(0);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText('Storyboard 없이 시작했어요 · 저장해도 Storyboard에는 반영되지 않아요');
+  await expect(page.locator('.fl-detail .wm-sbbar')).toContainText('연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요');
   await expect(page.locator('.ss-spaces__h')).toHaveText('공간 · DSS');
-  await expect(page.getByRole('link', { name: '목록', exact: true })).toHaveAttribute('href', '/scenario');
+  await expect(stepDlg.locator('.wm-flow__back')).toHaveCount(0);
   expect(Math.round((await page.locator('.ss-spaces').boundingBox())!.width)).toBe(196);
 
   // AI 3안(로비) → 점선 후보 3 → A 수락
@@ -57,27 +61,18 @@ test('공간 → 시나리오 → 장면(Storyboard 없음) — AI 3안 수락 �
   await page.getByRole('button', { name: '+ 시간대' }).click();
   await page.locator('#ss-f-0').fill('오후 9시 이후');
   await page.waitForTimeout(1200);           // 자동 저장
-  await page.getByRole('button', { name: '저장', exact: true }).click();
-  // 저장 → 같은 주소의 보기(SC_View) — 완료 안내 없음 · Storyboard 없으니 flow.json 버튼도 없음 · 처음엔 시나리오가 있는 첫 공간(로비)
-  await expect(page.getByRole('heading', { name: '용산 AI Ready 오피스', level: 1 })).toBeVisible({ timeout: 20_000 });
-  await expect(page).toHaveURL(new RegExp(`/scenario/spaces/${d.id}$`));
-  await expect(page.getByText(/저장했어요|완료됐|완성됐/)).toHaveCount(0);
-  await expect(page.getByText('연결된 Storyboard가 없어요')).toBeVisible();
-  await expect(page.getByRole('button', { name: 'flow.json' })).toHaveCount(0);
-  await expect(page.locator('.fl-view__meta')).toHaveText(/ 저장 · 공간 2 · 시나리오 2 · 시나리오 없는 공간 0$/);
-  await expect(page.locator('.scv-spaces__h')).toHaveText('공간 · DSS');
-  await expect(page.locator('.scv-sp')).toHaveText([/로비시나리오 1 · 제품 4/, /주차장시나리오 1 · 제품 1/]);
-  await expect(page.locator('.scv-head__name')).toHaveText('로비');
-  // AI 후보 A안(mock — 미등록 방문객 응대) · 수락 태그
-  await expect(page.locator('.scv-card .fl-vtag')).toHaveText('AI A안 · 수락');
-  await page.getByRole('button', { name: /주차장/ }).click();
-  const card = page.locator('.scv-card');
-  await expect(card).toHaveCount(1);
-  await expect(card.locator('.scv-card__title')).toHaveText('야간 주차 안내');
-  await expect(card.locator('.fl-vtag')).toHaveText('직접');
-  await expect(card.locator('.scv-step')).toHaveText(['1주차장 입구 사이니지에 빈 층이 뜸옥외형 사이니지 OHC55']);
-  await expect(card.locator('.scv-kv').last()).toHaveText('시간대오후 9시 이후');
-  expect(Math.round((await page.locator('.scv-spaces').boundingBox())!.width)).toBe(236);
+  await stepDlg.getByRole('button', { name: '저장', exact: true }).click();
+  // 팝업이 닫히고 최종본(완료 안내 화면 없음) — Storyboard 바는 비어 있고 flow.json 버튼도 없다
+  await expect(stepDlg).toHaveCount(0, { timeout: 20_000 });
+  const view = page.locator('.fl-detail');
+  await expect(view).toHaveAttribute('data-status', 'saved');
+  await expect(view.locator('.fl-dver')).toHaveText(`${d.code} v1`);
+  await expect(page.getByRole('heading', { name: '공간 시나리오를 저장했어요' })).toHaveCount(0);
+  await expect(view.locator('.wm-sbbar')).toContainText('연결된 Storyboard가 없어요');
+  await expect(view.getByRole('button', { name: 'flow.json' })).toHaveCount(0);
+  await expect(view.locator('.scv-sp')).toHaveText([/^로비시나리오 1 · 제품 4$/, /^주차장시나리오 1 · 제품 1$/]);
+  await view.locator('[data-vspace="주차장"]').click();
+  await expect(view.locator('[data-vscenario="야간 주차 안내"] .scv-step__p')).toHaveText('옥외형 사이니지 OHC55');
   await page.screenshot({ path: path.join(SCREENS, 'SC_View-nosb.png') });
   const st = await (await request.get(`/api/scenario/v1/space-sets/${d.id}/stage`)).json();
   const park = st.stage.spaces.find((s: { name: string }) => s.name === '주차장');

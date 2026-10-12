@@ -18,11 +18,10 @@ button{font-family:inherit;cursor:pointer}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="market" current="" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="Market Intelligence" title="MI-01 수정" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{three}}" hint-size="1180px,56px"></dc-import>
-    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="MI-01 v1을 고쳐요 · 저장하면 v2" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+  <dc-import name="View" content="{{hd.content}}" status="{{hd.bg}}" done="{{hd.bgDone}}" hint-size="1440px,900px"></dc-import>
+  <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 40"></div>
+  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 130px; top: 50px; width: 1180px; height: 800px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
+    <dc-import name="StepHead" content="{{hd.content}}" title="{{hd.title}}" mode="{{hd.mode}}" ver="{{hd.ver}}" sb="{{hd.sb}}" note="{{hd.note}}" current="{{hd.current}}" done="{{hd.done}}" close-href="{{hd.close}}" on-sb="{{hd.onSb}}" hint-size="1180px,72px"></dc-import>
     <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 22px 40px 22px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
       <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
         <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1">
@@ -53,21 +52,21 @@ button{font-family:inherit;cursor:pointer}
         </sc-for>
       </div>
       <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
-        <a href="MI2.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>검색어 고치기</a>
+        <sc-if value="{{ft.hasBack}}" hint-placeholder-val="{{true}}"><a href="{{ft.backHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>{{ft.back}}</a></sc-if>
         <span style="flex-grow: 1"></span>
-        <a class="m-btn" href="MI_View.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">MI 저장 · v2</a>
+        <a class="m-btn" href="{{ft.saveHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{ft.save}}</a>
       </div>
     </section>
-  </main>
+  </div>
 
   <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
       <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["new","edit"],"default":"edit"},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const s = Object.assign({ tab: 0, off: { '0-3': true }, pop: false }, this.state || {});
@@ -94,11 +93,18 @@ class Component extends DCLogic {
         wrap: 'display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 0 16px 0 18px;' + (i ? ' border-top: 1px solid #f0f2f5;' : ''),
         toggle: () => put({ off: Object.assign({}, s.off, { [key]: on }) }) };
     });
-    return {
+    const EDIT = this.props.mode === 'edit';
+    const HD = (R) => ({ content: 'mi', label: '정제', bg: EDIT ? 'saved' : 'new', bgDone: 2, title: EDIT ? '용산 오피스 시장 분석' : '용산 오피스 시장 분석', mode: EDIT ? 'edit' : 'new', ver: 'MI-01 v1',
+      sb: EDIT ? 'SB-01' : 'SB-01', note: EDIT ? '저장하면 MI-01 v2 · SB-01에 반영돼요' : 'MI를 저장하면 이 Storyboard에 연결돼요', current: 3, done: 2, close: EDIT ? 'MI_View.dc.html' : 'MI_Draft.dc.html', onSb: R.openPop || R.openSb || (() => {}) });
+    const FT = { hasBack: true, backHref: 'MI2.dc.html', back: '검색어 고치기', saveHref: 'MI_View.dc.html', save: EDIT ? 'MI 저장 · v2' : 'MI 저장' };
+    const R = {
       steps: ['Storyboard', '검색', '정제'], three: 3,
       tabs, items, countLine: '찾은 ' + all + ' · 담음 ' + kept, popOpen: s.pop,
       openPop: () => put({ pop: true }), closePop: () => put({ pop: false })
     };
+    R.hd = HD(R);
+    R.ft = FT;
+    return R;
   }
 }
 </script>

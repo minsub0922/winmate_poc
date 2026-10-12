@@ -218,8 +218,8 @@ test('SB0 · SB1 — 목록 · 진행 8칸 · 보기 팝업 · json · 전략 �
   const cp = page.getByRole('dialog');
   await expect(cp).toContainText('용산 오피스 공간별 제품');
   await expect(cp).toContainText(`공간별 제품 매칭 DSS${refs.dss} v1`);
-  // 「편집 화면에서 고치기」 는 편집 화면(?edit=1) — 콘텐츠 경로 그대로는 그 콘텐츠 보기다
-  await expect(cp.getByRole('link', { name: '편집 화면에서 고치기' })).toHaveAttribute('href', `/dss/${refs.dss}?edit=1`);
+  // 「콘텐츠 열기 · 단계별로 고치기」 는 그 콘텐츠 최종본(보드 v62 — 고치기는 최종본 머리의 단계 칩 → 팝업)
+  await expect(cp.getByRole('link', { name: '콘텐츠 열기 · 단계별로 고치기' })).toHaveAttribute('href', `/dss/${refs.dss}`);
   expect([await w(cp), await h(cp)]).toEqual([820, 680]);
   expect(page.url()).toBe(url);
   await settle(page);

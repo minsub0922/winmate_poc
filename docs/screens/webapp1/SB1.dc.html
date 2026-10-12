@@ -142,9 +142,9 @@ class Component extends DCLogic {
     const put = (p) => this.setState(Object.assign({}, s, p, { k: pt + (this.props.view || '') + (this.props.strat || '') }));
     // [키, 이름, 참조, 한 줄, 공유, 만들기/열기 링크]
     const C = [
-      ['rq', '고객 요구사항', 'RQ-01 v2', '키맨 3 · 요구 12 · 확인 필요 4', 'SB-02와 공유', 'RQ1.dc.html'],
-      ['dss', 'DSS', 'DSS-01 v1', '오피스 · 공간 7 · 제품 12 · 솔루션 3', 'SB-02와 공유', 'DS2.dc.html'],
-      ['mi', 'MI', 'MI-01 v1', '담은 정보 11 · 출처 11', '', 'MI2.dc.html'],
+      ['rq', '고객 요구사항', 'RQ-01 v2', '키맨 3 · 요구 12 · 확인 필요 4', 'SB-02와 공유', 'RQ_View.dc.html'],
+      ['dss', 'DSS', 'DSS-01 v1', '오피스 · 공간 7 · 제품 12 · 솔루션 3', 'SB-02와 공유', 'DS_View.dc.html'],
+      ['mi', 'MI', 'MI-01 v1', '담은 정보 11 · 출처 11', '', 'MI_View.dc.html'],
       ['ca', '경쟁사 분석', '', '', '', 'CA2.dc.html'],
       ['vp', 'Value Proposition', '', '', '', 'VP2.dc.html'],
       ['sp', 'Spec 시트', '', '', '', 'SP2.dc.html'],
@@ -158,7 +158,7 @@ class Component extends DCLogic {
       dot: 'width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;' + (ref ? ' background: #1428a0;' : ' border: 1.5px dashed #b8bec8;'),
       cta: 'height: 30px; padding: 0 12px; border-radius: 8px; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (ref ? ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417;' : ' background: #eaeefb; color: #1428a0;')
     }));
-    const T = [['rq', '요구사항', 'RQ-01 v2', 'RQ1.dc.html'], ['dss', 'DSS', 'DSS-01 v1', 'DS2.dc.html'], ['mi', 'MI', 'MI-01 v1', 'MI2.dc.html'], ['ca', '경쟁사', '', 'CA2.dc.html'], ['vp', 'VP', '', 'VP2.dc.html'], ['sp', 'Spec', '', 'SP2.dc.html'], ['sc', '시나리오', '', 'SC2.dc.html'], ['ppt', '제안서', '', 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe']];
+    const T = [['rq', '요구사항', 'RQ-01 v2', 'RQ_View.dc.html'], ['dss', 'DSS', 'DSS-01 v1', 'DS_View.dc.html'], ['mi', 'MI', 'MI-01 v1', 'MI_View.dc.html'], ['ca', '경쟁사', '', 'CA2.dc.html'], ['vp', 'VP', '', 'VP2.dc.html'], ['sp', 'Spec', '', 'SP2.dc.html'], ['sc', '시나리오', '', 'SC2.dc.html'], ['ppt', '제안서', '', 'https://claude.ai/artifact/Jd1mPcNMqvZoeBjfKFxeJe']];
     const track = T.map(([k, label, ref, href], i) => ({
       label, href, done: !!ref, todo: !ref, ref: ref || (k === 'ppt' ? '후속 작업' : '+ 만들기'),
       viewLabel: label + ' ' + ref + ' 보기', view: () => put({ cp: ref.split(' ')[0] }),

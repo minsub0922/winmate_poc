@@ -39,6 +39,12 @@ export async function createValueMap(body: S['VMCreate']): Promise<VMDoc> {
   return normalize(unwrap(await api.vp.POST('/v1/value-maps', { body })));
 }
 
+/** Storyboard(Gate)로 시작 — 같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 200 으로 돌려준다(reused) */
+export async function startValueMap(sbId: string): Promise<{ doc: VMDoc; reused: boolean }> {
+  const res = await api.vp.POST('/v1/value-maps', { body: { sb_id: sbId, select_all: true } });
+  return { doc: normalize(unwrap(res)), reused: res.response.status === 200 };
+}
+
 /** 저장 전 초안 지우기(목록 줄의 ×) — 저장한 맵은 409 SAVED_CONTENT */
 export async function deleteValueMap(id: string): Promise<void> {
   const r = await api.vp.DELETE('/v1/value-maps/{map_id}', P(id));
@@ -81,10 +87,11 @@ export function useVmActions(id: string) {
     },
     /** DSS 다시 가져오기 — 응답의 dss_changed(대개 null)를 그대로 넣는다 */
     resync: async () => put(unwrap(await api.vp.POST('/v1/value-maps/{map_id}:resync-dss', P(id))), false),
-    /** 저장 — 저장한 문서(status done · ver)를 다시 읽어 캐시에 바로 넣는다(→ 보기가 그 값으로 뜬다) */
+    /** 저장(판 +1 · 허브 stages.vp) — 문서를 다시 읽은 뒤 돌아온다(팝업이 닫히면 최종본이 바로 저장됨으로 보이게) */
     finish: async (): Promise<VMStageOut> => {
       const r = unwrap(await api.vp.POST('/v1/value-maps/{map_id}:finish', P(id)));
-      qc.setQueryData(vmKey(id), normalize(unwrap(await api.vp.GET('/v1/value-maps/{map_id}', P(id)))));
+      await qc.invalidateQueries({ queryKey: vmKey(id) });
+      for (const queryKey of [vmListKey, ['storyboard'], ['ws']]) void qc.invalidateQueries({ queryKey });
       return r;
     },
   };

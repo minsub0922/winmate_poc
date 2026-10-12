@@ -1,13 +1,15 @@
 /**
- * RQ1 — 고객 요구사항 입력(보드 webapp1 RQ1.dc.html 인라인 px 그대로 · rqflow.css).
+ * RQ1 — ① 요구사항 입력 팝업 본문(보드 webapp1 v62 RQ1 · RQ1_Edit 인라인 px 그대로 · rqflow.css). 최종본(RqView) 위 StepModal 안에서만 쓴다.
  * 왼쪽 400px 폼 | 오른쪽 1fr 키맨별 요구사항. 파일을 놓으면 빈 칸이 채워진다. (AI 심층 질의 — 폼 개선 과정 — 는 2026-10-12 에 뺐다)
+ * 팝업 안이라 Storyboard 바 · 「목록」 링크가 없다(보드 RQ1 ft.hasBack=false). 바닥 버튼: 새로 「저장」 · 고치기 「저장 · vN+1」.
+ * ctl — 팝업을 닫을 때 페이지가 남은 입력을 저장(flush)하고, 닫기 물음의 「저장 · vN」을 부른다.
  */
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
+import { useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState, type ChangeEvent, type DragEvent, type Ref } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { uploadFile } from '@/api/client';
 import { useJob } from '@/api/jobs';
-import { FlowBar, useFlowInvalidate } from '@/shell';
-import { FlowFooter, FlowScreen, LinkedStoryboardBar, cx, toast } from '@/ui';
+import { useFlowInvalidate } from '@/shell';
+import { FlowFooter, FlowScreen, cx, toast } from '@/ui';
 import { rfApi, rfListKey, type RFDoc, type RFStageOut } from './api';
 import { addKeyman, newId, removeKeyman, setWeight, weightSum, type FForm, type FKeyman, type FReq } from './form';
 import { AI_DOWN, errText, useRfEditor } from './useRfEditor';
@@ -134,7 +136,22 @@ function KeymanCard({ k, idx, n, edit, readOnly, focusReq, setFocusReq }: {
   );
 }
 
-export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | null; onCreated: (d: RFDoc) => void; onFinished: (out: RFStageOut) => void }) {
+/** 팝업(페이지)이 쓰는 손잡이 */
+export interface EditorCtl {
+  /** 남은 입력을 지금 저장 — 다 저장됐으면 true */
+  flush: () => Promise<boolean>;
+  /** 아직 서버에 보내지 않은 입력이 있는가 */
+  pending: () => boolean;
+  /** 지금 문서(첫 입력 전이면 null) */
+  doc: () => RFDoc | null;
+  /** 바닥 「저장」과 같다 */
+  save: () => Promise<void>;
+}
+
+export function Editor({ initial, mode = 'new', saveLabel = '저장', ctl, onCreated, onFinished }: {
+  initial: RFDoc | null; mode?: 'new' | 'edit'; saveLabel?: string; ctl?: Ref<EditorCtl>;
+  onCreated: (d: RFDoc) => void; onFinished: (out: RFStageOut) => void;
+}) {
   const qc = useQueryClient();
   const inval = useFlowInvalidate();
   const ed = useRfEditor(initial, onCreated);
@@ -215,6 +232,7 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
       onFinished(out);
     } catch (e) { toast(errText(e) === AI_DOWN ? '저장하지 못했어요. 다시 시도해 주세요.' : errText(e)); } finally { setSaving(false); }
   };
+  useImperativeHandle(ctl, () => ({ flush: ed.flush, pending: ed.pending, doc: () => ed.docRef.current, save }));
 
   const sources = doc?.sources ?? [];
   const sum = weightSum(form);
@@ -226,9 +244,7 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
   ];
   const progress = job.job && job.job.status === 'running' ? ` · ${job.job.progress ?? 0}%` : '';
   return (
-    <FlowScreen pad="0" gap={0} className="rqf-screen"
-      bar={doc?.sb_ids?.length ? <FlowBar sbIds={doc.sb_ids} current="rq" note="저장하면 연결된 Storyboard에 반영돼요" />
-        : <LinkedStoryboardBar chips={[]} emptyText="저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요" />}>
+    <FlowScreen pad="0" gap={0} className="rqf-screen">
       <div className="rqf-row">
         <section className="rqf-main" onDragOver={(e) => onDrag(e, true)} onDragLeave={(e) => onDrag(e, false)} onDrop={onDrop}>
           <div className="rqf-head">
@@ -240,6 +256,7 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
               <path d="M12 15V4 M7 9l5-5 5 5 M4 15v5h16v-5" /></svg>
             <span className="rqf-drop__t">파일을 끌어다 놓으면 폼이 채워져요 <span>· PPTX · PDF · DOCX · 메일</span></span>
             {filling && <span className="rqf-chip" role="status">{(uploading[0] ?? sources[sources.length - 1]?.name ?? '파일')} 읽는 중{progress}</span>}
+            {!filling && !sources.length && mode === 'edit' && <span className="rqf-chip">직접 입력 · 읽은 자료 없음</span>}
             {!filling && sources.slice(-1).map((s) => <span key={s.file_id} className="rqf-chip" title={sources.map((x) => x.name).join(' · ')}>{s.name}에서 읽음{sources.length > 1 ? ` 외 ${sources.length - 1}` : ''}</span>)}
             <button type="button" className="rqf-ghost34" onClick={() => fileInput.current?.click()} disabled={filling}>파일 첨부</button>
             <input ref={fileInput} type="file" multiple accept={ACCEPT} hidden aria-label="파일 첨부"
@@ -273,7 +290,7 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
             </div>
           </div>
 
-          <FlowFooter back={{ to: '/requirements', label: '목록' }} summary="모두 선택 항목이에요" primary={{ label: '저장', onClick: () => void save(), busy: saving }} />
+          <FlowFooter summary="모두 선택 항목이에요" primary={{ label: saveLabel, onClick: () => void save(), busy: saving }} />
         </section>
       </div>
     </FlowScreen>

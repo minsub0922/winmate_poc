@@ -108,16 +108,16 @@ test('List v61 — 가운데 새로 만들기 · 작업 내역 그리드 · 썸�
   await request.delete(`/api/dss/v1/dss/${draft.id}`);
 });
 
-test('List v61 — 요구사항 2/2 단계 · 빈 목록(VP)은 범례 없이 안내', async ({ page, request }) => {
+test('List v62 — 요구사항 1/1 단계 · 빈 목록(VP)은 범례 없이 안내', async ({ page, request }) => {
   test.setTimeout(90_000);
   const sb = await makeStoryboard(request, { name: `목록 요구 ${tag()}` }) as { id: string; name: string; cells: Array<{ key: string; ref: string | null }> };
   const rqRef = sb.cells.find((c) => c.key === 'rq')!.ref!;
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/requirements');
   await expect(page.locator('.fl-hero__label')).toHaveText('새 요구사항 만들기');
-  await expect(page.locator('.fl-hero__step')).toHaveText(['1요구사항 입력', '2저장']);
+  await expect(page.locator('.fl-hero__step')).toHaveText(['1요구사항 입력']);
   const card = page.locator('.fl-card').filter({ hasText: `${rqRef} v1` });
-  await expect(card.locator('.fl-steptxt')).toHaveText('2/2단계· 완성');
+  await expect(card.locator('.fl-steptxt')).toHaveText('1/1단계· 완성');
   await expect(card.locator('.fl-mini__fact b').first()).toHaveText('E 자산운용');
   await shotTo(page, DIR, 'RQ0-new');
 

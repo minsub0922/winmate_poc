@@ -21,11 +21,10 @@ input::placeholder{color:#a3a9b5}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="Sidebar" group="scenario" current="" hint-size="260px,900px"></dc-import>
-  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="공간 시나리오 생성" title="새 공간 시나리오" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
-    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" on-open="{{openSb}}" hint-size="1180px,52px"></dc-import>
+  <dc-import name="View" content="{{hd.content}}" status="{{hd.bg}}" done="{{hd.bgDone}}" hint-size="1440px,900px"></dc-import>
+  <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 40"></div>
+  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 130px; top: 50px; width: 1180px; height: 800px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
+    <dc-import name="StepHead" content="{{hd.content}}" title="{{hd.title}}" mode="{{hd.mode}}" ver="{{hd.ver}}" sb="{{hd.sb}}" note="{{hd.note}}" current="{{hd.current}}" done="{{hd.done}}" close-href="{{hd.close}}" on-sb="{{hd.onSb}}" hint-size="1180px,72px"></dc-import>
     <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 16px 32px 16px 32px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
       <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
         <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; flex-grow: 1">공간마다 시나리오를 여러 개 써요</h1>
@@ -134,28 +133,28 @@ input::placeholder{color:#a3a9b5}
         </div>
       </div>
       <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
-        <a href="SB1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
+        <sc-if value="{{ft.hasBack}}" hint-placeholder-val="{{true}}"><a href="{{ft.backHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>{{ft.back}}</a></sc-if>
         <span style="flex-grow: 1"></span>
         <span style="{{footStyle}}">{{footLine}}</span>
-        <sc-if value="{{canSave}}" hint-placeholder-val="{{true}}"><a class="c-btn" href="SC_View.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</a></sc-if>
+        <sc-if value="{{canSave}}" hint-placeholder-val="{{true}}"><a class="c-btn" href="{{ft.saveHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{ft.save}}</a></sc-if>
         <sc-if value="{{cantSave}}" hint-placeholder-val="{{false}}"><span aria-disabled="true" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #e2e5ea; color: #8a91a0; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</span></sc-if>
       </div>
     </section>
-  </main>
+  </div>
 
   <sc-if value="{{sbOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
       <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
     </div>
   </sc-if>
   <sc-if value="{{pickOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
       <dc-import name="ProdPicker" title="{{pickTitle}}" sub="공간에 쓸 제품 · 솔루션을 고르세요. 하나 이상 있어야 하고, 고른 것 중에서 시나리오마다 다시 골라요." picked="{{spNames}}" min="{{one}}" on-toggle="{{togglePick}}" on-close="{{closePop}}" hint-size="760px,640px"></dc-import>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"pop":{"editor":"enum","options":["","pick"],"default":""},"space":{"editor":"number","default":1},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["new","edit"],"default":"new"},"ai":{"editor":"boolean","default":false},"pop":{"editor":"enum","options":["","pick"],"default":""},"space":{"editor":"number","default":1},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const pai = !!this.props.ai;
@@ -263,7 +262,11 @@ class Component extends DCLogic {
     }
     const nSc = list.filter((x) => !x.cand).length;
     const togglePick = (n) => setSp(spNames.indexOf(n) >= 0 ? spNames.filter((x) => x !== n) : spNames.concat([n]));
-    return {
+    const EDIT = this.props.mode === 'edit';
+    const HD = (R) => ({ content: 'sc', label: '공간 · 시나리오', bg: EDIT ? 'saved' : 'new', bgDone: 1, title: EDIT ? '용산 오피스 공간 시나리오' : '용산 오피스 공간 시나리오', mode: EDIT ? 'edit' : 'new', ver: 'SC-01 v1',
+      sb: EDIT ? 'SB-01' : 'SB-01', note: EDIT ? '저장하면 SC-01 v2 · SB-01에 반영돼요' : 'Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨', current: 2, done: 1, close: EDIT ? 'SC_View.dc.html' : 'SC_Draft.dc.html', onSb: R.openPop || R.openSb || (() => {}) });
+    const FT = { hasBack: false, backHref: '', back: '', saveHref: 'SC_View.dc.html', save: EDIT ? '저장 · v2' : '저장' };
+    const R = {
       steps: ['Storyboard', '공간 · 시나리오'], two: 2, one: 1,
       spaces, spName: SP[sp][0], spProds, spNames, spNone: spNames.length === 0,
       spHeadStyle: 'box-sizing: border-box; flex-shrink: 0; background: #ffffff; border-radius: 14px; padding: 10px 12px 10px 16px; display: flex; flex-direction: column; gap: 8px;' + (spNames.length ? ' border: 1px solid #e2e5ea;' : ' border: 1.5px solid #e0b25c;'),
@@ -280,6 +283,9 @@ class Component extends DCLogic {
       togglePick,
       openSb: () => put({ pop: 'sb' }), openPick: () => put({ pop: 'pick' }), closePop: () => put({ pop: '' })
     };
+    R.hd = HD(R);
+    R.ft = FT;
+    return R;
   }
 }
 </script>

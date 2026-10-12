@@ -83,5 +83,24 @@ export function VerdictPill({ v, label, onPick }: { v: V; label: string; onPick:
   );
 }
 
+/**
+ * 단계 팝업(StepModal)은 Esc 를 document 캡처 단계에서 받아 팝업을 닫는다 — 그보다 먼저(window 캡처) 이 화면 안의 Esc 를 「처리함」으로 표시해
+ * 고치는 글 · 비교 쌍 더하기 · 경쟁사 이름 입력 · 판정 고르기 메뉴의 Esc 는 그것만 거두고 팝업은 그대로 둔다.
+ */
+export function useHoldEscape(root: string) {
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented) return;
+      const t = e.target instanceof Element ? e.target : null;
+      const scr = t?.closest(root);
+      if (!scr) return;
+      const editing = t!.matches('.caf-edin, .caf-addpair input, .caf-addpair select') || (t instanceof HTMLInputElement && t.id === 'ca-add' && !!t.value);
+      if (editing || scr.querySelector('.caf-vmenu')) e.preventDefault();
+    };
+    window.addEventListener('keydown', h, true);
+    return () => window.removeEventListener('keydown', h, true);
+  }, [root]);
+}
+
 /** 자리표시([위키 값] · [견적 확인] · [확인 필요] · [00])가 있는 값 */
 export const hasPlaceholder = (s: string | null | undefined) => !!s && s.includes('[');

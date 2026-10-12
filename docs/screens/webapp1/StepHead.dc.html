@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>단계 팝업 머리</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{text-decoration:none}
+button{font-family:inherit;cursor:pointer}
+.sh-step:hover{border-color:#1428a0}
+.sh-x:hover{background:#f0f2f5}
+.sh-sb:hover{border-color:#1428a0}
+.sh-step:focus-visible,.sh-x:focus-visible,.sh-sb:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1180px; height: 72px; box-sizing: border-box; display: flex; align-items: center; gap: 14px; padding: 0 16px 0 24px; background: #ffffff; border-bottom: 1px solid #e2e5ea; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417; flex-shrink: 0">
+  <span style="width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{icon}}"/></svg></span>
+  <span style="display: flex; flex-direction: column; gap: 5px; flex-grow: 1; min-width: 0">
+    <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+      <span style="font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{title}}</span>
+      <span style="{{modeStyle}}">{{modeText}}</span>
+    </span>
+    <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+      <sc-if value="{{hasSb}}" hint-placeholder-val="{{true}}">
+        <button class="sh-sb" onClick="{{openSb}}" aria-label="{{sbLabel}}" style="height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 6px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; flex-shrink: 0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M4 11h16 M10 11v8"/></svg>{{sbName}}</button>
+      </sc-if>
+      <span style="font-size: 12px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{note}}</span>
+    </span>
+  </span>
+
+  <!-- 단계: 팝업 안에서만 넘어간다 · 지난 단계는 눌러서 되돌아간다 -->
+  <span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #596170; white-space: nowrap; flex-shrink: 0">단계 {{pos}}</span>
+  <nav aria-label="단계" style="display: flex; align-items: center; flex-shrink: 0">
+    <sc-for list="{{items}}" as="s" hint-placeholder-count="3">
+      <sc-if value="{{s.link}}" hint-placeholder-val="{{true}}">
+        <a class="sh-step" href="{{s.href}}" aria-current="{{s.aria}}" title="{{s.tip}}" style="{{s.wrap}}">
+          <span style="{{s.circle}}"><sc-if value="{{s.check}}" hint-placeholder-val="{{true}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{s.num}}" hint-placeholder-val="{{false}}">{{s.n}}</sc-if></span>
+          <span style="{{s.label}}">{{s.text}}</span>
+        </a>
+      </sc-if>
+      <sc-if value="{{s.still}}" hint-placeholder-val="{{false}}">
+        <span aria-current="{{s.aria}}" title="{{s.tip}}" style="{{s.wrap}}">
+          <span style="{{s.circle}}"><sc-if value="{{s.check}}" hint-placeholder-val="{{false}}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{s.num}}" hint-placeholder-val="{{true}}">{{s.n}}</sc-if></span>
+          <span style="{{s.label}}">{{s.text}}</span>
+        </span>
+      </sc-if>
+      <sc-if value="{{s.notLast}}" hint-placeholder-val="{{true}}"><span style="{{s.line}}"></span></sc-if>
+    </sc-for>
+  </nav>
+
+  <a class="sh-x" href="{{closeHref}}" aria-label="{{closeLabel}}" title="{{closeTip}}" style="width: 38px; height: 38px; flex-shrink: 0; margin-left: 6px; border-radius: 10px; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"dss"},"title":{"editor":"text","default":"판교 스타트업 단지"},"mode":{"editor":"enum","options":["new","edit"],"default":"new"},"ver":{"editor":"text","default":""},"sb":{"editor":"text","default":"SB-05"},"note":{"editor":"text","default":"DSS를 저장하면 이 Storyboard에 연결돼요"},"current":{"editor":"int","default":2,"min":1,"max":5},"done":{"editor":"int","default":1,"min":0,"max":5},"closeHref":{"editor":"text","default":"DS_Draft.dc.html"},"onSb":{"editor":null},"$preview":{"width":1180,"height":72}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const key = this.props.content ?? 'dss';
+    // 콘텐츠마다 단계와, 그 단계 팝업 보드
+    const STEPS = {
+      rq: [['요구사항 입력', 'RQ1.dc.html']],
+      dss: [['Storyboard', 'DS1.dc.html'], ['공간 · 제품', 'DS2.dc.html'], ['솔루션', 'DS4.dc.html']],
+      mi: [['Storyboard', 'MI1.dc.html'], ['검색', 'MI2.dc.html'], ['정제', 'MI3.dc.html']],
+      ca: [['Storyboard', 'CA1.dc.html'], ['경쟁사 리스트업', 'CA2.dc.html']],
+      vp: [['Storyboard', 'VP1.dc.html'], ['가치 · 고객의 니즈', 'VP2.dc.html']],
+      sp: [['Storyboard', 'SP1.dc.html'], ['시트 작성', 'SP2.dc.html']],
+      sc: [['Storyboard', 'SC1.dc.html'], ['공간 · 시나리오', 'SC2.dc.html']]
+    };
+    const IC = {
+      rq: 'M9 4h6v3H9z M7 5.5H5V21h14V5.5h-2 M8.5 12h7 M8.5 16h5', dss: 'M3 21h18 M5 21V9l7-5 7 5v12 M9 21v-6h6v6', mi: 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2',
+      ca: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z M12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z', vp: 'M6 4h12l3 5-9 11L3 9l3-5z M3 9h18 M9.5 9L12 20l2.5-11',
+      sp: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7', sc: 'M4 6h16v12H4z M10 9l5 3-5 3V9z'
+    };
+    const SBN = { 'SB-01': '용산 AI Ready 오피스', 'SB-02': '용산 AI Ready 오피스 · 분기 B', 'SB-03': 'A 커피 매장 리뉴얼', 'SB-04': '동탄 시니어 복합단지', 'SB-05': '판교 스타트업 단지', 'SB-06': '성수 플래그십 리테일' };
+    const steps = STEPS[key] || STEPS.dss;
+    const n = steps.length;
+    const edit = this.props.mode === 'edit';
+    const cur = Math.max(1, Math.min(n, Number(this.props.current ?? 2)));
+    const done = edit ? n : Math.max(0, Math.min(n, Number(this.props.done ?? cur - 1)));
+    const sb = this.props.sb ?? '';
+    const items = steps.map(([text, href], i) => {
+      const k = i + 1;
+      const active = k === cur;
+      const isDone = !active && k <= done;
+      // 고치기에서는 사전 작업(Storyboard)을 바꾸지 않는다 · 새로 만들 때는 지난 단계로만 돌아간다
+      const fixed = edit && text === 'Storyboard';
+      const link = !active && isDone && !fixed;
+      return {
+        text, n: k, href, link, still: !link, check: isDone, num: !isDone, notLast: i < n - 1,
+        aria: active ? 'step' : 'false',
+        tip: active ? '지금 단계' : fixed ? '사전 작업은 여기서 바꾸지 않아요' : link ? '이 단계로 돌아가요' : '앞 단계를 마치면 열려요',
+        wrap: 'height: 32px; box-sizing: border-box; padding: 0 11px 0 6px; border-radius: 999px; display: flex; align-items: center; gap: 7px; white-space: nowrap;' +
+          (active ? ' background: #1428a0; border: 1px solid #1428a0;' : isDone ? ' background: #ffffff; border: 1px solid #c9d1f2;' : ' background: #ffffff; border: 1px dashed #d5d9e0;'),
+        circle: 'width: 20px; height: 20px; border-radius: 50%; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;' +
+          (active ? ' background: #ffffff; color: #1428a0;' : isDone ? ' background: #1428a0; color: #ffffff;' : ' border: 1.5px solid #d5d9e0; color: #8a91a0;'),
+        label: 'font-size: 12.5px; font-weight: ' + (active ? '700' : '600') + ';' + (active ? ' color: #ffffff;' : isDone ? ' color: #1428a0;' : ' color: #8a91a0;'),
+        line: 'width: 14px; height: 1.5px; margin: 0 5px; background: ' + (k < cur || (edit && k < n) ? '#1428a0' : '#d5d9e0') + ';'
+      };
+    });
+    const ver = this.props.ver || '';
+    return {
+      icon: IC[key] || IC.dss, title: this.props.title || '새로 만들기',
+      modeText: edit ? ver + ' 고치기' : '새로 만들기',
+      modeStyle: 'height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (edit ? ' background: #f0f2f5; color: #3d4452;' : ' background: #eaeefb; color: #1428a0;'),
+      hasSb: !!SBN[sb], sbName: SBN[sb] || '', sbLabel: (SBN[sb] || '') + ' 요약 보기', openSb: this.props.onSb || (() => {}),
+      note: this.props.note || '', pos: cur + '/' + n, items,
+      closeHref: this.props.closeHref || 'DS_Draft.dc.html',
+      closeLabel: '팝업 닫기', closeTip: edit ? '닫으면 저장하지 않은 고침을 버릴지 물어요' : '닫아도 작성 중으로 남아요'
+    };
+  }
+}
+</script>
+</body>
+</html>

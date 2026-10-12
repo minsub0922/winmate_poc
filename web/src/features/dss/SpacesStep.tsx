@@ -9,7 +9,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useQuery } from '@tanstack/react-query';
 import { FlowBar, useOpenDetail, useOpenPopover, useShellPage } from '@/shell';
-import { FlowScreen, ProductPickerDialog, cx, toast, useConfirm, useEscape, type PickItem } from '@/ui';
+import { FlowScreen, ProductPickerDialog, cx, toast, useConfirm, useEscape, useInStepPopup, type PickItem } from '@/ui';
 import { fetchCandidates, type DSDoc, type DSProduct, type DSSpace, type DsActions } from './api';
 import { addedRefs, dsOnAdd, dsShell } from './shellcfg';
 import { AiBtn, ArrowIcon, BackIcon, Chevron, ProductSearch, ScreenIcon, Star, Tag, XIcon, modelCodeOf } from './parts';
@@ -91,7 +91,11 @@ function IndustryPicker({ doc, actions }: { doc: DSDoc; actions: DsActions }) {
   );
 }
 
-export function SpacesStep({ doc, actions, onNext }: { doc: DSDoc; actions: DsActions; onNext: () => void }) {
+/** 팝업(보드 v62 DS2 · DS2_Edit) 바닥: 새로 만들기 = 「다음 · 솔루션」, 고치기 = 「저장 · vN」(이전 단계 링크 없음) */
+export interface SpacesFoot { label: string; onClick: () => void; busy?: boolean; arrow?: boolean }
+
+export function SpacesStep({ doc, actions, onNext, primary }: { doc: DSDoc; actions: DsActions; onNext: () => void; primary?: SpacesFoot }) {
+  const inPop = useInStepPopup();
   const [sel, setSel] = useState<string | null>(doc.spaces[0]?.key ?? null);
   const [busy, setBusy] = useState<'' | 'industry' | 'spaces' | 'products'>('');
   const [spName, setSpName] = useState('');
@@ -236,11 +240,13 @@ export function SpacesStep({ doc, actions, onNext }: { doc: DSDoc; actions: DsAc
       </div>
 
       <div className="wm-flow__foot">
-        {doc.sb_id ? <Link className="wm-flow__back" to={`/storyboard/flow/${doc.sb_id}`}><BackIcon />Storyboard</Link>
-          : <Link className="wm-flow__back" to="/dss"><BackIcon />목록</Link>}
+        {!inPop && (doc.sb_id ? <Link className="wm-flow__back" to={`/storyboard/flow/${doc.sb_id}`}><BackIcon />Storyboard</Link>
+          : <Link className="wm-flow__back" to="/dss"><BackIcon />목록</Link>)}
         <span style={{ flex: 1 }} />
         {pendAll > 0 && <span className="wm-flow__summary">수락하지 않은 추천은 저장되지 않아요</span>}
-        <button type="button" className="ds-next" onClick={onNext}>다음 · 솔루션<ArrowIcon /></button>
+        {primary
+          ? <button type="button" className="ds-next" onClick={primary.onClick} disabled={primary.busy} aria-busy={primary.busy || undefined}>{primary.busy ? '저장 중…' : primary.label}{primary.arrow && <ArrowIcon />}</button>
+          : <button type="button" className="ds-next" onClick={onNext}>다음 · 솔루션<ArrowIcon /></button>}
       </div>
 
       {cur && (

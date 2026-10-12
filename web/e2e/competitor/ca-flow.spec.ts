@@ -1,7 +1,10 @@
 /**
- * 경쟁사 분석 새 흐름(2026-10-08 보드 webapp1 CA0 · CA1 · CA2 · CA2_AI · CA2_Info · CA2_Pc · View content=ca) — 실제 스택(mock 모델 · mocks/ai-tools/ca.flow_*.json).
- * Storyboard(rq → dss, API) → 목록 → Gate → CA2(직접 추가 · 판정 · 메모 · 비교 쌍 · AI 후보 웹 탐색 → 수락 · 빼기 · 탭 3 · 장단점 · 주장) → 저장 → 같은 경로의 보기(CA_View · 허브 stages.ca · flow.json) → 편집 ?edit=1 → 목록 「열기」 · 새로고침도 보기.
- * 보드 고정 칸(목록 290 · 본문 1180 → 상세 796 · 비교 첫 칸 200 · 보기 236 + 5 × 82)을 숫자로 재고, 화면을 __screens__/<보드>-new.png 로 남긴다.
+ * 경쟁사 분석 새 흐름(보드 webapp1 v62 — CA0 · 최종본 View content=ca(CA_View · CA_Draft) + 단계 팝업 CA1 · CA2 · CA2_AI · CA2_Info · CA2_Pc · CA2_Edit)
+ * — 실제 스택(mock 모델 · mocks/ai-tools/ca.flow_*.json).
+ * Storyboard(rq → dss, API) → 목록 → 새로 만들기(빈 최종본 + ① Gate 팝업) → ② 경쟁사 리스트업 팝업(직접 추가 · 판정 · 메모 · 비교 쌍 · AI 후보 웹 탐색 → 수락 · 빼기 ·
+ * 탭 3 · 장단점 · 주장) → 저장하면 팝업이 닫히고 같은 주소의 최종본(비교 기준 · 판정 합계 · 경쟁사별 모은 판정 · 주장 · 허브 stages.ca) → 단계 칩으로 고치기 팝업(저장 · v2 · 닫기 물음).
+ * 상세에는 페이지 이동이 없다(같은 주소 · `?step=`). 팝업은 1440×900 에서 (130, 50) 1180×800 — 본문 좌표는 팝업 기준(예전 페이지 좌표에서 x −130 · y −50).
+ * 보드 고정 칸(목록 290 · 본문 1180 → 상세 796 · 비교 첫 칸 200 · 최종본 표 236 + 82 × 5)을 숫자로 재고, 화면을 __screens__/<보드>-new.png 로 남긴다.
  * 실행: make e2e-feature SERVICE=competitor (1 worker) · 이 파일만: … npx playwright test e2e/competitor/ca-flow.spec.ts --workers=1
  */
 import { expect, test, type APIRequestContext, type Locator, type Page } from '@playwright/test';
@@ -31,9 +34,11 @@ const BOARD_DSS = {
 
 const w = async (l: Locator) => Math.round((await l.boundingBox())!.width);
 const h = async (l: Locator) => Math.round((await l.boundingBox())!.height);
+const box = async (l: Locator) => { const b = (await l.boundingBox())!; return { x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height) }; };
 
+/** 팝업 안 단계 화면(본문 1180) · 목록 290 · 상세 796 */
 async function widths(page: Page) {
-  return { flow: await w(page.locator('.wm-flow')), left: await w(page.locator('.caf-left')), detail: await w(page.locator('.caf-detail')) };
+  return { flow: await w(page.locator('.fl-sbody .wm-flow')), left: await w(page.locator('.caf-left')), detail: await w(page.locator('.caf-detail')) };
 }
 
 const CF = (id: string) => `/api/competitor/v1/ca-flows/${id}`;
@@ -51,7 +56,7 @@ type Dims = Record<string, { verdict: string; note: string }>;
 const D = (spec: [string, string], price: [string, string], cases: [string, string], esg: [string, string], brand: [string, string]): Dims =>
   Object.fromEntries((['spec', 'price', 'cases', 'esg', 'brand'] as const).map((k, i) => [k, { verdict: [spec, price, cases, esg, brand][i][0], note: [spec, price, cases, esg, brand][i][1] }]));
 
-test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI 후보 웹 탐색 · 탭 3 · 저장 → 보기(stages.ca) · 편집', async ({ page, request }) => {
+test('CA 새 흐름 — 목록 · Gate 팝업 · 직접 추가 · 비교 판정 · AI 후보 웹 탐색 · 탭 3 · 저장 → 최종본(stages.ca) · 고치기 v2', async ({ page, request }) => {
   budget(300_000);
   const down = await backendDown(request);
   test.skip(!!down, down ?? '');
@@ -75,8 +80,18 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await shot(page, 'CA0-new');
   await page.getByRole('link', { name: '새 경쟁사 분석' }).first().click();
 
-  // CA1 — 사전 작업 Storyboard 고르기(보드 Gate content=ca)
+  // CA1 — 빈 최종본(새로 만들기 · ② 자리표시) 위 ① Storyboard 팝업(보드 Gate content=ca)
   await expect(page).toHaveURL(/\/competitor\/new$/);
+  const gateDlg = page.getByRole('dialog', { name: '새 경쟁사 분석 · Storyboard' });
+  await expect(gateDlg).toBeVisible();
+  expect(await box(gateDlg)).toEqual({ x: 130, y: 50, w: 1180, h: 800 });
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'new');
+  await expect(page.locator('.fl-detail .fl-dver')).toHaveText('새로 만들기');
+  await expect(page.locator('.fl-detail .fl-slot')).toHaveCount(1);
+  await expect(page.locator('.fl-detail [data-slot="2"]')).toContainText('경쟁사 리스트업 단계');
+  await expect(gateDlg.locator('.fl-shead__pos')).toHaveText('단계 1/2');
+  await expect(gateDlg.locator('.fl-shead__note')).toHaveText('Storyboard를 고르면 경쟁사 분석이 그 Storyboard에 연결돼요 · 고르기 전에 닫으면 목록으로');
+  await expect(gateDlg.getByRole('link', { name: '목록' })).toHaveCount(0);
   await expect(page.getByRole('heading', { name: '어느 Storyboard로 만들까요?' })).toBeVisible();
   await expect(page.getByText('최소 DSS까지 완료된 Storyboard이 있어야 시작할 수 있어요.', { exact: false })).toBeVisible();
   const radio = page.getByRole('radio', { name: new RegExp(sb.name) });
@@ -87,20 +102,31 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await shot(page, 'CA1-new');
   await page.getByRole('button', { name: /이 Storyboard로 시작/ }).click();
 
-  // CA2 — 비어 있는 새 경쟁사 분석
-  await expect(page).toHaveURL(/\/competitor\/flow\/cflow_[0-9A-Za-z]+$/, { timeout: 20_000 });
+  // CA2 — ② 경쟁사 리스트업 팝업(같은 최종본 위 · 주소는 ?step=list) · 비어 있는 새 경쟁사 분석
+  await expect(page).toHaveURL(/\/competitor\/flow\/cflow_[0-9A-Za-z]+\?step=list$/, { timeout: 20_000 });
   const fid = page.url().split('/').pop()!.split('?')[0];
+  const stepDlg = page.locator('.fl-stepdlg');
   await expect(page.getByRole('heading', { name: '경쟁사를 리스트업하고 우리 제안과 비교해요' })).toBeVisible();
+  await expect(stepDlg).toHaveAttribute('aria-label', new RegExp(' · 경쟁사 리스트업$'));
+  expect(await box(stepDlg)).toEqual({ x: 130, y: 50, w: 1180, h: 800 });
+  await expect(stepDlg.locator('.fl-shead__sb')).toContainText(sb.name);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText('Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨');
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText('새로 만들기');
+  await expect(stepDlg.locator('.fl-shead__pos')).toHaveText('단계 2/2');
+  await expect(stepDlg.locator('.wm-sbbar')).toHaveCount(0);
+  await expect(stepDlg.locator('.wm-flow__back')).toHaveCount(0);                   // 팝업 안에는 「‹ Storyboard」 링크가 없다(보드 CA2)
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'new');
   await expect(page.locator('.caf-basis > b')).toHaveText(`비교 기준 · ${dssRef}`);
   await expect(page.locator('.caf-cat')).toHaveText(['사이니지 6', 'LED 1', '협업 디스플레이 1', '비디오월 1', 'IoT · 솔루션 3']);
-  await expect(page.locator('.wm-sbbar__chip')).toContainText(sb.name);
-  await expect(page.getByText('Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨')).toBeVisible();
   await expect(page.locator('.caf-lhead')).toHaveText('경쟁사 0점선은 AI 후보');
   await expect(page.getByText('경쟁사를 하나 이상 목록에 넣어 주세요')).toBeVisible();
   await expect(page.getByRole('button', { name: '저장', exact: true })).toBeDisabled();
-  await expect(page.getByRole('link', { name: 'Storyboard', exact: true })).toHaveAttribute('href', `/storyboard/flow/${sb.id}`);
-  // 보드 CA2: 본문 열 1180 · 목록 290 | 상세 1fr(1180 − 80 − 290 − 14 = 796) · AI 버튼 38 · 목록 머리 42 + 선 · 추가 입력 36 · 저장 48
+  // 보드 CA2(팝업 1180 × 800 · 본문 728 · padding 18 40): 본문 열 1180 · 목록 290 | 상세 1fr(1180 − 80 − 290 − 14 = 796) · AI 버튼 38 · 목록 머리 42 + 선 · 추가 입력 36 · 저장 48(바닥 y832)
   expect(await widths(page)).toEqual({ flow: 1180, left: 290, detail: 796 });
+  expect(await box(page.locator('.caf-left'))).toMatchObject({ x: 170, w: 290 });
+  expect(await box(page.locator('.caf-detail'))).toMatchObject({ x: 474, w: 796 });
+  expect(await box(page.getByRole('button', { name: '저장', exact: true }))).toMatchObject({ y: 784, h: 48 });
+  expect(await box(page.locator('.caf-head'))).toMatchObject({ x: 170, y: 140, w: 1100 });
   expect(await h(page.getByRole('button', { name: 'AI 경쟁사 후보군 웹 탐색' }))).toBe(38);
   expect(await h(page.locator('.caf-lhead'))).toBe(43);
   expect(await h(page.locator('#ca-add'))).toBe(36);
@@ -157,6 +183,8 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await page.getByRole('button', { name: 'The Wall IAB 146" 가격 메모 고치기' }).click();
   await page.getByRole('textbox', { name: 'The Wall IAB 146" 가격 메모' }).fill('바뀌면 안 됨');
   await page.keyboard.press('Escape');
+  await expect(page.getByRole('textbox', { name: 'The Wall IAB 146" 가격 메모' })).toHaveCount(0);
+  await expect(stepDlg).toBeVisible();                                                // 고치는 글의 Esc 는 팝업을 닫지 않는다
   await expect.poll(async () => {
     const a = comp(await getDoc(request, fid), '경쟁사 A');
     const m = a.matches[0];
@@ -208,9 +236,9 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await expect(det.getByRole('button', { name: '목록에 추가', exact: true })).toBeVisible();
   {   // 보드 CA2_AI: 「목록에 추가」 h34 · 상세 머리 오른쪽 안쪽 16 + 점선(빼기 단추가 자리를 차지하지 않는다)
     const btn = (await det.getByRole('button', { name: '목록에 추가', exact: true }).boundingBox())!;
-    const box = (await det.boundingBox())!;
+    const panel = (await det.boundingBox())!;
     expect(Math.round(btn.height)).toBe(34);
-    expect(Math.round(box.x + box.width - (btn.x + btn.width))).toBe(17);   // 1.5px 점선은 DPR 1 에서 1px 로 그려진다
+    expect(Math.round(panel.x + panel.width - (btn.x + btn.width))).toBe(17);   // 1.5px 점선은 DPR 1 에서 1px 로 그려진다
   }
   await expect(det.locator('.caf-ours')).toHaveText(['비디오월 VM55B', 'b.IoT']);
   await expect(page.locator('.caf-lhead')).toHaveText('경쟁사 2점선은 AI 후보');      // 후보는 아직 목록에 들지 않는다
@@ -231,10 +259,10 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await expect(page.locator('.caf-row[data-cid="E"]')).toHaveCount(0);
   await expect(page.locator('.caf-row--cand')).toHaveCount(1);                     // 경쟁사 D 는 점선 그대로 → 저장에 안 들어간다
 
-  // CA2_Info — 개요 · 선별 기준(기본 정보 6칸 · 자리표시는 주황 · 선별 기준 · 확인 필요)
+  // CA2_Info — 개요 · 선별 기준(기본 정보 6칸 · 자리표시는 주황 · 선별 기준 · 확인 필요) — 탭은 팝업 안에서 `&tab=`
   await rowA.locator('.caf-card').click();
   await page.getByRole('tab', { name: '개요 · 선별 기준' }).click();
-  await expect(page).toHaveURL(/\?tab=info$/);
+  await expect(page).toHaveURL(/\?step=list&tab=info$/);
   await expect(det.locator('.caf-mcell__k')).toHaveText(['본사', '규모', '임직원', '업종', '주력 사업', 'B2B 오피스']);
   await expect(det.locator('.caf-mcell__v')).toHaveText(['국내', '대기업 · 매출 [위키 값]', '[위키 값]', '전자 · 디스플레이', '상업용 디스플레이 · LED 월', '국내 납품 다수']);
   await expect(det.locator('.caf-mcell__v.caf-ph')).toHaveCount(2);
@@ -262,7 +290,7 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
 
   // CA2_Pc — 장단점 · 주장 포인트(줄 더하기 · 주장 축 고치기)
   await page.getByRole('tab', { name: '장단점 · 주장 포인트' }).click();
-  await expect(page).toHaveURL(/\?tab=pc$/);
+  await expect(page).toHaveURL(/\?step=list&tab=pc$/);
   await expect(det.locator('.caf-pcbox__h')).toHaveText(['경쟁사 장점 · 삼성 대비', '경쟁사 단점 · 삼성 대비']);
   await expect(det.locator('.caf-claims__h')).toHaveText('그래서 우리가 주장할 것');
   const addLine = async (btn: string, box: string, text: string) => {
@@ -296,50 +324,66 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   await page.mouse.move(10, 890);
   await shot(page, 'CA2_Pc-new');
 
-  // 저장 → CA_View(보드 View content=ca) — 같은 경로에서 그 분석이 그대로 보인다(「저장했어요」 같은 완료 안내는 없다) · 허브 flow.json stages.ca
+  // 새로 고침해도 같은 팝업 · 같은 탭(주소 ?step=list&tab=pc)
+  await page.reload();
+  await expect(page.getByRole('tab', { name: '장단점 · 주장 포인트' })).toHaveAttribute('aria-selected', 'true');
+  await expect(stepDlg).toBeVisible();
+
+  // 저장 → 팝업이 닫히고 같은 주소의 최종본(보드 CA_View · 완료 안내 화면 없음) · 허브 flow.json stages.ca
   await page.getByRole('tab', { name: '제안 기준 비교' }).click();
   await expect(page.locator('.wm-flow__summary')).toHaveText('경쟁사 3 · 비교 쌍 6');
   await page.getByRole('button', { name: '저장', exact: true }).click();
-  await expect(page.locator('.cav-card')).toBeVisible({ timeout: 20_000 });
+  await expect(stepDlg).toHaveCount(0, { timeout: 20_000 });
   await expect(page).toHaveURL(new RegExp(`/competitor/flow/${fid}$`));
-  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
   doc = await getDoc(request, fid);
   expect(doc.status).toBe('done');
   expect(doc.ver).toBe(1);
-  await expectView(page, doc, sb.name, 1);
-  // 경쟁사별 5축 = 비교 쌍 판정을 모은 것(보드 규칙: 우위 · 열위 많은 쪽 · 같으면 엇갈림 · 아니면 비슷 / 자료 없음)
-  const vA = page.locator('.cav-row[data-cid="A"]');
-  await expect(vA.locator('.cav-name')).toHaveText('경쟁사 A직접');
-  await expect(vA.locator('.cav-wiki')).toHaveText('전자 · 디스플레이 · 대기업 · 국내');
-  await expect(vA.locator('.cav-space')).toHaveText(`${comp(doc, '경쟁사 A').spaces.join(' · ')} 겹침`);
-  await expect(vA.locator('.cav-dim .cav-chip')).toHaveText(['우위', '열위', '우위', '우위', '우위']);
-  await expect(vA.locator('.cav-dim .cav-n')).toHaveText(['2 / 3쌍', '2 / 3쌍', '2 / 3쌍', '1 / 3쌍', '1 / 3쌍']);
-  await expect(vA.locator('.cav-claim')).toHaveCount(2);                              // 주장은 두 개까지
-  await expect(vA.locator('.cav-axis')).toHaveText(['통합', '사례']);
-  await expect(vA.locator('.cav-claim').first()).toContainText('MagicINFO · SmartThings Pro · b.IoT 하나의 플랫폼으로 공간 7개를 묶음');
-  const vB = page.locator('.cav-row[data-cid="B"]');
-  await expect(vB.locator('.cav-dim .cav-chip')).toHaveText(['비슷', '비슷', '열위', '비슷', '비슷']);
-  await expect(vB.locator('.cav-dim .cav-n')).toHaveText(['1 / 1쌍', '1 / 1쌍', '1 / 1쌍', '1 / 1쌍', '1 / 1쌍']);
-  await expect(vB.locator('.cav-none')).toHaveText('적은 주장이 없어요');
-  const vC = page.locator('.cav-row[data-cid="C"]');
-  await expect(vC.locator('.cav-name .fl-vtag')).toHaveText('AI 웹 탐색');
-  await expect(vC.locator('.cav-wiki')).toHaveText([comp(doc, '경쟁사 C').wiki.industry, comp(doc, '경쟁사 C').wiki.size, comp(doc, '경쟁사 C').wiki.hq].join(' · '));
-  await expect(page.locator('.cav-row[data-cid="D"]')).toHaveCount(0);               // 점선 AI 후보는 보기에 없다
-  // 보드 View content=ca: 본문 1100 · 띠 h44 · 표 머리 h40 · 첫 칸 236 · 5축 82 · 줄 최소 92 · 머리 아이콘 44 · 편집 38 · 후속 작업 없음
-  expect(await w(page.locator('.cav-card'))).toBe(1100);
-  expect(await h(page.locator('.cav-strip'))).toBe(44);
-  expect(await h(page.locator('.cav-head'))).toBe(40);
-  const cols = page.locator('.cav-head > span');
-  expect(await w(cols.first())).toBe(236);
-  for (let i = 1; i <= 5; i++) expect(await w(cols.nth(i))).toBe(82);
-  expect(await w(cols.nth(6))).toBe(1100 - 2 - 36 - 236 - 5 * 82 - 6 * 10);
-  expect(await h(vB)).toBe(92);
-  expect(await h(page.locator('.cav-chip').first())).toBe(22);
-  expect(await h(page.locator('.fl-view__ic'))).toBe(44);
-  expect(await h(page.getByRole('link', { name: '편집' }))).toBe(38);
-  await expect(page.locator('.fl-view__follow')).toHaveCount(0);
-  await page.mouse.move(10, 890);
-  await shot(page, 'CA_View-new');
+  const view = page.locator('.fl-detail');
+  await expect(view).toHaveAttribute('data-status', 'saved');
+  await expect(view.locator('.fl-dver')).toHaveText(`${doc.code} v1`);
+  await expect(view.locator('.fl-dhead__meta')).toHaveText(/^오늘 \d\d:\d\d 저장 · 경쟁사 3 · 비교 쌍 6$/);
+  await expect(view.locator('.fl-dnav__label')).toHaveText('단계별 고치기');
+  await expect(view.locator('.fl-dnav .fl-dstep__t')).toHaveText(['Storyboard', '경쟁사 리스트업']);
+  await expect(view.locator('.fl-dfollow')).toHaveCount(0);                          // 후속 작업 없음
+  await expect(page.getByRole('heading', { name: '경쟁사 분석을 저장했어요' })).toHaveCount(0);
+  await expect(page.locator('.wm-sbbar__chip').first()).toContainText(sb.name);
+  // 비교 기준 줄 — DSS ref · 제품군 칩 · 판정 합계(모든 비교 쌍 × 5축)
+  await expect(view.locator('.cav-bar__from')).toHaveText(`비교 기준 · ${dssRef}`);
+  await expect(view.locator('.cav-cat')).toHaveText(['사이니지', 'LED', '협업 디스플레이', '비디오월', 'IoT · 솔루션']);
+  const vt = doc.counts.verdicts;
+  await expect(view.locator('[data-vtally]')).toHaveText([`우위${vt.oursBetter}`, `비슷${vt.similar}`, `열위${vt.oursWorse}`, `자료 없음${vt.noData}`]);
+  expect(vt.oursBetter + vt.similar + vt.oursWorse + vt.noData).toBe(30);
+  // 표 — 경쟁사(점선 AI 후보 D 는 빠짐) · 직접 / AI 웹 탐색 · 위키 한 줄 · 축마다 비교 쌍 판정을 모은 칩(보드 renderVals) · 주장 2개
+  await expect(view.locator('.cav-head > span')).toHaveText(['경쟁사 · 겹치는 공간', '스펙', '가격', '유관 사례', 'ESG', '브랜드 평판', '우리 주장 포인트']);
+  await expect(view.locator('[data-vcomp] .cav-who__top b')).toHaveText(['경쟁사 A', '경쟁사 B', '경쟁사 C']);
+  const vrow = (n: string) => view.locator(`[data-vcomp="${n}"]`);
+  await expect(vrow('경쟁사 A').locator('.fl-vtag')).toHaveText('직접');
+  await expect(vrow('경쟁사 C').locator('.fl-vtag')).toHaveText('AI 웹 탐색');
+  await expect(vrow('경쟁사 A').locator('.cav-who__wiki')).toHaveText('전자 · 디스플레이 · 대기업 · 국내');
+  await expect(vrow('경쟁사 A').locator('.cav-who__sp')).toHaveText(`${comp(doc, '경쟁사 A').spaces.join(' · ')} 겹침`);
+  await expect(vrow('경쟁사 C').locator('.cav-who__sp')).toHaveText('중앙관제실 겹침');
+  // 보드 CA_View 경쟁사 A · C 와 같은 판정(우위 2 / 3쌍 · 열위 2 / 3쌍 …)
+  await expect(vrow('경쟁사 A').locator('.cav-cell .cav-chip')).toHaveText(['우위', '열위', '우위', '우위', '우위']);
+  await expect(vrow('경쟁사 A').locator('.cav-cell__n')).toHaveText(['2 / 3쌍', '2 / 3쌍', '2 / 3쌍', '1 / 3쌍', '1 / 3쌍']);
+  await expect(vrow('경쟁사 B').locator('.cav-cell .cav-chip')).toHaveText(['비슷', '비슷', '열위', '비슷', '비슷']);
+  await expect(vrow('경쟁사 B').locator('.cav-cell__n')).toHaveText(['1 / 1쌍', '1 / 1쌍', '1 / 1쌍', '1 / 1쌍', '1 / 1쌍']);
+  await expect(vrow('경쟁사 C').locator('.cav-cell .cav-chip')).toHaveText(['우위', '열위', '우위', '우위', '우위']);
+  await expect(vrow('경쟁사 C').locator('.cav-cell__n')).toHaveText(['1 / 2쌍', '1 / 2쌍', '1 / 2쌍', '1 / 2쌍', '1 / 2쌍']);
+  await expect(vrow('경쟁사 A').locator('.cav-cell .cav-chip--ours-worse')).toHaveCSS('background-color', 'rgb(255, 244, 220)');
+  await expect(vrow('경쟁사 A').locator('.cav-claim')).toHaveText(['통합MagicINFO · SmartThings Pro · b.IoT 하나의 플랫폼으로 공간 7개를 묶음', '사례국내 AI 오피스 로비 도입사례로 RQ-01 ‘최초 AI Ready’ 뒷받침']);
+  await expect(vrow('경쟁사 C').locator('.cav-axis')).toHaveText(['ESG', '통합']);
+  await expect(view.locator('.fl-vfoot')).toHaveText('판정은 우리 제품 기준 · 경쟁사마다 비교 쌍의 판정을 모은 것 · 수치와 견적은 원문 · 사내 자료로 확인');
+  // 보드 View(content=ca): 본문 1100 · 비교 기준 줄 h44 · 표 머리 40 + 선 · 첫 칸 236 · 축 82(열 간격 10) · 줄 최소 92 · 판정 칩 22
+  expect(await box(view.locator('.cav-bar'))).toMatchObject({ x: 300, w: 1100, h: 44 });
+  expect(await box(view.locator('.cav-table'))).toMatchObject({ x: 300, w: 1100 });
+  expect(await h(view.locator('.cav-head'))).toBe(41);
+  expect(await w(vrow('경쟁사 A').locator('.cav-who'))).toBe(236);
+  expect(await w(vrow('경쟁사 A').locator('.cav-cell').first())).toBe(82);
+  expect(await box(vrow('경쟁사 A').locator('.cav-cell').first())).toMatchObject({ x: 300 + 1 + 18 + 236 + 10 });
+  expect(await h(vrow('경쟁사 B'))).toBeGreaterThanOrEqual(92);
+  expect(await h(vrow('경쟁사 B').locator('.cav-chip').first())).toBe(22);
+  expect(await h(view.locator('.cav-cat').first())).toBe(26);
+  // 허브 flow.json stages.ca
   const flow = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
   const sca = flow.stages.ca;
   expect(sca.ref).toBe(doc.code);
@@ -357,72 +401,91 @@ test('CA 새 흐름 — 목록 · Gate · 직접 추가 · 비교 판정 · AI �
   const cell = flow.cells.find((c: any) => c.key === 'ca');
   expect(cell).toMatchObject({ state: 'done', ref: doc.code, route: `/competitor/flow/${fid}` });
   expect(flow.cards.ca.facts[0]).toEqual(['경쟁사', '3']);
-  // flow.json — 허브 전체에서 stages.ca 강조
-  await page.getByRole('button', { name: 'flow.json' }).click();
+  await page.mouse.move(10, 890);
+  await shot(page, 'CA_View-new');
+  // flow.json(머리 버튼) — stages.ca 강조
+  await view.getByRole('button', { name: 'flow.json' }).click();
   const dlg = page.getByRole('dialog', { name: /flow\.json/ });
   await expect(dlg).toBeVisible();
   await expect(dlg.getByText('"ca": {').first()).toBeVisible();
-  await expect(dlg.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
+  await expect(dlg.locator('.wm-jsonline--add').first()).toBeVisible();
+  await page.mouse.move(10, 890);
+  await shot(page, 'CA_ViewJson-new');
   await dlg.getByRole('button', { name: '닫기' }).last().click();
 
-  // 편집 → ?edit=1 · 같은 문서(CA2 · 경쟁사 4줄 = 목록 3 + 점선 후보 1)
-  await page.getByRole('link', { name: '편집' }).click();
-  await expect(page).toHaveURL(new RegExp(`/competitor/flow/${fid}\\?edit=1$`));
-  await expect(page.getByRole('heading', { name: '경쟁사를 리스트업하고 우리 제안과 비교해요' })).toBeVisible();
-  await expect(page.locator('.caf-row')).toHaveCount(4);
-  // 목록에서 다시 열어도 같은 보기 · 새로 읽어도 보기
+  // 단계 칩 「경쟁사 리스트업」 → 고치기 팝업(CA2_Edit: CA-nn v1 고치기 · 저장 · v2 · 이전 단계 링크 없음) — 고치지 않고 닫으면 묻지 않는다
+  await view.getByRole('button', { name: /^경쟁사 리스트업 · / }).click();
+  await expect(page).toHaveURL(/step=list/);
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText(`${doc.code} v1 고치기`);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText(`저장하면 ${doc.code} v2 · ${sb.id}에 반영돼요`);
+  await expect(stepDlg.locator('.fl-shead__pos')).toHaveText('단계 2/2');
+  await expect(stepDlg.getByRole('button', { name: '저장 · v2' })).toBeVisible();
+  await expect(stepDlg.locator('.wm-flow__back')).toHaveCount(0);
+  await expect(page.locator('.caf-row')).toHaveCount(4);                              // 저장에 안 든 점선 후보 D 도 문서에는 남아 있다
+  expect(await box(page.getByRole('button', { name: '저장 · v2' }))).toMatchObject({ y: 784, h: 48 });
+  await page.mouse.move(10, 890);
+  await shot(page, 'CA2_Edit-new');
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(stepDlg).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/competitor/flow/${fid}$`));
+  // 고친 뒤 닫으면 저장할지 묻는다 → 「저장 · v2」 → 최종본 v2(경쟁사 C 스펙: 우위 1 · 열위 1 → 엇갈림)
+  await view.getByRole('button', { name: /^경쟁사 리스트업 · / }).click();
+  await page.locator('.caf-row[data-cid="C"] .caf-card').click();
+  await page.getByRole('button', { name: /^비디오월 VM55B 스펙 판정/ }).click();
+  await page.getByRole('menuitemradio', { name: '열위' }).click();
+  await expect(page.getByRole('button', { name: /^비디오월 VM55B 스펙 판정/ })).toHaveText('열위');
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  const ask = page.getByRole('dialog', { name: '고친 내용을 저장할까요?' });
+  await expect(ask).toBeVisible();
+  await expect(ask).toContainText(`저장하면 ${doc.code} v2로 연결된 Storyboard에 반영돼요.`);
+  await ask.getByRole('button', { name: '계속 고치기' }).click();
+  await expect(ask).toHaveCount(0);
+  await expect(stepDlg).toBeVisible();
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  await ask.getByRole('button', { name: '저장 · v2' }).click();
+  await expect(stepDlg).toHaveCount(0, { timeout: 20_000 });
+  await expect(view.locator('.fl-dver')).toHaveText(`${doc.code} v2`);
+  await expect(vrow('경쟁사 C').locator('.cav-cell').first().locator('.cav-chip')).toHaveText('엇갈림');
+  await expect(vrow('경쟁사 C').locator('.cav-cell__n').first()).toHaveText('우위 1 · 열위 1');
+  expect((await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json()).stages.ca.ver).toBe(2);
+  // 목록 — 저장된 줄(코드 v2 · Storyboard 칩 · 열기 = 최종본)
   await page.goto('/competitor');
-  const row = page.locator('.fl-card').filter({ hasText: `${doc.code} v1` });
+  const row = page.locator('.fl-card').filter({ hasText: `${doc.code} v2` });
   await expect(row).toBeVisible();
   await expect(row.getByRole('button', { name: sb.name })).toBeVisible();
   await expect(row.locator('.fl-cardtitle')).toHaveAttribute('href', `/competitor/flow/${fid}`);
-  // 목록 카드 → 보기(편집 화면 아님)
+  // 저장된 것을 열면 최종본만(팝업 없음)
   await row.locator('.fl-cardtitle').click();
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'saved');
   await expect(page).toHaveURL(new RegExp(`/competitor/flow/${fid}$`));
-  await expect(page.locator('.cav-row')).toHaveCount(3);
-  await expect(page.locator('.caf-row')).toHaveCount(0);
-  await page.reload();
-  await expectView(page, doc, sb.name, 1);
-
-  // 편집 화면(탭 · ?edit=1)에서 다시 저장 → ?edit · ?tab 를 떼고 보기(v2) · 완료 안내 없음
-  await page.goto(`/competitor/flow/${fid}?edit=1&tab=pc`);
-  await expect(page.getByRole('tab', { name: '장단점 · 주장 포인트' })).toHaveAttribute('aria-selected', 'true');
-  await page.getByRole('button', { name: '저장', exact: true }).click();
-  await expect(page).toHaveURL(new RegExp(`/competitor/flow/${fid}$`), { timeout: 20_000 });
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${doc.code} v2`);
-  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
+  await expect(page.locator('.fl-stepdlg')).toHaveCount(0);
 });
 
-/** CA_View 머리 · 띠 — 문서 값 그대로(제목 · 참조 v · 메타 · 비교 기준 · 판정 합계) */
-async function expectView(page: Page, doc: any, sbName: string, ver: number) {
-  await expect(page.getByRole('heading', { name: doc.title, level: 1 })).toBeVisible({ timeout: 20_000 });
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${doc.code} v${ver}`);
-  await expect(page.locator('.fl-view__meta')).toHaveText(/^(오늘 \d\d:\d\d|어제|\d+\/\d+) 저장 · 경쟁사 3 · 비교 쌍 6$/);
-  await expect(page.locator('.wm-sbbar__chip').first()).toContainText(sbName);
-  await expect(page.locator('.cav-from')).toHaveText(`비교 기준 · ${doc.basis.from}`);
-  await expect(page.locator('.cav-cat')).toHaveText(['사이니지', 'LED', '협업 디스플레이', '비디오월', 'IoT · 솔루션']);
-  const v = doc.counts.verdicts;
-  await expect(page.locator('.cav-tally')).toHaveText([`우위${v.oursBetter}`, `비슷${v.similar}`, `열위${v.oursWorse}`, `자료 없음${v.noData}`]);
-  await expect(page.locator('.cav-head > span')).toHaveText(['경쟁사 · 겹치는 공간', '스펙', '가격', '유관 사례', 'ESG', '브랜드 평판', '우리 주장 포인트']);
-  await expect(page.locator('.cav-row')).toHaveCount(3);
-  await expect(page.locator('.fl-vnote')).toHaveText('판정은 우리 제품 기준 · 경쟁사마다 비교 쌍의 판정을 모은 것 · 수치와 견적은 원문 · 사내 자료로 확인');
-}
-
-test('CA 새 흐름 — Storyboard 「만들기」(?sb=&auto=1) · 1920 폭 · AI 후보 없음 · 이전 흐름 경로', async ({ page, request }) => {
+test('CA 새 흐름 — Storyboard 「만들기」(?sb=&auto=1) → ② 팝업 · 1920 폭 · AI 후보 없음 · 작성 중 최종본 · 이전 흐름 경로', async ({ page, request }) => {
   budget(120_000);
   const down = await backendDown(request);
   test.skip(!!down, down ?? '');
   await page.setViewportSize({ width: 1440, height: 900 });
   const sb = await makeStoryboard(request, { dss: true, name: `판교 스타트업 단지 ${tag()}` });
 
-  // Storyboard 화면의 「만들기」 → Gate 를 건너뛰고 바로 만든다(CF-07)
+  // ① 팝업을 고르기 전에 닫으면 목록으로
+  await page.goto('/competitor/new');
+  await expect(page.getByRole('dialog', { name: '새 경쟁사 분석 · Storyboard' })).toBeVisible();
+  await page.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(page).toHaveURL(/\/competitor$/);
+
+  // Storyboard 화면의 「만들기」 → Gate 를 건너뛰고 바로 만든다(CF-07) — 빈 최종본 위 ② 팝업
   await page.goto(`/competitor/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(/\/competitor\/flow\/cflow_[0-9A-Za-z]+$/, { timeout: 20_000 });
+  await expect(page).toHaveURL(/\/competitor\/flow\/cflow_[0-9A-Za-z]+\?step=list$/, { timeout: 20_000 });
+  const fid = page.url().split('/').pop()!.split('?')[0];
+  await expect(page.locator('.fl-shead__sb')).toContainText(sb.name);
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'new');
   await expect(page.locator('.caf-cat')).toHaveText(['사이니지 3', 'LED 1', '협업 디스플레이 1', '키오스크 1', 'IoT · 솔루션 2']);
   await expect(page.getByText('경쟁사를 고르거나 추가해요')).toBeVisible();
 
-  // 1920 폭에서도 본문 열은 1180 · 고정 칸 290 (UI-W-01 · UI-W-04)
+  // 1920 × 1080: 팝업은 가운데 1180 × 800 그대로 · 본문 열 1180 · 고정 칸 290 (UI-W-01 · UI-W-04)
   await page.setViewportSize({ width: 1920, height: 1080 });
+  expect(await box(page.locator('.fl-stepdlg'))).toEqual({ x: 370, y: 140, w: 1180, h: 800 });
   expect(await widths(page)).toEqual({ flow: 1180, left: 290, detail: 796 });
   await page.setViewportSize({ width: 1440, height: 900 });
 
@@ -456,6 +519,35 @@ test('CA 새 흐름 — Storyboard 「만들기」(?sb=&auto=1) · 1920 폭 · A
   await expect(confirmDlg).toBeVisible();
   await confirmDlg.getByRole('button', { name: '빼기' }).click();
   await expect(page.locator('.caf-row')).toHaveCount(0);
+  await expect(page.locator('.fl-stepdlg')).toBeVisible();                           // 확인창을 닫아도 팝업은 그대로
+
+  // 팝업을 닫으면 작성 중 최종본(보드 CA_Draft: 작성 중 1/2 · ② 자리표시에 「이어서 · 경쟁사 리스트업」) — 탭 주소도 함께 빠진다
+  await page.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(page.locator('.fl-stepdlg')).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/competitor/flow/${fid}$`));
+  const draft = page.locator('.fl-detail');
+  await expect(draft).toHaveAttribute('data-status', 'draft');
+  await expect(draft.locator('.fl-dver')).toHaveText('작성 중 1/2');
+  await expect(draft.locator('.fl-dhead__meta')).toHaveText(`작성 중 · 2단계 중 1단계 마침 · 저장하면 ${sb.id}에 연결돼요`);
+  await expect(draft.locator('.fl-dnav__label')).toHaveText('단계 1/2');
+  const slot = draft.locator('[data-slot="2"]');
+  await expect(slot).toContainText('경쟁사 리스트업 단계경쟁사 · 제안 기준 비교 판정 · 주장 포인트 — 이 단계를 마치면 여기에 채워져요');
+  await expect(slot).toHaveClass(/fl-slot--next/);
+  expect(await box(slot)).toMatchObject({ x: 300, w: 1100 });
+  expect(await h(slot.getByRole('button', { name: '이어서 · 경쟁사 리스트업' }))).toBe(38);
+  await page.mouse.move(10, 890);
+  await shot(page, 'CA_Draft-new');
+  await slot.getByRole('button', { name: '이어서 · 경쟁사 리스트업' }).click();
+  await expect(page).toHaveURL(/\?step=list$/);
+  await expect(page.getByRole('heading', { name: '경쟁사를 리스트업하고 우리 제안과 비교해요' })).toBeVisible();
+  // 작성 중을 주소로 열면(목록 · 작업 내역 · 새로 고침) ② 팝업이 열린 채로
+  await page.goto(`/competitor/flow/${fid}`);
+  await expect(page).toHaveURL(/\?step=list$/);
+  await expect(page.locator('.fl-stepdlg')).toBeVisible();
+  // Esc 로 닫아도 작성 중 최종본
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.fl-stepdlg')).toHaveCount(0);
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'draft');
 
   // 이전 흐름: 정의서 진입(?input=requirements)은 이전 넣기 화면으로 · 이전 목록은 /competitor/legacy
   await page.goto('/competitor/new?input=requirements');

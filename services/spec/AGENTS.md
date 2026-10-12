@@ -30,6 +30,13 @@ make contracts SERVICE=spec    # contracts/spec.json 갱신 + 깨지는 변경 �
 
 ## 현재 상태
 
+### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
+상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/spec/new` 빈 최종본 + ① Gate 팝업 · `/spec/flow/:id` 최종본(SP_View · `SpView.tsx` · XLSX 내려받기) · `?step=sheet` 팝업(`SheetStep.tsx`).
+완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 ### 새 흐름(2026-10-08 · 보드 webapp1 SP0 · SP1 · SP2 · SP_View(2026-10-12) · docs/scenarios/11-content-flow.md §6 `sp`)
 - API `/v1/spec-flows*`(스키마 접두어 `SF*`, 본체 `spec_flow.py` · `routes/flows.py`, 저장 컬렉션 `spec_flows` sfl_ …):
   만들기 `POST {sb_id}`(get_flow → stages.dss 제품 = 행, 솔루션은 행 아님 · 없으면 404 / DSS 없으면 422 `PREREQUISITE_MISSING`) · 고치기 PATCH(형식 · 항목 8칩 · 표기, expected_version 409) ·

@@ -30,6 +30,13 @@ make contracts SERVICE=mi    # contracts/mi.json 갱신 + 깨지는 변경 검�
 
 ## 현재 상태 (2026-10-12)
 
+### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
+상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/mi/new` 빈 최종본 + ① Gate 팝업 · `/mi/flow/:id` 최종본(MI_View · `MiView.tsx`) · `?step=search|refine` 팝업.
+완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 ### 새 흐름(2026-10-08 · 웹앱 ① v58 보드 MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · 2026-10-12 v60 View content=mi = MI_View)
 수용 기준 `docs/scenarios/11-content-flow.md` §1(CF-08 의 MI 예외: Storyboard 를 고르면 AI 분석 로딩이 먼저) · §4 폭 · §6 stage 계약(`stages.mi`).
 - API `/v1/mi-flows*`(`api_flow.py` · 본체 `miflow.py` · 잡 `graphs/flow.py` = `mi.flow_analyze` · `mi.flow_search`). 단계 analyzing → search → searching → refine → done.

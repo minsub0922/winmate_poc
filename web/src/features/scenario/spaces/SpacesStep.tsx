@@ -1,28 +1,23 @@
 /**
- * 공간 시나리오 · 공간 → 시나리오 → 장면(보드 webapp1 SC2 · SC2_AI · SC2_Pick · SC2_Empty · View content=sc) — `/scenario/spaces/:id`
- * 위: 연결된 Storyboard 바(허브 FlowBar). 공간(196) | [공간 헤더 · 공간 제품 · 솔루션(하나 이상)] + [시나리오 목록(236) | 시나리오 편집].
- * 공간 · 공간 제품은 Gate 에서 고른 Storyboard 의 DSS 로 미리 채워진다. 입력 폼은 고정하지 않는다(단계 수 · 항목 자유).
+ * 공간 시나리오 ② 공간 · 시나리오 단계(보드 webapp1 v62 SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC2_Edit) — 최종본 위 단계 팝업(StepModal) 본문.
+ * 공간(196) | [공간 헤더 · 공간 제품 · 솔루션(하나 이상)] + [시나리오 목록(236) | 시나리오 편집]. 팝업 본문 1180 × 728(보드 section 그대로).
+ * 공간 · 공간 제품은 사전 작업 Storyboard 의 DSS 로 미리 채워진다. 입력 폼은 고정하지 않는다(단계 수 · 항목 자유).
  * 고칠 때마다 자동 저장(PUT, 낙관적 잠금 · 600ms). 제품 · 솔루션이 빈 공간이 있으면 저장 버튼이 막힌다(보드 canSave).
- * 저장한 묶음은 `?edit` 없이 열면 그 공간 시나리오 보기(SC_View · ScView.tsx), `?edit=1` 이면 이 편집 화면. 한 번도 저장 안 한 초안은 늘 편집 화면.
- * 저장 → 허브 stages.sc · 요약본 반영 → 문서 캐시 갱신 · 목록 · 허브 무효화 → `?edit` 를 떼고 보기로(완료 안내 · 토스트 없음).
+ * 바닥 「저장」(새로 만들기) · 「저장 · vN+1」(고치기) → 허브 stages.sc · 요약본 반영 → onSaved(팝업이 닫히고 최종본). 이전 단계 링크는 없다(보드 FT hasBack: false).
  * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 칸 폭은 그대로.
  * 다시 가져온 뒤 새로 놓인 제품 · 공간은 「새로」, 시나리오가 써서 남긴 빠진 제품 · 공간은 「DSS에서 빠짐」(주황).
+ * 부모(ScDetailPage)는 ctl 로 밀린 자동 저장을 마저 보내고(flush) · 닫기 물음의 「저장 · vN」을 이 화면의 저장(save — 막는 시나리오로 데려감)으로 부른다.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { FlowBar, useEditMode, useFlowInvalidate, useShellPage } from '@/shell';
-import { AiBar, AiButton, ErrorState, FlowFooter, FlowPanel, FlowScreen, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast, type PickGroup, type PickItem } from '@/ui';
+import { CONTENT, useFlowInvalidate, useShellPage } from '@/shell';
+import { AiBar, AiButton, FlowFooter, FlowPanel, FlowScreen, ProductPickerDialog, cx, toast, useInStepPopup, type PickGroup, type PickItem } from '@/ui';
 import {
-  acceptCandidate, dropCandidate, dssChangeText, finishSpaceSet, getSpaceSet, putSpaceSet, resyncSpaceSet, resyncToast, ssKey, ssListKey, suggestScenarios, useSpaceSet,
-  type SSCandidate, type SSDoc, type SSScenario, type SSSpace,
+  acceptCandidate, dropCandidate, dssChangeText, finishSpaceSet, putSpaceSet, resyncSpaceSet, resyncToast, ssKey, ssListKey, suggestScenarios,
+  type SSCandidate, type SSDoc, type SSScenario, type SSSpace, type SSStageOut,
 } from './api';
-import { ScView } from './ScView';
 import './spaces.css';
 
-const SECTION = '공간 시나리오 생성';
-/** 보드 SC2 스텝바 */
-const STEPS = ['Storyboard', '공간 · 시나리오'];
 const FIELD_PRESETS = ['시간대', '기대 효과', '연결 요구', '페인 포인트', '직접 이름 짓기'];
 const PRESET_KEYS = FIELD_PRESETS.slice(0, 4);
 let seq = 0;
@@ -90,8 +85,21 @@ function firstScenarioIssue(spaces: SSSpace[]) {
   return null;
 }
 
-function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: () => Promise<void> }) {
+/** 부모(단계 팝업)가 부르는 손잡이 — 밀린 자동 저장 보내기 · 저장(막는 시나리오가 있으면 그리로 데려가고 false) */
+export interface SpacesCtl { flush: () => Promise<void>; save: () => Promise<boolean> }
+
+export function SpacesStep({ doc, saveLabel, onSaved, ctl }: {
+  doc: SSDoc;
+  /** 바닥 주 버튼 — 새로 만들기 「저장」 · 고치기 「저장 · vN+1」 */
+  saveLabel: string;
+  onSaved: (s: SSStageOut) => void;
+  ctl?: { current: SpacesCtl | null };
+}) {
   const qc = useQueryClient();
+  const inPop = useInStepPopup();
+  // 팝업 안이면 셸은 「현재 작업」 맥락만 얹는다(상단바 제목 · 스텝바는 최종본 페이지 것)
+  useShellPage({ section: CONTENT.sc.label, title: doc.title || CONTENT.sc.short, hasTask: true });
+  const invalFlow = useFlowInvalidate();
   const [spaces, setSpaces] = useState<SSSpace[]>(doc.spaces);
   const [spId, setSpId] = useState(doc.spaces[0]?.id ?? '');
   const [cur, setCur] = useState<Record<string, string | null>>({});
@@ -192,28 +200,38 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: () => Promise<voi
       toast(resyncToast(d.last_resync));
     } catch (e) { toast((e as Error).message || 'DSS를 다시 가져오지 못했어요.'); } finally { setSyncing(false); }
   };
-  const save = async () => {
+  const save = async (): Promise<boolean> => {
     const bad = firstScenarioIssue(spaces);
     if (bad) {
       setSpId(bad.sp.id);
       setCur((c) => ({ ...c, [bad.sp.id]: bad.sc.id }));
       toast(`${bad.sp.name} · ${bad.sc.title || '새 시나리오'}에 쓰는 제품 · 솔루션을 하나 이상 골라 주세요.`);
-      return;
+      return false;
     }
+    if (spaces.some((s) => !s.products.length)) { toast('공간마다 제품 · 솔루션이 하나 이상 있어야 해요'); return false; }
     setSaving(true);
     try {
       await flush();
-      await finishSpaceSet(doc.id);
-      await onFinished();
-    } catch (e) { toast((e as Error).message || '저장하지 못했어요.'); } finally { setSaving(false); }
+      const out = await finishSpaceSet(doc.id);
+      invalFlow();
+      void qc.invalidateQueries({ queryKey: ssListKey });
+      void qc.invalidateQueries({ queryKey: ssKey(doc.id) });
+      onSaved(out);
+      return true;
+    } catch (e) { toast((e as Error).message || '저장하지 못했어요.'); return false; } finally { setSaving(false); }
   };
+  const saveRef = useRef(save);
+  saveRef.current = save;
+  useEffect(() => {
+    if (!ctl) return;
+    ctl.current = { flush, save: () => saveRef.current() };
+    return () => { ctl.current = null; };
+  }, [ctl, flush]);
 
   const fieldsHave = sel ? sel.fields.map((f) => f.k) : [];
   const selProds = sel ? sel.products.filter((p) => spNames.includes(p)) : [];
   return (
-    <FlowScreen pad="16px 32px" gap={12} className="ss-screen"
-      bar={doc.sb_id ? <FlowBar sbIds={[doc.sb_id]} current="sc" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" />
-        : <LinkedStoryboardBar chips={[]} emptyText="연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요" />}>
+    <FlowScreen pad="16px 32px" gap={12} className="ss-screen">
       <div className="ss-head">
         <h1 className="ss-h1">공간마다 시나리오를 여러 개 써요</h1>
         <span className="ss-hint">공간 → 시나리오 → 장면 · 공간과 시나리오마다 제품 · 솔루션을 골라요</span>
@@ -353,45 +371,12 @@ function Editor({ doc, onFinished }: { doc: SSDoc; onFinished: () => Promise<voi
           </div>
         )}
       </div>
-      <FlowFooter back={doc.sb_id ? { to: `/storyboard/flow/${doc.sb_id}`, label: 'Storyboard' } : { to: '/scenario', label: '목록' }}
+      <FlowFooter back={inPop ? undefined : { to: '/scenario', label: '목록' }}
         summary={`공간 ${spaces.length} · 시나리오 ${totalSc}${noProd ? ` · 제품 · 솔루션 없는 공간 ${noProd}` : ''}`} summaryTone={noProd ? 'warn' : undefined}
-        primary={{ label: '저장', onClick: save, busy: saving, disabled: !!noProd }} />
+        primary={{ label: saveLabel, onClick: () => void save(), busy: saving, disabled: !!noProd }} />
       {sp && <ProductPickerDialog open={pick} onClose={() => setPick(false)} title={`${sp.name} · 제품 · 솔루션 고르기`} min={1}
         sub="공간에 쓸 제품 · 솔루션을 고르세요. 하나 이상 있어야 하고, 고른 것 중에서 시나리오마다 다시 골라요."
         groups={pickGroups(doc, spaces, sp)} picked={spNames} onToggle={togglePick} />}
     </FlowScreen>
   );
-}
-
-/** 한 번이라도 저장한 묶음(허브 stages.sc 에 있음) — 보여 줄 완성본이 있다 */
-const isSaved = (d: SSDoc | undefined) => !!d && (d.status === 'done' || d.ver > 0);
-
-function Body({ id }: { id: string }) {
-  const qc = useQueryClient();
-  const inval = useFlowInvalidate();
-  const { editing, toView } = useEditMode();
-  const q = useSpaceSet(id);
-  const d = q.data;
-  const view = isSaved(d) && !editing;
-  // 보드 SC2 머리 「새 공간 시나리오」 · 저장한 뒤(보기 · 편집)는 코드(View 「SC-01」)
-  const title = d && d.ver ? (d.code ?? d.title) : '새 공간 시나리오';
-  useShellPage(view ? { section: SECTION, title, hasTask: false } : { section: SECTION, title, hasTask: true, stepper: { steps: STEPS, current: 2 } });
-  if (q.isError) return <div className="wm-page"><ErrorState message="공간 시나리오를 불러오지 못했어요 · 지워졌거나 주소가 바뀌었을 수 있어요" onRetry={() => q.refetch()} /></div>;
-  if (!d) return <div className="wm-page"><Skeleton h={480} r={14} /></div>;
-  if (view) return <ScView doc={d} />;
-  return (
-    <Editor key={`${d.id}:${d.ver}`} doc={d}
-      onFinished={async () => {
-        // 저장하면 그 공간 시나리오 보기로(같은 주소 · ?edit 만 뗀다) — :finish 는 문서를 돌려주지 않아 저장한 문서를 다시 읽어 캐시에 둔다
-        qc.setQueryData(ssKey(id), await getSpaceSet(id));
-        void qc.invalidateQueries({ queryKey: ssListKey });
-        inval();
-        toView();
-      }} />
-  );
-}
-
-export function SpacesPage() {
-  const { id = '' } = useParams();
-  return <Body key={id} id={id} />;
 }

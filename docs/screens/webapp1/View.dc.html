@@ -16,14 +16,16 @@ button{font-family:inherit;cursor:pointer}
 .v-btn:hover{border-color:#1428a0}
 .v-next:hover{border-color:#1428a0;box-shadow:0 6px 18px rgba(20,40,160,0.10)}
 .v-space:hover{background:#f7f8fd}
-.v-btn:focus-visible,.v-next:focus-visible,.v-space:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+.v-step:hover{background:#f3f5fd}
+.v-ph:hover{background:#0f1f80}
+.v-btn:focus-visible,.v-next:focus-visible,.v-space:focus-visible,.v-step:focus-visible,.v-ph:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
   <dc-import name="Sidebar" group="{{group}}" current="{{sideCur}}" hint-size="260px,900px"></dc-import>
   <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
     <dc-import name="TopBar" section="{{label}}" title="{{refId}}" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="SBBar" ids="{{sbIds}}" cur="SB-01" hi="{{hi}}" note="" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+    <dc-import name="SBBar" ids="{{sbIds}}" cur="{{sbCur}}" hi="{{hi}}" note="{{sbNote}}" empty-text="{{sbEmpty}}" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
     <section style="width: 1180px; height: 784px; box-sizing: border-box; padding: 22px 40px 24px 40px; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
 
       <!-- 머리: 콘텐츠 이름 · 버전 · 저장 시각 · 수 -->
@@ -32,22 +34,45 @@ button{font-family:inherit;cursor:pointer}
         <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
           <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
             <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{title}}</h1>
-            <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{refVer}}</span>
+            <span style="{{refVerStyle}}">{{refVer}}</span>
           </span>
           <span style="font-size: 13px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{meta}}</span>
         </span>
-        <sc-if value="{{isSp}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{spSaved}}" hint-placeholder-val="{{false}}">
           <button class="v-btn" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11 M7 10l5 5 5-5 M5 20h14"/></svg>XLSX 내려받기</button>
         </sc-if>
-        <button class="v-btn" onClick="{{openJson}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; color: #1428a0">{ }</span>flow.json</button>
-        <a href="{{editHref}}" class="v-btn" style="height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z M13.5 6.5l4 4"/></svg>편집</a>
+        <nav aria-label="단계" style="height: 38px; box-sizing: border-box; padding: 0 4px 0 10px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 2px; flex-shrink: 0">
+          <span style="font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap; margin-right: 4px">{{stepsLabel}}</span>
+          <sc-for list="{{steps}}" as="t" hint-placeholder-count="3">
+            <sc-if value="{{t.gap}}" hint-placeholder-val="{{true}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b8bec8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg></sc-if>
+            <sc-if value="{{t.btn}}" hint-placeholder-val="{{false}}">
+              <button class="v-step" onClick="{{t.open}}" title="{{t.tip}}" style="{{t.wrap}}"><span style="{{t.circle}}"><sc-if value="{{t.check}}" hint-placeholder-val="{{true}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{t.num}}" hint-placeholder-val="{{false}}">{{t.n}}</sc-if></span><span style="{{t.label}}">{{t.text}}</span></button>
+            </sc-if>
+            <sc-if value="{{t.link}}" hint-placeholder-val="{{true}}">
+              <a class="v-step" href="{{t.href}}" title="{{t.tip}}" style="{{t.wrap}}"><span style="{{t.circle}}"><sc-if value="{{t.check}}" hint-placeholder-val="{{true}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{t.num}}" hint-placeholder-val="{{false}}">{{t.n}}</sc-if></span><span style="{{t.label}}">{{t.text}}</span><sc-if value="{{t.pen}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></sc-if></a>
+            </sc-if>
+            <sc-if value="{{t.still}}" hint-placeholder-val="{{false}}">
+              <span title="{{t.tip}}" style="{{t.wrap}}"><span style="{{t.circle}}">{{t.n}}</span><span style="{{t.label}}">{{t.text}}</span></span>
+            </sc-if>
+          </sc-for>
+        </nav>
+        <sc-if value="{{saved}}" hint-placeholder-val="{{true}}">
+          <button class="v-btn" onClick="{{openJson}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; color: #1428a0">{ }</span>flow.json</button>
+        </sc-if>
       </div>
 
       <!-- 본문: 콘텐츠 그 자체 -->
       <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column">
 
         <!-- 고객 요구사항 -->
-        <sc-if value="{{isRq}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{rqPh}}" hint-placeholder-val="{{false}}">
+          <div style="{{phRq.wrap}}">
+            <span style="{{phRq.circle}}">{{phRq.n}}</span>
+            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phRq.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phRq.text}}</span></span>
+            <sc-if value="{{phRq.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phRq.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phRq.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{rqShow}}" hint-placeholder-val="{{false}}">
           <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px">
             <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 6px 18px; display: flex; flex-direction: column; overflow: hidden">
               <sc-for list="{{rq.facts}}" as="f" hint-placeholder-count="5">
@@ -82,10 +107,18 @@ button{font-family:inherit;cursor:pointer}
               <sc-for list="{{ds.facts}}" as="f" hint-placeholder-count="4">
                 <div style="box-sizing: border-box; height: 60px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; flex-direction: column; justify-content: center; gap: 3px; min-width: 0">
                   <span style="font-size: 11.5px; font-weight: 600; color: #596170">{{f.k}}</span>
-                  <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 15px; font-weight: 700; white-space: nowrap">{{f.v}}</span><sc-if value="{{f.hasTag}}" hint-placeholder-val="{{false}}"><span style="{{f.tagStyle}}">{{f.tag}}</span></sc-if><sc-if value="{{f.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{f.note}}</span></sc-if></span>
+                  <span style="display: flex; align-items: center; gap: 8px"><span style="{{f.vStyle}}">{{f.v}}</span><sc-if value="{{f.hasTag}}" hint-placeholder-val="{{false}}"><span style="{{f.tagStyle}}">{{f.tag}}</span></sc-if><sc-if value="{{f.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{f.note}}</span></sc-if></span>
                 </div>
               </sc-for>
             </div>
+            <sc-if value="{{ds.spPh}}" hint-placeholder-val="{{false}}">
+              <div style="{{ds.phSp.wrap}}">
+                <span style="{{ds.phSp.circle}}">{{ds.phSp.n}}</span>
+                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{ds.phSp.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{ds.phSp.text}}</span></span>
+                <sc-if value="{{ds.phSp.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{ds.phSp.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{ds.phSp.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ds.spOn}}" hint-placeholder-val="{{true}}">
             <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; flex-shrink: 0">
               <sc-for list="{{ds.spaces}}" as="sp" hint-placeholder-count="7">
                 <div style="box-sizing: border-box; padding: 12px 14px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; flex-direction: column; gap: 8px; min-width: 0">
@@ -103,6 +136,15 @@ button{font-family:inherit;cursor:pointer}
                 </div>
               </sc-for>
             </div>
+            </sc-if>
+            <sc-if value="{{ds.solPh}}" hint-placeholder-val="{{false}}">
+              <div style="{{ds.phSol.wrap}}">
+                <span style="{{ds.phSol.circle}}">{{ds.phSol.n}}</span>
+                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{ds.phSol.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{ds.phSol.text}}</span></span>
+                <sc-if value="{{ds.phSol.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{ds.phSol.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{ds.phSol.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ds.solOn}}" hint-placeholder-val="{{true}}">
             <div style="box-sizing: border-box; padding: 12px 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
               <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">솔루션 {{ds.nSol}}</span>
               <span style="display: flex; flex-wrap: wrap; gap: 8px">
@@ -111,12 +153,21 @@ button{font-family:inherit;cursor:pointer}
                 </sc-for>
               </span>
             </div>
+            </sc-if>
           </div>
         </sc-if>
 
         <!-- Market Intelligence -->
         <sc-if value="{{isMi}}" hint-placeholder-val="{{false}}">
           <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
+            <sc-if value="{{mi.qPh}}" hint-placeholder-val="{{false}}">
+              <div style="{{mi.phQ.wrap}}">
+                <span style="{{mi.phQ.circle}}">{{mi.phQ.n}}</span>
+                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{mi.phQ.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{mi.phQ.text}}</span></span>
+                <sc-if value="{{mi.phQ.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{mi.phQ.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{mi.phQ.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{mi.qOn}}" hint-placeholder-val="{{true}}">
             <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 10px; flex-shrink: 0">
               <span style="font-size: 12.5px; font-weight: 700; color: #3d4452">검색 조건</span>
               <sc-for list="{{mi.filters}}" as="c" hint-placeholder-count="4"><span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{c}}</span></sc-for>
@@ -124,6 +175,15 @@ button{font-family:inherit;cursor:pointer}
               <span style="font-size: 12.5px; font-weight: 700; color: #3d4452">검색어</span>
               <span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{mi.queryLine}}</span>
             </div>
+            </sc-if>
+            <sc-if value="{{mi.colPh}}" hint-placeholder-val="{{false}}">
+              <div style="{{mi.phCol.wrap}}">
+                <span style="{{mi.phCol.circle}}">{{mi.phCol.n}}</span>
+                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{mi.phCol.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{mi.phCol.text}}</span></span>
+                <sc-if value="{{mi.phCol.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{mi.phCol.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{mi.phCol.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{mi.colOn}}" hint-placeholder-val="{{true}}">
             <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
               <sc-for list="{{mi.cols}}" as="c" hint-placeholder-count="3">
                 <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
@@ -145,11 +205,19 @@ button{font-family:inherit;cursor:pointer}
               </sc-for>
             </div>
             <span style="font-size: 11.5px; color: #8a91a0; flex-shrink: 0">문장은 원문을 줄여 쓴 것이에요 · 수치는 원문에서 확인해요</span>
+            </sc-if>
           </div>
         </sc-if>
 
         <!-- 경쟁사 분석 -->
-        <sc-if value="{{isCa}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{caPh}}" hint-placeholder-val="{{false}}">
+          <div style="{{phCa.wrap}}">
+            <span style="{{phCa.circle}}">{{phCa.n}}</span>
+            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phCa.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phCa.text}}</span></span>
+            <sc-if value="{{phCa.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phCa.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phCa.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{caShow}}" hint-placeholder-val="{{false}}">
           <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
             <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
               <span style="font-size: 12.5px; font-weight: 700; color: #3d4452; white-space: nowrap">비교 기준 · {{ca.from}}</span>
@@ -188,7 +256,14 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <!-- Value Proposition -->
-        <sc-if value="{{isVp}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{vpPh}}" hint-placeholder-val="{{false}}">
+          <div style="{{phVp.wrap}}">
+            <span style="{{phVp.circle}}">{{phVp.n}}</span>
+            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phVp.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phVp.text}}</span></span>
+            <sc-if value="{{phVp.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phVp.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phVp.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{vpShow}}" hint-placeholder-val="{{false}}">
           <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
             <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0; font-size: 12.5px; color: #596170">
               <span style="font-weight: 700; color: #3d4452; white-space: nowrap">{{vp.fromLine}}</span>
@@ -226,7 +301,14 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <!-- Spec 시트 -->
-        <sc-if value="{{isSp}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{spPh}}" hint-placeholder-val="{{false}}">
+          <div style="{{phSp.wrap}}">
+            <span style="{{phSp.circle}}">{{phSp.n}}</span>
+            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phSp.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phSp.text}}</span></span>
+            <sc-if value="{{phSp.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phSp.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phSp.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{spShow}}" hint-placeholder-val="{{false}}">
           <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
             <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
               <sc-for list="{{sp.opts}}" as="o" hint-placeholder-count="3"><span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #596170; white-space: nowrap; margin-right: 10px"><b style="font-weight: 700; color: #3d4452">{{o.k}}</b>{{o.v}}</span></sc-for>
@@ -243,7 +325,14 @@ button{font-family:inherit;cursor:pointer}
         </sc-if>
 
         <!-- 공간 시나리오 -->
-        <sc-if value="{{isSc}}" hint-placeholder-val="{{false}}">
+        <sc-if value="{{scPh}}" hint-placeholder-val="{{false}}">
+          <div style="{{phSc.wrap}}">
+            <span style="{{phSc.circle}}">{{phSc.n}}</span>
+            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phSc.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phSc.text}}</span></span>
+            <sc-if value="{{phSc.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phSc.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phSc.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
+          </div>
+        </sc-if>
+        <sc-if value="{{scShow}}" hint-placeholder-val="{{false}}">
           <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 14px">
             <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto">
               <span style="font-size: 12px; font-weight: 700; color: #596170; padding: 6px 10px 6px 10px">공간 · {{sc.from}}</span>
@@ -320,10 +409,29 @@ button{font-family:inherit;cursor:pointer}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"dss"},"showJson":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"dss"},"status":{"editor":"enum","options":["saved","new","draft"],"default":"saved"},"done":{"editor":"int","default":1,"min":0,"max":3},"showJson":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const key = this.props.content ?? 'dss';
+    // ---- 상태: saved(저장됨) · new(새로 만드는 중 — 단계 팝업 뒤) · draft(작성 중으로 닫음) ----
+    const st = ['saved', 'new', 'draft'].indexOf(this.props.status) >= 0 ? this.props.status : 'saved';
+    const saved = st === 'saved';
+    // 단계: [이름, 새로 만들 때 팝업 보드, 고칠 때 팝업 보드(Storyboard 는 요약 팝업)]
+    const STEPS = {
+      rq: [['요구사항 입력', 'RQ1.dc.html', 'RQ1_Edit.dc.html']],
+      dss: [['Storyboard', 'DS1.dc.html', ''], ['공간 · 제품', 'DS2.dc.html', 'DS2_Edit.dc.html'], ['솔루션', 'DS4.dc.html', 'DS4_Edit.dc.html']],
+      mi: [['Storyboard', 'MI1.dc.html', ''], ['검색', 'MI2.dc.html', 'MI2.dc.html'], ['정제', 'MI3.dc.html', 'MI3.dc.html']],
+      ca: [['Storyboard', 'CA1.dc.html', ''], ['경쟁사 리스트업', 'CA2.dc.html', 'CA2_Edit.dc.html']],
+      vp: [['Storyboard', 'VP1.dc.html', ''], ['가치 · 고객의 니즈', 'VP2.dc.html', 'VP2_Edit.dc.html']],
+      sp: [['Storyboard', 'SP1.dc.html', ''], ['시트 작성', 'SP2.dc.html', 'SP2_Edit.dc.html']],
+      sc: [['Storyboard', 'SC1.dc.html', ''], ['공간 · 시나리오', 'SC2.dc.html', 'SC2_Edit.dc.html']]
+    };
+    const ST = STEPS[key] || STEPS.dss;
+    const nSt = ST.length;
+    const done = saved ? nSt : Math.max(0, Math.min(nSt, Number(this.props.done ?? 1)));
+    const on = (k) => saved || done >= k;
+    const onC = (c, k) => key !== c || on(k);   // 다른 콘텐츠 칸은 계산만(보이지 않음)
+    const CIRC = ['①', '②', '③', '④'];
     const s = Object.assign({ json: !!this.props.showJson, pop: '', space: 1 }, this.state || {});
     const put = (p) => this.setState(Object.assign({}, s, p));
     const U = '<원문 URL>';
@@ -355,6 +463,14 @@ class Component extends DCLogic {
       { name: '공용공간', basis: 'RQ-01 에너지 20% 절감', products: [pr('SmartThings 센서', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] }],
       solutions: [{ name: 'MagicINFO', by: 'ai-accepted', basis: 'RQ-01 업무환경 플랫폼' }, { name: 'SmartThings Pro', by: 'ai-accepted', basis: 'RQ-01 예측 · 반응형 공간' }, { name: 'b.IoT', by: 'manual', basis: 'RQ-01 에너지 20% 절감' }],
       sharedWith: ['SB-02'] };
+    const DSS_NEW = { ref: 'DSS-02', ver: 0, industry: { value: '오피스 · 업무시설', by: 'ai-accepted', basis: 'RQ-05' }, spaces: [
+      { name: '로비', basis: 'RQ-05 1 · 입주사 안내', products: [pr('Smart Signage QM55C', '2대', 'manual'), pr('삼성 키오스크', null, 'ai-accepted')] },
+      { name: '공용 회의실', basis: 'RQ-05 1 · 공용 회의실 예약', products: [pr('Flip Pro WA75D', null, 'ai-accepted'), pr('Smart Signage QB43C', '실당 1대', 'ai-accepted')] },
+      { name: '라운지', basis: 'ai-space', products: [pr('Smart Signage QM55C', '1대', 'ai-accepted')] },
+      { name: '전시 공간', basis: 'RQ-05 2 · 반도체 박물관 협업 전시', products: [pr('The Wall IAB 146"', '1식', 'ai-accepted')] },
+      { name: '통합 관제실', basis: 'RQ-05 3 · 단지 에너지 모니터링', products: [pr('비디오월 VM55B', '2×2', 'ai-accepted')] },
+      { name: '공용 공간', basis: 'ai-space', products: [pr('SmartThings 센서', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] }],
+      solutions: [] };
     const MI_ITEMS = [
       ['시장', '프라임 오피스에서 스마트 빌딩 설비 도입이 늘고 있다는 업계 분석', '리포트', '부동산 리서치', '2026-08', false],
       ['시장', '서울 도심 신축 오피스의 임대 경쟁 심화 보도 — 공실률 수치', '뉴스', '경제지', '2026-09', true],
@@ -434,7 +550,15 @@ class Component extends DCLogic {
       sp: ['Spec 시트 생성', '용산 오피스 제품 스펙', '오늘 17:10 저장', 'SB-01', 'SP2.dc.html', 'spec', ''],
       sc: ['공간 시나리오 생성', '용산 오피스 공간 시나리오', '오늘 17:30 저장', 'SB-01', 'SC2.dc.html', 'scenario', '']
     };
-    const [label, title, saved, sbIds, editHref, group, sideCur] = M[key] || M.dss;
+    const [label, title0, savedAt, sbIds0, , group, sideCur0] = M[key] || M.dss;
+    // 새로 만들 때: [이름, 사전 작업 Storyboard, 사이드바 작업 내역에 보이는 이름]
+    const NEW = { rq: ['새 요구사항', '', ''], dss: ['판교 스타트업 단지', 'SB-05', '판교 스타트업 단지 DSS'], mi: [title0, 'SB-01', ''], ca: [title0, 'SB-01', ''], vp: [title0, 'SB-01', ''], sp: [title0, 'SB-01', ''], sc: [title0, 'SB-01', ''] };
+    const [newTitle, newSb, newSide] = NEW[key] || NEW.dss;
+    const title = saved ? title0 : newTitle;
+    const sbOn = saved || (key !== 'rq' && done >= 1);
+    const sbIds = saved ? sbIds0 : sbOn ? newSb : '';
+    const sideCur = saved ? sideCur0 : (st === 'draft' ? newSide : '');
+    const DSX = saved ? DSS : DSS_NEW;
     const d = DATA[key] || DSS;
     const sum = (a, f) => a.reduce((n, x) => n + f(x), 0);
 
@@ -453,12 +577,15 @@ class Component extends DCLogic {
     };
 
     // DSS
-    const nProd = sum(DSS.spaces, (x) => x.products.length);
-    const nQty = sum(DSS.spaces, (x) => x.products.filter((p) => !p.qty).length);
-    const dsFact = (k, v, tag, note) => ({ k, v, tag: tag || '', hasTag: !!tag, tagStyle: tagBase + T_AI, note: note || '', hasNote: !!note });
+    const nProd = sum(DSX.spaces, (x) => x.products.length);
+    const nQty = sum(DSX.spaces, (x) => x.products.filter((p) => !p.qty).length);
+    const V_ON = 'font-size: 15px; font-weight: 700; white-space: nowrap;';
+    const V_OFF = 'font-size: 15px; font-weight: 700; white-space: nowrap; color: #b8bec8;';
+    const dsFact = (k, v, tag, note, k0) => (onC('dss', k0) ? { k, v, vStyle: V_ON, tag: tag || '', hasTag: !!tag, tagStyle: tagBase + T_AI, note: note || '', hasNote: !!note }
+      : { k, v: '—', vStyle: V_OFF, tag: '', hasTag: false, tagStyle: '', note: CIRC[k0 - 1] + ' ' + STEPS.dss[k0 - 1][0] + ' 단계에서', hasNote: true });
     const ds = {
-      facts: [dsFact('업종', DSS.industry.value, DSS.industry.by === 'ai-accepted' ? 'AI 추론 · 수락' : '', '근거 ' + DSS.industry.basis), dsFact('공간', String(DSS.spaces.length)), dsFact('제품', String(nProd), '', nQty ? '수량 확인 필요 ' + nQty : ''), dsFact('솔루션', String(DSS.solutions.length))],
-      spaces: DSS.spaces.map((x) => {
+      facts: [dsFact('업종', DSX.industry.value, DSX.industry.by === 'ai-accepted' ? 'AI 추론 · 수락' : '', '근거 ' + DSX.industry.basis, 2), dsFact('공간', String(DSX.spaces.length), '', '', 2), dsFact('제품', String(nProd), '', nQty ? '수량 확인 필요 ' + nQty : '', 2), dsFact('솔루션', String(DSX.solutions.length), '', '', 3)],
+      spaces: DSX.spaces.map((x) => {
         const ext = x.basis === 'extension';
         const aiSp = x.basis === 'ai-space';
         return { name: x.name, n: x.products.length,
@@ -469,8 +596,8 @@ class Component extends DCLogic {
             by: p.by === 'manual' ? '직접' : 'AI',
             byStyle: tagBase + ' padding: 0 6px;' + (p.by === 'manual' ? ' border: 1px solid #e2e5ea; color: #596170;' : T_AI) })) };
       }),
-      nSol: DSS.solutions.length,
-      solutions: DSS.solutions.map((o) => ({ name: o.name, basis: '근거 · ' + o.basis, by: o.by === 'manual' ? '직접' : 'AI 추천', byStyle: tagBase + (o.by === 'manual' ? T_MAN : T_AI) }))
+      nSol: DSX.solutions.length,
+      solutions: DSX.solutions.map((o) => ({ name: o.name, basis: '근거 · ' + o.basis, by: o.by === 'manual' ? '직접' : 'AI 추천', byStyle: tagBase + (o.by === 'manual' ? T_MAN : T_AI) }))
     };
 
     // MI
@@ -568,24 +695,65 @@ class Component extends DCLogic {
           fields: c.fields })) }
     };
 
+    // ---- 아직 비어 있는 칸: 그 칸을 채우는 단계 ----
+    const ph = (c, k, what, big) => {
+      const S = STEPS[c];
+      const next = key === c && k === done + 1;
+      return { n: String(k), head: S[k - 1][0] + ' 단계', href: S[k - 1][1],
+        text: what + (next ? ' — 이 단계를 마치면 여기에 채워져요' : ' — 앞 단계를 마치면 열려요'),
+        hasCta: next && st === 'draft', cta: '이어서 · ' + S[k - 1][0],
+        wrap: 'box-sizing: border-box; border: 1.5px dashed ' + (next ? '#b8c2e6' : '#d5d9e0') + '; border-radius: 14px; background: ' + (next ? '#fbfcff' : '#fafbfc') + '; display: flex; align-items: center; gap: 16px; padding: 18px 22px; min-width: 0;' + (big ? ' flex-grow: 1; min-height: 0;' : ' flex-shrink: 0;'),
+        circle: 'width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;' + (next ? ' border: 2px solid #1428a0; color: #1428a0; background: #ffffff;' : ' border: 1.5px dashed #b8bec8; color: #8a91a0;') };
+    };
+    const phRq = ph('rq', 1, '프로젝트명 · 고객사 · 최종 제안대상 · 키맨별 요구사항', true);
+    ds.spOn = onC('dss', 2); ds.spPh = !ds.spOn; ds.phSp = ph('dss', 2, '업종 · 공간 · 공간별 제품', true);
+    ds.solOn = onC('dss', 3); ds.solPh = !ds.solOn; ds.phSol = ph('dss', 3, '솔루션 0개 이상', false);
+    mi.qOn = onC('mi', 2); mi.qPh = !mi.qOn; mi.phQ = ph('mi', 2, 'Storyboard를 읽고 만든 검색어 · 검색 조건', false);
+    mi.colOn = onC('mi', 3); mi.colPh = !mi.colOn; mi.phCol = ph('mi', 3, '시장 · 고객사 · 사용자별로 담은 정보', true);
+    const phCa = ph('ca', 2, '경쟁사 · 제안 기준 비교 판정 · 주장 포인트', true);
+    const phVp = ph('vp', 2, '제품 · 솔루션별 가치 · 고객의 니즈', true);
+    const phSp = ph('sp', 2, 'DSS 제품의 스펙 비교표 · XLSX', true);
+    const phSc = ph('sc', 2, '공간 → 시나리오 → 장면', true);
+
+    // ---- 머리의 단계: 누르면 그 단계 팝업이 이 화면 위에 열린다(페이지 이동 없음) ----
+    const STEP_BASE = 'height: 30px; box-sizing: border-box; padding: 0 9px 0 5px; border-radius: 7px; border: none; background: transparent; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;';
+    const C_BASE = 'width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
+    const steps = ST.map(([text, hNew, hEdit], i) => {
+      const k = i + 1;
+      const isDone = on(k);
+      const next = !saved && k === done + 1;
+      const sbStep = text === 'Storyboard';
+      const btn = saved && sbStep;
+      const link = !btn && (isDone || next);
+      return { text, n: String(k), gap: i > 0, btn, link, still: !btn && !link, check: isDone, num: !isDone, pen: saved && !sbStep,
+        href: saved ? hEdit : hNew,
+        tip: btn ? '연결된 Storyboard 요약' : saved ? text + ' 단계를 팝업으로 열어 고쳐요' : isDone ? text + ' 단계로 돌아가요' : next ? '이 단계를 팝업으로 열어요' : '앞 단계를 마치면 열려요',
+        open: () => put({ pop: sbIds.split(',')[0] || 'SB-01', json: false }),
+        wrap: STEP_BASE + (next ? ' background: #eaeefb;' : ''),
+        circle: C_BASE + (isDone ? ' background: #1428a0; color: #ffffff;' : next ? ' border: 1.5px solid #1428a0; color: #1428a0; background: #ffffff;' : ' border: 1.5px solid #d5d9e0; color: #8a91a0;'),
+        label: 'font-size: 12.5px; font-weight: ' + (next ? '700' : '600') + ';' + (isDone ? ' color: #121417;' : next ? ' color: #1428a0;' : ' color: #8a91a0;') };
+    });
+
     // ---- 머리 한 줄 ----
     const META = {
-      rq: [saved, '키맨 ' + RQ.keymen.length, '요구 ' + nReq, nWarn ? '확인 필요 ' + nWarn : ''],
-      dss: [saved, '공간 ' + DSS.spaces.length, '제품 ' + nProd, '솔루션 ' + DSS.solutions.length],
-      mi: [saved, '담은 정보 ' + MI.counts.kept + ' (찾은 ' + MI.counts.found + ')', '수치 원문 확인 ' + MI.counts.numberCheck],
-      ca: [saved, '경쟁사 ' + CA.competitors.length, '비교 쌍 ' + sum(CA.competitors, (c) => c.matches.length)],
-      vp: [saved, '제품 · 솔루션 ' + VP.items.length, '가치 ' + nVal, '고객의 니즈 ' + nNeed + '/' + nVal],
-      sp: [saved, '제품 ' + SP.models.length, '항목 ' + SP.fields.length, SP.format],
-      sc: [saved, '공간 ' + SC.spaces.length, '시나리오 ' + nSc, '시나리오 없는 공간 ' + noSc]
+      rq: [savedAt, '키맨 ' + RQ.keymen.length, '요구 ' + nReq, nWarn ? '확인 필요 ' + nWarn : ''],
+      dss: [savedAt, '공간 ' + DSX.spaces.length, '제품 ' + nProd, '솔루션 ' + DSX.solutions.length],
+      mi: [savedAt, '담은 정보 ' + MI.counts.kept + ' (찾은 ' + MI.counts.found + ')', '수치 원문 확인 ' + MI.counts.numberCheck],
+      ca: [savedAt, '경쟁사 ' + CA.competitors.length, '비교 쌍 ' + sum(CA.competitors, (c) => c.matches.length)],
+      vp: [savedAt, '제품 · 솔루션 ' + VP.items.length, '가치 ' + nVal, '고객의 니즈 ' + nNeed + '/' + nVal],
+      sp: [savedAt, '제품 ' + SP.models.length, '항목 ' + SP.fields.length, SP.format],
+      sc: [savedAt, '공간 ' + SC.spaces.length, '시나리오 ' + nSc, '시나리오 없는 공간 ' + noSc]
     };
-    const meta = (META[key] || META.dss).filter(Boolean).join(' · ');
+    const meta = saved ? (META[key] || META.dss).filter(Boolean).join(' · ')
+      : st === 'new' ? '아직 저장 전 · 단계 ' + Math.min(nSt, done + 1) + '/' + nSt + ' 진행 중 · 팝업을 닫아도 작성 중으로 남아요'
+      : '작성 중 · ' + nSt + '단계 중 ' + done + '단계 마침 · 오늘 11:20 · 저장하면 ' + (key === 'rq' ? 'Storyboard가 만들어져요' : sbIds + '에 연결돼요');
 
     // ---- 후속 작업: 이미 있으면 그 콘텐츠를 열고, 없으면 바로 새로 만든다 ----
     const NEXT = {
       rq: [['dss', '공간별 제품 매칭 DSS', '공간 ' + DSS.spaces.length + ' · 제품 ' + nProd + ' · 솔루션 ' + DSS.solutions.length, 'DSS-01 v1', 'DS_View.dc.html']],
       dss: [['sc', '공간 시나리오 생성', '공간 ' + DSS.spaces.length + '개에서 사용자가 겪는 장면을 만들어요', '', 'SC2.dc.html'], ['sp', 'Spec 시트 생성', '매칭한 제품 ' + nProd + '개를 스펙 시트로', '', 'SP2.dc.html']]
     };
-    const nexts = (NEXT[key] || []).map(([k, t, dd, ref, href]) => ({ t, d: dd, ref, has: !!ref, cta: ref ? '열기' : '만들기', href, icon: IC[k] }));
+    const nexts = (saved ? (NEXT[key] || []) : []).map(([k, t, dd, ref, href]) => ({ t, d: dd, ref, has: !!ref, cta: ref ? '열기' : '만들기', href, icon: IC[k] }));
 
     // ---- flow.json: 이 콘텐츠가 담긴 stages.<콘텐츠> 를 강조 ----
     const brief = { rq: { ref: 'RQ-01', ver: 2, customer: 'E 자산운용', sharedWith: ['SB-02'] }, dss: { ref: 'DSS-01', ver: 1, sharedWith: ['SB-02'] }, mi: { ref: 'MI-01', ver: 2 } };
@@ -600,8 +768,20 @@ class Component extends DCLogic {
     const jsonLines = full.map((t, i) => ({ t, add: i >= startI && i <= endI }));
 
     return {
-      label, title, refId: d.ref, refVer: d.ref + ' v' + d.ver, meta, icon: IC[key], editHref, group, sideCur, sbIds, hi: key,
+      label, title, refId: saved ? d.ref : st === 'new' ? '새로 만들기' : title, meta, icon: IC[key], group, sideCur, sbIds, hi: key, saved,
+      refVer: saved ? d.ref + ' v' + d.ver : st === 'new' ? '새로 만들기' : '작성 중 ' + done + '/' + nSt,
+      refVerStyle: 'height: 22px; padding: 0 8px; border-radius: 6px; font-family: ' + (saved ? 'Manrope, sans-serif' : 'inherit') + '; font-size: 11.5px; font-weight: ' + (saved ? '800' : '700') + '; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (saved ? ' background: #f0f2f5; color: #3d4452;' : st === 'new' ? ' background: #eaeefb; color: #1428a0;' : ' background: #fff4dc; color: #7a4f00;'),
+      sbEmpty: key === 'rq' ? '저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요' : '① Storyboard 단계에서 골라요',
+      sbNote: saved ? '' : sbOn ? '저장하면 이 Storyboard에 연결돼요' : '',
+      sbCur: sbIds.split(',')[0] || '',
+      steps, stepsLabel: saved ? '단계별 고치기' : '단계 ' + Math.min(nSt, done + (st === 'new' ? 1 : 0)) + '/' + nSt,
+      spSaved: key === 'sp' && saved,
       isRq: key === 'rq', isDss: key === 'dss', isMi: key === 'mi', isCa: key === 'ca', isVp: key === 'vp', isSp: key === 'sp', isSc: key === 'sc',
+      rqShow: key === 'rq' && on(1), rqPh: key === 'rq' && !on(1), phRq,
+      caShow: key === 'ca' && on(2), caPh: key === 'ca' && !on(2), phCa,
+      vpShow: key === 'vp' && on(2), vpPh: key === 'vp' && !on(2), phVp,
+      spShow: key === 'sp' && on(2), spPh: key === 'sp' && !on(2), phSp,
+      scShow: key === 'sc' && on(2), scPh: key === 'sc' && !on(2), phSc,
       rq, ds, mi, ca, vp, sp, sc,
       nexts, hasNext: nexts.length > 0, nextGrid: 'display: grid; grid-template-columns: repeat(' + Math.max(1, nexts.length) + ', minmax(0, 1fr)); gap: 12px;',
       jsonLines, jsonTitle: 'SB-01/flow.json', jsonSub: '초록 줄이 이 콘텐츠(stages.' + key + ')예요 · 전체 ' + full.length + '줄',

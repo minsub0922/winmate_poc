@@ -29,6 +29,13 @@ make contracts SERVICE=dss    # contracts/dss.json 갱신 + 깨지는 변경 검
 
 ## 현재 상태
 
+### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
+상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/dss/new` 빈 최종본 + ① Gate 팝업 · `/dss/:id` 최종본(DS_View · 본문 `DsView.tsx`) · `?step=space|solution` 팝업.
+완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 ### 새 흐름(2026-10-08 · 보드 webapp1 v58 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · 2026-10-12 v60 DS_View)
 수용 기준 `docs/scenarios/11-content-flow.md` §1 · §4 · §6. Storyboard(고객 요구사항까지) → 업종 · 공간 · 공간별 제품 → 솔루션(0개 이상) → 저장하면 허브 `stages.dss`.
 

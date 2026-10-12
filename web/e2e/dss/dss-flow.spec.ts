@@ -1,9 +1,9 @@
 /**
- * 공간별 제품 매칭 DSS 새 흐름(2026-10-12 보드 webapp1 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_View) — 실제 스택(MODEL_MODE=mock ·
+ * 공간별 제품 매칭 DSS(보드 webapp1 v62 — DS0 · 최종본 View content=dss + 단계 팝업 DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS2_Edit) — 실제 스택(MODEL_MODE=mock ·
  * mocks/ai-tools/ds.industry_spaces.v1 · ds.solutions.v1 · KB 실데이터).
- * Storyboard(요구사항까지)를 API 로 만들고 → 목록 → Gate → DS2(공간 · 제품 직접 · AI 업종 · 공간 · 제품, 수락, 제품 고르기) → DS4(AI 솔루션 · 고르기 · 겹침 · 상세)
- * → 저장 → 그 DSS 보기(DS_View · 완료 안내 없음 · 허브 stages.dss 확인) → flow.json · 편집(?edit=1) · 다시 저장 · 새로고침 · 목록 「열기」도 보기.
- * 보드의 고정 칸(270 · 816 · 940 · 465 · 사실 2fr|1fr×3 · 공간 4열 266 · 후속 544)을 숫자로 재고 __screens__/<보드>-new.png 로 남긴다.
+ * Storyboard(요구사항까지)를 API 로 만들고 → 목록 → 새로 만들기(빈 최종본 + ① Gate 팝업) → ② 공간 · 제품 팝업(직접 · AI 업종 · 공간 · 제품, 수락, 제품 고르기)
+ * → ③ 솔루션 팝업(AI 솔루션 · 고르기 · 겹침 · 상세) → 저장하면 팝업이 닫히고 최종본(허브 stages.dss 확인) → 단계 칩으로 고치기 팝업.
+ * 상세에는 페이지 이동이 없다(같은 주소 · `?step=`). 팝업은 1440×900 에서 (130, 50) 1180×800 — 칸 좌표는 팝업 기준(x −130 · y −50 + 팝업 머리 72 − 상단바 · 스텝바 · SB 바 172).
  * 실행: make e2e-feature SERVICE=dss (1 worker)
  */
 import path from 'node:path';
@@ -54,6 +54,13 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
 
   // DS1 — 사전 작업 고르기(보드 Gate content=dss): 우리 Storyboard 를 고른다
   await expect(page).toHaveURL(/\/dss\/new$/);
+  // 빈 최종본(새로 만들기 · 칸마다 자리표시) 위 ① Storyboard 팝업
+  const gateDlg = page.getByRole('dialog', { name: '새 DSS · Storyboard' });
+  await expect(gateDlg).toBeVisible();
+  expect(await box(gateDlg)).toMatchObject({ x: 130, y: 50, w: 1180, h: 800 });
+  await expect(page.locator('.fl-detail .fl-dver')).toHaveText('새로 만들기');
+  await expect(page.locator('.fl-slot')).toHaveCount(2);
+  await expect(gateDlg.locator('.fl-shead__pos')).toHaveText('단계 1/3');
   await expect(page.getByRole('heading', { name: '어느 Storyboard로 만들까요?' })).toBeVisible();
   await expect(page.getByText('고객 요구사항이 연결된 Storyboard이 있어야 시작할 수 있어요.', { exact: false })).toBeVisible();
   const row = page.getByRole('radio', { name: new RegExp(name) });
@@ -64,12 +71,16 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   await shot(page, 'DS1-new');
   await page.getByRole('button', { name: '이 Storyboard로 시작' }).click();
 
-  // DS2 — 공간 · 제품(빈 상태에서 직접 넣기)
-  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+$/, { timeout: 15_000 });
+  // DS2 — ② 공간 · 제품 팝업(같은 최종본 위 · 주소는 ?step=space)
+  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+\?step=space$/, { timeout: 15_000 });
   const dssId = page.url().split('/').pop()!.split('?')[0];
   await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
-  await expect(page.locator('.wm-sbbar__chip')).toContainText(name);
-  await expect(page.locator('.wm-sbbar__note')).toHaveText('DSS를 저장하면 이 Storyboard에 연결돼요');
+  const stepDlg = page.locator('.fl-stepdlg');
+  await expect(stepDlg.locator('.fl-shead__sb')).toContainText(name);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText('DSS를 저장하면 이 Storyboard에 연결돼요');
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText('새로 만들기');
+  await expect(stepDlg.locator('.fl-shead__pos')).toHaveText('단계 2/3');
+  await expect(stepDlg.locator('.wm-sbbar')).toHaveCount(0);
   await expect(page.getByText('공간 0 · 제품 0')).toBeVisible();
   await expect(page.getByRole('button', { name: /업종\s*선택해 주세요/ })).toBeVisible();
   await page.locator('#ds-sp').fill('로비');
@@ -96,10 +107,10 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   await expect(page.locator('[data-space="공용 회의실"]')).toHaveAttribute('aria-selected', 'true');
   await page.locator('[data-space="로비"]').click();
   await expect(page.getByText('공간 2 · 제품 1')).toBeVisible();
-  // 보드 DS2 칸(1440 × 900): 본문 1180 · 공간 270 | 제품 816(1100 − 270 − 14) · 머리 47(46 + 선) · 제품 줄 68 · 아래 61 · 다음 48 · 업종 38 · AI 38 / 30
-  expect(await w(page.locator('.wm-flow'))).toBe(1180);
-  expect(await box(page.locator('.ds-spaces'))).toMatchObject({ w: 270, x: 300, y: 240, h: 582 });
-  expect(await box(page.locator('.ds-prods'))).toMatchObject({ w: 816, x: 584, y: 240, h: 582 });
+  // 보드 DS2 칸(팝업 1180 × 800): 본문 1180 · 공간 270 | 제품 816(1100 − 270 − 14) · 머리 47(46 + 선) · 제품 줄 68 · 아래 61 · 다음 48 · 업종 38 · AI 38 / 30
+  expect(await w(page.locator('.fl-sbody .wm-flow'))).toBe(1180);
+  expect(await box(page.locator('.ds-spaces'))).toMatchObject({ w: 270, x: 170, y: 190, h: 582 });
+  expect(await box(page.locator('.ds-prods'))).toMatchObject({ w: 816, x: 454, y: 190, h: 582 });
   expect(await box(page.locator('.ds-sphead'))).toMatchObject({ w: 268, h: 47 });
   expect(await box(page.locator('.ds-phead'))).toMatchObject({ w: 814, h: 47 });
   expect(await box(page.locator('.ds-sp').first())).toMatchObject({ w: 256, h: 44 });
@@ -113,7 +124,7 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   expect(await h(page.getByRole('button', { name: 'AI 업종 추론' }))).toBe(38);
   expect(await h(page.getByRole('button', { name: 'AI 공간 추천' }))).toBe(30);
   expect(await h(page.getByRole('button', { name: 'AI 공간별 제품 자동 매칭' }))).toBe(30);
-  expect(await box(page.getByRole('button', { name: '다음 · 솔루션' }))).toMatchObject({ h: 48, y: 834 });
+  expect(await box(page.getByRole('button', { name: '다음 · 솔루션' }))).toMatchObject({ h: 48, y: 784 });
   expect(await h(qm.getByRole('button', { name: '상세' }))).toBe(32);
   expect(await h(qm.locator('.ds-qty'))).toBe(28);
   await page.mouse.move(10, 890);
@@ -140,8 +151,8 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   const acceptAll = page.getByRole('button', { name: /^추천 모두 수락 \d+$/ });
   await expect(acceptAll).toBeVisible();
   // 보드 DS2_AI(앱과 같은 Noto Sans KR 로 잰 값): 업종 줄 1100 × 40 · 그리드가 12 아래로(292) · 추천 공간 줄 256 × 46(두 줄 글자 36 + 4 · 4) · 점선 제품 줄 69(위 선 1)
-  expect(await box(indAi)).toMatchObject({ w: 1100, h: 40, y: 240 });
-  expect(await box(page.locator('.ds-spaces'))).toMatchObject({ y: 292, h: 530 });
+  expect(await box(indAi)).toMatchObject({ w: 1100, h: 40, y: 190 });
+  expect(await box(page.locator('.ds-spaces'))).toMatchObject({ y: 242, h: 530 });
   expect(await box(page.locator('[data-rec]').first())).toMatchObject({ w: 256, h: 46 });
   expect(await box(page.locator('[data-by="ai-pending"]').first())).toMatchObject({ w: 814, h: 69 });
   expect(await h(page.locator('[data-rec] .ds-rec__add').first())).toBe(28);
@@ -183,13 +194,15 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   // 빼기
   await page.getByRole('button', { name: '협업 전시 미디어월 빼기' }).click();
   await expect(page.locator('[data-product="협업 전시 미디어월"]')).toHaveCount(0);
-  // 상세 → 셸 제품 상세 시트(모델코드 있는 제품)
+  // 상세 → 셸 제품 상세 시트(모델코드 있는 제품) — 시트의 Esc 는 시트만 닫는다(단계 팝업은 그대로)
   await page.locator('[data-space="로비"]').click();
   await qm.getByRole('button', { name: '상세' }).click();
   await expect(page).toHaveURL(/detail=product%3ALH55QMCEBGCXKR|detail=product:LH55QMCEBGCXKR/);
   await expect(page.getByRole('button', { name: '✓ 추가됨' })).toBeVisible({ timeout: 10_000 });   // 셸 시트: 이미 이 DSS 에 있는 제품
   await page.keyboard.press('Escape');
   await expect(page).not.toHaveURL(/detail=/);
+  await expect(page).toHaveURL(/step=space/);
+  await expect(stepDlg).toBeVisible();
 
   const doc = await (await request.get(`/api/dss/v1/dss/${dssId}`)).json();
   const nProducts = doc.counts.products as number;
@@ -201,12 +214,13 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   await expect(page).toHaveURL(/step=solution/);
   await expect(page.getByRole('heading', { name: '솔루션을 고르세요 · 0개 이상' })).toBeVisible();
   await expect(page.getByText('고르지 않아도 저장할 수 있어요.')).toBeVisible();
-  await expect(page.locator('.wm-sbbar__note')).toHaveText(`공간 3 · 제품 ${nProducts}`);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText(`공간 3 · 제품 ${nProducts} · 솔루션은 0개도 돼요`);
+  await expect(stepDlg.locator('.fl-shead__pos')).toHaveText('단계 3/3');
   await expect(page.locator('[data-solution="magicinfo"]')).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText('솔루션 없이 저장해도 돼요')).toBeVisible();
-  // 보드 DS4(Noto Sans KR): 머리 940 × 57(h1 34 + 4 + 19) · 카드 그리드 y263 · 카드 465 · 최소 112
-  expect(await box(page.locator('.ds-solhead'))).toMatchObject({ w: 940, x: 380, y: 194, h: 57 });
-  expect(await box(page.locator('.ds-solgrid'))).toMatchObject({ w: 940, x: 380, y: 263 });
+  // 보드 DS4(Noto Sans KR · 팝업): 머리 940 × 57(h1 34 + 4 + 19) · 카드 그리드 y213 · 카드 465 · 최소 112
+  expect(await box(page.locator('.ds-solhead'))).toMatchObject({ w: 940, x: 250, y: 144, h: 57 });
+  expect(await box(page.locator('.ds-solgrid'))).toMatchObject({ w: 940, x: 250, y: 213 });
   expect(await w(page.locator('[data-solution]').first())).toBe(465);
   expect(await h(page.getByRole('button', { name: 'AI 솔루션 추천' }))).toBe(38);
   expect(await h(page.getByRole('button', { name: 'DSS 저장' }))).toBe(48);
@@ -250,7 +264,7 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
     expect(await page.locator('.ds-solscroll').evaluate((el) => el.scrollHeight > el.clientHeight)).toBe(true);
     await page.getByRole('button', { name: '관련 있는 솔루션만 보기' }).click();
   }
-  expect(await box(page.getByRole('button', { name: 'DSS 저장' }))).toMatchObject({ y: 830, h: 48 });
+  expect(await box(page.getByRole('button', { name: 'DSS 저장' }))).toMatchObject({ y: 780, h: 48 });
   // 상세 → 셸 솔루션 상세 시트(보드 SolutionDetail)
   await page.locator('[data-solution="magicinfo"]').getByRole('button', { name: 'MagicINFO 상세' }).click();
   await expect(page).toHaveURL(/detail=solution(%3A|:)magicinfo/);
@@ -271,69 +285,36 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   await expect(overlap).toHaveCount(0);
   await expect(page.getByText('솔루션 3개 선택')).toBeVisible();
 
-  // 저장 → DS_View(보드 View content=dss) — 같은 주소의 그 DSS 보기(?edit · ?step 없음 · 「저장했어요」 같은 완료 안내 없음)
+  // 저장 → 팝업이 닫히고 같은 주소의 최종본(보드 DS_View · 완료 안내 화면 없음)
   await page.getByRole('button', { name: 'DSS 저장' }).click();
-  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`), { timeout: 20_000 });
-  const saved = await (await request.get(`/api/dss/v1/dss/${dssId}`)).json();
-  const code = saved.code as string;
-  await expect(page.getByRole('heading', { name: saved.title, level: 1 })).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
-  await expect(page.locator('.wm-done__card, .wm-done__md')).toHaveCount(0);
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v1`);
-  await expect(page.locator('.fl-view__meta')).toHaveText(new RegExp(`^오늘 \\d{2}:\\d{2} 저장 · 공간 3 · 제품 ${nProducts} · 솔루션 3$`));
-  await expect(page.locator('.wm-sbbar__chip').first()).toContainText(name);
-  // 사실 4칸 — 업종(AI 추론 · 수락 · 근거) · 공간 · 제품(수량 빈 것은 확인 필요 n) · 솔루션
-  const nQty = saved.spaces.flatMap((s: { products: Array<{ qty: string | null; by: string }> }) => s.products).filter((p: { qty: string | null; by: string }) => p.by !== 'ai-pending' && !p.qty).length;
-  const fact = (k: string) => page.locator(`[data-fact="${k}"]`);
-  await expect(fact('업종')).toContainText('오피스 · 업무시설');
-  await expect(fact('업종').locator('.fl-vtag')).toHaveText('AI 추론 · 수락');
-  await expect(fact('업종')).toContainText(`근거 ${sb.ref}`);
-  await expect(fact('공간').locator('.dsv-fact__v')).toHaveText('3');
-  await expect(fact('제품').locator('.dsv-fact__v')).toHaveText(String(nProducts));
-  if (nQty) await expect(fact('제품')).toContainText(`수량 확인 필요 ${nQty}`);
-  await expect(fact('솔루션').locator('.dsv-fact__v')).toHaveText('3');
-  // 공간 카드 — 이름 · 제품 수 · 근거 · 제품(수량 · 출처). 비어 있는 수량은 주황 「확인 필요」
-  await expect(page.locator('.dsv-space .dsv-space__name')).toHaveText(['로비', '공용 회의실', '전시 공간']);
-  const lobby = page.locator('[data-space="로비"].dsv-space');
-  await expect(lobby.locator('.dsv-basis')).toHaveText(`근거 · ${sb.ref} 1 · 로비에서 입주사 안내와 입주…`);
-  const qmv = lobby.locator('[data-product="Smart Signage QM55C"]');
-  await expect(qmv.locator('.dsv-qty')).toHaveText('2대');
-  await expect(qmv.locator('.dsv-by')).toHaveText('직접');
-  await expect(page.locator('[data-space="전시 공간"].dsv-space .dsv-basis')).toHaveText(`근거 · ${sb.ref} 2 · 반도체 박물관 협업 전시`);
-  await expect(page.locator('[data-space="전시 공간"] [data-product="실내용 The Wall IWC"] .dsv-by')).toHaveText('직접');
-  await expect(page.locator('.dsv-qty.fl-vtag--warn')).toHaveCount(nQty);
-  if (nQty) await expect(page.locator('.dsv-qty.fl-vtag--warn').first()).toHaveText('확인 필요');
-  await expect(page.locator('.dsv-by.fl-vtag--ai').first()).toHaveText('AI');
-  // 솔루션 띠 — 이름 · 근거 · AI 추천
-  await expect(page.locator('.dsv-sols__h')).toHaveText('솔루션 3');
-  await expect(page.locator('.dsv-sol .dsv-sol__name')).toHaveText(['MagicINFO', 'SmartThings Pro', 'b.IoT']);
-  await expect(page.locator('[data-solution="magicinfo"].dsv-sol .dsv-sol__basis')).toHaveText(`근거 · ${sb.ref} 1 입주사 안내 · 사이니지`);
-  await expect(page.locator('.dsv-sol .fl-vtag')).toHaveText(['AI 추천', 'AI 추천', 'AI 추천']);
-  // 후속 작업 — 공간 시나리오 · Spec 시트(아직 없으니 「만들기」 → 고르기 건너뛰고 바로 새로)
-  const follows = page.locator('a.wm-follow');
+  await expect(stepDlg).toHaveCount(0, { timeout: 20_000 });
+  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`));
+  const view = page.locator('.fl-detail');
+  await expect(view).toHaveAttribute('data-status', 'saved');
+  await expect(view.locator('.fl-dver')).toHaveText(/^DSS-\d+ v1$/);
+  await expect(view.locator('.fl-dhead__meta')).toContainText(`공간 3 · 제품 ${nProducts} · 솔루션 3`);
+  await expect(view.locator('.fl-dnav__label')).toHaveText('단계별 고치기');
+  await expect(page.getByRole('heading', { name: 'DSS를 저장했어요' })).toHaveCount(0);
+  await expect(view.locator('.dsv-space')).toHaveCount(3);
+  await expect(view.locator('.dsv-space .dsv-space__top b')).toHaveText(['로비', '공용 회의실', '전시 공간']);
+  await expect(view.locator('[data-vspace="전시 공간"] .dsv-space__basis')).toHaveText(`근거 · ${sb.ref} 2 · 반도체 박물관 협업 전시`);
+  await expect(view.locator('.dsv-sol b')).toHaveText(['MagicINFO', 'SmartThings Pro', 'b.IoT']);
+  await expect(view.locator('.dsv-fact').first()).toContainText('오피스 · 업무시설');
+  await expect(view.locator('.dsv-fact').first().locator('.fl-vtag')).toHaveText('AI 추론 · 수락');
+  const follows = view.locator('a.fl-dnext');
   await expect(follows).toHaveCount(2);
   await expect(follows.nth(0)).toHaveAttribute('href', `/scenario/new?sb=${sb.id}&auto=1`);
   await expect(follows.nth(0)).toContainText('공간 시나리오 생성');
   await expect(follows.nth(0)).toContainText('공간 3개에서 사용자가 겪는 장면을 만들어요');
   await expect(follows.nth(0)).toContainText('만들기');
   await expect(follows.nth(1)).toHaveAttribute('href', `/spec/new?sb=${sb.id}&auto=1`);
-  await expect(follows.nth(1)).toContainText('Spec 시트 생성');
   await expect(follows.nth(1)).toContainText(`매칭한 제품 ${nProducts}개를 스펙 시트로`);
-  // 보드 View(1440 × 900): 본문 좌우 40 → 1100 · 사실 2fr | 1fr × 3(간격 12 → 425.6 · 212.8) h60 · 공간 카드 4열 266 · 솔루션 띠 1100 · 솔루션 칩 34
-  //   머리 아이콘 44 · 버튼 38 · 후속 작업 2칸 544(간격 12)
-  expect(await box(fact('업종'))).toMatchObject({ w: 425.6, h: 60, x: 300 });
-  expect(await box(fact('공간'))).toMatchObject({ w: 212.8, h: 60 });
-  expect(await box(fact('솔루션'))).toMatchObject({ w: 212.8, h: 60 });
-  expect(await w(page.locator('.dsv-facts'))).toBe(1100);
-  expect(await box(page.locator('.dsv-space').first())).toMatchObject({ w: 266, x: 300 });
-  expect(await box(page.locator('.dsv-space').nth(1))).toMatchObject({ w: 266, x: 578 });
-  expect(await box(page.locator('.dsv-sols'))).toMatchObject({ w: 1100, x: 300 });
-  expect(await h(page.locator('.dsv-sol').first())).toBe(34);
-  expect(await h(page.locator('.fl-view__ic'))).toBe(44);
-  expect(await h(page.getByRole('link', { name: '편집' }))).toBe(38);
-  expect(await h(page.getByRole('button', { name: 'flow.json' }))).toBe(38);
+  await expect(page.locator('.wm-sbbar__stage').first()).toHaveText('DSS까지');
+  // 보드 View(content=dss): 본문 1100 · 업종 칸 2fr · 공간 카드 4열(간격 12) · 후속 2칸
+  expect(await w(view.locator('.dsv-facts'))).toBe(1100);
+  expect(await h(view.locator('.dsv-fact').first())).toBe(60);
+  expect(await w(view.locator('.dsv-space').first())).toBe(266);
   expect(await box(follows.nth(0))).toMatchObject({ w: 544, x: 300 });
-  expect(await box(follows.nth(1))).toMatchObject({ w: 544, x: 856 });
 
   // 허브 flow.json stages.dss — §6 계약 모양(점선 대기 값은 빠진다)
   const flow = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
@@ -351,60 +332,58 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   expect(cell).toMatchObject({ state: 'done', ref: st.ref, route: `/dss/${dssId}` });
   await page.mouse.move(10, 890);
   await shot(page, 'DS_View-new');
-  // flow.json — 허브 flow.json 전체에서 stages.dss 를 강조(보드 DS_ViewJson)
-  await page.getByRole('button', { name: 'flow.json' }).click();
+  await view.getByRole('button', { name: 'flow.json' }).click();
   const dlg = page.getByRole('dialog', { name: /flow\.json/ });
   await expect(dlg).toBeVisible();
   await expect(dlg.getByText('"dss": {').first()).toBeVisible();
-  await expect(dlg.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
-  await expect(dlg.getByRole('tab', { name: '이 콘텐츠만' })).toBeVisible();
+  await expect(dlg.locator('.wm-jsonline--add').first()).toBeVisible();
   await shot(page, 'DS_ViewJson-new');
   await dlg.getByRole('button', { name: '닫기' }).last().click();
-  await expect(dlg).toHaveCount(0);
 
-  // 편집 → ?edit=1 DS2(첫 단계부터 · 보드 editHref DS2) · 같은 문서
-  await page.getByRole('link', { name: '편집' }).click();
-  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}\\?edit=1$`));
-  await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
-  await expect(page.locator('[data-space="로비"]')).toBeVisible();
-  // 편집에서 다시 저장 → ?edit · ?step 을 떼고 보기(ver 2)
-  await page.getByRole('button', { name: '다음 · 솔루션' }).click();
-  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}\\?edit=1&step=solution$`));
-  await page.getByRole('button', { name: 'DSS 저장' }).click();
-  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`), { timeout: 20_000 });
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v2`);
-  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
-  // 새로고침해도 보기
-  await page.reload();
-  await expect(page.locator('.dsv-space')).toHaveCount(3);
-  await expect(page.locator('#ds-sp')).toHaveCount(0);
+  // 단계 칩 「공간 · 제품」 → 고치기 팝업(DS2_Edit: DSS-nn v1 고치기 · 저장 · v2 · 이전 단계 링크 없음) — 고치지 않고 닫으면 묻지 않는다
+  await view.getByRole('button', { name: /^공간 · 제품 · / }).click();
+  await expect(page).toHaveURL(/step=space/);
+  await expect(stepDlg.locator('.fl-shead__mode')).toHaveText(`${st.ref} v1 고치기`);
+  await expect(stepDlg.locator('.fl-shead__note')).toHaveText(`저장하면 ${st.ref} v2 · ${sb.id}에 반영돼요`);
+  await expect(stepDlg.getByRole('button', { name: '저장 · v2' })).toBeVisible();
+  await expect(stepDlg.locator('.wm-flow__back')).toHaveCount(0);
+  await shot(page, 'DS2_Edit-new');
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(stepDlg).toHaveCount(0);
+  // 고친 뒤 닫으면 저장할지 묻는다 → 「저장 · v2」 → 최종본 v2
+  await view.getByRole('button', { name: /^솔루션 · / }).click();
+  await expect(page).toHaveURL(/step=solution/);
+  await page.locator('[data-solution="biot"]').getByRole('checkbox').click();
+  await expect(page.getByText('솔루션 2개 선택')).toBeVisible();
+  await stepDlg.getByRole('button', { name: '팝업 닫기' }).click();
+  const ask = page.getByRole('dialog', { name: '고친 내용을 저장할까요?' });
+  await expect(ask).toBeVisible();
+  await ask.getByRole('button', { name: '저장 · v2' }).click();
+  await expect(stepDlg).toHaveCount(0, { timeout: 20_000 });
+  await expect(view.locator('.fl-dver')).toHaveText(`${st.ref} v2`);
+  await expect(view.locator('.dsv-sol b')).toHaveText(['MagicINFO', 'SmartThings Pro']);
   await page.goto('/dss');
   const listRow = page.locator('.fl-card').filter({ hasText: name });
   await expect(listRow).toContainText(`${st.ref} v2`);
   await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/dss/${dssId}`);
-  // 목록 카드 → 보기(편집 화면 아님)
-  await listRow.locator('.fl-cardtitle').click();
-  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`));
-  await expect(page.locator('.fl-view__ref')).toHaveText(`${st.ref} v2`);
-  await expect(page.locator('.dsv-space')).toHaveCount(3);
-  await expect(page.locator('#ds-sp')).toHaveCount(0);
   await page.goto('/dss/new');
   await expect(page.getByRole('radio', { name: new RegExp(name) })).toContainText(`${st.ref} v2 있음`);
 });
 
-test('DSS — Storyboard 화면의 「만들기」(?sb=&auto=1)는 Gate 를 건너뛰고 바로 DS2', async ({ page, request }) => {
+test('DSS — Storyboard 화면의 「만들기」(?sb=&auto=1)는 Gate 를 건너뛰고 바로 ② 공간 · 제품 팝업', async ({ page, request }) => {
   test.setTimeout(90_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   const sb = await makePangyo(request, `판교 바로 만들기 ${tag()}`);
   await page.goto(`/dss/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+$/, { timeout: 15_000 });
+  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+\?step=space$/, { timeout: 15_000 });
   await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
-  await expect(page.locator('.wm-sbbar__chip')).toContainText(sb.name);
-  // 1920 × 1080: 본문 열은 1180 가운데 · 공간 270 | 제품 816 · 그리드가 높이를 채운다(1080 − 64 − 56 − 52 − 36 − 38 − 12 − 12 − 48 = 762)
+  await expect(page.locator('.fl-shead__sb')).toContainText(sb.name);
+  // 1920 × 1080: 팝업은 가운데 1180 × 800 그대로 · 공간 270 | 제품 816 · 높이 582
   await page.setViewportSize({ width: 1920, height: 1080 });
-  expect(await w(page.locator('.wm-flow'))).toBe(1180);
-  expect(await box(page.locator('.ds-spaces'))).toMatchObject({ w: 270, h: 762 });
-  expect(await box(page.locator('.ds-prods'))).toMatchObject({ w: 816, h: 762 });
+  expect(await box(page.locator('.fl-stepdlg'))).toMatchObject({ x: 370, y: 140, w: 1180, h: 800 });
+  expect(await w(page.locator('.fl-sbody .wm-flow'))).toBe(1180);
+  expect(await box(page.locator('.ds-spaces'))).toMatchObject({ w: 270, h: 582 });
+  expect(await box(page.locator('.ds-prods'))).toMatchObject({ w: 816, h: 582 });
   await page.setViewportSize({ width: 1440, height: 900 });
   // 업종 고르기(220 목록 · 8개 · 보드 순서)
   await page.getByRole('button', { name: /^업종/ }).click();
@@ -428,6 +407,13 @@ test('DSS — Storyboard 화면의 「만들기」(?sb=&auto=1)는 Gate 를 건�
   await page.getByRole('button', { name: '다음 · 솔루션' }).click();
   await expect(page.getByText('공간에 제품을 하나 이상 넣어야 저장할 수 있어요')).toBeVisible();
   await expect(page.getByRole('button', { name: 'DSS 저장' })).toBeDisabled();
-  await page.getByRole('button', { name: '공간 · 제품' }).click();
+  await page.getByRole('button', { name: '이전 · 공간 · 제품' }).click();
   await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
+  // 닫으면 작성 중 최종본(채운 칸 없음 → ② 자리표시에 「이어서 · 공간 · 제품」)
+  await page.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'draft');
+  await expect(page.locator('.fl-detail .fl-dver')).toHaveText('작성 중 1/3');
+  await expect(page.locator('[data-slot="2"]').getByRole('button', { name: '이어서 · 공간 · 제품' })).toBeVisible();
+  await page.locator('[data-slot="2"]').getByRole('button', { name: '이어서 · 공간 · 제품' }).click();
+  await expect(page).toHaveURL(/step=space/);
 });

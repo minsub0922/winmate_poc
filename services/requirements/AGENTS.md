@@ -30,6 +30,13 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
 
 ## 현재 상태 (2026-10-12)
 
+### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
+상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/requirements/new` 빈 최종본 + ① 요구사항 입력 팝업(첫 입력에 문서가 생기면 `/requirements/flow/:id?step=input` 로 바꿔치기) · `/requirements/flow/:id` 최종본(RQ_View) · `?step=input` 팝업.
+완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 ### 새 흐름(2026-10-08) — 보드 webapp1 RQ0 · RQ1 · RQ_View(아티팩트 v60) · `docs/scenarios/11-content-flow.md` §6
 - **AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다** — 사용자 결정. `deep-questions` · `…:answer` · `deep-questions:close` 경로, `RFDeep*` · `RFAnswer` 스키마,
   `RFDoc.deep` · `RFDoc.target_ask` · `counts.pending`, task `rq.deep_questions.v1`(mock 포함), 웹 `DeepPanel`(RQ1_AI 380 패널) · 「AI 심층 질의로 폼 완성」 버튼 · 「AI 질의로 채움」 표시를 지웠다.

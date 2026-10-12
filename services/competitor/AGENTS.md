@@ -29,6 +29,10 @@ make contracts SERVICE=competitor    # contracts/competitor.json 갱신 + 깨지
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
 ## 현재 상태
+
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 - **새 흐름(2026-10-08 · 보드 webapp1 CA0 · CA1 · CA2 · CA2_Info · CA2_Pc · CA2_AI · View content=ca(CA_View · 2026-10-12) · docs/scenarios/11-content-flow.md §6 `ca`)**
   - 백엔드 `caflow.py` · `api_flow.py` — `/v1/ca-flows*`(스키마 접두어 `CF*`): 만들기(Storyboard DSS → 비교 기준 제품군 · 개수, 없으면 404 · DSS 전 422) ·
     경쟁사 직접 추가(웹 검색 요약 위키, 근거 없는 값 `[위키 값]` · `[확인 필요]`) · 비교 쌍(DSS 제품만, 5축 우위/비슷/열위/자료 없음 + 메모) ·

@@ -31,31 +31,27 @@ export function normalize(d: S['SFDoc']): SFDoc {
 
 const P = (flow_id: string) => ({ params: { path: { flow_id } } });
 export const sfKey = (id: string) => ['spec', 'flow', id] as const;
-export const sfListKey = ['spec', 'flows'] as const;
 export const sfStageKey = (id: string) => ['spec', 'flow', id, 'stage'] as const;
+export const sfListKey = ['spec', 'flows'] as const;
 export const sfRoute = (id: string) => `/spec/flow/${id}`;
 
 export function useSpecFlow(id: string) {
-  return useQuery({ queryKey: sfKey(id), enabled: !!id, queryFn: () => fetchDoc(id) });
+  return useQuery({ queryKey: sfKey(id), enabled: !!id, queryFn: async () => normalize(unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}', P(id)))) });
 }
 
-/** 저장 판의 stages.sp · XLSX 파일(보기의 「XLSX 내려받기」) — 저장 응답을 그대로 넣고, 다시 열면 `/stage` 에서 읽는다 */
-export function useSfStage(id: string, enabled = true) {
-  return useQuery({ queryKey: sfStageKey(id), enabled: !!id && enabled,
-    queryFn: async () => unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}/stage', P(id))) });
-}
-
-async function fetchDoc(id: string) {
-  return normalize(unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}', P(id))));
+/** 저장 판의 stages.sp + XLSX(file) — 최종본 머리 「XLSX 내려받기」 · 옵션 줄 「파일」. 문서(SFDoc)에는 file 이 없어 `/stage` 로 읽는다(저장 직후는 :finish 응답을 넣는다) */
+export function useSpecStage(id: string, enabled: boolean) {
+  return useQuery({ queryKey: sfStageKey(id), enabled: !!id && enabled, queryFn: async () => unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}/stage', P(id))) });
 }
 
 export function useSpecFlows() {
   return useQuery({ queryKey: sfListKey, queryFn: async () => unwrap(await api.spec.GET('/v1/spec-flows', { params: { query: { limit: 50 } } })) });
 }
 
-/** 만들기 — 같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 돌려준다(Gate 를 다시 거쳐도 초안이 둘이 되지 않게) */
-export async function createSpecFlow(sbId: string): Promise<SFDoc> {
-  return normalize(unwrap(await api.spec.POST('/v1/spec-flows', { body: { sb_id: sbId } })));
+/** 만들기 — 같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 돌려준다(200 · reused — Gate 를 다시 거쳐도 초안이 둘이 되지 않게) */
+export async function createSpecFlow(sbId: string): Promise<{ doc: SFDoc; reused: boolean }> {
+  const r = await api.spec.POST('/v1/spec-flows', { body: { sb_id: sbId } });
+  return { doc: normalize(unwrap(r)), reused: r.response.status === 200 };
 }
 
 /** 저장 전 초안 지우기(목록 줄의 ×) — 저장한 시트는 409 SAVED_CONTENT */
@@ -96,13 +92,13 @@ export function useSfActions(id: string) {
     /** DSS 에서 빠진 행 지우기 */
     deleteRow: (rowKey: string) => run((d) => ({ ...d, rows: d.rows.filter((x) => x.key !== rowKey) }),
       async () => unwrap(await api.spec.DELETE('/v1/spec-flows/{flow_id}/rows/{row_key}', { params: { path: { flow_id: id, row_key: rowKey } } }))),
-    /** 저장 — 저장 판(ver · status) 문서와 파일을 캐시에 넣은 뒤 돌려준다(보기로 바로 넘어가도 빈 칸이 없게). 목록 · 허브는 무효화 */
     finish: async (): Promise<SFStageOut> => {
       const r = unwrap(await api.spec.POST('/v1/spec-flows/{flow_id}:finish', P(id)));
+      // 팝업이 닫히자마자 최종본이 저장됨으로 그려지게(다시 읽기 전까지 판 · 상태를 먼저 넣는다)
+      const ver = (r.stage as { ver?: number | null }).ver;
+      qc.setQueryData<SFDoc>(sfKey(id), (d) => d && { ...d, status: 'done', ver: ver ?? (d.ver ?? 0) + 1 });
       qc.setQueryData(sfStageKey(id), r);
-      const d = await fetchDoc(id).catch(() => null);
-      if (d) qc.setQueryData(sfKey(id), d);
-      else void qc.invalidateQueries({ queryKey: sfKey(id), exact: true });
+      void qc.invalidateQueries({ queryKey: sfKey(id), exact: true });
       void qc.invalidateQueries({ queryKey: sfListKey });
       void qc.invalidateQueries({ queryKey: ['storyboard'] });   // 허브 진행 칸 · flow.json · 목록(보드 List)
       return r;

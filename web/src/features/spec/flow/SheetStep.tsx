@@ -1,21 +1,17 @@
 /**
- * Spec 시트 · 시트 작성(보드 webapp1 SP2) ↔ 보기(보드 View content=sp · SP_View, ./SpView.tsx) — `/spec/flow/:id`
- * 저장한 시트 + `?edit` 없음 → 보기, 저장 전 초안 · `?edit=1` → 시트 작성. 「시트 만들기」(저장) → 같은 주소의 보기(완료 안내 없음).
+ * Spec 시트 · ② 시트 작성(보드 webapp1 SP2 · 고치기 SP2_Edit) — 최종본(SP_View) 위 단계 팝업(StepModal) 본문. 상세 페이지: ./FlowPages.tsx
  * 왼쪽 DSS 제품(330 · 체크 = 시트에 넣기, 오른쪽 모델 칩 = 모델 고르기 · 바꾸기 · 수량) | 오른쪽 형식 · 항목 · 표기 칩 + 미리보기(130 + 제품 칸).
- * 값은 공식 카탈로그(KB)에서만, 없는 값은 [확인 필요]. 보드 px 그대로(sheet.css). 본문 열은 셸 규칙(1180) · 패널 안에서만 스크롤.
+ * 값은 공식 카탈로그(KB)에서만, 없는 값은 [확인 필요]. 보드 px 그대로(sheet.css) · 패널 안에서만 스크롤. 저장(시트 만들기 / 저장 · vN)하면 XLSX 를 만들고 팝업이 닫힌다.
  * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 나머지 칸은 그대로.
+ * 팝업 안에서는 Storyboard 페이지로 가는 뒤로 링크를 그리지 않는다(팝업 머리의 Storyboard 칩 · ×).
  */
 import { useState, type ReactNode } from 'react';
-import { useParams } from 'react-router';
-import { FlowBar, useEditMode, useShellPage } from '@/shell';
-import { AiBar, ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, LinkedStoryboardBar, Skeleton, cx, toast } from '@/ui';
-import { ITEM_KO, WARN_SHORT, dssChangeText, resyncToast, useSfActions, useSpecFlow, type SFDoc, type SFRow, type SFStageOut } from './api';
-import { SpView } from './SpView';
+import { CONTENT, FlowBar, useShellPage } from '@/shell';
+import { AiBar, FlowFooter, FlowHead, FlowPanel, FlowScreen, LinkedStoryboardBar, cx, toast, useInStepPopup } from '@/ui';
+import { ITEM_KO, WARN_SHORT, dssChangeText, resyncToast, useSfActions, type SFDoc, type SFRow, type SFStageOut } from './api';
 import { ModelDialog } from './ModelDialog';
 import './sheet.css';
 
-const SECTION = 'Spec 시트 생성';
-const STEPS = ['Storyboard', '시트 작성'];
 const FORMATS = [['compare', '비교표'], ['per_product', '제품별 1장']] as const;
 const NOTATIONS = [['ko_mm', '한국어 · mm'], ['en_inch', '영문 · inch']] as const;
 const PENDING = new Set(['[확인 필요]', '[To be confirmed]']);
@@ -113,11 +109,18 @@ function Preview({ doc }: { doc: SFDoc }) {
   );
 }
 
-function Editor({ doc, onFinished }: { doc: SFDoc; onFinished: (r: SFStageOut) => void }) {
+/**
+ * ② 시트 작성 — 팝업 안 본문(보드 SP2 · SP2_Edit). 바닥 주 버튼: 새로 「시트 만들기」 · 고치기 「저장 · vN」(saveLabel).
+ * 저장하면 XLSX 를 만들고 onSaved(응답) — 페이지가 팝업을 닫아 최종본을 보인다(완료 화면 없음).
+ * 팝업 밖(이전 주소에서 바로 그릴 때)에서는 Storyboard 바 · 뒤로 링크를 그대로 그린다.
+ */
+export function SheetStep({ doc, saveLabel = '시트 만들기', onSaved }: { doc: SFDoc; saveLabel?: string; onSaved: (r: SFStageOut) => void }) {
+  const inPop = useInStepPopup();
   const act = useSfActions(doc.id);
   const [modelKey, setModelKey] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  useShellPage({ section: CONTENT.sp.label, title: doc.title || CONTENT.sp.short, hasTask: true });
   const on = doc.rows.filter((r) => r.on).length;
   const c = doc.counts;
   const fail = (e: unknown) => toast(errText(e, '바꾸지 못했어요'));
@@ -127,7 +130,7 @@ function Editor({ doc, onFinished }: { doc: SFDoc; onFinished: (r: SFStageOut) =
   const setFormat = (k: (typeof FORMATS)[number][0]) => act.patch({ format: k }, (d) => ({ ...d, format: k })).catch(fail);
   const save = async () => {
     setSaving(true);
-    try { onFinished(await act.finish()); } catch (e) { toast(errText(e, '저장하지 못했어요.')); } finally { setSaving(false); }
+    try { onSaved(await act.finish()); } catch (e) { toast(errText(e, '저장하지 못했어요.')); } finally { setSaving(false); }
   };
   const resync = async () => {
     if (syncing) return;
@@ -169,36 +172,13 @@ function Editor({ doc, onFinished }: { doc: SFDoc; onFinished: (r: SFStageOut) =
           </div>
         </div>
       </div>
-      <FlowFooter back={doc.sb_id ? { to: `/storyboard/flow/${doc.sb_id}`, label: 'Storyboard' } : { to: '/spec', label: '목록' }}
+      <FlowFooter back={inPop ? undefined : doc.sb_id ? { to: `/storyboard/flow/${doc.sb_id}`, label: 'Storyboard' } : { to: '/spec', label: '목록' }}
         summary={why ?? summary} summaryTone="warn"
-        primary={{ label: '시트 만들기', onClick: save, busy: saving, disabled: !!why }} />
+        primary={{ label: saveLabel, onClick: save, busy: saving, disabled: !!why }} />
       <ModelDialog doc={doc} rowKey={modelKey} onClose={() => setModelKey(null)}
         onPick={(code) => act.patchRow(modelKey!, { model_code: code })}
         onQty={(qty) => act.patchRow(modelKey!, { qty }, (d) => ({ ...d, rows: d.rows.map((x) => (x.key === modelKey ? { ...x, qty } : x)) }))}
         onClear={() => act.patchRow(modelKey!, { clear_model: true })} />
     </FlowScreen>
   );
-}
-
-/** 한 번이라도 저장했으면 보여 줄 완성본이 있다(서버 ever_saved 와 같은 규칙) */
-const isSaved = (d: SFDoc | undefined) => !!d && (d.status === 'done' || (d.ver ?? 0) > 0);
-
-function Body({ id }: { id: string }) {
-  const q = useSpecFlow(id);
-  const { editing, toView } = useEditMode();
-  const d = q.data;
-  const view = isSaved(d) && !editing;
-  const title = d && d.ver ? (d.code ?? d.title) : '새 Spec 시트';
-  useShellPage(view ? { section: SECTION, title: d!.code ?? d!.title, hasTask: false } : { section: SECTION, title, hasTask: true, stepper: { steps: STEPS, current: 2 } });
-  if (q.isError) return <div className="wm-page"><ErrorState message="Spec 시트를 불러오지 못했어요 · 지워졌거나 주소가 바뀌었을 수 있어요" onRetry={() => q.refetch()} /></div>;
-  if (!d) return <div className="wm-page"><Skeleton h={480} r={14} /></div>;
-  if (view) return <SpView doc={d} />;
-  // 저장하면 그 시트 보기로(같은 주소 · ?edit 만 뗀다 · 완료 안내 없음). 문서 · 파일 캐시 갱신 · 목록 · 허브 무효화는 finish 가 한다
-  return <Editor doc={d} onFinished={() => toView()} />;
-}
-
-/** `/spec/flow/:id` — 다른 시트로 옮기면 화면 상태를 새로 */
-export function SheetPage() {
-  const { id = '' } = useParams();
-  return <Body key={id} id={id} />;
 }

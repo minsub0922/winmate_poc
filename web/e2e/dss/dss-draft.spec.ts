@@ -24,7 +24,7 @@ async function startFromGate(page: Page, name: string, resume = false) {
     await shotTo(page, DIR, 'DS1-draft-new');
   }
   await page.getByRole('button', { name: resume ? '초안 이어 쓰기' : '이 Storyboard로 시작' }).click();
-  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+$/, { timeout: 15_000 });
+  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+\?step=space$/, { timeout: 15_000 });
   await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
   return page.url().split('/').pop()!.split('?')[0];
 }

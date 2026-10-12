@@ -1,7 +1,8 @@
 /**
  * 경쟁사 분석(CA) 기능 모듈 — 소유: competitor 서비스 세션. 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 새 흐름(2026-10-08 · docs/scenarios/11-content-flow.md · 보드 webapp1 CA0~CA2_AI · View content=ca) — ./flow/CaFlowPages.tsx
- *   /competitor(CA0 List) · /competitor/new(CA1 Gate · `?sb=&auto=1`) · /competitor/flow/:id(저장한 분석 = CA_View 보기 · 초안 · `?edit=1` = CA2 `?tab=info|pc`)
+ * 새 흐름(보드 webapp1 v62 · docs/scenarios/11-content-flow.md — 상세 = 최종본 한 장 + 단계 팝업) — ./flow/CaFlowPages.tsx
+ *   /competitor(CA0 List) · /competitor/new(빈 최종본 + ① CA1 Gate 팝업 · `?sb=&auto=1`)
+ *   /competitor/flow/:id(최종본 CA_View · CA_Draft · `?step=list` ② CA2 팝업 · `&tab=info|pc` · 저장된 것은 고치기 CA2_Edit)
  * 이전 흐름(제안서 handoff 가 아직 읽는다 · 수용 기준 docs/scenarios/04-competitor.md):
  *   /competitor/legacy(CA0) · /competitor/legacy/new(CA1 · `?input=requirements&rq=` CA1R — /competitor/new?input= 도 이리로) · /competitor/:id → 작업의 route
  *   /competitor/:id/input(CA1 · CA1R) · finding(CA1G) · ask(CA2Q) · candidates(CA2) · run(CA3) · criteria(CA3C)
@@ -11,7 +12,7 @@ import { useEffect, useState, type ComponentType } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { feature } from '@/shell/feature';
 import { getAnalysis } from './api';
-import { CaFlowPage, CaGateScreen, CaListScreen } from './flow/CaFlowPages';
+import { CaDetailPage, CaListScreen, CaNewPage } from './flow/CaFlowPages';
 import { ErrorCol, LoadingCol } from './parts';
 import { AskPage } from './pages/AskPage';
 import { CandidatesPage } from './pages/CandidatesPage';
@@ -52,8 +53,8 @@ export default feature({
   home: { section: 'plan', title: '경쟁사 분석', desc: '경쟁사 찾기 · 비교 기준 · 신뢰도', mark: 'new' },
   routes: [
     { index: true, element: <CaListScreen /> },
-    { path: 'new', element: <CaGateScreen /> },
-    { path: 'flow/:id', element: <CaFlowPage /> },
+    { path: 'new', element: <CaNewPage /> },
+    { path: 'flow/:id', element: <CaDetailPage /> },
     // 이전 흐름 — 목록 · 새로 만들기만 /legacy 로 옮겼다(나머지 /:id/... 그대로)
     { path: 'legacy', element: <ListPage /> },
     { path: 'legacy/new', element: <InputPage /> },

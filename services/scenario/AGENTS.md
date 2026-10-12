@@ -30,6 +30,16 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
 
 ## 현재 상태
 
+### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
+상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/scenario/new` 빈 최종본 + ① Gate 팝업 · `/scenario/spaces/:id` 최종본(SC_View · `ScView.tsx`) · `?step=spaces` 팝업(`SpacesStep.tsx`).
+완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+
+**새 흐름(2026-10-08) · Storyboard 허브 연결 · 보드 webapp1 v58 SC0 · SC1 · SC2* · SC_Done · SC_DoneJson**
+- 라우트: `/scenario` = SC0(셸 `ContentListScreen content="sc"`, 작성 중 초안은 `/v1/space-sets`) · `/scenario/new` = SC1(셸 `GateScreen`, `?sb=SB-NN&auto=1` 이면 바로 만듦 — DSS 완료 화면의 후속 작업) ·
+  `/scenario/spaces/:id` = SC2(`FlowBar` = 실제 Storyboard) → 저장 → SC_Done(`FlowDoneView` · 전체 JSON · 「Storyboard로」). 코드 `web/src/features/scenario/spaces/`(FlowPages.tsx · SpacesPage.tsx).
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 **새 흐름(2026-10-08) · Storyboard 허브 연결 · 보드 webapp1 v60 SC0 · SC1 · SC2* · View content=sc(SC_View)**
 - 라우트: `/scenario` = SC0(셸 `ContentListScreen content="sc"`, 작성 중 초안은 `/v1/space-sets`) · `/scenario/new` = SC1(셸 `GateScreen`, `?sb=SB-NN&auto=1` 이면 바로 만듦 — DSS 보기의 후속 작업) ·
   `/scenario/spaces/:id` = 저장한 묶음(`ver` > 0 · done)이면 **보기**(SC_View · `ScView.tsx` · 셸 `FlowContentView`), `?edit=1` 또는 저장 전 초안이면 SC2 편집(`FlowBar` = 실제 Storyboard).

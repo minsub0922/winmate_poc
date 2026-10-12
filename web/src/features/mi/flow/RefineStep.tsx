@@ -1,22 +1,31 @@
 /**
- * MI3 정제(보드 webapp1 MI3.dc.html) — 찾은 정보를 시장 · 고객사 · 사용자 탭으로, 줄마다 담기/빼기 · 출처(종류 · 이름 · 날짜) · 수치 원문 확인 ·
+ * MI3 정제(보드 webapp1 v62 MI3 — 최종본 위 ③ 정제 팝업) — 찾은 정보를 시장 · 고객사 · 사용자 탭으로, 줄마다 담기/빼기 · 출처(종류 · 이름 · 날짜) · 수치 원문 확인 ·
  * v1에서 유지 / 새로 찾음 · 원문 · 문장 고치기. 담은 것만 Storyboard 에 들어간다.
+ * 바닥: 「‹ 검색어 고치기」(② 검색 팝업으로) · 「MI 저장」(새로 만들기) / 「MI 저장 · vN」(고치기) — 저장하면 팝업이 닫히고 최종본.
  * 원문: 검색 도구가 URL 을 줬으면 그 URL 을 열고, 요약형 검색(URL 없음)이면 그 문장을 뽑은 검색 결과 글을 보여 준다(URL 을 만들지 않는다).
  */
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Modal, cx, toast } from '@/ui';
-import { GROUPS, itemsOf, mfKey, type MFDoc, type MFItem, type MFResult, type MFStageOut, type useMfActions } from './api';
+import { GROUPS, itemsOf, mfKey, type MFDoc, type MFItem, type MFResult, type useMfActions } from './api';
 
 type Actions = ReturnType<typeof useMfActions>;
 
-/** 출처 이름 · 날짜(이름이 종류와 같으면 뺀다) — 보기(MiView)도 쓴다 */
+/** 출처 줄(이름 · 날짜) — 이름이 종류와 같으면 뺀다 */
 export const srcLine = (it: MFItem) => {
   const s = it.source;
   return [s.name && s.name !== s.type ? s.name : null, s.date].filter(Boolean).join(' · ');
 };
 
-export function RefineView({ doc, actions, onFinished }: { doc: MFDoc; actions: Actions; onFinished: (out: MFStageOut) => void | Promise<void> }) {
+export function RefineView({ doc, actions, onBack, onSave, saveLabel }: {
+  doc: MFDoc; actions: Actions;
+  /** 「검색어 고치기」 — 서버 단계를 search 로 돌린 뒤 ② 검색 팝업으로 */
+  onBack: () => void;
+  /** 「MI 저장」 — 저장(:finish)하고 팝업을 닫아 최종본으로(실패하면 던진다) */
+  onSave: () => Promise<void>;
+  /** 새로 만들기 「MI 저장」 · 고치기 「MI 저장 · vN」 */
+  saveLabel: string;
+}) {
   const qc = useQueryClient();
   const [tab, setTab] = useState(() => Math.max(0, GROUPS.findIndex((g) => itemsOf(doc).some((x) => x.group === g.label))));
   const [editId, setEditId] = useState<string | null>(null);
@@ -48,11 +57,11 @@ export function RefineView({ doc, actions, onFinished }: { doc: MFDoc; actions: 
   };
   const finish = async () => {
     setSaving(true);
-    try { await onFinished(await actions.finish()); } catch (e) { toast((e as Error).message || '저장하지 못했어요'); setSaving(false); }
+    try { await onSave(); } catch (e) { toast((e as Error).message || '저장하지 못했어요'); setSaving(false); }
   };
   const toSearch = async () => {
     setBack(true);
-    try { await actions.patch({ phase: 'search' }); } catch (e) { toast((e as Error).message || '검색어 화면으로 가지 못했어요'); setBack(false); }
+    try { await actions.patch({ phase: 'search' }); onBack(); } catch (e) { toast((e as Error).message || '검색어 화면으로 가지 못했어요'); setBack(false); }
   };
   const warn = (doc.warnings ?? []).join(' · ');
   return (
@@ -110,7 +119,7 @@ export function RefineView({ doc, actions, onFinished }: { doc: MFDoc; actions: 
         {doc.counts.kept === 0 ? <span className="wm-flow__summary wm-flow__summary--warn">담은 정보가 하나 이상 있어야 저장할 수 있어요</span>
           : warn && <span className="wm-flow__summary mif-warnline" title={warn}>{warn}</span>}
         <button type="button" className="wm-flow__primary" onClick={finish} disabled={saving || doc.counts.kept === 0} aria-busy={saving || undefined}>
-          {saving ? '저장 중…' : `MI 저장 · v${target}`}
+          {saving ? '저장 중…' : saveLabel}
         </button>
       </div>
       <OriginDialog item={orig} result={orig ? (doc.results ?? []).find((r) => r.id === orig.result_id) ?? null : null} onClose={() => setOrig(null)} />
@@ -136,7 +145,7 @@ function EditLine({ it, onSave, onCancel }: { it: MFItem; onSave: (t: string) =>
   );
 }
 
-/** 원문(URL 없음) — 이 문장을 뽑은 검색 결과 글 그대로(정제 · 보기 공용) */
+/** 원문(URL 없음) — 이 문장을 뽑은 검색 결과 글 그대로(정제 팝업 · 최종본이 함께 쓴다) */
 export function OriginDialog({ item, result, onClose }: { item: MFItem | null; result: MFResult | null; onClose: () => void }) {
   return (
     <Modal open={!!item} onClose={onClose} width={640} title="원문 · 검색 결과" bodyStyle={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}

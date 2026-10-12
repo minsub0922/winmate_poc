@@ -312,10 +312,9 @@ return <>{/* 화면 */}{dialog}</>;
 | `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
 
 **셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List v61 — 가운데 「새 ○○ 만들기」 · 작업 내역 그리드 · 썸네일 = 허브 `card` · n/N 단계, `DraftRow.step` 으로 초안의 지금 단계 · 초안 카드의 Storyboard 칩도 이름) · 목록 부품 `ListHero({to, label, steps, note})` · `HistoryHead({count, legend})` · `SegLegend` · `StepMeter({n, total, text, segs, gaps})` · `ThumbFrame({to?, badge, tone})` · `CardMini({card, note})`(SB0 도 쓴다) ·
-`GateScreen({content, onStart, initialSb, autoStart, drafts?})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
-`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다 · 「편집 화면에서 고치기」 = `editRoute(route)`) ·
-`FlowContentView({stageKey, sbIds, title, refVer, meta, editTo?, actions?, follow?})`(보드 View — 저장 뒤 · 목록 · 작업 내역에서 여는 콘텐츠 보기, 본문은 children · 완료 안내 없음) ·
-`useEditMode()`(`?edit=1` 이면 편집 · `toView()` 는 저장 뒤 보기로) · `editRoute(route)` ·
+`GateScreen({content, onStart, initialSb, autoStart, drafts?, openStep?})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다 · 단계 팝업 안이면 「목록」 링크를 숨기고 `openStep` 으로 그 단계 팝업을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup — 단계 팝업 안에서는 그리지 않는다) ·
+`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다 · 「콘텐츠 열기 · 단계별로 고치기」 = 최종본) ·
+**상세 = 최종본 + 단계 팝업(보드 v62 · CF-12 · `shell/flow/detail.tsx`)**: `ContentDetail({content, status: 'saved'|'new'|'draft', title, refVer, meta, sbIds, steps, done, onStep, actions?, json?, notice?, follow?, children})`(보드 View — 머리의 단계 칩 = 「단계별 고치기」) · `StepModal({open, content, title, mode: 'new'|'edit', ver, sbId, note, steps, current, done, onStep, onClose, children})`(1180×800 · 머리 StepHead 72 · 안의 FlowScreen 은 SB 바 없음 · `useShellPage` 는 작업 추가 맥락만 얹는다 · Esc 는 맨 위 것만) · `StepSlot({n, label, what, next, cta, onOpen, big?})`(빈 칸 자리표시 · 「이어서」) · `DetailFollow({items})` · `useStepParam(keys)`(`?step=<키>` → `{step, open, close}`) · `useEditGuard(open, version)` · `useCloseAsk()`(계속 고치기 · 저장하지 않고 닫기 · 저장 · vN) · `useInStepPopup()`(`@/ui`) ·
 `CONTENT`(콘텐츠별 이름 · base · 스텝 이름 = 보드 Gate META) · `useFlow` · `useFlows` · `FlowDots` · `whenText`.
 
 **폭 규칙**: 셸이 `.sh-content` 의 직계 자식을 `--wm-main-w`(1180px) 가운데 열로 맞춘다. 화면은 자기 max-width 를 주지 않는다.

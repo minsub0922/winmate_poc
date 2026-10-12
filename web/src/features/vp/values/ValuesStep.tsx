@@ -1,27 +1,24 @@
 /**
- * VP · 가치 · 고객의 니즈(보드 webapp1 VP2 · VP2_AI · VP2_Pick · VP2_Detail · View content=vp) — `/vp/values/:id`
- * 저장한 맵은 `?edit` 없이 열면 보기(VpView · VP_View), `?edit=1` 이면 이 편집 화면. 저장하면 `?edit` 를 떼고 보기로(완료 화면 없음).
+ * VP ② 단계 「가치 · 고객의 니즈」(보드 webapp1 v62 VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP2_Edit) — 최종본(`/vp/values/:id`) 위 단계 팝업(StepModal) 본문.
  * 왼쪽 고른 제품 · 솔루션(280) | 오른쪽 선택한 것의 가치 카드 여러 장. 가치마다 고객의 니즈(직접 · AI 추론, 점선 → 수락).
- * 값은 보드 px 그대로(values.css). 본문 열은 셸 규칙(최대 1180 가운데) · 높이는 화면을 채우고 패널 안에서 스크롤.
+ * 값은 보드 px 그대로(values.css · 팝업 본문 section 1180×728 · padding 18 40). 팝업 안에서는 Storyboard 바 · 「목록」 링크가 없다(머리 StepHead 가 보여 준다).
+ * 바닥 주 버튼은 부모가 준다(새로 만들기 「저장」 · 고치기 「저장 · vN+1」) — 누르면 저장하고 팝업이 닫혀 최종본이 채워진다(완료 화면 없음).
+ * 제품 · 솔루션 고르기(VP2_Pick · ProdPicker) · 연결된 가치 전체 보기(VP2_Detail)는 이 팝업 위에 겹쳐 뜬다.
  * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 칸 폭은 그대로.
  * 다시 가져온 뒤 새 DSS 후보는 고르기 대화상자에 「새로」, 골라 둔 것이 DSS 에서 빠지면 왼쪽 줄 · 머리에 「DSS에서 빠짐」(주황).
  */
 import { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router';
-import { useQueryClient } from '@tanstack/react-query';
 import { useShellPage } from '@/shell/ShellContext';
-import { FlowBar, useEditMode, useFlowInvalidate } from '@/shell';
 import {
-  AiBar, AiButton, ByTag, ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, KindTag, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast,
+  AiBar, AiButton, ByTag, FlowFooter, FlowHead, FlowPanel, FlowScreen, KindTag, LinkedStoryboardBar, ProductPickerDialog, cx, toast, useInStepPopup,
   type ByKind, type PickItem,
 } from '@/ui';
-import { dssChangeText, resyncToast, useValueMap, useVmActions, vmListKey, type VMDoc, type VMItem, type VMStageOut, type VMValue } from './api';
+import { FlowBar } from '@/shell';
+import { dssChangeText, resyncToast, useVmActions, type VMDoc, type VMItem, type VMValue } from './api';
 import { VpDetailDialog } from './VpDetailDialog';
-import { VpView } from './VpView';
 import './values.css';
 
 const SECTION = 'Value Proposition';
-const STEPS = ['Storyboard', '가치 · 고객의 니즈'];
 
 function NeedRow({ v, onSave, onInfer, onAccept, inferring }: {
   v: VMValue; onSave: (t: string) => void; onInfer: () => void; onAccept: () => void; inferring: boolean;
@@ -136,14 +133,19 @@ function AddCard({ item, actions, onDone }: { item: VMItem; actions: ReturnType<
   );
 }
 
-function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) => void }) {
+/** 팝업 바닥 주 버튼(부모가 저장 · 닫기) */
+export interface ValuesSave { label: string; onClick: () => void; busy?: boolean }
+
+/** resyncNow: 최종본의 DSS 바뀜 안내 「다시 가져오기」로 열었으면 열자마자 다시 가져온다(한 번 · onResynced 로 부모가 끈다) */
+export function ValuesStep({ doc, save, resyncNow, onResynced }: { doc: VMDoc; save: ValuesSave; resyncNow?: boolean; onResynced?: () => void }) {
+  const inPop = useInStepPopup();
   const actions = useVmActions(doc.id);
+  useShellPage({ section: SECTION, title: doc.title || 'VP', hasTask: true });
   const [selKey, setSelKey] = useState<string | null>(doc.items[0]?.key ?? null);
   const [pop, setPop] = useState<'' | 'pick' | 'detail'>('');
   const [adding, setAdding] = useState(false);
   const [inferring, setInferring] = useState<string | null>(null);
   const [aiBusy, setAiBusy] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const items = doc.items;
   const cur = items.find((i) => i.key === selKey) ?? items[0] ?? null;
@@ -185,10 +187,12 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
     setSyncing(true);
     try { toast(resyncToast((await actions.resync()).last_resync)); } catch (e) { toast((e as Error).message || 'DSS를 다시 가져오지 못했어요.'); } finally { setSyncing(false); }
   };
-  const save = async () => {
-    setSaving(true);
-    try { onFinished(await actions.finish()); } catch (e) { toast((e as Error).message || '저장하지 못했어요.'); } finally { setSaving(false); }
-  };
+  useEffect(() => {
+    if (!resyncNow) return;
+    onResynced?.();
+    if (doc.dss_changed) void resync();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 열 때 한 번
+  }, [resyncNow]);
 
   return (
     <FlowScreen pad="18px 40px" gap={12} className="vv-screen"
@@ -256,39 +260,13 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
           ) : <div className="vv-empty" style={{ margin: 14 }}><b>제품 · 솔루션을 골라 주세요</b><span>위의 “제품 · 솔루션 고르기”에서 VP 에 넣을 것을 고르세요.</span></div>}
         </FlowPanel>
       </div>
-      <FlowFooter back={{ to: '/vp', label: '목록' }} summary={`제품 · 솔루션 ${c.items} · 가치 ${c.values} · 니즈 ${c.needs}/${c.values}`}
-        primary={{ label: '저장', onClick: save, busy: saving, disabled: c.values === 0 }} />
+      <FlowFooter back={inPop ? undefined : { to: '/vp', label: '목록' }}
+        summary={c.values ? `제품 · 솔루션 ${c.items} · 가치 ${c.values} · 니즈 ${c.needs}/${c.values}` : '가치를 하나 이상 적어야 저장할 수 있어요'} summaryTone={c.values ? undefined : 'warn'}
+        primary={{ label: save.label, onClick: save.onClick, busy: save.busy, disabled: c.values === 0 }} />
       <ProductPickerDialog open={pop === 'pick'} onClose={() => setPop('')} title="VP에 넣을 제품 · 솔루션 고르기" min={1}
         sub="DSS에서 고른 것 중 가치를 적을 것을 고르세요. DSS에 없는 제품 · 솔루션도 카탈로그에서 더할 수 있어요."
         groups={groups} picked={picked} onToggle={togglePick} />
       {cur && <VpDetailDialog open={pop === 'detail'} onClose={() => setPop('')} doc={doc} item={cur} onImport={(b) => actions.importValue(cur.key, b)} />}
     </FlowScreen>
-  );
-}
-
-/** 한 번이라도 저장했으면 보여 줄 완성본이 있다 */
-const isSaved = (d: VMDoc | undefined) => !!d && (d.status === 'done' || !!d.ver);
-
-/** `/vp/values/:id` — 저장한 맵 + `?edit` 없음 → 보기(VP_View) · 그 밖(저장 전 초안 · `?edit=1`) → 편집(VP2) */
-export function ValuesPage() {
-  const { id = '' } = useParams();
-  const qc = useQueryClient();
-  const inval = useFlowInvalidate();
-  const { editing, toView } = useEditMode();
-  const q = useValueMap(id);
-  const d = q.data;
-  const view = isSaved(d) && !editing;
-  useShellPage(view ? { section: SECTION, title: d!.code ?? d!.title, hasTask: false }
-    : { section: SECTION, title: d ? (d.code ? `${d.code} · ${d.title}` : d.title) : '새 VP', hasTask: true, stepper: { steps: STEPS, current: 2 } });
-  if (q.isError) return <div className="wm-page"><ErrorState message="가치 맵을 불러오지 못했어요" onRetry={() => q.refetch()} /></div>;
-  if (!d) return <div className="wm-page"><Skeleton h={480} r={14} /></div>;
-  if (view) return <VpView doc={d} />;
-  return (
-    <Editor doc={d} onFinished={() => {
-      // 저장하면 그 가치 맵 보기로(같은 주소 · ?edit 만 뗀다 · 완료 안내 없음) — 문서 캐시는 finish 가 이미 바꿨다
-      void qc.invalidateQueries({ queryKey: vmListKey });
-      inval();
-      toView();
-    }} />
   );
 }

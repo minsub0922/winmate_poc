@@ -1,6 +1,7 @@
 /**
- * 경쟁사 분석 저장 전 초안(보드에 없음 · 2026-10-10) — 실제 스택(MODEL_MODE=mock).
- * Gate 를 다시 거쳐 같은 Storyboard 로 시작하면 같은 초안을 이어서 연다(새 초안이 늘지 않음 · `POST /v1/ca-flows` 200) →
+ * 경쟁사 분석 저장 전 초안(보드 v62 CA_Draft · 목록 초안 줄) — 실제 스택(MODEL_MODE=mock).
+ * 새로 만들기(빈 최종본 + ① Gate 팝업)를 다시 거쳐 같은 Storyboard 로 시작하면 같은 초안의 ② 팝업을 연다(새 초안이 늘지 않음 · `POST /v1/ca-flows` 200) →
+ * 목록의 초안 줄 「열기」는 작성 중 최종본 + ② 팝업 → 닫으면 작성 중 최종본(「이어서」) →
  * 목록(보드 List)의 초안 줄에 손을 올리면 × → 확인 → 지운다(`DELETE /v1/ca-flows/{id}` 204).
  * 실행: WM_E2E_SUITE=competitor WM_E2E_DEV=1 WM_E2E_PORT=5204 npx playwright test e2e/competitor/ca-draft.spec.ts --workers=1
  */
@@ -8,17 +9,20 @@ import { expect, test, type APIRequestContext, type Page } from '@playwright/tes
 import { makeStoryboard, tag } from '../shell/flowkit';
 import { shot } from './helpers';
 
-/** Gate(보드 Gate) — 우리 Storyboard 를 골라 시작 → 편집 화면 id */
+/** ① Gate 팝업(보드 CA1) — 우리 Storyboard 를 골라 시작 → ② 경쟁사 리스트업 팝업(`?step=list`) · 문서 id */
 async function startFromGate(page: Page, name: string, resume = false) {
   await page.goto('/competitor/new');
+  await expect(page.getByRole('dialog', { name: '새 경쟁사 분석 · Storyboard' })).toBeVisible();
   const row = page.getByRole('radio', { name: new RegExp(name) });
   await row.click();
   await expect(row).toHaveAttribute('aria-checked', 'true');
   // 저장 전 초안은 허브에 없다(「있음」이 아님) — 초안이 있으면 「작성 중 초안 있음」 · 「초안 이어 쓰기」
   await expect(row).toContainText(resume ? '작성 중 초안 있음' : '이어서 만들기');
+  if (resume) await expect(page.locator('.fl-footline')).toContainText('초안을 이어서 열어요');
   await page.getByRole('button', { name: resume ? /초안 이어 쓰기/ : /이 Storyboard로 시작/ }).click();
-  await expect(page).toHaveURL(/\/competitor\/flow\/cflow_[0-9A-Za-z]+$/, { timeout: 20_000 });
+  await expect(page).toHaveURL(/\/competitor\/flow\/cflow_[0-9A-Za-z]+\?step=list$/, { timeout: 20_000 });
   await expect(page.getByRole('heading', { name: '경쟁사를 리스트업하고 우리 제안과 비교해요' })).toBeVisible();
+  await expect(page.locator('.fl-stepdlg .fl-shead__pos')).toHaveText('단계 2/2');
   return page.url().split('/').pop()!.split('?')[0];
 }
 
@@ -64,8 +68,19 @@ test('경쟁사 분석 초안 — Gate 를 다시 거쳐도 같은 초안 · 목
   const again = await page.request.post('/api/competitor/v1/ca-flows', { data: { sb_id: sb.id } });
   expect(again.status()).toBe(200);
   expect((await again.json()).id).toBe(id);
-  await expect(page.getByText('경쟁사 초안').first()).toBeVisible();
+  await expect(page.locator('.caf-row').filter({ hasText: '경쟁사 초안' })).toBeVisible();
   expect((await draftsOf(request, sb.id)).map((d) => d.id)).toEqual([id]);
+
+  // 목록의 초안 줄 「열기」 → 작성 중 최종본 + ② 팝업이 열린 채로 → 닫으면 작성 중 최종본(② 자리표시에 「이어서」)
+  await page.goto('/competitor');
+  await expect(page.getByRole('heading', { name: '경쟁사 분석', exact: true })).toBeVisible();
+  await page.locator('.fl-card').filter({ hasText: title }).locator('.fl-cardtitle').click();
+  await expect(page).toHaveURL(new RegExp(`/competitor/flow/${id}\\?step=list$`));
+  await expect(page.locator('.fl-stepdlg')).toBeVisible();
+  await page.getByRole('button', { name: '팝업 닫기' }).click();
+  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'draft');
+  await expect(page.locator('.fl-detail .fl-dver')).toHaveText('작성 중 1/2');
+  await expect(page.locator('[data-slot="2"]').getByRole('button', { name: '이어서 · 경쟁사 리스트업' })).toBeVisible();
 
   // 목록 → 초안 줄 × → 확인 → 빠짐(서버에서도 지워짐)
   await page.goto('/competitor');

@@ -9,7 +9,7 @@
  *     <FlowFooter back={{ to, label }} summary="…" primary={{ label: '저장', onClick }} />
  *   </FlowScreen>
  */
-import { useState as useStateLocal, type CSSProperties, type ReactNode } from 'react';
+import { createContext, useContext, useState as useStateLocal, type CSSProperties, type ReactNode } from 'react';
 import { Link } from 'react-router';
 import { cx } from './controls';
 import { Icon, PathIcon } from './icons';
@@ -62,10 +62,19 @@ export function LinkedStoryboardBar({ chips, note, emptyText = '저장하면 Sto
 }
 
 /** 작업 화면 본문(보드 section): SB 바 아래를 꽉 채우고 안에서 패널이 스크롤한다. pad = 보드 section padding 그대로 */
+/**
+ * 단계 팝업 안인가(보드 v62 — 콘텐츠 상세는 최종본 한 장, 단계 화면은 그 위 팝업 StepModal).
+ * 팝업 안의 FlowScreen 은 Storyboard 바를 그리지 않는다(팝업 머리 StepHead 가 연결 Storyboard · 안내를 보여 준다).
+ * useShellPage 는 팝업 안이면 페이지 맥락을 덮지 않고 「현재 작업에 추가」 맥락만 얹는다(스텝바 없음).
+ */
+export const StepPopupContext = createContext(false);
+export const useInStepPopup = () => useContext(StepPopupContext);
+
 export function FlowScreen({ bar, pad = '18px 40px', gap = 12, children, className }: { bar?: ReactNode; pad?: string; gap?: number; children: ReactNode; className?: string }) {
+  const inPop = useInStepPopup();
   return (
-    <div className={cx('wm-flow', className)}>
-      {bar}
+    <div className={cx('wm-flow', inPop && 'wm-flow--pop', className)}>
+      {!inPop && bar}
       <section className="wm-flow__section" style={{ padding: pad, gap }}>{children}</section>
     </div>
   );

@@ -30,6 +30,13 @@ make contracts SERVICE=vp    # contracts/vp.json 갱신 + 깨지는 변경 검�
 
 ## 현재 상태
 
+### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
+상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/vp/new` 빈 최종본 + ① Gate 팝업 · `/vp/values/:id` 최종본(VP_View · `VpView.tsx`) · `?step=values` 팝업 · `/vp/values/new` 는 옛 주소(이어 줌).
+완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+
+
+> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
+
 ### 새 흐름 · 가치 · 고객의 니즈 (2026-10-08 · `docs/scenarios/11-content-flow.md` §2 · 보드 webapp1 VP2*)
 - 백엔드 `valuemap.py` + `api_values.py` — `/v1/value-maps*`(DocStore `value_maps`, 코드 `VP-NN`). 스키마는 모두 `VM*` 접두(기존 스키마 이름과 겹치지 않게).
   - 만들기: KB S1(공간별 후보)로 후보 목록. 항목 고르기 `PUT …/items` · 가치 더하기/고치기/지우기 · `:accept-all` · 다른 제안의 가치 `values:import`.

@@ -1,0 +1,44 @@
+/* 고객 요구사항 최종본(보드 webapp1 v62 View content=rq) — 인라인 px 그대로 · 색은 같은 값의 토큰. 접두어 rqv- */
+
+/* 두 칸: 340 | 1fr · 간격 14 · 남은 높이를 채운다 */
+.rqv, .fl-dbody > .rqv { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px; }
+
+/* 왼쪽 사실 칸(흰 칸 r14 · padding 6 18 · 줄 padding 13 0 · 사이 선 #f0f2f5) */
+.rqv-facts { box-sizing: border-box; min-height: 0; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; padding: 6px 18px;
+  display: flex; flex-direction: column; overflow-y: auto; }
+.rqv-fact { display: flex; flex-direction: column; gap: 5px; padding: 13px 0; flex-shrink: 0; }
+.rqv-fact + .rqv-fact { border-top: 1px solid var(--wm-line-soft); }
+.rqv-fact__k { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--wm-text-muted); }
+.rqv-fact__k small { font-size: inherit; font-weight: 500; color: var(--wm-text-subtle); }
+.rqv-fact__v { font-size: 14px; line-height: 1.45; color: var(--wm-text); overflow-wrap: anywhere; }
+.rqv-fact__v--strong { font-size: 14.5px; font-weight: 600; }
+.rqv-fact__v--text { white-space: pre-wrap; }
+.rqv-fact__v--off { color: var(--wm-text-subtle); }
+.rqv-fact__v--src { color: var(--wm-text-2); }
+.rqv-fact__v--warn { font-size: 14.5px; font-weight: 600; color: var(--wm-amber); }
+
+/* 오른쪽 키맨별 요구사항(머리 h48 · padding 0 18 · 아래 선 / 목록 padding 12 16 · gap 10) */
+.rqv-kms { box-sizing: border-box; min-width: 0; min-height: 0; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px;
+  display: flex; flex-direction: column; overflow: hidden; }
+.rqv-kms__h { height: 48px; box-sizing: border-box; display: flex; align-items: center; gap: 8px; padding: 0 18px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }
+.rqv-kms__h b { font-size: 14px; font-weight: 700; flex-grow: 1; }
+.rqv-kms__sum { font-size: 12px; color: var(--wm-text-muted); white-space: nowrap; }
+.rqv-kms__list { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rqv-kms__none { font-size: 13px; color: var(--wm-amber); font-weight: 600; padding: 4px 2px; }
+
+/* 키맨 카드(1px r12 · padding 12 16 · 170 | 1fr · gap 14) */
+.rqv-km { box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 12px; padding: 12px 16px; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; flex-shrink: 0; }
+.rqv-km__who { display: flex; flex-direction: column; gap: 5px; align-items: flex-start; min-width: 0; }
+.rqv-km__who b { font-size: 14.5px; font-weight: 700; max-width: 100%; overflow-wrap: anywhere; }
+.rqv-km__who b.rqv-km__none { color: var(--wm-text-subtle); }
+.rqv-km__w { height: 22px; box-sizing: border-box; padding: 0 8px; border-radius: 999px; background: var(--wm-brand-50); color: var(--wm-brand); font-family: var(--wm-font-num);
+  font-size: 11.5px; font-weight: 800; display: flex; align-items: center; }
+.rqv-km__reqs { display: flex; flex-direction: column; min-width: 0; }
+
+/* 요구 줄(min-h 28 · gap 10 · 번호 14px Manrope 11.5/700 · 문장 13.5/1.45 · 확인 필요 h20 r999) */
+.rqv-req { display: flex; align-items: center; gap: 10px; min-height: 28px; }
+.rqv-req__n { width: 14px; flex-shrink: 0; font-family: var(--wm-font-num); font-size: 11.5px; font-weight: 700; color: var(--wm-text-subtle); }
+.rqv-req__t { font-size: 13.5px; line-height: 1.45; flex-grow: 1; min-width: 0; overflow-wrap: anywhere; }
+.rqv-req__warn { height: 20px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: var(--wm-amber-bg); color: var(--wm-amber); font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+.rqv-req--none { font-size: 13px; color: var(--wm-amber); font-weight: 600; }

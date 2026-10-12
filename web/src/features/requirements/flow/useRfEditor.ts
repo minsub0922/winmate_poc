@@ -1,6 +1,6 @@
 /**
- * RQ1 편집 상태 — 화면 폼(FForm)이 원본이고 600ms 뒤 폼 전체를 PUT 한다(expected_version · 409 면 새로 읽고 한 번 더).
- * - 아직 문서가 없으면(`/requirements/new`) 첫 입력 때 만들고(POST) onCreated 로 주소를 바꾼다(빈 초안을 만들지 않는다).
+ * RQ1 편집 상태(① 요구사항 입력 팝업) — 화면 폼(FForm)이 원본이고 600ms 뒤 폼 전체를 PUT 한다(expected_version · 409 면 새로 읽고 한 번 더).
+ * - 아직 문서가 없으면(`/requirements/new`) 첫 입력 때 만들고(POST) onCreated 로 주소를 바꾼다(빈 초안을 만들지 않는다 · 팝업은 그대로).
  * - PUT 응답으로는 폼 글자를 덮어쓰지 않는다(입력 중 공백 · 빈 줄 보호). 서버가 폼을 바꾸는 호출(파일 채우기)만 폼을 바꾼다.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -125,5 +125,8 @@ export function useRfEditor(initial: RFDoc | null, onCreated: (d: RFDoc) => void
   // 화면을 떠날 때 남은 입력 저장
   useEffect(() => () => { void flushRef.current(); }, []);
 
-  return { doc, form, saving, edit, flush, applyDoc, ensureDoc, docRef, rev };
+  /** 아직 서버에 보내지 않은 입력이 있는가(600ms 자동 저장 전) */
+  const pending = useCallback(() => savedRev.current < rev.current, []);
+
+  return { doc, form, saving, edit, flush, applyDoc, ensureDoc, docRef, rev, pending };
 }

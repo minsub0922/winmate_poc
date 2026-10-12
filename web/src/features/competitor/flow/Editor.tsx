@@ -2,17 +2,19 @@
  * CA2 · CA2_Info · CA2_Pc · CA2_AI — 경쟁사 리스트업 · 제안 기준 비교(보드 webapp1 CA2.dc.html 인라인 px 그대로 · caflow.css).
  * 왼쪽 290px 경쟁사 목록(직접 · AI 웹 탐색 · 점선 AI 후보 · 회사 이름으로 추가) | 오른쪽 1fr 고른 경쟁사(탭 3: 개요 · 선별 기준 / 제안 기준 비교 / 장단점 · 주장 포인트).
  * 바꾸는 호출은 모두 고친 문서를 돌려준다(→ 캐시). 보드에 없는 편집은 글을 눌러서 고치고, 더하기 · 빼기는 작게(올렸을 때만) 둔다.
+ * 보드 v62: 최종본 위 ② 단계 팝업 안 본문(1180×728) — 팝업 안에서는 Storyboard 바 · 「‹ Storyboard」 링크가 없다(보드 CA2 ft.hasBack=false).
+ * 바닥 버튼은 새로 만들기 「저장」 · 고치기 「저장 · vN」(saveLabel).
  */
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { FlowBar } from '@/shell';
 import { ApiError } from '@/api/client';
-import { AiButton, FlowFooter, FlowScreen, cx, displayUrl, josa, toast, useConfirm } from '@/ui';
+import { AiButton, FlowFooter, FlowScreen, cx, displayUrl, josa, toast, useConfirm, useInStepPopup } from '@/ui';
 import {
   DIMS, useCfActions,
-  type CFClaim, type CFCompetitor, type CFCriterion, type CFDoc, type CFDssItem, type CFMatch, type DimKey,
+  type CFClaim, type CFCompetitor, type CFCriterion, type CFDoc, type CFDssItem, type CFMatch, type CFStageOut, type DimKey,
 } from './api';
-import { InlineText, VerdictPill, hasPlaceholder, type V } from './edit';
+import { InlineText, VerdictPill, hasPlaceholder, useHoldEscape, type V } from './edit';
 
 type Tab = 'info' | 'cmp' | 'pc';
 const TABS: Array<[Tab, string]> = [['info', '개요 · 선별 기준'], ['cmp', '제안 기준 비교'], ['pc', '장단점 · 주장 포인트']];
@@ -114,7 +116,7 @@ function AddPair({ items, onAdd, onCancel, busy }: { items: CFDssItem[]; onAdd: 
   const [theirs, setTheirs] = useState('');
   const cats = [...new Set(items.map((i) => i.category))];
   return (
-    <div className="caf-addpair" role="group" aria-label="비교 쌍 추가">
+    <div className="caf-addpair" role="group" aria-label="비교 쌍 추가" onKeyDown={(e) => { if (e.key === 'Escape' && e.target instanceof HTMLSelectElement) onCancel(); }}>
       <label className="wm-sr-only" htmlFor="caf-ours">우리 제품 · 솔루션(DSS)</label>
       <select id="caf-ours" value={ours} onChange={(e) => setOurs(e.target.value)}>
         {cats.map((cat) => (
@@ -237,7 +239,9 @@ function PcTab({ c, patch }: { c: CFCompetitor; patch: (b: Parameters<ReturnType
 
 // ── 화면 ─────────────────────────────────────────────
 
-export function Editor({ doc, onFinished }: { doc: CFDoc; onFinished: (saved: CFDoc) => void }) {
+export function Editor({ doc, onFinished, saveLabel = '저장' }: { doc: CFDoc; onFinished: (out: CFStageOut) => void; saveLabel?: string }) {
+  const inPop = useInStepPopup();
+  useHoldEscape('.caf-screen');
   const act = useCfActions(doc.id);
   const { confirm, dialog } = useConfirm();
   const [sp, setSp] = useSearchParams();
@@ -299,7 +303,7 @@ export function Editor({ doc, onFinished }: { doc: CFDoc; onFinished: (saved: CF
   const save = async () => {
     if (saving) return;
     setSaving(true);
-    try { onFinished((await act.finish()).doc); } catch (e) { toast(errText(e)); } finally { setSaving(false); }
+    try { onFinished(await act.finish()); } catch (e) { toast(errText(e)); } finally { setSaving(false); }
   };
 
   const sbIds = doc.sb_id ? [doc.sb_id] : [];
@@ -380,9 +384,9 @@ export function Editor({ doc, onFinished }: { doc: CFDoc; onFinished: (saved: CF
         </div>
       </div>
 
-      <FlowFooter back={{ to: doc.sb_id ? `/storyboard/flow/${doc.sb_id}` : '/competitor', label: 'Storyboard' }}
+      <FlowFooter back={inPop ? undefined : { to: doc.sb_id ? `/storyboard/flow/${doc.sb_id}` : '/competitor', label: 'Storyboard' }}
         summary={n ? `경쟁사 ${n} · 비교 쌍 ${nPairs}` : '경쟁사를 하나 이상 목록에 넣어 주세요'} summaryTone={n ? undefined : 'warn'}
-        primary={{ label: '저장', onClick: () => void save(), busy: saving, disabled: !n }} />
+        primary={{ label: saveLabel, onClick: () => void save(), busy: saving, disabled: !n }} />
       {dialog}
     </FlowScreen>
   );

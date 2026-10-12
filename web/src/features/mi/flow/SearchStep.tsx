@@ -1,9 +1,9 @@
 /**
- * MI2_Loading · MI2(보드 webapp1 MI2.dc.html) — AI 가 Storyboard 를 읽는 동안의 단계 카드, 그다음 검색어(시장 · 고객사 · 사용자) · 검색 조건.
+ * MI2_Loading · MI2(보드 webapp1 v62 MI2 — 최종본 위 ② 검색 팝업) — AI 가 Storyboard 를 읽는 동안의 단계 카드, 그다음 검색어(시장 · 고객사 · 사용자) · 검색 조건.
  * 웹 검색이 도는 동안도 같은 단계 카드를 쓴다(보드에는 검색 중 화면이 없다). 값은 보드 인라인 스타일 px 그대로(miflow.css).
+ * 팝업 안이라 아래 줄에 뒤로 링크가 없다(사전 작업 Storyboard 는 MI 를 만든 뒤 바꾸지 않는다 — 보드 MI2 고치기 · DSS 와 같다).
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Link } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import { ApiError } from '@/api/client';
 import { cx, toast } from '@/ui';
@@ -19,17 +19,10 @@ const MAX_Q = 10;
 
 const norm = (t: string) => t.toLowerCase().replace(/[^0-9a-z가-힣]+/g, '');
 
-/** 아래 줄(보드: ‹ 뒤로 · 빈칸 · 요약 13 · 주 버튼 h48 + 돋보기) */
-export function SearchFooter({ backTo, backLabel, summary, onSearch, disabled, busy }: {
-  backTo?: string; backLabel: string; summary?: ReactNode; onSearch?: () => void; disabled?: boolean; busy?: boolean;
-}) {
+/** 아래 줄(보드: 빈칸 · 요약 13 · 주 버튼 h48 + 돋보기) */
+export function SearchFooter({ summary, onSearch, disabled, busy }: { summary?: ReactNode; onSearch?: () => void; disabled?: boolean; busy?: boolean }) {
   return (
     <div className="wm-flow__foot mif-foot">
-      {backTo ? (
-        <Link className="wm-flow__back" to={backTo}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M15 6l-6 6 6 6" /></svg>{backLabel}
-        </Link>
-      ) : <span className="wm-flow__back mif-back--off">{backLabel}</span>}
       <span style={{ flexGrow: 1 }} />
       {summary && <span className="wm-flow__summary">{summary}</span>}
       <button type="button" className="wm-flow__primary mif-primary" onClick={onSearch} disabled={disabled || busy} aria-busy={busy || undefined}>
@@ -60,7 +53,7 @@ export function StepsCard({ title, steps }: { title: string; steps: MFStep[] }) 
 }
 
 /** MI2_Loading — Storyboard 분석 중 · 웹 검색 중 */
-export function LoadingView({ kind, steps, backTo, summary }: { kind: 'analyze' | 'search'; steps: MFStep[]; backTo?: string; summary?: string }) {
+export function LoadingView({ kind, steps, summary }: { kind: 'analyze' | 'search'; steps: MFStep[]; summary?: string }) {
   const an = kind === 'analyze';
   return (
     <>
@@ -71,13 +64,13 @@ export function LoadingView({ kind, steps, backTo, summary }: { kind: 'analyze' 
         </div>
       </div>
       <StepsCard title={an ? 'AI가 Storyboard를 분석하고 있어요' : 'AI가 웹에서 시장 · 고객사 · 사용자 정보를 찾고 있어요'} steps={steps} />
-      <SearchFooter backTo={backTo} backLabel={an ? 'Storyboard' : '검색어 고치기'} summary={summary} disabled />
+      <SearchFooter summary={summary} disabled />
     </>
   );
 }
 
 /** MI2 — 검색어 · 검색 조건 */
-export function SearchView({ doc, actions, backTo }: { doc: MFDoc; actions: Actions; backTo: string }) {
+export function SearchView({ doc, actions }: { doc: MFDoc; actions: Actions }) {
   const qc = useQueryClient();
   const [qs, setQs] = useState<Qs>(() => qsOf(doc));
   const [filters, setFilters] = useState<MFFilters>(() => ({ period: doc.filters?.period ?? '최근 1년', sourceTypes: [...(doc.filters?.sourceTypes ?? [])] }));
@@ -112,7 +105,10 @@ export function SearchView({ doc, actions, backTo }: { doc: MFDoc; actions: Acti
     if (timer.current) window.clearTimeout(timer.current);
     timer.current = window.setTimeout(() => { void send(); }, 250);
   };
-  useEffect(() => () => { if (timer.current) window.clearTimeout(timer.current); }, []);
+  // 팝업을 닫거나 정제로 넘어가 이 화면이 사라질 때 아직 보내지 않은 고침이 있으면 보낸다(잃지 않게)
+  const sendRef = useRef(send);
+  sendRef.current = send;
+  useEffect(() => () => { if (pending.current) void sendRef.current(); else if (timer.current) window.clearTimeout(timer.current); }, []);
 
   const setGroup = (g: GroupKey, rows: MFQuery[]) => { const next = { ...qs, [g]: rows }; setQs(next); queue({ queries: next }); };
   const toggle = (g: GroupKey, i: number) => setGroup(g, qs[g].map((q, j) => (j === i ? { ...q, on: !(q.on ?? true) } : q)));
@@ -182,7 +178,7 @@ export function SearchView({ doc, actions, backTo }: { doc: MFDoc; actions: Acti
           </div>
         ))}
       </div>
-      <SearchFooter backTo={backTo} backLabel="Storyboard" onSearch={search} busy={busy} disabled={!nq || noTypes}
+      <SearchFooter onSearch={search} busy={busy} disabled={!nq || noTypes}
         summary={!nq ? '검색어를 하나 이상 넣어 주세요' : noTypes ? '출처를 하나 이상 골라 주세요' : `검색어 ${nq}개 · 1–2분`} />
     </>
   );

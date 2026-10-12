@@ -1,8 +1,7 @@
 /**
  * Market Intelligence(MI) 기능 모듈 — 소유: mi 서비스 세션. 수용 기준: docs/scenarios/11-content-flow.md(새 흐름) · 03-mi.md(이전 흐름)
  * 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 라우트(새 흐름 · 보드 webapp1 v60): /mi(MI0 List) · /mi/new(MI1 Gate · MI1_Branch) · /mi/flow/:id(저장 전: MI2_Loading → MI2 → MI3 · 저장 뒤: MI_View 보기,
- *   `?edit=1` 편집 → 저장하면 보기로)
+ * 라우트(새 흐름 · 보드 webapp1 v62): /mi(MI0 List) · /mi/new(빈 최종본 + ① MI1 Gate · MI1_Branch 팝업) · /mi/flow/:id(최종본 MI_View · MI_Draft + `?step=search` ② MI2_Loading · MI2 / `?step=refine` ③ MI3 팝업)
  * 이전 흐름(제안서 handoff 가 아직 읽는다): /mi/legacy(MI0) · /mi/legacy/new(MI1) · /mi/legacy/new/industry(MI1I · 옛 주소 /mi/new/industry 도 연다)
  *   /mi/rules(MIR) · /mi/:id → 작업의 route
  *   /mi/:id/input(MI1) · industry(MI1I) · design(MI2A) · design/industry(MI1Q) · scope(MI2) · competitors(MI2C) · run(MI3G)
@@ -29,7 +28,7 @@ import { ScopePage } from './pages/ScopePage';
 import { SharedPage } from './pages/SharedPage';
 import { SlidesPage } from './pages/SlidesPage';
 import { VerifyPage } from './pages/VerifyPage';
-import { MiFlowPage, MiGateScreen, MiListScreen } from './flow/MiFlowPages';
+import { MiDetailPage, MiListScreen, MiNewPage } from './flow/MiFlowPages';
 import './mi.css';
 
 /** 다른 작업으로 옮겨 가면 화면 상태를 새로 시작한다(같은 라우트 · 다른 :id). MI1 은 만들 때 주소만 바뀌므로 감싸지 않는다 */
@@ -58,10 +57,10 @@ export default feature({
   order: 6,
   home: { section: 'plan', title: 'Market Intelligence', desc: '업종 · 시장 · 고객 · 경쟁 분석' },
   routes: [
-    // 새 콘텐츠 흐름(웹앱 ① v60): 목록(MI0) · 사전 작업 고르기(MI1) → 분석 로딩 · 검색(MI2) → 정제(MI3) → 저장하면 그 MI 보기(MI_View)
+    // 새 콘텐츠 흐름(웹앱 ① v62): 목록(MI0) · 상세 = 최종본 한 장 + 단계 팝업(① Storyboard · ② 검색 · ③ 정제)
     { index: true, element: <MiListScreen /> },
-    { path: 'new', element: <MiGateScreen /> },
-    { path: 'flow/:id', element: <MiFlowPage /> },
+    { path: 'new', element: <MiNewPage /> },
+    { path: 'flow/:id', element: <MiDetailPage /> },
     // 이전 MI 흐름 — 목록 · 새로 만들기만 /legacy 로 옮겼다(나머지 /:id/... 그대로)
     { path: 'legacy', element: <ListPage /> },
     { path: 'legacy/new', element: <InputPage /> },
