@@ -10,7 +10,7 @@ import { ApiError } from '@/api/client';
 import { AiButton, FlowFooter, FlowScreen, cx, displayUrl, josa, toast, useConfirm } from '@/ui';
 import {
   DIMS, useCfActions,
-  type CFClaim, type CFCompetitor, type CFCriterion, type CFDoc, type CFDssItem, type CFMatch, type CFStageOut, type DimKey,
+  type CFClaim, type CFCompetitor, type CFCriterion, type CFDoc, type CFDssItem, type CFMatch, type DimKey,
 } from './api';
 import { InlineText, VerdictPill, hasPlaceholder, type V } from './edit';
 
@@ -237,7 +237,7 @@ function PcTab({ c, patch }: { c: CFCompetitor; patch: (b: Parameters<ReturnType
 
 // ── 화면 ─────────────────────────────────────────────
 
-export function Editor({ doc, onFinished }: { doc: CFDoc; onFinished: (out: CFStageOut) => void }) {
+export function Editor({ doc, onFinished }: { doc: CFDoc; onFinished: (saved: CFDoc) => void }) {
   const act = useCfActions(doc.id);
   const { confirm, dialog } = useConfirm();
   const [sp, setSp] = useSearchParams();
@@ -299,7 +299,7 @@ export function Editor({ doc, onFinished }: { doc: CFDoc; onFinished: (out: CFSt
   const save = async () => {
     if (saving) return;
     setSaving(true);
-    try { onFinished(await act.finish()); } catch (e) { toast(errText(e)); } finally { setSaving(false); }
+    try { onFinished((await act.finish()).doc); } catch (e) { toast(errText(e)); } finally { setSaving(false); }
   };
 
   const sbIds = doc.sb_id ? [doc.sb_id] : [];

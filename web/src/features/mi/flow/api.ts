@@ -9,6 +9,7 @@ import type { components } from '@/api/gen/mi';
 type S = components['schemas'];
 export type MFDoc = S['MFDoc'];
 export type MFItem = S['MFItem'];
+export type MFSource = S['MFSource'];
 export type MFQuery = S['MFQuery'];
 export type MFQueries = S['MFQueries'];
 export type MFFilters = S['MFFilters'];

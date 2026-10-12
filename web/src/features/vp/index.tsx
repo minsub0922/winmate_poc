@@ -4,7 +4,7 @@
  * 라우트(새 흐름): /vp(VP0 List) · /vp/new(VP1 Gate) · /vp/values/:id(VP2) — 이전 흐름: /vp/legacy · /vp/legacy/new · /vp/rules(VPR) · /vp/:id/materials(VP1) · …/materials/review(VP1A) · …/questions(VP1Q) · …/structure(VP2)
  *        · …/generating?job=(VP3G) · …/result(VP3) · …/result/layout(VP3L) · …/result/numbers(VP3N) · …/result/images(VPI) · …/export(VP4)
  *        · /vp/:id → 작업의 resume_route
- *        · /vp/values/new · /vp/values/:id — 새 흐름(가치 · 고객의 니즈, 보드 VP2 · VpDetail · VP_Done)
+ *        · /vp/values/new · /vp/values/:id — 새 흐름(가치 · 고객의 니즈, 보드 VP2 · VpDetail · 저장한 맵은 보기 View content=vp, 편집은 ?edit=1)
  */
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';

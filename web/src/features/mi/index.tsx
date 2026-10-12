@@ -1,7 +1,8 @@
 /**
  * Market Intelligence(MI) 기능 모듈 — 소유: mi 서비스 세션. 수용 기준: docs/scenarios/11-content-flow.md(새 흐름) · 03-mi.md(이전 흐름)
  * 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 라우트(새 흐름 · 보드 webapp1 v58): /mi(MI0 List) · /mi/new(MI1 Gate · MI1_Branch) · /mi/flow/:id(MI2_Loading → MI2 → MI3 → MI_Done)
+ * 라우트(새 흐름 · 보드 webapp1 v60): /mi(MI0 List) · /mi/new(MI1 Gate · MI1_Branch) · /mi/flow/:id(저장 전: MI2_Loading → MI2 → MI3 · 저장 뒤: MI_View 보기,
+ *   `?edit=1` 편집 → 저장하면 보기로)
  * 이전 흐름(제안서 handoff 가 아직 읽는다): /mi/legacy(MI0) · /mi/legacy/new(MI1) · /mi/legacy/new/industry(MI1I · 옛 주소 /mi/new/industry 도 연다)
  *   /mi/rules(MIR) · /mi/:id → 작업의 route
  *   /mi/:id/input(MI1) · industry(MI1I) · design(MI2A) · design/industry(MI1Q) · scope(MI2) · competitors(MI2C) · run(MI3G)
@@ -57,7 +58,7 @@ export default feature({
   order: 6,
   home: { section: 'plan', title: 'Market Intelligence', desc: '업종 · 시장 · 고객 · 경쟁 분석' },
   routes: [
-    // 새 콘텐츠 흐름(웹앱 ① v58): 목록(MI0) · 사전 작업 고르기(MI1) → 분석 로딩 · 검색(MI2) → 정제(MI3) → 완료
+    // 새 콘텐츠 흐름(웹앱 ① v60): 목록(MI0) · 사전 작업 고르기(MI1) → 분석 로딩 · 검색(MI2) → 정제(MI3) → 저장하면 그 MI 보기(MI_View)
     { index: true, element: <MiListScreen /> },
     { path: 'new', element: <MiGateScreen /> },
     { path: 'flow/:id', element: <MiFlowPage /> },

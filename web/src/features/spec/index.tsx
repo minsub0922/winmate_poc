@@ -1,7 +1,7 @@
 /**
  * Spec 시트 생성(SP) 기능 모듈 — 소유: spec 서비스 세션. 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 새 흐름(2026-10-08 · docs/scenarios/11-content-flow.md §6 · 보드 webapp1 SP0 · SP1 · SP2 · SP_Done) — ./flow/
- *   /spec(SP0 List) · /spec/new(SP1 Gate · `?sb=&auto=1`) · /spec/flow/:id(SP2 시트 작성 → SP_Done)
+ * 새 흐름(2026-10-08 · docs/scenarios/11-content-flow.md §6 · 보드 webapp1 SP0 · SP1 · SP2 · SP_View) — ./flow/
+ *   /spec(SP0 List) · /spec/new(SP1 Gate · `?sb=&auto=1`) · /spec/flow/:id(저장한 시트 = SP_View 보기 · 초안 · `?edit=1` = SP2 시트 작성)
  * 이전 흐름(제안서 handoff 가 아직 읽는다 · 수용 기준 docs/scenarios/06-spec.md):
  *   /spec/legacy(목록) · /spec/legacy/new(/find · /requirements) — `/spec/new?models=|from=|pop=` 도 이리로 · /spec/:id/*(그대로)
  */

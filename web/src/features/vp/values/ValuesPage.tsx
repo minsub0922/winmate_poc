@@ -1,5 +1,6 @@
 /**
- * VP · 가치 · 고객의 니즈(보드 webapp1 VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_Done) — `/vp/values/:id`
+ * VP · 가치 · 고객의 니즈(보드 webapp1 VP2 · VP2_AI · VP2_Pick · VP2_Detail · View content=vp) — `/vp/values/:id`
+ * 저장한 맵은 `?edit` 없이 열면 보기(VpView · VP_View), `?edit=1` 이면 이 편집 화면. 저장하면 `?edit` 를 떼고 보기로(완료 화면 없음).
  * 왼쪽 고른 제품 · 솔루션(280) | 오른쪽 선택한 것의 가치 카드 여러 장. 가치마다 고객의 니즈(직접 · AI 추론, 점선 → 수락).
  * 값은 보드 px 그대로(values.css). 본문 열은 셸 규칙(최대 1180 가운데) · 높이는 화면을 채우고 패널 안에서 스크롤.
  * Storyboard 의 DSS 가 바뀌었으면(보드에 없음) 머리 아래 안내 줄 하나(AiBar · 「다시 가져오기」) — 그 줄만큼 작업 그리드가 줄고 칸 폭은 그대로.
@@ -7,14 +8,16 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
+import { useQueryClient } from '@tanstack/react-query';
 import { useShellPage } from '@/shell/ShellContext';
-import { FlowBar, FlowDoneView } from '@/shell';
+import { FlowBar, useEditMode, useFlowInvalidate } from '@/shell';
 import {
   AiBar, AiButton, ByTag, ErrorState, FlowFooter, FlowHead, FlowPanel, FlowScreen, KindTag, LinkedStoryboardBar, ProductPickerDialog, Skeleton, cx, toast,
   type ByKind, type PickItem,
 } from '@/ui';
-import { dssChangeText, resyncToast, useValueMap, useVmActions, type VMDoc, type VMItem, type VMStageOut, type VMValue } from './api';
+import { dssChangeText, resyncToast, useValueMap, useVmActions, vmListKey, type VMDoc, type VMItem, type VMStageOut, type VMValue } from './api';
 import { VpDetailDialog } from './VpDetailDialog';
+import { VpView } from './VpView';
 import './values.css';
 
 const SECTION = 'Value Proposition';
@@ -263,22 +266,29 @@ function Editor({ doc, onFinished }: { doc: VMDoc; onFinished: (s: VMStageOut) =
   );
 }
 
+/** 한 번이라도 저장했으면 보여 줄 완성본이 있다 */
+const isSaved = (d: VMDoc | undefined) => !!d && (d.status === 'done' || !!d.ver);
+
+/** `/vp/values/:id` — 저장한 맵 + `?edit` 없음 → 보기(VP_View) · 그 밖(저장 전 초안 · `?edit=1`) → 편집(VP2) */
 export function ValuesPage() {
   const { id = '' } = useParams();
+  const qc = useQueryClient();
+  const inval = useFlowInvalidate();
+  const { editing, toView } = useEditMode();
   const q = useValueMap(id);
-  const [done, setDone] = useState<VMStageOut | null>(null);
-  useShellPage({ section: SECTION, title: q.data ? (q.data.code ? `${q.data.code} · ${q.data.title}` : q.data.title) : '새 VP', hasTask: !done, stepper: { steps: STEPS, current: 2, complete: !!done } });
+  const d = q.data;
+  const view = isSaved(d) && !editing;
+  useShellPage(view ? { section: SECTION, title: d!.code ?? d!.title, hasTask: false }
+    : { section: SECTION, title: d ? (d.code ? `${d.code} · ${d.title}` : d.title) : '새 VP', hasTask: true, stepper: { steps: STEPS, current: 2 } });
   if (q.isError) return <div className="wm-page"><ErrorState message="가치 맵을 불러오지 못했어요" onRetry={() => q.refetch()} /></div>;
-  if (!q.data) return <div className="wm-page"><Skeleton h={480} r={14} /></div>;
-  if (done) {
-    const c = q.data.counts;
-    const d = q.data;
-    return (
-      <FlowDoneView sbId={d.sb_id ?? null} stageKey="vp" stage={done.stage} mdAdded={done.flow_sync?.md_added ?? done.summary_md}
-        title="가치 제안을 저장했어요" sub={`제품 · 솔루션 ${c.items}개의 가치 ${c.values}개와 고객의 니즈를 Storyboard에 담았어요`}
-        note={done.flow_sync?.synced?.length ? `연결된 Storyboard ${done.flow_sync.synced.length + 1}개에 반영했어요` : '요약본이 방금 갱신됐어요'}
-        onEdit={() => setDone(null)} />
-    );
-  }
-  return <Editor doc={q.data} onFinished={setDone} />;
+  if (!d) return <div className="wm-page"><Skeleton h={480} r={14} /></div>;
+  if (view) return <VpView doc={d} />;
+  return (
+    <Editor doc={d} onFinished={() => {
+      // 저장하면 그 가치 맵 보기로(같은 주소 · ?edit 만 뗀다 · 완료 안내 없음) — 문서 캐시는 finish 가 이미 바꿨다
+      void qc.invalidateQueries({ queryKey: vmListKey });
+      inval();
+      toView();
+    }} />
+  );
 }

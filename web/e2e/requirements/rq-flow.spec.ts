@@ -1,6 +1,7 @@
 /**
- * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ_Done) — 실제 스택(mock 모델 · mocks/ai-tools/rq.flow_extract.v1).
- * 목록 → 새 요구사항(바로 RQ1) → 파일로 채우기 → 직접 입력 → 저장 → 완료(Storyboard 자동 생성).
+ * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ_View) — 실제 스택(mock 모델 · mocks/ai-tools/rq.flow_extract.v1).
+ * 목록 → 새 요구사항(바로 RQ1) → 파일로 채우기 → 직접 입력 → 저장 → 그 요구사항 보기(Storyboard 자동 생성 · 완료 안내 없음)
+ * → 편집(?edit=1) → 목록 · 다시 열기(작업 내역)도 같은 보기.
  * AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다 — 버튼 · 패널 · API 가 없어야 한다.
  * 보드의 고정 칸 폭(400 · 본문 1180)을 숫자로 재고, 화면을 __screens__/<보드>-new.png 로 남긴다.
  * 실행: make e2e-feature SERVICE=requirements (1 worker)
@@ -85,15 +86,30 @@ test('RQ 새 흐름 — 목록 · 입력 · 파일 · 저장 · Storyboard 자�
   await expect(page.locator('#rq-to')).not.toHaveClass(/--ai/);
   await expect(page.locator('.rqf-aitag, .rqf-w--ai, .rqf-tag--ai')).toHaveCount(0);
 
-  // 저장 → RQ_Done(보드 Done content=rq) · Storyboard 자동 생성
+  // 저장 → RQ_View(보드 View content=rq) — 그 요구사항이 그대로 보인다(「저장했어요」 같은 완료 안내는 없다) · Storyboard 자동 생성
   await page.getByRole('button', { name: '저장', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '요구사항을 저장했어요' })).toBeVisible({ timeout: 20_000 });
-  const sub = page.getByText(/Storyboard ‘성수 플래그십 리테일’\((SB-[0-9A-Za-z]+)\)[이가] 자동으로 만들어졌어요/);
-  await expect(sub).toBeVisible();
-  const sbId = /\((SB-[0-9A-Za-z]+)\)/.exec((await sub.textContent()) ?? '')![1];
-  await expect(page.getByText(/"stages\.rq": \{/)).toBeVisible();
-  await expect(page.locator('.wm-done__md pre')).toContainText('마케팅 리드(40%): 시즌 캠페인 빠른 교체 · 방문객 데이터 활용 [확인 필요]');
+  await expect(page.getByRole('heading', { name: '성수 플래그십 리테일 리뉴얼', level: 1 })).toBeVisible({ timeout: 20_000 });
+  await expect(page).toHaveURL(new RegExp(`/requirements/flow/${flowId}$`));
+  await expect(page.getByText(/저장했어요|완료됐|완성됐/)).toHaveCount(0);
+  const doc = await (await request.get(`/api/requirements/v1/rq-flows/${flowId}`)).json();
+  const code = doc.code as string;
+  const sbId = doc.sb_ids[0] as string;
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v1`);
+  await expect(page.locator('.fl-view__meta')).toContainText('키맨 2 · 요구 5 · 확인 필요 1');
+  await expect(page.locator('.wm-sbbar__chip').first()).toContainText('성수 플래그십 리테일');
+  const facts = page.locator('.rqv-facts');
+  await expect(facts).toContainText('K 리츠');
+  await expect(facts).toContainText('자산관리본부장');
+  await expect(facts).toContainText('적지 않았어요');
+  await expect(facts).toContainText('회의록_K리츠.txt');
+  await expect(page.locator('.rqv-kmcard')).toHaveCount(2);
+  await expect(page.locator('.rqv-kmcard').first()).toContainText('자산관리팀장');
+  await expect(page.locator('.rqv-w')).toHaveText(['60%', '40%']);
+  await expect(page.locator('.rqv-kmcard').nth(1).locator('.rqv-req').nth(1)).toContainText('방문객 데이터 활용');
+  await expect(page.locator('.rqv-kmcard').nth(1).locator('.rqv-tag')).toHaveText('범위 불명확');
+  // 후속 작업 = DSS(아직 없으니 「만들기」 → 고르기 건너뛰고 바로 새 DSS)
   await expect(page.locator('a.wm-follow')).toContainText('공간별 제품 매칭 DSS');
+  await expect(page.locator('a.wm-follow')).toContainText('만들기');
   await expect(page.locator('a.wm-follow')).toHaveAttribute('href', `/dss/new?sb=${sbId}&auto=1`);
   await expect(page.getByText(`${sbId}${/[036]$/.test(sbId) ? '으로' : '로'} 공간마다 제품 · 솔루션을 골라요`)).toBeVisible();
   const flow = await (await request.get(`/api/storyboard/v1/flows/${sbId}`)).json();
@@ -103,24 +119,28 @@ test('RQ 새 흐름 — 목록 · 입력 · 파일 · 저장 · Storyboard 자�
   expect(flow.stages.rq.requirements[4]).toMatchObject({ text: '방문객 데이터 활용', status: 'check' });
   expect(JSON.stringify(flow.stages.rq)).not.toContain('스펙인');
   expect(flow.cells[0].route).toBe(`/requirements/flow/${flowId}`);
-  // 보드 Done: 본문 좌우 80 → 카드 1020 · 요약 · JSON 상자 248 + 선(그려진 높이 250) · 후속 작업 카드 84
-  expect(await w(page.locator('.wm-done__card'))).toBe(1020);
-  expect(await h(page.locator('.wm-done__md'))).toBe(250);
-  expect(await h(page.locator('.wm-follow'))).toBe(84);
+  // 보드 View: 본문 좌우 40 → 1100 · 왼쪽 340 | 오른쪽 1fr(1100 − 340 − 14 = 746) · 머리 아이콘 44 · 버튼 38 · 후속 작업 카드 76
+  expect(await w(page.locator('.rqv-facts'))).toBe(340);
+  expect(await w(page.locator('.rqv-km'))).toBe(746);
+  expect(await h(page.locator('.fl-view__ic'))).toBe(44);
+  expect(await h(page.getByRole('link', { name: '편집' }))).toBe(38);
+  expect(await h(page.locator('.wm-follow'))).toBe(76);
   await page.mouse.move(10, 890);
-  await shot(page, 'RQ_Done-new');
-  await page.getByRole('button', { name: '전체 JSON 보기' }).click();
+  await shot(page, 'RQ_View-new');
+  await page.getByRole('button', { name: 'flow.json' }).click();
   const dlg = page.getByRole('dialog', { name: /flow\.json/ });
   await expect(dlg).toBeVisible();
   await expect(dlg.getByText('"rq": {').first()).toBeVisible();
-  await shot(page, 'RQ_DoneJson-new');
+  await expect(dlg.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
+  await expect(dlg.getByRole('tab', { name: '이 콘텐츠만' })).toBeVisible();
   await dlg.getByRole('button', { name: '닫기' }).last().click();
 
-  // 다시 고치기 → 같은 문서(코드 · ver 1) · 목록에 Storyboard 칩
-  await page.getByRole('button', { name: '다시 고치기' }).click();
+  // 편집 → ?edit=1 · 같은 문서(코드 · ver 1)
+  await page.getByRole('link', { name: '편집' }).click();
+  await expect(page).toHaveURL(new RegExp(`/requirements/flow/${flowId}\\?edit=1$`));
   await expect(page.locator('#rq-to')).toHaveValue('자산관리본부장');
   await expect(page.locator('.wm-sbbar__chip')).toContainText('성수 플래그십 리테일');
-  const code = (await (await request.get(`/api/requirements/v1/rq-flows/${flowId}`)).json()).code as string;
+  // 목록(작업 내역)에서 다시 열어도 같은 보기
   await page.getByRole('link', { name: '목록' }).click();
   await expect(page).toHaveURL(/\/requirements$/);
   const row = page.locator('.fl-card').filter({ hasText: `${code} v1` });
@@ -128,6 +148,12 @@ test('RQ 새 흐름 — 목록 · 입력 · 파일 · 저장 · Storyboard 자�
   await expect(row.getByRole('button', { name: '성수 플래그십 리테일' })).toBeVisible();
   await page.mouse.move(10, 890);
   await shot(page, 'RQ0-new');
+  await row.locator('.fl-cardtitle').click();
+  await expect(page).toHaveURL(new RegExp(`/requirements/flow/${flowId}$`));
+  await expect(page.getByRole('heading', { name: '성수 플래그십 리테일 리뉴얼', level: 1 })).toBeVisible();
+  await expect(page.locator('#rq-to')).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator('.rqv-kmcard')).toHaveCount(2);
 });
 
 test('RQ 새 흐름 — 첫 입력에서 문서가 생겨도 입력이 끊기지 않는다 · 요구 줄 더하기 · 가중치', async ({ page, request }) => {

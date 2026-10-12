@@ -1,17 +1,18 @@
 /**
- * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ_Done) — docs/scenarios/11-content-flow.md §6.
- *   /requirements            RQ0  목록(보드 List content=rq · 저장된 것 = 허브, 작성 중 = /v1/rq-flows)
- *   /requirements/new        RQ1  새 요구사항(사전 작업이 없어 Gate 없이 바로 폼 · 첫 입력 때 만든다)
- *   /requirements/flow/:id   RQ1 편집 → 저장 → RQ_Done(FlowDoneView · Storyboard 자동 생성)
+ * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ_View) — docs/scenarios/11-content-flow.md §6.
+ *   /requirements                  RQ0  목록(보드 List content=rq · 저장된 것 = 허브, 작성 중 = /v1/rq-flows)
+ *   /requirements/new              RQ1  새 요구사항(사전 작업이 없어 Gate 없이 바로 폼 · 첫 입력 때 만든다)
+ *   /requirements/flow/:id         저장한 요구사항 = RQ_View(보기 · 후속 DSS) · 저장 전 초안 = RQ1 편집
+ *   /requirements/flow/:id?edit=1  RQ1 편집 → 저장하면 다시 보기(완료 안내 화면은 없다)
  */
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import { CONTENT, ContentListScreen, FlowDoneView, useFlow, useShellPage, type DraftRow } from '@/shell';
-import { ErrorState, FollowCard, Skeleton, josa } from '@/ui';
-import { rfKey, rfRoute, useRfDelete, useRqFlow, useRqFlows, type RFDoc, type RFStageOut } from './api';
+import { ContentListScreen, useEditMode, useFlowInvalidate, useShellPage, type DraftRow } from '@/shell';
+import { ErrorState, Skeleton } from '@/ui';
+import { rfKey, rfListKey, rfRoute, useRfDelete, useRqFlow, useRqFlows, type RFDoc } from './api';
 import { Editor } from './Editor';
-import { euro } from './form';
+import { RqView } from './RqView';
 import './rqflow.css';
 
 const SECTION = '고객 요구사항';
@@ -28,59 +29,33 @@ export function RqListScreen() {
   return <ContentListScreen content="rq" drafts={drafts} />;
 }
 
-/** 요약본 머리(첫 `## ` 절 앞 줄들) + 더해진 절 */
-function withHead(summary: string | undefined, added: string) {
-  if (!summary) return added;
-  const lines = summary.split('\n');
-  const i = lines.findIndex((l) => l.startsWith('## '));
-  const head = (i > 0 ? lines.slice(0, i) : []).join('\n').trimEnd();
-  return head ? `${head}\n\n${added}` : added;
-}
-
-/** RQ_Done — 보드 Done(content=rq): 요약본에 더해진 부분 · stages.rq(접힘) · 전체 JSON · 후속 작업 DSS */
-function RqDone({ out, onEdit }: { out: RFStageOut; onEdit: () => void }) {
-  const sbId = out.sb_id ?? null;
-  const flow = useFlow(sbId);
-  const name = out.sb_name ?? flow.data?.name ?? sbId ?? '';
-  const synced = out.flow_sync?.synced ?? [];
-  const sub = !sbId ? 'Storyboard를 만들지 못했어요 · 다시 저장하면 다시 만들어요'
-    : out.created ? `Storyboard ‘${name}’(${sbId})${josa(sbId, '이', '가')} 자동으로 만들어졌어요`
-      : synced.length ? `연결된 Storyboard ${synced.length + 1}개에 반영했어요` : `Storyboard ‘${name}’(${sbId})에 반영했어요`;
-  const added = out.flow_sync?.md_added || out.summary_md;
-  // 새로 만든 Storyboard 면 요약본 머리(# 이름 · 고객 줄)도 이번에 더해진 부분이다(보드 RQ_Done) — 「남은 것」 절은 넣지 않는다
-  const md = out.created ? withHead(flow.data?.summary_md, added) : added;
-  return (
-    <div className="rqf-done">
-      {/* stage 는 허브의 stages.rq(ref · ver 포함)를 쓴다 — 허브가 없을 때만 저장 응답 값 */}
-      <FlowDoneView sbId={sbId} sbIds={sbId ? [sbId, ...(out.doc.sb_ids ?? []).filter((x) => x !== sbId)] : undefined} stageKey="rq" stage={sbId ? undefined : out.stage}
-        mdAdded={md} title="요구사항을 저장했어요" sub={sub} onEdit={onEdit} newStoryboard={!!out.created}
-        follow={sbId ? (
-          <div className="rqf-follows">
-            <FollowCard to={`/dss/new?sb=${encodeURIComponent(sbId)}&auto=1`} icon={CONTENT.dss.icon} title={CONTENT.dss.label}
-              desc={`${sbId}${euro(sbId)} 공간마다 제품 · 솔루션을 골라요`} />
-          </div>
-        ) : undefined} />
-    </div>
-  );
-}
+/** 한 번이라도 저장했으면 보여 줄 완성본이 있다 */
+const isSaved = (d: RFDoc | undefined) => !!d && (d.status === 'done' || d.ver > 0);
 
 function Body({ id, onCreated }: { id: string | undefined; onCreated: (d: RFDoc) => void }) {
   const nav = useNavigate();
   const qc = useQueryClient();
+  const inval = useFlowInvalidate();
+  const { editing, toView } = useEditMode();
   const q = useRqFlow(id);
-  const [done, setDone] = useState<RFStageOut | null>(null);
   const d = q.data;
-  const title = done ? done.doc.code : d && d.ver > 0 ? d.code : '새 요구사항';
-  useShellPage({ section: SECTION, title, hasTask: !done, stepper: done ? { steps: ['요구사항 입력'], current: 1, complete: true } : { steps: STEPS, current: 1 } });
+  const view = isSaved(d) && !editing;
+  const title = d && d.ver > 0 ? d.code : '새 요구사항';
+  useShellPage(view ? { section: SECTION, title: d!.code, hasTask: false } : { section: SECTION, title, hasTask: true, stepper: { steps: STEPS, current: 1 } });
   if (id && q.isError) {
     return <div className="wm-page"><ErrorState message="요구사항을 불러오지 못했어요 · 지워졌거나 주소가 바뀌었을 수 있어요" onRetry={() => q.refetch()} /></div>;
   }
   if (id && !d) return <div className="wm-page"><Skeleton h={520} r={16} /></div>;
-  if (done) {
-    return <RqDone out={done} onEdit={() => { qc.setQueryData(rfKey(done.doc.id), done.doc); setDone(null); }} />;
-  }
+  if (view) return <RqView doc={d!} />;
   return (
-    <Editor initial={d ?? null} onFinished={setDone}
+    <Editor initial={d ?? null}
+      onFinished={(out) => {
+        // 저장하면 그 요구사항 보기로(같은 주소 · ?edit 만 뗀다)
+        qc.setQueryData(rfKey(out.doc.id), out.doc);
+        void qc.invalidateQueries({ queryKey: rfListKey });
+        inval();
+        if (out.doc.id !== id) nav(rfRoute(out.doc.id), { replace: true }); else toView();
+      }}
       onCreated={(doc) => { onCreated(doc); nav(rfRoute(doc.id), { replace: true }); }} />
   );
 }

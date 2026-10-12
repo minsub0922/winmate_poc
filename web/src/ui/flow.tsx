@@ -168,11 +168,13 @@ export function stageLineRange(lines: string[], key: string): [number, number] |
   return [i, i];
 }
 
-/** flow.json 전체 보기 팝업(보드 JsonPopup 900×780) — 전체 / 추가된 값만 · 이번에 추가 · 바뀐 줄 초록 · 복사 */
-export function JsonPopup({ open, onClose, json, highlightKey, highlightAll, title = 'flow.json', sub }: {
+/** flow.json 전체 보기 팝업(보드 JsonPopup 900×780) — 전체 / 강조 줄만 · 강조 줄 초록 · 복사 */
+export function JsonPopup({ open, onClose, json, highlightKey, highlightAll, title = 'flow.json', sub, legend = '이번에 추가 · 바뀐 줄', onlyLabel = '추가된 값만' }: {
   open: boolean; onClose: () => void; json: unknown; highlightKey?: string | null; title?: string; sub?: ReactNode;
   /** 새 Storyboard 처럼 전체가 이번에 생긴 값이면 모든 줄을 강조 */
   highlightAll?: boolean;
+  /** 아래 안내 · 강조 줄만 보는 탭 이름(콘텐츠 보기: 「이 콘텐츠가 담긴 줄」 · 「이 콘텐츠만」) */
+  legend?: string; onlyLabel?: string;
 }) {
   const [only, setOnly] = useStateLocal(false);
   const lines = JSON.stringify(json ?? {}, null, 2).split('\n');
@@ -187,11 +189,11 @@ export function JsonPopup({ open, onClose, json, highlightKey, highlightAll, tit
         <span className="wm-jsonpop__tabs" role="tablist" aria-label="보기">
           <button type="button" role="tab" aria-selected={!only} className={cx('wm-jsonpop__tab', !only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(false)}>전체</button>
           <button type="button" role="tab" aria-selected={only} className={cx('wm-jsonpop__tab', only && 'wm-jsonpop__tab--on')} onClick={() => setOnly(true)} disabled={!rg}
-            title={rg ? `${rows.length}줄` : '이번에 추가 · 바뀐 값이 없어요'}>추가된 값만</button>
+            title={rg ? `${rows.length}줄` : '강조할 줄이 없어요'}>{onlyLabel}</button>
         </span></span>}
       bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column' }}
       footer={<div className="wm-jsonpop__foot">
-        <span className="wm-jsonpop__legend"><span aria-hidden />이번에 추가 · 바뀐 줄</span>
+        <span className="wm-jsonpop__legend"><span aria-hidden />{legend}</span>
         <button type="button" className="wm-btn wm-btn--h38" onClick={copy}>복사</button>
         <button type="button" className="wm-btn wm-btn--primary wm-btn--h38" onClick={onClose}>닫기</button>
       </div>}>
@@ -202,66 +204,19 @@ export function JsonPopup({ open, onClose, json, highlightKey, highlightAll, tit
   );
 }
 
-/**
- * 완료 화면(보드 Done · VP_Done · SC_Done · CA_Done) — 저장했어요 머리 · Storyboard 카드(단계 칸 · 요약 md 더해진 부분 · flow.json 추가 값 접힘)
- * · 전체 JSON 팝업(fullJson 이 있으면 flow.json 전체에서 stages.<key> 를 강조) · 후속 작업.
- */
-export function FlowDone({ title, sub, sbName, sbStage, stages, md, stageKey, stage, fullJson, onEdit, follow, onOpenStoryboard, jsonHead, jsonTitle, highlightAll }: {
-  title: string; sub?: ReactNode; sbName?: string | null; sbStage?: string; stages: DoneStage[]; md: string; stageKey: string; stage: unknown;
-  fullJson?: unknown; onEdit?: () => void; follow?: ReactNode; onOpenStoryboard?: () => void;
-  /** FLOW.JSON 칸 머리 글(기본 `stages.<key> · n줄 추가` · 새 Storyboard 면 `새 Storyboard 전체`) */
-  jsonHead?: ReactNode;
-  /** 전체 JSON 팝업 제목(기본 flow.json · 보드 `SB-06/flow.json`) */
-  jsonTitle?: string;
-  /** 전체 JSON 팝업에서 모든 줄을 이번에 생긴 값으로 강조(새 Storyboard) */
-  highlightAll?: boolean;
+/** 후속 작업 카드(보드 View: min-h76 r14 · 아이콘 38 · 제목 15/700 · 설명 12.5 · [참조] · 열기|만들기 · →) */
+export function FollowCard({ to, icon, title, desc, refLabel, cta }: {
+  to: string; icon: string; title: string; desc: string;
+  /** 그 Storyboard 에 이미 있는 콘텐츠의 참조(DSS-01 v1) — 있으면 「열기」 */
+  refLabel?: string;
+  cta?: string;
 }) {
-  const [full, setFull] = useStateLocal(false);
-  const folded = `"stages.${stageKey}": ${JSON.stringify(foldJson(stage), null, 2)}`;
-  const addLines = JSON.stringify(stage ?? {}, null, 2).split('\n').length;
-  return (
-    <div className="wm-done">
-      <div className="wm-done__head">
-        <span className="wm-done__check" aria-hidden><Icon name="check" size={22} color="#fff" strokeWidth={2.6} /></span>
-        <span className="wm-flow__titles"><h1 className="wm-flow__h1">{title}</h1>{sub && <span className="wm-flow__desc">{sub}</span>}</span>
-        {onEdit && <button type="button" className="wm-btn wm-btn--h40" onClick={onEdit}>다시 고치기</button>}
-      </div>
-      <div className="wm-done__card">
-        <div className="wm-done__sbrow">
-          <span className="wm-done__sbname">Storyboard{sbName ? ` · ${sbName}` : ''}</span>
-          <span style={{ flex: 1 }} />
-          {sbStage && <span className="wm-flow__desc" style={{ fontSize: 12.5 }}>{sbStage}</span>}
-          {onOpenStoryboard && <button type="button" className="wm-done__link" onClick={onOpenStoryboard}>Storyboard 열기</button>}
-        </div>
-        <div className="wm-done__stages">
-          {stages.map((s) => (
-            <span key={s.key} className={cx('wm-done__stage', `wm-done__stage--${s.state}`)}><b>{s.label}</b><small>{s.ref || '—'}</small></span>
-          ))}
-        </div>
-        <div className="wm-done__cols">
-          <div className="wm-done__md"><div className="wm-done__colhead"><b>SUMMARY.MD</b><span>요약본에 더해진 부분</span></div><pre>{md}</pre></div>
-          <div className="wm-done__json">
-            <div className="wm-done__colhead wm-done__colhead--json"><b>FLOW.JSON</b><span>{jsonHead ?? `stages.${stageKey} · ${addLines}줄 추가`}</span><span style={{ flex: 1 }} />
-              <button type="button" className="wm-done__jsonbtn" onClick={() => setFull(true)}>전체 JSON 보기</button></div>
-            <pre>{folded}</pre>
-          </div>
-        </div>
-      </div>
-      <div className="wm-done__follow"><span className="wm-done__followh">후속 작업</span>{follow ?? (
-        <div className="wm-done__nofollow"><span>이 콘텐츠는 후속 작업이 없어요. Storyboard에서 다른 콘텐츠를 이어서 만들 수 있어요.</span>
-          {onOpenStoryboard && <button type="button" className="wm-done__nofollowlink" onClick={onOpenStoryboard}>Storyboard로</button>}</div>
-      )}</div>
-      <JsonPopup open={full} onClose={() => setFull(false)} json={fullJson ?? { stages: { [stageKey]: stage } }} highlightKey={stageKey} highlightAll={highlightAll} title={jsonTitle} />
-    </div>
-  );
-}
-
-/** 후속 작업 카드(보드 Done: h84 r16 · 아이콘 40 · 제목 15/700 · 설명 12.5 · →) */
-export function FollowCard({ to, icon, title, desc }: { to: string; icon: string; title: string; desc: string }) {
   return (
     <Link className="wm-follow" to={to}>
       <span className="wm-follow__ic" aria-hidden><PathIcon d={icon} size={18} color="#fff" /></span>
       <span className="wm-follow__txt"><b>{title}</b><span>{desc}</span></span>
+      {refLabel && <span className="wm-follow__ref">{refLabel}</span>}
+      {cta && <span className="wm-follow__cta">{cta}</span>}
       <Icon name="arrowRight" size={16} color="var(--wm-brand)" />
     </Link>
   );

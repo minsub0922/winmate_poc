@@ -1,5 +1,6 @@
 /**
- * MI 새 흐름(웹앱 ① v58 보드 webapp1 MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_Done · MI_DoneJson) — docs/scenarios/11-content-flow.md §1 · §6.
+ * MI 새 흐름(웹앱 ① v60 보드 webapp1 MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · View content=mi = MI_View) — docs/scenarios/11-content-flow.md §1 · §6.
+ * 저장하면 완료 안내 없이 그 MI 보기(같은 주소 · `?edit` 없음) — 목록 「열기」 · 새로고침도 같은 보기 · 「편집」은 `?edit=1`.
  * 실제 스택: 게이트웨이 → mi(+워커) · storyboard 허브 · ai-tools(mock 고정 응답 mocks/ai-tools/mi.flow_analyze.v1 · mi.flow_search.v1 = 보드 예시 문장).
  * 화면 폭 · 칸 폭을 숫자로 재고(본문 열 1180 · 보드 고정 칸) e2e/mi/__screens__/<보드>-new.png 를 남긴다.
  * 실행: make e2e-feature SERVICE=mi (또는 WM_E2E_SUITE=mi WM_E2E_DEV=1 WM_E2E_PORT=5203 npx playwright test e2e/mi/mi-flow.spec.ts --workers=1)
@@ -25,7 +26,7 @@ const row = (page: Page, text: string | RegExp) => page.locator('.mif-row').filt
 let SB = { id: '', name: '' };
 let CODE = '';
 
-test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → 정제 → 저장 v1 → 다시 고치기 → v2 · 전체 JSON', async ({ page, request }) => {
+test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → 정제 → 저장 v1 = 보기 → 편집 → v2 = 보기 · 목록 열기', async ({ page, request }) => {
   test.setTimeout(240_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   SB = await makeStoryboard(request, { dss: true, name: `용산 AI Ready 오피스 ${tag()}` });
@@ -103,11 +104,57 @@ test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → �
   await expect(row(page, '에너지 사용을').locator('.mif-row__meta')).toContainText('공시 · IR지속가능경영보고서 · 2026-04');
   await page.locator('.mif-tab', { hasText: '시장' }).click();
 
-  // ── 저장 v1 → MI_Done
+  // ── 저장 v1 → MI_View(보드 View content=mi) — 완료 안내 없이 그 MI 가 보인다(같은 주소 · ?edit 없음)
   await page.getByRole('button', { name: 'MI 저장 · v1' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'MI를 저장했어요' })).toBeVisible();
-  await expect(page).toHaveURL(/\?done=1$/);
-  await expect(page.locator('.wm-done__head')).toContainText('시장 3 · 고객사 4 · 사용자 4 · 담은 정보 11개를 Storyboard에 담았어요');
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${CODE} v1`, { timeout: 20_000 });
+  await expect(page).toHaveURL(new RegExp(`/mi/flow/${mid}$`));
+  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
+  await expect(page.getByRole('heading', { level: 1, name: doc0.title })).toBeVisible();
+  await expect(page.locator('.fl-view__meta')).toHaveText(/^오늘 \d{2}:\d{2} 저장 · 담은 정보 11 \(찾은 13\) · 수치 원문 확인 2$/);
+  await expect(page.locator('.miv-col .miv-colh')).toHaveText(['시장', '고객사', '사용자']);
+  await expect(page.locator('.miv-coln')).toHaveText(['3', '4', '4']);                  // 담은 것만(뺀 공실률 · 정부 통계 줄은 없다)
+  await expect(page.locator('.miv-it', { hasText: '공실률' })).toHaveCount(0);
+  await expect(page.locator('.miv-it', { hasText: '건물 에너지 효율' })).toHaveCount(0);
+  const v1first = page.locator('[data-group="market"] .miv-it').first();
+  await expect(v1first.locator('.miv-it__t')).toHaveText('프라임 오피스에서 스마트 빌딩 설비 도입이 늘고 있다는 업계 분석');
+  await expect(v1first.locator('.fl-vtag').first()).toHaveText('리포트');
+  await expect(v1first.locator('.miv-it__src')).toHaveText('부동산 리서치 · 2026-08');
+  await expect(page.locator('.miv-it', { hasText: '에너지 사용을' }).locator('.fl-vtag--warn')).toHaveText('수치 원문 확인');
+  await expect(page.locator('.miv-chip')).toHaveText(['최근 1년', '뉴스', '공시 · IR', '리포트', '정부 통계']);
+  await expect(page.locator('.miv-qline')).toHaveText(/^시장 4 · 고객사 3 · 사용자 3 · .+ 외$/);
+  await expect(page.locator('.fl-vnote')).toHaveText('문장은 원문을 줄여 쓴 것이에요 · 수치는 원문에서 확인해요');
+  await expect(page.locator('.fl-view__follow')).toHaveCount(0);                         // MI 는 후속 작업이 없다
+  await expect(page.locator('.sh-crumbs__cur')).toHaveText(CODE);
+  // 원문(요약형 검색 — URL 없음 → 검색 결과 글)
+  await v1first.getByRole('button', { name: '원문' }).click();
+  const vorig = page.getByRole('dialog', { name: '원문 · 검색 결과' });
+  await expect(vorig).toContainText('부동산 리서치 2026-08 리포트에 따르면');
+  await vorig.getByRole('button', { name: '닫기' }).last().click();
+  // 폭(보드 View): 본문 1180 − 40×2 = 1100 · 띠 h44 · 세 칸 (1100 − 12×2)/3 · 칸 머리 h44 · 머리 아이콘 44 · 버튼 38
+  near((await box(page, '.fl-view__section')).width, 1180);
+  near((await box(page, '.miv-strip')).width, 1100);
+  near((await box(page, '.miv-strip')).height, 44);
+  const vcols = page.locator('.miv-col');
+  const vx: number[] = [];
+  for (let i = 0; i < 3; i += 1) {
+    const b = (await vcols.nth(i).boundingBox())!;
+    near(b.width, (1100 - 24) / 3);
+    vx.push(b.x);
+  }
+  near(vx[1] - vx[0], (1100 - 24) / 3 + 12);
+  near((await box(page, '.miv-colhead')).height, 44);
+  near((await box(page, '.miv-chip')).height, 24);
+  near((await box(page, '.fl-view__ic')).height, 44);
+  near((await page.getByRole('link', { name: '편집' }).boundingBox())!.height, 38);
+  await page.mouse.move(10, 890);
+  await shot(page, 'MI_View-new');
+  // flow.json — stages.mi 강조
+  await page.getByRole('button', { name: 'flow.json' }).click();
+  const vjson = page.getByRole('dialog', { name: /flow\.json/ });
+  await expect(vjson).toBeVisible();
+  await expect(vjson.getByText('"mi": {').first()).toBeVisible();
+  await expect(vjson.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
+  await vjson.getByRole('button', { name: '닫기' }).last().click();
   let flow = await hub(request, SB.id);
   expect(flow.stages.mi.ref).toBe(CODE);
   expect(flow.stages.mi.ver).toBe(1);
@@ -117,22 +164,30 @@ test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → �
   expect(flow.stages.mi.items[0].source).toEqual({ type: '리포트', name: '부동산 리서치', date: '2026-08', url: null });
   expect(flow.stages.mi.filters.sourceTypes).toContain('정부 통계');
   expect(flow.cells.find((c: { key: string }) => c.key === 'mi').route).toBe(`/mi/flow/${mid}`);
-  // 새로 고침해도 완료 화면
+  // 새로 고침해도 보기(분석을 다시 돌리지 않는다)
   await page.reload();
-  await expect(page.getByRole('heading', { level: 1, name: 'MI를 저장했어요' })).toBeVisible();
+  await expect(page.locator('.miv-coln')).toHaveText(['3', '4', '4']);
+  expect((await (await request.get(`/api/mi/v1/mi-flows/${mid}`)).json()).phase).toBe('done');
 
-  // ── 다시 고치기 → Storyboard 다시 읽기(보드 MI2_Loading: 「MI-01 수정」 · 「v1을 고쳐요 · 저장하면 v2」)
-  await page.getByRole('button', { name: '다시 고치기' }).click();
+  // ── 편집(?edit=1) → Storyboard 다시 읽기(보드 MI2_Loading: 「MI-01 수정」 · 「v1을 고쳐요 · 저장하면 v2」)
+  await page.getByRole('link', { name: '편집' }).click();
+  await expect(page).toHaveURL(new RegExp(`/mi/flow/${mid}\\?edit=1$`));
   await expect(page.locator('.sh-crumbs__cur')).toHaveText(`${CODE} 수정`);
   await expect(page.locator('.wm-sbbar__note')).toHaveText(`${CODE} v1을 고쳐요 · 저장하면 v2`);
   const steps = page.getByTestId('mif-steps');
   await expect(steps.locator('.mif-step[data-state="run"]')).toHaveText(/고객사 · 업종 · 공간 · 요구 뽑기/, { timeout: 10_000 });
   await expect(steps.locator('.mif-step').first()).toContainText('요구사항 · DSS · 요약본');
+  // 폭: 본문 열 1180 · 단계 카드 = 1180 − 40×2 — 분석이 빨리 끝나 화면이 바뀌기 전에 한 번에 잰다
+  const ld = await page.evaluate(() => {
+    const r = (s: string) => document.querySelector(s)?.getBoundingClientRect() ?? null;
+    return { screen: r('.mif-screen')?.width, steps: r('.mif-steps')?.width, step: r('.mif-step')?.height };
+  });
+  if (ld.steps != null && ld.step != null) {
+    near(ld.screen!, 1180);
+    near(ld.steps, 1100);
+    near(ld.step, 45);
+  }
   await page.screenshot({ path: 'e2e/mi/__screens__/MI2_Loading-new.png' });
-  // 폭: 본문 열 1180 · 단계 카드 = 1180 − 40×2
-  near((await box(page, '.mif-screen')).width, 1180);
-  near((await box(page, '.mif-steps')).width, 1100);
-  near((await box(page, '.mif-step')).height, 45);
 
   await expect(page.getByRole('heading', { level: 1, name: '무엇을 검색할까요?' })).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('.mif-opt__k')).toHaveText(['기간', '출처', `기존 ${CODE}`]);
@@ -184,29 +239,37 @@ test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → �
   near((await box(page, '.mif-tab')).height, 34);
   near((await box(page, '.mif-ghost30')).height, 30);
 
-  // ── 저장 v2 → MI_Done · MI_DoneJson
+  // 고치는 중 새로 고침 → 그 단계(정제)에서 이어 간다(Storyboard 를 다시 읽지 않는다)
+  await page.reload();
+  await expect(page.getByRole('heading', { level: 1, name: '찾은 정보를 정리해요' })).toBeVisible();
+  await expect(page.getByTestId('mif-count')).toHaveText('찾은 13 · 담음 12');
+  // 고치는 중에 편집 없이 열면 → 마지막으로 저장한 v1 보기(아직 저장 안 한 값은 보이지 않는다)
+  await page.goto(`/mi/flow/${mid}`);
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${CODE} v1`);
+  await expect(page.locator('.fl-view__meta')).toContainText('담은 정보 11 (찾은 13) · 수치 원문 확인 2');
+  await expect(page.locator('.miv-coln')).toHaveText(['3', '4', '4']);
+  await page.getByRole('link', { name: '편집' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: '찾은 정보를 정리해요' })).toBeVisible();
+  await expect(page.getByTestId('mif-count')).toHaveText('찾은 13 · 담음 12');
+
+  // ── 저장 v2 → 같은 주소의 보기(완료 안내 없음)
   await page.getByRole('button', { name: 'MI 저장 · v2' }).click();
-  await expect(page.getByRole('heading', { level: 1, name: 'MI를 고쳐 저장했어요' })).toBeVisible();
-  await expect(page.locator('.wm-done__head')).toContainText(`${CODE} v1 → v2 · 담은 정보 11 → 12`);
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${CODE} v2`, { timeout: 20_000 });
+  await expect(page).toHaveURL(new RegExp(`/mi/flow/${mid}$`));
+  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
   await expect(page.locator('.sh-crumbs__cur')).toHaveText(CODE);
-  await expect(page.getByText(/"stages\.mi": \{/)).toBeVisible();
-  await expect(page.locator('.wm-done__md pre')).toContainText('- 시장 4 · 고객사 4 · 사용자 4 (+1)');
-  await expect(page.locator('.mif-nofollow')).toContainText('이 콘텐츠는 후속 작업이 없어요.');
-  await expect(page.locator('.mif-nofollow').getByRole('link', { name: 'Storyboard로' })).toHaveAttribute('href', `/storyboard/flow/${SB.id}`);
-  await shot(page, 'MI_Done-new');
-  near((await box(page, '.wm-done__card')).width, 1020);
+  await expect(page.locator('.fl-view__meta')).toHaveText(/저장 · 담은 정보 12 \(찾은 13\) · 수치 원문 확인 3$/);
+  await expect(page.locator('.miv-coln')).toHaveText(['4', '4', '4']);
+  await expect(page.locator('.miv-it', { hasText: '공실률' }).locator('.fl-vtag--warn')).toHaveText('수치 원문 확인');
+  await expect(page.locator('.miv-it', { hasText: '건물 에너지 효율' })).toHaveCount(0);
+  await expect(page.locator('.miv-chip')).toHaveText(['최근 1년', '뉴스', '공시 · IR', '리포트', '정부 통계']);
+  await expect(page.locator('.miv-qline')).toHaveText(/^시장 4 · 고객사 3 · 사용자 3 · .+ 외$/);   // 뺀 검색어는 세지 않는다
   flow = await hub(request, SB.id);
   expect(flow.stages.mi.ver).toBe(2);
   expect(flow.stages.mi.prevVer).toBe(1);
   expect(flow.stages.mi.counts).toEqual({ found: 13, kept: 12, numberCheck: 3 });
   expect(flow.stages.mi.items.map((x: { addedIn: string }) => x.addedIn).filter((v: string) => v === 'v2')).toHaveLength(1);
   expect(flow.stages.mi.queries.user).toEqual(['하이브리드 근무 회의실 수요', '오피스 방문객 출입 경험', '임차인 선호 오피스 설비']);   // 뺀 검색어는 안 들어간다
-  await page.getByRole('button', { name: '전체 JSON 보기' }).click();
-  const json = page.getByRole('dialog', { name: /flow\.json/ });
-  await expect(json).toBeVisible();
-  await expect(json.locator('.wm-jsonline--add').first()).toContainText('"mi": {');
-  await shot(page, 'MI_DoneJson-new');
-  await json.getByRole('button', { name: '닫기' }).last().click();
 
   // ── 목록에 저장된 MI(허브) — 연결된 Storyboard 칩
   await page.goto('/mi');
@@ -214,7 +277,16 @@ test('새 MI — 목록 → Gate → 분석 로딩 → 검색어 · 조건 → �
   await expect(line).toHaveCount(1);
   await expect(line.locator('.fl-sbchip')).toHaveText(SB.name);
   await expect(line.locator('.fl-cardtitle')).toHaveAttribute('href', `/mi/flow/${mid}`);
+  await page.mouse.move(10, 890);
   await shot(page, 'MI0-new');
+  // 목록 카드 → 보기(편집 화면 · 분석 로딩이 아니다)
+  await line.locator('.fl-cardtitle').click();
+  await expect(page).toHaveURL(new RegExp(`/mi/flow/${mid}$`));
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${CODE} v2`);
+  await expect(page.locator('.mif-screen')).toHaveCount(0);
+  await page.reload();
+  await expect(page.locator('.miv-coln')).toHaveText(['4', '4', '4']);
+  expect((await (await request.get(`/api/mi/v1/mi-flows/${mid}`)).json()).phase).toBe('done');
 });
 
 test('MI1_Branch — 이미 MI 가 있는 Storyboard → 복제본 만들기 → 분기 Storyboard 에 새 MI', async ({ page, request }) => {

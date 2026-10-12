@@ -3,7 +3,7 @@
  * 보드: docs/screens/webapp1/SC*.dc.html(새 흐름) · webapp2/SC*.dc.html(이전 흐름). 셸이 자동으로 등록한다(web/src/shell/registry.ts).
  *
  * 라우트 — 새 콘텐츠 흐름(웹앱 ① v58, Storyboard 허브):
- *   /scenario(SC0 List content=sc) · /scenario/new(SC1 Gate · `?sb=&auto=1` 바로 만들기) · /scenario/spaces/:id(SC2 · SC_Done)
+ *   /scenario(SC0 List content=sc) · /scenario/new(SC1 Gate · `?sb=&auto=1` 바로 만들기) · /scenario/spaces/:id(저장한 것 = SC_View 보기 · `?edit=1` · 저장 전 초안 = SC2 편집)
  * 이전 흐름(제안서 handoff 가 아직 읽는다): /scenario/legacy(SC0) · legacy/new(SC1) · legacy/new/template(SC1T) · legacy/new/birdseye(SC1B)
  *   :id/type(SC1) · :id/input(SC2) · :id/timeline(SC2E) · :id/solutions(SC3) · :id/solutions/recommend(SC3R)
  *   :id/generate/:jobId(SC4G) · :id/result(SC4) · :id/scenes/:sceneId(SC4E) · :id/send(SC5) · :id/birdseye(SC1B 변경 반영)
@@ -70,7 +70,7 @@ export default feature({
   order: 5,
   home: { section: 'visual', title: '공간 시나리오', desc: '장면 · 솔루션 · 장면 이미지' },
   routes: [
-    // 새 콘텐츠 흐름(웹앱 ① v58): 목록(SC0) · 사전 작업 고르기(SC1) → 공간 → 시나리오 → 장면(SC2) → 완료(SC_Done)
+    // 새 콘텐츠 흐름(웹앱 ① v58): 목록(SC0) · 사전 작업 고르기(SC1) → 공간 → 시나리오 → 장면(SC2) → 저장 → 보기(SC_View)
     { index: true, element: <ListEntry /> },
     { path: 'new', element: <NewEntry /> },
     { path: 'spaces/new', element: <Moved to="/scenario/new" /> },

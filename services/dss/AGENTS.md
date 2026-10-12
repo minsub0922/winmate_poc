@@ -29,7 +29,7 @@ make contracts SERVICE=dss    # contracts/dss.json 갱신 + 깨지는 변경 검
 
 ## 현재 상태
 
-### 새 흐름(2026-10-08 · 보드 webapp1 v58 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_Done)
+### 새 흐름(2026-10-08 · 보드 webapp1 v58 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · 2026-10-12 v60 DS_View)
 수용 기준 `docs/scenarios/11-content-flow.md` §1 · §4 · §6. Storyboard(고객 요구사항까지) → 업종 · 공간 · 공간별 제품 → 솔루션(0개 이상) → 저장하면 허브 `stages.dss`.
 
 **API**(`contracts/dss.json` · 본체 `src/winmate_dss/dss.py`, 저장소 DocStore `dss`, 쓰기는 낙관적 잠금 · `expected_version` 이면 409)
@@ -50,11 +50,14 @@ make contracts SERVICE=dss    # contracts/dss.json 갱신 + 깨지는 변경 검
 **웹**(`web/src/features/dss/`, CSS `dss.css` 접두어 `ds-`, 보드 인라인 px 그대로)
 - `/dss` DS0 = 셸 `ContentListScreen`(초안 = `GET /v1/dss` 의 draft, 줄마다 `onDelete` — 손을 올리면 × · 확인 → `useDsDelete` → 목록 · 사이드바 색인 새로) ·
   `/dss/new` DS1 = 셸 `GateScreen`(`?sb=&auto=1` 이면 바로 만든다 · 서버가 기존 초안을 돌려주면(200) 「작성 중이던 DSS-nn 초안을 이어서 열어요」 알림)
-- `/dss/:id` DS2(`SpacesStep.tsx`): 머리(업종 220 목록 · AI 업종 추론 → 점선 줄 「적용」) · 공간 270 | 제품 1fr(직접 · AI 추천 점선 → 수락 · 추천 모두 수락 · 수량 눌러 고치기 · 상세 = 셸 제품 시트 · 빼기) ·
+- `/dss/:id` 저장한 DSS(status done · ver) = DS_View 보기(`DsView.tsx`) · 저장 전 초안 · `?edit=1` = DS2 편집(`SpacesStep.tsx`): 머리(업종 220 목록 · AI 업종 추론 → 점선 줄 「적용」) · 공간 270 | 제품 1fr(직접 · AI 추천 점선 → 수락 · 추천 모두 수락 · 수량 눌러 고치기 · 상세 = 셸 제품 시트 · 빼기) ·
   제품 검색 줄(결과는 위로) · 「제품 탐색에서 고르기」= `ProductPickerDialog`(KB 추천 + 카탈로그 + 직접) · 공간 빼기는 손을 올리면 ×
-- `?step=solution` DS4(`SolutionsStep.tsx`): 카드 2열(940 · 465) · AI 솔루션 추천(점선 · 근거) · 겹침 안내 · 상세 = 셸 솔루션 시트 · 관련 없는 것은 「솔루션 n개 더 보기」
-- 저장 → DS_Done = 셸 `FlowDoneView`(stages.dss 접힘 · 전체 JSON) + 후속 작업 공간 시나리오 · Spec 시트(`/scenario/new?sb=&auto=1` · `/spec/new?sb=&auto=1`)
+- `&step=solution` DS4(`SolutionsStep.tsx`): 카드 2열(940 · 465) · AI 솔루션 추천(점선 · 근거) · 겹침 안내 · 상세 = 셸 솔루션 시트 · 관련 없는 것은 「솔루션 n개 더 보기」
+- 저장 → 문서 다시 읽어 캐시 · 목록 · 허브 무효화 → `?edit` · `?step` 을 떼고 같은 주소의 DS_View(완료 안내 · 토스트 없음 · 목록 「열기」 · 작업 내역 · 새로고침도 같은 보기).
+  DS_View = 셸 `FlowContentView`(SB 바 · 머리 `DSS-nn vN` · `… 저장 · 공간 n · 제품 n · 솔루션 n` · flow.json 팝업 · 「편집」 → `?edit=1` DS2) +
+  본문(CSS `dsv-`: 사실 4칸 업종 2fr | 공간 · 제품 · 솔루션 1fr · h60 · 공간 카드 4열(근거 · 제품 · 수량 — 비면 주황 「확인 필요」 · 직접/AI) · 솔루션 띠(근거 · 직접/AI 추천)) +
+  후속 작업 공간 시나리오 · Spec 시트(허브에 있으면 「열기」, 없으면 「만들기」 `/scenario/new?sb=&auto=1` · `/spec/new?sb=&auto=1`)
 - 셸 상세 시트 · 팝오버의 「현재 작업에 추가」: 제품 → 지금 고른 공간, 솔루션 → 고른 솔루션(`shellcfg.ts`)
 
-**테스트**: `make test SERVICE=dss` 12개(허브 연동 · AI mock · KB 대체 · 겹침 · 저장 · 허브 가져오기 · 같은 Storyboard 초안 다시 쓰기 · 지우기) · e2e `web/e2e/dss/dss-flow.spec.ts` 2개(`make e2e-feature SERVICE=dss`, 캡처 `web/e2e/dss/__screens__/<보드>-new.png`) ·
+**테스트**: `make test SERVICE=dss` 12개(허브 연동 · AI mock · KB 대체 · 겹침 · 저장 · 허브 가져오기 · 같은 Storyboard 초안 다시 쓰기 · 지우기) · e2e `web/e2e/dss/dss-flow.spec.ts` 2개(저장 → DS_View · flow.json · 편집 → 다시 저장 v2 · 새로고침 · 목록 「열기」 · 캡처 DS_View-new · DS_ViewJson-new · `make e2e-feature SERVICE=dss`, 캡처 `web/e2e/dss/__screens__/<보드>-new.png`) ·
 `dss-draft.spec.ts` 1개(Gate 다시 시작 = 같은 초안 → 목록 × → 확인 → 빠짐 → 다시 시작 = 새 초안, 캡처 `DS0-draft-delete.png`)

@@ -1,8 +1,9 @@
 /**
- * 공간별 제품 매칭 DSS 새 흐름(2026-10-08 보드 webapp1 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_Done) — 실제 스택(MODEL_MODE=mock ·
+ * 공간별 제품 매칭 DSS 새 흐름(2026-10-12 보드 webapp1 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_View) — 실제 스택(MODEL_MODE=mock ·
  * mocks/ai-tools/ds.industry_spaces.v1 · ds.solutions.v1 · KB 실데이터).
  * Storyboard(요구사항까지)를 API 로 만들고 → 목록 → Gate → DS2(공간 · 제품 직접 · AI 업종 · 공간 · 제품, 수락, 제품 고르기) → DS4(AI 솔루션 · 고르기 · 겹침 · 상세)
- * → 저장 → 완료(허브 stages.dss 확인). 보드의 고정 칸(270 · 816 · 940 · 465 · 1020 · 504)을 숫자로 재고 __screens__/<보드>-new.png 로 남긴다.
+ * → 저장 → 그 DSS 보기(DS_View · 완료 안내 없음 · 허브 stages.dss 확인) → flow.json · 편집(?edit=1) · 다시 저장 · 새로고침 · 목록 「열기」도 보기.
+ * 보드의 고정 칸(270 · 816 · 940 · 465 · 사실 2fr|1fr×3 · 공간 4열 266 · 후속 544)을 숫자로 재고 __screens__/<보드>-new.png 로 남긴다.
  * 실행: make e2e-feature SERVICE=dss (1 worker)
  */
 import path from 'node:path';
@@ -270,27 +271,69 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   await expect(overlap).toHaveCount(0);
   await expect(page.getByText('솔루션 3개 선택')).toBeVisible();
 
-  // 저장 → DS_Done(보드 Done content=dss)
+  // 저장 → DS_View(보드 View content=dss) — 같은 주소의 그 DSS 보기(?edit · ?step 없음 · 「저장했어요」 같은 완료 안내 없음)
   await page.getByRole('button', { name: 'DSS 저장' }).click();
-  await expect(page.getByRole('heading', { name: 'DSS를 저장했어요' })).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByText(`공간 3 · 제품 ${nProducts} · 솔루션 3을 Storyboard에 담았어요`)).toBeVisible();
-  await expect(page.getByText(/"stages\.dss": \{/)).toBeVisible();
-  await expect(page.locator('.wm-done__md pre')).toContainText('- 업종: 오피스 · 업무시설 · 공간 3');
-  await expect(page.locator('.wm-done__md pre')).toContainText('- 솔루션: MagicINFO · SmartThings Pro · b.IoT');
-  await expect(page.locator('.wm-done__md pre')).toContainText('Smart Signage QM55C ×2');
+  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`), { timeout: 20_000 });
+  const saved = await (await request.get(`/api/dss/v1/dss/${dssId}`)).json();
+  const code = saved.code as string;
+  await expect(page.getByRole('heading', { name: saved.title, level: 1 })).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
+  await expect(page.locator('.wm-done__card, .wm-done__md')).toHaveCount(0);
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v1`);
+  await expect(page.locator('.fl-view__meta')).toHaveText(new RegExp(`^오늘 \\d{2}:\\d{2} 저장 · 공간 3 · 제품 ${nProducts} · 솔루션 3$`));
+  await expect(page.locator('.wm-sbbar__chip').first()).toContainText(name);
+  // 사실 4칸 — 업종(AI 추론 · 수락 · 근거) · 공간 · 제품(수량 빈 것은 확인 필요 n) · 솔루션
+  const nQty = saved.spaces.flatMap((s: { products: Array<{ qty: string | null; by: string }> }) => s.products).filter((p: { qty: string | null; by: string }) => p.by !== 'ai-pending' && !p.qty).length;
+  const fact = (k: string) => page.locator(`[data-fact="${k}"]`);
+  await expect(fact('업종')).toContainText('오피스 · 업무시설');
+  await expect(fact('업종').locator('.fl-vtag')).toHaveText('AI 추론 · 수락');
+  await expect(fact('업종')).toContainText(`근거 ${sb.ref}`);
+  await expect(fact('공간').locator('.dsv-fact__v')).toHaveText('3');
+  await expect(fact('제품').locator('.dsv-fact__v')).toHaveText(String(nProducts));
+  if (nQty) await expect(fact('제품')).toContainText(`수량 확인 필요 ${nQty}`);
+  await expect(fact('솔루션').locator('.dsv-fact__v')).toHaveText('3');
+  // 공간 카드 — 이름 · 제품 수 · 근거 · 제품(수량 · 출처). 비어 있는 수량은 주황 「확인 필요」
+  await expect(page.locator('.dsv-space .dsv-space__name')).toHaveText(['로비', '공용 회의실', '전시 공간']);
+  const lobby = page.locator('[data-space="로비"].dsv-space');
+  await expect(lobby.locator('.dsv-basis')).toHaveText(`근거 · ${sb.ref} 1 · 로비에서 입주사 안내와 입주…`);
+  const qmv = lobby.locator('[data-product="Smart Signage QM55C"]');
+  await expect(qmv.locator('.dsv-qty')).toHaveText('2대');
+  await expect(qmv.locator('.dsv-by')).toHaveText('직접');
+  await expect(page.locator('[data-space="전시 공간"].dsv-space .dsv-basis')).toHaveText(`근거 · ${sb.ref} 2 · 반도체 박물관 협업 전시`);
+  await expect(page.locator('[data-space="전시 공간"] [data-product="실내용 The Wall IWC"] .dsv-by')).toHaveText('직접');
+  await expect(page.locator('.dsv-qty.fl-vtag--warn')).toHaveCount(nQty);
+  if (nQty) await expect(page.locator('.dsv-qty.fl-vtag--warn').first()).toHaveText('확인 필요');
+  await expect(page.locator('.dsv-by.fl-vtag--ai').first()).toHaveText('AI');
+  // 솔루션 띠 — 이름 · 근거 · AI 추천
+  await expect(page.locator('.dsv-sols__h')).toHaveText('솔루션 3');
+  await expect(page.locator('.dsv-sol .dsv-sol__name')).toHaveText(['MagicINFO', 'SmartThings Pro', 'b.IoT']);
+  await expect(page.locator('[data-solution="magicinfo"].dsv-sol .dsv-sol__basis')).toHaveText(`근거 · ${sb.ref} 1 입주사 안내 · 사이니지`);
+  await expect(page.locator('.dsv-sol .fl-vtag')).toHaveText(['AI 추천', 'AI 추천', 'AI 추천']);
+  // 후속 작업 — 공간 시나리오 · Spec 시트(아직 없으니 「만들기」 → 고르기 건너뛰고 바로 새로)
   const follows = page.locator('a.wm-follow');
   await expect(follows).toHaveCount(2);
   await expect(follows.nth(0)).toHaveAttribute('href', `/scenario/new?sb=${sb.id}&auto=1`);
   await expect(follows.nth(0)).toContainText('공간 시나리오 생성');
   await expect(follows.nth(0)).toContainText('공간 3개에서 사용자가 겪는 장면을 만들어요');
+  await expect(follows.nth(0)).toContainText('만들기');
   await expect(follows.nth(1)).toHaveAttribute('href', `/spec/new?sb=${sb.id}&auto=1`);
+  await expect(follows.nth(1)).toContainText('Spec 시트 생성');
   await expect(follows.nth(1)).toContainText(`매칭한 제품 ${nProducts}개를 스펙 시트로`);
-  await expect(page.locator('.wm-sbbar__stage').first()).toHaveText('DSS까지');
-  // 보드 Done: 카드 1020 · 요약 · JSON 상자 250 · 후속 작업 2칸 504 × 84(간격 12)
-  expect(await w(page.locator('.wm-done__card'))).toBe(1020);
-  expect(await h(page.locator('.wm-done__md'))).toBe(250);
-  expect(await box(follows.nth(0))).toMatchObject({ w: 504, h: 84, x: 340 });
-  expect(await box(follows.nth(1))).toMatchObject({ w: 504, h: 84, x: 856 });
+  // 보드 View(1440 × 900): 본문 좌우 40 → 1100 · 사실 2fr | 1fr × 3(간격 12 → 425.6 · 212.8) h60 · 공간 카드 4열 266 · 솔루션 띠 1100 · 솔루션 칩 34
+  //   머리 아이콘 44 · 버튼 38 · 후속 작업 2칸 544(간격 12)
+  expect(await box(fact('업종'))).toMatchObject({ w: 425.6, h: 60, x: 300 });
+  expect(await box(fact('공간'))).toMatchObject({ w: 212.8, h: 60 });
+  expect(await box(fact('솔루션'))).toMatchObject({ w: 212.8, h: 60 });
+  expect(await w(page.locator('.dsv-facts'))).toBe(1100);
+  expect(await box(page.locator('.dsv-space').first())).toMatchObject({ w: 266, x: 300 });
+  expect(await box(page.locator('.dsv-space').nth(1))).toMatchObject({ w: 266, x: 578 });
+  expect(await box(page.locator('.dsv-sols'))).toMatchObject({ w: 1100, x: 300 });
+  expect(await h(page.locator('.dsv-sol').first())).toBe(34);
+  expect(await h(page.locator('.fl-view__ic'))).toBe(44);
+  expect(await h(page.getByRole('link', { name: '편집' }))).toBe(38);
+  expect(await h(page.getByRole('button', { name: 'flow.json' }))).toBe(38);
+  expect(await box(follows.nth(0))).toMatchObject({ w: 544, x: 300 });
+  expect(await box(follows.nth(1))).toMatchObject({ w: 544, x: 856 });
 
   // 허브 flow.json stages.dss — §6 계약 모양(점선 대기 값은 빠진다)
   const flow = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
@@ -307,24 +350,46 @@ test('DSS 새 흐름 — 목록 · Gate · 공간 · 제품 · AI · 솔루션 �
   const cell = flow.cells.find((c: { key: string }) => c.key === 'dss');
   expect(cell).toMatchObject({ state: 'done', ref: st.ref, route: `/dss/${dssId}` });
   await page.mouse.move(10, 890);
-  await shot(page, 'DS_Done-new');
-  await page.getByRole('button', { name: '전체 JSON 보기' }).click();
+  await shot(page, 'DS_View-new');
+  // flow.json — 허브 flow.json 전체에서 stages.dss 를 강조(보드 DS_ViewJson)
+  await page.getByRole('button', { name: 'flow.json' }).click();
   const dlg = page.getByRole('dialog', { name: /flow\.json/ });
   await expect(dlg).toBeVisible();
   await expect(dlg.getByText('"dss": {').first()).toBeVisible();
-  await shot(page, 'DS_DoneJson-new');
+  await expect(dlg.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
+  await expect(dlg.getByRole('tab', { name: '이 콘텐츠만' })).toBeVisible();
+  await shot(page, 'DS_ViewJson-new');
   await dlg.getByRole('button', { name: '닫기' }).last().click();
+  await expect(dlg).toHaveCount(0);
 
-  // 다시 고치기 → DS2 · 목록에 저장된 줄(DSS-nn v1) · Gate 는 「DSS-nn v1 있음」
-  await page.getByRole('button', { name: '다시 고치기' }).click();
+  // 편집 → ?edit=1 DS2(첫 단계부터 · 보드 editHref DS2) · 같은 문서
+  await page.getByRole('link', { name: '편집' }).click();
+  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}\\?edit=1$`));
   await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
-  await expect(page).not.toHaveURL(/step=solution/);
+  await expect(page.locator('[data-space="로비"]')).toBeVisible();
+  // 편집에서 다시 저장 → ?edit · ?step 을 떼고 보기(ver 2)
+  await page.getByRole('button', { name: '다음 · 솔루션' }).click();
+  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}\\?edit=1&step=solution$`));
+  await page.getByRole('button', { name: 'DSS 저장' }).click();
+  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`), { timeout: 20_000 });
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${code} v2`);
+  await expect(page.getByText(/저장했어요|완료됐|완성됐|담았어요/)).toHaveCount(0);
+  // 새로고침해도 보기
+  await page.reload();
+  await expect(page.locator('.dsv-space')).toHaveCount(3);
+  await expect(page.locator('#ds-sp')).toHaveCount(0);
   await page.goto('/dss');
   const listRow = page.locator('.fl-card').filter({ hasText: name });
-  await expect(listRow).toContainText(`${st.ref} v1`);
+  await expect(listRow).toContainText(`${st.ref} v2`);
   await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/dss/${dssId}`);
+  // 목록 카드 → 보기(편집 화면 아님)
+  await listRow.locator('.fl-cardtitle').click();
+  await expect(page).toHaveURL(new RegExp(`/dss/${dssId}$`));
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${st.ref} v2`);
+  await expect(page.locator('.dsv-space')).toHaveCount(3);
+  await expect(page.locator('#ds-sp')).toHaveCount(0);
   await page.goto('/dss/new');
-  await expect(page.getByRole('radio', { name: new RegExp(name) })).toContainText(`${st.ref} v1 있음`);
+  await expect(page.getByRole('radio', { name: new RegExp(name) })).toContainText(`${st.ref} v2 있음`);
 });
 
 test('DSS — Storyboard 화면의 「만들기」(?sb=&auto=1)는 Gate 를 건너뛰고 바로 DS2', async ({ page, request }) => {

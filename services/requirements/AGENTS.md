@@ -30,7 +30,7 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
 
 ## 현재 상태 (2026-10-12)
 
-### 새 흐름(2026-10-08) — 보드 webapp1 RQ0 · RQ1 · RQ_Done(아티팩트 v59) · `docs/scenarios/11-content-flow.md` §6
+### 새 흐름(2026-10-08) — 보드 webapp1 RQ0 · RQ1 · RQ_View(아티팩트 v60) · `docs/scenarios/11-content-flow.md` §6
 - **AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다** — 사용자 결정. `deep-questions` · `…:answer` · `deep-questions:close` 경로, `RFDeep*` · `RFAnswer` 스키마,
   `RFDoc.deep` · `RFDoc.target_ask` · `counts.pending`, task `rq.deep_questions.v1`(mock 포함), 웹 `DeepPanel`(RQ1_AI 380 패널) · 「AI 심층 질의로 폼 완성」 버튼 · 「AI 질의로 채움」 표시를 지웠다.
   예전 문서에 남은 `deep` · `target_ask` 칸은 읽을 때 버리고(`_DROPPED`), 출처 `by` 의 `ai-pending | ai-accepted` 는 예전 값 읽기용으로만 남겼다. RQ1 머리 줄은 높이 40(보드 그대로 — 아래 칸 위치 유지).
@@ -42,13 +42,13 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
   소프트 삭제 + `unregister_item`, 채우는 잡이 있으면 취소 — 워커는 문서가 사라졌으면 되살리지 않고 잡을 canceled 로 끝냄. 번호 카운터는 그대로라 지운 번호를 다시 쓰지 않음).
   요구사항은 만들 때 Storyboard 가 없어 같은 Storyboard 중복 막기는 해당 없음.
 - **웹** `web/src/features/requirements/flow/`: `/requirements`(RQ0 = `ContentListScreen content="rq"`, 작성 중 = rq-flows 중 내용 있는 초안 — 저장 전 초안 줄은 `onDelete`(손을 올리면 × · 확인 → `useRfDelete` → 목록 · 사이드바 색인 새로)) ·
-  `/requirements/new`(Gate 없이 바로 RQ1 — 첫 입력 때 만들고 주소를 `/requirements/flow/:id` 로, 빈 초안은 만들지 않음) · `/requirements/flow/:id`(RQ1 → 저장 → RQ_Done `FlowDoneView` + 후속 DSS `/dss/new?sb=&auto=1`).
+  `/requirements/new`(Gate 없이 바로 RQ1 — 첫 입력 때 만들고 주소를 `/requirements/flow/:id` 로, 빈 초안은 만들지 않음) · `/requirements/flow/:id`(저장한 것 = RQ_View 보기 `RqView`(`FlowContentView` · 개요 340 | 키맨별 요구 · 후속 DSS — 있으면 「열기」, 없으면 `/dss/new?sb=&auto=1`) · 저장 전 초안 = RQ1 · `?edit=1` = RQ1 → 저장하면 다시 보기 — 완료 화면 없음, 2026-10-12).
   폼은 화면이 원본(id 를 화면이 만듦 `k_ · q_`) · 600ms 자동 저장(PUT 응답으로 글자를 덮어쓰지 않음, 파일 채우기만 폼을 바꿈). 보드 px 그대로 `rqflow.css`(접두어 `rqf-`, 왼쪽 400 · 머리 줄 40).
-  RQ_Done 은 공용 FlowDone 을 `.rqf-done` 범위에서 보드 Done 값으로 덮어씀(공용 부품 요청 대상).
+  보기 본문 CSS 는 `rqflow.css` RQ_View 절(접두어 `rqv-`).
 - **이전 흐름 이동**: 목록 · 새로 만들기만 `/requirements/legacy` · `/requirements/legacy/new`. 나머지 `/requirements/:rqId/...` 는 그대로(제안서 handoff).
-- **테스트** `test_requirements_flow.py` 7개(전체 39 — 지우기 · 채우기 잡 취소 · 심층 질의 경로 없음 · 예전 문서 읽기 포함) · e2e `web/e2e/requirements/rq-flow.spec.ts` 3개(목록 → 파일 → 직접 입력 → 저장 → Storyboard 자동 생성 · 폭 측정 · AI 버튼 없음 · 1920) ·
+- **테스트** `test_requirements_flow.py` 7개(전체 39 — 지우기 · 채우기 잡 취소 · 심층 질의 경로 없음 · 예전 문서 읽기 포함) · e2e `web/e2e/requirements/rq-flow.spec.ts` 3개(목록 → 파일 → 직접 입력 → 저장 → 보기(완료 문구 없음 · 값 · 폭 340/746 · flow.json · 편집 `?edit=1` · 목록 열기 · 새로고침) · Storyboard 자동 생성 · AI 버튼 없음 · 1920) ·
   `rq-draft.spec.ts` 1개(첫 입력 초안 → 목록 × → 확인 → 빠짐 · 저장한 것은 × 없음 + API 409) ·
-  캡처 `__screens__/RQ0-new · RQ1-new · RQ1-empty-new · RQ_Done-new · RQ_DoneJson-new · RQ0-draft-delete.png`.
+  캡처 `__screens__/RQ0-new · RQ1-new · RQ1-empty-new · RQ_View-new · RQ0-draft-delete.png`.
 
 ### 이전 흐름(`/v1/requirements*`, 2026-10-06)
 

@@ -29,10 +29,10 @@ export type { WsMe, WsItem, WsFeatureCount, WsNotification, WsNotificationCounts
 export { WorkListPage } from './WorkListPage';
 // 새 콘텐츠 흐름(Storyboard 허브) — docs/scenarios/11-content-flow.md
 export {
-  CONTENT, STAGE_LABEL, ORDER as FLOW_ORDER, useFlow, useFlowsById, useFlows, useFlowContents, branchFlow, patchFlow, suggestKeyMessage, useFlowInvalidate, doneKeys, flowKey,
+  CONTENT, STAGE_LABEL, ORDER as FLOW_ORDER, useFlow, useFlowsById, useFlows, useFlowContents, branchFlow, patchFlow, suggestKeyMessage, useFlowInvalidate, doneKeys, flowKey, editRoute, useEditMode,
 } from './flow/api';
 export type { ContentKey, StageKey, ContentMeta, FlowDoc, FlowCell, FlowListItem, FlowContentItem, FlowCard, FlowStageOut } from './flow/api';
-export { FlowBar, SBPopup, ContentPopup, GateScreen, FlowDoneView, FlowDots, whenText } from './flow/parts';
-export type { GateStart } from './flow/parts';
+export { FlowBar, SBPopup, ContentPopup, GateScreen, FlowContentView, FlowDots, whenText } from './flow/parts';
+export type { GateStart, FollowSpec } from './flow/parts';
 export { ContentListScreen, ListHero, HistoryHead, SegLegend, StepMeter, ThumbFrame, CardMini } from './flow/list';
 export type { DraftRow, SegState } from './flow/list';

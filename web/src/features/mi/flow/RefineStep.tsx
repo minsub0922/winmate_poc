@@ -10,12 +10,13 @@ import { GROUPS, itemsOf, mfKey, type MFDoc, type MFItem, type MFResult, type MF
 
 type Actions = ReturnType<typeof useMfActions>;
 
-const srcLine = (it: MFItem) => {
+/** 출처 이름 · 날짜(이름이 종류와 같으면 뺀다) — 보기(MiView)도 쓴다 */
+export const srcLine = (it: MFItem) => {
   const s = it.source;
   return [s.name && s.name !== s.type ? s.name : null, s.date].filter(Boolean).join(' · ');
 };
 
-export function RefineView({ doc, actions, onFinished }: { doc: MFDoc; actions: Actions; onFinished: (out: MFStageOut, prev: { ver: number | null; kept: number }) => void }) {
+export function RefineView({ doc, actions, onFinished }: { doc: MFDoc; actions: Actions; onFinished: (out: MFStageOut) => void | Promise<void> }) {
   const qc = useQueryClient();
   const [tab, setTab] = useState(() => Math.max(0, GROUPS.findIndex((g) => itemsOf(doc).some((x) => x.group === g.label))));
   const [editId, setEditId] = useState<string | null>(null);
@@ -47,7 +48,7 @@ export function RefineView({ doc, actions, onFinished }: { doc: MFDoc; actions: 
   };
   const finish = async () => {
     setSaving(true);
-    try { onFinished(await actions.finish(), { ver: doc.ver ?? null, kept: doc.saved_kept ?? 0 }); } catch (e) { toast((e as Error).message || '저장하지 못했어요'); setSaving(false); }
+    try { await onFinished(await actions.finish()); } catch (e) { toast((e as Error).message || '저장하지 못했어요'); setSaving(false); }
   };
   const toSearch = async () => {
     setBack(true);
@@ -135,8 +136,8 @@ function EditLine({ it, onSave, onCancel }: { it: MFItem; onSave: (t: string) =>
   );
 }
 
-/** 원문(URL 없음) — 이 문장을 뽑은 검색 결과 글 그대로 */
-function OriginDialog({ item, result, onClose }: { item: MFItem | null; result: MFResult | null; onClose: () => void }) {
+/** 원문(URL 없음) — 이 문장을 뽑은 검색 결과 글 그대로(정제 · 보기 공용) */
+export function OriginDialog({ item, result, onClose }: { item: MFItem | null; result: MFResult | null; onClose: () => void }) {
   return (
     <Modal open={!!item} onClose={onClose} width={640} title="원문 · 검색 결과" bodyStyle={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}
       footer={<div className="mif-origfoot"><span>요약형 웹 검색이라 원문 링크가 없어요 · 수치는 원문에서 확인해 주세요</span>

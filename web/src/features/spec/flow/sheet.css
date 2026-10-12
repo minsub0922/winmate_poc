@@ -1,4 +1,4 @@
-/* Spec 시트 · 시트 작성(보드 webapp1 SP2) · 완료(Done content=sp) · 모델 고르기(ProdPicker 모양) — 보드 인라인 스타일 px 그대로. 색은 토큰만. 접두어 sf- */
+/* Spec 시트 · 시트 작성(보드 webapp1 SP2) · 보기(View content=sp) · 모델 고르기(ProdPicker 모양) — 보드 인라인 스타일 px 그대로. 색은 토큰만. 접두어 sf- */
 
 /* 그리드: 제품 330 | 나머지(보드 grid-template-columns: 330px minmax(0, 1fr) · gap 14) */
 .sf-grid2 { grid-template-columns: 330px minmax(0, 1fr); }
@@ -70,14 +70,25 @@
 
 .sf-empty { padding: 24px 16px; font-size: 13px; color: var(--wm-text-muted); text-align: center; }
 
-/* 완료(보드 Done): 설명 줄의 XLSX 받기 · 후속 작업 없음(점선 14 · 13 · 「Storyboard로」 13/700) */
-.sf-dl { color: var(--wm-brand); font-weight: 600; }
-.sf-dl:hover { color: var(--wm-brand-hover); text-decoration: underline; }
-.sf-nofollow { box-sizing: border-box; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--wm-brand-line); background: var(--wm-surface); display: flex;
-  align-items: center; gap: 12px; font-size: 13px; color: var(--wm-text-muted); }
-.sf-nofollow > span { flex-grow: 1; }
-.sf-nofollow > a { font-size: 13px; font-weight: 700; white-space: nowrap; color: var(--wm-brand); }
-.sf-nofollow > a:hover { color: var(--wm-brand-hover); }
+/* SP_View — 저장한 시트 보기(보드 View content=sp): 띠 h44 · gap 12 · 흰 판 표(190 · 160 · 항목 1fr · 머리 h40 고정 · 줄 h44) · 아래 안내 */
+.spv { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.spv-opt { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; margin-right: 10px; }
+.spv-opt b { font-weight: 700; color: var(--wm-text-2); }
+.spv-grow { flex-grow: 1; }
+.spv-warn { height: 24px; padding: 0 9px; border-radius: 999px; background: var(--wm-amber-bg); color: var(--wm-amber); font-size: 11.5px; font-weight: 700; display: flex;
+  align-items: center; white-space: nowrap; flex-shrink: 0; }
+.spv-card { flex-grow: 1; min-height: 0; overflow: auto; }
+.spv-grid { display: grid; font-size: 12.5px; }
+.spv-row { display: contents; }
+.spv-cell { box-sizing: border-box; min-height: 44px; padding: 0 12px; display: flex; align-items: center; border-top: 1px solid var(--wm-line-soft); white-space: nowrap;
+  overflow: hidden; text-overflow: ellipsis; min-width: 0; color: var(--wm-text); }
+.spv-cell--head { min-height: 40px; border-top: none; background: var(--wm-surface-2); font-size: 12px; font-weight: 700; color: var(--wm-text-muted); position: sticky; top: 0; z-index: 1; }
+.spv-cell--name { font-weight: 700; color: var(--wm-text); }
+.spv-cell--warnname { color: var(--wm-amber); }
+.spv-cell--space { color: var(--wm-text-muted); font-size: 12px; }
+.spv-cell--pend { color: var(--wm-amber); font-weight: 600; }
+/* 「XLSX 내려받기」(보드: button · 패딩 0 13) — 내려받기라 a 로 그린다 · 파일이 없으면(export 실패) 꺼진 button */
+a.spv-dl { padding: 0 13px; }
 
 /* 모델 고르기(보드 ProdPicker 760×640: 머리 18/700 · 12.5 · 묶음 12/700 · 2열 줄 52 r10 · 점선 찾기 38 · 발 완료 40) */
 .sf-dlg__head { display: flex; flex-direction: column; gap: 4px; padding: 6px 0; min-width: 0; }

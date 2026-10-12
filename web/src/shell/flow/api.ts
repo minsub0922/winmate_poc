@@ -1,8 +1,9 @@
 /**
  * 새 콘텐츠 흐름(docs/scenarios/11-content-flow.md)의 Storyboard 허브 — contracts/storyboard.json `/v1/flows*` → @/api/gen/storyboard.
- * 콘텐츠 화면은 이 훅과 셸 흐름 화면(ContentListScreen · GateScreen · FlowBar · FlowDoneView)만 쓴다.
+ * 콘텐츠 화면은 이 훅과 셸 흐름 화면(ContentListScreen · GateScreen · FlowBar · FlowContentView)만 쓴다.
  */
 import { useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useSearchParams } from 'react-router';
 import { api, unwrap } from '@/api/client';
 import type { components } from '@/api/gen/storyboard';
 
@@ -106,3 +107,25 @@ export function useFlowInvalidate() {
 /** 진행 칸 8 의 보드 스타일 키(rq dss | mi ca vp sp sc | ppt) */
 export const ORDER: StageKey[] = ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'];
 export const doneKeys = (cells: FlowCell[]) => cells.filter((c) => c.state === 'done').map((c) => c.key);
+
+// ── 보기 ↔ 편집(보드 View · *_View) ─────────────────────────
+// 저장된 콘텐츠의 경로(허브 cells[].route · 목록 · 작업 내역)는 그 콘텐츠 보기로 열린다. 편집 화면은 `?edit=1`.
+// 저장 전 초안은 경로 그대로 편집 화면이다(보여 줄 완성본이 없다).
+
+/** 콘텐츠 경로 → 편집 화면 경로(`?edit=1`, 다른 검색 조건은 버린다) */
+export function editRoute(route: string) {
+  try { const u = new URL(route, 'http://x'); return `${u.pathname}?edit=1`; } catch { return `${route}?edit=1`; }
+}
+
+/** 지금 화면이 편집인지(`?edit=1`) · 편집으로 · 보기로(저장 뒤, 기록을 남기지 않고 바꾼다) */
+export function useEditMode() {
+  const [sp, setSp] = useSearchParams();
+  const editing = sp.get('edit') === '1';
+  const toView = (drop: string[] = []) => setSp((prev) => {
+    const n = new URLSearchParams(prev);
+    n.delete('edit');
+    for (const k of drop) n.delete(k);
+    return n;
+  }, { replace: true });
+  return { editing, toView };
+}

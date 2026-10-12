@@ -42,7 +42,11 @@ export function useSpaceSets() {
 }
 
 export function useSpaceSet(id: string) {
-  return useQuery({ queryKey: ssKey(id), enabled: !!id, queryFn: async () => normalize(unwrap(await api.scenario.GET('/v1/space-sets/{set_id}', P(id)))) });
+  return useQuery({ queryKey: ssKey(id), enabled: !!id, queryFn: () => getSpaceSet(id) });
+}
+
+export async function getSpaceSet(id: string): Promise<SSDoc> {
+  return normalize(unwrap(await api.scenario.GET('/v1/space-sets/{set_id}', P(id))));
 }
 
 export async function createSpaceSet(body: S['SSCreate']): Promise<SSDoc> {

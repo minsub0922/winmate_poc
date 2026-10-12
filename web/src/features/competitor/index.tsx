@@ -1,7 +1,7 @@
 /**
  * 경쟁사 분석(CA) 기능 모듈 — 소유: competitor 서비스 세션. 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 새 흐름(2026-10-08 · docs/scenarios/11-content-flow.md · 보드 webapp1 CA0~CA_DoneJson) — ./flow/CaFlowPages.tsx
- *   /competitor(CA0 List) · /competitor/new(CA1 Gate · `?sb=&auto=1`) · /competitor/flow/:id(CA2 · `?tab=info|pc` → CA_Done)
+ * 새 흐름(2026-10-08 · docs/scenarios/11-content-flow.md · 보드 webapp1 CA0~CA2_AI · View content=ca) — ./flow/CaFlowPages.tsx
+ *   /competitor(CA0 List) · /competitor/new(CA1 Gate · `?sb=&auto=1`) · /competitor/flow/:id(저장한 분석 = CA_View 보기 · 초안 · `?edit=1` = CA2 `?tab=info|pc`)
  * 이전 흐름(제안서 handoff 가 아직 읽는다 · 수용 기준 docs/scenarios/04-competitor.md):
  *   /competitor/legacy(CA0) · /competitor/legacy/new(CA1 · `?input=requirements&rq=` CA1R — /competitor/new?input= 도 이리로) · /competitor/:id → 작업의 route
  *   /competitor/:id/input(CA1 · CA1R) · finding(CA1G) · ask(CA2Q) · candidates(CA2) · run(CA3) · criteria(CA3C)

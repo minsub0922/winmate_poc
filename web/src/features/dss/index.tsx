@@ -1,7 +1,7 @@
 /**
  * 공간별 제품 매칭 DSS(DS) 기능 모듈 — 소유: dss 서비스 세션. 수용 기준: docs/scenarios/11-content-flow.md(§1 · §4 · §6)
- * 보드 webapp1 v58: DS0(List) · DS1(Gate) · DS2 · DS2_AI(업종 · 공간 · 공간별 제품) · DS4 · DS4_AI(솔루션) · DS_Done. 셸이 자동으로 등록한다.
- * 라우트: /dss(DS0) · /dss/new(DS1 · `?sb=&auto=1`) · /dss/:id(DS2 → `?step=solution` DS4 → 저장 → DS_Done)
+ * 보드 webapp1 v58: DS0(List) · DS1(Gate) · DS2 · DS2_AI(업종 · 공간 · 공간별 제품) · DS4 · DS4_AI(솔루션) · DS_View(보기). 셸이 자동으로 등록한다.
+ * 라우트: /dss(DS0) · /dss/new(DS1 · `?sb=&auto=1`) · /dss/:id(저장한 것 = DS_View · `?edit=1` · 초안 = DS2 → `?step=solution` DS4 → 저장 → 보기)
  */
 import { feature } from '@/shell/feature';
 import { DsEditPage, DsGateScreen, DsListScreen } from './DsPages';

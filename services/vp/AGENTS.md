@@ -35,8 +35,15 @@ make contracts SERVICE=vp    # contracts/vp.json 갱신 + 깨지는 변경 검�
   - 만들기: KB S1(공간별 후보)로 후보 목록. 항목 고르기 `PUT …/items` · 가치 더하기/고치기/지우기 · `:accept-all` · 다른 제안의 가치 `values:import`.
   - AI: `:suggest`(`vp.values_suggest.v1`, 모델이 없으면 KB E1 원문 메시지 → 니즈 없는 점선 후보 `mode=kb_only`) · `values/{id}:infer-need`(`vp.need_infer.v1`, 못 쓰면 빈 값).
   - `items/{key}/linked`: 이 제안 · 같은 제품을 쓴 다른 제안 · KB 공식 메시지(E1). `:finish` → `stage`(= flow.json `stages.vp`) + `summary_md`. 점선 값은 빠진다.
-- 화면 `web/src/features/vp/values/`(`/vp/values/new` · `/vp/values/:id`, 목록 머리 「가치 · 고객의 니즈」). `@/ui` FlowScreen · ProductPickerDialog · FlowDone 사용.
-- 시험: `tests/test_value_maps.py` 3개 · e2e `web/e2e/vp/values.spec.ts`(폭 280 · 1180 도 잰다). mock `mocks/ai-tools/vp.need_infer.v1.json`.
+- 화면 `web/src/features/vp/values/`(`/vp/values/new` · `/vp/values/:id`, 목록 머리 「가치 · 고객의 니즈」). `@/ui` FlowScreen · ProductPickerDialog 사용.
+- **보기(2026-10-12 · 보드 webapp1 View content=vp · VP_View)**: 저장한 맵(`status done` · `ver`)을 `?edit` 없이 열면 완료 화면 대신 `VpView`(셸 `FlowContentView`) —
+  머리 메타 「… 저장 · 제품 · 솔루션 n · 가치 n · 고객의 니즈 n/n」(저장 시각은 허브 history 의 그 VP 반영) · 띠 h44 「DSS-xx에서 n개를 골랐어요 · 고르지 않은 n — …」
+  (DSS 밖에서 더함 · DSS에서 빠짐은 있을 때만 덧붙임) · 흰 판 하나에 고른 제품 · 솔루션마다 줄(210 | 1fr · gap 18 · 16 20): 종류 꼬리표 · 이름 · 공간 · 「가치 n · 니즈 n/n」 |
+  가치마다 공간 · 메시지 · 연결 요구 + 니즈 줄(직접 / AI 추론 · 수락, 비면 주황 점선 「비어 있어요 · …」). 수락한 가치 · 니즈만(stages.vp 와 같다). 후속 작업 없음.
+  저장 뒤 · 목록 「열기」 · 작업 내역 · 새로고침 모두 같은 보기(「저장했어요」 문구 없음). 「편집」 → `?edit=1`(VP2) → 저장하면 `?edit` 를 떼고 보기로(문서 캐시 갱신 · 목록 · 허브 무효화).
+  저장 전 초안은 그 경로에서 바로 편집 화면. DSS 다시 가져오기 안내 줄(dss_changed)은 편집 화면에만 있다(보기에는 없음).
+- 시험: `tests/test_value_maps.py` 3개 · e2e `web/e2e/vp/values.spec.ts`(VP2 폭 280 · 1180 · 저장 → 보기: 완료 문구 0 · 값 · 본문 1100 · 띠 h44 · 왼쪽 210 · 오른쪽 830 · flow.json · 편집 `?edit=1` · 목록 열기 · 새로고침,
+  캡처 `__screens__/VP_View-new.png`). mock `mocks/ai-tools/vp.need_infer.v1.json`.
 - 남은 것: Storyboard `flow.json` 에 `stage` 를 써 넣는 일(storyboard 단계 1) · Gate. 이전 VP 화면(VP0~)은 그대로 둔다.
 - **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
   - Storyboard(Gate · `sb_id` 만)로 만든 맵은 `dss_ref` · `dss_ver` 를 남기고 `candidates` 가 DSS 후보다(후보를 직접 준 맵은 `dss_ref` null → 대상 아님).

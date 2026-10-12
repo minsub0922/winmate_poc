@@ -1,4 +1,4 @@
-/* MI 새 흐름 — 보드 webapp1 MI2 · MI2_Loading · MI3 · MI_Done 인라인 스타일 그대로(px). 색은 토큰. 접두어 mif-
+/* MI 새 흐름 — 보드 webapp1 MI2 · MI2_Loading · MI3 · View(content=mi) 인라인 스타일 그대로(px). 색은 토큰. 접두어 mif-
    앱은 전역 box-sizing: border-box 라, 보드에서 box-sizing 이 없는(content-box) 요소는 테두리만큼 높이를 더해 그려진 크기를 맞췄다(주석 「+선」). */
 
 .mif-screen .wm-flow__section > * { flex-shrink: 0; }
@@ -121,11 +121,30 @@ a.mif-ghost30:hover, .mif-ghost30:hover { background: var(--wm-brand-hero-hover)
 .mif-origfoot { display: flex; align-items: center; gap: 12px; width: 100%; }
 .mif-origfoot span { flex: 1; font-size: 12.5px; color: var(--wm-text-muted); }
 
-/* ── MI_Done — 완료 화면은 공용 FlowDone. 후속 작업 없음 줄은 보드 Done(noNext) 그대로 ── */
-.mif-done { flex: 1 0 auto; display: flex; flex-direction: column; min-height: 0; }
-.mif-nofollow { box-sizing: border-box; padding: 14px 16px; border-radius: 14px; border: 1px dashed var(--wm-brand-line); background: var(--wm-surface);
-  display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--wm-text-muted); }
-.mif-nofollow span { flex-grow: 1; }
-.mif-nofollow a { font-size: 13px; font-weight: 700; white-space: nowrap; }
 .mif-q__x:focus-visible, .mif-chip:focus-visible, .mif-tab:focus-visible, .mif-chk:focus-visible, .mif-ghost30:focus-visible, .mif-link30:focus-visible,
 .mif-backbtn:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+
+/* ── MI_View — 저장한 MI 보기(보드 View content=mi: 검색 조건 띠 h44 → 세 칸 1fr × 3 · gap 12 → 안내 11.5) ── */
+.miv { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
+.miv-strip { gap: 10px; }
+.miv-k { font-size: 12.5px; font-weight: 700; color: var(--wm-text-2); white-space: nowrap; flex-shrink: 0; }
+.miv-chip { height: 24px; padding: 0 9px; border-radius: 999px; background: var(--wm-surface-3); color: var(--wm-text-2); font-size: 11.5px; font-weight: 600;
+  display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
+.miv-sep { width: 1px; height: 18px; background: var(--wm-line); margin: 0 4px; flex-shrink: 0; }
+.miv-qline { font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.miv-cols { flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.miv-col { display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
+.miv-colhead { height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; box-sizing: border-box; }
+.miv-colh { margin: 0; font-size: 14px; font-weight: 700; }
+.miv-coln { font-family: var(--wm-font-num); font-size: 12px; font-weight: 800; color: var(--wm-brand); }
+.miv-list { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.miv-it { display: flex; flex-direction: column; gap: 7px; padding: 12px 16px; flex-shrink: 0; }
+.miv-it + .miv-it { border-top: 1px solid var(--wm-line-soft); }
+.miv-it__t { font-size: 13.5px; font-weight: 600; line-height: 1.5; color: var(--wm-text); word-break: keep-all; }
+.miv-it__meta { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.miv-it__src { font-size: 11.5px; color: var(--wm-text-subtle); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.miv-orig { margin-left: auto; padding: 0 0 0 4px; border: none; background: transparent; color: var(--wm-brand); font-size: 12px; font-weight: 700;
+  white-space: nowrap; flex-shrink: 0; font-family: inherit; cursor: pointer; }
+.miv-orig:hover { color: var(--wm-brand-hover); }
+.miv-orig:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+.miv-empty { padding: 14px 16px; font-size: 12.5px; color: var(--wm-text-subtle); }

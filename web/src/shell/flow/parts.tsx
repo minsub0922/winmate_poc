@@ -1,13 +1,13 @@
 /**
- * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate · Done) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`.
+ * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate · View) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`.
  * 기능 화면은 이것만 조합한다. 보드 px 그대로(본문 열 1180 안에서).
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useShellPage } from '../ShellContext';
-import { ErrorState, FlowDone, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, type DoneStage } from '@/ui';
+import { ErrorState, FollowCard, Icon, JsonPopup, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast } from '@/ui';
 import {
-  CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, useFlow, useFlowInvalidate, useFlows, useFlowsById,
+  CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, editRoute, useFlow, useFlowInvalidate, useFlows, useFlowsById,
   type ContentKey, type FlowCell, type FlowDoc, type FlowListItem, type StageKey,
 } from './api';
 import type { DraftRow } from './list';
@@ -123,7 +123,7 @@ export function ContentPopup({ flow, stage, onClose }: { flow: FlowDoc | undefin
         {!card && <span className="fl-muted">이 콘텐츠의 요약 카드가 아직 없어요 · 편집 화면에서 다시 저장하면 생겨요</span>}
       </div>
       <div className="fl-popfoot fl-popfoot--cp"><span>{card?.foot ?? ''}</span>
-        {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={cell.route} onClick={onClose}>편집 화면에서 고치기</Link>}
+        {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={editRoute(cell.route)} onClick={onClose}>편집 화면에서 고치기</Link>}
         <button type="button" className="wm-btn wm-btn--primary wm-btn--h42 fl-popbtn18" onClick={onClose}>닫기</button></div>
     </Modal>
   );
@@ -181,7 +181,7 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
     setBusy(true);
     try {
       if (dr) { nav(dr.to); return; }
-      if (ex && choice === 'edit' && ex.route) { nav(ex.route); return; }
+      if (ex && choice === 'edit' && ex.route) { nav(editRoute(ex.route)); return; }
       if (ex && choice === 'branch') {
         const b = await branchFlow(cur.id, content);
         inval();
@@ -249,33 +249,72 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
   );
 }
 
-// ── 완료(보드 Done) ──────────────────────────────────
+// ── 콘텐츠 보기(보드 View · *_View) ──────────────────────
+
+/** 후속 작업 한 칸 — 그 Storyboard 에 이미 있으면 그 콘텐츠를 열고(ref · 열기), 없으면 사전 작업 고르기를 건너뛰고 바로 만든다 */
+export interface FollowSpec { key: ContentKey; desc: string }
 
 /**
- * 완료 화면(보드 Done · *_Done · *_DoneJson) — 허브의 flow.json 전체에서 stages.<key> 를 강조하고, 단계 칸 · 요약 md 추가분을 그린다.
- *   <FlowDoneView sbId="SB-01" stageKey="mi" mdAdded={out.flow_sync?.md_added ?? out.summary_md} title="MI를 저장했어요" sub="…" onEdit={…} follow={…} />
+ * 콘텐츠 보기(보드 View) — 저장 뒤 · 목록 · 작업 내역에서 그 콘텐츠를 열면 이 화면이다. 「저장했어요」 같은 완료 안내는 없다.
+ * 머리 = 아이콘 · 이름 · 참조 v · 저장 시각 · 수 · (actions) · flow.json · 편집, 본문 = 기능이 그리는 콘텐츠 그 자체, 맨 아래 = 후속 작업(있을 때만).
+ *   <FlowContentView stageKey="dss" sbIds={[sb]} title="…" refVer="DSS-01 v1" meta={['오늘 10:10 저장', '공간 7', …]}
+ *     follow={[{ key: 'sc', desc: '공간 7개에서 …' }, { key: 'sp', desc: '…' }]}>{본문}</FlowContentView>
  */
-export function FlowDoneView({ sbId, sbIds, stageKey, mdAdded, stage, title, sub, onEdit, follow, note = '요약본이 방금 갱신됐어요', newStoryboard, jsonHead }: {
-  sbId: string | null; sbIds?: string[]; stageKey: StageKey; mdAdded: string; stage?: unknown; title: string; sub?: ReactNode; onEdit?: () => void; follow?: ReactNode; note?: string;
-  /** 이번 저장으로 Storyboard 가 새로 생겼다(고객 요구사항 첫 저장) → JSON 칸 머리 「새 Storyboard 전체」 · 팝업 전체 강조 */
-  newStoryboard?: boolean;
-  jsonHead?: ReactNode;
+export function FlowContentView({ stageKey, sbIds, title, refVer, meta, editTo, actions, follow, children, bodyClassName }: {
+  stageKey: ContentKey; sbIds: string[]; title: string; refVer: string; meta: (string | null | undefined | false)[];
+  /** 편집 화면 경로(기본: 지금 경로 + `?edit=1`) */
+  editTo?: string;
+  /** flow.json 앞에 오는 버튼(Spec 시트의 XLSX 내려받기 등) */
+  actions?: ReactNode;
+  follow?: FollowSpec[];
+  children: ReactNode;
+  bodyClassName?: string;
 }) {
-  const nav = useNavigate();
+  const loc = useLocation();
+  const sbId = sbIds[0] ?? null;
   const q = useFlow(sbId);
   const d = q.data;
-  const stages: DoneStage[] = (d?.cells ?? ORDER.map((k) => ({ key: k, label: STAGE_LABEL[k], state: 'none', ref: null } as FlowCell))).map((c) => ({
-    key: c.key, label: c.label, ref: c.ref, state: c.key === stageKey && c.state === 'done' ? 'cur' : c.state === 'done' ? 'done' : 'none',
-  }));
-  const st = stage ?? (d?.stages as Record<string, unknown> | undefined)?.[stageKey] ?? {};
+  const [json, setJson] = useState(false);
+  const meta1 = CONTENT[stageKey];
+  const jsonLines = d?.flow_json ? JSON.stringify(d.flow_json, null, 2).split('\n').length : 0;
+  const nexts = (follow ?? []).map((f) => {
+    const c = d?.cells.find((x) => x.key === f.key);
+    const has = !!c && c.state === 'done' && !!c.route;
+    const m = CONTENT[f.key];
+    return { key: f.key, title: m.label, icon: m.icon,
+      to: has ? c!.route! : `/${m.base}/new?sb=${encodeURIComponent(sbId ?? '')}&auto=1`,
+      refLabel: has ? `${c!.ref}${c!.ver ? ` v${c!.ver}` : ''}` : undefined,
+      desc: has ? (d?.cards?.[f.key]?.title ?? m.desc) : f.desc, cta: has ? '열기' : '만들기' };
+  });
   return (
-    <div className="wm-flow">
-      {sbId ? <FlowBar sbIds={sbIds ?? [sbId]} current={stageKey} note={note} /> : <LinkedStoryboardBar chips={[]} emptyText="연결된 Storyboard가 없어요" />}
-      {sbId && q.isLoading ? <div style={{ padding: 28 }}><Skeleton h={420} r={16} /></div> : (
-        <FlowDone title={title} sub={sub} sbName={d?.name ?? null} sbStage={d?.progress} stages={stages} md={mdAdded} stageKey={stageKey} stage={st}
-          fullJson={d?.flow_json} onEdit={onEdit} follow={follow} onOpenStoryboard={sbId ? () => nav(`/storyboard/flow/${sbId}`) : undefined}
-          jsonTitle={d?.id ? `${d.id}/flow.json` : 'flow.json'} highlightAll={newStoryboard} jsonHead={jsonHead ?? (newStoryboard ? '새 Storyboard 전체' : undefined)} />
-      )}
+    <div className="wm-flow fl-view">
+      {sbIds.length ? <FlowBar sbIds={sbIds} current={stageKey} /> : <LinkedStoryboardBar chips={[]} emptyText="연결된 Storyboard가 없어요" />}
+      <section className="fl-view__section">
+        <div className="fl-view__head">
+          <span className="fl-view__ic" aria-hidden><PathIcon d={meta1.icon} size={21} color="var(--wm-brand)" /></span>
+          <span className="fl-view__titles">
+            <span className="fl-view__titlerow"><h1 className="fl-view__h1">{title}</h1><span className="fl-view__ref">{refVer}</span></span>
+            <span className="fl-view__meta">{meta.filter(Boolean).join(' · ')}</span>
+          </span>
+          {actions}
+          {sbId && <button type="button" className="fl-view__btn" onClick={() => setJson(true)} disabled={!d?.flow_json}
+            title={d?.flow_json ? undefined : 'Storyboard를 불러오는 중이에요'}>
+            <span className="fl-view__jsonic" aria-hidden>{'{ }'}</span>flow.json</button>}
+          <Link className="fl-view__btn" to={editTo ?? editRoute(loc.pathname)}><Icon name="edit" size={14} strokeWidth={2.2} />편집</Link>
+        </div>
+        <div className={cx('fl-view__body', bodyClassName)}>{children}</div>
+        {nexts.length > 0 && (
+          <div className="fl-view__follow">
+            <span className="fl-view__followh">후속 작업</span>
+            <div className="fl-view__follows" style={{ gridTemplateColumns: `repeat(${nexts.length}, minmax(0, 1fr))` }}>
+              {nexts.map((n) => <FollowCard key={n.key} to={n.to} icon={n.icon} title={n.title} desc={n.desc} refLabel={n.refLabel} cta={n.cta} />)}
+            </div>
+          </div>
+        )}
+      </section>
+      <JsonPopup open={json} onClose={() => setJson(false)} json={d?.flow_json ?? {}} highlightKey={stageKey}
+        title={d?.id ? `${d.id}/flow.json` : 'flow.json'} sub={`초록 줄이 이 콘텐츠(stages.${stageKey})예요 · 전체 ${jsonLines}줄`}
+        legend="이 콘텐츠가 담긴 줄" onlyLabel="이 콘텐츠만" />
     </div>
   );
 }

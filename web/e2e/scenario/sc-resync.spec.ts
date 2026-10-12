@@ -88,14 +88,14 @@ test('공간 시나리오 — DSS 다시 가져오기(안내 줄 · 새 공간 �
 
   // 목록(SC0) — 저장 전 초안 줄의 × → 확인 → 지움
   await page.goto('/scenario');
-  const row = page.getByRole('row').filter({ hasText: name });
+  const row = page.locator('.fl-card').filter({ hasText: name });
   await expect(row).toContainText('작성 중');
   await row.hover();
   await row.getByRole('button', { name: `${name} 지우기` }).click();
   const dlg = page.getByRole('dialog').filter({ hasText: '작성 중인 초안을 지울까요?' });
   await dlg.getByRole('button', { name: '지우기' }).click();
   await expect(page.locator('.wm-toast').filter({ hasText: '초안을 지웠어요' })).toBeVisible();
-  await expect(page.getByRole('row').filter({ hasText: name })).toHaveCount(0);
+  await expect(page.locator('.fl-card').filter({ hasText: name })).toHaveCount(0);
   expect((await request.get(`/api/scenario/v1/space-sets/${setId}`)).status()).toBe(404);
   // 저장한 묶음은 지울 수 없다(409 SAVED_CONTENT)
   const made = await (await request.post('/api/scenario/v1/space-sets', { data: { sb_id: sb.id } })).json();

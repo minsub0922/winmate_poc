@@ -1,6 +1,6 @@
 # 11 · 콘텐츠 흐름(Storyboard 중심) — 수용 기준 (2026-10-08)
 
-디자인 원본: `docs/screens/webapp1/*.dc.html`(캔버스 v58) · 그린 화면 `docs/screens/_rendered/webapp1/<보드>.jpg · .txt`.
+디자인 원본: `docs/screens/webapp1/*.dc.html`(캔버스 v60) · 그린 화면 `docs/screens/_rendered/webapp1/<보드>.jpg · .txt`.
 이전 보드(v52)는 `docs/screens/_archive/webapp1-v52/` 에 있다. 2026-10-10 에 웹앱 ① 의 모든 콘텐츠를 새 흐름으로 옮겼다(§5). 이전 흐름 화면은 `/<base>/legacy` 아래에 남아 있고,
 그 화면의 수용 기준은 기존 문서(01~09)다.
 
@@ -16,11 +16,11 @@
 | CF-06 | 사전 작업은 필수다. 콘텐츠 목록 → 새로 만들기는 사전 작업 고르기(Gate)에서 Storyboard 를 고른다. 같은 종류가 이미 있으면 **수정**(연결된 모든 Storyboard 반영) 또는 **복제본 만들기**(Storyboard 분기). |
 | CF-07 | Storyboard 화면에서 "만들기" 하면 Gate 를 건너뛰고 현재 Storyboard 를 가져가 새로 만들기 화면으로 간다. |
 | CF-08 | AI 가 먼저 묻는 화면은 없다. AI 는 "AI 추가기능" 버튼(파란 테두리 + ✦)으로만 돌고, 결과는 **점선**으로 보이며 **수락해야** 들어간다. 예외: MI 는 Storyboard 분석 로딩이 먼저 나온다. |
-| CF-09 | 저장하면 완료 화면(Done): 요약본에 더해진 부분 + `flow.json` 에 더해진 블록(`stages.<콘텐츠>`, 접힌 JSON: 긴 배열은 첫 항목 + "… n개 더") + "전체 JSON 보기"(추가 · 바뀐 줄 강조) + 후속 작업. |
+| CF-09 | **완료 화면은 없다(2026-10-12 · 보드 v60).** 저장하면 같은 경로에서 **그 콘텐츠 보기**(보드 View · `*_View`)가 뜨고, 목록 · 사이드바 작업 내역 · 허브 `cells[].route` 로 다시 열어도 똑같은 보기다. 「저장했어요」 같은 완료 안내 · 요약본 추가분 · 접힌 JSON 칸은 없다. 보기 = 머리(아이콘 · 이름 · 참조 vN · `… 저장 · 수` 한 줄 · flow.json · 편집) + 콘텐츠 본문 + 후속 작업(후속이 있는 콘텐츠만: 이미 있으면 「참조 · 열기」, 없으면 「만들기」). 편집은 `?edit=1`, 저장하면 다시 보기. 저장 전 초안은 그 경로에서 편집 화면. flow.json 팝업은 허브 flow.json 전체에서 `stages.<콘텐츠>` 강조(「이 콘텐츠가 담긴 줄」 · 「이 콘텐츠만」). |
 | CF-10 | 출처 표시 `by`: `manual`(직접) · `ai-accepted`(AI 추천 · 수락) · `ai-pending`(점선) · `ai-candidate-A`(AI 3안 수락) · `ai-web`. |
 | CF-11 | 근거 없는 사실 · 수치는 만들지 않는다 — `[확인 필요]` · `[위키 값]` · `[견적 확인]` · `[00]`. |
 
-## 2. Value Proposition — 보드 VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_Done · VP_DoneJson · VpDetail · ProdPicker
+## 2. Value Proposition — 보드 VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_View · VpDetail · ProdPicker
 
 API `contracts/vp.json` `/v1/value-maps*` · 화면 `web/src/features/vp/values/` · 라우트 `/vp/values/new` · `/vp/values/:id`.
 
@@ -32,9 +32,9 @@ API `contracts/vp.json` `/v1/value-maps*` · 화면 `web/src/features/vp/values/
 | VP-N-04 | "AI 가치 매칭 추천"(`vp.values_suggest.v1`): 빈 곳에 가치 후보(니즈 포함)를 점선으로. 모델이 없으면 KB E1 원문 메시지를 니즈 없는 후보로(`mode=kb_only`). "모두 수락" 가능. |
 | VP-N-05 | "제품 · 솔루션 고르기 · n"(ProdPicker 760×640): DSS 제품 · 솔루션 + KB 카탈로그 검색 + "직접 추가 · KB 에 없음 · 확인 필요". |
 | VP-N-06 | "연결된 가치 전체 보기"(VpDetail 900×720): 이 제안 · 같은 제품을 쓴 다른 제안(가져오기 → 복사) · 삼성 공식 메시지(KB 원문, 출처 링크). 공간 칩으로 거른다. |
-| VP-N-07 | 저장 → Done: `stages.vp = {ref, ver, from, selection{fromDss, excluded, addedOutsideDss}, items[{name, kind, spaces, values[{id, space, message, need{text,by}|null, req, by}]}], importedFrom, counts}`. 점선(대기) 값은 저장에 안 들어간다. |
+| VP-N-07 | 저장 → 보기(VP_View): `stages.vp = {ref, ver, from, selection{fromDss, excluded, addedOutsideDss}, items[{name, kind, spaces, values[{id, space, message, need{text,by}|null, req, by}]}], importedFrom, counts}`. 점선(대기) 값은 저장에 안 들어간다. |
 
-## 3. 공간 시나리오 — 보드 SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done · SC_DoneJson
+## 3. 공간 시나리오 — 보드 SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_View
 
 API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scenario/spaces/` · 라우트 `/scenario/spaces/new` · `/scenario/spaces/:id`.
 
@@ -45,7 +45,7 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 | SC-N-03 | 시나리오는 공간마다 여러 개. 이름 · 사용자 · 이 시나리오의 제품(공간 제품 중 1개 이상, 없으면 422 `SCENARIO_WITHOUT_PRODUCT`) · 장면 흐름. |
 | SC-N-04 | 입력 폼은 고정하지 않는다: 단계 수 자유, 단계마다 "쓰인 제품" 선택, 항목(시간대 · 기대 효과 · 연결 요구 · 페인 포인트 · 직접 이름 짓기)은 필요할 때만 더한다. |
 | SC-N-05 | "AI 시나리오 3안"(`sc.space_candidates.v1` + KB D1 사례): 목록에 점선 후보 A/B/C. 수락 전에도 고칠 수 있고, 수락해야 시나리오가 된다. 모델이 없으면 KB 사례 틀 + `[확인 필요]`(`mode=kb_only`). |
-| SC-N-06 | 자동 저장(600ms, `expected_version` 409). 저장 → Done: `stages.sc = {ref, ver, from, spaces[{name, products, scenarios[{id, title, user, products, steps[{text, product}], fields[{k,v}], by}]}], rules{minProductsPerSpace:1, minProductsPerScenario:1}, counts}`. |
+| SC-N-06 | 자동 저장(600ms, `expected_version` 409). 저장 → 보기(SC_View): `stages.sc = {ref, ver, from, spaces[{name, products, scenarios[{id, title, user, products, steps[{text, product}], fields[{k,v}], by}]}], rules{minProductsPerSpace:1, minProductsPerScenario:1}, counts}`. |
 
 ## 4. 화면 폭 · 동적 폭 (모든 화면)
 
@@ -63,14 +63,14 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 | 콘텐츠 | 보드 | 목록 · 새로 · 편집 | 백엔드(새 자원) | e2e |
 |---|---|---|---|---|
 | 홈 | HomeGrid | `/` — 시작 · 흐름 3 · Storyboard로 만드는 콘텐츠 5 · 비주얼 2 · 최근 작업 2 | — | `shell/layout.spec.ts` H-* |
-| 고객 요구사항 | RQ0 · RQ1 · RQ_Done | `/requirements` · `/requirements/new`(바로 RQ1) · `/requirements/flow/:id` | requirements `/v1/rq-flows*` — 첫 저장에 Storyboard 자동 생성 | `requirements/rq-flow.spec.ts` |
+| 고객 요구사항 | RQ0 · RQ1 · RQ_View | `/requirements` · `/requirements/new`(바로 RQ1) · `/requirements/flow/:id`(저장했으면 보기 · `?edit=1` 편집) | requirements `/v1/rq-flows*` — 첫 저장에 Storyboard 자동 생성 | `requirements/rq-flow.spec.ts` |
 | Storyboard | SB0 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI | `/storyboard` · `/storyboard/flow/:id` | storyboard `/v1/flows*`(허브) | `storyboard/sb-flow.spec.ts` |
-| DSS | DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_Done | `/dss` · `/dss/new` · `/dss/:id`(`?step=solution` = DS4) | dss(신규 서비스, 5111) `/v1/dss*` | `dss/dss-flow.spec.ts` |
-| MI | MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_Done · MI_DoneJson | `/mi` · `/mi/new` · `/mi/flow/:id` | mi `/v1/mi-flows*` | `mi/mi-flow.spec.ts` |
-| 경쟁사 분석 | CA0 · CA1 · CA2 · CA2_Info · CA2_Pc · CA2_AI · CA_Done · CA_DoneJson | `/competitor` · `/competitor/new` · `/competitor/flow/:id`(`?tab=info\|pc`) | competitor `/v1/ca-flows*` | `competitor/ca-flow.spec.ts` |
-| VP | VP0 · VP1 · VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_Done | `/vp` · `/vp/new` · `/vp/values/:id` | vp `/v1/value-maps*` | `vp/values.spec.ts` |
-| Spec 시트 | SP0 · SP1 · SP2 · SP_Done | `/spec` · `/spec/new` · `/spec/flow/:id` | spec `/v1/spec-flows*`(저장 때 XLSX 도 만든다) | `spec/sp-flow.spec.ts` |
-| 공간 시나리오 | SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done | `/scenario` · `/scenario/new` · `/scenario/spaces/:id` | scenario `/v1/space-sets*`(DSS 공간 · 제품으로 미리 채움) | `scenario/sc-flow.spec.ts` |
+| DSS | DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_View · DS_ViewJson | `/dss` · `/dss/new` · `/dss/:id`(저장했으면 보기 · `?edit=1` DS2 · `&step=solution` = DS4) | dss(신규 서비스, 5111) `/v1/dss*` | `dss/dss-flow.spec.ts` |
+| MI | MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_View | `/mi` · `/mi/new` · `/mi/flow/:id`(저장했으면 보기 · `?edit=1` 고쳐 쓰기) | mi `/v1/mi-flows*` | `mi/mi-flow.spec.ts` |
+| 경쟁사 분석 | CA0 · CA1 · CA2 · CA2_Info · CA2_Pc · CA2_AI · CA_View | `/competitor` · `/competitor/new` · `/competitor/flow/:id`(저장했으면 보기 · `?edit=1` CA2 · `&tab=info\|pc`) | competitor `/v1/ca-flows*` | `competitor/ca-flow.spec.ts` |
+| VP | VP0 · VP1 · VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP_View | `/vp` · `/vp/new` · `/vp/values/:id`(저장했으면 보기 · `?edit=1` 편집) | vp `/v1/value-maps*` | `vp/values.spec.ts` |
+| Spec 시트 | SP0 · SP1 · SP2 · SP_View | `/spec` · `/spec/new` · `/spec/flow/:id`(저장했으면 보기 · XLSX 내려받기 · `?edit=1` 편집) | spec `/v1/spec-flows*`(저장 때 XLSX 도 만든다) | `spec/sp-flow.spec.ts` |
+| 공간 시나리오 | SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_View | `/scenario` · `/scenario/new` · `/scenario/spaces/:id`(저장했으면 보기 · `?edit=1` 편집) | scenario `/v1/space-sets*`(DSS 공간 · 제품으로 미리 채움) | `scenario/sc-flow.spec.ts` |
 
 - **고객 요구사항의 AI 심층 질의(폼 개선 과정 · 보드 RQ1_AI)는 2026-10-12 에 뺐다**(아티팩트 v59 · `deep-questions` API · `rq.deep_questions.v1` 도 없음) — RQ1 은 폼 입력 · 파일로 채우기 · 저장만. 확인 필요 표시는 사람이 요구 줄의 「확인 필요」로 단다.
 - **목록 v61(2026-10-12 · 보드 List · SB0)**: 7개 콘텐츠 목록과 Storyboard 목록은 같은 틀이다.
@@ -81,10 +81,12 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
   MI 는 정제(`phase=refine`) 중이면 3, 요구사항 초안은 1(`DraftRow.step`). 카드가 없는 저장분 · 초안은 빈 틀 썸네일. 최근 수정 순, 빈 목록은 점선 안내(범례 없음).
   Storyboard 목록(SB0)은 「새 고객 요구사항으로 시작」 · 카드 썸네일 = 진행 8칸 + 요약본 앞 줄(`FlowListItem.summary_head`) · **n/8 단계**(입력된 칸 수 · 막대 8칸) · Key message.
   공용 부품 `@/shell` `ListHero` · `HistoryHead` · `SegLegend` · `StepMeter` · `ThumbFrame` · `CardMini`(`web/src/shell/flow/list.tsx`), e2e `shell/content-list.spec.ts`.
-- 새로 만들기 `/<base>/new?sb=<id>&auto=1` 은 Gate 를 건너뛴다(Storyboard 「만들기」 · 완료 화면 후속 작업 카드).
+- 새로 만들기 `/<base>/new?sb=<id>&auto=1` 은 Gate 를 건너뛴다(Storyboard 「만들기」 · 보기의 후속 작업 「만들기」).
+- **보기 ↔ 편집(2026-10-12 · CF-09)**: 콘텐츠 경로 = 보기(저장한 것) · `?edit=1` = 편집. ContentPopup 「편집 화면에서 고치기」 · Gate 「수정하기」 는 `editRoute(route)` 로 편집 화면에 간다.
+  보기 본문은 각 기능 문서에서 그린다(`<X>View` — RqView · DsView · MiView · CaView · VpView · SpView · ScView). MI 를 고쳐 쓰는 중(저장 안 함)에 `?edit` 없이 열면 허브의 마지막 저장본을 보여 준다.
 - **이전 흐름**은 `/<base>/legacy` · `/<base>/legacy/new` 로 옮겼다. 이전 흐름의 다른 경로(`/<base>/:id/...`)는 그대로다(제안서 handoff 가 읽는다).
   예전 들어오기 주소(`/vp/new?sb=sb_…` · `?mi=` · `?rq=`, `/mi/new?rq=`, `/competitor/new?input=…`, `/spec/new?models=|from=|pop=`, `/scenario/new?from=|mi=|sb=sb_…`)는 이전 흐름 화면으로 넘긴다.
-- 공용 화면(`@/shell` flow): `ContentListScreen`(목록 v61 — 위 · 초안 카드의 Storyboard 칩도 이름 · 초안 ×) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동 · 초안 이어 쓰기) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowDoneView`(`newStoryboard` · `jsonHead`, 전체 JSON 제목 `SB-nn/flow.json`).
+- 공용 화면(`@/shell` flow): `ContentListScreen`(목록 v61 — 위 · 초안 카드의 Storyboard 칩도 이름 · 초안 ×) · `GateScreen`(줄 목록 안에서만 스크롤, 조사 자동 · 초안 이어 쓰기) · `FlowBar` · `SBPopup` · `ContentPopup`(머리 · 바닥 보드 값) · `FlowContentView`(보드 View — 머리 · 본문 children · 후속 작업 · flow.json 팝업 `SB-nn/flow.json`) · `useEditMode` · `editRoute`.
 - **저장 전 초안 지우기 · 이어 쓰기(2026-10-10 · 보드에 없음)**: 7개 자원 `DELETE /v1/{rq-flows|dss|mi-flows|ca-flows|value-maps|spec-flows|space-sets}/{id}`
   — 한 번도 저장하지 않은 초안만 204, 저장한 것 409 `SAVED_CONTENT`(「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」), 확인과 지우기 사이에 저장이 끼면 409 `VERSION_CONFLICT`
   (`DocStore.delete(expected_version=)` 한 트랜잭션). 목록(보드 List)은 초안 카드에 손을 올리면 오른쪽 위 × → 확인 → 지움(`DraftRow.onDelete`). Gate 로 같은 Storyboard 를 다시 시작하면
@@ -103,7 +105,7 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 
 허브: storyboard 서비스 `/v1/flows*`(contracts/storyboard.json, 본체 `services/storyboard/src/winmate_storyboard/flows.py`).
 콘텐츠 서비스는 `winmate_common.flow` 의 `get_flow(sb)` · `push_stage(sb, key, ref=, ver=, res_id=, title=, value=, md=, card=)` 만 쓴다
-(consumes 에 storyboard 필요). 웹은 `@/shell` 의 `useFlow` · `FlowBar` · `GateScreen` · `ContentListScreen` · `FlowDoneView` · `ContentPopup` · `SBPopup`.
+(consumes 에 storyboard 필요). 웹은 `@/shell` 의 `useFlow` · `FlowBar` · `GateScreen` · `ContentListScreen` · `FlowContentView` · `ContentPopup` · `SBPopup`.
 
 | 경로 | 하는 일 |
 |---|---|

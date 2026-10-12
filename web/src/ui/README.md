@@ -307,14 +307,15 @@ return <>{/* 화면 */}{dialog}</>;
 | `ByTag` · `KindTag` | `by`(manual · ai-accepted · ai-pending · ai-web) · `kind` | 출처 · 종류 태그 |
 | `FlowPanel` | `dashed?` | 흰 패널(r 16). `dashed` 는 AI 점선 |
 | `FlowFooter` | `back: { to, label }`, `summary`, `summaryTone?`, `primary: { label, onClick?, to?, disabled?, busy?, icon?, busyLabel? }` | 하단 줄(목록 · 요약 · 주 버튼 48px — 아이콘은 글 앞, 간격 8) |
-| `FlowDone` | `title`, `sbName`, `stages`, `md`, `stageKey`, `stage`, `follow?` … | 완료 화면 — 요약본 추가분 + 접힌 JSON(`foldJson`) + 전체 JSON 팝업 |
-| ↳ `FlowDone` 추가 props | `jsonHead?` · `jsonTitle?` · `highlightAll?` · `onOpenStoryboard?` | FLOW.JSON 칸 머리 글 · 전체 JSON 팝업 제목(`SB-nn/flow.json`) · 새 Storyboard 면 전체 줄 강조 · 후속 작업 없음 칸의 「Storyboard로」 |
-| `JsonPopup` | `json`, `highlightKey?`, `highlightAll?`, `title?`, `sub?` | flow.json 전체 900×780 — 이번에 더해진 `stages.<key>` 줄(또는 전체)을 초록으로 · 머리 오른쪽 탭 전체 / 추가된 값만(보드 JsonPopup — `sub` 는 줬을 때만) |
+| `FollowCard` | `to`, `icon`, `title`, `desc`, `refLabel?`, `cta?` | 후속 작업 카드(보드 View — 이미 있으면 참조 + 「열기」, 없으면 「만들기」) |
+| `JsonPopup` | `json`, `highlightKey?`, `highlightAll?`, `title?`, `sub?`, `legend?`, `onlyLabel?` | flow.json 전체 900×780 — `stages.<key>` 줄(또는 전체)을 초록으로 · 머리 오른쪽 탭 전체 / 강조 줄만(보드 JsonPopup — `sub` 는 줬을 때만, 콘텐츠 보기는 「이 콘텐츠가 담긴 줄」 · 「이 콘텐츠만」) |
 | `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
 
 **셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List v61 — 가운데 「새 ○○ 만들기」 · 작업 내역 그리드 · 썸네일 = 허브 `card` · n/N 단계, `DraftRow.step` 으로 초안의 지금 단계 · 초안 카드의 Storyboard 칩도 이름) · 목록 부품 `ListHero({to, label, steps, note})` · `HistoryHead({count, legend})` · `SegLegend` · `StepMeter({n, total, text, segs, gaps})` · `ThumbFrame({to?, badge, tone})` · `CardMini({card, note})`(SB0 도 쓴다) ·
 `GateScreen({content, onStart, initialSb, autoStart, drafts?})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
-`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다) · `FlowDoneView({sbId, stageKey, mdAdded, title, sub, onEdit, follow, newStoryboard?, jsonHead?})` ·
+`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다 · 「편집 화면에서 고치기」 = `editRoute(route)`) ·
+`FlowContentView({stageKey, sbIds, title, refVer, meta, editTo?, actions?, follow?})`(보드 View — 저장 뒤 · 목록 · 작업 내역에서 여는 콘텐츠 보기, 본문은 children · 완료 안내 없음) ·
+`useEditMode()`(`?edit=1` 이면 편집 · `toView()` 는 저장 뒤 보기로) · `editRoute(route)` ·
 `CONTENT`(콘텐츠별 이름 · base · 스텝 이름 = 보드 Gate META) · `useFlow` · `useFlows` · `FlowDots` · `whenText`.
 
 **폭 규칙**: 셸이 `.sh-content` 의 직계 자식을 `--wm-main-w`(1180px) 가운데 열로 맞춘다. 화면은 자기 max-width 를 주지 않는다.

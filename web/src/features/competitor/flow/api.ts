@@ -90,12 +90,11 @@ export function useCfActions(id: string) {
       put(r.flow);
       return r;
     },
-    finish: async (): Promise<CFStageOut> => {
-      const r = unwrap(await api.competitor.POST('/v1/ca-flows/{flow_id}:finish', P(id)));
-      void qc.invalidateQueries({ queryKey: cfKey(id) });
-      void qc.invalidateQueries({ queryKey: ['storyboard'] });
-      void qc.invalidateQueries({ queryKey: cfListKey });
-      return r;
+    /** 저장(`:finish` → 허브 stages.ca) — 저장한 문서(status done · ver)를 다시 읽어 돌려준다(→ 보기) */
+    finish: async (): Promise<{ out: CFStageOut; doc: CFDoc }> => {
+      const out = unwrap(await api.competitor.POST('/v1/ca-flows/{flow_id}:finish', P(id)));
+      const doc = normalize(unwrap(await api.competitor.GET('/v1/ca-flows/{flow_id}', P(id))));
+      return { out, doc };
     },
   };
 }

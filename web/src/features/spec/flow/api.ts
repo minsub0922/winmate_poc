@@ -32,10 +32,21 @@ export function normalize(d: S['SFDoc']): SFDoc {
 const P = (flow_id: string) => ({ params: { path: { flow_id } } });
 export const sfKey = (id: string) => ['spec', 'flow', id] as const;
 export const sfListKey = ['spec', 'flows'] as const;
+export const sfStageKey = (id: string) => ['spec', 'flow', id, 'stage'] as const;
 export const sfRoute = (id: string) => `/spec/flow/${id}`;
 
 export function useSpecFlow(id: string) {
-  return useQuery({ queryKey: sfKey(id), enabled: !!id, queryFn: async () => normalize(unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}', P(id)))) });
+  return useQuery({ queryKey: sfKey(id), enabled: !!id, queryFn: () => fetchDoc(id) });
+}
+
+/** 저장 판의 stages.sp · XLSX 파일(보기의 「XLSX 내려받기」) — 저장 응답을 그대로 넣고, 다시 열면 `/stage` 에서 읽는다 */
+export function useSfStage(id: string, enabled = true) {
+  return useQuery({ queryKey: sfStageKey(id), enabled: !!id && enabled,
+    queryFn: async () => unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}/stage', P(id))) });
+}
+
+async function fetchDoc(id: string) {
+  return normalize(unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}', P(id))));
 }
 
 export function useSpecFlows() {
@@ -85,9 +96,13 @@ export function useSfActions(id: string) {
     /** DSS 에서 빠진 행 지우기 */
     deleteRow: (rowKey: string) => run((d) => ({ ...d, rows: d.rows.filter((x) => x.key !== rowKey) }),
       async () => unwrap(await api.spec.DELETE('/v1/spec-flows/{flow_id}/rows/{row_key}', { params: { path: { flow_id: id, row_key: rowKey } } }))),
+    /** 저장 — 저장 판(ver · status) 문서와 파일을 캐시에 넣은 뒤 돌려준다(보기로 바로 넘어가도 빈 칸이 없게). 목록 · 허브는 무효화 */
     finish: async (): Promise<SFStageOut> => {
       const r = unwrap(await api.spec.POST('/v1/spec-flows/{flow_id}:finish', P(id)));
-      void qc.invalidateQueries({ queryKey: sfKey(id) });
+      qc.setQueryData(sfStageKey(id), r);
+      const d = await fetchDoc(id).catch(() => null);
+      if (d) qc.setQueryData(sfKey(id), d);
+      else void qc.invalidateQueries({ queryKey: sfKey(id), exact: true });
       void qc.invalidateQueries({ queryKey: sfListKey });
       void qc.invalidateQueries({ queryKey: ['storyboard'] });   // 허브 진행 칸 · flow.json · 목록(보드 List)
       return r;

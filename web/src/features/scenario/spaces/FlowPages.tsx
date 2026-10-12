@@ -9,7 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { CONTENT, ContentListScreen, GateScreen, useShellPage, type DraftRow } from '@/shell';
 import { createSpaceSet, deleteSpaceSet, ssListKey, useSpaceSets } from './api';
 
-/** 보드 SC1 · SC_Done 스텝바(Gate META `['Storyboard', '공간별 시나리오']`) — SC2 보드는 「공간 · 시나리오」 */
+/** 보드 SC1 스텝바(Gate META `['Storyboard', '공간별 시나리오']`) — SC2 보드는 「공간 · 시나리오」 */
 export const GATE_STEPS = ['Storyboard', '공간별 시나리오'];
 
 /** SC0 — 저장 전 초안(한 번도 저장하지 않은 것)만 줄의 × 로 지운다(보드에 없음 — 셸이 확인을 묻는다). 저장 뒤 고친 묶음은 허브 줄로 보인다 */

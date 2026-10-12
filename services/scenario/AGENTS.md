@@ -30,9 +30,13 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
 
 ## 현재 상태
 
-**새 흐름(2026-10-08) · Storyboard 허브 연결 · 보드 webapp1 v58 SC0 · SC1 · SC2* · SC_Done · SC_DoneJson**
-- 라우트: `/scenario` = SC0(셸 `ContentListScreen content="sc"`, 작성 중 초안은 `/v1/space-sets`) · `/scenario/new` = SC1(셸 `GateScreen`, `?sb=SB-NN&auto=1` 이면 바로 만듦 — DSS 완료 화면의 후속 작업) ·
-  `/scenario/spaces/:id` = SC2(`FlowBar` = 실제 Storyboard) → 저장 → SC_Done(`FlowDoneView` · 전체 JSON · 「Storyboard로」). 코드 `web/src/features/scenario/spaces/`(FlowPages.tsx · SpacesPage.tsx).
+**새 흐름(2026-10-08) · Storyboard 허브 연결 · 보드 webapp1 v60 SC0 · SC1 · SC2* · View content=sc(SC_View)**
+- 라우트: `/scenario` = SC0(셸 `ContentListScreen content="sc"`, 작성 중 초안은 `/v1/space-sets`) · `/scenario/new` = SC1(셸 `GateScreen`, `?sb=SB-NN&auto=1` 이면 바로 만듦 — DSS 보기의 후속 작업) ·
+  `/scenario/spaces/:id` = 저장한 묶음(`ver` > 0 · done)이면 **보기**(SC_View · `ScView.tsx` · 셸 `FlowContentView`), `?edit=1` 또는 저장 전 초안이면 SC2 편집(`FlowBar` = 실제 Storyboard).
+  편집에서 저장 → `:finish` → 문서 다시 읽어 캐시 · 목록 · 허브 무효화 → `?edit` 를 떼고 같은 주소의 보기(완료 화면 · 토스트 없음). 목록 「열기」 · 작업 내역 · 허브 cells.route 도 같은 보기.
+  보기 = 머리(이름 · `SC-NN vN` · 「… 저장 · 공간 n · 시나리오 n · 시나리오 없는 공간 n」 — 저장 시각은 허브 history · flow.json · 편집) + 236 | 1fr(공간 목록 「공간 · DSS-01」 ·
+  고른 공간 머리 · 제품 · 솔루션 칩 · 시나리오 카드 두 칸 · 빈 공간 점선 「이 공간은 시나리오가 없어요」). 고른 공간은 화면 상태(처음엔 시나리오가 있는 첫 공간). 후속 작업 없음.
+  `[확인 필요]` 장면 · 값은 주황, 빈 값은 「—」. 코드 `web/src/features/scenario/spaces/`(FlowPages.tsx · SpacesPage.tsx · ScView.tsx).
 - 이전 흐름 목록 · 새로 만들기는 `/scenario/legacy` · `legacy/new` · `legacy/new/template` · `legacy/new/birdseye`(lib.ts `route.*`). 다른 기능 · 서버 handoff 가 만드는 옛 주소는
   주소를 바꾸지 않고 이전 화면을 연다: `/scenario?image_version=`(IMG4) · `/scenario/new?sb=sb_…`(이전 Storyboard SB4) · `?from=` · `?mi=` · `?project=`(MI4 · VP4) · `new/template` · `new/birdseye`.
   `/scenario/:id/...` 는 그대로. `spaces/new` 는 `/scenario/new` 로 넘긴다(NewSpacesPage 는 지움).
@@ -42,10 +46,11 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
 - `:finish` → `ver`(저장 횟수) +1 → `push_stage(sb, "sc", ref=SC-NN, ver, res_id, title, value={from, spaces, rules, counts}, md, card)` → `{stage, summary_md, flow_sync}`.
   card = 공간 · 시나리오 · 시나리오 없는 공간 + 공간 3곳 묶음(`[확인 필요]` 시나리오는 「확인 필요」). 허브 편집 경로는 `/scenario/spaces/{id}`.
 - 화면 보드와 다르게 한 것: 시나리오 지우기(목록 줄 오른쪽 아래) · 항목 빼기(입력칸 안 오른쪽)는 마우스 · 키보드가 머물 때만 보인다(쉴 때 보드와 같은 모습).
-  직접 이름 지은 항목 이름은 라벨처럼 보이는 입력칸. AI 후보 근거는 안내 줄의 툴팁. 스텝바는 보드대로 SC1 · SC_Done 「공간별 시나리오」 · SC2 「공간 · 시나리오」.
+  직접 이름 지은 항목 이름은 라벨처럼 보이는 입력칸. AI 후보 근거는 안내 줄의 툴팁. 스텝바는 보드대로 SC1 「공간별 시나리오」 · SC2 「공간 · 시나리오」 · 보기는 스텝바 없음.
 - 시험: `tests/test_sc_flow.py` 3개(실제 storyboard 앱 — 404/422 · DSS 미리 채움 · 저장 → 허브 stages · cells.route · cards · contents · ver 2 · 분기) — pytest 62개.
-  e2e `web/e2e/scenario/sc-flow.spec.ts` 2개(목록 → Gate → SC2 → 저장 → 완료 · 허브 확인 · 폭 196/236/662/908 · 본문 1180 · 높이 728 · auto · 옛 주소) ·
-  `spaces.spec.ts` 는 Storyboard 없는 묶음(허브에 쓰지 않음). 캡처 `__screens__/SC0-new · SC0-list-new · SC1-new · SC2-new · SC2_AI-new · SC2_Pick-new · SC2_Empty-new · SC2_NoProduct-new · SC_Done-new · SC_DoneJson-new`.
+  e2e `web/e2e/scenario/sc-flow.spec.ts` 2개(목록 → Gate → SC2 → 저장 → 같은 주소 보기(완료 문구 0 · 값 · 폭 236 | 850 · 카드 두 칸 같은 폭 · 공간 바꾸기 · flow.json) · 허브 확인 ·
+  편집 `?edit=1` · 목록 「열기」 · 새로고침도 보기 · 편집에서 다시 저장 → 보기 v2 · SC2 폭 196/236/662/908 · 본문 1180 · 높이 728 · auto · 옛 주소) ·
+  `spaces.spec.ts` 는 Storyboard 없는 묶음(허브에 쓰지 않음 · 저장 → 보기). 캡처 `__screens__/SC0-new · SC0-list-new · SC1-new · SC2-new · SC2_AI-new · SC2_Pick-new · SC2_Empty-new · SC2_NoProduct-new · SC_View-new · SC_ViewJson-new`.
 - **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
   - 묶음은 마지막으로 가져온 DSS 를 남긴다: `dss_ref` · `dss_ver` · `dss_spaces`(공간 이름) · `dss_items`(제품 · 솔루션과 놓인 공간). `GET /v1/space-sets/{id}` 는 이것과
     허브의 지금 stages.dss 를 견줘 `dss_changed{from, to, ref_changed, added, removed, changed, spaces_added, spaces_removed, added_names, removed_names}`(사람이 공간 제품을
@@ -68,7 +73,7 @@ make contracts SERVICE=scenario    # contracts/scenario.json 갱신 + 깨지는 
   - `PUT`(expected_version 409)은 화면이 고친 그대로 저장. 후보 목록은 서버 기준이고 같은 id · cid 후보의 고친 내용만 받는다(수락 전 편집).
   - `spaces/{id}:suggest`: KB D1 사례 + `sc.space_candidates.v1` → 점선 3안 A/B/C. 모델이 없으면 사례 틀 + `[확인 필요]`(`mode=kb_only`). `candidates/{cid}:accept` · `DELETE`.
   - `:finish` → `stage`(= flow.json `stages.sc`) + `summary_md` + 허브 반영(위 절).
-- 화면 `web/src/features/scenario/spaces/`(`/scenario/spaces/:id`). 자동 저장 600ms.
+- 화면 `web/src/features/scenario/spaces/`(`/scenario/spaces/:id` — 저장한 것은 보기, `?edit=1` 편집). 자동 저장 600ms.
 - 시험: `tests/test_space_sets.py` 4개 · e2e `web/e2e/scenario/spaces.spec.ts`. mock `mocks/ai-tools/sc.space_candidates.v1.json`.
 - 이전 SC0~SC5 흐름은 그대로 둔다(제안서 handoff 가 아직 그것을 읽는다).
 

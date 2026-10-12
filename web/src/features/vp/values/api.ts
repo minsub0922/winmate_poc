@@ -81,9 +81,10 @@ export function useVmActions(id: string) {
     },
     /** DSS 다시 가져오기 — 응답의 dss_changed(대개 null)를 그대로 넣는다 */
     resync: async () => put(unwrap(await api.vp.POST('/v1/value-maps/{map_id}:resync-dss', P(id))), false),
+    /** 저장 — 저장한 문서(status done · ver)를 다시 읽어 캐시에 바로 넣는다(→ 보기가 그 값으로 뜬다) */
     finish: async (): Promise<VMStageOut> => {
       const r = unwrap(await api.vp.POST('/v1/value-maps/{map_id}:finish', P(id)));
-      qc.invalidateQueries({ queryKey: vmKey(id) });
+      qc.setQueryData(vmKey(id), normalize(unwrap(await api.vp.GET('/v1/value-maps/{map_id}', P(id)))));
       return r;
     },
   };

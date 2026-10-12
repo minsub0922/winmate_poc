@@ -1,7 +1,8 @@
 /**
- * 공간 시나리오 새 흐름(웹앱 ① v58 보드 SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done · SC_DoneJson) — Storyboard 허브 연동.
+ * 공간 시나리오 새 흐름(웹앱 ① 보드 SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · View content=sc(SC_View)) — Storyboard 허브 연동.
  * API 로 Storyboard(요구사항 + DSS)를 만들고 목록 → Gate → SC2(DSS 공간 미리 채움 · AI 3안 · 수락 · 직접 시나리오 · 제품 고르기 · 제품 없는 공간 막기)
- * → 저장 → 완료(전체 JSON) → 허브 stages.sc 확인. 보드 고정 칸(196 · 236)과 본문 열(1180 · 패딩 32)을 숫자로 잰다.
+ * → 저장 → 같은 주소의 보기(SC_View · 완료 안내 없음 · flow.json) → 허브 stages.sc 확인 → 편집(?edit=1) · 목록 「열기」 · 새로고침도 보기.
+ * 보드 고정 칸(SC2 196 · 236 · View 236 | 1fr · 시나리오 카드 두 칸)과 본문 열(1180)을 숫자로 잰다.
  * 실제 스택(mock 모델 — 로비 AI 3안은 mocks/ai-tools/sc.space_candidates.v1.json 고정 응답).
  */
 import { expect, test, type Page } from '@playwright/test';
@@ -12,7 +13,48 @@ const esc = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const width = async (page: Page, sel: string) => Math.round((await page.locator(sel).first().boundingBox())!.width);
 const height = async (page: Page, sel: string) => Math.round((await page.locator(sel).first().boundingBox())!.height);
 
-test('SC 새 흐름 — 목록 → Gate → 공간 · 시나리오 → 저장 → 완료 · 허브 stages.sc', async ({ page, request }) => {
+/** SC_View(보드 View content=sc) — 저장한 값 그대로 · 보드 폭(본문 1100 = 236 | 14 | 850 · 시나리오 카드 두 칸 같은 폭) */
+async function expectView(page: Page, o: { title: string; sbName: string; dssRef: string }) {
+  await expect(page.getByRole('heading', { name: o.title, level: 1 })).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator('.fl-view__ref')).toHaveText(/^SC-\d+ v1$/);
+  await expect(page.locator('.fl-view__meta')).toHaveText(/^오늘 \d\d:\d\d 저장 · 공간 3 · 시나리오 2 · 시나리오 없는 공간 2$/);
+  await expect(page.locator('.wm-sbbar__chip')).toContainText(o.sbName);
+  await expect(page.locator('.scv-spaces__h')).toHaveText(`공간 · ${o.dssRef}`);
+  const sp = page.locator('.scv-sp');
+  await expect(sp).toHaveText([/로비시나리오 2 · 제품 4/, /회의실시나리오 없음 · 제품 \d+/, /주차장시나리오 없음 · 제품 1/]);
+  await expect(sp.first()).toHaveAttribute('aria-pressed', 'true');                   // 처음엔 시나리오가 있는 첫 공간
+  await expect(page.locator('.scv-head__name')).toHaveText('로비');
+  await expect(page.locator('.scv-head__n')).toHaveText('시나리오 2');
+  await expect(page.locator('.scv-chip')).toHaveText(['제품The Wall IAB 146"', '제품Smart Signage QM55C', '제품삼성 키오스크', '솔루션MagicINFO']);
+  const cards = page.locator('.scv-card');
+  await expect(cards).toHaveCount(2);
+  const a = cards.nth(0);
+  await expect(a.locator('.scv-card__title')).toHaveText('미등록 방문객 응대');
+  await expect(a.locator('.fl-vtag')).toHaveText('AI A안 · 수락');
+  await expect(a.locator('.fl-vtag')).toHaveClass(/fl-vtag--ai/);
+  await expect(a.locator('.scv-kv').first()).toHaveText('사용자예약 없이 온 외부 방문객');
+  const b = cards.nth(1);
+  await expect(b.locator('.scv-card__title')).toHaveText('출근 혼잡 시간의 로비');
+  await expect(b.locator('.fl-vtag')).toHaveText('직접');
+  await expect(b.locator('.scv-kv').first()).toHaveText('사용자오전 9시 전후 임직원');
+  await expect(b.locator('.scv-pill')).toHaveText(['Smart Signage QM55C', 'MagicINFO']);
+  await expect(b.locator('.scv-step')).toHaveText(['1출근 인원이 몰려 게이트 앞이 혼잡해짐', '2층별 엘리베이터 대기 안내가 뜸Smart Signage QM55C']);
+  await expect(b.locator('.scv-step').nth(1).locator('.scv-sprod')).toHaveText('Smart Signage QM55C');
+  await expect(b.locator('.scv-kv').last()).toHaveText('시간대오전 9시 전후');
+  // 후속 작업 없음(보드 View content=sc) · 편집 링크 = ?edit=1
+  await expect(page.locator('.fl-view__follow')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: '편집' })).toHaveAttribute('href', /\?edit=1$/);
+  expect(await width(page, '.fl-view__body')).toBe(1100);
+  expect(await width(page, '.scv-spaces')).toBe(236);
+  expect(await width(page, '.scv-main')).toBe(850);
+  expect(await height(page, '.scv-sp')).toBe(52);
+  expect(await height(page, '.fl-view__ic')).toBe(44);
+  const [w1, w2] = [Math.round((await cards.nth(0).boundingBox())!.width), Math.round((await cards.nth(1).boundingBox())!.width)];
+  expect(w1).toBe(w2);
+  expect(w1).toBeGreaterThanOrEqual(390);                                           // (850 − 2 − 32 − 12) / 2 = 402(세로 스크롤 막대가 생기면 그만큼 준다)
+}
+
+test('SC 새 흐름 — 목록 → Gate → 공간 · 시나리오 → 저장 → 보기 · 허브 stages.sc', async ({ page, request }) => {
   test.setTimeout(240_000);
   const sb = await makeStoryboard(request, { dss: true, name: `용산 AI Ready 오피스 ${tag()}` });
   const flow0 = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
@@ -137,21 +179,29 @@ test('SC 새 흐름 — 목록 → Gate → 공간 · 시나리오 → 저장 �
   await page.mouse.move(0, 0);
   await shot(page, 'SC2-new');
 
-  // ── 저장 → SC_Done ──
+  // ── 저장 → SC_View(보드 View content=sc) — 같은 주소의 그 공간 시나리오 보기(「저장했어요」 같은 완료 안내는 없다) ──
   await page.getByRole('button', { name: '저장', exact: true }).click();
-  await expect(page.getByRole('heading', { name: '공간 시나리오를 저장했어요' })).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByText('공간 3개 · 시나리오 2개를 Storyboard에 담았어요')).toBeVisible();
-  await expect(page.getByText(/"stages\.sc": \{/)).toBeVisible();
-  await expect(page.getByText('요약본이 방금 갱신됐어요')).toBeVisible();
-  await expect(page.getByText('공간별 시나리오', { exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Storyboard로' })).toHaveAttribute('href', `/storyboard/flow/${sb.id}`);
-  await expect(page.locator('.wm-done__md pre')).toContainText('- 공간 3 · 시나리오 2 · 시나리오 없는 공간 2 (회의실 · 주차장)');
-  await expect(page.locator('.wm-done__stage--cur')).toContainText('시나리오');
-  await shot(page, 'SC_Done-new');
-  await page.getByRole('button', { name: '전체 JSON 보기' }).click();
-  const json = page.getByRole('dialog').filter({ hasText: `${sb.id}/flow.json` });
+  await expect(page.locator('.scv-grid')).toBeVisible({ timeout: 20_000 });
+  await expect(page).toHaveURL(new RegExp(`/scenario/spaces/${setId}$`));
+  await expect(page.getByText(/저장했어요|완료됐|완성됐|다시 고치기|전체 JSON 보기/)).toHaveCount(0);
+  await expectView(page, { title: sb.name, sbName: sb.name, dssRef });
+  // 다른 공간을 누르면 오른쪽이 그 공간으로(시나리오 없는 공간 = 점선 안내)
+  await page.getByRole('button', { name: /회의실/ }).click();
+  await expect(page.getByRole('button', { name: /회의실/ })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.scv-head__name')).toHaveText('회의실');
+  await expect(page.locator('.scv-head__n')).toHaveText('시나리오 0');
+  await expect(page.locator('.scv-empty')).toContainText('이 공간은 시나리오가 없어요');
+  await expect(page.locator('.scv-card')).toHaveCount(0);
+  await page.getByRole('button', { name: /로비/ }).click();
+  await expect(page.locator('.scv-card')).toHaveCount(2);
+  await page.mouse.move(10, 890);
+  await shot(page, 'SC_View-new');
+  await page.getByRole('button', { name: 'flow.json' }).click();
+  const json = page.getByRole('dialog', { name: /flow\.json/ });
   await expect(json).toBeVisible();
-  await shot(page, 'SC_DoneJson-new');
+  await expect(json.getByText('"sc": {').first()).toBeVisible();
+  await expect(json.getByText('이 콘텐츠가 담긴 줄')).toBeVisible();
+  await shot(page, 'SC_ViewJson-new');
   await json.getByRole('button', { name: '닫기' }).last().click();
 
   // 허브 flow.json stages.sc · 진행 칸 · 팝업 카드
@@ -174,21 +224,38 @@ test('SC 새 흐름 — 목록 → Gate → 공간 · 시나리오 → 저장 �
   expect(cell.route).toBe(`/scenario/spaces/${setId}`);
   expect(flow.cards.sc.facts).toEqual([['공간', '3'], ['시나리오', '2'], ['시나리오 없는 공간', '2']]);
 
-  // 다시 고치기 → 편집 화면(머리 = 코드)
-  await page.getByRole('button', { name: '다시 고치기' }).click();
+  // 편집 → ?edit=1 편집 화면(같은 묶음 · 머리 = 코드)
+  await page.getByRole('link', { name: '편집' }).click();
+  await expect(page).toHaveURL(new RegExp(`/scenario/spaces/${setId}\\?edit=1$`));
   await expect(page.getByRole('heading', { name: '공간마다 시나리오를 여러 개 써요' })).toBeVisible();
+  await expect(page.locator('.ss-sc', { hasText: '출근 혼잡 시간의 로비' })).toBeVisible();
+  await expect(page.locator('.scv-grid')).toHaveCount(0);
 
-  // 목록 — 저장된 공간 시나리오 줄 · 연결된 Storyboard 칩
+  // 목록 — 저장된 공간 시나리오 줄 · 연결된 Storyboard 칩 · 「열기」 → 보기 · 새로고침해도 보기
   await page.goto('/scenario');
   const listRow = page.locator('.fl-card', { hasText: `${set.code} v1` });
   await expect(listRow).toContainText(sb.name);
   await expect(listRow.locator('.fl-cardtitle')).toHaveAttribute('href', `/scenario/spaces/${setId}`);
   await shot(page, 'SC0-list-new');
+  await listRow.locator('.fl-cardtitle').click();
+  await expect(page).toHaveURL(new RegExp(`/scenario/spaces/${setId}$`));
+  await expectView(page, { title: sb.name, sbName: sb.name, dssRef });
+  await page.reload();
+  await expectView(page, { title: sb.name, sbName: sb.name, dssRef });
 
   // Gate — 이미 SC 가 있는 Storyboard 는 수정 / 복제본
   await page.goto(`/scenario/new?sb=${sb.id}`);
   await expect(page.getByText(`이 Storyboard에는 공간 시나리오 ${set.code} v1이 이미 있어요`)).toBeVisible();
   await expect(page.getByRole('button', { name: `${set.code} 수정하기` })).toBeVisible();
+
+  // 편집 화면에서 다시 저장 → ?edit 를 떼고 보기로(완료 안내 · 토스트 없음) · v2
+  await page.goto(`/scenario/spaces/${setId}?edit=1`);
+  await expect(page.getByRole('heading', { name: '공간마다 시나리오를 여러 개 써요' })).toBeVisible();
+  await page.getByRole('button', { name: '저장', exact: true }).click();
+  await expect(page).toHaveURL(new RegExp(`/scenario/spaces/${setId}$`), { timeout: 20_000 });
+  await expect(page.locator('.fl-view__ref')).toHaveText(`${set.code} v2`);
+  await expect(page.locator('.scv-card')).toHaveCount(2);
+  await expect(page.getByText(/저장했어요|완료됐|완성됐/)).toHaveCount(0);
 });
 
 test('SC 새 흐름 — Storyboard 화면의 「만들기」(?sb=&auto=1)는 Gate 를 건너뛴다 · 옛 주소는 이전 흐름으로', async ({ page, request }) => {

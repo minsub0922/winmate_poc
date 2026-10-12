@@ -28,9 +28,9 @@ make contracts SERVICE=mi    # contracts/mi.json 갱신 + 깨지는 변경 검�
 - API 를 바꾸면 `make contracts SERVICE=mi` 를 돌리고 `contracts/mi.json` 변경을 함께 남긴다. 깨지는 변경이면 소비 서비스를 `docs/requests/` 에 알린다.
 - 다른 서비스에 기능이 필요하면 `docs/requests/<그 서비스>.md` 에 적는다(직접 고치지 않는다).
 
-## 현재 상태 (2026-10-10)
+## 현재 상태 (2026-10-12)
 
-### 새 흐름(2026-10-08 · 웹앱 ① v58 보드 MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_Done · MI_DoneJson)
+### 새 흐름(2026-10-08 · 웹앱 ① v58 보드 MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · 2026-10-12 v60 View content=mi = MI_View)
 수용 기준 `docs/scenarios/11-content-flow.md` §1(CF-08 의 MI 예외: Storyboard 를 고르면 AI 분석 로딩이 먼저) · §4 폭 · §6 stage 계약(`stages.mi`).
 - API `/v1/mi-flows*`(`api_flow.py` · 본체 `miflow.py` · 잡 `graphs/flow.py` = `mi.flow_analyze` · `mi.flow_search`). 단계 analyzing → search → searching → refine → done.
   화면은 문서 `progress.steps` 를 폴링(0.6초)한다. 저장 `:finish` → `push_stage(sb, "mi")` · 요약 줄(보드: 그룹 수 · 출처 · 확인 필요 수치 2줄).
@@ -43,17 +43,20 @@ make contracts SERVICE=mi    # contracts/mi.json 갱신 + 깨지는 변경 검�
   고쳐 저장할 때 담은 정보 유지 + 새로 찾은 것만 더하고, 정제 목록은 이번에 찾은 순서(유지 · 새로 찾음이 섞인다).
 - 규칙 대체 검색어(모델 없음)는 고객 계획 수치(예: 20%)를 빼고 업종 낱말을 한 번만 쓴다(`need_query`).
 - mock: `mocks/ai-tools/mi.flow_analyze.v1.json`(고객사 「E 자산운용」 Storyboard 만 — 그 밖은 오류 → 규칙) · `mi.flow_search.v1.json`(검색어별 보드 MI3 예시 문장, 출처 · 날짜 포함 · URL 없음).
-- 웹 `web/src/features/mi/flow/`: `MiFlowPages.tsx`(목록 · Gate · 편집 라우터 · 완료) · `SearchStep.tsx`(MI2_Loading · MI2) · `RefineStep.tsx`(MI3 · 원문) · `pace.ts`(단계 보여 주기 최소 0.8초) · `api.ts` · `miflow.css`(mif-).
+- 웹 `web/src/features/mi/flow/`: `MiFlowPages.tsx`(목록 · Gate · 보기/편집 라우터) · `MiView.tsx`(MI_View — 공용 `FlowContentView` + 검색 조건 띠 · 시장 · 고객사 · 사용자 세 칸) · `SearchStep.tsx`(MI2_Loading · MI2) · `RefineStep.tsx`(MI3 · 원문) · `pace.ts`(단계 보여 주기 최소 0.8초) · `api.ts` · `miflow.css`(mif- · 보기 miv-).
+- 보기 ↔ 편집(2026-10-12 · `docs/handoff/2026-10-12-content-view-brief.md`): 완료 화면(`FlowDoneView` · `?done=1`)을 없앴다. 저장한 MI 는 `/mi/flow/:id` 가 곧 보기(저장 직후 · 목록 「열기」 · 작업 내역 · 허브 route · 새로고침 모두 같다, 「저장했어요」 같은 문구 없음 · 후속 작업 없음).
+  보기 머리 메타 `… 저장 · 담은 정보 n (찾은 n) · 수치 원문 확인 n`, 본문은 담은 정보만(문서 items 의 kept). 고치는 중(phase ≠ done)인 MI 를 `?edit` 없이 열면 마지막 저장 판(허브 `stages.mi`)을 보여 준다.
+  「편집」 = `?edit=1`(보드 editHref = MI2): 저장된 채(phase done)면 Storyboard 를 다시 읽고(`:analyze` · v1 → v2) 시작, 이미 고치는 중이면 다시 읽지 않고 그 단계(MI2 · MI3)에서 이어 간다. 저장(`:finish`) → 문서 다시 읽어 캐시 · 목록 · 허브 무효화 → `?edit` 를 떼고 보기.
 
 | 라우트 | 보드 |
 |---|---|
 | `/mi` | MI0 = 공용 `ContentListScreen`(작성 중 초안은 `/v1/mi-flows` · 저장 전 초안 줄은 `onDelete` — 손을 올리면 × · 확인 → `useMfDelete` → 목록 · 사이드바 색인 새로) |
 | `/mi/new` (`?sb=&auto=1` 바로 만들기 · `?rq=` 는 이전 MI1 로) | MI1 · MI1_Branch = 공용 `GateScreen`(만든 문서를 캐시에 먼저 넣어 분석 단계부터 그린다 · 기존 초안이면(200) 「작성 중이던 MI-NN 초안을 이어서 열어요」) |
-| `/mi/flow/:id` (`?done=1` 완료) | MI2_Loading → MI2 → (검색 중 같은 단계 카드) → MI3 → MI_Done(`FlowDoneView` · 후속 작업 없음 줄은 보드대로 「Storyboard로」). 저장한 MI 를 열면 Storyboard 를 다시 읽고 고치기(v1 → v2) |
+| `/mi/flow/:id` (`?edit=1` 편집) | 저장 전 초안: MI2_Loading → MI2 → (검색 중 같은 단계 카드) → MI3. 저장한 MI: MI_View(보드 View content=mi) · `?edit=1` 이면 Storyboard 다시 읽기 → MI2 → MI3 → 저장 → 보기(v1 → v2) |
 | `/mi/legacy` · `/mi/legacy/new` · `/mi/legacy/new/industry` | 이전 흐름 목록 · MI1 · MI1I(옛 `/mi/new/industry` 도 연다). 나머지 `/mi/:id/...` 는 그대로 |
 
-- 테스트: pytest `tests/test_mi_flow.py` 10개(허브 연동 · 규칙 대체 · 찾은 순서 · 같은 Storyboard 초안 다시 쓰기 · 지우기 · 사라진 초안의 잡 취소). e2e `web/e2e/mi/mi-flow.spec.ts` 3개(목록 → Gate → 로딩 → MI2 → MI3 → v1 → 다시 고치기 → v2 · JSON / 복제본 / 바로 만들기 · `?rq=`),
-  폭(본문 1180 · 검색어 칸 (1100 − 24)/3 · 높이 300 · 조건 키 96 · 정제 줄 76 · 완료 카드 1020)을 재고 `__screens__/<보드>-new.png` 를 남긴다.
+- 테스트: pytest `tests/test_mi_flow.py` 10개(허브 연동 · 규칙 대체 · 찾은 순서 · 같은 Storyboard 초안 다시 쓰기 · 지우기 · 사라진 초안의 잡 취소). e2e `web/e2e/mi/mi-flow.spec.ts` 3개(목록 → Gate → 로딩 → MI2 → MI3 → 저장 v1 = 보기(완료 문구 0 · 값 · flow.json · 새로고침) → 편집 `?edit=1` → v2 → 보기 · 목록 「열기」 = 보기 / 복제본 / 바로 만들기 · `?rq=`),
+  폭(본문 1180 · 검색어 칸 (1100 − 24)/3 · 높이 300 · 조건 키 96 · 정제 줄 76 · 보기 띠 1100×44 · 보기 세 칸 (1100 − 24)/3)을 재고 `__screens__/<보드>-new.png`(`MI_View-new.png` 포함)를 남긴다.
   `mi-draft.spec.ts` 1개(「‹ Storyboard」 → Gate → 다시 시작 = 같은 초안 · 새 분석 잡 없음 → 목록 × → 확인 → 빠짐, 캡처 `MI0-draft-delete.png`).
 
 ### 이전 흐름(2026-10-06)

@@ -34,7 +34,7 @@ function SolutionCard({ o, on, accepted, onToggle }: { o: DSSolutionOption; on: 
   );
 }
 
-export function SolutionsStep({ doc, actions, onBack, onSaved }: { doc: DSDoc; actions: DsActions; onBack: () => void; onSaved: (out: Awaited<ReturnType<DsActions['finish']>>) => void }) {
+export function SolutionsStep({ doc, actions, onBack, onSaved }: { doc: DSDoc; actions: DsActions; onBack: () => void; onSaved: (out: Awaited<ReturnType<DsActions['finish']>>) => void | Promise<void> }) {
   const q = useSolutionOptions(doc.id);
   useShellPage(dsShell(doc, 3, { addable: ['solution'], added: addedRefs(doc), onAdd: dsOnAdd(doc, actions, null) }));
   const [aiBusy, setAiBusy] = useState(false);
@@ -73,7 +73,7 @@ export function SolutionsStep({ doc, actions, onBack, onSaved }: { doc: DSDoc; a
   };
   const save = async () => {
     setSaving(true);
-    try { onSaved(await actions.finish()); } catch (e) { toast(errMsg(e, '저장하지 못했어요')); setSaving(false); }
+    try { await onSaved(await actions.finish()); } catch (e) { toast(errMsg(e, '저장하지 못했어요')); setSaving(false); }
   };
   const noProducts = c.products === 0;
 
