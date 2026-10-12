@@ -1,4 +1,4 @@
-"""새 콘텐츠 흐름(/v1/rq-flows · 보드 webapp1 RQ1 · RQ1_AI · RQ_Done) — 폼 · AI 심층 질의 · 파일 첨부 · 저장 → Storyboard 허브(stages.rq)."""
+"""새 콘텐츠 흐름(/v1/rq-flows · 보드 webapp1 RQ1 · RQ_Done) — 폼 · 파일 첨부 · 저장 → Storyboard 허브(stages.rq)."""
 from __future__ import annotations
 
 import pytest
@@ -54,7 +54,7 @@ async def test_create_edit_conflict_and_list(hub, app):
         assert [k["role"] for k in d2["keymen"]] == ["자산관리팀장", "마케팅 리드"]
         vague = d2["keymen"][1]["reqs"][1]
         assert vague["flag"] == "vague" and vague["status"] == "check" and vague["by"] == "manual"
-        assert d2["counts"] == {"keymen": 2, "reqs": 5, "check": 1, "weight_sum": 100, "pending": 0}
+        assert d2["counts"] == {"keymen": 2, "reqs": 5, "check": 1, "weight_sum": 100}
         # 같은 id 로 보내면 요구 id 가 유지되고, 문장을 고치면 manual
         km = d2["keymen"][0]
         body = {**BOARD_FORM, "keymen": [{**km, "reqs": [{**km["reqs"][0], "text": "1층 파사드 미디어로 집객 · 야간 포함"}]}]}
@@ -75,68 +75,23 @@ async def test_create_edit_conflict_and_list(hub, app):
         assert ws and ws[-1]["json"]["route"] == f"/requirements/flow/{d['id']}" and ws[-1]["json"]["feature"] == "RQ"
 
 
-async def test_deep_questions_apply_and_ask(hub, app):
+async def test_deep_questions_removed(hub, app):
+    """AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다 — 경로가 없고, 예전 문서에 남은 칸(deep · target_ask)은 응답에 싣지 않는다."""
+    from winmate_requirements import rqflow
     async with testing.api_client(app) as c:
         d = await _put(c, await _new(c), BOARD_FORM)
-        r = await c.post(f"/v1/rq-flows/{d['id']}/deep-questions")
+        for path in (f"/v1/rq-flows/{d['id']}/deep-questions", f"/v1/rq-flows/{d['id']}/deep-questions/dq_1:answer",
+                     f"/v1/rq-flows/{d['id']}/deep-questions:close"):
+            r = await c.post(path, json={})
+            assert r.status_code in (404, 405), (path, r.status_code)
+        # 예전 문서(심층 질의를 쓴 초안)도 그대로 읽고 저장된다
+        await rqflow.update(d["id"], lambda x: x.update(deep={"questions": [{"id": "dq_1", "status": "pending"}], "mode": "rule", "at": "2026-10-09T00:00:00Z"},
+                                                        target_ask=True))
+        doc = (await c.get(f"/v1/rq-flows/{d['id']}")).json()
+        assert "deep" not in doc and "target_ask" not in doc and "pending" not in doc["counts"]
+        r = await c.post(f"/v1/rq-flows/{d['id']}:finish")
         assert r.status_code == 200, r.text
-        out = r.json()
-        assert out["mode"] == "llm" and out["found"] == 3
-        qs = out["doc"]["deep"]["questions"]
-        assert [q["tag"] for q in qs] == ["최종 제안대상", "마케팅 리드 · 요구 2", "가중치"]
-        assert all(q["status"] == "pending" and q["by"] == "ai-pending" for q in qs)
-        assert [o["label"] for o in qs[0]["options"]] == ["대표이사", "자산관리본부장", "투자심의위원회"]
-        assert qs[1]["text"] == "‘방문객 데이터 활용’은 어디까지인가요?"
-        assert [o["label"] for o in qs[2]["options"]] == ["맞아요 · 60 : 40", "50 : 50", "70 : 30"]
-        assert out["doc"]["deep"]["current"] == 0 and out["doc"]["counts"]["pending"] == 3
-        # 제작자 의견(내부)은 모델에 가지 않는다 · 기밀 표시
-        call = next(x for x in hub.calls if x.get("task") == "rq.deep_questions.v1")
-        assert "설계 단계" not in str(call) and call.get("confidential") is True
-        # 1) 보기 고르기 → 폼에 반영(ai-accepted)
-        doc = (await c.post(f"/v1/rq-flows/{d['id']}/deep-questions/{qs[0]['id']}:answer", json={"option": 1})).json()
-        assert doc["target"] == "자산관리본부장" and doc["target_by"] == "ai-accepted" and doc["deep"]["current"] == 1
-        # 2) 고객에게 확인으로 남기기 → 요구는 확인 필요(ask)
-        doc = (await c.post(f"/v1/rq-flows/{d['id']}/deep-questions/{qs[1]['id']}:answer", json={"later": True})).json()
-        req = doc["keymen"][1]["reqs"][1]
-        assert req["flag"] == "ask" and req["status"] == "check" and doc["deep"]["asked"] == 1
-        # 3) 가중치 직접 입력(합이 100 이 아니면 422) → 50 : 50
-        r = await c.post(f"/v1/rq-flows/{d['id']}/deep-questions/{qs[2]['id']}:answer", json={"text": "50 : 40"})
-        assert r.status_code == 422 and r.json()["error"]["code"] == "INVALID_WEIGHTS"
-        doc = (await c.post(f"/v1/rq-flows/{d['id']}/deep-questions/{qs[2]['id']}:answer", json={"option": 1})).json()
-        assert [k["weight"] for k in doc["keymen"]] == [50, 50] and doc["keymen"][0]["weight_by"] == "ai-accepted"
-        assert doc["deep"]["current"] is None and doc["deep"]["applied"] == 2 and doc["counts"]["pending"] == 0
-        r = await c.post(f"/v1/rq-flows/{d['id']}/deep-questions/{qs[2]['id']}:answer", json={"option": 0})
-        assert r.status_code == 409
-        # 요구 질문에 답하면 문장 뒤에 범위가 붙고 확인 필요가 풀린다
-        hub.overrides["rq.deep_questions.v1"] = {"json": {"questions": []}}
-        d2 = (await c.get(f"/v1/rq-flows/{d['id']}")).json()
-        km = d2["keymen"]
-        body = {**BOARD_FORM, "target": "자산관리본부장", "keymen": [km[0], {**km[1], "reqs": [{**km[1]["reqs"][1], "flag": "vague", "status": "check"}]}]}
-        d3 = await _put(c, d2, body)
-        out = (await c.post(f"/v1/rq-flows/{d['id']}/deep-questions")).json()
-        assert out["mode"] == "rule" and [q["tag"] for q in out["doc"]["deep"]["questions"]] == ["마케팅 리드 · 요구 1"]
-        q = out["doc"]["deep"]["questions"][0]
-        assert q["text"] == "‘방문객 데이터 활용’의 범위는 어디까지인가요?" and q["options"] == []
-        doc = (await c.post(f"/v1/rq-flows/{d3['id']}/deep-questions/{q['id']}:answer", json={"text": "익명 통계만 · 개인 식별 없음"})).json()
-        r1 = doc["keymen"][1]["reqs"][0]
-        assert r1["text"] == "방문객 데이터 활용 — 익명 통계만 · 개인 식별 없음" and r1["status"] == "ok" and r1["by"] == "ai-accepted"
-
-
-async def test_deep_questions_fallback_and_confidential(hub, app):
-    async with testing.api_client(app) as c:
-        d = await _new(c)
-        hub.overrides["rq.deep_questions.v1"] = {"error": {"status": 503, "code": "LLM_UNAVAILABLE"}}
-        out = (await c.post(f"/v1/rq-flows/{d['id']}/deep-questions")).json()
-        assert out["mode"] == "rule" and [q["target"]["kind"] for q in out["doc"]["deep"]["questions"]] == ["target", "customer", "title"]
-        # 빈 답은 422 · 닫으면 답하지 않은 질문은 버린다
-        q0 = out["doc"]["deep"]["questions"][0]
-        r = await c.post(f"/v1/rq-flows/{d['id']}/deep-questions/{q0['id']}:answer", json={})
-        assert r.status_code == 422 and r.json()["error"]["code"] == "NOTHING_SELECTED"
-        doc = (await c.post(f"/v1/rq-flows/{d['id']}/deep-questions:close")).json()
-        assert doc["deep"]["questions"] == [] and doc["counts"]["pending"] == 0
-        hub.overrides["rq.deep_questions.v1"] = {"error": {"status": 403, "code": "POLICY_CONFIDENTIAL"}}
-        r = await c.post(f"/v1/rq-flows/{d['id']}/deep-questions")
-        assert r.status_code == 403 and r.json()["error"]["code"] == "POLICY_CONFIDENTIAL"
+        assert not any(x.get("task") == "rq.deep_questions.v1" for x in hub.calls)
 
 
 async def test_fill_from_file_keeps_human_values(hub, app):

@@ -660,66 +660,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/rq-flows/{flow_id}/deep-questions": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Deep Questions
-         * @description AI 심층 질의 — 부족한 곳을 찾아 질문(ai-pending)을 만든다(`rq.deep_questions.v1`, 실패하면 규칙 문장).
-         */
-        post: operations["deep_questions"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/rq-flows/{flow_id}/deep-questions:close": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Close Questions
-         * @description 질의 닫기 — 답하지 않은 질문은 버린다.
-         */
-        post: operations["close_questions"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/rq-flows/{flow_id}/deep-questions/{question_id}:answer": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Answer Question
-         * @description 답(보기 · 직접 입력)을 폼에 반영(ai-accepted) — later=true 면 고객에게 확인으로 남긴다.
-         */
-        post: operations["answer_question"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2076,36 +2016,12 @@ export interface components {
             proposal: components["schemas"]["Proposal"];
             session: components["schemas"]["DeepSession"];
         };
-        /** RFAnswer */
-        RFAnswer: {
-            /**
-             * Later
-             * @description 고객에게 확인으로 남기기
-             * @default false
-             */
-            later: boolean;
-            /**
-             * Option
-             * @description 고른 보기 번호
-             */
-            option?: number | null;
-            /**
-             * Text
-             * @description 직접 입력
-             */
-            text?: string | null;
-        };
         /** RFCounts */
         RFCounts: {
             /** Check */
             check: number;
             /** Keymen */
             keymen: number;
-            /**
-             * Pending
-             * @description 아직 답하지 않은 AI 심층 질의
-             */
-            pending: number;
             /** Reqs */
             reqs: number;
             /** Weight Sum */
@@ -2139,96 +2055,6 @@ export interface components {
              */
             title: string;
         };
-        /** RFDeep */
-        RFDeep: {
-            /**
-             * Applied
-             * @default 0
-             */
-            applied: number;
-            /**
-             * Asked
-             * @default 0
-             */
-            asked: number;
-            /** At */
-            at: string;
-            /**
-             * Current
-             * @description 다음에 물을 질문 번호(0부터), 다 끝났으면 null
-             */
-            current: number | null;
-            /**
-             * Mode
-             * @default rule
-             * @enum {string}
-             */
-            mode: "llm" | "rule";
-            /** Questions */
-            questions: components["schemas"]["RFDeepQuestion"][];
-        };
-        /** RFDeepOption */
-        RFDeepOption: {
-            /** Label */
-            label: string;
-            /**
-             * Weights
-             * @description 가중치 질문의 보기 — 키맨 순서대로
-             */
-            weights: number[] | null;
-        };
-        /** RFDeepOut */
-        RFDeepOut: {
-            doc: components["schemas"]["RFDoc"];
-            /** Found */
-            found: number;
-            /**
-             * Mode
-             * @enum {string}
-             */
-            mode: "llm" | "rule";
-        };
-        /** RFDeepQuestion */
-        RFDeepQuestion: {
-            /** Answer */
-            answer: string | null;
-            /**
-             * By
-             * @default ai-pending
-             * @enum {string}
-             */
-            by: "manual" | "file" | "ai-pending" | "ai-accepted";
-            /** Id */
-            id: string;
-            /** Options */
-            options: components["schemas"]["RFDeepOption"][];
-            /**
-             * Status
-             * @default pending
-             * @enum {string}
-             */
-            status: "pending" | "applied" | "asked";
-            /**
-             * Tag
-             * @description 어디(최종 제안대상 · 마케팅 리드 · 요구 2 · 가중치)
-             */
-            tag: string;
-            target: components["schemas"]["RFDeepTarget"];
-            /** Text */
-            text: string;
-        };
-        /** RFDeepTarget */
-        RFDeepTarget: {
-            /** Keyman Id */
-            keyman_id: string | null;
-            /**
-             * Kind
-             * @enum {string}
-             */
-            kind: "target" | "customer" | "title" | "req" | "weights" | "keyman";
-            /** Req Id */
-            req_id: string | null;
-        };
         /** RFDoc */
         RFDoc: {
             /** Code */
@@ -2243,7 +2069,6 @@ export interface components {
             customer: string;
             /** Customer By */
             customer_by: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
-            deep: components["schemas"]["RFDeep"] | null;
             /**
              * Fill Job
              * @description 파일 첨부 잡(진행 중일 때)
@@ -2280,12 +2105,6 @@ export interface components {
              * @default
              */
             target: string;
-            /**
-             * Target Ask
-             * @description 최종 제안대상을 고객에게 확인으로 남김
-             * @default false
-             */
-            target_ask: boolean;
             /** Target By */
             target_by: ("manual" | "file" | "ai-pending" | "ai-accepted") | null;
             /**
@@ -4957,131 +4776,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RFStageOut"];
-                };
-            };
-        };
-    };
-    deep_questions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                flow_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 요청 오류 */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description 서버 오류 */
-            "5XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RFDeepOut"];
-                };
-            };
-        };
-    };
-    close_questions: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                flow_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description 요청 오류 */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description 서버 오류 */
-            "5XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RFDoc"];
-                };
-            };
-        };
-    };
-    answer_question: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                flow_id: string;
-                question_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RFAnswer"];
-            };
-        };
-        responses: {
-            /** @description 요청 오류 */
-            "4XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description 서버 오류 */
-            "5XX": {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorResponse"];
-                };
-            };
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RFDoc"];
                 };
             };
         };

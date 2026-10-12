@@ -1,8 +1,8 @@
 /**
- * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ1_AI · RQ_Done) — docs/scenarios/11-content-flow.md §6.
+ * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ_Done) — docs/scenarios/11-content-flow.md §6.
  *   /requirements            RQ0  목록(보드 List content=rq · 저장된 것 = 허브, 작성 중 = /v1/rq-flows)
  *   /requirements/new        RQ1  새 요구사항(사전 작업이 없어 Gate 없이 바로 폼 · 첫 입력 때 만든다)
- *   /requirements/flow/:id   RQ1 · RQ1_AI 편집 → 저장 → RQ_Done(FlowDoneView · Storyboard 자동 생성)
+ *   /requirements/flow/:id   RQ1 편집 → 저장 → RQ_Done(FlowDoneView · Storyboard 자동 생성)
  */
 import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';

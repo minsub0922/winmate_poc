@@ -1,4 +1,4 @@
-"""고객 요구사항 새 흐름 API(/v1/rq-flows) — 보드 webapp1 RQ0 · RQ1 · RQ1_AI · RQ_Done. 처리 본체는 rqflow.py."""
+"""고객 요구사항 새 흐름 API(/v1/rq-flows) — 보드 webapp1 RQ0 · RQ1 · RQ_Done. 처리 본체는 rqflow.py."""
 from __future__ import annotations
 
 from typing import Any
@@ -47,24 +47,6 @@ async def delete_rq_flow(flow_id: str, expected_version: int | None = Query(None
 async def fill_rq_flow(flow_id: str, body: rf.RFFillIn) -> dict[str, Any]:
     """파일로 폼 채우기(잡 rq.flow.fill) — 빈 칸만 채운다. 끝나면 sources 에 파일이 붙는다."""
     return await rf.start_fill(flow_id, body)
-
-
-@router.post("/rq-flows/{flow_id}/deep-questions", response_model=rf.RFDeepOut)
-async def deep_questions(flow_id: str) -> dict[str, Any]:
-    """AI 심층 질의 — 부족한 곳을 찾아 질문(ai-pending)을 만든다(`rq.deep_questions.v1`, 실패하면 규칙 문장)."""
-    return await rf.deep_questions(flow_id)
-
-
-@router.post("/rq-flows/{flow_id}/deep-questions/{question_id}:answer", response_model=rf.RFDoc)
-async def answer_question(flow_id: str, question_id: str, body: rf.RFAnswer) -> dict[str, Any]:
-    """답(보기 · 직접 입력)을 폼에 반영(ai-accepted) — later=true 면 고객에게 확인으로 남긴다."""
-    return await rf.answer(flow_id, question_id, body)
-
-
-@router.post("/rq-flows/{flow_id}/deep-questions:close", response_model=rf.RFDoc)
-async def close_questions(flow_id: str) -> dict[str, Any]:
-    """질의 닫기 — 답하지 않은 질문은 버린다."""
-    return await rf.close_deep(flow_id)
 
 
 @router.post("/rq-flows/{flow_id}:finish", response_model=rf.RFStageOut)

@@ -3066,184 +3066,6 @@
         }
       }
     },
-    "/v1/rq-flows/{flow_id}/deep-questions": {
-      "post": {
-        "tags": [
-          "rq-flows"
-        ],
-        "summary": "Deep Questions",
-        "description": "AI 심층 질의 — 부족한 곳을 찾아 질문(ai-pending)을 만든다(`rq.deep_questions.v1`, 실패하면 규칙 문장).",
-        "operationId": "deep_questions",
-        "parameters": [
-          {
-            "name": "flow_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Flow Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RFDeepOut"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "요청 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "5XX": {
-            "description": "서버 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/rq-flows/{flow_id}/deep-questions/{question_id}:answer": {
-      "post": {
-        "tags": [
-          "rq-flows"
-        ],
-        "summary": "Answer Question",
-        "description": "답(보기 · 직접 입력)을 폼에 반영(ai-accepted) — later=true 면 고객에게 확인으로 남긴다.",
-        "operationId": "answer_question",
-        "parameters": [
-          {
-            "name": "flow_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Flow Id"
-            }
-          },
-          {
-            "name": "question_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Question Id"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RFAnswer"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RFDoc"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "요청 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "5XX": {
-            "description": "서버 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v1/rq-flows/{flow_id}/deep-questions:close": {
-      "post": {
-        "tags": [
-          "rq-flows"
-        ],
-        "summary": "Close Questions",
-        "description": "질의 닫기 — 답하지 않은 질문은 버린다.",
-        "operationId": "close_questions",
-        "parameters": [
-          {
-            "name": "flow_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "Flow Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RFDoc"
-                }
-              }
-            }
-          },
-          "4XX": {
-            "description": "요청 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "5XX": {
-            "description": "서버 오류",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/v1/rq-flows/{flow_id}:finish": {
       "post": {
         "tags": [
@@ -6232,44 +6054,6 @@
         ],
         "title": "QuestionTarget"
       },
-      "RFAnswer": {
-        "properties": {
-          "option": {
-            "anyOf": [
-              {
-                "type": "integer",
-                "minimum": 0.0
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Option",
-            "description": "고른 보기 번호"
-          },
-          "text": {
-            "anyOf": [
-              {
-                "type": "string",
-                "maxLength": 300
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Text",
-            "description": "직접 입력"
-          },
-          "later": {
-            "type": "boolean",
-            "title": "Later",
-            "description": "고객에게 확인으로 남기기",
-            "default": false
-          }
-        },
-        "type": "object",
-        "title": "RFAnswer"
-      },
       "RFCounts": {
         "properties": {
           "keymen": {
@@ -6287,11 +6071,6 @@
           "weight_sum": {
             "type": "integer",
             "title": "Weight Sum"
-          },
-          "pending": {
-            "type": "integer",
-            "title": "Pending",
-            "description": "아직 답하지 않은 AI 심층 질의"
           }
         },
         "type": "object",
@@ -6299,8 +6078,7 @@
           "keymen",
           "reqs",
           "check",
-          "weight_sum",
-          "pending"
+          "weight_sum"
         ],
         "title": "RFCounts"
       },
@@ -6350,233 +6128,6 @@
         "type": "object",
         "title": "RFCreate"
       },
-      "RFDeep": {
-        "properties": {
-          "questions": {
-            "items": {
-              "$ref": "#/components/schemas/RFDeepQuestion"
-            },
-            "type": "array",
-            "title": "Questions"
-          },
-          "mode": {
-            "type": "string",
-            "enum": [
-              "llm",
-              "rule"
-            ],
-            "title": "Mode",
-            "default": "rule"
-          },
-          "at": {
-            "type": "string",
-            "title": "At"
-          },
-          "current": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Current",
-            "description": "다음에 물을 질문 번호(0부터), 다 끝났으면 null"
-          },
-          "applied": {
-            "type": "integer",
-            "title": "Applied",
-            "default": 0
-          },
-          "asked": {
-            "type": "integer",
-            "title": "Asked",
-            "default": 0
-          }
-        },
-        "type": "object",
-        "required": [
-          "questions",
-          "mode",
-          "at",
-          "current",
-          "applied",
-          "asked"
-        ],
-        "title": "RFDeep"
-      },
-      "RFDeepOption": {
-        "properties": {
-          "label": {
-            "type": "string",
-            "title": "Label"
-          },
-          "weights": {
-            "anyOf": [
-              {
-                "items": {
-                  "type": "integer"
-                },
-                "type": "array"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Weights",
-            "description": "가중치 질문의 보기 — 키맨 순서대로"
-          }
-        },
-        "type": "object",
-        "required": [
-          "label",
-          "weights"
-        ],
-        "title": "RFDeepOption"
-      },
-      "RFDeepOut": {
-        "properties": {
-          "doc": {
-            "$ref": "#/components/schemas/RFDoc"
-          },
-          "found": {
-            "type": "integer",
-            "title": "Found"
-          },
-          "mode": {
-            "type": "string",
-            "enum": [
-              "llm",
-              "rule"
-            ],
-            "title": "Mode"
-          }
-        },
-        "type": "object",
-        "required": [
-          "doc",
-          "found",
-          "mode"
-        ],
-        "title": "RFDeepOut"
-      },
-      "RFDeepQuestion": {
-        "properties": {
-          "id": {
-            "type": "string",
-            "title": "Id"
-          },
-          "tag": {
-            "type": "string",
-            "title": "Tag",
-            "description": "어디(최종 제안대상 · 마케팅 리드 · 요구 2 · 가중치)"
-          },
-          "text": {
-            "type": "string",
-            "title": "Text"
-          },
-          "target": {
-            "$ref": "#/components/schemas/RFDeepTarget"
-          },
-          "options": {
-            "items": {
-              "$ref": "#/components/schemas/RFDeepOption"
-            },
-            "type": "array",
-            "title": "Options"
-          },
-          "by": {
-            "type": "string",
-            "enum": [
-              "manual",
-              "file",
-              "ai-pending",
-              "ai-accepted"
-            ],
-            "title": "By",
-            "default": "ai-pending"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "pending",
-              "applied",
-              "asked"
-            ],
-            "title": "Status",
-            "default": "pending"
-          },
-          "answer": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Answer"
-          }
-        },
-        "type": "object",
-        "required": [
-          "id",
-          "tag",
-          "text",
-          "target",
-          "options",
-          "by",
-          "status",
-          "answer"
-        ],
-        "title": "RFDeepQuestion"
-      },
-      "RFDeepTarget": {
-        "properties": {
-          "kind": {
-            "type": "string",
-            "enum": [
-              "target",
-              "customer",
-              "title",
-              "req",
-              "weights",
-              "keyman"
-            ],
-            "title": "Kind"
-          },
-          "keyman_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Keyman Id"
-          },
-          "req_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Req Id"
-          }
-        },
-        "type": "object",
-        "required": [
-          "kind",
-          "keyman_id",
-          "req_id"
-        ],
-        "title": "RFDeepTarget"
-      },
       "RFDoc": {
         "properties": {
           "id": {
@@ -6624,12 +6175,6 @@
               }
             ],
             "title": "Target By"
-          },
-          "target_ask": {
-            "type": "boolean",
-            "title": "Target Ask",
-            "description": "최종 제안대상을 고객에게 확인으로 남김",
-            "default": false
           },
           "customer_by": {
             "anyOf": [
@@ -6684,16 +6229,6 @@
             },
             "type": "array",
             "title": "Sources"
-          },
-          "deep": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/RFDeep"
-              },
-              {
-                "type": "null"
-              }
-            ]
           },
           "fill_job": {
             "anyOf": [
@@ -6762,13 +6297,11 @@
           "customer",
           "target",
           "target_by",
-          "target_ask",
           "customer_by",
           "title_by",
           "note",
           "keymen",
           "sources",
-          "deep",
           "fill_job",
           "status",
           "ver",

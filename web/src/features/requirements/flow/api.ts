@@ -10,13 +10,10 @@ type S = components['schemas'];
 export type RFDoc = S['RFDoc'];
 export type RFKeyman = S['RFKeyman'];
 export type RFReq = S['RFReq'];
-export type RFDeep = S['RFDeep'];
-export type RFDeepQuestion = S['RFDeepQuestion'];
 export type RFStageOut = S['RFStageOut'];
 export type RFListItem = S['RFListItem'];
 export type RFCreate = S['RFCreate'];
 export type RFUpdate = S['RFUpdate'];
-export type RFAnswer = S['RFAnswer'];
 export type By = RFReq['by'];
 export type Flag = RFReq['flag'];
 
@@ -42,10 +39,6 @@ export const rfApi = {
   get: async (id: string) => unwrap(await rq.GET('/v1/rq-flows/{flow_id}', P(id))),
   put: async (id: string, body: RFUpdate) => unwrap(await rq.PUT('/v1/rq-flows/{flow_id}', { ...P(id), body })),
   fill: async (id: string, fileIds: string[]) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}:fill', { ...P(id), body: { file_ids: fileIds } })),
-  deep: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}/deep-questions', P(id))),
-  answer: async (id: string, qid: string, body: RFAnswer) =>
-    unwrap(await rq.POST('/v1/rq-flows/{flow_id}/deep-questions/{question_id}:answer', { params: { path: { flow_id: id, question_id: qid } }, body })),
-  closeDeep: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}/deep-questions:close', P(id))),
   finish: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}:finish', P(id))),
   /** 저장 전 초안 지우기(204) — 저장한 것은 409 SAVED_CONTENT */
   remove: async (id: string) => { unwrap(await rq.DELETE('/v1/rq-flows/{flow_id}', P(id))); },

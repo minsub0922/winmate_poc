@@ -1,7 +1,7 @@
 /**
  * RQ1 편집 상태 — 화면 폼(FForm)이 원본이고 600ms 뒤 폼 전체를 PUT 한다(expected_version · 409 면 새로 읽고 한 번 더).
  * - 아직 문서가 없으면(`/requirements/new`) 첫 입력 때 만들고(POST) onCreated 로 주소를 바꾼다(빈 초안을 만들지 않는다).
- * - PUT 응답으로는 폼 글자를 덮어쓰지 않는다(입력 중 공백 · 빈 줄 보호). 서버가 폼을 바꾸는 호출(심층 질의 답 · 파일 채우기)만 폼을 바꾼다.
+ * - PUT 응답으로는 폼 글자를 덮어쓰지 않는다(입력 중 공백 · 빈 줄 보호). 서버가 폼을 바꾸는 호출(파일 채우기)만 폼을 바꾼다.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,7 +35,7 @@ export function useRfEditor(initial: RFDoc | null, onCreated: (d: RFDoc) => void
   const createdRef = useRef(onCreated);
   createdRef.current = onCreated;
 
-  /** 서버 문서 반영. replaceForm 이면 폼도 서버 값으로(심층 질의 답 · 파일 채우기 — 서버가 폼을 바꾼 경우) */
+  /** 서버 문서 반영. replaceForm 이면 폼도 서버 값으로(파일 채우기 — 서버가 폼을 바꾼 경우) */
   const applyDoc = useCallback((d: RFDoc, replaceForm = false) => {
     docRef.current = d;
     setDoc(d);

@@ -1,12 +1,12 @@
-"""고객 요구사항 — 새 콘텐츠 흐름(2026-10-08 · docs/scenarios/11-content-flow.md · 보드 webapp1 RQ0 · RQ1 · RQ1_AI · RQ_Done).
+"""고객 요구사항 — 새 콘텐츠 흐름(2026-10-08 · docs/scenarios/11-content-flow.md · 보드 webapp1 RQ0 · RQ1 · RQ_Done).
 
 이전 정의서(`/v1/requirements*`)와 따로 둔 가벼운 자원 `/v1/rq-flows*`(DocStore 컬렉션 `rq_flows`, id `rqf_…`, 코드 `RQ-NN`).
 - 폼 하나: 프로젝트명 · 고객사 · 최종 제안대상 · 제작자 의견(**고객 문서 · Storyboard 에서 빠진다**) · 키맨(가중치 합 100) · 키맨별 요구사항.
-  요구사항마다 status `ok | check`(확인 필요), flag `none | vague(범위 불명확) | ask(고객에게 확인)`, 출처 by `manual | file | ai-accepted`.
+  요구사항마다 status `ok | check`(확인 필요), flag `none | vague(범위 불명확) | ask(고객에게 확인)`, 출처 by `manual | file`
+  (`ai-pending | ai-accepted` 는 2026-10-12 에 지운 AI 심층 질의가 남긴 예전 값 — 읽기만 한다).
 - 고치기는 폼 전체를 보낸다(PUT, `expected_version` 이 다르면 409). 화면은 자동 저장.
 - 파일 첨부(`:fill` 202 잡 `rq.flow.fill`) — 파일 글 → `rq.flow_extract.v1` → 빈 칸만 채움(사람 값 보호). 모델이 안 되면 아무것도 바꾸지 않는다.
-- AI 심층 질의(`deep-questions`) — 규칙으로 부족한 곳을 찾고 `rq.deep_questions.v1` 이 문장 · 보기를 다듬는다(실패 · 빈 답이면 규칙 문장).
-  질문은 `ai-pending`(점선) — 답하면(폼에 반영) `ai-accepted` 로 폼에 들어가고, "고객에게 확인으로 남기기" 면 확인 필요로 남는다.
+- AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다 — 폼 입력 · 파일 첨부 · 저장만 있다.
 - 저장(`:finish`) — 처음이면 `create_flow` 로 Storyboard 를 만들고(sb_ids 에 저장), 다음부터는 `push_stage(sb, "rq")`(같은 ref 의 다른 Storyboard 는 허브가 함께 고친다).
   stage 값은 §6 `rq` 모양. ver = 저장 횟수.
 - 지우기(`DELETE`) — 한 번도 저장하지 않은 초안만(status draft · ver 0 · sb_ids 없음). 저장한 것은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
@@ -16,7 +16,6 @@ from __future__ import annotations
 
 import asyncio
 import copy
-import json
 import logging
 import re
 import uuid
@@ -46,12 +45,10 @@ META = "rq_flow_meta"
 FEATURE = "RQ"
 MAX_KEYMEN = 8
 MAX_REQS = 12
-MAX_QUESTIONS = 5
-DEEP_TASK = "rq.deep_questions.v1"
 EXTRACT_TASK = "rq.flow_extract.v1"
 FILL_KIND = "rq.flow.fill"
 
-By = Literal["manual", "file", "ai-pending", "ai-accepted"]
+By = Literal["manual", "file", "ai-pending", "ai-accepted"]   # ai-* 는 예전 AI 심층 질의 값(읽기만)
 Flag = Literal["none", "vague", "ask"]
 Status = Literal["ok", "check"]
 
@@ -90,43 +87,11 @@ class RFSource(Model):
     read_at: str
 
 
-class RFDeepTarget(Model):
-    kind: Literal["target", "customer", "title", "req", "weights", "keyman"]
-    keyman_id: str | None = None
-    req_id: str | None = None
-
-
-class RFDeepOption(Model):
-    label: str
-    weights: list[int] | None = Field(None, description="가중치 질문의 보기 — 키맨 순서대로")
-
-
-class RFDeepQuestion(Model):
-    id: str
-    tag: str = Field(description="어디(최종 제안대상 · 마케팅 리드 · 요구 2 · 가중치)")
-    text: str
-    target: RFDeepTarget
-    options: list[RFDeepOption] = Field(default_factory=list)
-    by: By = "ai-pending"
-    status: Literal["pending", "applied", "asked"] = "pending"
-    answer: str | None = None
-
-
-class RFDeep(Model):
-    questions: list[RFDeepQuestion] = Field(default_factory=list)
-    mode: Literal["llm", "rule"] = "rule"
-    at: str
-    current: int | None = Field(None, description="다음에 물을 질문 번호(0부터), 다 끝났으면 null")
-    applied: int = 0
-    asked: int = 0
-
-
 class RFCounts(Model):
     keymen: int
     reqs: int
     check: int
     weight_sum: int
-    pending: int = Field(description="아직 답하지 않은 AI 심층 질의")
 
 
 class RFDoc(Model):
@@ -137,13 +102,11 @@ class RFDoc(Model):
     customer: str = ""
     target: str = Field("", description="최종 제안대상")
     target_by: By | None = None
-    target_ask: bool = Field(False, description="최종 제안대상을 고객에게 확인으로 남김")
     customer_by: By | None = None
     title_by: By | None = None
     note: str = Field("", description="제작자 의견 — 고객 문서 · Storyboard 에서 빠진다(internal)")
     keymen: list[RFKeyman] = Field(default_factory=list)
     sources: list[RFSource] = Field(default_factory=list)
-    deep: RFDeep | None = None
     fill_job: str | None = Field(None, description="파일 첨부 잡(진행 중일 때)")
     status: Literal["draft", "done"] = "draft"
     ver: int = Field(0, description="저장(완료) 횟수 = stage ver")
@@ -202,18 +165,6 @@ class RFUpdate(RFCreate):
 
 class RFFillIn(BaseModel):
     file_ids: list[str] = Field(min_length=1, max_length=5)
-
-
-class RFAnswer(BaseModel):
-    option: int | None = Field(None, ge=0, description="고른 보기 번호")
-    text: str | None = Field(None, max_length=300, description="직접 입력")
-    later: bool = Field(False, description="고객에게 확인으로 남기기")
-
-
-class RFDeepOut(Model):
-    doc: RFDoc
-    found: int
-    mode: Literal["llm", "rule"]
 
 
 class RFFlowSync(Model):
@@ -339,22 +290,22 @@ def _keymen_from(items: list[RFKeymanIn], old: list[dict[str, Any]]) -> list[dic
     return out
 
 
+def _kms(d: dict[str, Any]) -> list[dict[str, Any]]:
+    return [k for k in d.get("keymen") or [] if k.get("role") or k.get("reqs")]
+
+
 def counts(d: dict[str, Any]) -> dict[str, int]:
-    kms = [k for k in d.get("keymen") or [] if k.get("role") or k.get("reqs")]
+    kms = _kms(d)
     reqs = [r for k in kms for r in k.get("reqs") or []]
-    pend = sum(1 for q in ((d.get("deep") or {}).get("questions") or []) if q.get("status") == "pending")
     return {"keymen": len(kms), "reqs": len(reqs), "check": sum(1 for r in reqs if r.get("status") == "check"),
-            "weight_sum": sum(int(k.get("weight") or 0) for k in kms), "pending": pend}
+            "weight_sum": sum(int(k.get("weight") or 0) for k in kms)}
+
+
+_DROPPED = ("deep", "target_ask")   # 예전 AI 심층 질의가 문서에 남긴 칸 — 응답에 싣지 않는다
 
 
 def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    deep = d.get("deep")
-    if deep:
-        qs = deep.get("questions") or []
-        cur = next((i for i, q in enumerate(qs) if q.get("status") == "pending"), None)
-        deep = {**deep, "current": cur, "applied": sum(1 for q in qs if q.get("status") == "applied"),
-                "asked": sum(1 for q in qs if q.get("status") == "asked")}
-    return {**d, "deep": deep, "counts": counts(d)}
+    return {**{k: v for k, v in d.items() if k not in _DROPPED}, "counts": counts(d)}
 
 
 def display_title(d: dict[str, Any]) -> str:
@@ -402,8 +353,8 @@ async def create(body: RFCreate) -> dict[str, Any]:
     code = await asyncio.to_thread(_next_code_sync, floor)
     keymen = _keymen_from(body.keymen, []) if body.keymen is not None else [{"id": _sid("k_"), "role": "", "weight": 100, "weight_by": "manual", "reqs": []}]
     doc = {"code": code, "title": _clean(body.title, 120), "customer": _clean(body.customer, 80), "target": _clean(body.target, 80),
-           "target_by": "manual" if body.target.strip() else None, "target_ask": False, "customer_by": None, "title_by": None,
-           "note": (body.note or "").strip()[:2000], "keymen": keymen, "sources": [], "deep": None, "fill_job": None,
+           "target_by": "manual" if body.target.strip() else None, "customer_by": None, "title_by": None,
+           "note": (body.note or "").strip()[:2000], "keymen": keymen, "sources": [], "fill_job": None,
            "status": "draft", "ver": 0, "sb_ids": [], "saved_at": None}
     fid = new_id("rqf")
     saved = await asyncio.to_thread(_store().put, COLL, fid, doc, keep_history=False)
@@ -422,8 +373,6 @@ async def put_form(fid: str, body: RFUpdate) -> dict[str, Any]:
             if v != (d.get(f) or ""):
                 d[f] = v
                 d[f"{f}_by"] = "manual" if v else None
-                if f == "target" and v:
-                    d["target_ask"] = False
         d["note"] = (body.note or "").strip()[:2000]
         if body.keymen is not None:
             d["keymen"] = _keymen_from(body.keymen, d.get("keymen") or [])
@@ -713,194 +662,6 @@ async def handle_fill(ctx: JobContext) -> dict[str, Any]:
     return {"rq_flow_id": fid, "filled": int((final or {}).get("filled") or 0), "note": (final or {}).get("note")}
 
 
-# ── AI 심층 질의 ─────────────────────────────────────────
-
-class _QOut(BaseModel):
-    gap: str = Field(description="부족한 곳 id(G1 …) 또는 'R:<요구 id>'(범위가 불분명해 보이는 요구)")
-    text: str = Field(description="고객 영업 담당자에게 묻는 질문 한 문장(60자 이내)")
-    options: list[str] = Field(default_factory=list, description="고를 보기 2~3개(짧게). 입력에 없는 숫자 · 고객명은 쓰지 않는다")
-
-
-class _QsOut(BaseModel):
-    questions: list[_QOut] = Field(default_factory=list)
-
-
-def _kms(d: dict[str, Any]) -> list[dict[str, Any]]:
-    return [k for k in d.get("keymen") or [] if k.get("role") or k.get("reqs")]
-
-
-def _ratio(ws: list[int]) -> str:
-    return " : ".join(str(w) for w in ws)
-
-
-def _equal(n: int) -> list[int]:
-    share, extra = divmod(100, n)
-    return [share + (1 if i < extra else 0) for i in range(n)]
-
-
-def rule_gaps(d: dict[str, Any]) -> list[dict[str, Any]]:
-    """규칙으로 찾은 부족한 곳(묻는 순서대로) — 모델 없이도 질문이 된다."""
-    gaps: list[dict[str, Any]] = []
-    kms = _kms(d)
-    if not (d.get("target") or "").strip() and not d.get("target_ask"):
-        roles = [k["role"] for k in kms if k.get("role")]
-        opts = list(dict.fromkeys(["대표이사", *roles]))[:3]
-        gaps.append({"target": {"kind": "target"}, "tag": "최종 제안대상", "text": "최종 제안대상이 비어 있어요. 누구에게 최종 제안하나요?",
-                     "options": [{"label": o} for o in opts]})
-    for k in kms:
-        for i, r in enumerate(k.get("reqs") or []):
-            if r.get("flag") == "vague":
-                gaps.append({"target": {"kind": "req", "keyman_id": k["id"], "req_id": r["id"]}, "tag": f"{k.get('role') or '키맨'} · 요구 {i + 1}",
-                             "text": f"‘{r['text']}’의 범위는 어디까지인가요?", "options": []})
-    if len(kms) >= 2 and not any(k.get("weight_by") == "ai-accepted" for k in kms):
-        cur = [int(k.get("weight") or 0) for k in kms]
-        eq = _equal(len(kms))
-        opts = [{"label": f"맞아요 · {_ratio(cur)}", "weights": cur}]
-        if eq != cur:
-            opts.append({"label": _ratio(eq), "weights": eq})
-        if len(kms) == 2:
-            alt = [min(100, cur[0] + 10), max(0, cur[1] - 10)] if cur[0] + 10 <= 100 and cur[1] >= 10 else [max(0, cur[0] - 10), min(100, cur[1] + 10)]
-            if alt not in (cur, eq):
-                opts.append({"label": _ratio(alt), "weights": alt})
-        who = "두 키맨의" if len(kms) == 2 else f"키맨 {len(kms)}명의"
-        gaps.append({"target": {"kind": "weights"}, "tag": "가중치", "text": f"{who} 가중치가 {_ratio(cur)}이 맞나요?", "options": opts})
-    if not (d.get("customer") or "").strip():
-        gaps.append({"target": {"kind": "customer"}, "tag": "고객사", "text": "고객사가 비어 있어요. 어느 회사에 제안하나요?", "options": []})
-    if not (d.get("title") or "").strip():
-        gaps.append({"target": {"kind": "title"}, "tag": "프로젝트명", "text": "프로젝트명이 비어 있어요. 어떤 사업인가요?", "options": []})
-    for k in kms:
-        if k.get("role") and not k.get("reqs"):
-            gaps.append({"target": {"kind": "keyman", "keyman_id": k["id"]}, "tag": k["role"], "text": f"‘{k['role']}’의 요구사항이 비어 있어요. 무엇을 바라나요?", "options": []})
-    return gaps
-
-
-def _form_for_prompt(d: dict[str, Any]) -> dict[str, Any]:
-    """모델에 보내는 폼 — 제작자 의견(내부 메모)은 보내지 않는다(질문에 섞이지 않게)."""
-    return {"프로젝트명": d.get("title") or "", "고객사": d.get("customer") or "", "최종 제안대상": d.get("target") or "",
-            "키맨": [{"역할": k.get("role"), "가중치": k.get("weight"), "요구": [{"id": r["id"], "문장": r["text"], "확인 필요": r.get("status") == "check"} for r in k.get("reqs") or []]}
-                   for k in _kms(d)]}
-
-
-async def deep_questions(fid: str) -> dict[str, Any]:
-    d = await load(fid)
-    gaps = rule_gaps(d)
-    handles = {f"G{i + 1}": g for i, g in enumerate(gaps)}
-    req_index = {r["id"]: (k, i, r) for k in _kms(d) for i, r in enumerate(k.get("reqs") or [])}
-    prompt = llm_dump({
-        "요청": "고객 요구사항 폼에서 부족한 곳마다 영업 담당자에게 물을 질문 한 문장과 고를 보기(2~3개)를 만든다. "
-                "또 범위가 불분명해 보이는 요구가 있으면 gap 을 'R:<요구 id>' 로 질문을 더한다(최대 2개). 답하면 폼에 바로 들어간다. "
-                "입력에 없는 숫자 · 고객명 · 모델명은 보기에 쓰지 않는다.",
-        "폼": _form_for_prompt(d),
-        "부족한 곳": [{"id": h, "어디": g["tag"], "기본 질문": g["text"], "기본 보기": [o["label"] for o in g["options"]]} for h, g in handles.items()],
-    })
-    mode: Literal["llm", "rule"] = "rule"
-    try:
-        out = await llm.call_json(DEEP_TASK, prompt, _QsOut, timeout=60, temperature=0.3)
-    except ApiError as exc:
-        if exc.code == "POLICY_CONFIDENTIAL":
-            raise
-        log.info("심층 질의 모델 대신 규칙: %s", exc.code)
-        out = {}
-    extra: list[dict[str, Any]] = []
-    for q in out.get("questions") or []:
-        gid = str(q.get("gap") or "")
-        text = q.get("text")
-        opts = [o.strip() for o in q.get("options") or [] if not _mockish(o)][:3]
-        if gid in handles and not _mockish(text):
-            g = handles[gid]
-            g["text"] = clip(text.strip(), 120)
-            if g["target"]["kind"] != "weights" and opts:     # 가중치 보기는 숫자를 규칙으로 만든다
-                g["options"] = [{"label": o} for o in opts]
-            mode = "llm"
-        elif gid.startswith("R:") and gid[2:] in req_index and not _mockish(text) and len(extra) < 2:
-            k, i, r = req_index[gid[2:]]
-            if any(g["target"].get("req_id") == r["id"] for g in gaps):
-                continue
-            extra.append({"target": {"kind": "req", "keyman_id": k["id"], "req_id": r["id"]}, "tag": f"{k.get('role') or '키맨'} · 요구 {i + 1}",
-                          "text": clip(text.strip(), 120), "options": [{"label": o} for o in opts]})
-            mode = "llm"
-    # 요구 질문은 규칙 것 다음(키맨 순서 유지), 나머지는 뒤
-    ordered = gaps[:]
-    pos = max((i for i, g in enumerate(ordered) if g["target"]["kind"] in ("target", "req")), default=-1) + 1
-    ordered[pos:pos] = extra
-    qs = [{"id": _sid("dq_"), "tag": g["tag"], "text": g["text"], "target": {"keyman_id": None, "req_id": None, **g["target"]},
-           "options": [{"label": o["label"], "weights": o.get("weights")} for o in g["options"]], "by": "ai-pending", "status": "pending", "answer": None}
-          for g in ordered[:MAX_QUESTIONS]]
-
-    def fn(doc: dict[str, Any]) -> None:
-        doc["deep"] = {"questions": qs, "mode": mode, "at": now_iso()}
-    saved = await update(d["id"], fn)
-    return {"doc": to_api(saved), "found": len(qs), "mode": mode}
-
-
-def llm_dump(obj: Any) -> str:
-    return json.dumps(obj, ensure_ascii=False, indent=1)
-
-
-def _parse_weights(text: str, n: int) -> list[int] | None:
-    nums = [int(x) for x in re.findall(r"\d+", text or "")]
-    if len(nums) != n or sum(nums) != 100:
-        return None
-    return nums
-
-
-async def answer(fid: str, qid: str, body: RFAnswer) -> dict[str, Any]:
-    if not body.later and body.option is None and not (body.text or "").strip():
-        raise ApiError(422, "NOTHING_SELECTED", "보기를 고르거나 직접 입력해 주세요.")
-
-    def fn(d: dict[str, Any]) -> None:
-        q = next((x for x in ((d.get("deep") or {}).get("questions") or []) if x["id"] == qid), None)
-        if q is None:
-            raise repo.not_found("심층 질의", qid)
-        if q["status"] != "pending":
-            raise ApiError(409, "ALREADY_ANSWERED", "이미 답한 질문이에요.")
-        t = q["target"]
-        kms = _kms(d)
-        km = next((k for k in kms if k["id"] == t.get("keyman_id")), None)
-        req = next((r for r in (km or {}).get("reqs") or [] if r["id"] == t.get("req_id")), None)
-        if body.later:
-            q["status"], q["answer"] = "asked", None
-            if t["kind"] == "target":
-                d["target_ask"] = True
-            elif t["kind"] == "req" and req:
-                req["flag"], req["status"] = "ask", "check"
-            return
-        opt = q["options"][body.option] if body.option is not None and body.option < len(q["options"]) else None
-        value = _clean((body.text or "").strip() or (opt or {}).get("label") or "", 200)
-        if t["kind"] in ("target", "customer", "title"):
-            d[t["kind"]] = _clean(value, 120 if t["kind"] == "title" else 80)
-            d[f"{t['kind']}_by"] = "ai-accepted"
-            if t["kind"] == "target":
-                d["target_ask"] = False
-        elif t["kind"] == "req":
-            if req is None:
-                raise ApiError(409, "TARGET_GONE", "질문한 요구가 폼에서 지워졌어요.")
-            base = req["text"].split(" — ")[0]
-            req.update(text=_clean(f"{base} — {value}", 300), status="ok", flag="none", by="ai-accepted")
-        elif t["kind"] == "weights":
-            ws = (opt or {}).get("weights") if not (body.text or "").strip() else _parse_weights(body.text or "", len(kms))
-            if not ws or len(ws) != len(kms):
-                raise ApiError(422, "INVALID_WEIGHTS", f"키맨 {len(kms)}명의 가중치를 합 100으로 적어 주세요(예: 60 : 40).")
-            for k, w in zip(kms, ws, strict=True):
-                k["weight"], k["weight_by"] = int(w), "ai-accepted"
-            value = _ratio([int(w) for w in ws])
-        elif t["kind"] == "keyman":
-            if km is None:
-                raise ApiError(409, "TARGET_GONE", "질문한 키맨이 폼에서 지워졌어요.")
-            km.setdefault("reqs", []).append({"id": _sid("q_"), "text": _clean(value, 300), "status": "ok", "flag": "none", "by": "ai-accepted"})
-        q["status"], q["answer"] = "applied", value
-    saved = await update(fid, fn)
-    return to_api(saved)
-
-
-async def close_deep(fid: str) -> dict[str, Any]:
-    """질의 닫기 — 답하지 않은 질문은 버린다(폼은 그대로)."""
-    def fn(d: dict[str, Any]) -> None:
-        if d.get("deep"):
-            d["deep"]["questions"] = [q for q in d["deep"]["questions"] if q["status"] != "pending"]
-    return to_api(await update(fid, fn))
-
-
 # ── 저장 · flow.json ────────────────────────────────────
 
 def stage(d: dict[str, Any]) -> dict[str, Any]:
@@ -966,8 +727,6 @@ async def finish(fid: str) -> dict[str, Any]:
         doc["ver"] = int(doc.get("ver") or 0) + 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
-        if doc.get("deep"):                              # 답하지 않은 질문은 저장에 넣지 않는다
-            doc["deep"]["questions"] = [q for q in doc["deep"]["questions"] if q["status"] != "pending"]
     saved = await update(d["id"], fn)
     st = stage(saved)
     md = summary_md(saved, st)

@@ -1,6 +1,6 @@
 /**
  * RQ1 폼 상태(화면 쪽) — 서버 문서(RFDoc)에서 만들고, 고칠 때마다 폼 전체를 PUT 한다.
- * id 는 화면이 만든다(k_ · q_ + 8자) — 자동 저장을 여러 번 해도 요구 · 키맨 id 가 바뀌지 않게(심층 질의가 id 로 가리킨다).
+ * id 는 화면이 만든다(k_ · q_ + 8자) — 자동 저장을 여러 번 해도 요구 · 키맨 id 가 바뀌지 않게.
  */
 import { distribute } from '../lib/weights';
 import type { By, Flag, RFDoc, RFUpdate } from './api';

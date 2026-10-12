@@ -1,7 +1,8 @@
 /**
- * 고객 요구사항 새 흐름(2026-10-08 보드 webapp1 RQ0 · RQ1 · RQ1_AI · RQ_Done) — 실제 스택(mock 모델 · mocks/ai-tools/rq.flow_extract.v1 · rq.deep_questions.v1).
- * 목록 → 새 요구사항(바로 RQ1) → 파일로 채우기 → 직접 입력 → AI 심층 질의(폼에 반영 · 고객에게 확인) → 저장 → 완료(Storyboard 자동 생성).
- * 보드의 고정 칸 폭(400 · 300 · 380 · 본문 1180 · 800)을 숫자로 재고, 화면을 __screens__/<보드>-new.png 로 남긴다.
+ * 고객 요구사항 새 흐름(보드 webapp1 RQ0 · RQ1 · RQ_Done) — 실제 스택(mock 모델 · mocks/ai-tools/rq.flow_extract.v1).
+ * 목록 → 새 요구사항(바로 RQ1) → 파일로 채우기 → 직접 입력 → 저장 → 완료(Storyboard 자동 생성).
+ * AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다 — 버튼 · 패널 · API 가 없어야 한다.
+ * 보드의 고정 칸 폭(400 · 본문 1180)을 숫자로 재고, 화면을 __screens__/<보드>-new.png 로 남긴다.
  * 실행: make e2e-feature SERVICE=requirements (1 worker)
  */
 import { expect, test, type Locator, type Page } from '@playwright/test';
@@ -26,7 +27,7 @@ async function widths(page: Page) {
   };
 }
 
-test('RQ 새 흐름 — 목록 · 입력 · 파일 · AI 심층 질의 · 저장 · Storyboard 자동 생성', async ({ page, request }) => {
+test('RQ 새 흐름 — 목록 · 입력 · 파일 · 저장 · Storyboard 자동 생성', async ({ page, request }) => {
   test.setTimeout(180_000);
   await page.setViewportSize({ width: 1440, height: 900 });
 
@@ -41,10 +42,12 @@ test('RQ 새 흐름 — 목록 · 입력 · 파일 · AI 심층 질의 · 저장
   await expect(page.getByRole('heading', { name: '고객 요구사항 입력' })).toBeVisible();
   await expect(page.getByText('저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요')).toBeVisible();
   await expect(page.getByText('모두 선택 항목이에요')).toBeVisible();
-  // 보드 RQ1: 본문 열 1180 · 왼쪽 400 | 오른쪽 1fr(1180 − 80 − 400 − 16 = 684) · 끌어 놓기 줄 1100×64 · 버튼 40 · 입력 42 · 저장 48
+  // 보드 RQ1: 본문 열 1180 · 왼쪽 400 | 오른쪽 1fr(1180 − 80 − 400 − 16 = 684) · 머리 줄 40 · 끌어 놓기 줄 1100×64(위 248) · 입력 42 · 저장 48
   expect(await widths(page)).toEqual({ flow: 1180, main: 1180, left: 400, right: 684, drop: 1100 });
   expect(await h(page.locator('.rqf-drop'))).toBe(64);
-  expect(await h(page.getByRole('button', { name: 'AI 심층 질의로 폼 완성' }))).toBe(40);
+  expect(Math.round((await page.locator('.rqf-drop').boundingBox())!.y)).toBe(248);
+  expect(await h(page.locator('.rqf-head'))).toBe(40);
+  await expect(page.getByRole('button', { name: /AI 심층 질의/ })).toHaveCount(0);
   expect(await h(page.locator('#rq-proj'))).toBe(42);
   expect(await h(page.getByRole('button', { name: '저장', exact: true }))).toBe(48);
   expect(await h(page.locator('.rqf-role').first())).toBe(34);
@@ -75,42 +78,12 @@ test('RQ 새 흐름 — 목록 · 입력 · 파일 · AI 심층 질의 · 저장
   await page.mouse.move(10, 890);
   await shot(page, 'RQ1-new');
 
-  // RQ1_AI — AI 심층 질의(누를 때만 열린다 · 380px) · 본문 800 · 왼쪽 300
-  await page.getByRole('button', { name: 'AI 심층 질의로 폼 완성' }).click();
-  const ai = page.getByRole('complementary', { name: 'AI 심층 질의' });
-  await expect(ai.getByText('최종 제안대상이 비어 있어요. 누구에게 최종 제안하나요?')).toBeVisible({ timeout: 20_000 });
-  await expect(ai.getByText('폼에서 부족한 곳 3개를 찾았어요 · 답하면 폼에 바로 반영돼요')).toBeVisible();
-  await expect(ai.getByLabel('진행')).toHaveText('1 / 3');
-  await expect(page.getByRole('button', { name: 'AI 심층 질의로 폼 완성' })).toHaveCount(0);
-  expect(await w(ai)).toBe(380);
-  expect(await widths(page)).toEqual({ flow: 1180, main: 800, left: 300, right: 424, drop: 740 });
-  await expect(ai.getByRole('button', { name: '대표이사' })).toBeVisible();
-  await page.mouse.move(10, 890);
-  await shot(page, 'RQ1_AI-new');
-
-  // 1) 보기 고르기 → 폼에 반영(ai-accepted · 초록)
-  await ai.getByRole('button', { name: '자산관리본부장' }).click();
-  await expect(ai.getByRole('button', { name: '자산관리본부장' })).toHaveAttribute('aria-pressed', 'true');
-  await ai.getByRole('button', { name: '폼에 반영' }).click();
-  await expect(page.locator('#rq-to')).toHaveValue('자산관리본부장');
-  await expect(page.locator('#rq-to')).toHaveClass(/rqf-input--ai/);
-  await expect(page.locator('label[for="rq-to"]')).toContainText('AI 질의로 채움');
-  // 2) 고객에게 확인으로 남기기 → 요구 꼬리표 「고객에게 확인」
-  await expect(ai.getByLabel('진행')).toHaveText('2 / 3');
-  await expect(ai.getByText('‘방문객 데이터 활용’은 어디까지인가요?')).toBeVisible();
-  await ai.getByRole('button', { name: '고객에게 확인으로 남기기' }).click();
-  await expect(page.locator('[data-req]').nth(4).locator('.rqf-tag--ask')).toHaveText('고객에게 확인');
-  // 3) 가중치 — 맞아요 · 60 : 40 → 알약이 초록(AI 질의로 확인)
-  await expect(ai.getByLabel('진행')).toHaveText('3 / 3');
-  await ai.getByRole('button', { name: '맞아요 · 60 : 40' }).click();
-  await ai.getByRole('button', { name: '폼에 반영' }).click();
-  await expect(ai.getByText('질의를 마쳤어요')).toBeVisible();
-  await expect(ai.getByText('2개를 폼에 반영했고, 1개는 고객에게 확인으로 남겼어요.')).toBeVisible();
-  await expect(page.locator('.rqf-w.rqf-w--ai')).toHaveCount(2);
-  await page.mouse.move(10, 890);
-  await shot(page, 'RQ1_AI-done-new');
-  await ai.getByRole('button', { name: '닫기' }).last().click();
-  await expect(ai).toHaveCount(0);
+  // 최종 제안대상은 직접 적는다(AI 심층 질의 없음 — 경로도 없다)
+  expect([404, 405]).toContain((await request.post(`/api/requirements/v1/rq-flows/${flowId}/deep-questions`)).status());
+  await page.locator('#rq-to').fill('자산관리본부장');
+  await expect.poll(async () => (await (await request.get(`/api/requirements/v1/rq-flows/${flowId}`)).json()).target, { timeout: 10_000 }).toBe('자산관리본부장');
+  await expect(page.locator('#rq-to')).not.toHaveClass(/--ai/);
+  await expect(page.locator('.rqf-aitag, .rqf-w--ai, .rqf-tag--ai')).toHaveCount(0);
 
   // 저장 → RQ_Done(보드 Done content=rq) · Storyboard 자동 생성
   await page.getByRole('button', { name: '저장', exact: true }).click();

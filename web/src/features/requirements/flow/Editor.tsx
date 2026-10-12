@@ -1,6 +1,6 @@
 /**
- * RQ1 · RQ1_AI — 고객 요구사항 입력(보드 webapp1 RQ1.dc.html 인라인 px 그대로 · rqflow.css).
- * 왼쪽 400px(AI 질의가 열리면 300px) 폼 | 오른쪽 1fr 키맨별 요구사항. AI 심층 질의는 오른쪽 380px 패널(눌러야 열림).
+ * RQ1 — 고객 요구사항 입력(보드 webapp1 RQ1.dc.html 인라인 px 그대로 · rqflow.css).
+ * 왼쪽 400px 폼 | 오른쪽 1fr 키맨별 요구사항. 파일을 놓으면 빈 칸이 채워진다. (AI 심층 질의 — 폼 개선 과정 — 는 2026-10-12 에 뺐다)
  */
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -8,16 +8,12 @@ import { uploadFile } from '@/api/client';
 import { useJob } from '@/api/jobs';
 import { FlowBar, useFlowInvalidate } from '@/shell';
 import { FlowFooter, FlowScreen, LinkedStoryboardBar, cx, toast } from '@/ui';
-import { rfApi, rfListKey, type By, type RFDoc, type RFStageOut } from './api';
-import { DeepPanel } from './DeepPanel';
+import { rfApi, rfListKey, type RFDoc, type RFStageOut } from './api';
 import { addKeyman, newId, removeKeyman, setWeight, weightSum, type FForm, type FKeyman, type FReq } from './form';
 import { AI_DOWN, errText, useRfEditor } from './useRfEditor';
 
 const ACCEPT = '.pptx,.pdf,.docx,.txt,.eml,.msg';
 const OK_EXT = ['pptx', 'pdf', 'docx', 'txt', 'eml', 'msg'];
-const STARS = 'M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z M19 15l.9 2.1 2.1.9-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z';
-
-const isAi = (by: By | null | undefined) => by === 'ai-accepted';
 
 /** 글이 길면 줄이 늘어나는 한 줄 입력(보드 요구 문장 span 과 같은 모양) */
 function AutoText({ value, onChange, onEnter, onEmptyBackspace, className, label, readOnly, inputRef }: {
@@ -52,19 +48,19 @@ function AutoText({ value, onChange, onEnter, onEmptyBackspace, className, label
 }
 
 /** 가중치 알약(보드 h28 r999 Manrope 12/800) — 누르면 숫자 입력 */
-function WeightPill({ value, ai, onCommit, label, readOnly }: { value: number; ai: boolean; onCommit: (w: number) => void; label: string; readOnly?: boolean }) {
+function WeightPill({ value, onCommit, label, readOnly }: { value: number; onCommit: (w: number) => void; label: string; readOnly?: boolean }) {
   const [edit, setEdit] = useState<string | null>(null);
   if (edit !== null) {
     const commit = () => { const n = Number(edit.replace(/[^0-9]/g, '')); setEdit(null); if (edit.trim() && Number.isFinite(n) && n !== value) onCommit(n); };
     return (
-      <span className={cx('rqf-w', 'rqf-w--edit', ai && 'rqf-w--ai')}>
+      <span className="rqf-w rqf-w--edit">
         <input autoFocus inputMode="numeric" aria-label={`${label} 가중치(%)`} value={edit} onChange={(e) => setEdit(e.target.value.replace(/[^0-9]/g, '').slice(0, 3))}
           onBlur={commit} onKeyDown={(e) => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') setEdit(null); }} />%
       </span>
     );
   }
   return (
-    <button type="button" className={cx('rqf-w', ai && 'rqf-w--ai')} aria-label={`${label} 가중치 ${value}% · 눌러서 바꾸기`} disabled={readOnly}
+    <button type="button" className="rqf-w" aria-label={`${label} 가중치 ${value}% · 눌러서 바꾸기`} disabled={readOnly}
       onClick={() => setEdit(String(value))}>{value}%</button>
   );
 }
@@ -72,7 +68,6 @@ function WeightPill({ value, ai, onCommit, label, readOnly }: { value: number; a
 function ReqTag({ r, onClear }: { r: FReq; onClear: () => void }) {
   if (r.flag === 'vague') return <button type="button" className="rqf-tag rqf-tag--vague" onClick={onClear} title="눌러서 확인 필요 풀기">범위 불명확</button>;
   if (r.flag === 'ask') return <button type="button" className="rqf-tag rqf-tag--ask" onClick={onClear} title="눌러서 확인 필요 풀기">고객에게 확인</button>;
-  if (isAi(r.by)) return <span className="rqf-tag rqf-tag--ai">AI 질의로 채움</span>;
   return null;
 }
 
@@ -112,7 +107,7 @@ function KeymanCard({ k, idx, n, edit, readOnly, focusReq, setFocusReq }: {
         <input id={`rq-k${idx}`} className="rqf-role" value={k.role} placeholder="키맨 직함 · 예) 자산관리팀장" readOnly={readOnly}
           onChange={(e) => setKm((x) => ({ ...x, role: e.target.value }))}
           onKeyDown={(e) => { if (e.key === 'Enter' && !e.nativeEvent.isComposing) { if (k.reqs[0]) setFocusReq(k.reqs[0].id); else addReq(); } }} />
-        <WeightPill value={k.weight} ai={isAi(k.weight_by)} label={who} readOnly={readOnly}
+        <WeightPill value={k.weight} label={who} readOnly={readOnly}
           onCommit={(w) => edit((f) => ({ ...f, keymen: setWeight(f.keymen, idx, w) }))} />
       </div>
       {k.reqs.map((r, j) => (
@@ -120,12 +115,12 @@ function KeymanCard({ k, idx, n, edit, readOnly, focusReq, setFocusReq }: {
           <button type="button" className="rqf-n" aria-label={`${who} 요구 ${j + 1} 지우기`} title="지우기" disabled={readOnly} onClick={() => removeReq(r.id)}>
             <span className="rqf-n__num">{j + 1}</span><span className="rqf-n__x" aria-hidden>×</span>
           </button>
-          <AutoText className={cx('rqf-rt', isAi(r.by) && r.flag === 'none' && 'rqf-rt--ai')} label={`${who} 요구 ${j + 1}`} value={r.text} readOnly={readOnly}
+          <AutoText className="rqf-rt" label={`${who} 요구 ${j + 1}`} value={r.text} readOnly={readOnly}
             inputRef={(el) => { if (el) refs.current.set(r.id, el); else refs.current.delete(r.id); }}
             onChange={(t) => setReq(r.id, (x) => ({ ...x, text: t, by: x.text !== t ? 'manual' : x.by }))}
             onEnter={() => addReq(r.id)} onEmptyBackspace={() => removeReq(r.id)} />
           <ReqTag r={r} onClear={() => setReq(r.id, (x) => ({ ...x, flag: 'none', status: 'ok' }))} />
-          {r.flag === 'none' && !isAi(r.by) && !readOnly && r.text.trim() && (
+          {r.flag === 'none' && !readOnly && r.text.trim() && (
             <button type="button" className="rqf-tag rqf-tag--mark" onClick={() => setReq(r.id, (x) => ({ ...x, flag: 'ask', status: 'check' }))}>확인 필요</button>
           )}
         </div>
@@ -144,9 +139,6 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
   const inval = useFlowInvalidate();
   const ed = useRfEditor(initial, onCreated);
   const { doc, form, edit, docRef, applyDoc } = ed;
-  const [aiOpen, setAiOpen] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiBusy, setAiBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string[]>([]);
   const [over, setOver] = useState(false);
@@ -209,38 +201,6 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
     void attach(Array.from(e.dataTransfer.files ?? []));
   };
 
-  const openAi = async () => {
-    if (filling) { toast('파일에서 폼을 채우는 중이에요. 끝난 뒤 다시 눌러 주세요.'); return; }
-    setAiOpen(true);
-    setAiLoading(true);
-    try {
-      const d = await ed.ensureDoc();
-      if (!(await ed.flush())) { setAiOpen(false); return; }
-      const out = await rfApi.deep(d.id);
-      ed.applyDoc(out.doc);
-    } catch (e) {
-      toast(errText(e));
-      setAiOpen(false);
-    } finally { setAiLoading(false); }
-  };
-  const closeAi = async () => {
-    setAiOpen(false);
-    const d = ed.docRef.current;
-    if (d && (d.counts?.pending ?? 0) > 0) {
-      try { ed.applyDoc(await rfApi.closeDeep(d.id)); } catch { /* 다음 질의 때 새로 만든다 */ }
-    }
-  };
-  const answer = async (qid: string, body: { option?: number | null; text?: string | null; later: boolean }) => {
-    const d = ed.docRef.current;
-    if (!d) return;
-    setAiBusy(true);
-    try {
-      if (!(await ed.flush())) return;
-      // 답은 서버가 폼에 넣는다 → 폼을 서버 값으로 바꾼다(안 그러면 다음 자동 저장이 답을 지운다)
-      ed.applyDoc(await rfApi.answer(d.id, qid, { option: body.option ?? null, text: body.text ?? null, later: body.later }), true);
-    } catch (e) { toast(errText(e)); } finally { setAiBusy(false); }
-  };
-
   const save = async () => {
     if (saving) return;
     if (filling) { toast('파일에서 폼을 채우는 중이에요. 끝난 뒤 저장해 주세요.'); return; }
@@ -262,7 +222,7 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
   const fields: Array<{ id: string; k: 'title' | 'customer' | 'target'; label: string; ph: string }> = [
     { id: 'rq-proj', k: 'title', label: '프로젝트명', ph: '' },
     { id: 'rq-cust', k: 'customer', label: '고객사', ph: '' },
-    { id: 'rq-to', k: 'target', label: '최종 제안대상', ph: doc?.target_ask && !form.target ? '[확인 필요]' : '예) 대표이사' },
+    { id: 'rq-to', k: 'target', label: '최종 제안대상', ph: '예) 대표이사' },
   ];
   const progress = job.job && job.job.status === 'running' ? ` · ${job.job.progress ?? 0}%` : '';
   return (
@@ -270,14 +230,9 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
       bar={doc?.sb_ids?.length ? <FlowBar sbIds={doc.sb_ids} current="rq" note="저장하면 연결된 Storyboard에 반영돼요" />
         : <LinkedStoryboardBar chips={[]} emptyText="저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요" />}>
       <div className="rqf-row">
-        <section className={cx('rqf-main', aiOpen && 'rqf-main--ai')} onDragOver={(e) => onDrag(e, true)} onDragLeave={(e) => onDrag(e, false)} onDrop={onDrop}>
+        <section className="rqf-main" onDragOver={(e) => onDrag(e, true)} onDragLeave={(e) => onDrag(e, false)} onDrop={onDrop}>
           <div className="rqf-head">
             <h1>고객 요구사항 입력</h1>
-            {!aiOpen && (
-              <button type="button" className="rqf-aibtn" onClick={() => void openAi()}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d={STARS} /></svg>AI 심층 질의로 폼 완성
-              </button>
-            )}
           </div>
 
           <div className={cx('rqf-drop', over && 'rqf-drop--over')} data-state={filling ? 'filling' : over ? 'over' : 'idle'}>
@@ -293,16 +248,13 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
 
           <div className="rqf-grid">
             <div className="rqf-card rqf-left">
-              {fields.map((f) => {
-                const ai = isAi(form[`${f.k}_by`]);
-                return (
-                  <div key={f.id} className="rqf-field">
-                    <label htmlFor={f.id} className="rqf-label">{f.label}{ai && <span className="rqf-aitag">AI 질의로 채움</span>}</label>
-                    <input id={f.id} className={cx('rqf-input', ai && 'rqf-input--ai')} value={form[f.k]} placeholder={f.ph} readOnly={readOnly}
-                      onChange={(e) => setField(f.k, e.target.value)} />
-                  </div>
-                );
-              })}
+              {fields.map((f) => (
+                <div key={f.id} className="rqf-field">
+                  <label htmlFor={f.id} className="rqf-label">{f.label}</label>
+                  <input id={f.id} className="rqf-input" value={form[f.k]} placeholder={f.ph} readOnly={readOnly}
+                    onChange={(e) => setField(f.k, e.target.value)} />
+                </div>
+              ))}
               <div className="rqf-field rqf-field--grow">
                 <label htmlFor="rq-note" className="rqf-label">제작자 의견<small>· 고객 문서에서 빠져요</small></label>
                 <textarea id="rq-note" className="rqf-textarea" placeholder="제안 방향 · 강조할 점" value={form.note} readOnly={readOnly}
@@ -323,7 +275,6 @@ export function Editor({ initial, onCreated, onFinished }: { initial: RFDoc | nu
 
           <FlowFooter back={{ to: '/requirements', label: '목록' }} summary="모두 선택 항목이에요" primary={{ label: '저장', onClick: () => void save(), busy: saving }} />
         </section>
-        {aiOpen && <DeepPanel deep={doc?.deep} loading={aiLoading} busy={aiBusy} onAnswer={answer} onClose={() => void closeAi()} />}
       </div>
     </FlowScreen>
   );

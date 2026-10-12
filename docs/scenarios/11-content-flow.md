@@ -63,7 +63,7 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 | 콘텐츠 | 보드 | 목록 · 새로 · 편집 | 백엔드(새 자원) | e2e |
 |---|---|---|---|---|
 | 홈 | HomeGrid | `/` — 시작 · 흐름 3 · Storyboard로 만드는 콘텐츠 5 · 비주얼 2 · 최근 작업 2 | — | `shell/layout.spec.ts` H-* |
-| 고객 요구사항 | RQ0 · RQ1 · RQ1_AI · RQ_Done | `/requirements` · `/requirements/new`(바로 RQ1) · `/requirements/flow/:id` | requirements `/v1/rq-flows*` — 첫 저장에 Storyboard 자동 생성 | `requirements/rq-flow.spec.ts` |
+| 고객 요구사항 | RQ0 · RQ1 · RQ_Done | `/requirements` · `/requirements/new`(바로 RQ1) · `/requirements/flow/:id` | requirements `/v1/rq-flows*` — 첫 저장에 Storyboard 자동 생성 | `requirements/rq-flow.spec.ts` |
 | Storyboard | SB0 · SB1 · SB1_Json · SB1_View · SB1_Strat · SB1_StratAI | `/storyboard` · `/storyboard/flow/:id` | storyboard `/v1/flows*`(허브) | `storyboard/sb-flow.spec.ts` |
 | DSS | DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_Done | `/dss` · `/dss/new` · `/dss/:id`(`?step=solution` = DS4) | dss(신규 서비스, 5111) `/v1/dss*` | `dss/dss-flow.spec.ts` |
 | MI | MI0 · MI1 · MI1_Branch · MI2_Loading · MI2 · MI3 · MI_Done · MI_DoneJson | `/mi` · `/mi/new` · `/mi/flow/:id` | mi `/v1/mi-flows*` | `mi/mi-flow.spec.ts` |
@@ -72,6 +72,7 @@ API `contracts/scenario.json` `/v1/space-sets*` · 화면 `web/src/features/scen
 | Spec 시트 | SP0 · SP1 · SP2 · SP_Done | `/spec` · `/spec/new` · `/spec/flow/:id` | spec `/v1/spec-flows*`(저장 때 XLSX 도 만든다) | `spec/sp-flow.spec.ts` |
 | 공간 시나리오 | SC0 · SC1 · SC2 · SC2_AI · SC2_Pick · SC2_Empty · SC_Done | `/scenario` · `/scenario/new` · `/scenario/spaces/:id` | scenario `/v1/space-sets*`(DSS 공간 · 제품으로 미리 채움) | `scenario/sc-flow.spec.ts` |
 
+- **고객 요구사항의 AI 심층 질의(폼 개선 과정 · 보드 RQ1_AI)는 2026-10-12 에 뺐다**(아티팩트 v59 · `deep-questions` API · `rq.deep_questions.v1` 도 없음) — RQ1 은 폼 입력 · 파일로 채우기 · 저장만. 확인 필요 표시는 사람이 요구 줄의 「확인 필요」로 단다.
 - 새로 만들기 `/<base>/new?sb=<id>&auto=1` 은 Gate 를 건너뛴다(Storyboard 「만들기」 · 완료 화면 후속 작업 카드).
 - **이전 흐름**은 `/<base>/legacy` · `/<base>/legacy/new` 로 옮겼다. 이전 흐름의 다른 경로(`/<base>/:id/...`)는 그대로다(제안서 handoff 가 읽는다).
   예전 들어오기 주소(`/vp/new?sb=sb_…` · `?mi=` · `?rq=`, `/mi/new?rq=`, `/competitor/new?input=…`, `/spec/new?models=|from=|pop=`, `/scenario/new?from=|mi=|sb=sb_…`)는 이전 흐름 화면으로 넘긴다.
