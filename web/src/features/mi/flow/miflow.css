@@ -1,115 +1,81 @@
-/* MI 단계 팝업 — 보드 webapp1 v62 MI2 · MI2_Loading · MI3(최종본 위 팝업 본문 1180×728) 인라인 스타일 그대로(px). 색은 토큰. 접두어 mif-
+/* MI 상세(웹앱 ① v63) — 보드 webapp1 MIBody(본문) · MISearch(검색 팝업 1040×740) 인라인 스타일 그대로(px). 색은 토큰. 접두어 mif-(본문) · mis-(팝업)
    앱은 전역 box-sizing: border-box 라, 보드에서 box-sizing 이 없는(content-box) 요소는 테두리만큼 높이를 더해 그려진 크기를 맞췄다(주석 「+선」). */
 
-.mif-screen .wm-flow__section > * { flex-shrink: 0; }
-.mif-head { display: flex; align-items: center; gap: 12px; }
-.mif-desc--warn { color: var(--wm-amber); }
 @keyframes mif-spin { to { transform: rotate(360deg); } }
 .mif-spin { animation: mif-spin 1s linear infinite; color: var(--wm-brand); flex-shrink: 0; }
 
-/* ── MI2_Loading: AI 단계 카드(r16 · padding 22 24 · 줄 h44) ── */
-.mif-steps { box-sizing: border-box; margin-top: 8px; border: 1px solid var(--wm-line); border-radius: 16px; background: var(--wm-surface);
-  padding: 22px 24px; display: flex; flex-direction: column; gap: 4px; }
-.mif-steps__title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-.mif-step { display: flex; align-items: center; gap: 12px; height: 45px; border-top: 1px solid var(--wm-bg); }   /* 보드 44 +선 */
-.mif-dot { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--wm-line-step); }
-.mif-dot--done { border: none; background: var(--wm-brand); }
-.mif-dot--error { border: none; background: var(--wm-amber-line); }
-.mif-dot--run { border: 3px solid var(--wm-brand); border-right-color: transparent; animation: mif-spin 1s linear infinite; }
-.mif-step__t { font-size: 14px; flex-grow: 1; min-width: 0; }
-.mif-step[data-state='run'] .mif-step__t { font-weight: 700; }
-.mif-step[data-state='wait'] .mif-step__t { color: var(--wm-text-subtle); }
-.mif-step__note { font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; }
-.mif-step[data-state='error'] .mif-step__note { color: var(--wm-amber); }
+/* ── 본문(보드 MIBody: 1100 · 세로 gap 12) — cd-body 높이를 채운다 ── */
+.mif-body { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; gap: 12px; }
 
-/* ── MI2: Storyboard 에서 읽은 것 ── */
-.mif-basis { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.mif-aitag { height: 22px; padding: 0 7px; border-radius: 5px; background: var(--wm-brand-50); color: var(--wm-brand); font-size: 11px; font-weight: 700;
-  display: flex; align-items: center; gap: 4px; }
-.mif-basis__label { font-size: 12px; font-weight: 600; color: var(--wm-text-muted); margin-right: 4px; }
-.mif-basis__chip { height: 28px; padding: 0 9px; border-radius: 7px; background: var(--wm-surface); border: 1px solid var(--wm-line); font-size: 12px;
-  display: flex; align-items: center; gap: 5px; white-space: nowrap; }   /* 보드 26 +선 */
-.mif-basis__chip b { font-weight: 700; color: var(--wm-text-muted); }
+/* 검색 조건 · 검색어 띠(h48 · padding 0 6 0 16 · r12 · gap 8) */
+.mif-strip { flex-shrink: 0; box-sizing: border-box; height: 48px; padding: 0 6px 0 16px; border-radius: 12px; display: flex; align-items: center; gap: 8px; min-width: 0;
+  background: var(--wm-surface); border: 1px solid var(--wm-line); }
+.mif-strip--empty { background: #fbfcff; border: 1.5px dashed var(--wm-ai-line); }
+.mif-strip__k { font-size: 12.5px; font-weight: 700; color: var(--wm-text-2); white-space: nowrap; }
+.mif-strip__chip { height: 24px; padding: 0 9px; border-radius: 999px; background: var(--wm-surface-3); color: var(--wm-text-2); font-size: 11.5px; font-weight: 600;
+  display: flex; align-items: center; white-space: nowrap; }
+.mif-strip__sep { width: 1px; height: 18px; background: var(--wm-line); margin: 0 4px; flex-shrink: 0; }
+.mif-strip__q { font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0; }
+.mif-strip__spark { color: var(--wm-brand); flex-shrink: 0; }
+.mif-strip__empty { font-size: 13px; font-weight: 600; color: var(--wm-text-2); flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mif-strip__run { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: var(--wm-brand); white-space: nowrap; flex-shrink: 0; }
+.mif-run { height: 36px; padding: 0 12px; border-radius: 9px; font: inherit; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap;
+  flex-shrink: 0; cursor: pointer; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); }
+.mif-run:hover { background: var(--wm-brand-hero-hover); }
+.mif-run--primary { border: none; background: var(--wm-brand); color: #fff; }
+.mif-run--primary:hover { background: var(--wm-brand-hover); }
 
-/* ── MI2: 검색어 세 칸(1fr × 3 · gap 12 · 카드 h300 r14 p14) ── */
-.mif-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-.mif-col { box-sizing: border-box; height: 300px; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; padding: 14px;
-  display: flex; flex-direction: column; gap: 10px; min-width: 0; }
-.mif-col__head { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-.mif-col__t { font-size: 14.5px; font-weight: 700; flex-grow: 1; }
-.mif-col__n { font-size: 12px; color: var(--wm-text-subtle); }
-.mif-qs { display: flex; flex-direction: column; gap: 6px; min-height: 0; overflow-y: auto; }
-.mif-qs > * { flex-shrink: 0; }
-.mif-q { height: 34px; box-sizing: border-box; padding: 0 6px 0 12px; border-radius: 8px; font-size: 13px; display: flex; align-items: center; gap: 6px;
-  background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 600; }
-.mif-q--off { background: transparent; border: 1px dashed var(--wm-brand-line); color: var(--wm-text-subtle); font-weight: 400; text-decoration: line-through; }
-.mif-q__t { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.mif-q__x { width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; border: none; background: transparent; color: inherit; padding: 0;
-  display: flex; align-items: center; justify-content: center; }
-.mif-q__x:hover { background: var(--wm-surface); }
-.mif-add { margin-top: auto; display: flex; align-items: center; gap: 6px; height: 34px; box-sizing: border-box; padding: 0 10px; border-radius: 8px;
-  border: 1px dashed var(--wm-line-dashed); flex-shrink: 0; }
-.mif-add:focus-within { border-color: var(--wm-brand); }
-.mif-add input { flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 12.5px; color: var(--wm-text); outline: none; padding: 0; }
+/* 시장 · 고객사 · 사용자(1fr × 3 · gap 12 · r14) */
+.mif-cols3 { flex: 1 1 0; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.mif-gcol { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; min-width: 0; min-height: 0; }
+.mif-gcol__head { height: 45px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--wm-line-soft); flex-shrink: 0; }   /* 보드 44 +선 */
+.mif-gcol__h { font-size: 14px; font-weight: 700; }
+.mif-gcol__n { font-family: var(--wm-font-num); font-size: 12px; font-weight: 800; color: var(--wm-brand); }
+.mif-gcol__sub { font-size: 11.5px; color: var(--wm-text-subtle); }
+.mif-gcol__body { flex: 1 1 0; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; }
+.mif-gcol__body > * { flex-shrink: 0; }
+/* 검색 전 자리(margin 14 · 1.5px 점선 · r12) */
+.mif-gcol__body > .mif-ph { flex: 1 1 auto; }
+.mif-ph { margin: 14px; box-sizing: border-box; border: 1.5px dashed var(--wm-line-step); border-radius: 12px; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 6px; padding: 16px; text-align: center; }
+.mif-ph b { font-size: 13.5px; font-weight: 700; color: var(--wm-text-2); }
+.mif-ph span { font-size: 12px; color: var(--wm-text-subtle); line-height: 1.5; }
+/* 찾는 중 뼈대(padding 14 16 · 막대 12 · 12 · 10) */
+.mif-skel { display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-top: 1px solid #f5f6f8; }
+.mif-skel i { height: 12px; border-radius: 6px; background: #eef0f4; display: block; }
+.mif-skel i.mif-skel--s { height: 10px; border-radius: 5px; background: #f3f4f7; }
 
-/* ── MI2: 검색 조건(r14 · padding 4 16 · 줄 min-h 46 · 키 96) ── */
-.mif-opts { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; padding: 4px 16px;
-  display: flex; flex-direction: column; }
-.mif-opt { display: flex; align-items: center; gap: 14px; min-height: 46px; }
-.mif-opt + .mif-opt { border-top: 1px solid var(--wm-line-soft); min-height: 47px; }   /* 보드 46 +선 */
-.mif-opt__k { width: 96px; flex-shrink: 0; font-size: 13px; font-weight: 600; color: var(--wm-text-2); }
-.mif-opt__vs { display: flex; gap: 6px; flex-wrap: wrap; }
-.mif-chip { height: 30px; box-sizing: border-box; padding: 0 11px; border-radius: 999px; font-size: 12.5px; white-space: nowrap;
-  border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text-2); font-weight: 500; }
-.mif-chip--on { border-color: var(--wm-brand); background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 700; }
-.mif-chip:hover:not(.mif-chip--on) { background: var(--wm-brand-hero-hover); }
-
-/* ── 아래 줄(보드: margin-top auto · gap 12 · 주 버튼 h48 + 돋보기 gap 8 · 팝업 안이라 ② 에는 뒤로 링크가 없다) ── */
-.mif-foot { margin-top: auto; }
-.mif-primary { gap: 8px; }
-.mif-backbtn { border: none; background: transparent; padding: 0; }
-.mif-backbtn:disabled { color: var(--wm-text-subtle); }
-.mif-warnline { font-size: 12.5px; max-width: 560px; overflow: hidden; text-overflow: ellipsis; }
-
-/* ── MI3: 머리 · 탭 ── */
-.mif-countline { font-size: 13px; color: var(--wm-text-muted); white-space: nowrap; }
-.mif-tabs { display: flex; gap: 6px; }
-.mif-tab { height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; display: flex; align-items: center; white-space: nowrap;
-  border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); font-weight: 500; }
-.mif-tab--on { border-color: var(--wm-brand); background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 700; }
-.mif-tab:hover:not(.mif-tab--on) { background: var(--wm-brand-hero-hover); }
-.mif-tab__n { font-family: var(--wm-font-num); font-weight: 800; margin-left: 6px; }
-
-/* ── MI3: 찾은 정보 목록(남은 높이를 채우고 안에서 스크롤 · 줄 min-h 76 · padding 0 16 0 18) ── */
-.mif-screen .wm-flow__section > .mif-list { flex: 1 1 0; min-height: 0; }
-.mif-list { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; overflow-y: auto;
-  display: flex; flex-direction: column; }
-.mif-row { display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 0 16px 0 18px; flex-shrink: 0; }
-.mif-row + .mif-row { border-top: 1px solid var(--wm-line-soft); min-height: 77px; }   /* 보드 76 +선 */
-.mif-chk { width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center;
-  padding: 0; border: 2px solid var(--wm-brand-line); background: var(--wm-surface); color: #fff; }
-.mif-chk--on { background: var(--wm-brand); border: none; }
-.mif-row__txt { display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0; }
-.mif-row__t { font-size: 14px; font-weight: 600; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--wm-text); }
-.mif-row__t--off { color: var(--wm-text-subtle); text-decoration: line-through; }
-.mif-row__edit { height: 20px; box-sizing: border-box; border: none; border-bottom: 1px solid var(--wm-brand); outline: none; padding: 0; background: transparent;
-  font-size: 14px; font-weight: 600; line-height: 1.45; color: var(--wm-text); width: 100%; }
-.mif-row__meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--wm-text-muted); white-space: nowrap; min-width: 0; }
-.mif-kind { height: 20px; padding: 0 7px; border-radius: 5px; background: var(--wm-surface-3); color: var(--wm-text-2); font-weight: 700; display: flex; align-items: center; }
-.mif-numchk { height: 20px; padding: 0 7px; border-radius: 5px; background: var(--wm-amber-bg); color: var(--wm-amber); font-weight: 700; display: flex; align-items: center; }
-.mif-tag { height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; }
-.mif-tag--old { background: var(--wm-surface-3); color: var(--wm-text-muted); }
+/* 찾은 정보 줄(gap 10 · padding 12 14 · 체크 20 r6) */
+.mif-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px; }
+.mif-item + .mif-item { border-top: 1px solid var(--wm-line-soft); }
+.mif-item:hover { background: #fafbfd; }
+.mif-item--chg { box-shadow: inset 3px 0 0 var(--wm-brand); }
+.mif-box { width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  padding: 0; cursor: pointer; border: 2px solid var(--wm-brand-line); background: var(--wm-surface); color: #fff; }
+.mif-box--on { background: var(--wm-brand); border: none; }
+.mif-item__txt { display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0; }
+.mif-item__t { font: inherit; font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--wm-text); text-align: left; padding: 0; border: none; background: transparent;
+  cursor: text; border-radius: 4px; overflow-wrap: anywhere; }
+.mif-item__t:hover { background: var(--wm-brand-hero-hover); }
+.mif-item__t--off { color: var(--wm-text-subtle); text-decoration: line-through; }
+/* 이번에 고친 문장 = cd-in--chg(1.5px 파란 선 · #f6f8fe) — 보드 고치는 칸과 같은 자리(padding 7 9 · r8), 줄 수만큼 높이 */
+.mif-item__t.mif-item__t--chg { box-sizing: border-box; padding: 7px 9px; font-size: 13px; border-radius: 8px; border: 1.5px solid var(--wm-brand); background: #f6f8fe; }
+.mif-item__t.mif-item__t--chg:hover { background: #f6f8fe; }
+/* 문장 고치기(보드 MI3_Edit: h62 · 1.5px 파란 선 · #f6f8fe · r8 · padding 7 9) */
+.mif-edit { height: 62px; box-sizing: border-box; resize: none; border: 1.5px solid var(--wm-brand); background: #f6f8fe; border-radius: 8px; padding: 7px 9px; font: inherit;
+  font-size: 13px; font-weight: 600; line-height: 1.5; color: var(--wm-text); outline: none; width: 100%; box-shadow: 0 0 0 3px rgba(20, 40, 160, 0.12); }
+.mif-item__meta { display: flex; align-items: center; gap: 6px; min-width: 0; flex-wrap: wrap; }
+.mif-kind { height: 20px; padding: 0 7px; border-radius: 5px; background: var(--wm-surface-3); color: var(--wm-text-2); font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; }
+.mif-src { font-size: 11.5px; color: var(--wm-text-subtle); white-space: nowrap; }
+.mif-numchk { height: 20px; padding: 0 7px; border-radius: 5px; background: var(--wm-amber-bg); color: var(--wm-amber); font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; }
+.mif-tag { height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; }
 .mif-tag--new { background: var(--wm-ok-bg); color: var(--wm-ok); }
-.mif-ghost30 { height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text);
-  font-size: 12px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; flex-shrink: 0; }
-a.mif-ghost30:hover, .mif-ghost30:hover { background: var(--wm-brand-hero-hover); color: var(--wm-text); }
-.mif-link30 { height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: var(--wm-brand); font-size: 12px; font-weight: 600;
-  white-space: nowrap; flex-shrink: 0; }
-.mif-link30:hover { background: var(--wm-brand-hero-hover); }
-.mif-empty { margin: 16px; box-sizing: border-box; border: 1px dashed var(--wm-brand-line); border-radius: 12px; padding: 20px; display: flex; flex-direction: column;
-  align-items: center; gap: 6px; text-align: center; }
-.mif-empty b { font-size: 14px; font-weight: 700; }
-.mif-empty span { font-size: 12.5px; color: var(--wm-text-muted); }
+.mif-tag--off { background: var(--wm-brand-50); color: var(--wm-brand); }
+.mif-orig { font: inherit; font-size: 12px; font-weight: 700; white-space: nowrap; color: var(--wm-brand); border: none; background: transparent; padding: 0; cursor: pointer; text-decoration: none; }
+.mif-orig:hover { color: var(--wm-brand-hover); text-decoration: underline; }
+.mif-foot { font-size: 11.5px; color: var(--wm-text-subtle); flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mif-foot__warn { font-weight: 600; color: var(--wm-amber); }
+.mif-run:focus-visible, .mif-box:focus-visible, .mif-item__t:focus-visible, .mif-orig:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
 
 /* 원문(검색 결과 글) */
 .mif-orig__row { display: flex; gap: 12px; font-size: 13px; }
@@ -120,5 +86,82 @@ a.mif-ghost30:hover, .mif-ghost30:hover { background: var(--wm-brand-hero-hover)
 .mif-origfoot { display: flex; align-items: center; gap: 12px; width: 100%; }
 .mif-origfoot span { flex: 1; font-size: 12.5px; color: var(--wm-text-muted); }
 
-.mif-q__x:focus-visible, .mif-chip:focus-visible, .mif-tab:focus-visible, .mif-chk:focus-visible, .mif-ghost30:focus-visible, .mif-link30:focus-visible,
-.mif-backbtn:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }
+/* ── 검색 팝업(보드 MISearch 1040×740 · r18 · #f5f6f8 · 그림자 0 28 72) ── */
+.wm-modal:has(> .wm-modal__body > .mis-head) { box-shadow: 0 28px 72px rgba(18, 20, 23, 0.32); }
+.mis-head { height: 72px; box-sizing: border-box; padding: 0 16px 0 24px; background: var(--wm-surface); border-bottom: 1px solid var(--wm-line); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.mis-ic { width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px; background: var(--wm-brand-50); color: var(--wm-brand); display: flex; align-items: center; justify-content: center; }
+.mis-titles { display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0; }
+.mis-h1 { font-size: 17px; font-weight: 700; }
+.mis-sub { font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mis-sub--warn { color: var(--wm-amber); }
+.mis-sb { height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--wm-brand-hero-line); background: var(--wm-surface); color: var(--wm-brand); font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0; max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+.mis-x { width: 38px; height: 38px; border-radius: 10px; border: none; background: transparent; color: var(--wm-text-muted); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; padding: 0; }
+.mis-x:hover { background: var(--wm-brand-hero-hover); }
+.mis-sec { flex: 1 1 0; min-height: 0; box-sizing: border-box; padding: 18px 24px; display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+.mis-sec > * { flex-shrink: 0; }
+.mis-note { font-size: 12.5px; color: var(--wm-text-muted); }
+
+/* AI 단계 카드(r16 · padding 22 24 · 줄 h44) */
+.mis-steps { box-sizing: border-box; border: 1px solid var(--wm-line); border-radius: 16px; background: var(--wm-surface); padding: 22px 24px; display: flex; flex-direction: column; gap: 4px; }
+.mis-steps__title { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.mis-step { display: flex; align-items: center; gap: 12px; height: 45px; border-top: 1px solid #f5f6f8; }   /* 보드 44 +선 */
+.mis-dot { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; border: 2px solid var(--wm-line-step); }
+.mis-dot--done { border: none; background: var(--wm-brand); }
+.mis-dot--error { border: none; background: var(--wm-amber-line); }
+.mis-dot--run { border: 3px solid var(--wm-brand); border-right-color: transparent; animation: mif-spin 1s linear infinite; }
+.mis-step__t { font-size: 14px; flex-grow: 1; min-width: 0; }
+.mis-step[data-state='run'] .mis-step__t { font-weight: 700; }
+.mis-step[data-state='wait'] .mis-step__t { color: var(--wm-text-subtle); }
+.mis-step__note { font-size: 12.5px; color: var(--wm-text-muted); white-space: nowrap; }
+.mis-step[data-state='error'] .mis-step__note { color: var(--wm-amber); }
+
+/* Storyboard 에서 읽은 것 */
+.mis-basis { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.mis-aitag { height: 22px; padding: 0 7px; border-radius: 5px; background: var(--wm-brand-50); color: var(--wm-brand); font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+.mis-basis__label { font-size: 12px; font-weight: 600; color: var(--wm-text-muted); margin-right: 4px; }
+.mis-basis__chip { height: 28px; padding: 0 9px; border-radius: 7px; background: var(--wm-surface); border: 1px solid var(--wm-line); font-size: 12px;
+  display: flex; align-items: center; gap: 5px; white-space: nowrap; }   /* 보드 26 +선 */
+.mis-basis__chip b { font-weight: 700; color: var(--wm-text-muted); }
+
+/* 검색어 세 칸(1fr × 3 · gap 12 · 카드 h280 r14 p14) */
+.mis-cols { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.mis-col { box-sizing: border-box; height: 280px; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.mis-col__head { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.mis-col__t { font-size: 14.5px; font-weight: 700; flex-grow: 1; }
+.mis-col__n { font-size: 12px; color: var(--wm-text-subtle); }
+.mis-qs { display: flex; flex-direction: column; gap: 6px; min-height: 0; overflow-y: auto; }
+.mis-qs > * { flex-shrink: 0; }
+.mis-q { height: 34px; box-sizing: border-box; padding: 0 6px 0 12px; border-radius: 8px; font-size: 13px; display: flex; align-items: center; gap: 6px;
+  background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 600; }
+.mis-q--off { background: transparent; border: 1px dashed var(--wm-brand-line); color: var(--wm-text-subtle); font-weight: 400; text-decoration: line-through; }
+.mis-q__t { flex-grow: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mis-q__x { width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; border: none; background: transparent; color: inherit; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+.mis-q__x:hover { background: var(--wm-surface); }
+.mis-add { margin-top: auto; display: flex; align-items: center; gap: 6px; height: 34px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; border: 1px dashed var(--wm-line-dashed); flex-shrink: 0; }
+.mis-add:focus-within { border-color: var(--wm-brand); }
+.mis-add input { flex-grow: 1; min-width: 0; border: none; background: transparent; font: inherit; font-size: 12.5px; color: var(--wm-text); outline: none; padding: 0; }
+.mis-add input::placeholder { color: var(--wm-placeholder); }
+
+/* 검색 조건(r14 · padding 4 16 · 줄 min-h 46 · 키 96) */
+.mis-opts { box-sizing: border-box; background: var(--wm-surface); border: 1px solid var(--wm-line); border-radius: 14px; padding: 4px 16px; display: flex; flex-direction: column; }
+.mis-opt { display: flex; align-items: center; gap: 14px; min-height: 46px; }
+.mis-opt + .mis-opt { border-top: 1px solid var(--wm-line-soft); min-height: 47px; }   /* 보드 46 +선 */
+.mis-opt__k { width: 96px; flex-shrink: 0; font-size: 13px; font-weight: 600; color: var(--wm-text-2); }
+.mis-opt__vs { display: flex; gap: 6px; flex-wrap: wrap; }
+.mis-chip { height: 30px; box-sizing: border-box; padding: 0 11px; border-radius: 999px; font: inherit; font-size: 12.5px; white-space: nowrap; cursor: pointer;
+  border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text-2); font-weight: 500; }
+.mis-chip--on { border-color: var(--wm-brand); background: var(--wm-brand-50); color: var(--wm-brand); font-weight: 700; }
+.mis-chip:hover:not(.mis-chip--on) { background: var(--wm-brand-hero-hover); }
+
+/* 아래 줄(h76 · padding 0 24 · gap 12 · 닫기 h46 · 웹 검색 h46) */
+.mis-foot { height: 76px; box-sizing: border-box; padding: 0 24px; background: var(--wm-surface); border-top: 1px solid var(--wm-line); display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.mis-footline { font-size: 13px; color: var(--wm-text-muted); flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mis-footline--warn { color: var(--wm-amber); font-weight: 600; }
+.mis-close { height: 46px; padding: 0 16px; border-radius: 11px; border: 1px solid var(--wm-line); background: var(--wm-surface); color: var(--wm-text); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
+.mis-close:hover { background: var(--wm-brand-hero-hover); }
+.mis-run { height: 46px; padding: 0 22px; border-radius: 11px; border: none; color: #fff; font: inherit; font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+  white-space: nowrap; background: var(--wm-brand); cursor: pointer; flex-shrink: 0; }
+.mis-run:hover:not(:disabled) { background: var(--wm-brand-hover); }
+.mis-run:disabled { background: var(--wm-line-dashed); cursor: default; }
+.mis-x:focus-visible, .mis-q__x:focus-visible, .mis-chip:focus-visible, .mis-close:focus-visible, .mis-run:focus-visible { outline: 2px solid var(--wm-brand); outline-offset: 2px; }

@@ -1,14 +1,14 @@
 /**
  * 공간별 제품 매칭 DSS(새 흐름) API — contracts/dss.json `/v1/dss*` → @/api/gen/dss(DS* 스키마).
- * 바꾸는 호출은 모두 고친 DSS 문서(DSDoc)를 돌려준다 → 캐시에 그대로 넣는다(다시 읽지 않음).
+ * 바꾸는 호출은 모두 고친 DSS 문서(DSDoc)를 돌려준다 → 캐시에 그대로 넣는다(다시 읽지 않음). 문서의 `changes` 가 「고친 곳 n」.
  */
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, unwrap } from '@/api/client';
 import type { components } from '@/api/gen/dss';
 
 type S = components['schemas'];
 export type DSProduct = S['DSProduct'];
-export type DSSpaceRec = S['DSSpaceRec'];
+export type DSSpaceRec = Omit<S['DSSpaceRec'], 'products'> & { products: DSProduct[] };
 export type DSSolution = Omit<S['DSSolution'], 'links'> & { links: string[] };
 /** 서버는 배열을 늘 채워 보내지만(default_factory) 생성 타입은 선택이라 — 화면이 쓰는 모양으로 맞춘다(norm) */
 export type DSSpace = Omit<S['DSSpace'], 'products'> & { products: DSProduct[] };
@@ -28,7 +28,7 @@ const ds = api.dss;
 
 export function norm(d: S['DSDoc']): DSDoc {
   return {
-    ...d, spaces: (d.spaces ?? []).map((sp) => ({ ...sp, products: sp.products ?? [] })), space_recs: d.space_recs ?? [],
+    ...d, spaces: (d.spaces ?? []).map((sp) => ({ ...sp, products: sp.products ?? [] })), space_recs: (d.space_recs ?? []).map((r) => ({ ...r, products: r.products ?? [] })),
     solutions: (d.solutions ?? []).map((so) => ({ ...so, links: so.links ?? [] })), solution_recs: d.solution_recs ?? [], reqs: d.reqs ?? [], industry_options: d.industry_options ?? [],
   };
 }
@@ -49,9 +49,11 @@ export function useDssList() {
   return useQuery({ queryKey: dsListKey, queryFn: async () => unwrap(await ds.GET('/v1/dss', { params: { query: { limit: 100 } } })) });
 }
 
-export function useSolutionOptions(id: string, enabled = true) {
-  return useQuery({ queryKey: dsOptionsKey(id), enabled, queryFn: async () => {
-    const o = unwrap(await ds.GET('/v1/dss/{dss_id}/solution-options', P(id)));
+/** 솔루션 카드 — selected 를 주면 그 고름(솔루션 고르기 팝업에서 아직 넣기 전)으로 on · 겹침 안내 */
+export function useSolutionOptions(id: string, selected: string[] | null = null, enabled = true) {
+  const sel = selected ? selected.join(',') : null;
+  return useQuery({ queryKey: [...dsOptionsKey(id), sel], enabled, placeholderData: keepPreviousData, queryFn: async () => {
+    const o = unwrap(await ds.GET('/v1/dss/{dss_id}/solution-options', { params: { path: { dss_id: id }, query: { selected: sel } } }));
     return { ...o, items: o.items.map((x) => ({ ...x, links: x.links ?? [] })) };
   } });
 }
@@ -91,6 +93,8 @@ export function useDsActions(id: string) {
     setIndustry: async (value: string | null) => put(unwrap(await ds.PUT('/v1/dss/{dss_id}/industry', { ...P(id), body: { value, accept_ai: false } }))),
     acceptIndustry: async () => put(unwrap(await ds.PUT('/v1/dss/{dss_id}/industry', { ...P(id), body: { accept_ai: true } }))),
     addSpace: async (name: string) => put(unwrap(await ds.POST('/v1/dss/{dss_id}/spaces', { ...P(id), body: { name } }))),
+    renameSpace: async (key: string, name: string) =>
+      put(unwrap(await ds.PATCH('/v1/dss/{dss_id}/spaces/{space_key}', { params: { path: { ...path, space_key: key } }, body: { name } }))),
     deleteSpace: async (key: string) => put(unwrap(await ds.DELETE('/v1/dss/{dss_id}/spaces/{space_key}', { params: { path: { ...path, space_key: key } } }))),
     addProduct: async (key: string, body: DSAddProduct) =>
       put(unwrap(await ds.POST('/v1/dss/{dss_id}/spaces/{space_key}/products', { params: { path: { ...path, space_key: key } }, body }))),
@@ -100,7 +104,12 @@ export function useDsActions(id: string) {
       put(unwrap(await ds.PATCH('/v1/dss/{dss_id}/products/{product_id}', { params: { path: { ...path, product_id: pid } }, body: { accept: true } }))),
     deleteProduct: async (pid: string) =>
       put(unwrap(await ds.DELETE('/v1/dss/{dss_id}/products/{product_id}', { params: { path: { ...path, product_id: pid } } }))),
-    acceptAll: async () => put(unwrap(await ds.POST('/v1/dss/{dss_id}:accept-all', P(id)))),
+    /** products = 공간별 제품 추천만 · all = 업종 추론 · 추천 공간 · 제품 추천 모두(점선 줄 「모두 수락」) */
+    acceptAll: async (scope: 'products' | 'all' = 'all') => put(unwrap(await ds.POST('/v1/dss/{dss_id}:accept-all', { ...P(id), body: { scope } }))),
+    /** 점선 지우기 — industry · space(name) · all(「모두 지우기」) */
+    dismiss: async (kind: 'industry' | 'space' | 'all', name?: string) => put(unwrap(await ds.POST('/v1/dss/{dss_id}:dismiss', { ...P(id), body: { kind, name: name ?? null } }))),
+    /** 저장한 판으로 되돌리기(고친 곳 0) — 저장한 적 없으면 409 NOT_SAVED */
+    revert: async () => put(unwrap(await ds.POST('/v1/dss/{dss_id}:revert', P(id)))),
     setSolutions: async (ids: string[]) => put(unwrap(await ds.PUT('/v1/dss/{dss_id}/solutions', { ...P(id), body: { ids } }))),
     suggest: async (scope: SuggestScope): Promise<DSSuggestResult> => {
       const r = unwrap(await ds.POST('/v1/dss/{dss_id}:suggest', { ...P(id), body: { scope } }));

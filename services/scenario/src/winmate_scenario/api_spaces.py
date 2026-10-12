@@ -69,6 +69,14 @@ async def drop_candidate(set_id: str, space_id: str, cid: str) -> dict[str, Any]
     return await ss.drop(set_id, space_id, cid)
 
 
+@router.post("/space-sets/{set_id}:revert", response_model=ss.SSDoc,
+             responses={409: {"description": "NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없어요"}})
+async def revert_space_set(set_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기(보드 SC2_Edit 「되돌리기」) — 공간 · 공간 제품 · 시나리오 · 장면 · 항목 · 가져온 DSS 를 마지막 저장 값으로(changes 0).
+    지금 점선 AI 후보는 그대로 둔다. 저장한 적 없으면 409 NOT_SAVED."""
+    return await ss.revert(set_id)
+
+
 @router.post("/space-sets/{set_id}:finish", response_model=ss.SSStageOut)
 async def finish_space_set(set_id: str) -> dict[str, Any]:
     """저장 — 공간 · 시나리오마다 제품 · 솔루션이 하나 이상이어야 한다(아니면 422). ver(저장 횟수)가 오르고,

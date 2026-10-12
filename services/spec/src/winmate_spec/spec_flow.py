@@ -14,6 +14,13 @@
   DSS 에서 빠진 제품은 남겨 두고 경고 「DSS에서 빠짐」(사람이 지울 수 있음), 수량은 사람이 고치지 않은 행만 DSS 값으로 바꾼다.
 - 초안 지우기 · 같은 Storyboard 초안 이어 쓰기: 한 번도 저장(허브 반영)하지 않은 시트만 지울 수 있다(저장한 것은 409 `SAVED_CONTENT`).
   같은 Storyboard 로 다시 만들면 저장 전 초안을 돌려준다(Gate 복제본은 새 Storyboard 라 새 시트).
+- 최종본에서 바로 고치기(2026-10-12 · 웹앱 ① v63 · 보드 SPBody · SP2_Edit · winmate_common.edits):
+  · 카탈로그에 값이 없는 칸([확인 필요])은 사람이 원문 값을 바로 적는다(행 `manual{항목: 글}` — 카탈로그 값이 있는 칸은 422 `CELL_FROM_CATALOG`,
+    모델을 바꾸거나 비우면 그 행의 직접 적은 값은 지운다 — 다른 제품의 값이 남지 않게). 표시 · stages.sp · XLSX 는 직접 적은 값을 쓴다.
+  · DSS 밖 제품을 카탈로그에서 더한다(`POST …/rows` · 행 `source: catalog` — DSS 다시 가져오기가 건드리지 않고, 지울 수 있다).
+  · 저장(:finish)이 저장한 판(`saved_snapshot`, EDIT_KEYS)을 남기고, 응답 `changes` = 저장한 뒤 고친 곳 수. 한 번 고친 일이 1이 되게
+    `edit_view`(형식 · 표기 · 항목 하나 · 제품 넣기/빼기 · 모델 · 수량 · 공간 · 직접 적은 칸 하나)로 센다 — stages.sp 로 세면 항목 하나에 제품 수만큼 늘어난다.
+    `:revert` 는 저장한 판으로(저장한 적 없으면 409 `NOT_SAVED`). 판을 남기기 전에 저장한 문서는 처음 읽거나 고칠 때 지금 값을 판으로 남긴다.
 
 저장소: DocStore("spec") 컬렉션 `spec_flows`(sfl_ …). 쓰기는 낙관적 잠금 + 재시도, PATCH 는 expected_version(409).
 """
@@ -28,6 +35,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 from winmate_common.client import ServiceClient
+from winmate_common.edits import SNAPSHOT, changes_of, ensure_snapshot, has_snapshot, restore_snapshot, snapshot_view, take_snapshot
 from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
@@ -64,6 +72,11 @@ _CODE = re.compile(r"\b([A-Z]{2,3}\d{2,3}[A-Z]{0,2})\b")
 # DSS 수량 원문 중 「개수」로 읽을 수 있는 것(2 · 2대 · 1식 · 3 EA). `실당 1대` · `층당 1대` 같은 단위당 수는 개수가 아니다.
 _QTY = re.compile(r"^\s*(\d{1,4})\s*(대|식|개|세트|set|sets|ea|pcs|unit|units)?\s*$", re.IGNORECASE)
 
+# 저장한 판(winmate_common.edits)에 남기는 키 — 사람이 고치는 값 + 다시 가져온 DSS(되돌리면 DSS 판도 같이 돌아가야 안내 줄이 맞다)
+EDIT_KEYS = ("title", "format", "notation", "items", "rows", "dss_ref", "dss_ver", "last_resync")
+NOT_SAVED_MSG = "아직 저장하지 않아 되돌릴 판이 없어요"
+MANUAL_MAX = 200
+
 Format = Literal["compare", "per_product"]
 Notation = Literal["ko_mm", "en_inch"]
 Match = Literal["ref", "code", "family", "manual", "none"]
@@ -82,6 +95,7 @@ class SFRow(BaseModel):
     spaces: list[str] = Field(default_factory=list, description="이 제품이 놓인 DSS 공간들")
     qty: int | None = Field(None, ge=0, description="수량(DSS 공간별 개수의 합, 사람이 고칠 수 있음) — 개수를 알 수 없으면 null(= [확인 필요])")
     qty_note: str | None = Field(None, description="DSS 수량 원문(공간별, 예: 로비 2대 · 라운지 [확인 필요])")
+    qty_text: str = Field("", description="표의 「공간 · 수량」 칸 수량 글(3대 · 1식 · 실당 1대 · [확인 필요]) — 개수를 모르면 원문 하나 또는 [확인 필요]")
     on: bool = Field(True, description="시트에 넣는다(보드 체크박스)")
     dss_ref: str | None = Field(None, description="DSS 제품 참조(kb:model:… · kb:family:…)")
     model_code: str | None = Field(None, description="맞춘 KB 모델코드 — 없으면 카탈로그에서 찾지 못함")
@@ -91,11 +105,16 @@ class SFRow(BaseModel):
     source_url: str | None = Field(None, description="값 출처(공식 카탈로그 페이지)")
     match: Match = Field("none", description="모델을 맞춘 방법: ref · code(이름 속 모델명) · family(제품군 대표 모델) · manual(사람이 고름) · none")
     by: str = Field("manual", description="출처 표시(CF-10) — DSS 제품의 by, 사람이 모델을 바꾸면 manual, DSS 다시 가져오기로 더한 행은 dss")
+    source: Literal["dss", "catalog"] = Field("dss", description="dss = DSS 제품 · catalog = DSS 밖에서 카탈로그로 더한 제품(지울 수 있음)")
+    kind: Literal["product", "solution"] = Field("product", description="제품 · 솔루션(카탈로그에서 솔루션을 더한 행 — 모델 없음, 칸은 직접 적는다)")
+    catalog_ref: str | None = Field(None, description="카탈로그에서 더한 제품의 참조(kb:family:… · kb:model:…)")
     qty_edited: bool = Field(False, description="사람이 수량을 고쳤다(DSS 다시 가져오기가 수량을 덮지 않는다)")
     dss_status: Literal["added", "removed"] | None = Field(
         None, description="DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 들어옴 · removed = DSS 에서 빠짐(남겨 둠, 사람이 지울 수 있음)")
-    cells: dict[str, str] = Field(default_factory=dict, description="항목 key → 표시 글(현재 표기 기준, 없는 값은 [확인 필요])")
-    pending: list[str] = Field(default_factory=list, description="값을 다 채우지 못한 항목 key")
+    cells: dict[str, str] = Field(default_factory=dict, description="항목 key → 표시 글(현재 표기 기준 · 사람이 적은 값이 있으면 그 값, 없는 값은 [확인 필요])")
+    pending: list[str] = Field(default_factory=list, description="값을 다 채우지 못한 항목 key(고른 항목만)")
+    editable: list[str] = Field(default_factory=list, description="카탈로그에 값이 없어 사람이 바로 적는 칸(노란 칸) — 항목 key 전부")
+    manual: dict[str, str] = Field(default_factory=dict, description="사람이 [확인 필요] 칸에 적은 원문 값(항목 key → 글)")
     warnings: list[SFWarning] = Field(default_factory=list)
 
 
@@ -138,6 +157,12 @@ class SFResync(BaseModel):
     kept_qty: list[str] = Field(default_factory=list, description="사람이 고친 수량이라 그대로 둔 행")
 
 
+class SFFile(BaseModel):
+    id: str
+    name: str = Field(description="SP-01_v1.xlsx")
+    url: str = Field(description="내려받기 경로(files 서비스)")
+
+
 class SFDoc(BaseModel):
     id: str
     code: str | None = Field(None, description="화면 · flow.json 짧은 번호(SP-01 …)")
@@ -156,6 +181,9 @@ class SFDoc(BaseModel):
     catalog_version: str | None = None
     status: Literal["draft", "done"] = "draft"
     ver: int | None = Field(None, description="저장(완료) 판 — flow.json stages.sp.ver")
+    saved_at: str | None = Field(None, description="마지막 저장 시각")
+    file: SFFile | None = Field(None, description="마지막 저장 때 만든 XLSX(머리 「XLSX 내려받기」) — 못 만들었으면 null")
+    changes: int = Field(0, description="저장한 뒤 고친 곳 수(저장한 판과 지금 값의 차이 · 저장한 적 없으면 0)")
     counts: SFCounts
     version: int
     created_at: str
@@ -195,7 +223,15 @@ class SFRowPatch(BaseModel):
     qty: int | None = Field(None, ge=0, le=9999)
     model_code: str | None = Field(None, description="이 모델로 바꾼다(KB 모델코드 · 표시명)")
     clear_model: bool | None = Field(None, description="모델을 비운다(카탈로그 밖 제품)")
+    cells: dict[str, str | None] | None = Field(
+        None, description="[확인 필요] 칸에 사람이 적는 원문 값(항목 key → 글, 빈 글 · null 은 지움). 카탈로그 값이 있는 칸이면 422 `CELL_FROM_CATALOG`")
     expected_version: int | None = None
+
+
+class SFRowAdd(BaseModel):
+    name: str = Field(min_length=1, max_length=120, description="더할 제품 이름(카탈로그 검색 결과 · 직접 적은 이름)")
+    ref: str | None = Field(None, max_length=200, description="카탈로그 참조(kb:family:… · kb:model:…) — 없으면 이름 속 모델명으로 맞춘다")
+    kind: Literal["product", "solution"] = Field("product", description="솔루션이면 모델을 맞추지 않는다(칸은 [확인 필요] · 직접 적기)")
 
 
 class SFModelOption(BaseModel):
@@ -214,12 +250,6 @@ class SFModelOptions(BaseModel):
 class SFFlowSync(BaseModel):
     md_added: str = Field(description="Storyboard 요약본에 더해진 부분")
     synced: list[str] = Field(default_factory=list, description="같은 Spec 시트가 연결돼 함께 바뀐 다른 Storyboard")
-
-
-class SFFile(BaseModel):
-    id: str
-    name: str = Field(description="SP-01_v1.xlsx")
-    url: str = Field(description="내려받기 경로(files 서비스)")
 
 
 class SFStageOut(BaseModel):
@@ -259,6 +289,7 @@ async def update(fid: str, fn: Callable[[dict[str, Any]], None], note: str | Non
                 raise ApiError(409, "CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 고쳐 주세요.",
                                {"current_version": cur["version"]})
             work = copy.deepcopy(cur)
+            ensure_snapshot(work, EDIT_KEYS, saved=ever_saved(work))   # 판을 남기기 전에 저장한 문서 — 고치기 전 값이 저장한 판
             fn(work)
             try:
                 return _store().put(COLL, fid, work, expected_version=cur["version"], note=note)
@@ -365,7 +396,8 @@ def row_warnings(r: dict[str, Any]) -> list[dict[str, str]]:
     if r.get("dss_status") == "removed":   # 제품 줄 · 팝업은 첫 경고 이름을 쓴다 → 맨 앞
         out.append({"kind": "dss_removed", "text": "DSS에서 빠짐 · Storyboard의 DSS에 이 제품이 없어요 · 필요 없으면 지워 주세요"})
     if not r.get("model_code"):
-        out.append({"kind": "not_in_catalog", "text": "공식 카탈로그에서 모델을 찾지 못했어요 · 모델을 골라 주세요(값은 [확인 필요])"})
+        if r.get("kind") != "solution":     # 솔루션 행(DSS 밖에서 더함)은 모델이 없는 게 맞다
+            out.append({"kind": "not_in_catalog", "text": "공식 카탈로그에서 모델을 찾지 못했어요 · 모델을 골라 주세요(값은 [확인 필요])"})
         return out
     lc = r.get("lifecycle") or {}
     if lc.get("status") in ("discontinued", "eol_planned"):
@@ -383,17 +415,53 @@ def row_warnings(r: dict[str, Any]) -> list[dict[str, str]]:
     return out
 
 
+_KO_UNITS = ("대", "식", "개", "세트")
+
+
+def qty_text(r: dict[str, Any], notation: str) -> str:
+    """표 「공간 · 수량」 칸의 수량 글 — 개수를 알면 개수(+ DSS 원문 단위: 3대 · 1식), 모르면 DSS 원문이 하나로 같을 때 그 원문(실당 1대 · 2×2),
+    아니면 [확인 필요]. 지어내지 않는다(원문 전체는 qty_note)."""
+    en = NOTATION.get(notation, NOTATION["ko_mm"])[0] == "en"
+    raw = r.get("qty_raw") or []
+    if r.get("qty") is not None:
+        if en:
+            return str(r["qty"])
+        if raw:
+            units = {(m.group(2) or "") for x in raw if (m := _QTY.match(x))}
+        else:   # 원문 목록을 남기기 전에 만든 행 — 원문 줄에서 단위만 읽는다
+            units = set(re.findall(r"\d\s*(대|식|개|세트)(?![가-힣])", r.get("qty_note") or ""))
+        u = next(iter(units)) if len(units) == 1 else ""
+        return f"{r['qty']}{u if u in _KO_UNITS else '대'}"
+    if raw and PENDING not in raw and len(set(raw)) == 1:
+        return raw[0]
+    return PENDING_EN if en else PENDING
+
+
+def editable_keys(r: dict[str, Any]) -> list[str]:
+    """카탈로그에 값이 (다) 없어 사람이 원문 값을 적을 수 있는 칸(표기와 무관)."""
+    vals = r.get("values") if r.get("model_code") else None
+    return [k for k in ITEM_KEYS if cell_text(k, vals, "ko_mm")[1]]
+
+
 def to_row(r: dict[str, Any], notation: str, items: list[str]) -> dict[str, Any]:
+    """저장 행 → 화면 · flow.json 행. 카탈로그 값이 없는 칸은 사람이 적은 값(manual)이 있으면 그 값, 없으면 [확인 필요]."""
     cells: dict[str, str] = {}
     pending: list[str] = []
+    editable: list[str] = []
     vals = r.get("values") if r.get("model_code") else None
+    manual = r.get("manual") or {}
     for k in ITEM_KEYS:
         t, p = cell_text(k, vals, notation)
+        if p:
+            editable.append(k)
+            if manual.get(k):
+                t, p = manual[k], False
         cells[k] = t
         if p and k in items:
             pending.append(k)
-    out = {k: v for k, v in r.items() if k not in ("values", "lifecycle")}
-    return {**out, "cells": cells, "pending": pending, "warnings": row_warnings(r)}
+    out = {k: v for k, v in r.items() if k not in ("values", "lifecycle", "qty_raw")}
+    return {**out, "manual": {k: v for k, v in manual.items() if k in editable and v}, "cells": cells, "pending": pending,
+            "editable": editable, "qty_text": qty_text(r, notation), "warnings": row_warnings(r)}
 
 
 def counts(d: dict[str, Any]) -> dict[str, int]:
@@ -409,7 +477,26 @@ def to_api(d: dict[str, Any], dss_changed: dict[str, Any] | None = None) -> dict
     items = d.get("items") or []
     return {**d, "rows": [to_row(r, notation, items) for r in d.get("rows") or []],
             "columns": [{"key": k, "label": item_label(k, notation), "on": k in items} for k in ITEM_KEYS], "counts": counts(d),
-            "dss_changed": dss_changed}
+            "changes": changes(d), "dss_changed": dss_changed}
+
+
+# ── 저장한 판 · 고친 곳 · 되돌리기(winmate_common.edits) ─────────
+
+def edit_view(d: dict[str, Any]) -> dict[str, Any]:
+    """고친 곳을 세는 값 — 사람이 한 번 고친 일이 1이 되게(형식 · 표기 · 항목 하나 · 제품 넣기/빼기 · 모델 · 수량 · 공간 · 적은 칸 하나).
+    stages.sp 로 세면 항목 하나를 더할 때 제품 수만큼 칸이 늘어 「고친 곳」이 부풀기 때문에 시트 값의 출처(행 · 항목)로 센다."""
+    rows = {r["key"]: {"on": bool(r.get("on", True)), "model": r.get("model_code"), "qty": r.get("qty"), "spaces": " · ".join(r.get("spaces") or []),
+                       "cells": {k: v for k, v in (r.get("manual") or {}).items() if v}, "status": r.get("dss_status")}
+            for r in d.get("rows") or []}
+    return {"title": d.get("title"), "format": d.get("format") or "compare", "notation": d.get("notation") or "ko_mm",
+            "items": {k: True for k in d.get("items") or []}, "rows": rows, "from": d.get("dss_ref")}
+
+
+def changes(d: dict[str, Any]) -> int:
+    """저장한 뒤 고친 곳 수(저장한 적 없거나 판이 없으면 0)."""
+    if not ever_saved(d) or not has_snapshot(d):
+        return 0
+    return changes_of(edit_view(d), edit_view(snapshot_view(d, EDIT_KEYS)))
 
 
 # ── 모델 맞추기 ──────────────────────────────────────────
@@ -507,6 +594,7 @@ def dss_rows(flow: dict[str, Any]) -> list[dict[str, Any]]:
         nums = [n for _, n, _ in parts]
         r["qty"] = sum(nums) if nums and all(n is not None for n in nums) else None   # type: ignore[arg-type]
         r["qty_note"] = " · ".join(f"{s} {t}".strip() for s, _, t in parts) or None
+        r["qty_raw"] = [t for _, _, t in parts]
     return list(out.values())
 
 
@@ -570,6 +658,8 @@ async def create(body: SFCreate) -> tuple[dict[str, Any], bool]:
 async def get_with_status(fid: str) -> dict[str, Any]:
     """GET — 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null(화면은 그대로)."""
     d = await load(fid)
+    if ever_saved(d) and not has_snapshot(d):     # 판을 남기기 전에 저장한 문서 — 지금 값을 저장한 판으로(한 번 다시 쓴다)
+        d = await update(fid, lambda doc: None, "저장한 판 남김")
     flow = await get_flow(d["sb_id"]) if d.get("sb_id") else None
     return to_api(d, dss_diff(d, flow) if flow else None)
 
@@ -605,7 +695,7 @@ def dss_diff(d: dict[str, Any], flow: dict[str, Any] | None) -> dict[str, Any] |
     new = {r["key"]: r for r in dss_rows(flow or {})}
     rows = {r["key"]: r for r in d.get("rows") or []}
     added = [r["name"] for k, r in new.items() if k not in rows or rows[k].get("dss_status") == "removed"]
-    removed = [r["name"] for k, r in rows.items() if k not in new and r.get("dss_status") != "removed"]
+    removed = [r["name"] for k, r in rows.items() if k not in new and r.get("dss_status") != "removed" and r.get("source") != "catalog"]
     changed = [r["name"] for k, r in new.items() if k in rows and rows[k].get("dss_status") != "removed" and (
         list(rows[k].get("spaces") or []) != r["spaces"] or (rows[k].get("qty_note") or None) != (r.get("qty_note") or None)
         or (rows[k].get("dss_ref") or None) != (r.get("dss_ref") or None))]
@@ -650,6 +740,11 @@ async def resync(fid: str) -> dict[str, Any]:
         out: list[dict[str, Any]] = []
         for row in doc.get("rows") or []:
             nr = new.get(row["key"])
+            if nr is None and row.get("source") == "catalog":   # DSS 밖에서 더한 제품은 DSS 와 상관없다
+                out.append(row)
+                continue
+            if nr is not None and row.get("source") == "catalog":   # 같은 제품이 DSS 에 들어왔으면 DSS 행으로
+                row["source"] = "dss"
             if nr is None:
                 if row.get("dss_status") != "removed":
                     log_["removed"].append(row["name"])
@@ -658,7 +753,7 @@ async def resync(fid: str) -> dict[str, Any]:
                 continue
             back = row.get("dss_status") == "removed"
             touched = list(row.get("spaces") or []) != nr["spaces"] or (row.get("qty_note") or None) != (nr.get("qty_note") or None)
-            row["spaces"], row["qty_note"] = nr["spaces"], nr.get("qty_note")
+            row["spaces"], row["qty_note"], row["qty_raw"] = nr["spaces"], nr.get("qty_note"), nr.get("qty_raw")
             if (row.get("dss_ref") or None) != (nr.get("dss_ref") or None):
                 row["dss_ref"] = nr.get("dss_ref")
                 touched = True
@@ -691,15 +786,15 @@ async def resync(fid: str) -> dict[str, Any]:
 
 
 async def delete_row(fid: str, key: str) -> dict[str, Any]:
-    """DSS 에서 빠진 행 지우기(경고 「DSS에서 빠짐」의 「지우기」). DSS 에 있는 제품 행은 체크를 빼서 시트에서 뺀다."""
+    """DSS 에서 빠진 행 · DSS 밖에서 더한 행 지우기. DSS 에 있는 제품 행은 체크를 빼서(on=false) 시트에서 뺀다."""
     def fn(doc: dict[str, Any]) -> None:
         r = next((x for x in doc.get("rows") or [] if x["key"] == key), None)
         if r is None:
             raise not_found("제품 행", key)
-        if r.get("dss_status") != "removed":
+        if r.get("dss_status") != "removed" and r.get("source") != "catalog":
             raise ApiError(422, "ROW_IN_DSS", "DSS에 있는 제품은 지울 수 없어요 · 체크를 빼서 시트에서 빼 주세요.", {"row": key})
         doc["rows"] = [x for x in doc["rows"] if x["key"] != key]
-    return to_api(await update(fid, fn, "DSS에서 빠진 행 지움"))
+    return to_api(await update(fid, fn, "행 지움"))
 
 
 async def list_flows(limit: int, cursor: str | None) -> dict[str, Any]:
@@ -726,10 +821,24 @@ async def patch(fid: str, body: SFPatch) -> dict[str, Any]:
     return to_api(await update(fid, fn, "형식 · 항목 · 표기", expected=body.expected_version))
 
 
+def _clean_cells(cells: dict[str, str | None]) -> dict[str, str | None]:
+    bad = [k for k in cells if k not in ITEM_KEYS]
+    if bad:
+        raise ApiError(422, "UNKNOWN_ITEM", f"모르는 항목이에요: {', '.join(bad)}", {"items": bad})
+    out: dict[str, str | None] = {}
+    for k, v in cells.items():
+        t = re.sub(r"\s+", " ", v or "").strip()
+        if len(t) > MANUAL_MAX:
+            raise ApiError(422, "CELL_TOO_LONG", f"칸 값은 {MANUAL_MAX}자까지 적을 수 있어요.", {"item": k})
+        out[k] = t if t and t not in (PENDING, PENDING_EN) else None
+    return out
+
+
 async def patch_row(fid: str, key: str, body: SFRowPatch) -> dict[str, Any]:
     d = await load(fid)
     if not any(r["key"] == key for r in d.get("rows") or []):
         raise not_found("제품 행", key)
+    cells = _clean_cells(body.cells) if body.cells else None
     filled: dict[str, Any] | None = None
     if body.model_code:
         code = await catalog().resolve(body.model_code)
@@ -746,6 +855,8 @@ async def patch_row(fid: str, key: str, body: SFRowPatch) -> dict[str, Any]:
             r["qty"] = body.qty
             r["qty_edited"] = True          # DSS 다시 가져오기가 덮지 않는다
         if filled is not None:
+            if filled.get("model_code") != r.get("model_code"):
+                r["manual"] = {}            # 다른 제품 — 앞 모델 칸에 적은 값이 남지 않게
             r.update(filled)
             r["by"] = "manual"
         elif body.clear_model:
@@ -753,7 +864,58 @@ async def patch_row(fid: str, key: str, body: SFRowPatch) -> dict[str, Any]:
                 r[k] = None
             r["match"] = "none"
             r["by"] = "manual"
+            r["manual"] = {}
+        if cells:
+            ok = set(editable_keys(r))
+            fixed = [k for k in cells if k not in ok]
+            if fixed:
+                raise ApiError(422, "CELL_FROM_CATALOG", "공식 카탈로그 값이 있는 칸은 고칠 수 없어요 · 다른 모델을 골라 주세요.", {"items": fixed})
+            man = dict(r.get("manual") or {})
+            for k, v in cells.items():
+                if v:
+                    man[k] = v
+                else:
+                    man.pop(k, None)
+            r["manual"] = man
     return to_api(await update(fid, fn, "행 고침", expected=body.expected_version))
+
+
+async def add_row(fid: str, body: SFRowAdd) -> dict[str, Any]:
+    """DSS 밖 제품을 카탈로그(또는 직접 적은 이름)로 더한다 — 모델은 ref → 이름 속 모델명 순서로 맞춘다. 같은 제품이 이미 있으면 시트에 넣기만 한다."""
+    name = re.sub(r"\s+", " ", body.name).strip()
+    k = slug(name)
+    d = await load(fid)
+    if any(r["key"] == k for r in d.get("rows") or []):
+        def on(doc: dict[str, Any]) -> None:
+            next(x for x in doc["rows"] if x["key"] == k)["on"] = True
+        return to_api(await update(fid, on, "행 넣기"))
+    row: dict[str, Any] = {"key": k, "name": name, "spaces": [], "qty": None, "qty_note": None, "qty_raw": [], "on": True, "dss_ref": None,
+                           "by": "manual", "source": "catalog", "kind": body.kind, "catalog_ref": body.ref, "qty_edited": False, "dss_status": None, "manual": {}}
+    if body.kind == "product":
+        code, how = await match_model(name, body.ref)
+        await _fill(row, code, how)
+    else:
+        await _fill(row, None, "none")
+
+    def fn(doc: dict[str, Any]) -> None:
+        if any(r["key"] == k for r in doc.get("rows") or []):
+            next(x for x in doc["rows"] if x["key"] == k)["on"] = True
+            return
+        doc.setdefault("rows", []).append(row)
+    return to_api(await update(fid, fn, "카탈로그 제품 더함"))
+
+
+async def revert(fid: str) -> dict[str, Any]:
+    """저장한 판으로 되돌린다(고친 곳 0). 저장한 적 없으면 409 NOT_SAVED."""
+    d = await load(fid)
+    if not ever_saved(d):
+        raise ApiError(409, "NOT_SAVED", NOT_SAVED_MSG, {"id": fid})
+
+    def fn(doc: dict[str, Any]) -> None:
+        restore_snapshot(doc, EDIT_KEYS)    # 판이 없던 문서는 update 가 지금 값을 판으로 남겼다 → 그대로
+    saved = await update(fid, fn, "저장한 판으로 되돌림")
+    flow = await get_flow(saved["sb_id"]) if saved.get("sb_id") else None
+    return to_api(saved, dss_diff(saved, flow) if flow else None)
 
 
 async def model_options(fid: str, key: str, q: str | None) -> dict[str, Any]:
@@ -792,7 +954,9 @@ def stage(d: dict[str, Any]) -> dict[str, Any]:
     rows = [to_row(r, notation, items) for r in d.get("rows") or [] if r.get("on")]
     models = [{"space": " · ".join(r.get("spaces") or []), "name": r["name"], "model_code": r.get("model_code"),
                "ref": f"kb:model:{r['model_code']}" if r.get("model_code") else None, "qty": r.get("qty"),
-               "specs": {k: r["cells"][k] for k in items}, "by": r.get("by") or "manual"} for r in rows]
+               "specs": {k: r["cells"][k] for k in items}, "by": r.get("by") or "manual",
+               **({"manualSpecs": [k for k in items if k in r["manual"]]} if any(k in r["manual"] for k in items) else {}),
+               **({"source": "catalog"} if r.get("source") == "catalog" else {})} for r in rows]
     warnings = [{"model": r.get("display_name") or r["name"], "kind": w["kind"], "text": w["text"]} for r in rows for w in r["warnings"]]
     f = d.get("file") or {}
     return {"ref": d.get("code") or d["id"], "ver": d.get("ver"), "from": d.get("dss_ref") or d.get("sb_id"),
@@ -817,10 +981,13 @@ def xlsx_document(d: dict[str, Any]) -> dict[str, Any]:
             return f"{r['display_name']} ({r['model_code']})" if r.get("model_code") else P
         if k == "space":
             return " · ".join(r.get("spaces") or []) or "—"
-        return str(r["qty"]) if r.get("qty") is not None else P
+        return str(r["qty"]) if r.get("qty") is not None else (r.get("qty_text") or P)
 
     src = ("Values: official catalog" if en else "값 출처: 공식 카탈로그") + (f" ({d['catalog_version']})" if d.get("catalog_version") else "")
     notes = [src, f"{P} = " + ("no catalog value · please confirm" if en else "카탈로그에 값이 없어 확인이 필요한 칸")]
+    man = [f"{r['name']}: {', '.join(item_label(k, notation) for k in items if k in r['manual'])}" for r in rows if any(k in r["manual"] for k in items)]
+    if man:
+        notes.append(("Entered by hand (not in catalog) — " if en else "카탈로그에 없어 직접 적은 값 — ") + " · ".join(man))
     notes += [f"⚠ {r.get('display_name') or r['name']}: {w['text']}" for r in rows for w in r["warnings"]]
     label = "Item" if en else "항목"
     if (d.get("format") or "compare") == "compare":
@@ -897,6 +1064,7 @@ async def finish(fid: str) -> dict[str, Any]:
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
         doc["file"] = None
+        doc[SNAPSHOT] = take_snapshot(doc, EDIT_KEYS)   # 저장한 판 — 이 뒤로 고치면 「고친 곳 n」 · 되돌리기
     saved = await update(fid, fn, "저장")
     f = await make_xlsx(saved)
     if f:

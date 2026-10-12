@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Value Proposition · 본문 (가치 · 고객의 니즈를 그 자리에서 쓰고 고치기)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#b0915a}
+.e-in:hover{border-color:#c9d0e6}
+.e-in:focus{border-color:#1428a0;box-shadow:0 0 0 3px rgba(20,40,160,0.12)}
+.e-ghost:hover{background:#f3f5fd}
+.e-aib:hover{background:#eaeefb}
+.e-sel:hover{filter:brightness(0.97)}
+.e-ghost:focus-visible,.e-aib:focus-visible,.e-sel:focus-visible,.e-ok:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1100px; height: {{h}}px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+  <div style="flex-shrink: 0; height: 48px; box-sizing: border-box; padding: 0 6px 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: #596170">
+    <span style="font-weight: 700; color: #3d4452; white-space: nowrap">{{fromLine}}</span>
+    <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0">{{outLine}}</span>
+    <button class="e-ghost" onClick="{{openPick}}" style="height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16 M4 12h10 M4 18h6"/></svg>제품 · 솔루션 고르기 · {{nItems}}</button>
+    <button class="e-aib" style="height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 가치 매칭 추천</button>
+  </div>
+  <sc-if value="{{hasPend}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="flex-shrink: 0; height: 38px; box-sizing: border-box; padding: 0 8px 0 14px; border-radius: 10px; border: 1px dashed #1428a0; background: #f7f8fe; display: flex; align-items: center; gap: 10px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="#1428a0"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>
+      <span style="font-size: 12.5px; font-weight: 600; color: #1428a0; flex-grow: 1">{{pendLine}}</span>
+      <button class="e-ghost" style="height: 28px; padding: 0 10px; border-radius: 7px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 600">모두 지우기</button>
+      <button class="e-ok" style="height: 28px; padding: 0 12px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700">모두 수락</button>
+    </div>
+  </sc-if>
+  <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow-y: auto">
+    <sc-for list="{{items}}" as="it" hint-placeholder-count="4">
+      <div style="{{it.wrap}}">
+        <span style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; min-width: 0">
+          <span style="{{it.kindStyle}}">{{it.kind}}</span>
+          <span style="font-size: 14.5px; font-weight: 700; line-height: 1.35">{{it.name}}</span>
+          <span style="font-size: 12px; color: #596170">{{it.spaces}}</span>
+          <span style="{{it.countStyle}}">{{it.count}}</span>
+          <button class="e-ghost" onClick="{{openDetail}}" style="height: 26px; margin-left: -6px; padding: 0 6px; border-radius: 6px; border: none; background: transparent; color: #1428a0; font-size: 11.5px; font-weight: 700; white-space: nowrap">연결된 가치 전체 보기 →</button>
+        </span>
+        <span style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+          <sc-for list="{{it.values}}" as="v" hint-placeholder-count="2">
+            <span style="{{v.wrap}}">
+              <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                <button class="e-sel" aria-haspopup="listbox" aria-label="공간" style="height: 26px; padding: 0 6px 0 8px; border-radius: 6px; border: none; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0">{{v.space}}<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+                <input class="e-in" aria-label="가치 메시지" value="{{v.message}}" style="{{v.msgStyle}}">
+                <button class="e-sel" aria-haspopup="listbox" aria-label="연결 요구" style="height: 26px; padding: 0 6px 0 8px; border-radius: 6px; border: none; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0">{{v.req}}<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+                <sc-if value="{{v.pend}}" hint-placeholder-val="{{false}}"><button class="e-ok" style="height: 26px; padding: 0 9px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0">수락</button></sc-if>
+              </span>
+              <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                <span style="width: 66px; flex-shrink: 0; font-size: 11.5px; font-weight: 700; color: #596170">고객의 니즈</span>
+                <input class="e-in" aria-label="고객의 니즈" value="{{v.need}}" placeholder="고객이 할 말처럼 적어요 · 예) 여름에도 쾌적한 교실 환경이 필요해요" style="{{v.needStyle}}">
+                <sc-if value="{{v.hasTag}}" hint-placeholder-val="{{true}}"><span style="{{v.tagStyle}}">{{v.tag}}</span></sc-if>
+                <sc-if value="{{v.needPend}}" hint-placeholder-val="{{false}}"><button class="e-ok" style="height: 26px; padding: 0 9px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; white-space: nowrap; flex-shrink: 0">수락</button></sc-if>
+                <sc-if value="{{v.canInfer}}" hint-placeholder-val="{{false}}"><button class="e-aib" style="height: 28px; padding: 0 9px; border-radius: 7px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 니즈 추론</button></sc-if>
+              </span>
+            </span>
+          </sc-for>
+          <button class="e-ghost" style="{{it.addStyle}}">{{it.addText}}</button>
+        </span>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["saved","editing","new","draft"],"default":"saved"},"ai":{"editor":"boolean","default":false},"h":{"editor":"int","default":682},"onPop":{"editor":null},"$preview":{"width":1100,"height":682}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.mode ?? 'saved';
+    const SAVED = mode === 'saved' || mode === 'editing';
+    const EDIT = mode === 'editing';
+    const AI = !!this.props.ai && !SAVED;
+    const pop = (p) => () => (this.props.onPop || (() => {}))(p);
+    // [공간, 가치, 니즈, 니즈 출처(manual · ai), 요구, 가치 출처]
+    const SV = {
+      'The Wall IAB 146"': ['제품', '로비', [['로비', '들어서는 순간 회사의 AI 비전을 보여 줌', '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', 'manual', 'RQ-01 최초 AI Ready', 'manual'], ['로비', EDIT ? '사내 행사 · 투자자 설명회 때 로비를 무대로 바꿈' : '사내 행사 때 로비를 무대로 바꿈', '행사 때마다 외부 장소를 빌리지 않았으면 해요', 'ai', 'RQ-01 업무환경 플랫폼', 'manual', EDIT ? 'msg' : ''], ['로비', '베젤 없는 큰 화면으로 콘텐츠에 몰입', '로비 화면이 광고판처럼 보이지 않았으면 해요', 'ai', 'RQ-01 최초 AI Ready', 'ai']]],
+      'Smart Signage QM55C': ['제품', '로비 · 라운지', [['로비', '방문 안내와 환영을 사람 손 없이', '안내 데스크 인력 없이도 방문객을 맞고 싶어요', 'ai', 'RQ-01 인식 · 반응', 'ai'], ['라운지', '층별 공지 · 비상 안내를 한 번에', '긴급할 때 모든 층에 바로 알리고 싶어요', 'ai', 'RQ-01 유지보수 최소화', 'ai']]],
+      '삼성 키오스크': ['제품', '로비', [['로비', '방문객 등록 대기를 줄임', '예약 없이 온 손님도 기다리지 않게 하고 싶어요', 'ai', 'RQ-01 인식 · 반응', 'ai']]],
+      'Flip Pro WA75D': ['제품', '회의실', [['회의실', '회의 내용이 끊기지 않고 이어짐', '회의 끝나도 판서 내용이 사라지지 않았으면 해요', 'manual', 'RQ-01 업무환경 플랫폼', 'manual'], ['회의실', '케이블 없이 바로 화면 공유', EDIT ? '회의 시작할 때 케이블 찾느라 시간 버리고 싶지 않아요' : '', 'manual', 'RQ-01 업무환경 플랫폼', 'manual', EDIT ? 'need' : ''], ['회의실', '원격 참석자와 같은 화면에 함께 판서', '재택 인원도 회의에 똑같이 참여했으면 해요', 'ai', 'RQ-01 업무환경 플랫폼', 'ai']]],
+      '비디오월 VM55B': ['제품', '중앙관제실', [['중앙관제실', '건물 상태를 한 화면에서 보고 바로 대응', '설비 문제를 사고 나기 전에 알고 싶어요', 'ai', 'RQ-01 유지보수 최소화', 'ai']]],
+      'SmartThings 센서': ['제품', '공용공간 · 라운지', [['공용공간', '재실에 맞춰 냉난방 · 조명을 줄여 에너지 절감', '빈 회의실에 에어컨이 켜져 있지 않았으면 해요', 'ai', 'RQ-01 에너지 20% 절감', 'ai'], ['라운지', '온습도를 자동으로 맞춰 늘 쾌적하게', '여름에도 쾌적한 라운지가 필요해요', 'ai', 'RQ-01 예측 · 반응형 공간', 'ai']]],
+      'MagicINFO': ['솔루션', '전체', [['전체', '모든 화면 콘텐츠를 한 곳에서 바꿈', '층마다 돌아다니며 화면을 바꾸지 않았으면 해요', 'ai', 'RQ-01 업무환경 플랫폼', 'manual'], ['로비', '시간대별 콘텐츠 자동 예약', '출근 · 점심 · 퇴근 시간에 맞는 안내가 나왔으면 해요', 'ai', 'RQ-01 인식 · 반응', 'ai']]],
+      'SmartThings Pro': ['솔루션', '전체', [['전체', '공간 기기를 하나의 앱으로 자동화', '조명 · 공조 · 화면을 따로 관리하지 않았으면 해요', 'ai', 'RQ-01 예측 · 반응형 공간', 'ai']]],
+      'b.IoT': ['솔루션', '중앙관제실', [['중앙관제실', '에너지 사용을 실측 데이터로 증빙', '에너지 20% 절감을 숫자로 보여 줘야 해요', 'manual', 'RQ-01 에너지 20% 절감', 'manual'], ['중앙관제실', '설비 이상을 미리 알려 유지보수 비용을 줄임', '고장 나고서야 수리하는 일을 줄이고 싶어요', 'ai', 'RQ-01 유지보수 최소화', 'ai']]]
+    };
+    // 작성 중: 직접 쓴 가치 · 빈 니즈 / AI 가치 추천 · 빈 니즈 추론(점선)
+    const DV = {
+      'The Wall IAB 146"': [['로비', '들어서는 순간 회사의 AI 비전을 보여 줌', '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', 'manual', 'RQ-01 최초 AI Ready', 'manual'], ['로비', '사내 행사 때 로비를 무대로 바꿈', AI ? '행사 때마다 외부 장소를 빌리지 않았으면 해요' : '', AI ? 'pend' : '', 'RQ-01 업무환경 플랫폼', 'manual']].concat(AI ? [['로비', '베젤 없는 큰 화면으로 콘텐츠에 몰입', '로비 화면이 광고판처럼 보이지 않았으면 해요', 'pend', 'RQ-01 최초 AI Ready', 'pend']] : []),
+      'Smart Signage QM55C': AI ? [['로비', '방문 안내와 환영을 사람 손 없이', '안내 데스크 인력 없이도 방문객을 맞고 싶어요', 'pend', 'RQ-01 인식 · 반응', 'pend'], ['라운지', '층별 공지 · 비상 안내를 한 번에', '긴급할 때 모든 층에 바로 알리고 싶어요', 'pend', 'RQ-01 유지보수 최소화', 'pend']] : [],
+      '삼성 키오스크': AI ? [['로비', '방문객 등록 대기를 줄임', '예약 없이 온 손님도 기다리지 않게 하고 싶어요', 'pend', 'RQ-01 인식 · 반응', 'pend']] : [],
+      'Flip Pro WA75D': [['회의실', '회의 내용이 끊기지 않고 이어짐', '회의 끝나도 판서 내용이 사라지지 않았으면 해요', 'manual', 'RQ-01 업무환경 플랫폼', 'manual'], ['회의실', '케이블 없이 바로 화면 공유', AI ? '회의 시작할 때 케이블 찾느라 시간 버리고 싶지 않아요' : '', AI ? 'pend' : '', 'RQ-01 업무환경 플랫폼', 'manual']],
+      '비디오월 VM55B': [], 'SmartThings 센서': [],
+      'MagicINFO': [['전체', '모든 화면 콘텐츠를 한 곳에서 바꿈', AI ? '층마다 돌아다니며 화면을 바꾸지 않았으면 해요' : '', AI ? 'pend' : '', 'RQ-01 업무환경 플랫폼', 'manual']],
+      'SmartThings Pro': [],
+      'b.IoT': [['중앙관제실', '에너지 사용을 실측 데이터로 증빙', '에너지 20% 절감을 숫자로 보여 줘야 해요', 'manual', 'RQ-01 에너지 20% 절감', 'manual']]
+    };
+    const ORDER = ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', '비디오월 VM55B', 'SmartThings 센서', 'MagicINFO', 'SmartThings Pro', 'b.IoT'];
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const CHG = ' border: 1.5px solid #1428a0; background: #f6f8fe;';
+    let nV = 0, nN = 0, nPend = 0;
+    const items = ORDER.map((name, i) => {
+      const [kind, spaces, sv] = SV[name];
+      const vals = mode === 'new' ? [] : SAVED ? sv : DV[name];
+      const values = vals.map(([space, message, need, needBy, req, by, chg]) => {
+        const pend = by === 'pend';
+        const needPend = needBy === 'pend' && !pend;
+        if (pend) nPend++; else { nV++; if (need && needBy !== 'pend') nN++; }
+        if (needPend) nPend++;
+        return { space, message, req, need, pend, needPend, hasTag: !!need && !pend && !needPend,
+          tag: needBy === 'manual' ? '직접' : 'AI 추론 · 수락',
+          tagStyle: tagBase + (needBy === 'manual' ? ' background: #f0f2f5; color: #3d4452;' : ' background: #e6f4ee; color: #0b6e4f;'),
+          canInfer: !need && !pend,
+          msgStyle: 'flex-grow: 1; min-width: 0; height: 32px; box-sizing: border-box; padding: 0 9px; border-radius: 8px; font-size: 14px; font-weight: 700; color: #121417; outline: none;' + (chg === 'msg' ? CHG : ' border: 1px solid #eef0f4; background: #ffffff;'),
+          needStyle: 'flex-grow: 1; min-width: 0; height: 32px; box-sizing: border-box; padding: 0 9px; border-radius: 8px; font-size: 13px; color: #121417; outline: none;' + (chg === 'need' ? CHG : needPend ? ' border: 1px dashed #1428a0; background: #fbfcff; color: #1428a0;' : need ? ' border: 1px solid #eef0f4; background: #f7f8fa;' : ' border: 1px dashed #e8c77a; background: #fffaf0;'),
+          wrap: 'display: flex; flex-direction: column; gap: 6px; box-sizing: border-box; padding: 8px 10px; border-radius: 10px;' + (pend ? ' border: 1.5px dashed #1428a0; background: #fbfcff;' : ' border: 1px solid #f0f2f5;') };
+      });
+      const real = values.filter((v) => !v.pend);
+      const needs = real.filter((v) => v.hasTag).length;
+      return { name, kind: kind, spaces,
+        kindStyle: tagBase + (kind === '제품' ? ' background: #f0f2f5; color: #3d4452;' : ' background: #eaeefb; color: #1428a0;'),
+        count: real.length ? '가치 ' + real.length + ' · 니즈 ' + needs + '/' + real.length : '가치 없음',
+        countStyle: 'font-size: 11.5px;' + (real.length ? ' color: #8a91a0;' : ' color: #7a4f00; font-weight: 600;'),
+        values,
+        addText: values.length ? '+ 가치 추가' : '+ 가치 추가 · 공간 · 가치 · 니즈 · 요구 — 또는 위의 AI 가치 매칭 추천',
+        addStyle: 'align-self: stretch; height: 34px; box-sizing: border-box; padding: 0 12px; border-radius: 9px; border: 1px dashed #c9d0e6; background: #fbfbfc; color: #1428a0; font-size: 12.5px; font-weight: 700; text-align: left;',
+        wrap: 'display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 16px; padding: 14px 18px;' + (i ? ' border-top: 1px solid #f0f2f5;' : '') };
+    });
+    return {
+      h: this.props.h ?? 682, items, nItems: ORDER.length,
+      fromLine: 'DSS-01에서 9개를 골랐어요',
+      outLine: '· 고르지 않은 4 — Smart Signage QB55C · Smart Signage QB43C · 스마트 모니터 · 옥외형 사이니지 OHC55',
+      hasPend: nPend > 0, pendLine: 'AI 추천 ' + nPend + '개 — 가치 후보와 빈 니즈 추론이 점선으로 들어왔어요 · 수락해야 들어가요',
+      openPick: pop('pick'), openDetail: pop('detail')
+    };
+  }
+}
+</script>
+</body>
+</html>

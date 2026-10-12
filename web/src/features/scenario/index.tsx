@@ -2,9 +2,9 @@
  * 공간 시나리오(SC) 기능 모듈 — 소유: scenario 서비스 세션. 수용 기준: docs/scenarios/11-content-flow.md §3 · §6(새 흐름) · 09-scenario.md(이전 흐름)
  * 보드: docs/screens/webapp1/SC*.dc.html(새 흐름) · webapp2/SC*.dc.html(이전 흐름). 셸이 자동으로 등록한다(web/src/shell/registry.ts).
  *
- * 라우트 — 새 콘텐츠 흐름(웹앱 ① v62, Storyboard 허브 · 상세 = 최종본 한 장 + 단계 팝업 · spaces/FlowPages.tsx):
- *   /scenario(SC0 List content=sc) · /scenario/new(빈 최종본 + ① SC1 Gate 팝업 · `?sb=&auto=1` 이면 바로 ② 팝업)
- *   /scenario/spaces/:id(최종본 SC_View · SC_Draft · `?step=spaces` ② SC2 · SC2_Edit 팝업)
+ * 라우트 — 새 콘텐츠 흐름(웹앱 ① v63, Storyboard 허브):
+ *   /scenario(SC0 List content=sc) · /scenario/new(SC1 목록 위 Gate 팝업 · `?sb=&auto=1` 바로 만들기)
+ *   /scenario/spaces/:id(상세 한 장 — SC2 새로 · SC_Draft · SC2_AI · SC2_Pick · SC2_Empty · SC2_Edit · SC_View, 완료 화면 없음)
  * 이전 흐름(제안서 handoff 가 아직 읽는다): /scenario/legacy(SC0) · legacy/new(SC1) · legacy/new/template(SC1T) · legacy/new/birdseye(SC1B)
  *   :id/type(SC1) · :id/input(SC2) · :id/timeline(SC2E) · :id/solutions(SC3) · :id/solutions/recommend(SC3R)
  *   :id/generate/:jobId(SC4G) · :id/result(SC4) · :id/scenes/:sceneId(SC4E) · :id/send(SC5) · :id/birdseye(SC1B 변경 반영)
@@ -33,9 +33,9 @@ const ScenePage = lazy(() => import('./pages/ScenePage'));
 const SendPage = lazy(() => import('./pages/SendPage'));
 const OpenPage = lazy(() => import('./pages/OpenPage'));
 const UseCasePage = lazy(() => import('./pages/UseCasePage'));
-const ScDetailPage = lazy(() => import('./spaces/FlowPages').then((m) => ({ default: m.ScDetailPage })));
+const SpacesPage = lazy(() => import('./spaces/SpacesPage').then((m) => ({ default: m.SpacesPage })));
 const ScListScreen = lazy(() => import('./spaces/FlowPages').then((m) => ({ default: m.ScListScreen })));
-const ScNewPage = lazy(() => import('./spaces/FlowPages').then((m) => ({ default: m.ScNewPage })));
+const ScGateScreen = lazy(() => import('./spaces/FlowPages').then((m) => ({ default: m.ScGateScreen })));
 
 /** 옛 주소 → 새 주소(쿼리 그대로) */
 function Moved({ to }: { to: string }) {
@@ -52,12 +52,12 @@ function ListEntry() {
 /** 새 흐름 Storyboard(허브) 번호 — 이전 Storyboard 는 `sb_…` */
 const HUB_SB = /^SB-\d+$/;
 
-/** `/scenario/new` — 허브 Storyboard(`?sb=SB-01&auto=1`)나 아무 재료 없음 = 빈 최종본 + Gate 팝업, 이전 handoff(`?sb=sb_…` · `?from=` · `?mi=` · `?project=`) = 이전 SC1 */
+/** `/scenario/new` — 허브 Storyboard(`?sb=SB-01&auto=1`)나 아무 재료 없음 = Gate, 이전 handoff(`?sb=sb_…` · `?from=` · `?mi=` · `?project=`) = 이전 SC1 */
 function NewEntry() {
   const [sp] = useSearchParams();
   const sb = sp.get('sb');
   const legacy = sb ? !HUB_SB.test(sb) : !!(sp.get('from') || sp.get('mi') || sp.get('project'));
-  return legacy ? L(<TypePage />) : L(<ScNewPage />);
+  return legacy ? L(<TypePage />) : L(<ScGateScreen />);
 }
 
 const L = (el: ReactNode) => (
@@ -71,11 +71,11 @@ export default feature({
   order: 5,
   home: { section: 'visual', title: '공간 시나리오', desc: '장면 · 솔루션 · 장면 이미지' },
   routes: [
-    // 새 콘텐츠 흐름(웹앱 ① v62): 목록(SC0) · 새로 만들기(빈 최종본 + ① 팝업) · 최종본(② 공간 → 시나리오 → 장면 팝업)
+    // 새 콘텐츠 흐름(웹앱 ① v63): 목록(SC0) · 목록 위 사전 작업 고르기(SC1) → 상세 한 장(공간 → 시나리오 → 장면 · 그 자리에서 저장)
     { index: true, element: <ListEntry /> },
     { path: 'new', element: <NewEntry /> },
     { path: 'spaces/new', element: <Moved to="/scenario/new" /> },
-    { path: 'spaces/:id', element: L(<ScDetailPage />) },
+    { path: 'spaces/:id', element: L(<SpacesPage />) },
     // 이전 흐름 — /scenario/legacy(제안서 handoff 가 아직 읽는다)
     { path: 'legacy', element: L(<ListPage />) },
     { path: 'legacy/new', element: L(<TypePage />) },

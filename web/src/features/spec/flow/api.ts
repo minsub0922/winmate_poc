@@ -1,5 +1,5 @@
 /**
- * Spec 시트 새 흐름 API — contracts/spec.json `/v1/spec-flows*` → @/api/gen/spec.
+ * Spec 시트 새 흐름 API — contracts/spec.json `/v1/spec-flows*` → @/api/gen/spec. 화면: ./SheetPage.tsx(보드 v63 SPBody · 상세 한 장).
  * 화면은 문서 하나(SFDoc)를 읽고, 바꾸는 호출은 고친 문서를 돌려준다(→ 캐시에 바로 넣는다).
  * 체크 · 칩은 먼저 화면을 바꾸고(낙관적), 마지막 요청의 응답만 캐시에 넣는다(빠르게 여러 번 눌러도 순서가 꼬이지 않게).
  * `dss_changed`(Storyboard 의 DSS 가 바뀜)는 GET · 다시 가져오기 응답에만 계산돼 온다 → 다른 고침 응답을 넣을 때는 앞의 값을 이어 둔다.
@@ -10,10 +10,12 @@ import { api, unwrap } from '@/api/client';
 import type { components } from '@/api/gen/spec';
 
 type S = components['schemas'];
-export type SFRow = Omit<S['SFRow'], 'spaces' | 'cells' | 'pending' | 'warnings' | 'qty'> & {
+export type SFRow = Omit<S['SFRow'], 'spaces' | 'cells' | 'pending' | 'warnings' | 'qty' | 'editable' | 'manual' | 'qty_text'> & {
   spaces: string[]; cells: Record<string, string>; pending: string[]; warnings: S['SFWarning'][]; qty: number | null;
+  editable: string[]; manual: Record<string, string>; qty_text: string;
 };
-export type SFDoc = Omit<S['SFDoc'], 'rows' | 'items' | 'columns'> & { rows: SFRow[]; items: string[]; columns: S['SFColumn'][] };
+export type SFDoc = Omit<S['SFDoc'], 'rows' | 'items' | 'columns' | 'changes'> & { rows: SFRow[]; items: string[]; columns: S['SFColumn'][]; changes: number };
+export type SFRowAdd = S['SFRowAdd'];
 export type SFStageOut = S['SFStageOut'];
 export type SFFile = S['SFFile'];
 export type SFModelOption = S['SFModelOption'];
@@ -24,14 +26,16 @@ export type SFResync = S['SFResync'];
 
 export function normalize(d: S['SFDoc']): SFDoc {
   return {
-    ...d, items: d.items ?? [], columns: d.columns ?? [],
-    rows: (d.rows ?? []).map((r) => ({ ...r, spaces: r.spaces ?? [], cells: r.cells ?? {}, pending: r.pending ?? [], warnings: r.warnings ?? [], qty: r.qty ?? null })),
+    ...d, items: d.items ?? [], columns: d.columns ?? [], changes: d.changes ?? 0,
+    rows: (d.rows ?? []).map((r) => ({
+      ...r, spaces: r.spaces ?? [], cells: r.cells ?? {}, pending: r.pending ?? [], warnings: r.warnings ?? [], qty: r.qty ?? null,
+      editable: r.editable ?? [], manual: r.manual ?? {}, qty_text: r.qty_text ?? '',
+    })),
   };
 }
 
 const P = (flow_id: string) => ({ params: { path: { flow_id } } });
 export const sfKey = (id: string) => ['spec', 'flow', id] as const;
-export const sfStageKey = (id: string) => ['spec', 'flow', id, 'stage'] as const;
 export const sfListKey = ['spec', 'flows'] as const;
 export const sfRoute = (id: string) => `/spec/flow/${id}`;
 
@@ -39,19 +43,13 @@ export function useSpecFlow(id: string) {
   return useQuery({ queryKey: sfKey(id), enabled: !!id, queryFn: async () => normalize(unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}', P(id)))) });
 }
 
-/** 저장 판의 stages.sp + XLSX(file) — 최종본 머리 「XLSX 내려받기」 · 옵션 줄 「파일」. 문서(SFDoc)에는 file 이 없어 `/stage` 로 읽는다(저장 직후는 :finish 응답을 넣는다) */
-export function useSpecStage(id: string, enabled: boolean) {
-  return useQuery({ queryKey: sfStageKey(id), enabled: !!id && enabled, queryFn: async () => unwrap(await api.spec.GET('/v1/spec-flows/{flow_id}/stage', P(id))) });
-}
-
 export function useSpecFlows() {
   return useQuery({ queryKey: sfListKey, queryFn: async () => unwrap(await api.spec.GET('/v1/spec-flows', { params: { query: { limit: 50 } } })) });
 }
 
-/** 만들기 — 같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 돌려준다(200 · reused — Gate 를 다시 거쳐도 초안이 둘이 되지 않게) */
-export async function createSpecFlow(sbId: string): Promise<{ doc: SFDoc; reused: boolean }> {
-  const r = await api.spec.POST('/v1/spec-flows', { body: { sb_id: sbId } });
-  return { doc: normalize(unwrap(r)), reused: r.response.status === 200 };
+/** 만들기 — 같은 Storyboard 의 저장 전 초안이 있으면 서버가 그 초안을 돌려준다(Gate 를 다시 거쳐도 초안이 둘이 되지 않게) */
+export async function createSpecFlow(sbId: string): Promise<SFDoc> {
+  return normalize(unwrap(await api.spec.POST('/v1/spec-flows', { body: { sb_id: sbId } })));
 }
 
 /** 저장 전 초안 지우기(목록 줄의 ×) — 저장한 시트는 409 SAVED_CONTENT */
@@ -67,20 +65,25 @@ export async function modelOptions(id: string, rowKey: string, q?: string) {
 export function useSfActions(id: string) {
   const qc = useQueryClient();
   const seq = useRef(0);
+  const flying = useRef(new Set<Promise<unknown>>());
   const cur = () => qc.getQueryData<SFDoc>(sfKey(id));
+  /** 저장 · 되돌리기 전에 — 칸을 떠나며 보낸 고침(예: 노란 칸 적고 바로 저장)이 먼저 들어가게 기다린다 */
+  const settle = async () => { await Promise.allSettled([...flying.current]); };
   const run = async (optimistic: ((d: SFDoc) => SFDoc) | null, call: () => Promise<S['SFDoc']>, keepDss = true) => {
     const n = ++seq.current;
     const before = cur();
     if (optimistic && before) qc.setQueryData(sfKey(id), optimistic(before));
+    const p = call();
+    flying.current.add(p);
     try {
-      const got = normalize(await call());
+      const got = normalize(await p);
       const d = keepDss ? { ...got, dss_changed: got.dss_changed ?? cur()?.dss_changed ?? null } : got;
       if (n === seq.current) qc.setQueryData(sfKey(id), d);
       return d;
     } catch (e) {
       if (n === seq.current) void qc.invalidateQueries({ queryKey: sfKey(id) });
       throw e;
-    }
+    } finally { flying.current.delete(p); }
   };
   return {
     patch: (body: SFPatch, optimistic?: (d: SFDoc) => SFDoc) =>
@@ -89,16 +92,17 @@ export function useSfActions(id: string) {
       run(optimistic ?? null, async () => unwrap(await api.spec.PATCH('/v1/spec-flows/{flow_id}/rows/{row_key}', { params: { path: { flow_id: id, row_key: rowKey } }, body }))),
     /** DSS 다시 가져오기 — 응답의 dss_changed(대개 null)를 그대로 넣는다 */
     resync: () => run(null, async () => unwrap(await api.spec.POST('/v1/spec-flows/{flow_id}:resync-dss', P(id))), false),
-    /** DSS 에서 빠진 행 지우기 */
+    /** DSS 에서 빠진 행 · DSS 밖에서 더한 행 지우기 */
     deleteRow: (rowKey: string) => run((d) => ({ ...d, rows: d.rows.filter((x) => x.key !== rowKey) }),
       async () => unwrap(await api.spec.DELETE('/v1/spec-flows/{flow_id}/rows/{row_key}', { params: { path: { flow_id: id, row_key: rowKey } } }))),
+    /** DSS 밖 제품 · 솔루션을 카탈로그에서 더한다(제품 고르기 팝업) */
+    addRow: (body: SFRowAdd) => run(null, async () => unwrap(await api.spec.POST('/v1/spec-flows/{flow_id}/rows', { ...P(id), body }))),
+    /** 저장한 판으로 되돌리기 — 응답의 dss_changed 를 그대로(되돌린 DSS 판 기준) */
+    revert: async () => { await settle(); return run(null, async () => unwrap(await api.spec.POST('/v1/spec-flows/{flow_id}:revert', P(id))), false); },
     finish: async (): Promise<SFStageOut> => {
+      await settle();
       const r = unwrap(await api.spec.POST('/v1/spec-flows/{flow_id}:finish', P(id)));
-      // 팝업이 닫히자마자 최종본이 저장됨으로 그려지게(다시 읽기 전까지 판 · 상태를 먼저 넣는다)
-      const ver = (r.stage as { ver?: number | null }).ver;
-      qc.setQueryData<SFDoc>(sfKey(id), (d) => d && { ...d, status: 'done', ver: ver ?? (d.ver ?? 0) + 1 });
-      qc.setQueryData(sfStageKey(id), r);
-      void qc.invalidateQueries({ queryKey: sfKey(id), exact: true });
+      await qc.invalidateQueries({ queryKey: sfKey(id) });          // 그 자리에서 저장됨으로(문서 다시 읽기)
       void qc.invalidateQueries({ queryKey: sfListKey });
       void qc.invalidateQueries({ queryKey: ['storyboard'] });   // 허브 진행 칸 · flow.json · 목록(보드 List)
       return r;
@@ -109,6 +113,11 @@ export function useSfActions(id: string) {
 /** 경고 종류 → 제품 줄 · 팝업에 붙는 짧은 이름(서버 rules: spec_flow.row_warnings) */
 export const WARN_SHORT: Record<string, string> = {
   not_in_catalog: '카탈로그에 없음', discontinued: '단종', sold_out: '품절', mismatch: '모델 불일치', family_default: '대표 모델', dss_removed: 'DSS에서 빠짐',
+};
+
+/** 옵션 띠 경고 칩 문구(보드 SPBody 「삼성 키오스크 · 모델 코드 확인 필요」) */
+export const WARN_CHIP: Record<string, string> = {
+  not_in_catalog: '모델 코드 확인 필요', discontinued: '단종 모델', sold_out: '품절', mismatch: '모델 불일치', family_default: '대표 모델 확인', dss_removed: 'DSS에서 빠짐',
 };
 
 /** 「DSS-01 v1 → v2」 — 같은 DSS 면 뒤쪽은 판만 */

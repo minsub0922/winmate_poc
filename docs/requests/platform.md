@@ -180,3 +180,15 @@
   (새로 만들면 201). Gate 「복제본 만들기」는 새 분기 Storyboard 라 그대로 새 자원이다. 그래서 지금 Gate 의 「이 Storyboard로 시작」을 다시 눌러도 초안이 둘이 되지 않는다.
 - 필요(선택): 셸 `GateScreen` 줄에 「작성 중 초안 있음 · 이어 쓰기」 같은 표시가 있으면 사용자가 새로 시작하는 줄 알지 않는다. 허브 `GET /v1/flows?content=` 의 `existing` 은 저장된 것만 알아
   초안 여부는 각 서비스 목록(`GET /v1/<자원>?…` 의 `sb_id` · `status` · `ver`)에서 알 수 있다 — 셸이 기능에서 `drafts`(DraftRow 와 같은 모양)를 받아 줄에 표시해 주면 세 기능이 넘긴다.
+
+## 콘텐츠 상세 v63 공용 부품 — requirements · dss · mi · competitor · vp · spec · scenario · 2026-10-12
+- 한 것(통합 때 플랫폼이 반영): `Modal` 딤이 셸 본문 폭 규칙을 받지 않음 · `Modal className` · `useEscape` 맨 위 겹창만 ·
+  `InlineInput`(`id` · `inputRef` · `onKeyDown` · `inputMode` · `autoFocus` · `required` · `multiline`+`autosize`, Esc 는 저장 안 함) ·
+  `ContentDetail shell`(셸 작업 추가 맥락) · 제네릭 `onSave`/`savedToast` · `josaRo`(되돌리기 토스트 「v3으로」).
+- 남은 것(선택):
+  - `@/ui` 알약 · 칩 고르기 목록(listbox, body 에 띄움 · 직접 쓰기 칸) — 지금 기능마다 따로: VP `values/ChipSelect.tsx` · CA `flow/edit.tsx Pick` · SC `wm-menu` · SP `spd-itemsl`(다중 선택).
+  - `cd-in` 높이 변형(38 · 34 · 32 — RQ 는 `.rqb` 안에서 덮어씀) · `AiButton` 크기 하나 더(DSS 업종 칸 padding 10 · 12, CA 36 의 gap 6 · 아이콘 13).
+  - `ProductPickerDialog`: 모델 검색(`kinds=model`) 옵션 · 행 `data-name`(SP 가 모델명으로 못 찾음).
+  - 「새로 만들기 / 작성 중」 기준을 셸 `detailMode` 에서 하나로(지금은 기능마다 — 이 탭에서 막 만들었으면 새로 만들기).
+  - 참고: 저장 버튼은 막혀도 `aria-disabled`(누르면 이유 토스트)라 Playwright 는 `click({ force: true })` 로 누른다 — 의도된 동작.
+- 상태: 일부 완료(2026-10-12) — 남은 것은 다음 플랫폼 작업.

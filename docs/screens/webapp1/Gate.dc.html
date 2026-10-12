@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>사전 작업 · Storyboard 고르기</title>
+<title>사전 작업 · Storyboard 고르기 팝업 (목록 위)</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -19,13 +19,20 @@ button{font-family:inherit;cursor:pointer}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="View" content="{{hd.content}}" status="{{hd.bg}}" done="{{hd.bgDone}}" hint-size="1440px,900px"></dc-import>
+  <dc-import name="List" content="{{key}}" hint-size="1440px,900px"></dc-import>
   <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 40"></div>
-  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 130px; top: 50px; width: 1180px; height: 800px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
-    <dc-import name="StepHead" content="{{hd.content}}" title="{{hd.title}}" mode="{{hd.mode}}" ver="{{hd.ver}}" sb="{{hd.sb}}" note="{{hd.note}}" current="{{hd.current}}" done="{{hd.done}}" close-href="{{hd.close}}" on-sb="{{hd.onSb}}" hint-size="1180px,72px"></dc-import>
-    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 24px 160px 24px 160px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 280px; top: 60px; width: 880px; height: 780px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
+    <div style="height: 72px; box-sizing: border-box; padding: 0 16px 0 24px; background: #ffffff; border-bottom: 1px solid #e2e5ea; display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+      <span style="width: 40px; height: 40px; flex-shrink: 0; border-radius: 11px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{icon}}"/></svg></span>
+      <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+        <span style="font-size: 17px; font-weight: 700">{{newTitle}} 만들기</span>
+        <span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{hd.note}}</span>
+      </span>
+      <a class="g-ghost" href="{{listHref}}" aria-label="닫기" style="width: 38px; height: 38px; border-radius: 10px; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    </div>
+    <section style="width: 880px; flex-grow: 1; min-height: 0; box-sizing: border-box; padding: 20px 28px 22px 28px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
       <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
-        <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.35">어느 Storyboard로 만들까요?</h1>
+        <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.35">어느 Storyboard로 만들까요?</h1>
         <div style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #596170">
           <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">사전 작업</span>
           <span>{{pre}}이 있어야 시작할 수 있어요. 없으면 먼저 만들고 와 주세요.</span>
@@ -35,7 +42,7 @@ button{font-family:inherit;cursor:pointer}
       <div role="radiogroup" aria-label="Storyboard" style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
         <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
           <div style="{{r.wrap}}">
-            <button class="g-row" role="radio" aria-checked="{{r.on}}" aria-disabled="{{r.off}}" onClick="{{r.pick}}" style="display: flex; align-items: center; gap: 14px; flex-grow: 1; min-width: 0; height: 64px; padding: 0 0 0 16px; border: none; background: transparent; text-align: left; color: inherit">
+            <button class="g-row" role="radio" aria-checked="{{r.on}}" aria-disabled="{{r.off}}" onClick="{{r.pick}}" style="display: flex; align-items: center; gap: 14px; flex-grow: 1; min-width: 0; height: 58px; padding: 0 0 0 16px; border: none; background: transparent; text-align: left; color: inherit">
               <span style="{{r.radio}}"></span>
               <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex-grow: 1">
                 <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
@@ -77,7 +84,7 @@ button{font-family:inherit;cursor:pointer}
         <sc-if value="{{ft.hasBack}}" hint-placeholder-val="{{true}}"><a href="{{ft.backHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>{{ft.back}}</a></sc-if>
         <span style="flex-grow: 1"></span>
         <span style="font-size: 13px; color: #596170; white-space: nowrap">{{footLine}}</span>
-        <a class="g-btn" href="{{workHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">{{cta}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="g-btn" href="{{go}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">{{cta}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       </div>
     </section>
   </div>
@@ -104,7 +111,7 @@ class Component extends DCLogic {
     // [이름, 짧은 이름, 사전 작업 키, 사전 작업 설명, 사전 작업 짧은 이름, 사전 작업 링크, 목록, 작업 화면, 단계, 사이드바 그룹]
     const META = {
       dss: ['공간별 제품 매칭 DSS', 'DSS', 'rq', '고객 요구사항이 연결된 Storyboard', '요구사항', 'RQ1.dc.html', 'DS0.dc.html', 'DS2.dc.html', ['Storyboard', '공간 · 제품', '솔루션'], 'dss'],
-      mi: ['Market Intelligence', 'MI', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'MI0.dc.html', 'MI2.dc.html', ['Storyboard', '검색', '정제'], 'market'],
+      mi: ['Market Intelligence', 'MI', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'MI0.dc.html', 'MI2_Loading.dc.html', ['Storyboard', '검색', '정제'], 'market'],
       ca: ['경쟁사 분석', '경쟁사 분석', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'CA0.dc.html', 'CA2.dc.html', ['Storyboard', '경쟁사 리스트업'], 'competitor'],
       vp: ['Value Proposition', 'VP', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'VP0.dc.html', 'VP2.dc.html', ['Storyboard', '가치 · 고객의 니즈'], 'value'],
       sp: ['Spec 시트 생성', 'Spec 시트', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'SP0.dc.html', 'SP2.dc.html', ['Storyboard', '시트 작성'], 'spec'],
@@ -146,13 +153,16 @@ class Component extends DCLogic {
     ];
     const opts = O.map(([id, t, d]) => { const on = s.choice === id; return { t, d, on, style: optBase + (on ? ' border: 2px solid #1428a0;' : ' border: 1px solid #e2e5ea;'), radio: radio(on), pick: () => put({ choice: id }) }; });
     const selName = SBS[s.sel] ? SBS[s.sel][0] : '';
-    const cta = !exRef ? '이 Storyboard로 시작' : s.choice === 'edit' ? exRef.split(' ')[0] + ' 수정하기' : '분기 만들고 시작';
-    const footLine = !exRef ? selName + '에 ' + short + '가 연결돼요' : s.choice === 'edit' ? '수정 내용은 요약본에 바로 반영돼요' : '‘' + selName + ' · 분기 C’가 새로 생겨요';
+    const cta = !exRef ? '이 Storyboard로 시작' : s.choice === 'edit' ? exRef.split(' ')[0] + ' 열어 고치기' : '분기 만들고 시작';
+    const VIEWB = { dss: 'DS_View.dc.html', mi: 'MI_View.dc.html', ca: 'CA_View.dc.html', vp: 'VP_View.dc.html', sp: 'SP_View.dc.html', sc: 'SC_View.dc.html' };
+    const go = exRef && s.choice === 'edit' ? VIEWB[key] : workHref;
+    const footLine = !exRef ? '고르면 바로 ' + short + ' 화면으로 넘어가요' : s.choice === 'edit' ? exRef.split(' ')[0] + ' 화면을 열어 그 자리에서 고쳐요' : '‘' + selName + ' · 분기 C’가 생기고 새 ' + short + ' 화면으로 넘어가요';
     const NEWT = { dss: '판교 스타트업 단지', mi: '용산 오피스 시장 분석', ca: '용산 오피스 경쟁사', vp: '용산 오피스 가치 제안', sp: '용산 오피스 제품 스펙', sc: '용산 오피스 공간 시나리오' };
-    const HD = (R) => ({ content: key, label: '사전 작업 고르기', bg: 'new', bgDone: 0, title: NEWT[key] || '새 ' + short, mode: 'new', ver: '', sb: '', note: 'Storyboard를 고르면 ' + short + '가 그 Storyboard에 연결돼요 · 고르기 전에 닫으면 목록으로', current: 1, done: 0, close: listHref, onSb: () => {} });
+    const HD = (R) => ({ content: key, label: '사전 작업 · Storyboard 고르기', note: '사전 작업 · 고른 Storyboard에 ' + short + '가 연결돼요 · 닫으면 목록 그대로', close: listHref });
+    const ICONS = { dss: 'M3 21h18 M5 21V9l7-5 7 5v12 M9 21v-6h6v6', mi: 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2', ca: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z M12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z', vp: 'M6 4h12l3 5-9 11L3 9l3-5z M3 9h18 M9.5 9L12 20l2.5-11', sp: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7', sc: 'M4 6h16v12H4z M10 9l5 3-5 3V9z' };
     const FT = { hasBack: false, backHref: listHref, back: '목록', saveHref: '', save: '' };
     const R = {
-      label, short, pre, preShort, preHref, listHref, workHref, steps, group, one: 1, newTitle: '새 ' + short,
+      key, icon: ICONS[key] || ICONS.mi, go, label, short, pre, preShort, preHref, listHref, workHref, steps, group, one: 1, newTitle: '새 ' + short,
       rows, hasExisting: !!exRef, exRef, opts, cta, footLine,
       popOpen: !!s.pop, pop: s.pop || 'SB-01', closePop: () => put({ pop: '' })
     };

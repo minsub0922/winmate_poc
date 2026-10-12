@@ -1282,7 +1282,8 @@ export interface paths {
         };
         /**
          * Get Spec Flow
-         * @description 시트 하나 + `dss_changed`(Storyboard 의 DSS 가 시트를 만든 뒤 바뀌었으면 그 차이, 아니면 null).
+         * @description 시트 하나 + `dss_changed`(Storyboard 의 DSS 가 시트를 만든 뒤 바뀌었으면 그 차이, 아니면 null) + `changes`(저장한 뒤 고친 곳 수).
+         *     판을 남기기 전에 저장한 시트는 처음 읽을 때 지금 값을 저장한 판으로 남긴다.
          */
         get: operations["get_spec_flow"];
         put?: never;
@@ -1312,7 +1313,7 @@ export interface paths {
         put?: never;
         /**
          * Finish Spec Flow
-         * @description 저장(시트 만들기) → Storyboard flow.json stages.sp · 요약본 · 팝업 카드. 넣은 제품이 없으면 422 `NO_MODELS`, 항목이 없으면 422 `NO_COLUMNS`.
+         * @description 저장 → XLSX · Storyboard flow.json stages.sp · 요약본 · 팝업 카드 · 저장한 판(이 뒤로 고치면 `changes`). 넣은 제품이 없으면 422 `NO_MODELS`, 항목이 없으면 422 `NO_COLUMNS`.
          */
         post: operations["finish_spec_flow"];
         delete?: never;
@@ -1342,6 +1343,48 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/spec-flows/{flow_id}:revert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revert Spec Flow
+         * @description 저장한 판으로 되돌리기(머리 「고친 곳 n · 되돌리기」) — changes 0 인 시트. 형식 · 표기 · 항목 · 제품 넣기/빼기 · 모델 · 수량 · 직접 적은 칸 · 가져온 DSS 판이 돌아간다.
+         *     아직 저장하지 않았으면 409 `NOT_SAVED` 「아직 저장하지 않아 되돌릴 판이 없어요」.
+         */
+        post: operations["revert_spec_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/spec-flows/{flow_id}/rows": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Spec Flow Row
+         * @description DSS 밖 제품을 카탈로그에서 더한다(제품 고르기 팝업 · 행 `source: catalog`) — 모델은 ref → 이름 속 모델명으로 맞추고 값은 카탈로그에서.
+         *     같은 이름의 행이 이미 있으면 시트에 넣기만 한다. 카탈로그에 없으면 행은 더하고 칸은 [확인 필요](경고 「카탈로그에 없음」).
+         */
+        post: operations["add_spec_flow_row"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/spec-flows/{flow_id}/rows/{row_key}": {
         parameters: {
             query?: never;
@@ -1354,14 +1397,15 @@ export interface paths {
         post?: never;
         /**
          * Delete Spec Flow Row
-         * @description DSS 에서 빠진 행 지우기(경고 「DSS에서 빠짐」). DSS 에 있는 제품 행이면 422 `ROW_IN_DSS`(체크를 빼서 시트에서 뺀다).
+         * @description DSS 에서 빠진 행(경고 「DSS에서 빠짐」) · DSS 밖에서 더한 행 지우기. DSS 에 있는 제품 행이면 422 `ROW_IN_DSS`(체크를 빼서 시트에서 뺀다).
          */
         delete: operations["delete_spec_flow_row"];
         options?: never;
         head?: never;
         /**
          * Patch Spec Flow Row
-         * @description 행 넣기 · 빼기 · 수량 · 다른 모델 고르기(카탈로그에 없는 모델이면 422 `MODEL_NOT_IN_CATALOG`) · 모델 비우기.
+         * @description 행 넣기 · 빼기 · 수량 · 다른 모델 고르기(카탈로그에 없는 모델이면 422 `MODEL_NOT_IN_CATALOG`) · 모델 비우기 ·
+         *     [확인 필요] 칸에 원문 값 적기(`cells` — 카탈로그 값이 있는 칸이면 422 `CELL_FROM_CATALOG`, 모델을 바꾸면 그 행의 적은 값은 지운다).
          */
         patch: operations["patch_spec_flow_row"];
         trace?: never;
@@ -3480,6 +3524,12 @@ export interface components {
             /** Catalog Version */
             catalog_version?: string | null;
             /**
+             * Changes
+             * @description 저장한 뒤 고친 곳 수(저장한 판과 지금 값의 차이 · 저장한 적 없으면 0)
+             * @default 0
+             */
+            changes: number;
+            /**
              * Code
              * @description 화면 · flow.json 짧은 번호(SP-01 …)
              */
@@ -3504,6 +3554,8 @@ export interface components {
              * @description 가져온 DSS 판(허브 stages.dss.ver)
              */
             dss_ver?: number | null;
+            /** @description 마지막 저장 때 만든 XLSX(머리 「XLSX 내려받기」) — 못 만들었으면 null */
+            file?: components["schemas"]["SFFile"] | null;
             /**
              * Format
              * @default compare
@@ -3526,6 +3578,11 @@ export interface components {
             notation: "ko_mm" | "en_inch";
             /** Rows */
             rows?: components["schemas"]["SFRow"][];
+            /**
+             * Saved At
+             * @description 마지막 저장 시각
+             */
+            saved_at?: string | null;
             /** Sb Id */
             sb_id?: string | null;
             /**
@@ -3725,8 +3782,13 @@ export interface components {
              */
             by: string;
             /**
+             * Catalog Ref
+             * @description 카탈로그에서 더한 제품의 참조(kb:family:… · kb:model:…)
+             */
+            catalog_ref?: string | null;
+            /**
              * Cells
-             * @description 항목 key → 표시 글(현재 표기 기준, 없는 값은 [확인 필요])
+             * @description 항목 key → 표시 글(현재 표기 기준 · 사람이 적은 값이 있으면 그 값, 없는 값은 [확인 필요])
              */
             cells?: {
                 [key: string]: string;
@@ -3746,6 +3808,11 @@ export interface components {
              * @description DSS 다시 가져오기 표시 — added = 이번에 DSS 에서 새로 들어옴 · removed = DSS 에서 빠짐(남겨 둠, 사람이 지울 수 있음)
              */
             dss_status?: ("added" | "removed") | null;
+            /**
+             * Editable
+             * @description 카탈로그에 값이 없어 사람이 바로 적는 칸(노란 칸) — 항목 key 전부
+             */
+            editable?: string[];
             /** Family Id */
             family_id?: string | null;
             /** Family Name */
@@ -3755,6 +3822,20 @@ export interface components {
              * @description 시트 안에서 행을 가리키는 키(DSS 제품 이름에서 만든 slug)
              */
             key: string;
+            /**
+             * Kind
+             * @description 제품 · 솔루션(카탈로그에서 솔루션을 더한 행 — 모델 없음, 칸은 직접 적는다)
+             * @default product
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /**
+             * Manual
+             * @description 사람이 [확인 필요] 칸에 적은 원문 값(항목 key → 글)
+             */
+            manual?: {
+                [key: string]: string;
+            };
             /**
              * Match
              * @description 모델을 맞춘 방법: ref · code(이름 속 모델명) · family(제품군 대표 모델) · manual(사람이 고름) · none
@@ -3780,7 +3861,7 @@ export interface components {
             on: boolean;
             /**
              * Pending
-             * @description 값을 다 채우지 못한 항목 key
+             * @description 값을 다 채우지 못한 항목 key(고른 항목만)
              */
             pending?: string[];
             /**
@@ -3800,6 +3881,19 @@ export interface components {
              */
             qty_note?: string | null;
             /**
+             * Qty Text
+             * @description 표의 「공간 · 수량」 칸 수량 글(3대 · 1식 · 실당 1대 · [확인 필요]) — 개수를 모르면 원문 하나 또는 [확인 필요]
+             * @default
+             */
+            qty_text: string;
+            /**
+             * Source
+             * @description dss = DSS 제품 · catalog = DSS 밖에서 카탈로그로 더한 제품(지울 수 있음)
+             * @default dss
+             * @enum {string}
+             */
+            source: "dss" | "catalog";
+            /**
              * Source Url
              * @description 값 출처(공식 카탈로그 페이지)
              */
@@ -3812,8 +3906,35 @@ export interface components {
             /** Warnings */
             warnings?: components["schemas"]["SFWarning"][];
         };
+        /** SFRowAdd */
+        SFRowAdd: {
+            /**
+             * Kind
+             * @description 솔루션이면 모델을 맞추지 않는다(칸은 [확인 필요] · 직접 적기)
+             * @default product
+             * @enum {string}
+             */
+            kind: "product" | "solution";
+            /**
+             * Name
+             * @description 더할 제품 이름(카탈로그 검색 결과 · 직접 적은 이름)
+             */
+            name: string;
+            /**
+             * Ref
+             * @description 카탈로그 참조(kb:family:… · kb:model:…) — 없으면 이름 속 모델명으로 맞춘다
+             */
+            ref?: string | null;
+        };
         /** SFRowPatch */
         SFRowPatch: {
+            /**
+             * Cells
+             * @description [확인 필요] 칸에 사람이 적는 원문 값(항목 key → 글, 빈 글 · null 은 지움). 카탈로그 값이 있는 칸이면 422 `CELL_FROM_CATALOG`
+             */
+            cells?: {
+                [key: string]: string | null;
+            } | null;
             /**
              * Clear Model
              * @description 모델을 비운다(카탈로그 밖 제품)
@@ -7673,6 +7794,90 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    revert_spec_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SFDoc"];
+                };
+            };
+        };
+    };
+    add_spec_flow_row: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SFRowAdd"];
+            };
+        };
         responses: {
             /** @description 요청 오류 */
             "4XX": {

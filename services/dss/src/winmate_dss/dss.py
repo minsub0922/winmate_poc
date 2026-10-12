@@ -10,6 +10,9 @@ Storyboard(고객 요구사항까지)에서 시작해 업종 → 공간 → 공�
 - 같은 Storyboard 로 다시 만들면(Gate 를 다시 거쳐도) 그 Storyboard 의 저장 전 초안을 돌려준다(200 · 새로 만들지 않음).
   복제본(분기)은 Storyboard 가 새로 생기므로 새 DSS 가 된다.
 - 지우기는 한 번도 저장하지 않은 초안만(status draft · ver 없음). 저장한 DSS 는 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
+- 최종본에서 바로 고치기(웹앱 ① v63 · winmate_common.edits): 저장(:finish)할 때 사람이 고치는 값(EDIT_KEYS)을 판으로 남기고,
+  저장 뒤 고치면 `changes`(고친 곳 수)를 센다 — AI 점선(대기) 값은 판에도 셈에도 들지 않는다. `:revert` 는 저장한 판으로 되돌린다.
+  예전에 저장해 판이 없는 문서는 읽거나 고칠 때 지금 값을 판으로 한 번 남긴다.
 
 저장소: DocStore("dss") 컬렉션 `dss`(dss_ …). 쓰기는 낙관적 잠금 + 재시도, `expected_version` 을 주면 맞지 않을 때 409.
 """
@@ -28,6 +31,7 @@ from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
 from winmate_common.client import ServiceClient
+from winmate_common.edits import SNAPSHOT, changes_of, has_snapshot, restore_snapshot, snapshot_view, take_snapshot
 from winmate_common.platform import register_item, unregister_item
 from winmate_common.store import DocStore, VersionConflict
 
@@ -38,6 +42,7 @@ log = logging.getLogger("winmate.dss")
 COLL = "dss"
 MAX_SPACES = 20
 MAX_PRODUCTS_PER_SPACE = 20
+EDIT_KEYS = ("industry", "spaces", "solutions")   # 사람이 고치는 값 — 저장한 판 · 고친 곳 · 되돌리기(AI 후보 industry_ai · space_recs · solution_recs 는 뺀다)
 
 By = Literal["manual", "ai-pending", "ai-accepted"]
 
@@ -100,6 +105,7 @@ class DSSpace(BaseModel):
     name: str
     by: By = "manual"
     basis: str | None = Field(None, description="근거(예: RQ-05 1 · 입주사 안내)")
+    ext: bool = Field(False, description="AI 가 추천한 확장 공간(요구에는 없음)을 수락한 것 — 화면 「확장 공간 · 요구에는 없음」")
     products: list[DSProduct] = Field(default_factory=list)
 
 
@@ -108,6 +114,7 @@ class DSSpaceRec(BaseModel):
     why: str
     basis: str | None = None
     ext: bool = Field(False, description="요구에는 없는 확장 공간")
+    products: list[DSProduct] = Field(default_factory=list, description="이 추천 공간의 제품 추천(점선) — 공간을 수락하면 함께 들어간다(점선 그대로)")
 
 
 class DSSolution(BaseModel):
@@ -153,6 +160,8 @@ class DSDoc(BaseModel):
     solution_recs: list[DSSolutionRec] = Field(default_factory=list, description="AI 솔루션 추천(점선) — 골라야 들어간다")
     status: Literal["draft", "done"] = "draft"
     ver: int | None = Field(None, description="저장(완료) 판 — flow.json stages.dss.ver")
+    saved_at: str | None = Field(None, description="마지막 저장(:finish) 시각")
+    changes: int = Field(0, description="마지막 저장 뒤 고친 곳 수(저장한 적 없으면 0) — AI 점선(대기) 값은 세지 않는다")
     counts: DSCounts
     version: int
     created_at: str
@@ -219,6 +228,15 @@ class DSSuggestBody(BaseModel):
     scope: Literal["industry", "spaces", "products", "solutions"]
 
 
+class DSAcceptAll(BaseModel):
+    scope: Literal["products", "all"] = Field("products", description="products = 공간별 제품 추천만 · all = 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄 「모두 수락」)")
+
+
+class DSDismiss(BaseModel):
+    kind: Literal["industry", "space", "all"] = Field(description="industry = AI 업종 추론 · space = 추천 공간 하나(name) · all = 점선 모두(업종 · 추천 공간 · 제품 추천)")
+    name: str | None = Field(None, max_length=40, description="kind=space 일 때 추천 공간 이름")
+
+
 class DSSuggestResult(BaseModel):
     doc: DSDoc
     added: int
@@ -267,6 +285,8 @@ class DSStageOut(BaseModel):
     stage: dict[str, Any] = Field(description="Storyboard flow.json 의 stages.dss")
     summary_md: str
     flow_sync: DSFlowSync | None = None
+    ref: str | None = Field(None, description="DSS 번호(DSS-01 …)")
+    ver: int | None = Field(None, description="저장 판(:finish 결과) — 저장 토스트 「DSS-01 v2 저장」")
 
 
 # ── 저장소 ──────────────────────────────────────────────
@@ -306,12 +326,32 @@ def _get(doc_id: str) -> dict[str, Any] | None:
 async def load(doc_id: str) -> dict[str, Any]:
     d = await asyncio.to_thread(_get, doc_id)
     if d:
+        if is_saved(d) and not has_snapshot(d):      # 예전에 저장해 판이 없는 문서 — 지금 값을 저장한 판으로 한 번 남긴다
+            d = await asyncio.to_thread(_ensure_snapshot, d)
         return d
     if re.fullmatch(r"DSS-[0-9A-Za-z]+", doc_id):  # 허브에만 있는 DSS(예시 데이터 · 다른 곳에서 저장) → 편집본으로 가져온다
         adopted = await _adopt(doc_id)
         if adopted:
             return adopted
     raise not_found("DSS", doc_id)
+
+
+def _snap(d: dict[str, Any]) -> dict[str, Any]:
+    """저장한 판 — 사람이 고치는 값(EDIT_KEYS). AI 점선(대기) 제품은 저장 값이 아니므로 뺀다."""
+    snap = take_snapshot(d, EDIT_KEYS)
+    for sp in snap.get("spaces") or []:
+        sp["products"] = _kept(sp.get("products") or [])
+    return snap
+
+
+def _ensure_snapshot(d: dict[str, Any]) -> dict[str, Any]:
+    work = copy.deepcopy(d)
+    work[SNAPSHOT] = _snap(work)
+    try:
+        return _store().put(COLL, d["id"], work, expected_version=d["version"], note="저장한 판 남김")
+    except VersionConflict:                            # 그 사이 다른 곳에서 고침 — 다시 읽는다(그쪽이 남겼을 수 있다)
+        cur = _get(d["id"]) or d
+        return cur if has_snapshot(cur) else d
 
 
 async def update(doc_id: str, fn: Callable[[dict[str, Any]], None], note: str, expected_version: int | None = None) -> dict[str, Any]:
@@ -325,6 +365,8 @@ async def update(doc_id: str, fn: Callable[[dict[str, Any]], None], note: str, e
             if expected_version is not None and cur["version"] != expected_version:
                 raise ApiError(409, "VERSION_CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 해 주세요.", {"current": cur["version"]})
             work = copy.deepcopy(cur)
+            if is_saved(work) and not has_snapshot(work):  # 고치기 전에 저장한 판부터(예전에 저장한 문서)
+                work[SNAPSHOT] = _snap(work)
             fn(work)
             try:
                 return _store().put(COLL, doc_id, work, expected_version=cur["version"], note=note)
@@ -341,13 +383,34 @@ def _kept(products: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def counts(d: dict[str, Any]) -> dict[str, int]:
     prods = [p for sp in d.get("spaces") or [] for p in sp.get("products") or []]
     kept = _kept(prods)
-    pending = (len(prods) - len(kept)) + len(d.get("space_recs") or []) + (1 if d.get("industry_ai") else 0) \
+    recs = d.get("space_recs") or []
+    pending = (len(prods) - len(kept)) + len(recs) + sum(len(r.get("products") or []) for r in recs) + (1 if d.get("industry_ai") else 0) \
         + len([r for r in d.get("solution_recs") or [] if r["id"] not in {s["id"] for s in d.get("solutions") or []}])
     return {"spaces": len(d.get("spaces") or []), "products": len(kept), "solutions": len(d.get("solutions") or []), "pending": pending}
 
 
+def _edit_view(d: dict[str, Any]) -> dict[str, Any]:
+    """고친 곳을 셀 때 견주는 값 — 화면에서 사람이 고치는 칸만(공간은 key · 제품은 id 로 맞춘다).
+    파생 값(함께 쓰는 제품 links · qtyStatus · 직접 공간 근거 · 출처 by)은 세지 않는다 — 이름을 바꾸거나 수량을 채운 것이 하나로 세어지게."""
+    ind = d.get("industry") or {}
+    return {
+        "industry": ind.get("value") or None,
+        "spaces": [{"id": sp.get("key") or sp.get("name"), "name": sp.get("name"),
+                    "products": [{"id": p.get("id") or p.get("name"), "name": p.get("name"), "qty": p.get("qty") or None} for p in _kept(sp.get("products") or [])]}
+                   for sp in d.get("spaces") or []],
+        "solutions": [{"id": s.get("id") or s.get("name")} for s in d.get("solutions") or []],
+    }
+
+
+def changes(d: dict[str, Any]) -> int:
+    """마지막 저장 뒤 고친 곳 수(저장한 적 없거나 판이 없으면 0)."""
+    if not is_saved(d) or not has_snapshot(d):
+        return 0
+    return changes_of(_edit_view(d), _edit_view(snapshot_view(d, EDIT_KEYS)))
+
+
 def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    return {**d, "industry_options": list(INDUSTRIES), "counts": counts(d)}
+    return {**d, "industry_options": list(INDUSTRIES), "counts": counts(d), "changes": changes(d)}
 
 
 # ── 문맥(사전 작업) ─────────────────────────────────────
@@ -529,7 +592,9 @@ async def _adopt(code: str) -> dict[str, Any] | None:
             prods.append({"id": new_id("prd"), "name": p.get("name") or p.get("model") or "", "kind": "product", "ref": p.get("ref"),
                           "model_code": p.get("model_code"), "family_id": None, "category": None,
                           "qty": (f"{q}대" if isinstance(q, int) else q) or None, "why": p.get("why"), "by": p.get("by") or "manual"})
-        spaces.append({"key": slug(sp.get("name") or ""), "name": sp.get("name") or "", "by": sp.get("by") or "manual", "basis": sp.get("basis"), "products": prods})
+        ext = bool(sp.get("ext")) or sp.get("basis") == "extension"
+        spaces.append({"key": slug(sp.get("name") or ""), "name": sp.get("name") or "", "by": sp.get("by") or "manual",
+                       "basis": None if sp.get("basis") == "extension" else sp.get("basis"), "ext": ext, "products": prods})
     cat = {s.get("kb_id"): s for s in await kbx.solutions() if s.get("kb_id")}
     sols = []
     for so in st.get("solutions") or []:
@@ -543,6 +608,7 @@ async def _adopt(code: str) -> dict[str, Any] | None:
            "industry": {"value": ind.get("value"), "by": ind.get("by") or "manual", "basis": ind.get("basis")} if isinstance(ind, dict) and ind.get("value") else None,
            "industry_ai": None, "spaces": spaces, "space_recs": [], "solutions": sols, "solution_recs": [],
            "status": "done", "ver": int(st.get("ver") or it.get("ver") or 1), "saved_at": it.get("updated_at")}
+    doc[SNAPSHOT] = _snap(doc)                       # 허브에 저장된 값 = 저장한 판
     saved = await asyncio.to_thread(_store().put, COLL, code, doc, note="허브에서 가져옴")
     await register_item(feature="DS", item_id=code, title=saved["title"], status="done", route=f"/dss/{code}", summary=_summary_line(saved))
     return saved
@@ -563,12 +629,17 @@ def _space(d: dict[str, Any], key: str) -> dict[str, Any]:
     return sp
 
 
-def _product(d: dict[str, Any], pid: str) -> tuple[dict[str, Any], dict[str, Any]]:
-    for sp in d.get("spaces") or []:
+def _product(d: dict[str, Any], pid: str, recs: bool = False) -> tuple[dict[str, Any], dict[str, Any]]:
+    """(공간, 제품). recs 면 추천 공간(점선)의 제품 추천도 찾는다 — 그때 공간 자리에는 추천 공간이 온다."""
+    for sp in list(d.get("spaces") or []) + (list(d.get("space_recs") or []) if recs else []):
         for p in sp.get("products") or []:
             if p["id"] == pid:
                 return sp, p
     raise not_found("제품", pid)
+
+
+def _is_rec(d: dict[str, Any], sp: dict[str, Any]) -> bool:
+    return any(r is sp for r in d.get("space_recs") or [])
 
 
 async def set_industry(doc_id: str, body: DSSetIndustry) -> dict[str, Any]:
@@ -585,6 +656,26 @@ async def set_industry(doc_id: str, body: DSSetIndustry) -> dict[str, Any]:
     return to_api(await update(doc_id, fn, "업종", body.expected_version))
 
 
+def _new_key(d: dict[str, Any], name: str) -> str:
+    key = slug(name)
+    keys = {s["key"] for s in d.get("spaces") or []}
+    i = 2
+    while key in keys:
+        key = f"{slug(name)}-{i}"
+        i += 1
+    return key
+
+
+def _promote(d: dict[str, Any], rec: dict[str, Any]) -> dict[str, Any]:
+    """추천 공간 → 공간(ai-accepted). 추천 근거가 있으면 그 근거, 없으면 비운다(화면 「AI 추천 공간 · 수락」 · 확장은 「확장 공간 · 요구에는 없음」).
+    그 공간의 제품 추천은 점선 그대로 함께 들어간다."""
+    sp = {"key": _new_key(d, rec["name"]), "name": rec["name"], "by": "ai-accepted", "basis": rec.get("basis"), "ext": bool(rec.get("ext")),
+          "products": [{**p, "by": "ai-pending"} for p in rec.get("products") or []]}
+    d.setdefault("spaces", []).append(sp)
+    d["space_recs"] = [r for r in d.get("space_recs") or [] if _norm(r["name"]) != _norm(rec["name"])]
+    return sp
+
+
 async def add_space(doc_id: str, body: DSAddSpace) -> dict[str, Any]:
     name = body.name.strip()
 
@@ -594,15 +685,10 @@ async def add_space(doc_id: str, body: DSAddSpace) -> dict[str, Any]:
         if any(_norm(s["name"]) == _norm(name) for s in d.get("spaces") or []):
             raise ApiError(409, "SPACE_EXISTS", f"‘{name}’ 공간이 이미 있어요.")
         rec = next((r for r in d.get("space_recs") or [] if _norm(r["name"]) == _norm(name)), None)
-        key = slug(name)
-        keys = {s["key"] for s in d.get("spaces") or []}
-        i = 2
-        while key in keys:
-            key = f"{slug(name)}-{i}"
-            i += 1
-        d.setdefault("spaces", []).append({"key": key, "name": name, "by": "ai-accepted" if rec else "manual",
-                                           "basis": (rec.get("basis") or rec.get("why")) if rec else _manual_basis(d, name), "products": []})
-        d["space_recs"] = [r for r in d.get("space_recs") or [] if _norm(r["name"]) != _norm(name)]
+        if rec:
+            _promote(d, rec)
+            return
+        d.setdefault("spaces", []).append({"key": _new_key(d, name), "name": name, "by": "manual", "basis": _manual_basis(d, name), "ext": False, "products": []})
     return to_api(await update(doc_id, fn, "공간 추가", body.expected_version))
 
 
@@ -642,8 +728,12 @@ async def add_product(doc_id: str, key: str, body: DSAddProduct) -> dict[str, An
 
 
 async def patch_product(doc_id: str, pid: str, body: DSPatchProduct) -> dict[str, Any]:
+    """수량 · 수락. 추천 공간(점선) 안의 제품을 수락하면 그 공간도 함께 수락된다(공간 없이 제품만 들어갈 수 없다)."""
     def fn(d: dict[str, Any]) -> None:
-        _, p = _product(d, pid)
+        sp, p = _product(d, pid, recs=True)
+        if body.accept and p.get("by") == "ai-pending" and _is_rec(d, sp):
+            sp = _promote(d, sp)
+            p = next(x for x in sp["products"] if x["id"] == pid)
         if body.qty is not None:
             p["qty"] = body.qty.strip() or None
         if body.accept and p.get("by") == "ai-pending":
@@ -653,19 +743,47 @@ async def patch_product(doc_id: str, pid: str, body: DSPatchProduct) -> dict[str
 
 async def delete_product(doc_id: str, pid: str, expected_version: int | None = None) -> dict[str, Any]:
     def fn(d: dict[str, Any]) -> None:
-        sp, _ = _product(d, pid)
+        sp, _ = _product(d, pid, recs=True)
         sp["products"] = [x for x in sp["products"] if x["id"] != pid]
     return to_api(await update(doc_id, fn, "제품 지움", expected_version))
 
 
-async def accept_all(doc_id: str) -> dict[str, Any]:
-    """공간별 제품 AI 추천 모두 수락(보드 DS2_AI '추천 모두 수락 n')."""
+async def accept_all(doc_id: str, body: DSAcceptAll | None = None) -> dict[str, Any]:
+    """AI 추천 모두 수락 — products: 공간별 제품 추천만 · all: 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄 「모두 수락」)."""
+    scope = body.scope if body else "products"
+
     def fn(d: dict[str, Any]) -> None:
+        if scope == "all":
+            ai = d.get("industry_ai")
+            if ai and ai.get("value") != (d.get("industry") or {}).get("value"):
+                d["industry"] = {"value": ai["value"], "by": "ai-accepted", "basis": ai.get("basis")}
+            d["industry_ai"] = None
+            for r in list(d.get("space_recs") or []):
+                if len(d.get("spaces") or []) < MAX_SPACES and not _covered(d, r["name"]):
+                    _promote(d, r)
+            d["space_recs"] = []
         for sp in d.get("spaces") or []:
             for p in sp.get("products") or []:
                 if p.get("by") == "ai-pending":
                     p["by"] = "ai-accepted"
     return to_api(await update(doc_id, fn, "AI 추천 모두 수락"))
+
+
+async def dismiss(doc_id: str, body: DSDismiss) -> dict[str, Any]:
+    """AI 점선 지우기(거절) — 업종 추론 · 추천 공간 하나 · 모두(업종 · 추천 공간 · 제품 추천). 제품 추천 하나는 DELETE …/products/{pid}."""
+    def fn(d: dict[str, Any]) -> None:
+        if body.kind in ("industry", "all"):
+            d["industry_ai"] = None
+        if body.kind == "space":
+            name = (body.name or "").strip()
+            if not any(_norm(r["name"]) == _norm(name) for r in d.get("space_recs") or []):
+                raise not_found("추천 공간", name)
+            d["space_recs"] = [r for r in d.get("space_recs") or [] if _norm(r["name"]) != _norm(name)]
+        if body.kind == "all":
+            d["space_recs"] = []
+            for sp in d.get("spaces") or []:
+                sp["products"] = _kept(sp.get("products") or [])
+    return to_api(await update(doc_id, fn, "AI 추천 지움"))
 
 
 async def set_solutions(doc_id: str, body: DSSetSolutions) -> dict[str, Any]:
@@ -766,11 +884,13 @@ def _sol_score(c: dict[str, Any], det: dict[str, Any] | None, d: dict[str, Any])
     return score, [r["n"] for r in reqs], links
 
 
-async def solution_options(doc_id: str) -> dict[str, Any]:
+async def solution_options(doc_id: str, selected: list[str] | None = None) -> dict[str, Any]:
+    """솔루션 카드. selected 를 주면 그 고름으로 본 on · 겹침 안내(솔루션 고르기 팝업 — 넣기 전 고른 것)."""
     d = await load(doc_id)
     cat = await kbx.solutions()
     det = await _details([c["id"] for c in cat])
-    on = {s["id"] for s in d.get("solutions") or []}
+    by_id = {c["id"]: c for c in cat}
+    on = set(selected) if selected is not None else {s["id"] for s in d.get("solutions") or []}
     recs = {r["id"]: r["why"] for r in d.get("solution_recs") or []}
     rows = []
     for i, c in enumerate(cat):
@@ -780,7 +900,10 @@ async def solution_options(doc_id: str) -> dict[str, Any]:
             "ref": f"kb:solution:{c['kb_id']}" if c.get("kb_id") else None, "links": links, "on": c["id"] in on,
             "rec": c["id"] in recs and c["id"] not in on, "why": recs.get(c["id"]), "relevant": score > 0 or c["id"] in on or c["id"] in recs}))
     rows.sort(key=lambda x: (x[0], x[1]))
-    sel = [s for s in d.get("solutions") or []]
+    if selected is not None:
+        sel = [{"id": i, "name": by_id[i].get("name") or i} for i in dict.fromkeys(selected) if i in by_id]
+    else:
+        sel = [s for s in d.get("solutions") or []]
     return {"items": [r[2] for r in rows], "overlap": _overlap(sel, det)}
 
 
@@ -916,8 +1039,11 @@ async def suggest(doc_id: str, body: DSSuggestBody) -> dict[str, Any]:
     if scope == "products":
         if not d.get("spaces"):
             raise ApiError(422, "NO_SPACES", "공간을 먼저 하나 이상 넣어 주세요.")
-        per = await asyncio.gather(*(_space_candidates(d, sp) for sp in d["spaces"]))
-        for sp, items in zip(d["spaces"], per):
+        # 공간 + 추천 공간(점선) — 추천 공간의 제품 추천은 그 추천에 붙는다(보드 DS2_AI: 점선 공간 안의 점선 제품)
+        targets = list(d["spaces"]) + [{"key": f"rec:{_norm(r['name'])}", "name": r["name"], "products": r.get("products") or []}
+                                       for r in d.get("space_recs") or []]
+        per = await asyncio.gather(*(_space_candidates(d, sp) for sp in targets))
+        for sp, items in zip(targets, per):
             for c in items:
                 cands.append({**c, "key": f"P{len(cands) + 1}", "space": sp["name"], "space_key": sp["key"]})
     out = await _llm_industry_spaces(d, scope, cands)
@@ -977,11 +1103,14 @@ async def suggest(doc_id: str, body: DSSuggestBody) -> dict[str, Any]:
             doc["industry_ai"] = ind_sug
             added = 1 if ind_sug else 0
         elif scope == "spaces":
-            doc["space_recs"] = [r for r in space_recs if not _covered(doc, r["name"])]
+            old = {_norm(r["name"]): r.get("products") or [] for r in doc.get("space_recs") or []}   # 같은 추천 공간의 제품 추천은 그대로 둔다
+            doc["space_recs"] = [{**r, "products": old.get(_norm(r["name"]), [])} for r in space_recs if not _covered(doc, r["name"])]
             added = len(doc["space_recs"])
         else:
             by_name = {sp["name"]: sp for sp in doc.get("spaces") or []}
             by_key = {sp["key"]: sp for sp in doc.get("spaces") or []}
+            for r in doc.get("space_recs") or []:
+                by_key[f"rec:{_norm(r['name'])}"] = r
             for c in prod_sug:
                 sp = by_key.get(c.get("space_key")) or by_name.get(c.get("space"))
                 if sp is None or len(sp.get("products") or []) >= MAX_PRODUCTS_PER_SPACE:
@@ -1060,7 +1189,10 @@ def stage(d: dict[str, Any]) -> dict[str, Any]:
             if not p.get("qty") or "[" in (p.get("qty") or ""):
                 row["qtyStatus"] = "확인 필요"
             prods.append(row)
-        spaces.append({"name": sp["name"], "by": sp.get("by") or "manual", "basis": sp.get("basis"), "products": prods})
+        row_sp: dict[str, Any] = {"name": sp["name"], "by": sp.get("by") or "manual", "basis": sp.get("basis"), "products": prods}
+        if sp.get("ext"):
+            row_sp["ext"] = True                      # 확장 공간(요구에는 없음) — 더한 키(§6 값 모양은 그대로)
+        spaces.append(row_sp)
     ind = d.get("industry")
     c = counts(d)
     return {"id": d["id"], "from": d.get("sb_id"),
@@ -1122,6 +1254,7 @@ async def finish(doc_id: str) -> dict[str, Any]:
         doc["ver"] = int(doc.get("ver") or 0) + 1 if (doc.get("status") == "done" or doc.get("saved_at")) else 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
+        doc[SNAPSHOT] = _snap(doc)                   # 저장한 판 — 이 뒤로 고치면 「고친 곳 n」
     saved = await update(doc_id, fn, "저장")
     await register_item(feature="DS", item_id=doc_id, title=saved.get("title") or "DSS", status="done", route=f"/dss/{doc_id}", summary=_summary_line(saved))
     st, md = stage(saved), summary_md(saved)
@@ -1129,9 +1262,24 @@ async def finish(doc_id: str) -> dict[str, Any]:
     if saved.get("sb_id"):
         sync = await push_stage(saved["sb_id"], "dss", ref=saved.get("code") or doc_id, ver=int(saved.get("ver") or 1), res_id=doc_id,
                                 title=saved.get("title"), value=st, md=md, card=card(saved))
-    return {"stage": st, "summary_md": md, "flow_sync": {"md_added": sync["md_added"], "synced": sync.get("synced") or []} if sync else None}
+    return {"stage": st, "summary_md": md, "flow_sync": {"md_added": sync["md_added"], "synced": sync.get("synced") or []} if sync else None,
+            "ref": saved.get("code") or doc_id, "ver": int(saved.get("ver") or 1)}
+
+
+NOT_SAVED_MSG = "아직 저장하지 않아 되돌릴 판이 없어요"
+
+
+async def revert(doc_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌린다(고친 곳 0). 저장한 적 없으면 409 NOT_SAVED. 점선(대기) 제품은 저장 값이 아니라 함께 빠진다."""
+    def fn(d: dict[str, Any]) -> None:
+        if not is_saved(d) or not restore_snapshot(d, EDIT_KEYS):
+            raise ApiError(409, "NOT_SAVED", NOT_SAVED_MSG)
+        d["space_recs"] = [r for r in d.get("space_recs") or [] if not _covered(d, r["name"])]
+        if d.get("industry_ai") and d["industry_ai"].get("value") == (d.get("industry") or {}).get("value"):
+            d["industry_ai"] = None
+    return to_api(await update(doc_id, fn, "되돌리기"))
 
 
 async def get_stage(doc_id: str) -> dict[str, Any]:
     d = await load(doc_id)
-    return {"stage": stage(d), "summary_md": summary_md(d), "flow_sync": None}
+    return {"stage": stage(d), "summary_md": summary_md(d), "flow_sync": None, "ref": d.get("code") or doc_id, "ver": d.get("ver")}

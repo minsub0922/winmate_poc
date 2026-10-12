@@ -1,7 +1,7 @@
 /**
- * DSS 저장 전 초안(보드에 없음 · 2026-10-10) — 실제 스택(MODEL_MODE=mock).
- * Gate 를 다시 거쳐 같은 Storyboard 로 시작하면 같은 초안을 이어서 연다(새 초안이 늘지 않음 · `POST /v1/dss` 200) →
- * 목록(보드 List)의 초안 줄에 손을 올리면 × → 확인 → 지운다(`DELETE /v1/dss/{id}` 204) → 다시 시작하면 새 초안.
+ * DSS 저장 전 초안(보드에 없음 · 2026-10-10 → 웹앱 ① v63 상세 한 장) — 실제 스택(MODEL_MODE=mock).
+ * 목록 위 팝업(Gate)을 다시 거쳐 같은 Storyboard 로 시작하면 같은 초안을 이어서 연다(새 초안이 늘지 않음 · `POST /v1/dss` 200 · 상세는 「작성 중」) →
+ * 목록(보드 List)의 초안 카드에 손을 올리면 × → 확인 → 지운다(`DELETE /v1/dss/{id}` 204) → 다시 시작하면 새 초안(「새로 만들기」).
  * 실행: WM_E2E_SUITE=dss WM_E2E_DEV=1 WM_E2E_PORT=5211 npx playwright test e2e/dss/dss-draft.spec.ts --workers=1
  */
 import path from 'node:path';
@@ -11,9 +11,10 @@ import { makeStoryboard, shotTo, tag } from '../shell/flowkit';
 
 const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '__screens__');
 
-/** Gate(보드 Gate) — 우리 Storyboard 를 골라 시작 → 편집 화면 id */
+/** 목록 위 팝업(보드 Gate) — 우리 Storyboard 를 골라 시작 → 상세 id */
 async function startFromGate(page: Page, name: string, resume = false) {
   await page.goto('/dss/new');
+  await expect(page.getByRole('dialog', { name: '새 DSS 만들기 · Storyboard 고르기' })).toBeVisible();
   const row = page.getByRole('radio', { name: new RegExp(name) });
   await row.click();
   await expect(row).toHaveAttribute('aria-checked', 'true');
@@ -24,8 +25,8 @@ async function startFromGate(page: Page, name: string, resume = false) {
     await shotTo(page, DIR, 'DS1-draft-new');
   }
   await page.getByRole('button', { name: resume ? '초안 이어 쓰기' : '이 Storyboard로 시작' }).click();
-  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+\?step=space$/, { timeout: 15_000 });
-  await expect(page.getByRole('heading', { name: '공간과 제품을 정해요' })).toBeVisible();
+  await expect(page).toHaveURL(/\/dss\/dss_[0-9A-Za-z]+$/, { timeout: 15_000 });
+  await expect(page.locator('.cd-head .cd-ref')).toHaveText(resume ? '작성 중' : '새로 만들기');
   return page.url().split('/').pop()!.split('?')[0];
 }
 
@@ -60,16 +61,17 @@ test('DSS 초안 — Gate 를 다시 거쳐도 같은 초안 · 목록에서 × 
 
   // 처음 시작 → 공간 하나 넣기
   const id = await startFromGate(page, name);
-  await page.locator('#ds-sp').fill('로비');
-  await page.locator('#ds-sp').press('Enter');
-  await expect(page.locator('[data-space="로비"]')).toHaveAttribute('aria-selected', 'true');
+  await page.locator('#ds-add-space').fill('로비');
+  await page.locator('#ds-add-space').press('Enter');
+  await expect(page.locator('[data-space-card="로비"]')).toBeVisible();
   const code = (await (await request.get(`/api/dss/v1/dss/${id}`)).json()).code as string;
 
   // Gate 를 다시 거쳐 같은 Storyboard 로 → 줄에 「작성 중 초안 있음」 · 「초안 이어 쓰기」 → 같은 초안(넣은 공간 그대로)
   expect(await startFromGate(page, name, true)).toBe(id);
   await expect(page.locator('.fl-footline')).toHaveCount(0);
   expect(code).toMatch(/^DSS-/);
-  await expect(page.locator('[data-space="로비"]')).toBeVisible();
+  await expect(page.locator('[data-space-card="로비"]')).toBeVisible();
+  await expect(page.locator('.cd-head .cd-meta')).toContainText('작성 중 · 공간 1 · 제품 0 · 솔루션 0 · ');
   expect((await draftsOf(request, sb.id)).map((d) => d.id)).toEqual([id]);
   // 서버도 같은 초안을 200 으로 돌려준다
   const again = await request.post('/api/dss/v1/dss', { data: { sb_id: sb.id } });
@@ -88,6 +90,6 @@ test('DSS 초안 — Gate 를 다시 거쳐도 같은 초안 · 목록에서 × 
   // 지운 뒤 다시 시작하면 새 초안
   const id2 = await startFromGate(page, name);
   expect(id2).not.toBe(id);
-  await expect(page.getByText('공간 0 · 제품 0')).toBeVisible();
+  await expect(page.locator('[data-space-card]')).toHaveCount(0);
   expect((await request.delete(`/api/dss/v1/dss/${id2}`)).status()).toBe(204);     // 정리
 });

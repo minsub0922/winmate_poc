@@ -29,7 +29,7 @@ export function VpDetailDialog({ open, onClose, doc, item, onImport }: {
       title={<span className="vd-title"><span className="vd-ic"><PathIcon d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z" size={20} color="var(--wm-brand)" /></span>
         <span style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}><span style={{ fontSize: 19, fontWeight: 700 }}>{item.name}</span><span className="wm-kindtag">{item.kind === 'solution' ? '솔루션' : '제품'}</span></span>
-          <span style={{ fontSize: 12.5, color: 'var(--wm-text-muted)', fontWeight: 400 }}>연결된 가치 {total} · 이 제안 {d?.here.length ?? 0} · 다른 제안 {d?.other.length ?? 0}{(item.spaces ?? []).length ? ` · 공간 ${(item.spaces ?? []).join(' · ')}` : ''}</span>
+          <span style={{ fontSize: 12.5, color: 'var(--wm-text-muted)', fontWeight: 400 }}>연결된 가치 {total} · 이 제안 {d?.here.length ?? 0} · 다른 제안 {d?.other.length ?? 0}{(item.spaces ?? []).length ? ` · ${doc.dss_ref ? `${doc.dss_ref} ` : ''}공간 ${(item.spaces ?? []).join(' · ')}` : ''}</span>
         </span></span>}
       bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column' }}
       footer={<div style={{ display: 'flex', alignItems: 'center', gap: 10, width: '100%' }}>

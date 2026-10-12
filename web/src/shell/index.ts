@@ -32,9 +32,9 @@ export {
   CONTENT, STAGE_LABEL, ORDER as FLOW_ORDER, useFlow, useFlowsById, useFlows, useFlowContents, branchFlow, patchFlow, suggestKeyMessage, useFlowInvalidate, doneKeys, flowKey,
 } from './flow/api';
 export type { ContentKey, StageKey, ContentMeta, FlowDoc, FlowCell, FlowListItem, FlowContentItem, FlowCard, FlowStageOut } from './flow/api';
-export { FlowBar, SBPopup, ContentPopup, GateScreen, FlowDots, whenText } from './flow/parts';
+export { FlowBar, SBPopup, ContentPopup, GateDialog, FlowDots, whenText } from './flow/parts';
 export type { GateStart } from './flow/parts';
-export { ContentListScreen, ListHero, HistoryHead, SegLegend, StepMeter, ThumbFrame, CardMini } from './flow/list';
-export type { DraftRow, SegState } from './flow/list';
-export { ContentDetail, StepModal, StepSlot, DetailFollow, useStepParam, useEditGuard, useCloseAsk } from './flow/detail';
-export type { DetailStatus, ContentDetailProps, StepModalProps } from './flow/detail';
+export { ContentListScreen, GateScreen, ListHero, HistoryHead, SegLegend, StepMeter, ThumbFrame, CardMini } from './flow/list';
+export type { DraftRow, SegState, GateProps } from './flow/list';
+export { ContentDetail, detailMode, AiButton, PendingBar, InlineInput } from './flow/detail';
+export type { DetailMode, NextCard } from './flow/detail';

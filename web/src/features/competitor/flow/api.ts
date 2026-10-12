@@ -1,6 +1,7 @@
 /**
  * 경쟁사 리스트업(새 CA 흐름) API — contracts/competitor.json `/v1/ca-flows*` → @/api/gen/competitor.
  * 화면은 문서 하나(CFDoc)를 읽고, 바꾸는 호출은 모두 고친 문서를 돌려준다(→ 캐시에 바로 넣는다).
+ * 문서의 `changes` = 저장한 뒤 고친 곳 수(머리 「고친 곳 n · 되돌리기」), `:revert` = 저장한 판으로.
  */
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, unwrap } from '@/api/client';
@@ -20,7 +21,6 @@ export type CFCompetitor = Omit<S['CFCompetitor'], 'categories' | 'spaces' | 'cr
 export type CFDoc = Omit<S['CFDoc'], 'competitors' | 'dss_items'> & { competitors: CFCompetitor[]; dss_items: CFDssItem[] };
 export type CFStageOut = S['CFStageOut'];
 export type CFCandidatesResult = S['CFCandidatesResult'];
-export type CFListItem = S['CFListItem'];
 export type DimKey = 'spec' | 'price' | 'cases' | 'esg' | 'brand';
 export type Verdict = CFDim['verdict'];
 
@@ -91,13 +91,15 @@ export function useCfActions(id: string) {
       put(r.flow);
       return r;
     },
+    /** 저장 — 끝나면 문서를 다시 읽어(ver · saved_at · changes 0) 그 자리에서 저장됨으로 바뀐다 */
     finish: async (): Promise<CFStageOut> => {
       const r = unwrap(await api.competitor.POST('/v1/ca-flows/{flow_id}:finish', P(id)));
-      // 저장된 문서(status done · ver)를 읽은 뒤 돌려준다 — 팝업이 닫힐 때 최종본이 바로 저장됨으로 보이게
-      await qc.invalidateQueries({ queryKey: cfKey(id) });
+      put(unwrap(await api.competitor.GET('/v1/ca-flows/{flow_id}', P(id))));
       void qc.invalidateQueries({ queryKey: ['storyboard'] });
       void qc.invalidateQueries({ queryKey: cfListKey });
       return r;
     },
+    /** 저장한 판으로 되돌리기(고친 곳 0 · 점선 AI 후보는 그대로) — 저장한 적 없으면 409 NOT_SAVED */
+    revert: () => run(async () => unwrap(await api.competitor.POST('/v1/ca-flows/{flow_id}:revert', P(id)))),
   };
 }

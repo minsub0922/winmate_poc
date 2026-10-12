@@ -98,10 +98,24 @@ async def import_value(map_id: str, item_key: str, body: vm.VMImportValue) -> di
     return await vm.import_value(map_id, item_key, body)
 
 
+@router.post("/value-maps/{map_id}:clear-pending", response_model=vm.VMDoc)
+async def clear_pending(map_id: str) -> dict[str, Any]:
+    """점선(AI 추천) 모두 지우기 — 가치 후보는 빼고 AI 니즈 추론은 비운다(사람이 쓴 값 · 수락한 값은 그대로)."""
+    return await vm.clear_pending(map_id)
+
+
 @router.post("/value-maps/{map_id}:finish", response_model=vm.VMStageOut)
 async def finish(map_id: str) -> dict[str, Any]:
-    """저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다."""
+    """저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다. 이 값이 「저장한 판」이 된다(고친 곳 · 되돌리기의 기준)."""
     return await vm.finish(map_id)
+
+
+@router.post("/value-maps/{map_id}:revert", response_model=vm.VMDoc,
+             responses={409: {"description": "NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없음"}})
+async def revert_value_map(map_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기 — 고른 제품 · 솔루션과 가치 · 니즈를 마지막 저장 값으로(changes 0, 점선 AI 추천도 사라진다).
+    한 번도 저장하지 않았으면 409 `NOT_SAVED`."""
+    return await vm.revert(map_id)
 
 
 @router.get("/value-maps/{map_id}/stage", response_model=vm.VMStageOut)

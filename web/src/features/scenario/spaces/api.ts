@@ -1,7 +1,8 @@
 /**
  * 공간 → 시나리오 → 장면(새 흐름) API — contracts/scenario.json `/v1/space-sets*` → @/api/gen/scenario.
  * 만들기는 Gate 에서 고른 Storyboard(`sb_id`)의 DSS 로 시작하고, 저장(`:finish`)은 허브 stages.sc 에 반영된다(flow_sync).
- * 같은 Storyboard 의 저장 전 초안이 있으면 만들기가 그 초안을 돌려준다. `dss_changed` 는 GET · 다시 가져오기 응답에만 계산돼 온다.
+ * 같은 Storyboard 의 저장 전 초안이 있으면 만들기가 그 초안을 돌려준다. `dss_changed` 는 GET · 다시 가져오기 · 되돌리기 응답에만 계산돼 온다.
+ * 응답마다 `changes`(저장한 판과 다른 곳 수 — 보드 SC2_Edit 「고친 곳 n」), `:revert` 는 저장한 판으로(웹앱 ① v63).
  */
 import { useQuery } from '@tanstack/react-query';
 import { api, unwrap } from '@/api/client';
@@ -41,18 +42,21 @@ export function useSpaceSets() {
   return useQuery({ queryKey: ssListKey, queryFn: async () => unwrap(await api.scenario.GET('/v1/space-sets', { params: { query: { limit: 100 } } })) });
 }
 
-export function useSpaceSet(id: string) {
-  return useQuery({ queryKey: ssKey(id), enabled: !!id, queryFn: () => getSpaceSet(id) });
-}
-
 export async function getSpaceSet(id: string): Promise<SSDoc> {
   return normalize(unwrap(await api.scenario.GET('/v1/space-sets/{set_id}', P(id))));
 }
 
-/** 만들기 — 같은 Storyboard 의 저장 전 초안이 있으면 그 초안을 200 으로 돌려준다(reused) */
-export async function createSpaceSet(body: S['SSCreate']): Promise<{ doc: SSDoc; reused: boolean }> {
-  const res = await api.scenario.POST('/v1/space-sets', { body });
-  return { doc: normalize(unwrap(res)), reused: res.response.status === 200 };
+export function useSpaceSet(id: string) {
+  return useQuery({ queryKey: ssKey(id), enabled: !!id, queryFn: () => getSpaceSet(id) });
+}
+
+/** 저장한 판으로 되돌리기(보드 SC2_Edit 「되돌리기」) — 저장한 적 없으면 409 NOT_SAVED */
+export async function revertSpaceSet(id: string): Promise<SSDoc> {
+  return normalize(unwrap(await api.scenario.POST('/v1/space-sets/{set_id}:revert', P(id))));
+}
+
+export async function createSpaceSet(body: S['SSCreate']): Promise<SSDoc> {
+  return normalize(unwrap(await api.scenario.POST('/v1/space-sets', { body })));
 }
 
 export async function putSpaceSet(id: string, spaces: SSSpace[], expected?: number): Promise<SSDoc> {

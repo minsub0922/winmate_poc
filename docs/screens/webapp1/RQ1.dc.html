@@ -2,116 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>고객 요구사항 · 입력</title>
+<title>고객 요구사항 · 새로 만들기 (빈 최종본에 바로 입력)</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
-<style>
-body{margin:0;background:#f5f6f8}
-a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button,input,textarea{font-family:inherit}
-button{cursor:pointer}
-input::placeholder,textarea::placeholder{color:#a3a9b5}
-.r-ghost:hover{background:#f3f5fd}
-.r-ghost:focus-visible,.r-btn:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
-</style>
+<style>body{margin:0;background:#f5f6f8}</style>
 </helmet>
-<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="View" content="{{hd.content}}" status="{{hd.bg}}" done="{{hd.bgDone}}" hint-size="1440px,900px"></dc-import>
-  <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 40"></div>
-  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 130px; top: 50px; width: 1180px; height: 800px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
-    <dc-import name="StepHead" content="{{hd.content}}" title="{{hd.title}}" mode="{{hd.mode}}" ver="{{hd.ver}}" sb="{{hd.sb}}" note="{{hd.note}}" current="{{hd.current}}" done="{{hd.done}}" close-href="{{hd.close}}" on-sb="{{hd.onSb}}" hint-size="1180px,72px"></dc-import>
-    <div style="width: 1180px; height: 728px; display: flex; overflow: hidden">
-      <section style="{{mainStyle}}">
-        <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; height: 40px">
-          <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; flex-grow: 1">고객 요구사항 입력</h1>
-        </div>
-
-        <div style="flex-shrink: 0; height: 64px; box-sizing: border-box; border: 1.5px dashed #b8c2e6; border-radius: 14px; background: #fbfbfc; display: flex; align-items: center; gap: 12px; padding: 0 16px">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M12 15V4 M7 9l5-5 5 5 M4 15v5h16v-5"/></svg>
-          <span style="font-size: 13.5px; font-weight: 600; flex-grow: 1">파일을 끌어다 놓으면 폼이 채워져요 <span style="font-weight: 400; color: #8a91a0">· PPTX · PDF · DOCX · 메일</span></span>
-          <span style="height: 28px; padding: 0 10px; border-radius: 8px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{readFrom}}</span>
-          <button class="r-ghost" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; white-space: nowrap">파일 첨부</button>
-        </div>
-
-        <div style="{{gridStyle}}">
-          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-height: 0">
-            <sc-for list="{{fields}}" as="f" hint-placeholder-count="3">
-              <div style="display: flex; flex-direction: column; gap: 6px">
-                <label for="{{f.id}}" style="font-size: 13px; font-weight: 600; color: #3d4452; display: flex; align-items: center; gap: 6px">{{f.k}}</label>
-                <input id="{{f.id}}" value="{{f.v}}" placeholder="{{f.ph}}" style="{{f.style}}">
-              </div>
-            </sc-for>
-            <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-height: 0">
-              <label for="rq-note" style="font-size: 13px; font-weight: 600; color: #3d4452; display: flex; align-items: center; gap: 6px">제작자 의견<span style="font-size: 11.5px; font-weight: 500; color: #8a91a0">· 고객 문서에서 빠져요</span></label>
-              <textarea id="rq-note" placeholder="제안 방향 · 강조할 점" style="flex-grow: 1; min-height: 60px; box-sizing: border-box; resize: none; border: 1px solid #e2e5ea; border-radius: 10px; padding: 10px 12px; font-size: 13.5px; line-height: 1.6; color: #121417; outline: none"></textarea>
-            </div>
-          </div>
-          <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 16px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; min-height: 0; overflow: hidden">
-            <div style="display: flex; align-items: center; gap: 8px"><span style="font-size: 14px; font-weight: 700; flex-grow: 1">키맨별 요구사항</span><span style="font-size: 12px; color: #8a91a0">가중치 합 100%</span></div>
-            <sc-for list="{{kms}}" as="k" hint-placeholder-count="2">
-              <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
-                <div style="display: flex; align-items: center; gap: 8px">
-                  <label for="{{k.idW}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">키맨</label>
-                  <input id="{{k.idW}}" value="{{k.who}}" style="flex-grow: 1; min-width: 0; height: 34px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; padding: 0 10px; font-size: 13.5px; font-weight: 700; color: #121417; outline: none">
-                  <span style="{{k.wStyle}}">{{k.w}}</span>
-                </div>
-                <sc-for list="{{k.reqs}}" as="q" hint-placeholder-count="3">
-                  <div style="display: flex; align-items: center; gap: 8px; padding-left: 4px">
-                    <span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #8a91a0; width: 12px">{{q.n}}</span>
-                    <span style="{{q.style}}">{{q.t}}</span>
-                    <sc-if value="{{q.tag}}" hint-placeholder-val="{{false}}"><span style="{{q.tagStyle}}">{{q.tagText}}</span></sc-if>
-                  </div>
-                </sc-for>
-                <button style="align-self: flex-start; height: 24px; padding: 0 0 0 24px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600">+ 요구사항</button>
-              </div>
-            </sc-for>
-            <button style="flex-shrink: 0; height: 40px; border-radius: 10px; border: 1.5px dashed #c9d0e6; background: #fbfbfc; color: #1428a0; font-size: 13px; font-weight: 600">+ 키맨 추가</button>
-          </div>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
-          <sc-if value="{{ft.hasBack}}" hint-placeholder-val="{{true}}"><a href="{{ft.backHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>{{ft.back}}</a></sc-if>
-          <span style="flex-grow: 1"></span>
-          <span style="font-size: 12.5px; color: #596170">모두 선택 항목이에요</span>
-          <a class="r-btn" href="{{ft.saveHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{ft.save}}</a>
-        </div>
-      </section>
-    </div>
-  </div>
+<div style="width: 1440px; height: 900px; overflow: hidden">
+  <dc-import name="View" content="rq" status="new" hint-size="1440px,900px"></dc-import>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["new","edit"],"default":"new"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() {
-    const inBase = 'height: 42px; box-sizing: border-box; border-radius: 10px; padding: 0 12px; font-size: 14px; color: #121417; outline: none; border: 1px solid #e2e5ea; background: #ffffff;';
-    const EDIT = this.props.mode === 'edit';
-    const fields = (EDIT ? [['rq-proj', '프로젝트명', '용산 업무시설 재개발 AI Ready 오피스', ''], ['rq-cust', '고객사', 'E 자산운용', ''], ['rq-to', '최종 제안대상', '대표이사', '예) 대표이사']] : [['rq-proj', '프로젝트명', '성수 플래그십 리테일 리뉴얼', ''], ['rq-cust', '고객사', 'K 리츠', ''], ['rq-to', '최종 제안대상', '', '예) 대표이사']]).map(([id, k, v, ph]) => ({ id, k, v, ph, style: inBase }));
-    const reqStyle = 'font-size: 13px; line-height: 1.45; flex-grow: 1; min-width: 0;';
-    const tagStyle = 'height: 18px; padding: 0 6px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; background: #fff4dc; color: #7a4f00;';
-    const KM = EDIT ? [['대표이사', 50, [['사용자를 인식하고 반응하는 AI Ready 오피스', false], ['최초 AI Ready 공간으로 알리기', false], ['에너지 사용량 20% 절감 · 실측 증빙', false]]], ['공간컨텐츠실장', 30, [['오피스를 업무환경 플랫폼으로', true], ['예측 · 반응형 공간', false], ['건물 가치 · 임대 선호도 제고', false]]], ['개발사업팀장', 20, [['AI 인프라를 설계 단계에 반영', false], ['시공 · 운영 유지보수 부담 최소화', false]]]] : [['자산관리팀장', 60, [['1층 파사드 미디어로 집객', false], ['테넌트별 콘텐츠 운영', false], ['시설 원격 관리', false]]], ['마케팅 리드', 40, [['시즌 캠페인 빠른 교체', false], ['방문객 데이터 활용', true]]]];
-    const kms = KM.map(([who, wt, reqs], i) => ({
-      who, w: wt + '%', idW: 'rq-k' + i,
-      wStyle: 'height: 28px; padding: 0 10px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; flex-shrink: 0; background: #eaeefb; color: #1428a0;',
-      reqs: reqs.map(([t, vague], j) => ({ n: j + 1, t, tag: vague, style: reqStyle, tagText: '범위 불명확', tagStyle }))
-    }));
-    const HD = (R) => ({ content: 'rq', label: '고객 요구사항 입력', bg: EDIT ? 'saved' : 'new', bgDone: 0, title: EDIT ? '용산 업무시설 재개발 AI Ready 오피스' : '새 요구사항', mode: EDIT ? 'edit' : 'new', ver: 'RQ-01 v2',
-      sb: EDIT ? 'SB-01' : '', note: EDIT ? '저장하면 RQ-01 v3 · 연결된 Storyboard 2개(SB-01 · SB-02)에 반영돼요' : '저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요', current: 1, done: 0, close: EDIT ? 'RQ_View.dc.html' : 'RQ_Draft.dc.html', onSb: () => {} });
-    const FT = { hasBack: false, backHref: '', back: '', saveHref: 'RQ_View.dc.html', save: EDIT ? '저장 · v3' : '저장' };
-    const R = {
-      readFrom: EDIT ? '직접 입력 · 읽은 자료 없음' : '회의록_K리츠.pdf에서 읽음',
-      steps: ['요구사항 입력', '저장'], one: 1,
-      mainStyle: 'height: 728px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; overflow: hidden; width: 1180px; padding: 22px 40px 24px 40px;',
-      gridStyle: 'flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 16px;',
-      fields, kms
-    };
-    R.hd = HD(R);
-    R.ft = FT;
-    return R;
-  }
+  renderVals() { return { yes: true }; }
 }
 </script>
 </body>

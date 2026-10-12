@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>DSS · 공간 · 제품</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#a3a9b5}
+.p-sp:hover,.p-ghost:hover{background:#f3f5fd}
+.p-aib:hover{background:#eaeefb}
+.p-sp:focus-visible,.p-ghost:focus-visible,.p-btn:focus-visible,.p-aib:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="dss" current="판교 스타트업 단지 DSS" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="공간별 제품 매칭 DSS" title="판교 스타트업 단지" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="SB-05" cur="SB-05" note="DSS를 저장하면 이 Storyboard에 연결돼요" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 18px 40px 18px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <!-- 업종 -->
+      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0; position: relative; z-index: 5">
+        <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em; flex-grow: 1">공간과 제품을 정해요</h1>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">{{totalLine}}</span>
+        <div style="position: relative">
+          <button class="p-ghost" onClick="{{toggleInd}}" aria-expanded="{{indOpen}}" style="{{indBtnStyle}}"><span style="font-size: 12px; font-weight: 600; color: #596170">업종</span><span>{{indLabel}}</span><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+          <sc-if value="{{indOpen}}" hint-placeholder-val="{{false}}">
+            <div role="listbox" aria-label="업종" style="position: absolute; right: 0; top: 42px; width: 220px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 12px; box-shadow: 0 12px 32px rgba(18,20,23,0.14); padding: 6px">
+              <sc-for list="{{inds}}" as="i" hint-placeholder-count="8"><button class="p-ghost" role="option" aria-selected="{{i.on}}" onClick="{{i.pick}}" style="{{i.style}}">{{i.t}}</button></sc-for>
+            </div>
+          </sc-if>
+        </div>
+        <button class="p-aib" onClick="{{aiInd}}" style="height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 업종 추론</button>
+      </div>
+      <sc-if value="{{indAiShow}}" hint-placeholder-val="{{false}}">
+        <div style="flex-shrink: 0; display: flex; align-items: center; gap: 10px; height: 40px; box-sizing: border-box; padding: 0 8px 0 12px; border-radius: 10px; background: #f7f8fd; border: 1px dashed #b8c2e6">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="#1428a0"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>
+          <span style="font-size: 13px; font-weight: 700">오피스 · 업무시설</span>
+          <span style="font-size: 12px; color: #596170; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">근거 · RQ-05 ‘입주사 공용 회의실 예약’ · ‘단지 운영’ — 복합단지일 수도 있어요</span>
+          <button class="p-ghost" onClick="{{applyInd}}" style="height: 28px; padding: 0 12px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700">적용</button>
+        </div>
+      </sc-if>
+
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 14px">
+        <!-- 공간 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 6px; height: 46px; padding: 0 8px 0 14px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+            <span style="font-size: 14px; font-weight: 700; flex-grow: 1">공간 {{spN}}</span>
+            <button class="p-aib" onClick="{{aiSp}}" style="height: 30px; padding: 0 9px; border-radius: 8px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 공간 추천</button>
+          </div>
+          <div role="tablist" aria-orientation="vertical" aria-label="공간" style="flex-grow: 1; min-height: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; overflow: hidden">
+            <sc-for list="{{spaces}}" as="p" hint-placeholder-count="3">
+              <button class="p-sp" role="tab" aria-selected="{{p.on}}" onClick="{{p.pick}}" style="{{p.style}}">
+                <span style="font-size: 13.5px; font-weight: 700; flex-grow: 1; white-space: nowrap">{{p.t}}</span>
+                <sc-if value="{{p.hasPend}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 6px; border-radius: 999px; border: 1px dashed #1428a0; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center">+{{p.pend}}</span></sc-if>
+                <span style="{{p.countStyle}}">{{p.n}}</span>
+              </button>
+            </sc-for>
+            <sc-for list="{{recs}}" as="r" hint-placeholder-count="0">
+              <div style="display: flex; align-items: center; gap: 8px; min-height: 44px; box-sizing: border-box; padding: 4px 6px 4px 10px; border-radius: 10px; border: 1px dashed #b8c2e6; background: #fbfcff">
+                <span style="display: flex; flex-direction: column; gap: 1px; flex-grow: 1; min-width: 0"><span style="font-size: 13px; font-weight: 700; color: #1428a0; display: flex; align-items: center; gap: 5px">{{r.t}}<sc-if value="{{r.ext}}" hint-placeholder-val="{{false}}"><span style="height: 16px; padding: 0 4px; border-radius: 4px; border: 1px solid #121417; color: #121417; font-size: 10px; font-weight: 700; display: flex; align-items: center">확장</span></sc-if></span><span style="font-size: 11px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.why}}</span></span>
+                <button class="p-ghost" onClick="{{r.add}}" style="height: 28px; padding: 0 9px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; flex-shrink: 0">추가</button>
+              </div>
+            </sc-for>
+          </div>
+          <div style="padding: 8px 10px 10px 10px; border-top: 1px solid #f0f2f5; flex-shrink: 0">
+            <div style="display: flex; align-items: center; gap: 6px; height: 36px; box-sizing: border-box; padding: 0 4px 0 10px; border-radius: 9px; border: 1px dashed #b8bec8">
+              <label for="ds-sp" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">공간 추가</label>
+              <input id="ds-sp" placeholder="공간 이름으로 추가" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 12.5px; color: #121417; outline: none">
+              <button class="p-ghost" style="height: 28px; padding: 0 9px; border-radius: 7px; border: none; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700">추가</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 선택한 공간의 제품 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 10px 0 18px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+            <span style="font-size: 15px; font-weight: 700">{{spName}}</span>
+            <span style="font-size: 12px; color: #596170; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{spLine}}</span>
+            <sc-if value="{{hasPending}}" hint-placeholder-val="{{false}}"><button class="p-ghost" onClick="{{acceptAll}}" style="height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 700; white-space: nowrap">추천 모두 수락 {{pendAll}}</button></sc-if>
+            <button class="p-aib" onClick="{{runAi}}" style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 공간별 제품 자동 매칭</button>
+          </div>
+          <div style="flex-grow: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column">
+            <sc-for list="{{prods}}" as="x" hint-placeholder-count="2">
+              <div style="{{x.wrap}}">
+                <span style="width: 42px; height: 42px; flex-shrink: 0; border-radius: 10px; background: #f0f2f5; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#596170" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v11H3z M8 20h8 M12 16v4"/></svg></span>
+                <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+                  <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">{{x.t}}</span><span style="{{x.tagStyle}}">{{x.tag}}</span></span>
+                  <span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{x.why}}</span>
+                </span>
+                <span style="{{x.qtyStyle}}">{{x.qty}}</span>
+                <button class="p-ghost" onClick="{{x.detail}}" style="height: 32px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; white-space: nowrap">상세</button>
+                <sc-if value="{{x.pend}}" hint-placeholder-val="{{false}}"><button class="p-ghost" onClick="{{x.accept}}" style="height: 32px; padding: 0 12px; border-radius: 8px; border: none; background: #1428a0; color: #ffffff; font-size: 12.5px; font-weight: 700; white-space: nowrap">수락</button></sc-if>
+                <button class="p-ghost" onClick="{{x.remove}}" aria-label="{{x.removeLabel}}" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; color: #8a91a0; display: flex; align-items: center; justify-content: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+              </div>
+            </sc-for>
+            <sc-if value="{{noProds}}" hint-placeholder-val="{{false}}">
+              <div style="margin: 18px; padding: 18px; border-radius: 12px; border: 1px dashed #c9d0e6; font-size: 13px; color: #596170; line-height: 1.6">아직 제품이 없어요. 아래에서 모델명으로 찾아 넣거나, AI 자동 매칭을 써 보세요.</div>
+            </sc-if>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 10px 18px 12px 18px; border-top: 1px solid #f0f2f5; flex-shrink: 0">
+            <div style="flex-grow: 1; height: 38px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 12px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <label for="ds-add" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">제품 추가</label>
+              <input id="ds-add" placeholder="{{addPh}}" style="flex-grow: 1; min-width: 0; border: none; background: transparent; font-size: 13px; color: #121417; outline: none">
+            </div>
+            <button class="p-ghost" style="height: 38px; padding: 0 12px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; white-space: nowrap">제품 탐색에서 고르기</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <a href="DS1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
+        <span style="flex-grow: 1"></span>
+        <sc-if value="{{hasPending}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: #596170; white-space: nowrap">수락하지 않은 추천은 저장되지 않아요</span></sc-if>
+        <a class="p-btn" href="DS4.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">다음 · 솔루션<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-05" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{detailOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 30"></div>
+    <div style="position: absolute; left: 120px; top: 36px; width: 1200px; height: 828px; z-index: 31">
+      <dc-import name="ProductDetail" tab="spec" on-close="{{closeDetail}}" hint-size="1200px,828px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pai = !!this.props.ai;
+    const s = Object.assign({ ind: -1, indOpen: false, indAi: pai, spAi: pai, prodAi: pai, sp: ['로비', '공용 회의실'], sel: '로비', acc: {}, rm: {}, pop: '' }, (this.state && this.state.k === String(pai)) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: String(pai) }));
+    const IND = ['오피스 · 업무시설', '리테일', '외식 · 카페', '호텔 · 숙박', '병원 · 헬스케어', '교육', '공공 · 관공서', '주거 · 복합단지'];
+    const inds = IND.map((t, i) => { const on = s.ind === i; return { t, on, pick: () => put({ ind: i, indOpen: false }),
+      style: 'width: 100%; height: 34px; padding: 0 10px; border-radius: 8px; border: none; text-align: left; font-size: 13px;' + (on ? ' background: #eaeefb; color: #1428a0; font-weight: 700;' : ' background: transparent; color: #121417;') }; });
+    // 공간: 이름 → [근거, 직접 넣은 제품, AI 추천 제품]
+    const SPACE = {
+      '로비': ['RQ-05 1 · 입주사 안내', [['Smart Signage QM55C', '입주사 안내 · 직접 추가', '2대']], [['삼성 키오스크', '방문객 셀프 등록 · RQ-05 1', '[확인 필요]']]],
+      '공용 회의실': ['RQ-05 1 · 공용 회의실 예약', [], [['Flip Pro WA75D', '협업 보드 · RQ-05 1', '실 수 [확인 필요]'], ['Smart Signage QB43C', '회의실 예약 현황 · RQ-05 1', '실당 1대']]],
+      '라운지': ['오피스 기본 공간', [], [['Smart Signage QM55C', '입주사 소식 · 교류', '1대']]],
+      '전시 공간': ['RQ-05 2 · 반도체 박물관 협업 전시', [], [['The Wall IAB 146"', '협업 전시 미디어월 · RQ-05 2 [확인 필요]', '1식']]],
+      '통합 관제실': ['RQ-05 3 · 단지 에너지 모니터링', [], [['비디오월 VM55B', '에너지 · 설비 모니터링 · RQ-05 3', '2×2']]],
+      '공용 공간': ['오피스 기본 공간', [], [['SmartThings 센서', '재실 · 환경 감지 · RQ-05 3', '[확인 필요]'], ['Smart Signage QB43C', '층별 안내', '층당 1대']]],
+      '주차장': ['요구에는 없음 · 확장', [], [['옥외형 사이니지 OHC55', '단지 출입 동선 안내', '2대']]]
+    };
+    const REC = [['라운지', 'RQ-05 입주사 교류 · 오피스 기본', false], ['전시 공간', 'RQ-05 반도체 박물관 협업 전시', false], ['통합 관제실', 'RQ-05 단지 에너지 모니터링', false], ['공용 공간', '오피스 기본 · 안내 · 쾌적성', false], ['주차장', '요구에는 없음 · 단지 출입 동선', true]];
+    const itemsOf = (name) => {
+      const [, man, rec] = SPACE[name] || ['', [], []];
+      const out = man.map(([t, why, qty], j) => ({ key: name + '-m' + j, t, why, qty, kind: 'man' }));
+      if (s.prodAi) rec.forEach(([t, why, qty], j) => { const key = name + '-a' + j; out.push({ key, t, why, qty, kind: s.acc[key] ? 'acc' : 'pend' }); });
+      return out.filter((x) => !s.rm[x.key]);
+    };
+    let total = 0, pendAll = 0;
+    const spaces = s.sp.map((t) => {
+      const it = itemsOf(t);
+      const kept = it.filter((x) => x.kind !== 'pend').length;
+      const pend = it.length - kept;
+      total += kept; pendAll += pend;
+      const on = s.sel === t;
+      return { t, n: String(kept), pend, hasPend: pend > 0, on,
+        style: 'display: flex; align-items: center; gap: 8px; width: 100%; height: 44px; box-sizing: border-box; padding: 0 10px; border-radius: 10px; border: none; text-align: left; color: #121417; flex-shrink: 0;' + (on ? ' background: #eaeefb;' : ' background: transparent;'),
+        countStyle: 'min-width: 24px; height: 24px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center;' + (kept ? (on ? ' background: #1428a0; color: #ffffff;' : ' background: #f0f2f5; color: #3d4452;') : ' border: 1px dashed #b8bec8; color: #596170;'),
+        pick: () => put({ sel: t }) };
+    });
+    const recs = s.spAi ? REC.filter(([t]) => s.sp.indexOf(t) < 0).map(([t, why, ext]) => ({ t, why, ext, add: () => put({ sp: s.sp.concat([t]), sel: t }) })) : [];
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+    const prods = itemsOf(s.sel).map((x, k) => ({
+      t: x.t, why: x.why, qty: x.qty, pend: x.kind === 'pend', removeLabel: x.t + ' 빼기',
+      tag: x.kind === 'pend' ? 'AI 추천' : x.kind === 'acc' ? 'AI 추천 · 수락' : '직접',
+      tagStyle: tagBase + (x.kind === 'pend' ? ' border: 1px dashed #1428a0; color: #1428a0;' : x.kind === 'acc' ? ' background: #e6f4ee; color: #0b6e4f;' : ' background: #f0f2f5; color: #3d4452;'),
+      qtyStyle: 'height: 28px; box-sizing: border-box; padding: 0 10px; border-radius: 8px; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (x.qty.indexOf('[') >= 0 ? ' background: #fff4dc; color: #7a4f00;' : ' background: #f0f2f5; color: #121417;'),
+      wrap: 'display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 0 14px 0 18px;' + (k ? ' border-top: 1px solid #f5f6f8;' : '') + (x.kind === 'pend' ? ' background: #fbfcff; outline: 1px dashed #c9d1f2; outline-offset: -6px; border-radius: 12px;' : ''),
+      accept: () => put({ acc: Object.assign({}, s.acc, { [x.key]: true }) }),
+      remove: () => put({ rm: Object.assign({}, s.rm, { [x.key]: true }) }),
+      detail: () => put({ pop: 'product' })
+    }));
+    const acceptAll = () => { const acc = Object.assign({}, s.acc); s.sp.forEach((name) => ((SPACE[name] || [0, 0, []])[2]).forEach((r, j) => { acc[name + '-a' + j] = true; })); put({ acc }); };
+    const indSet = s.ind >= 0;
+    return {
+      steps: ['Storyboard', '공간 · 제품', '솔루션'], two: 2,
+      inds, indOpen: s.indOpen, indLabel: indSet ? IND[s.ind] : '선택해 주세요', indAiShow: s.indAi && !indSet,
+      indBtnStyle: 'height: 38px; padding: 0 12px; border-radius: 10px; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; white-space: nowrap;' + (indSet ? ' border: 1.5px solid #1428a0; background: #ffffff; color: #1428a0;' : ' border: 1px dashed #b8bec8; background: #ffffff; color: #121417;'),
+      spaces, recs, spN: s.sp.length, prods, noProds: prods.length === 0,
+      spName: s.sel, spLine: '근거 · ' + ((SPACE[s.sel] || [''])[0]),
+      totalLine: '공간 ' + s.sp.length + ' · 제품 ' + total, hasPending: pendAll > 0, pendAll,
+      addPh: s.sel + '에 제품 추가 · 모델명이나 용도로 찾기',
+      popOpen: s.pop === 'sb', detailOpen: s.pop === 'product',
+      toggleInd: () => put({ indOpen: !s.indOpen }),
+      aiInd: () => put({ indAi: true }), applyInd: () => put({ ind: 0 }),
+      aiSp: () => put({ spAi: true }), runAi: () => put({ prodAi: true }), acceptAll,
+      openPop: () => put({ pop: 'sb' }), closePop: () => put({ pop: '' }), closeDetail: () => put({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

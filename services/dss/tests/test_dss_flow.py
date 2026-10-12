@@ -308,3 +308,190 @@ async def test_adopt_hub_only_dss(client, apps):
     # 허브에서 가져온 DSS 는 저장한 것 — 지울 수 없다
     r = await client.delete("/v1/dss/DSS-07")
     assert r.status_code == 409 and r.json()["error"]["code"] == "SAVED_CONTENT"
+
+
+async def _saved(client, apps) -> dict[str, Any]:
+    """저장한 DSS 하나(업종 · 공간 2 · 제품 2 · 솔루션 1) — v1."""
+    d = await _new(client, apps)
+    i = d["id"]
+    await client.put(f"/v1/dss/{i}/industry", json={"value": "오피스 · 업무시설"})
+    d = (await client.post(f"/v1/dss/{i}/spaces", json={"name": "로비"})).json()
+    d = (await client.post(f"/v1/dss/{i}/spaces", json={"name": "공용 회의실"})).json()
+    lobby, meet = d["spaces"][0]["key"], d["spaces"][1]["key"]
+    await client.post(f"/v1/dss/{i}/spaces/{lobby}/products", json={"name": "Smart Signage QM55C", "ref": "kb:model:mdl_LH55QMCEBGCXKR",
+                                                                 "model_code": "LH55QMCEBGCXKR", "family_id": "fam_G000182628", "qty": "2대"})
+    await client.post(f"/v1/dss/{i}/spaces/{meet}/products", json={"name": "Flip Pro WA75D"})
+    await client.put(f"/v1/dss/{i}/solutions", json={"ids": ["magicinfo"]})
+    assert (await client.get(f"/v1/dss/{i}")).json()["changes"] == 0          # 저장 전은 늘 0
+    out = (await client.post(f"/v1/dss/{i}:finish")).json()
+    assert out["ref"] == d["code"] and out["ver"] == 1
+    return (await client.get(f"/v1/dss/{i}")).json()
+
+
+async def test_changes_and_revert_after_save(client, apps):
+    """저장 → 고치기 → changes(앞에 하나 끼워도 1) → :revert → 값 · changes 0 → 다시 고쳐 저장 v2(웹앱 ① v63 「고친 곳 n · 되돌리기」)."""
+    d = await _saved(client, apps)
+    i = d["id"]
+    assert d["status"] == "done" and d["ver"] == 1 and d["changes"] == 0 and d["saved_at"]
+    lobby = d["spaces"][0]
+    qm = lobby["products"][0]
+    # 수량 하나 → 1
+    d = (await client.patch(f"/v1/dss/{i}/products/{qm['id']}", json={"qty": "3대"})).json()
+    assert d["changes"] == 1
+    # 같은 값으로 되돌려 쓰면 0
+    d = (await client.patch(f"/v1/dss/{i}/products/{qm['id']}", json={"qty": "2대"})).json()
+    assert d["changes"] == 0
+    # 공간 목록 앞에 하나 끼워도(뒤 공간이 다 바뀐 것으로 세지 않음) 1 · 공간 이름 1 · 업종 1 · 솔루션 1 · 제품 빼기 1
+    d = (await client.post(f"/v1/dss/{i}/spaces", json={"name": "라운지"})).json()
+    assert d["changes"] == 1
+    d = (await client.patch(f"/v1/dss/{i}/spaces/{lobby['key']}", json={"name": "메인 로비"})).json()
+    assert d["changes"] == 2
+    d = (await client.put(f"/v1/dss/{i}/industry", json={"value": "리테일"})).json()
+    assert d["changes"] == 3
+    d = (await client.put(f"/v1/dss/{i}/solutions", json={"ids": ["magicinfo", "biot"]})).json()
+    assert d["changes"] == 4
+    meet = next(s for s in d["spaces"] if s["name"] == "공용 회의실")
+    d = (await client.delete(f"/v1/dss/{i}/products/{meet['products'][0]['id']}")).json()
+    assert d["changes"] == 5
+    # AI 점선(대기) 값은 고친 곳이 아니다 — 수락해야 센다
+    r = (await client.post(f"/v1/dss/{i}:suggest", json={"scope": "products"})).json()
+    pend = [p for s in r["doc"]["spaces"] for p in s["products"] if p["by"] == "ai-pending"]
+    assert pend and r["doc"]["changes"] == 5
+    d = (await client.patch(f"/v1/dss/{i}/products/{pend[0]['id']}", json={"accept": True})).json()
+    assert d["changes"] == 6
+    # 되돌리기 → 저장한 판(점선 제품도 빠짐) · changes 0
+    d = (await client.post(f"/v1/dss/{i}:revert")).json()
+    assert d["changes"] == 0 and d["industry"]["value"] == "오피스 · 업무시설"
+    assert [s["name"] for s in d["spaces"]] == ["로비", "공용 회의실"]
+    assert [p["qty"] for p in d["spaces"][0]["products"]] == ["2대"] and [p["name"] for p in d["spaces"][1]["products"]] == ["Flip Pro WA75D"]
+    assert [s["id"] for s in d["solutions"]] == ["magicinfo"] and d["counts"]["pending"] == 0
+    assert d["ver"] == 1 and d["status"] == "done"
+    # 다시 고쳐 저장 → v2 · changes 0 · 허브도 v2
+    d = (await client.patch(f"/v1/dss/{i}/products/{qm['id']}", json={"qty": "4대"})).json()
+    assert d["changes"] == 1
+    out = (await client.post(f"/v1/dss/{i}:finish")).json()
+    assert out["ver"] == 2 and out["summary_md"].startswith(f"## DSS · {d['code']} v2")
+    d = (await client.get(f"/v1/dss/{i}")).json()
+    assert d["ver"] == 2 and d["changes"] == 0
+    async with testing.api_client(apps["storyboard"]) as sb:
+        flow = (await sb.get(f"/v1/flows/{d['sb_id']}")).json()
+    assert flow["stages"]["dss"]["ver"] == 2 and flow["stages"]["dss"]["spaces"][0]["products"][0]["qty"] == "4대"
+    # v2 에서 되돌리면 v2 판으로
+    await client.patch(f"/v1/dss/{i}/products/{qm['id']}", json={"qty": ""})
+    d = (await client.post(f"/v1/dss/{i}:revert")).json()
+    assert d["spaces"][0]["products"][0]["qty"] == "4대" and d["changes"] == 0
+
+
+async def test_revert_not_saved_409(client, apps):
+    d = await _new(client, apps)
+    r = await client.post(f"/v1/dss/{d['id']}:revert")
+    err = r.json()["error"]
+    assert r.status_code == 409 and err["code"] == "NOT_SAVED" and err["message"] == "아직 저장하지 않아 되돌릴 판이 없어요"
+    assert (await client.post("/v1/dss/dss_nope:revert")).status_code == 404
+
+
+async def test_legacy_saved_doc_gets_snapshot_lazily(client, apps):
+    """판을 남기기 전에 저장한 문서 — 처음 읽을 때 지금 값을 저장한 판으로 남긴다(한 번 다시 씀) → 고치면 센다 · 되돌리기."""
+    from winmate_common.edits import SNAPSHOT
+    from winmate_dss import dss as ds
+
+    d = await _saved(client, apps)
+    i = d["id"]
+    raw = ds._store().get(ds.COLL, i)
+    raw.pop(SNAPSHOT)
+    ds._store().put(ds.COLL, i, raw, note="예전 문서")
+    v0 = ds._store().get(ds.COLL, i)["version"]
+    d = (await client.get(f"/v1/dss/{i}")).json()
+    assert d["changes"] == 0 and d["version"] == v0 + 1 and SNAPSHOT in ds._store().get(ds.COLL, i)
+    assert (await client.get(f"/v1/dss/{i}")).json()["version"] == v0 + 1     # 두 번째 읽기는 다시 쓰지 않는다
+    qm = d["spaces"][0]["products"][0]
+    d = (await client.patch(f"/v1/dss/{i}/products/{qm['id']}", json={"qty": "9대"})).json()
+    assert d["changes"] == 1
+    assert (await client.post(f"/v1/dss/{i}:revert")).json()["spaces"][0]["products"][0]["qty"] == "2대"
+    # 판 없이 고치기부터 해도(읽기 없이) 고치기 전 값이 판이 된다
+    raw = ds._store().get(ds.COLL, i)
+    raw.pop(SNAPSHOT)
+    ds._store().put(ds.COLL, i, raw, note="예전 문서")
+    d = await ds.patch_product(i, qm["id"], ds.DSPatchProduct(qty="7대"))
+    assert d["changes"] == 1
+
+
+async def test_adopted_hub_dss_has_snapshot(client, apps):
+    sb_id = await _sb(apps)
+    async with testing.api_client(apps["storyboard"]) as sb:
+        await sb.put(f"/v1/flows/{sb_id}/stages/dss", json={"ref": "DSS-31", "value": {
+            "spaces": [{"name": "주차장", "basis": "extension", "by": "manual", "products": [{"name": "옥외형 사이니지 OHC55", "kind": "product", "qty": "1대", "by": "manual"}]}],
+            "solutions": []}, "md": "- 공간 1"})
+    d = (await client.get("/v1/dss/DSS-31")).json()
+    assert d["changes"] == 0 and d["spaces"][0]["ext"] is True and d["spaces"][0]["basis"] is None
+    d = (await client.patch(f"/v1/dss/DSS-31/products/{d['spaces'][0]['products'][0]['id']}", json={"qty": "2대"})).json()
+    assert d["changes"] == 1
+    assert (await client.post("/v1/dss/DSS-31:revert")).json()["changes"] == 0
+
+
+async def test_pending_spaces_carry_products_accept_all_dismiss(client, apps):
+    """보드 DSBody AI: 추천 공간(점선) 안에도 제품 추천(점선) — 「AI 추천 n개」 · 모두 수락(scope=all) · 모두 지우기 · 하나씩 수락 · ×."""
+    d = await _new(client, apps)
+    i = d["id"]
+    await client.post(f"/v1/dss/{i}/spaces", json={"name": "로비"})
+    await client.post(f"/v1/dss/{i}:suggest", json={"scope": "industry"})
+    r = (await client.post(f"/v1/dss/{i}:suggest", json={"scope": "spaces"})).json()
+    assert [x["name"] for x in r["doc"]["space_recs"]] == ["라운지", "전시 공간", "통합 관제실", "공용 공간", "주차장"]
+    r = (await client.post(f"/v1/dss/{i}:suggest", json={"scope": "products"})).json()
+    recs = {x["name"]: x for x in r["doc"]["space_recs"]}
+    rec_prods = [p for x in recs.values() for p in x["products"]]
+    assert rec_prods and all(p["by"] == "ai-pending" for p in rec_prods)
+    sp_pend = [p for s in r["doc"]["spaces"] for p in s["products"] if p["by"] == "ai-pending"]
+    assert r["doc"]["counts"]["pending"] == 1 + 5 + len(rec_prods) + len(sp_pend)
+    # 공간 추천을 다시 돌려도 이미 붙은 제품 추천은 그대로
+    r2 = (await client.post(f"/v1/dss/{i}:suggest", json={"scope": "spaces"})).json()
+    assert sum(len(x["products"]) for x in r2["doc"]["space_recs"]) == len(rec_prods)
+    # 추천 공간의 제품 하나 × → 그 추천에서만 빠짐
+    some = next(x for x in recs.values() if x["products"])
+    d = (await client.delete(f"/v1/dss/{i}/products/{some['products'][0]['id']}")).json()
+    assert len(next(x for x in d["space_recs"] if x["name"] == some["name"])["products"]) == len(some["products"]) - 1
+    # 추천 공간의 제품을 수락하면 그 공간도 함께 수락(공간 ai-accepted · 그 제품 ai-accepted · 나머지는 점선 그대로)
+    other = next((x for x in recs.values() if x["name"] != some["name"] and len(x["products"]) >= 1), None)
+    if other:
+        d = (await client.patch(f"/v1/dss/{i}/products/{other['products'][0]['id']}", json={"accept": True})).json()
+        sp = next(s for s in d["spaces"] if s["name"] == other["name"])
+        assert sp["by"] == "ai-accepted" and sp["products"][0]["by"] == "ai-accepted"
+        assert other["name"] not in {x["name"] for x in d["space_recs"]}
+    # 추천 공간 하나 지우기 · 없는 이름 404
+    d = (await client.post(f"/v1/dss/{i}:dismiss", json={"kind": "space", "name": "주차장"})).json()
+    assert "주차장" not in {x["name"] for x in d["space_recs"]}
+    assert (await client.post(f"/v1/dss/{i}:dismiss", json={"kind": "space", "name": "없음"})).status_code == 404
+    # 모두 수락(scope=all) → 업종 · 추천 공간(확장은 ext) · 제품 추천 모두 들어가고 점선 0
+    d = (await client.post(f"/v1/dss/{i}:accept-all", json={"scope": "all"})).json()
+    assert d["counts"]["pending"] == 0 and d["industry"]["by"] == "ai-accepted" and d["industry_ai"] is None and d["space_recs"] == []
+    assert {"라운지", "전시 공간", "통합 관제실", "공용 공간"} <= {s["name"] for s in d["spaces"]}
+    ex = next(s for s in d["spaces"] if s["name"] == "전시 공간")
+    assert ex["by"] == "ai-accepted" and ex["basis"] == "RQ-05 2 · 반도체 박물관 협업 전시" and ex["ext"] is False
+    assert next(s for s in d["spaces"] if s["name"] == "공용 공간")["basis"] is None        # 요구 근거 없는 추천 공간은 근거를 비운다
+    # 다시 추천 → 모두 지우기(dismiss all)
+    await client.post(f"/v1/dss/{i}:suggest", json={"scope": "spaces"})
+    await client.post(f"/v1/dss/{i}:suggest", json={"scope": "industry"})
+    d = (await client.post(f"/v1/dss/{i}:dismiss", json={"kind": "all"})).json()
+    assert d["counts"]["pending"] == 0 and d["space_recs"] == [] and d["industry_ai"] is None
+    # 확장 추천 공간(주차장)을 넣으면 ext · 근거 없음 → stage 에 ext
+    r = (await client.post(f"/v1/dss/{i}:suggest", json={"scope": "spaces"})).json()
+    assert "주차장" in {x["name"] for x in r["doc"]["space_recs"]}
+    d = (await client.post(f"/v1/dss/{i}/spaces", json={"name": "주차장"})).json()
+    pk = next(s for s in d["spaces"] if s["name"] == "주차장")
+    assert pk["ext"] is True and pk["basis"] is None
+    st = (await client.get(f"/v1/dss/{i}/stage")).json()["stage"]
+    assert next(s for s in st["spaces"] if s["name"] == "주차장")["ext"] is True
+
+
+async def test_solution_options_with_selected_preview(client, apps):
+    """솔루션 고르기 팝업 — 넣기 전 고른 것(selected)으로 on · 겹침 안내를 본다(문서는 그대로)."""
+    d = await _new(client, apps)
+    i = d["id"]
+    d = (await client.post(f"/v1/dss/{i}/spaces", json={"name": "로비"})).json()
+    await client.post(f"/v1/dss/{i}/spaces/{d['spaces'][0]['key']}/products", json={"name": "Smart Signage QM55C", "family_id": "fam_G000182628", "ref": "kb:model:mdl_LH55QMCEBGCXKR"})
+    o = (await client.get(f"/v1/dss/{i}/solution-options", params={"selected": "magicinfo,vxt"})).json()
+    on = [x["id"] for x in o["items"] if x["on"]]
+    assert set(on) == {"magicinfo", "vxt"} and o["overlap"].startswith("MagicINFO와 Samsung VXT는 둘 다")
+    o = (await client.get(f"/v1/dss/{i}/solution-options", params={"selected": ""})).json()
+    assert not any(x["on"] for x in o["items"]) and o["overlap"] is None
+    assert (await client.get(f"/v1/dss/{i}")).json()["solutions"] == []

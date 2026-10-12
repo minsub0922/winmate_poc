@@ -1,52 +1,27 @@
 /**
- * DSS 화면 조각 — AI 추가기능 버튼(칸마다 보드 크기) · 출처 태그 · 제품 검색 줄(결과는 위로 열린다).
+ * DSS 화면 조각 — 출처 태그(보드 DSBody tagBase) · 아이콘 · KB 참조 도우미 · 공간 카드 안 제품 찾기(보드 DSBody `sp.searching`).
  */
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { cx, searchProducts, useEscape, type ProductSearchItem } from '@/ui';
-import type { By, DSAddProduct } from './api';
+import type { By, DSAddProduct, DSCandidate } from './api';
 
-const STAR = 'M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z';
-
-/** AI 추가기능 버튼(보드 p-aib · o-aib) — size: 38 업종 · sol 솔루션 · sp 공간 · prod 공간별 제품 */
-export function AiBtn({ size, onClick, busy, disabled, children }: { size: '38' | 'sol' | 'sp' | 'prod'; onClick: () => void; busy?: boolean; disabled?: boolean; children: ReactNode }) {
-  const icon = size === 'sol' ? 14 : size === '38' ? 13 : 12;
-  return (
-    <button type="button" className={cx('ds-aib', `ds-aib--${size}`)} onClick={onClick} disabled={disabled || busy} aria-busy={busy || undefined}>
-      <svg width={icon} height={icon} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d={STAR} /></svg>
-      {busy ? 'AI가 찾는 중…' : children}
-    </button>
-  );
-}
-
-export function Star({ size = 13 }: { size?: number }) {
-  return <svg width={size} height={size} viewBox="0 0 24 24" fill="var(--wm-brand)" aria-hidden><path d={STAR} /></svg>;
-}
-
-const BY_LABEL: Record<By, string> = { manual: '직접', 'ai-pending': 'AI 추천', 'ai-accepted': 'AI 추천 · 수락' };
-
-/** 출처 태그(보드 tagBase) — 직접 · AI 추천(점선) · AI 추천 · 수락(초록) */
-export function Tag({ by }: { by: By }) {
-  return <span className={cx('ds-tag', by !== 'manual' && `ds-tag--${by}`)}>{BY_LABEL[by]}</span>;
+/** 출처 태그(보드 DSBody tagBase h20 · 10.5/700): 직접(선) · AI(초록) · AI 점선 — 업종 「AI 추론」, 솔루션 「AI 추천」처럼 글은 자리마다 다르다 */
+export function ByTag({ by, children }: { by: By; children?: string }) {
+  const label = children ?? (by === 'manual' ? '직접' : 'AI');
+  return <span className={cx('ds-by', by === 'manual' ? 'ds-by--man' : by === 'ai-pending' ? 'ds-by--pend' : 'ds-by--ai')}>{label}</span>;
 }
 
 export const Chevron = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M6 9l6 6 6-6" /></svg>
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M6 9l6 6 6-6" /></svg>
 );
-export const XIcon = ({ size = 14 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden><path d="M6 6l12 12M18 6L6 18" /></svg>
-);
-export const ScreenIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--wm-text-muted)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M3 5h18v11H3z M8 20h8 M12 16v4" /></svg>
-);
-export const BackIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M15 6l-6 6 6 6" /></svg>
-);
-export const ArrowIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+/** × (보드: 공간 11 · 2.6 · 제품 10 · 2.8 · 솔루션 10 · 2.8) */
+export const XIcon = ({ size = 11, w = 2.6 }: { size?: number; w?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={w} strokeLinecap="round" aria-hidden><path d="M6 6l12 12M18 6L6 18" /></svg>
 );
 export const CheckIcon = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M5 12l5 5L20 7" /></svg>
 );
+export const STAR = 'M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z';
 
 /** `kb:model:mdl_<코드>` → 모델코드(상세 시트). 제품군은 대표 모델을 모른다 */
 export function modelCodeOf(ref?: string | null): string | null {
@@ -66,73 +41,71 @@ export function addBodyOf(it: ProductSearchItem): DSAddProduct {
   };
 }
 
+interface Row { key: string; name: string; meta: string; body: DSAddProduct }
+
 /**
- * 제품 추가 검색 줄(보드 DS2 아래 h38) — KB 제품 · 제품군 검색, 결과는 입력창 위로 열린다.
- * Enter: 고른 결과(없으면 첫 결과), 결과가 없으면 입력 그대로 「직접 추가 · KB 에 없음 · 확인 필요」.
+ * 공간 카드 안 제품 찾기(보드 DSBody `+ 제품` → 검색 칸 h30 · 「제품 탐색」) — 비어 있으면 그 공간의 KB 추천(S1 후보),
+ * 쓰면 KB 제품 · 제품군 검색. 결과는 칸 아래(카드 안)에 줄로 — 스크롤 칸에 잘리지 않게. 결과가 없으면 입력 그대로 「직접 추가 · KB 에 없음 · 확인 필요」.
+ * Enter 고른 줄(없으면 첫 줄) · ↑↓ · Esc 닫기 · 카드 밖을 누르면 닫힌다.
  */
-export function ProductSearch({ placeholder, disabled, onAdd }: { placeholder: string; disabled?: boolean; onAdd: (b: DSAddProduct) => Promise<unknown> }) {
+export function CardSearch({ id, space, candidates, onAdd, onPicker, onClose }: {
+  id: string; space: string; candidates?: DSCandidate[]; onAdd: (b: DSAddProduct) => Promise<unknown>; onPicker: () => void; onClose: () => void;
+}) {
   const [q, setQ] = useState('');
-  const [rows, setRows] = useState<ProductSearchItem[]>([]);
-  const [open, setOpen] = useState(false);
+  const [found, setFound] = useState<ProductSearchItem[]>([]);
   const [hi, setHi] = useState(0);
   const [busy, setBusy] = useState(false);
   const wrap = useRef<HTMLDivElement>(null);
-  useEscape(() => setOpen(false), open);
+  useEscape(onClose);
   useEffect(() => {
     const t = q.trim();
-    if (!t) { setRows([]); return; }
+    if (!t) { setFound([]); return; }
     const ac = new AbortController();
     const h = setTimeout(() => {
-      searchProducts(t, { limit: 6, kinds: 'model,family', signal: ac.signal }).then((r) => { setRows(r); setHi(0); }).catch(() => { /* 검색 실패는 빈 결과 */ });
+      searchProducts(t, { limit: 5, kinds: 'model,family', signal: ac.signal }).then((r) => { setFound(r); setHi(0); }).catch(() => { /* 검색 실패는 빈 결과 */ });
     }, 220);
     return () => { clearTimeout(h); ac.abort(); };
   }, [q]);
   useEffect(() => {
-    if (!open) return;
-    const h = (e: MouseEvent) => { if (wrap.current && !wrap.current.contains(e.target as Node)) setOpen(false); };
+    const h = (e: MouseEvent) => { if (wrap.current && !wrap.current.contains(e.target as Node)) onClose(); };
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
-  }, [open]);
+  }, [onClose]);
   const t = q.trim();
-  const custom = !!t && !rows.some((r) => nameOf(r) === t);
-  const n = rows.length + (custom ? 1 : 0);
+  const rows: Row[] = t
+    ? found.map((r) => ({ key: `${r.kind}:${r.id}`, name: nameOf(r), meta: `${r.meta_line || (r.category_path ?? []).join(' · ') || (r.kind === 'family' ? '제품군' : '모델')}${r.model_code ? ` · ${r.model_code}` : ''}`, body: addBodyOf(r) }))
+    : (candidates ?? []).map((c) => ({ key: `kb:${c.ref ?? c.name}`, name: c.name, meta: c.why || c.category || 'KB 추천',
+      body: { name: c.name, ref: c.ref, model_code: c.model_code, family_id: c.family_id, category: c.category, why: c.why } }));
+  if (t && !rows.some((r) => r.name === t)) rows.push({ key: 'custom', name: t, meta: '직접 추가 · KB 에 없음 · 확인 필요', body: { name: t } });
   const pick = async (i: number) => {
-    if (busy || !t) return;
+    const r = rows[i];
+    if (busy || !r) return;
     setBusy(true);
-    try {
-      await onAdd(i < rows.length ? addBodyOf(rows[i]) : { name: t });
-      setQ(''); setRows([]); setOpen(false);
-    } finally { setBusy(false); }
+    try { await onAdd(r.body); setQ(''); setFound([]); } finally { setBusy(false); }
   };
   return (
-    <div ref={wrap} className="ds-psearch">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--wm-text-subtle)" strokeWidth="2" strokeLinecap="round" aria-hidden><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
-      <label className="wm-sr" htmlFor="ds-add">제품 추가</label>
-      <input id="ds-add" value={q} placeholder={placeholder} disabled={disabled} autoComplete="off" role="combobox" aria-expanded={open && !!t} aria-controls="ds-add-results"
-        onChange={(e) => { setQ(e.target.value); setOpen(true); }} onFocus={() => setOpen(true)}
-        onKeyDown={(e) => {
-          if (e.key === 'ArrowDown') { e.preventDefault(); setHi((v) => Math.min(n - 1, v + 1)); }
-          else if (e.key === 'ArrowUp') { e.preventDefault(); setHi((v) => Math.max(0, v - 1)); }
-          else if (e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); void pick(Math.min(hi, n - 1)); }
-        }} />
-      {open && !!t && (
-        <div className="ds-presults" id="ds-add-results" role="listbox" aria-label="제품 검색 결과">
-          <span className="ds-presults__h">“{t}” 검색 결과 · Enter로 추가</span>
+    <div ref={wrap} className="ds-csearch">
+      <span className="ds-csearch__box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--wm-text-muted)" strokeWidth="2.4" strokeLinecap="round" aria-hidden><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
+        <label className="cd-sr" htmlFor={id}>{space}에 제품 추가</label>
+        <input id={id} autoFocus value={q} placeholder="모델명 · 용도로 찾기" autoComplete="off" role="combobox" aria-expanded={rows.length > 0} aria-controls={`${id}-rows`}
+          onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowDown') { e.preventDefault(); setHi((v) => Math.min(rows.length - 1, v + 1)); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setHi((v) => Math.max(0, v - 1)); }
+            else if (e.key === 'Enter' && !e.nativeEvent.isComposing) { e.preventDefault(); void pick(Math.min(hi, rows.length - 1)); }
+          }} />
+        <button type="button" className="ds-csearch__pick" onClick={onPicker}>제품 탐색</button>
+      </span>
+      {rows.length > 0 && (
+        <div className="ds-cres" id={`${id}-rows`} role="listbox" aria-label={`${space} 제품 찾기 결과`}>
+          <span className="ds-cres__h">{t ? `“${t}” · Enter로 추가` : `KB 추천 · ${space}`}</span>
           {rows.map((r, i) => (
-            <button key={`${r.kind}:${r.id}`} type="button" role="option" aria-selected={hi === i} className={cx('ds-pres', hi === i && 'ds-pres--on')}
-              onMouseEnter={() => setHi(i)} onClick={() => void pick(i)}>
-              <span className="ds-pres__txt"><span className="ds-pres__name">{nameOf(r)}</span>
-                <span className="ds-pres__meta">{r.meta_line || (r.category_path ?? []).join(' · ') || (r.kind === 'family' ? '제품군' : '모델')}{r.model_code ? ` · ${r.model_code}` : ''}</span></span>
-              <span className="ds-pres__add">추가</span>
+            <button key={r.key} type="button" role="option" aria-selected={hi === i} className={cx('ds-cres__row', hi === i && 'ds-cres__row--on')}
+              onMouseEnter={() => setHi(i)} onClick={() => void pick(i)} disabled={busy}>
+              <span className="ds-cres__name">{r.name}</span><span className="ds-cres__meta">{r.meta}</span>
             </button>
           ))}
-          {custom && (
-            <button type="button" role="option" aria-selected={hi === rows.length} className={cx('ds-pres', hi === rows.length && 'ds-pres--on')}
-              onMouseEnter={() => setHi(rows.length)} onClick={() => void pick(rows.length)}>
-              <span className="ds-pres__txt"><span className="ds-pres__name">{t}</span><span className="ds-pres__meta">직접 추가 · KB 에 없음 · 확인 필요</span></span>
-              <span className="ds-pres__add">추가</span>
-            </button>
-          )}
         </div>
       )}
     </div>

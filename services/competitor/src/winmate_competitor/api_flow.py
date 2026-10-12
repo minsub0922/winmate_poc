@@ -29,7 +29,15 @@ async def create_ca_flow(body: cf.CFCreate, response: Response) -> dict[str, Any
 
 @router.get("/ca-flows/{flow_id}", response_model=cf.CFDoc)
 async def get_ca_flow(flow_id: str) -> dict[str, Any]:
-    return cf.to_api(await cf.load(flow_id))
+    """문서 하나 — `changes` = 저장한 뒤 고친 곳 수(저장한 적 없으면 0)."""
+    return await cf.get(flow_id)
+
+
+@router.post("/ca-flows/{flow_id}:revert", response_model=cf.CFDoc)
+async def revert_ca_flow(flow_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기(머리 「고친 곳 n · 되돌리기」) — changes 0 인 문서. 지금 점선 AI 후보는 그대로 둔다.
+    아직 저장하지 않았으면 409 NOT_SAVED 「아직 저장하지 않아 되돌릴 판이 없어요」."""
+    return await cf.revert(flow_id)
 
 
 @router.delete("/ca-flows/{flow_id}", status_code=204, response_class=Response)

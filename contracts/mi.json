@@ -4774,6 +4774,7 @@
           "mi-flows"
         ],
         "summary": "Get Mi Flow",
+        "description": "문서(진행 · 고친 곳 `changes`). 판 없이 저장된 예전 문서는 지금 값을 저장한 판으로 한 번 남긴다.",
         "operationId": "get_mi_flow",
         "parameters": [
           {
@@ -5165,6 +5166,62 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/mi-flows/{flow_id}:revert": {
+      "post": {
+        "tags": [
+          "mi-flows"
+        ],
+        "summary": "Revert Mi Flow",
+        "description": "저장한 판으로 되돌리기(화면 머리 「고친 곳 n · 되돌리기」) — 찾은 정보(담기 · 빼기 · 문장) · 검색어 · 조건을 마지막 저장 때로, changes 0.",
+        "operationId": "revert_mi_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없어요 · BUSY — AI 가 일하는 중"
           }
         }
       }
@@ -10182,6 +10239,24 @@
             },
             "type": "array",
             "title": "Warnings"
+          },
+          "changes": {
+            "type": "integer",
+            "title": "Changes",
+            "description": "저장한 판과 다른 곳 수(담은 정보 · 문장 · 검색어 · 조건) — 저장한 적 없으면 0. 화면 머리 「고친 곳 n」",
+            "default": 0
+          },
+          "saved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved At",
+            "description": "마지막 저장(:finish) 시각"
           },
           "version": {
             "type": "integer",

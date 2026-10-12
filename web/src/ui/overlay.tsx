@@ -52,15 +52,24 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean
   }, [active, ref]);
 }
 
-/** Esc 로 닫기(창 수준). enabled 가 false 면 듣지 않는다. */
+/** 켜진 useEscape 의 순서 — 맨 나중에 켜진(= 맨 위에 뜬) 겹창 하나만 Esc 를 받는다 */
+const escStack: object[] = [];
+
+/** Esc 로 닫기(창 수준). enabled 가 false 면 듣지 않는다. 여러 겹이 떠 있으면 맨 위(가장 나중에 켜진) 것만 닫힌다 — 팝업 위 시트 · 팝업 안 목록. */
 export function useEscape(onEscape: () => void, enabled = true) {
   const cb = useRef(onEscape);
   cb.current = onEscape;
   useEffect(() => {
     if (!enabled) return;
-    const h = (e: KeyboardEvent) => { if (e.key === 'Escape' && !e.defaultPrevented) cb.current(); };
+    const token = {};
+    escStack.push(token);
+    const h = (e: KeyboardEvent) => { if (e.key === 'Escape' && !e.defaultPrevented && escStack[escStack.length - 1] === token) cb.current(); };
     window.addEventListener('keydown', h);
-    return () => window.removeEventListener('keydown', h);
+    return () => {
+      window.removeEventListener('keydown', h);
+      const i = escStack.lastIndexOf(token);
+      if (i >= 0) escStack.splice(i, 1);
+    };
   }, [enabled]);
 }
 
@@ -82,10 +91,12 @@ export interface ModalProps {
   /** 딤 클릭으로 닫기(기본 true) */
   closeOnScrim?: boolean;
   bodyStyle?: CSSProperties;
+  /** 상자(.wm-modal)에 더할 클래스 — 보드마다 다른 그림자 · 모서리를 기능 CSS 로 */
+  className?: string;
 }
 
 /** 모달(§2.8 Sheet(Modal)): 딤 `rgba(18,20,23,0.42)` · r18 · 포커스 가두기 · Esc · 딤 클릭. `variant="side"` 면 오른쪽 시트 */
-export function Modal({ open, onClose, title, children, footer, width = 720, height, ariaLabel, variant = 'sheet', closeOnScrim = true, bodyStyle }: ModalProps) {
+export function Modal({ open, onClose, title, children, footer, width = 720, height, ariaLabel, variant = 'sheet', closeOnScrim = true, bodyStyle, className }: ModalProps) {
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
   useFocusTrap(ref, open);
@@ -94,7 +105,7 @@ export function Modal({ open, onClose, title, children, footer, width = 720, hei
   const side = variant === 'side';
   return (
     <div className={cx('wm-scrim', side && 'wm-scrim--side')} onMouseDown={(e) => { if (closeOnScrim && e.target === e.currentTarget) onClose(); }}>
-      <div ref={ref} className={cx('wm-modal', variant === 'dialog' && 'wm-modal--dialog', side && 'wm-modal--side')} role="dialog" aria-modal="true" tabIndex={-1}
+      <div ref={ref} className={cx('wm-modal', variant === 'dialog' && 'wm-modal--dialog', side && 'wm-modal--side', className)} role="dialog" aria-modal="true" tabIndex={-1}
         aria-label={typeof title === 'string' ? title : ariaLabel} aria-labelledby={title && typeof title !== 'string' ? titleId : undefined}
         data-variant={variant}
         style={side ? { width, height: '100vh', maxWidth: 'calc(100vw - 48px)', maxHeight: '100vh' }

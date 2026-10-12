@@ -12,6 +12,8 @@ export const SCREENS = path.join(here, '__screens__');
 
 export async function shot(page: Page, name: string) {
   fs.mkdirSync(SCREENS, { recursive: true });
+  // 토스트(3.2초)가 화면을 가리지 않게 사라질 때까지 기다린다(보드에는 토스트가 없다)
+  await page.locator('.wm-toast').first().waitFor({ state: 'detached', timeout: 6_000 }).catch(() => undefined);
   await page.waitForTimeout(250);
   await page.screenshot({ path: path.join(SCREENS, `${name}.png`) });
 }

@@ -5,6 +5,7 @@ Gate 에서 고른 Storyboard 의 DSS 공간 · 공간별 제품으로 시작 �
 """
 from __future__ import annotations
 
+import copy
 from collections.abc import AsyncIterator, Iterator
 from typing import Any
 
@@ -149,7 +150,6 @@ async def test_branch_storyboard_gets_own_space_set(clients: tuple[Any, Any]) ->
 
 def _dss_v2() -> dict[str, Any]:
     """로비: 삼성 키오스크 빠짐 · Smart Signage QH55C 새로 / 회의실: QB55C 빠짐 / 라운지 새 공간(QM55C) / 주차장 빠짐."""
-    import copy
     v = copy.deepcopy(DSS)
     lobby, meet = v["spaces"][0], v["spaces"][1]
     lobby["products"] = [p for p in lobby["products"] if p["name"] != "삼성 키오스크"] + [
@@ -247,3 +247,98 @@ async def test_space_set_draft_delete_and_dedupe(clients: tuple[Any, Any], hub_w
     assert r.status_code == 201 and r.json()["id"] != b["id"] and r.json()["code"] != b["code"]
     r2 = await c.post("/v1/space-sets", json={"sb_id": f["id"], "spaces": [{"name": "로비", "products": [{"name": "MagicINFO", "kind": "solution"}]}]})
     assert r2.status_code == 201 and r2.json()["id"] != r.json()["id"]
+
+
+# ── 최종본에서 바로 고치기(웹앱 ① v63 · 보드 SC2_Edit · SC_View): 고친 곳 n · 되돌리기 ──
+
+async def test_changes_count_and_revert_after_save(clients: tuple[Any, Any]) -> None:
+    c, sb = clients
+    f = await _flow(sb)
+    d = (await c.post("/v1/space-sets", json={"sb_id": f["id"]})).json()
+    assert d["changes"] == 0 and d["ver"] == 0 and d["saved_at"] is None
+    # 저장 전에는 되돌릴 판이 없다
+    r = await c.post(f"/v1/space-sets/{d['id']}:revert")
+    assert r.status_code == 409 and r.json()["error"]["code"] == "NOT_SAVED"
+    assert r.json()["error"]["message"] == "아직 저장하지 않아 되돌릴 판이 없어요"
+    # 저장 전 고침은 고친 곳이 아니다(작성 중)
+    d["spaces"][0]["scenarios"] = [{"id": "scn_rush", "title": "출근 혼잡 시간의 로비", "user": "오전 9시 전후 임직원",
+                                    "products": ["Smart Signage QM55C", "MagicINFO"],
+                                    "steps": [{"text": "출근 인원이 몰려 게이트 앞이 혼잡해짐", "product": None},
+                                              {"text": "층별 엘리베이터 대기 안내가 뜸", "product": "Smart Signage QM55C"}],
+                                    "fields": [{"k": "시간대", "v": "오전 9시 전후"}], "by": "manual"}]
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    assert d["changes"] == 0
+
+    assert (await c.post(f"/v1/space-sets/{d['id']}:finish")).status_code == 200
+    d = (await c.get(f"/v1/space-sets/{d['id']}")).json()
+    assert d["ver"] == 1 and d["status"] == "done" and d["changes"] == 0 and d["saved_at"]
+    saved_spaces = copy.deepcopy(d["spaces"])
+
+    # 한 칸 고치기(사용자) → 고친 곳 1
+    d["spaces"][0]["scenarios"][0]["user"] = "오전 9시 전후 임직원 · 방문객"
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    assert d["changes"] == 1 and d["status"] == "draft" and d["ver"] == 1
+    # 장면 하나 고치고 하나 더하기 → 3
+    sc0 = d["spaces"][0]["scenarios"][0]
+    sc0["steps"][1]["text"] = "층별 엘리베이터 대기 시간이 실시간으로 뜸"
+    sc0["steps"].append({"text": "방문객은 키오스크로 따로 안내", "product": "Smart Signage QM55C"})
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    assert d["changes"] == 3
+    # AI 3안(점선 후보)은 저장 값이 아니라 세지 않는다
+    lobby = d["spaces"][0]
+    s = (await c.post(f"/v1/space-sets/{d['id']}/spaces/{lobby['id']}:suggest")).json()
+    assert len(s["set"]["spaces"][0]["candidates"]) == 3 and s["set"]["changes"] == 3
+    # 되돌리기 → 저장한 값 · 고친 곳 0 · 점선 후보는 그대로
+    r = await c.post(f"/v1/space-sets/{d['id']}:revert")
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["changes"] == 0 and d["status"] == "done" and d["ver"] == 1
+    assert [sc["user"] for sc in d["spaces"][0]["scenarios"]] == ["오전 9시 전후 임직원"]
+    assert len(d["spaces"][0]["scenarios"][0]["steps"]) == 2
+    assert [x["cid"] for x in d["spaces"][0]["candidates"]] == ["A", "B", "C"]
+    assert [{k: v for k, v in sp.items() if k != "candidates"} for sp in d["spaces"]] == \
+        [{k: v for k, v in sp.items() if k != "candidates"} for sp in saved_spaces]
+
+    # 시나리오를 목록 앞에 하나 끼워도 고친 곳 1(AI 수락 = 시나리오 하나 더함)
+    d = (await c.post(f"/v1/space-sets/{d['id']}/spaces/{lobby['id']}/candidates/A:accept")).json()
+    assert d["changes"] == 1
+    sp0 = d["spaces"][0]
+    sp0["scenarios"] = [sp0["scenarios"][-1]] + sp0["scenarios"][:-1]           # 수락한 것을 앞으로
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    assert d["changes"] == 1
+    # 주차장 공간 제품 칩 하나 더하기 → +1
+    d["spaces"][2]["products"] = [{"name": "옥외형 사이니지 OHC55", "kind": "product"}, {"name": "MagicINFO", "kind": "solution"}]
+    d = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": d["version"], "spaces": d["spaces"]})).json()
+    assert d["changes"] == 2
+
+    # 다시 저장 → v2 · 고친 곳 0 · 허브도 v2
+    out = (await c.post(f"/v1/space-sets/{d['id']}:finish")).json()
+    assert out["stage"]["ver"] == 2
+    d = (await c.get(f"/v1/space-sets/{d['id']}")).json()
+    assert d["ver"] == 2 and d["changes"] == 0 and d["status"] == "done"
+    hub = (await sb.get(f"/v1/flows/{f['id']}")).json()["stages"]["sc"]
+    assert hub["ver"] == 2 and [x["title"] for x in hub["spaces"][0]["scenarios"]] == ["미등록 방문객 응대", "출근 혼잡 시간의 로비"]
+    assert hub["spaces"][2]["products"] == ["옥외형 사이니지 OHC55", "MagicINFO"]
+
+
+async def test_saved_before_snapshot_gets_one_on_read(clients: tuple[Any, Any]) -> None:
+    """판을 남기기 전에 저장한 묶음 — 처음 읽을 때 지금 값을 저장한 판으로 남기고(한 번 다시 씀), 그 뒤 고치면 센다."""
+    from winmate_common.edits import SNAPSHOT
+    from winmate_scenario import repo
+    from winmate_scenario.spaceset import COLL
+    c, sb = clients
+    f = await _flow(sb)
+    d = (await c.post("/v1/space-sets", json={"sb_id": f["id"]})).json()
+    assert (await c.post(f"/v1/space-sets/{d['id']}:finish")).status_code == 200
+    old = repo.store().get(COLL, d["id"])
+    old.pop(SNAPSHOT)
+    repo.store().put(COLL, d["id"], old)
+    assert SNAPSHOT not in repo.store().get(COLL, d["id"])
+    g = (await c.get(f"/v1/space-sets/{d['id']}")).json()
+    assert g["changes"] == 0 and SNAPSHOT in repo.store().get(COLL, d["id"])
+    v = g["version"]
+    assert (await c.get(f"/v1/space-sets/{d['id']}")).json()["version"] == v       # 두 번째 읽기는 다시 쓰지 않는다
+    g["spaces"][0]["products"] = g["spaces"][0]["products"][:-1]                  # MagicINFO 빼기
+    g = (await c.put(f"/v1/space-sets/{d['id']}", json={"expected_version": v, "spaces": g["spaces"]})).json()
+    assert g["changes"] == 1
+    assert (await c.post(f"/v1/space-sets/{d['id']}:revert")).json()["spaces"][0]["products"][-1]["name"] == "MagicINFO"

@@ -11,6 +11,9 @@
   stage 값은 §6 `rq` 모양. ver = 저장 횟수.
 - 지우기(`DELETE`) — 한 번도 저장하지 않은 초안만(status draft · ver 0 · sb_ids 없음). 저장한 것은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
   소프트 삭제 + workspace 색인 지우기, 파일로 채우는 잡이 돌고 있으면 취소한다.
+- 고친 곳 · 되돌리기(2026-10-12 · 웹앱 ① v63 — 상세는 최종본 한 장에서 바로 고친다): 저장(:finish) 때 사람이 고치는 값(EDIT_KEYS)을 판으로 남기고
+  (`winmate_common.edits`), 문서 응답 `changes` = 저장한 판과 지금 값의 다른 곳 수. `:revert` 는 저장한 판으로 되돌린다(저장한 적 없으면 409 NOT_SAVED).
+  예전에 저장해 판이 없는 문서는 읽을 때 지금 값을 판으로 남긴다(ensure_snapshot · 한 번 다시 쓴다).
 """
 from __future__ import annotations
 
@@ -25,6 +28,7 @@ from typing import Any, Literal, TypedDict
 from langgraph.graph import END, START, StateGraph
 from pydantic import BaseModel, Field
 from winmate_common.client import ServiceClient
+from winmate_common.edits import SNAPSHOT, changes_of, ensure_snapshot, has_snapshot, restore_snapshot, snapshot_view, take_snapshot
 from winmate_common.errors import ApiError
 from winmate_common.flow import create_flow, push_stage
 from winmate_common.graph import run_graph
@@ -112,6 +116,7 @@ class RFDoc(Model):
     ver: int = Field(0, description="저장(완료) 횟수 = stage ver")
     sb_ids: list[str] = Field(default_factory=list, description="이 요구사항이 연결된 Storyboard(처음 저장 때 자동 생성)")
     counts: RFCounts
+    changes: int = Field(0, description="마지막 저장 판과 지금 값의 다른 곳 수(고친 곳 n) — 저장한 적 없으면 0")
     created_at: str
     updated_at: str
     saved_at: str | None = None
@@ -201,6 +206,14 @@ def _get(fid: str) -> dict[str, Any]:
 
 async def load(fid: str) -> dict[str, Any]:
     return await asyncio.to_thread(_get, fid)
+
+
+async def load_api(fid: str) -> dict[str, Any]:
+    """문서 읽기(응답 모양) — 예전에 저장해 판이 없는 문서는 지금 값을 저장한 판으로 남긴다(한 번 다시 쓴다)."""
+    d = await load(fid)
+    if is_saved(d) and not has_snapshot(d):
+        d = await update(d["id"], _keep_saved)
+    return to_api(d)
 
 
 def _update_sync(fid: str, fn: Callable[[dict[str, Any]], None], expected: int | None) -> dict[str, Any]:
@@ -301,11 +314,35 @@ def counts(d: dict[str, Any]) -> dict[str, int]:
             "weight_sum": sum(int(k.get("weight") or 0) for k in kms)}
 
 
-_DROPPED = ("deep", "target_ask")   # 예전 AI 심층 질의가 문서에 남긴 칸 — 응답에 싣지 않는다
+_DROPPED = ("deep", "target_ask", SNAPSHOT)   # 예전 AI 심층 질의가 문서에 남긴 칸 · 저장한 판 — 응답에 싣지 않는다
+
+# 사람이 고치는 값(저장한 판에 남기고 :revert 로 되돌린다). 출처(*_by)도 함께 되돌린다 — 세지는 않는다.
+EDIT_KEYS = ("title", "customer", "target", "note", "keymen", "title_by", "customer_by", "target_by")
+
+
+def _edit_view(d: dict[str, Any]) -> dict[str, Any]:
+    """고친 곳을 셀 값 — 화면의 칸 하나 = 잎 하나. stage(…) 는 요구 문장이 needs · goals · requirements 에 겹쳐 들어가 한 번 고쳐도 여러 번 세므로 쓰지 않는다.
+    빈 키맨 자리(이름 · 요구 없음)는 빼고, 키맨 · 요구는 id 로 맞춰 본다(앞에 하나 끼워도 1). 출처(by) · flag 는 세지 않는다(status 로 센다)."""
+    return {"title": d.get("title") or "", "customer": d.get("customer") or "", "target": d.get("target") or "", "note": d.get("note") or "",
+            "keymen": [{"id": k.get("id"), "role": k.get("role") or "", "weight": int(k.get("weight") or 0),
+                        "reqs": [{"id": r.get("id"), "text": r.get("text") or "", "status": r.get("status") or "ok"} for r in k.get("reqs") or []]}
+                       for k in _kms(d)]}
+
+
+def changes(d: dict[str, Any]) -> int:
+    """마지막 저장 판과 지금 값의 다른 곳 수 — 저장한 적 없으면(판 없음) 0."""
+    if not is_saved(d) or not has_snapshot(d):
+        return 0
+    return changes_of(_edit_view(d), _edit_view(snapshot_view(d, EDIT_KEYS)))
+
+
+def _keep_saved(d: dict[str, Any]) -> None:
+    """예전에 저장해 판이 없는 문서 — 고치기 전에 지금 값을 저장한 판으로 남긴다."""
+    ensure_snapshot(d, EDIT_KEYS, saved=is_saved(d))
 
 
 def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    return {**{k: v for k, v in d.items() if k not in _DROPPED}, "counts": counts(d)}
+    return {**{k: v for k, v in d.items() if k not in _DROPPED}, "counts": counts(d), "changes": changes(d)}
 
 
 def display_title(d: dict[str, Any]) -> str:
@@ -368,6 +405,7 @@ async def put_form(fid: str, body: RFUpdate) -> dict[str, Any]:
         raise ApiError(409, "FILLING", "파일에서 폼을 채우는 중이에요. 끝난 뒤 고쳐 주세요.", {"job_id": before["fill_job"]})
 
     def fn(d: dict[str, Any]) -> None:
+        _keep_saved(d)                                  # 예전에 저장한 문서 — 고치기 전 값을 저장한 판으로
         for f, n in (("title", 120), ("customer", 80), ("target", 80)):
             v = _clean(getattr(body, f), n)
             if v != (d.get(f) or ""):
@@ -624,6 +662,7 @@ async def _fill_merge(state: _FillState) -> dict[str, Any]:
     def fn(d: dict[str, Any]) -> None:
         nonlocal filled
         filled = 0
+        _keep_saved(d)
         for e in srcs:
             k = merge_extraction(d, e["ex"], e["file"])
             filled += k
@@ -727,6 +766,7 @@ async def finish(fid: str) -> dict[str, Any]:
         doc["ver"] = int(doc.get("ver") or 0) + 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
+        doc[SNAPSHOT] = take_snapshot(doc, EDIT_KEYS)    # Storyboard 에 반영한 판 — 이 뒤로 고친 곳을 센다
     saved = await update(d["id"], fn)
     st = stage(saved)
     md = summary_md(saved, st)
@@ -754,3 +794,27 @@ async def finish(fid: str) -> dict[str, Any]:
             saved = await update(saved["id"], keep)
     await _index(saved)
     return {"stage": st, "summary_md": md, "flow_sync": sync, "sb_id": sb_id, "sb_name": name, "created": created, "doc": to_api(saved)}
+
+
+# ── 되돌리기(저장한 판으로) ───────────────────────────────
+
+NOT_SAVED_MSG = "아직 저장하지 않아 되돌릴 판이 없어요"
+
+
+async def revert(fid: str) -> dict[str, Any]:
+    """저장한 판(마지막 :finish)으로 되돌린다 — 고친 곳 0. 저장한 적 없으면 409 NOT_SAVED, 파일로 채우는 중이면 409 FILLING."""
+    before = await load(fid)
+    if not is_saved(before):
+        raise ApiError(409, "NOT_SAVED", NOT_SAVED_MSG, {"code": before["code"]})
+    if before.get("fill_job"):
+        raise ApiError(409, "FILLING", "파일에서 폼을 채우는 중이에요. 끝난 뒤 되돌려 주세요.", {"job_id": before["fill_job"]})
+
+    def fn(d: dict[str, Any]) -> None:
+        if d.get("fill_job"):
+            raise ApiError(409, "FILLING", "파일에서 폼을 채우는 중이에요. 끝난 뒤 되돌려 주세요.", {"job_id": d["fill_job"]})
+        _keep_saved(d)                                  # 판이 없는 예전 문서는 지금 값이 곧 저장한 판(바뀌는 것 없음)
+        restore_snapshot(d, EDIT_KEYS)
+    saved = await update(before["id"], fn)
+    if display_title(saved) != display_title(before):
+        await _index(saved)
+    return to_api(saved)

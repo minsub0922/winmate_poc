@@ -7,7 +7,7 @@
 > 웹앱 ③ 의 PRQ · PRS · PRX · *Layout* 보드와 `Stepper` · `Thumb` 는 이제 각자 `.dc.html` 파일로 있다(전에는 다른 파일 안의 변형).
 
 > **웹앱 ① 은 2026-10-08 에 콘텐츠 흐름을 처음부터 다시 그렸다(Storyboard 중심 · 사전 작업 · DSS 신규 · VP 가치 · 고객의 니즈 · 공간 → 시나리오 → 장면).**
-> 정본은 `webapp1/`(아티팩트 v62 사본 — 2026-10-12 고객 요구사항의 AI 심층 질의(`RQ1_AI` · RQ1 「AI 심층 질의로 폼 완성」)를 뺐고, 완료 화면(`Done` · `*_Done` · `*_DoneJson`)을 없애고 콘텐츠 보기(`View` · `*_View`)로 바꿨다 — 저장 뒤 · 목록 · 작업 내역에서 열면 그 콘텐츠가 그대로 보인다. **v62: 콘텐츠 상세는 최종본(`View`) 한 장이고, 단계 화면(`Gate` · `RQ1` · `DS2` · `DS4` · `MI2` · `MI3` · `CA2` · `VP2` · `SP2` · `SC2`)은 그 위 팝업(머리 `StepHead`)이다 — 페이지 이동 없음. 새로 만들기 = 빈 최종본 + 1단계 팝업, 닫으면 `*_Draft`, 저장된 것은 머리의 단계 칩 → `*_Edit` 팝업**. v61 은 목록(`List` · `SB0`)을 가운데 큰 「새 ○○ 만들기」 + 작업 내역 그리드(썸네일 · n/N 단계)로 다시 그렸다)이고, 규칙은 `docs/scenarios/11-content-flow.md` 가 정본이다. 2026-10-10 에 웹앱 ① 의 모든 보드(홈 HomeGrid 포함)를 코드로 옮겼다 — 화면 ↔ 보드 대응은 11-content-flow.md §5 표. 그 전 웹앱 ① 보드(RQ1~RQ7 · SB1~SB5 · MI1~MI4 · CA1~CA5 · VP1~VP4 · SP1~SP4 등)는
+> 정본은 `webapp1/`(아티팩트 v64 사본 — v63 보드 + ContentPopup 「콘텐츠 열기」 · **v63(2026-10-12): 콘텐츠 상세는 최종본 한 장(`View` + `<콘텐츠>Body`)에서 바로 입력 · 수정 · 저장한다 — 단계 팝업 · 완료 화면 없음, 저장한 뒤 고치면 「고친 곳 n · 되돌리기 · 저장 · vN+1」(`*_Edit`), 저장 전은 `*_Draft` · 새로 만들기. 사전 작업 Storyboard 고르기(`Gate`)는 목록 위 팝업이고 고르면 바로 그 콘텐츠 화면으로 간다. 팝업은 고르기(`ProdPicker` · `SolPicker`) · MI 검색(`MISearch`) · 보기(`JsonPopup` · `VpDetail`)만.** 그 전 v61 보드는 `_archive/webapp1-v61/`. 2026-10-12 고객 요구사항의 AI 심층 질의(`RQ1_AI` · RQ1 「AI 심층 질의로 폼 완성」)를 뺐고, 완료 화면(`Done` · `*_Done` · `*_DoneJson`)을 없애고 콘텐츠 보기(`View` · `*_View`)로 바꿨다 — 저장 뒤 · 목록 · 작업 내역에서 열면 그 콘텐츠가 그대로 보인다. v61 은 목록(`List` · `SB0`)을 가운데 큰 「새 ○○ 만들기」 + 작업 내역 그리드(썸네일 · n/N 단계)로 다시 그렸다)이고, 규칙은 `docs/scenarios/11-content-flow.md` 가 정본이다. 2026-10-10 에 웹앱 ① 의 모든 보드(홈 HomeGrid 포함)를 코드로 옮겼다 — 화면 ↔ 보드 대응은 11-content-flow.md §5 표. 그 전 웹앱 ① 보드(RQ1~RQ7 · SB1~SB5 · MI1~MI4 · CA1~CA5 · VP1~VP4 · SP1~SP4 등)는
 > `_archive/webapp1-v52/` · `_rendered/_archive/webapp1-v52/` 에 참고용으로만 남긴다 — **새로 만들거나 고칠 때는 따르지 않는다.**
 > 웹앱 ② 의 SC0~SC5(옛 공간 시나리오)도 새 흐름(웹앱 ① SC0 · SC1 · SC2)으로 대체됐다. 웹앱 ② 의 이미지는 그대로다.
 > 웹앱 ② 조감도는 2026-10-08 아티팩트에서 **2D(BP1~BP5 · BP1D · BP3Z) / 3D(BR1~BR4 · BR1P · BR3V)** 두 흐름으로 갈렸다 — BE0 은 유형을 고르는 목록이고,
@@ -37,79 +37,91 @@
 | webapp1 | `SolutionDetail` | 컴포넌트 · 솔루션 상세 시트 (tab: overview · images · cases) | 웹앱 · 홈 · 공통 컴포넌트 | shell |
 | webapp1 | `SBBar` | 컴포넌트 · 연결된 Storyboard 바 |  | shell(공통 흐름) |
 | webapp1 | `SBPopup` | 컴포넌트 · Storyboard 요약 팝업 |  | shell(공통 흐름) |
-| webapp1 | `Gate` | 컴포넌트 · 사전 작업 Storyboard 고르기 — 빈 최종본 위 1단계 팝업 (content) |  | shell(공통 흐름) |
-| webapp1 | `View` | 컴포넌트 · 콘텐츠 상세(최종본 한 장) — 저장됨 · 새로 만드는 중 · 작성 중 · 머리의 단계 칩 (content · state · done) |  | shell(공통 흐름) |
-| webapp1 | `StepHead` | 컴포넌트 · 단계 팝업 머리 (콘텐츠 · 새로 만들기 / 고치기 · 연결 Storyboard · 단계 칩 · 닫기) |  | shell(공통 흐름) |
+| webapp1 | `Gate` | 컴포넌트 · 사전 작업 Storyboard 고르기 — 목록 위 팝업 · 고르면 그 콘텐츠 화면으로 (content) |  | shell(공통 흐름) |
+| webapp1 | `View` | 컴포넌트 · 콘텐츠 상세(최종본 한 장) — 머리 · 저장 · 본문 · 후속 · 팝업 (content · status: saved · editing · new · draft) |  | shell(공통 흐름) |
 | webapp1 | `List` | 컴포넌트 · 콘텐츠 목록 — 가운데 새로 만들기 · 작업 내역 그리드 (썸네일 · n/N 단계) (content) |  | shell(공통 흐름) |
 | webapp1 | `RQ0` | 요구사항 · 목록 | 웹앱 · 고객 요구사항 | requirements |
-| webapp1 | `RQ1` | [팝업] 요구사항 · 입력 | 웹앱 · 고객 요구사항 | requirements |
-| webapp1 | `RQ1_Edit` | [팝업] 요구사항 · 고치기 (RQ-01 v2 → v3) | 웹앱 · 고객 요구사항 | requirements |
-| webapp1 | `RQ_View` | 요구사항 · 보기 (저장 뒤 · 목록 · 작업 내역) · 후속 DSS | 웹앱 · 고객 요구사항 | requirements |
-| webapp1 | `RQ_Draft` | 요구사항 · 작성 중 (입력 팝업을 저장 전에 닫음) | 웹앱 · 고객 요구사항 | requirements |
+| webapp1 | `RQ1` | 요구사항 · 새로 만들기 — 빈 최종본에 바로 입력 · 저장 | 웹앱 · 고객 요구사항 | requirements |
+| webapp1 | `RQ_View` | 요구사항 · 저장됨 (눌러서 바로 고침) · 후속 DSS | 웹앱 · 고객 요구사항 | requirements |
 | webapp1 | `FlowRule` | 콘텐츠 흐름 규칙 | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `SB0` | Storyboard 목록 · 가운데 시작 · 작업 내역 그리드 (요약본 썸네일 · n/8 단계) | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `SB1` | Storyboard · 연결 콘텐츠 · 요약본 md | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `SB1_Json` | Storyboard · 전체 흐름 JSON | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `DS0` | DSS · 목록 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS1` | [팝업] DSS · 사전 작업 · Storyboard 고르기 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS2` | [팝업] DSS · 공간 · 제품 (업종 · 공간 · 공간별 제품 한 화면) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS2_Edit` | [팝업] DSS · 공간 · 제품 고치기 (DSS-01 v1 → v2) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS4` | [팝업] DSS · 솔루션 (0개 이상) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS4_Edit` | [팝업] DSS · 솔루션 고치기 (DSS-01 v1 → v2) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS_View` | DSS · 보기 (저장 뒤 · 목록 · 작업 내역) · 후속 시나리오 · Spec | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS_Draft` | DSS · 작성 중 2/3 (팝업을 닫은 뒤 · 이어서 솔루션) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS_ViewJson` | DSS · 보기 · flow.json (이 콘텐츠가 담긴 줄 강조) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS2_AI` | [팝업] DSS · AI 업종 추론 · 공간 추천 · 제품 자동 매칭 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
-| webapp1 | `DS4_AI` | [팝업] DSS · AI 솔루션 추천 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS1` | [팝업] DSS · 목록 위 Storyboard 고르기 → 고르면 DSS 화면으로 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS2` | DSS · 새로 만들기 — 업종 · 공간 · 제품 · 솔루션을 그 자리에서 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS4` | [팝업] DSS · 솔루션 고르기 (0개 이상) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS_View` | DSS · 저장됨 (눌러서 바로 고침) · 후속 시나리오 · Spec | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS_ViewJson` | DSS · 저장됨 · flow.json (이 콘텐츠가 담긴 줄 강조) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS2_AI` | DSS · AI 업종 추론 · 공간 추천 · 제품 자동 매칭 (점선 → 수락) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS4_AI` | [팝업] DSS · 솔루션 고르기 · AI 솔루션 추천 | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
 | webapp1 | `MI0` | MI · 목록 | 웹앱 · Market Intelligence | mi |
-| webapp1 | `MI1` | [팝업] MI · 사전 작업 · 이미 있으면 수정 | 웹앱 · Market Intelligence | mi |
-| webapp1 | `MI2` | [팝업] MI · 검색 (AI가 Storyboard 분석 후 표시) | 웹앱 · Market Intelligence | mi |
-| webapp1 | `MI3` | [팝업] MI · 정제 | 웹앱 · Market Intelligence | mi |
-| webapp1 | `MI_View` | MI · 보기 (저장 뒤 · 목록 · 작업 내역) | 웹앱 · Market Intelligence | mi |
-| webapp1 | `MI_Draft` | MI · 작성 중 1/3 (팝업을 닫은 뒤) | 웹앱 · Market Intelligence | mi |
-| webapp1 | `MI1_Branch` | [팝업] MI · 사전 작업 · 복제본(분기) 고르기 | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI1` | [팝업] MI · 목록 위 Storyboard 고르기 · 이미 있으면 수정 | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI2` | [팝업] MI · 검색 — 검색어 · 검색 조건 → 웹 검색 | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI3` | MI · 찾은 정보를 그 자리에서 담기 · 문장 고치기 (정제) | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI_View` | MI · 저장됨 (눌러서 바로 고침) | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI1_Branch` | [팝업] MI · 목록 위 Storyboard 고르기 · 복제본(분기) | 웹앱 · Market Intelligence | mi |
 | webapp1 | `CA0` | 경쟁사 분석 · 목록 | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA1` | [팝업] 경쟁사 분석 · 사전 작업 | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA2` | [팝업] 경쟁사 분석 · 리스트업 · 제안 기준 비교 (스펙 · 가격 · 사례 · ESG · 브랜드) | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA2_Edit` | [팝업] 경쟁사 분석 · 고치기 (CA-01 v1 → v2) | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA_View` | 경쟁사 분석 · 보기 · 경쟁사 × 제안 기준 판정 · 주장 포인트 | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA_Draft` | 경쟁사 분석 · 작성 중 1/2 (팝업을 닫은 뒤) | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA2_AI` | [팝업] 경쟁사 분석 · AI 후보군 웹 탐색 · 후보 비교 | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `CA1` | [팝업] 경쟁사 분석 · 목록 위 Storyboard 고르기 | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `CA2` | 경쟁사 분석 · 새로 만들기 — 경쟁사가 아직 없음 | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `CA_View` | 경쟁사 분석 · 저장됨 · 경쟁사별 (눌러서 바로 고침) | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `CA2_AI` | 경쟁사 분석 · AI 후보군 웹 탐색 (점선 → 추가) | 웹앱 · 경쟁사 분석 | competitor |
 | webapp1 | `VP0` | VP · 목록 | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP1` | [팝업] VP · 사전 작업 | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP2` | [팝업] VP · 제품 · 솔루션별 가치 여러 개 · 고객의 니즈 | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP2_Edit` | [팝업] VP · 가치 · 고객의 니즈 고치기 (VP-01 v1 → v2) | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP_View` | VP · 보기 · 제품 · 솔루션별 가치 · 고객의 니즈 | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP_Draft` | VP · 작성 중 1/2 (팝업을 닫은 뒤) | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP2_AI` | [팝업] VP · AI 가치 매칭 추천 · 니즈 추론 (점선 → 수락) | 웹앱 · Value Proposition | vp |
+| webapp1 | `VP1` | [팝업] VP · 목록 위 Storyboard 고르기 | 웹앱 · Value Proposition | vp |
+| webapp1 | `VP2` | VP · 새로 만들기 — DSS 제품 · 솔루션을 가져옴 | 웹앱 · Value Proposition | vp |
+| webapp1 | `VP_View` | VP · 저장됨 (눌러서 바로 고침) | 웹앱 · Value Proposition | vp |
+| webapp1 | `VP2_AI` | VP · AI 가치 매칭 추천 · 니즈 추론 (점선 → 수락) | 웹앱 · Value Proposition | vp |
 | webapp1 | `SP0` | Spec 시트 · 목록 | 웹앱 · Spec 시트 생성 | spec |
-| webapp1 | `SP1` | [팝업] Spec 시트 · 사전 작업 | 웹앱 · Spec 시트 생성 | spec |
-| webapp1 | `SP2` | [팝업] Spec 시트 · 시트 작성 | 웹앱 · Spec 시트 생성 | spec |
-| webapp1 | `SP2_Edit` | [팝업] Spec 시트 · 고치기 (SP-01 v1 → v2) | 웹앱 · Spec 시트 생성 | spec |
-| webapp1 | `SP_View` | Spec 시트 · 보기 · 비교표 · XLSX | 웹앱 · Spec 시트 생성 | spec |
-| webapp1 | `SP_Draft` | Spec 시트 · 작성 중 1/2 (팝업을 닫은 뒤) | 웹앱 · Spec 시트 생성 | spec |
+| webapp1 | `SP1` | [팝업] Spec 시트 · 목록 위 Storyboard 고르기 | 웹앱 · Spec 시트 생성 | spec |
+| webapp1 | `SP2` | Spec 시트 · 새로 만들기 — DSS 제품으로 표를 채움 | 웹앱 · Spec 시트 생성 | spec |
+| webapp1 | `SP_View` | Spec 시트 · 저장됨 · XLSX (눌러서 바로 고침) | 웹앱 · Spec 시트 생성 | spec |
 | webapp1 | `SC0` | 공간 시나리오 · 목록 | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC1` | [팝업] 공간 시나리오 · 사전 작업 | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC2` | [팝업] 공간 시나리오 · 공간 → 시나리오 → 장면 · 공간 / 시나리오별 제품 · 솔루션 | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC2_Edit` | [팝업] 공간 시나리오 · 고치기 (SC-01 v1 → v2) | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC_View` | 공간 시나리오 · 보기 · 공간 → 시나리오 → 장면 | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC_Draft` | 공간 시나리오 · 작성 중 1/2 (팝업을 닫은 뒤) | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC2_AI` | [팝업] 공간 시나리오 · AI 3안 (후보를 시나리오 목록에 · 수락) | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `SC1` | [팝업] 공간 시나리오 · 목록 위 Storyboard 고르기 | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `SC2` | 공간 시나리오 · 새로 만들기 — DSS 공간 · 제품을 가져옴 | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `SC_View` | 공간 시나리오 · 저장됨 (눌러서 바로 고침) | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `SC2_AI` | 공간 시나리오 · AI 3안 (후보 카드 점선 → 수락) | 웹앱 · 공간 시나리오 생성 | scenario |
 | webapp1 | `ContentPopup` | 컴포넌트 · 연결된 콘텐츠 보기 팝업 (refId) |  | shell(공통 흐름) |
 | webapp1 | `SB1_View` | Storyboard · 연결 콘텐츠 보기 팝업 (페이지 이동 없음) | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `SB1_Strat` | Storyboard · 전략 수립 팝업 (페이지 이동 없음) | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `SB1_StratAI` | Storyboard · 전략 수립 팝업 · AI 후보 3안 | 웹앱 · 전략 수립 Storyboard | storyboard |
 | webapp1 | `StrategyPopup` | 컴포넌트 · 전략 수립 팝업 (ai) |  | shell(공통 흐름) |
-| webapp1 | `MI2_Loading` | [팝업] MI · Storyboard 고른 뒤 AI 분석 로딩 | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI2_Loading` | [팝업] MI · 들어오자마자 검색 팝업 · AI가 Storyboard 분석 | 웹앱 · Market Intelligence | mi |
 | webapp1 | `JsonPopup` | 컴포넌트 · flow.json 전체 보기 팝업 |  | shell(공통 흐름) |
-| webapp1 | `CA2_Info` | [팝업] 경쟁사 분석 · 개요 탭 · 위키 메타 · 선별 기준 | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `CA2_Pc` | [팝업] 경쟁사 분석 · 장단점 탭 · 삼성 대비 · 주장 포인트 | 웹앱 · 경쟁사 분석 | competitor |
-| webapp1 | `VP2_Pick` | [팝업] VP · 제품 · 솔루션 고르기 팝업 | 웹앱 · Value Proposition | vp |
-| webapp1 | `VP2_Detail` | [팝업] VP · 연결된 가치 전체 보기 팝업 (이 제안 + 다른 제안) | 웹앱 · Value Proposition | vp |
+| webapp1 | `CA2_Info` | 경쟁사 분석 · 작성 중 · 개요 · 선별 기준 탭 | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `CA2_Pc` | 경쟁사 분석 · 작성 중 · 장단점 · 주장 포인트 탭 | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `VP2_Pick` | [팝업] VP · 제품 · 솔루션 고르기 | 웹앱 · Value Proposition | vp |
+| webapp1 | `VP2_Detail` | [팝업] VP · 연결된 가치 전체 보기 (이 제안 + 다른 제안) | 웹앱 · Value Proposition | vp |
 | webapp1 | `SC2_Pick` | [팝업] 공간 시나리오 · 공간 제품 · 솔루션 고르기 (1개 이상) | 웹앱 · 공간 시나리오 생성 | scenario |
-| webapp1 | `SC2_Empty` | [팝업] 공간 시나리오 · 시나리오 없는 공간 (주차장) | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `SC2_Empty` | 공간 시나리오 · 시나리오 없는 공간 (주차장) | 웹앱 · 공간 시나리오 생성 | scenario |
 | webapp1 | `ProdPicker` | 컴포넌트 · 제품 · 솔루션 고르기 팝업 (picked · min) |  | shell(공통 흐름) |
 | webapp1 | `VpDetail` | 컴포넌트 · VP 연결된 가치 전체 팝업 |  | vp |
+| webapp1 | `RQ_Draft` | 요구사항 · 작성 중 (다시 열었을 때) | 웹앱 · 고객 요구사항 | requirements |
+| webapp1 | `RQ1_Edit` | 요구사항 · 저장된 것을 그 자리에서 고치는 중 (RQ-01 v2 → v3) | 웹앱 · 고객 요구사항 | requirements |
+| webapp1 | `DS_Draft` | DSS · 작성 중 (다시 열었을 때 · 솔루션 0) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `DS2_Edit` | DSS · 저장된 것을 그 자리에서 고치는 중 (DSS-01 v1 → v2) | 웹앱 · 공간별 제품 매칭 DSS | dss(신규) |
+| webapp1 | `MI_Draft` | MI · 작성 중 (검색 전에 팝업을 닫음) | 웹앱 · Market Intelligence | mi |
+| webapp1 | `CA_Draft` | 경쟁사 분석 · 작성 중 · 제안 기준 비교 (판정 · 근거를 그 자리에서) | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `CA2_Edit` | 경쟁사 분석 · 저장된 것을 그 자리에서 고치는 중 (CA-01 v1 → v2) | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `VP_Draft` | VP · 작성 중 (다시 열었을 때) | 웹앱 · Value Proposition | vp |
+| webapp1 | `VP2_Edit` | VP · 저장된 것을 그 자리에서 고치는 중 (VP-01 v1 → v2) | 웹앱 · Value Proposition | vp |
+| webapp1 | `SP_Draft` | Spec 시트 · 작성 중 (다시 열었을 때) | 웹앱 · Spec 시트 생성 | spec |
+| webapp1 | `SP2_Edit` | Spec 시트 · 저장된 것을 그 자리에서 고치는 중 (SP-01 v1 → v2) | 웹앱 · Spec 시트 생성 | spec |
+| webapp1 | `SC_Draft` | 공간 시나리오 · 작성 중 (다시 열었을 때) | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `SC2_Edit` | 공간 시나리오 · 저장된 것을 그 자리에서 고치는 중 (SC-01 v1 → v2) | 웹앱 · 공간 시나리오 생성 | scenario |
+| webapp1 | `MI2_Run` | MI · 웹 검색 중 — 팝업을 닫고 최종본에서 기다림 | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI3_Edit` | MI · 저장된 것을 그 자리에서 고치는 중 (MI-01 v2 → v3) | 웹앱 · Market Intelligence | mi |
+| webapp1 | `MI_Search` | [팝업] MI · 저장된 것 · 검색어 · 조건 고치고 다시 검색 | 웹앱 · Market Intelligence | mi |
+| webapp1 | `CA_Table` | 경쟁사 분석 · 저장됨 · 비교표 (경쟁사 × 5축 한눈에) | 웹앱 · 경쟁사 분석 | competitor |
+| webapp1 | `SP2_Pick` | [팝업] Spec 시트 · 제품 고르기 | 웹앱 · Spec 시트 생성 | spec |
+| webapp1 | `RQBody` | 컴포넌트 · 요구사항 본문 — 개요 \| 키맨별 요구사항 · 파일로 빈 칸 채우기 (mode) |  | requirements |
+| webapp1 | `DSBody` | 컴포넌트 · DSS 본문 — 업종 · 공간 카드(제품 · 수량) · 솔루션 띠 (mode · ai) |  | dss(신규) |
+| webapp1 | `MIBody` | 컴포넌트 · MI 본문 — 검색 조건 띠 · 시장 · 고객사 · 사용자 (담기 · 문장 고치기) (mode · stage) |  | mi |
+| webapp1 | `CABody` | 컴포넌트 · 경쟁사 분석 본문 — 경쟁사별(목록 \| 탭 3) · 비교표 (mode · tab · view · ai) |  | competitor |
+| webapp1 | `VPBody` | 컴포넌트 · VP 본문 — 제품 · 솔루션별 가치 · 고객의 니즈 (mode · ai) |  | vp |
+| webapp1 | `SPBody` | 컴포넌트 · Spec 시트 본문 — 형식 · 표기 · 항목 · 비교표 · [확인 필요] 칸 (mode) |  | spec |
+| webapp1 | `SCBody` | 컴포넌트 · 공간 시나리오 본문 — 공간 \| 공간 제품 · 시나리오 카드(사용자 · 제품 · 장면 · 항목) (mode · space · ai) |  | scenario |
+| webapp1 | `SolPicker` | 컴포넌트 · DSS 솔루션 고르기 팝업 (mode · ai) |  | dss(신규) |
+| webapp1 | `MISearch` | 컴포넌트 · MI 검색 팝업 — AI 분석 → 검색어 · 검색 조건 → 웹 검색 (mode · phase) |  | mi |
 | webapp2 | `UC_BE` | 조감도 · 유스케이스 맵 (2D / 3D) | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
 | webapp2 | `BE0` | 조감도 · 작업 목록 (유형 선택) | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |
 | webapp2 | `BP1` | 2D 조감도 1/4 · 공간 · 치수 | 웹앱 · 공간 조감도 생성 (2D · 3D) | birdseye |

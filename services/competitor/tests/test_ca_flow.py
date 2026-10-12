@@ -287,6 +287,97 @@ async def test_delete_draft_only(hub_ws):
     assert (await c.get(f"/v1/ca-flows/{b['id']}")).json()["status"] == "done"
 
 
+async def test_changes_and_revert(hub):
+    """최종본에서 바로 고치기(v63): 저장 → 고치기 → changes(목록에 하나 더해도 1씩) → 점선 후보는 세지 않음 → :revert(후보는 남김) → 다시 저장 v2."""
+    c, sb = hub
+    sid = await _storyboard(sb)
+    d = (await c.post("/v1/ca-flows", json={"sb_id": sid})).json()
+    fid = d["id"]
+    assert d["changes"] == 0 and d["saved_at"] is None
+    d = (await c.post(f"/v1/ca-flows/{fid}/competitors", json={"name": "경쟁사 A"})).json()
+    assert d["changes"] == 0                                                  # 저장 전에는 늘 0
+    r = await c.post(f"/v1/ca-flows/{fid}:revert")
+    assert r.status_code == 409 and r.json()["error"]["code"] == "NOT_SAVED" and r.json()["error"]["message"] == "아직 저장하지 않아 되돌릴 판이 없어요"
+    a = d["competitors"][0]
+    m0 = a["matches"][0]
+    await c.patch(f"/v1/ca-flows/{fid}/competitors/A/matches/{m0['id']}", json={"dims": {"price": {"verdict": "ours-worse", "note": "가격 이점 없음 [견적 확인]"}}})
+    assert (await c.post(f"/v1/ca-flows/{fid}:finish")).status_code == 200
+    d = (await c.get(f"/v1/ca-flows/{fid}")).json()
+    assert d["ver"] == 1 and d["changes"] == 0 and d["saved_at"]
+    assert "saved_snapshot" not in d                                         # 응답 모델에는 판을 싣지 않는다
+
+    # 보드 CA2_Edit: 판정 · 메모 고침 = 고친 곳 2
+    d = (await c.patch(f"/v1/ca-flows/{fid}/competitors/A/matches/{m0['id']}", json={
+        "dims": {"price": {"verdict": "similar", "note": "초기가는 낮지만 운영비까지 보면 비슷 [견적 확인]"}}})).json()
+    assert d["changes"] == 2
+    # 경쟁사 하나 더하기 = +1 (목록 항목은 id 로 맞춰 본다)
+    d = (await c.post(f"/v1/ca-flows/{fid}/competitors", json={"name": "경쟁사 B", "lookup": False})).json()
+    assert d["changes"] == 3
+    # 비교 쌍도 id 로 맞춰 본다 — 앞 쌍을 빼도 1(뒤 쌍이 당겨져 모두 바뀐 것으로 세지 않음) · 되돌려 놓기
+    m1 = d["competitors"][0]["matches"][1]
+    # 판정 2칸을 고친 쌍을 빼면 그 쌍이 빠진 1 + 경쟁사 B 1 = 2
+    assert (await c.delete(f"/v1/ca-flows/{fid}/competitors/A/matches/{m0['id']}")).json()["changes"] == 2
+    d = (await c.get(f"/v1/ca-flows/{fid}")).json()
+    assert [m["id"] for m in d["competitors"][0]["matches"]] == [m1["id"]]
+    d = (await c.post(f"/v1/ca-flows/{fid}:revert")).json()
+    assert d["changes"] == 0 and len(d["competitors"][0]["matches"]) == 2
+    d = (await c.patch(f"/v1/ca-flows/{fid}/competitors/A/matches/{m0['id']}", json={
+        "dims": {"price": {"verdict": "similar", "note": "초기가는 낮지만 운영비까지 보면 비슷 [견적 확인]"}}})).json()
+    d = (await c.post(f"/v1/ca-flows/{fid}/competitors", json={"name": "경쟁사 B", "lookup": False})).json()
+    assert d["changes"] == 3
+    # 점선 AI 후보는 저장 값이 아니라 세지 않는다
+    d = (await c.post(f"/v1/ca-flows/{fid}:candidates")).json()["flow"]
+    assert d["counts"]["candidates"] == 3 and d["changes"] == 3
+    # 제목도 사람이 고치는 값
+    d = (await c.patch(f"/v1/ca-flows/{fid}", json={"title": "용산 오피스 경쟁사"})).json()
+    assert d["changes"] == 4
+
+    # 되돌리기 — 저장한 판 그대로 · 점선 후보는 남는다(글자가 겹치면 새 글자)
+    r = await c.post(f"/v1/ca-flows/{fid}:revert")
+    assert r.status_code == 200, r.text
+    d = r.json()
+    assert d["changes"] == 0 and d["title"] == "용산 AI Ready 오피스 경쟁사"
+    assert [x["name"] for x in d["competitors"] if x["by"] != "ai-pending"] == ["경쟁사 A"]
+    assert d["competitors"][0]["matches"][0]["dims"]["price"] == {"verdict": "ours-worse", "note": "가격 이점 없음 [견적 확인]"}
+    pend = [x for x in d["competitors"] if x["by"] == "ai-pending"]
+    assert [x["name"] for x in pend] == ["경쟁사 C", "경쟁사 D", "경쟁사 E"]
+    assert len({x["id"] for x in d["competitors"]}) == len(d["competitors"])
+    # 후보 하나 수락 = +1 → 고친 뒤 저장 v2 · changes 0
+    d = (await c.patch(f"/v1/ca-flows/{fid}/competitors/{pend[0]['id']}", json={"accept": True})).json()
+    assert d["changes"] == 1
+    out = (await c.post(f"/v1/ca-flows/{fid}:finish")).json()
+    assert out["stage"]["ver"] == 2 and [x["name"] for x in out["stage"]["competitors"]] == ["경쟁사 A", "경쟁사 C"]
+    d = (await c.get(f"/v1/ca-flows/{fid}")).json()
+    assert d["ver"] == 2 and d["changes"] == 0 and d["counts"]["candidates"] == 2
+
+
+async def test_old_saved_doc_gets_snapshot_on_read(hub):
+    """판을 남기기 전에 저장한 문서 — 읽을 때 지금 값을 저장한 판으로 남긴다(한 번 다시 씀) → 고치면 그때부터 센다."""
+    c, sb = hub
+    sid = await _storyboard(sb)
+    fid = (await c.post("/v1/ca-flows", json={"sb_id": sid})).json()["id"]
+    await c.post(f"/v1/ca-flows/{fid}/competitors", json={"name": "경쟁사 A", "lookup": False})
+    assert (await c.post(f"/v1/ca-flows/{fid}:finish")).status_code == 200
+    from winmate_competitor import caflow as cf
+    from winmate_competitor.store import store
+
+    raw = store().get(cf.COLL, fid)
+    raw.pop("saved_snapshot")
+    store().put(cf.COLL, fid, raw, expected_version=raw["version"])
+    assert "saved_snapshot" not in store().get(cf.COLL, fid)
+    d = (await c.get(f"/v1/ca-flows/{fid}")).json()
+    assert d["changes"] == 0 and "saved_snapshot" in store().get(cf.COLL, fid)
+    d = (await c.patch(f"/v1/ca-flows/{fid}/competitors/A", json={"pros": ["국내 유지보수 거점이 많음 [확인 필요]"]})).json()
+    assert d["changes"] == 1
+    # 판이 없는 채로 바로 고쳐도(읽기 전) 고치기 전 값이 판이 된다
+    raw = store().get(cf.COLL, fid)
+    raw.pop("saved_snapshot")
+    store().put(cf.COLL, fid, raw, expected_version=raw["version"])
+    d = (await c.patch(f"/v1/ca-flows/{fid}/competitors/A", json={"cons": ["AI 오피스 레퍼런스가 적음"]})).json()
+    assert d["changes"] == 1
+    assert (await c.post(f"/v1/ca-flows/{fid}:revert")).json()["competitors"][0]["cons"] == []
+
+
 def test_md_lines_short_claims():
     """요약 줄의 주장은 낱말 경계에서 자르고 … 를 붙인다(보드 CA_Done 요약본 한 줄)."""
     from winmate_competitor import caflow as cf

@@ -61,9 +61,29 @@ export interface paths {
         put?: never;
         /**
          * Accept All
-         * @description 공간별 제품 AI 추천 모두 수락.
+         * @description AI 추천 모두 수락 — 본문 없음 · scope=products: 공간별 제품 추천만, scope=all: 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄).
          */
         post: operations["accept_all"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dss/{dss_id}:dismiss": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Dismiss
+         * @description AI 점선 지우기(거절) — industry: 업종 추론 · space: 추천 공간 하나(name, 없으면 404) · all: 업종 · 추천 공간 · 제품 추천 모두(「모두 지우기」).
+         */
+        post: operations["dismiss"];
         delete?: never;
         options?: never;
         head?: never;
@@ -84,6 +104,26 @@ export interface paths {
          * @description 저장 → Storyboard flow.json stages.dss · 요약본 · 팝업 카드(허브 push_stage). 공간 · 제품이 없으면 422.
          */
         post: operations["finish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dss/{dss_id}:revert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revert
+         * @description 저장한 판으로 되돌리기(「고친 곳 n · 되돌리기」) → changes 0. 저장한 적 없으면 409 NOT_SAVED 「아직 저장하지 않아 되돌릴 판이 없어요」.
+         */
+        post: operations["revert"];
         delete?: never;
         options?: never;
         head?: never;
@@ -314,6 +354,16 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** DSAcceptAll */
+        DSAcceptAll: {
+            /**
+             * Scope
+             * @description products = 공간별 제품 추천만 · all = 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄 「모두 수락」)
+             * @default products
+             * @enum {string}
+             */
+            scope: "products" | "all";
+        };
         /** DSAddProduct */
         DSAddProduct: {
             /** Category */
@@ -395,8 +445,28 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /** DSDismiss */
+        DSDismiss: {
+            /**
+             * Kind
+             * @description industry = AI 업종 추론 · space = 추천 공간 하나(name) · all = 점선 모두(업종 · 추천 공간 · 제품 추천)
+             * @enum {string}
+             */
+            kind: "industry" | "space" | "all";
+            /**
+             * Name
+             * @description kind=space 일 때 추천 공간 이름
+             */
+            name?: string | null;
+        };
         /** DSDoc */
         DSDoc: {
+            /**
+             * Changes
+             * @description 마지막 저장 뒤 고친 곳 수(저장한 적 없으면 0) — AI 점선(대기) 값은 세지 않는다
+             * @default 0
+             */
+            changes: number;
             /**
              * Code
              * @description 화면 · flow.json 에 쓰는 짧은 번호(DSS-01 …)
@@ -424,6 +494,11 @@ export interface components {
              * @description 사전 작업 고객 요구사항 ref(근거 표시 RQ-05 1)
              */
             rq_ref?: string | null;
+            /**
+             * Saved At
+             * @description 마지막 저장(:finish) 시각
+             */
+            saved_at?: string | null;
             /** Sb Id */
             sb_id?: string | null;
             /**
@@ -721,6 +796,12 @@ export interface components {
              * @enum {string}
              */
             by: "manual" | "ai-pending" | "ai-accepted";
+            /**
+             * Ext
+             * @description AI 가 추천한 확장 공간(요구에는 없음)을 수락한 것 — 화면 「확장 공간 · 요구에는 없음」
+             * @default false
+             */
+            ext: boolean;
             /** Key */
             key: string;
             /** Name */
@@ -740,12 +821,22 @@ export interface components {
             ext: boolean;
             /** Name */
             name: string;
+            /**
+             * Products
+             * @description 이 추천 공간의 제품 추천(점선) — 공간을 수락하면 함께 들어간다(점선 그대로)
+             */
+            products?: components["schemas"]["DSProduct"][];
             /** Why */
             why: string;
         };
         /** DSStageOut */
         DSStageOut: {
             flow_sync?: components["schemas"]["DSFlowSync"] | null;
+            /**
+             * Ref
+             * @description DSS 번호(DSS-01 …)
+             */
+            ref?: string | null;
             /**
              * Stage
              * @description Storyboard flow.json 의 stages.dss
@@ -755,6 +846,11 @@ export interface components {
             };
             /** Summary Md */
             summary_md: string;
+            /**
+             * Ver
+             * @description 저장 판(:finish 결과) — 저장 토스트 「DSS-01 v2 저장」
+             */
+            ver?: number | null;
         };
         /** DSSuggestBody */
         DSSuggestBody: {
@@ -999,7 +1095,55 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody?: {
+            content: {
+                "application/json": components["schemas"]["DSAcceptAll"] | null;
+            };
+        };
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DSDoc"];
+                };
+            };
+        };
+    };
+    dismiss: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dss_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DSDismiss"];
+            };
+        };
         responses: {
             /** @description 요청 오류 */
             "4XX": {
@@ -1066,6 +1210,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["DSStageOut"];
+                };
+            };
+        };
+    };
+    revert: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                dss_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DSDoc"];
                 };
             };
         };
@@ -1248,7 +1432,10 @@ export interface operations {
     };
     solution_options: {
         parameters: {
-            query?: never;
+            query?: {
+                /** @description 솔루션 고르기 팝업에서 아직 넣기 전 고른 id(쉼표로) — 주면 그 고름으로 on · 겹침 안내. 빈 문자열 = 아무것도 안 고름 */
+                selected?: string | null;
+            };
             header?: never;
             path: {
                 dss_id: string;

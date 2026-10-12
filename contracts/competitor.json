@@ -2560,6 +2560,7 @@
           "ca-flows"
         ],
         "summary": "Get Ca Flow",
+        "description": "문서 하나 — `changes` = 저장한 뒤 고친 곳 수(저장한 적 없으면 0).",
         "operationId": "get_ca_flow",
         "parameters": [
           {
@@ -2695,6 +2696,59 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CFDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ca-flows/{flow_id}:revert": {
+      "post": {
+        "tags": [
+          "ca-flows"
+        ],
+        "summary": "Revert Ca Flow",
+        "description": "저장한 판으로 되돌리기(머리 「고친 곳 n · 되돌리기」) — changes 0 인 문서. 지금 점선 AI 후보는 그대로 둔다.\n아직 저장하지 않았으면 409 NOT_SAVED 「아직 저장하지 않아 되돌릴 판이 없어요」.",
+        "operationId": "revert_ca_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -5005,6 +5059,24 @@
             ],
             "title": "Ver",
             "description": "저장(완료) 판 — flow.json stages.ca.ver"
+          },
+          "saved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved At",
+            "description": "마지막 저장 시각(저장한 적 없으면 없음)"
+          },
+          "changes": {
+            "type": "integer",
+            "title": "Changes",
+            "description": "저장한 뒤 고친 곳 수(저장한 판과 지금 값의 차이 · 점선 AI 후보는 세지 않음, 저장한 적 없으면 0)",
+            "default": 0
           },
           "counts": {
             "$ref": "#/components/schemas/CFCounts"

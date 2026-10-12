@@ -237,7 +237,13 @@ async def _s_organize(state: S) -> dict[str, Any]:
         filters = d.get("filters") or {}
         ver = F.target_ver(d)
         # 고칠 때 담은 정보 유지 → 이전 판 담은 것 먼저(addedIn 그대로), 새로 찾은 것 중 겹치지 않는 것만 뒤에
-        prev = [dict(x, kept=True) for x in (d.get("saved_items") or [])] if (d.get("editing") and d.get("keep_previous", True)) else []
+        keep = d.get("keep_previous", True)
+        if d.get("editing") and keep:          # 이전 흐름(:analyze 로 다시 읽고 고치기) — 마지막 저장 때 담은 것
+            prev = [dict(x, kept=True) for x in (d.get("saved_items") or [])]
+        elif F.is_saved(d) and keep:           # v63 — 저장한 MI 화면에서 바로 다시 검색: 지금 화면의 정보(담기 · 빼기 · 고친 문장) 그대로
+            prev = [dict(x) for x in (d.get("items") or [])]
+        else:
+            prev = []
         before = {F.norm_key(x["summary_orig"]): x for x in d.get("items") or []}
         seen = {F.norm_key(x["summary_orig"]) for x in prev}
         per_group: dict[str, int] = {}

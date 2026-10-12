@@ -205,6 +205,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/value-maps/{map_id}:clear-pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Clear Pending
+         * @description 점선(AI 추천) 모두 지우기 — 가치 후보는 빼고 AI 니즈 추론은 비운다(사람이 쓴 값 · 수락한 값은 그대로).
+         */
+        post: operations["clear_pending"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/value-maps/{map_id}:finish": {
         parameters: {
             query?: never;
@@ -216,7 +236,7 @@ export interface paths {
         put?: never;
         /**
          * Finish
-         * @description 저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다.
+         * @description 저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다. 이 값이 「저장한 판」이 된다(고친 곳 · 되돌리기의 기준).
          */
         post: operations["finish"];
         delete?: never;
@@ -240,6 +260,27 @@ export interface paths {
          *     결과는 `last_resync`. Storyboard 로 만든 맵이 아니면 422 `NO_STORYBOARD` · Storyboard 없음 404 · DSS 없음 422.
          */
         post: operations["resync_value_map_dss"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/value-maps/{map_id}:revert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revert Value Map
+         * @description 저장한 판으로 되돌리기 — 고른 제품 · 솔루션과 가치 · 니즈를 마지막 저장 값으로(changes 0, 점선 AI 추천도 사라진다).
+         *     한 번도 저장하지 않았으면 409 `NOT_SAVED`.
+         */
+        post: operations["revert_value_map"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3676,6 +3717,12 @@ export interface components {
              */
             candidates?: components["schemas"]["VMCandidate"][];
             /**
+             * Changes
+             * @description 저장한 판과 지금 값의 다른 곳 수(저장한 적 없으면 0) — 화면 머리 「고친 곳 n · 되돌리기」
+             * @default 0
+             */
+            changes: number;
+            /**
              * Code
              * @description 화면 · flow.json 에 쓰는 짧은 번호(VP-01 …)
              */
@@ -3708,6 +3755,11 @@ export interface components {
              */
             items?: components["schemas"]["VMItem"][];
             last_resync?: components["schemas"]["VMResync"] | null;
+            /**
+             * Saved At
+             * @description 마지막 저장(:finish) 시각
+             */
+            saved_at?: string | null;
             /** Sb Id */
             sb_id?: string | null;
             /**
@@ -4807,6 +4859,46 @@ export interface operations {
             };
         };
     };
+    clear_pending: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+        };
+    };
     finish: {
         parameters: {
             query?: never;
@@ -4884,6 +4976,53 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["VMDoc"];
                 };
+            };
+        };
+    };
+    revert_value_map: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                map_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VMDoc"];
+                };
+            };
+            /** @description NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없음 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

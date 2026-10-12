@@ -524,7 +524,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Ca Flow */
+        /**
+         * Get Ca Flow
+         * @description 문서 하나 — `changes` = 저장한 뒤 고친 곳 수(저장한 적 없으면 0).
+         */
         get: operations["get_ca_flow"];
         put?: never;
         post?: never;
@@ -577,6 +580,27 @@ export interface paths {
          * @description 저장 — status=done, Storyboard flow.json stages.ca · 요약 md · 팝업 카드 반영(push_stage). 경쟁사 0이면 422 NO_COMPETITORS.
          */
         post: operations["finish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/ca-flows/{flow_id}:revert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revert Ca Flow
+         * @description 저장한 판으로 되돌리기(머리 「고친 곳 n · 되돌리기」) — changes 0 인 문서. 지금 점선 AI 후보는 그대로 둔다.
+         *     아직 저장하지 않았으면 409 NOT_SAVED 「아직 저장하지 않아 되돌릴 판이 없어요」.
+         */
+        post: operations["revert_ca_flow"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1513,6 +1537,12 @@ export interface components {
         CFDoc: {
             basis: components["schemas"]["CFBasis"];
             /**
+             * Changes
+             * @description 저장한 뒤 고친 곳 수(저장한 판과 지금 값의 차이 · 점선 AI 후보는 세지 않음, 저장한 적 없으면 0)
+             * @default 0
+             */
+            changes: number;
+            /**
              * Code
              * @description CA-01 …
              */
@@ -1531,6 +1561,11 @@ export interface components {
             dss_items?: components["schemas"]["CFDssItem"][];
             /** Id */
             id: string;
+            /**
+             * Saved At
+             * @description 마지막 저장 시각(저장한 적 없으면 없음)
+             */
+            saved_at?: string | null;
             /** Sb Id */
             sb_id?: string | null;
             /**
@@ -5247,6 +5282,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CFStageOut"];
+                };
+            };
+        };
+    };
+    revert_ca_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CFDoc"];
                 };
             };
         };

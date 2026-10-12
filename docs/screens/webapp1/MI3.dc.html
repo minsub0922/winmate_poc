@@ -2,110 +2,21 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>MI · 정제</title>
+<title>MI · 찾은 정보를 그 자리에서 담기 · 고치기 (정제)</title>
 <script src="./support.js"></script>
 </head>
 <body>
 <x-dc>
 <helmet>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
-<style>
-body{margin:0;background:#f5f6f8}
-a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
-button{font-family:inherit;cursor:pointer}
-.m-ghost:hover{background:#f3f5fd}
-.m-ghost:focus-visible,.m-btn:focus-visible,.m-tab:focus-visible,.m-chk:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
-</style>
+<style>body{margin:0;background:#f5f6f8}</style>
 </helmet>
-<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
-  <dc-import name="View" content="{{hd.content}}" status="{{hd.bg}}" done="{{hd.bgDone}}" hint-size="1440px,900px"></dc-import>
-  <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); z-index: 40"></div>
-  <div role="dialog" aria-modal="true" aria-label="{{hd.label}}" style="position: absolute; left: 130px; top: 50px; width: 1180px; height: 800px; z-index: 41; box-sizing: border-box; border-radius: 18px; background: #f5f6f8; box-shadow: 0 28px 72px rgba(18,20,23,0.32); display: flex; flex-direction: column; overflow: hidden">
-    <dc-import name="StepHead" content="{{hd.content}}" title="{{hd.title}}" mode="{{hd.mode}}" ver="{{hd.ver}}" sb="{{hd.sb}}" note="{{hd.note}}" current="{{hd.current}}" done="{{hd.done}}" close-href="{{hd.close}}" on-sb="{{hd.onSb}}" hint-size="1180px,72px"></dc-import>
-    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 22px 40px 22px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
-      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
-        <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1">
-          <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em">찾은 정보를 정리해요</h1>
-          <span style="font-size: 13px; color: #596170">담은 것만 Storyboard에 들어가요. 문장은 원문을 줄여 쓴 것이고, 수치는 원문에서 확인해야 해요.</span>
-        </div>
-        <span style="font-size: 13px; color: #596170; white-space: nowrap">{{countLine}}</span>
-      </div>
-      <div role="tablist" style="display: flex; gap: 6px; flex-shrink: 0">
-        <sc-for list="{{tabs}}" as="t" hint-placeholder-count="3"><button class="m-tab" role="tab" aria-selected="{{t.on}}" onClick="{{t.pick}}" style="{{t.style}}">{{t.t}}<span style="font-family: Manrope, sans-serif; font-weight: 800; margin-left: 6px">{{t.n}}</span></button></sc-for>
-      </div>
-      <div style="box-sizing: border-box; flex-grow: 1; min-height: 0; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column">
-        <sc-for list="{{items}}" as="x" hint-placeholder-count="4">
-          <div style="{{x.wrap}}">
-            <button class="m-chk" role="checkbox" aria-checked="{{x.on}}" onClick="{{x.toggle}}" aria-label="{{x.label}}" style="{{x.box}}"><sc-if value="{{x.on}}" hint-placeholder-val="{{true}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></button>
-            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
-              <span style="{{x.tStyle}}">{{x.t}}</span>
-              <span style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #596170; white-space: nowrap">
-                <span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #f0f2f5; color: #3d4452; font-weight: 700; display: flex; align-items: center">{{x.kind}}</span>
-                <span>{{x.src}}</span>
-                <sc-if value="{{x.tbd}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #fff4dc; color: #7a4f00; font-weight: 700; display: flex; align-items: center">수치 원문 확인</span></sc-if>
-              </span>
-            </span>
-            <span style="{{x.tagStyle}}">{{x.tag}}</span>
-            <button class="m-ghost" style="height: 30px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12px; font-weight: 600; white-space: nowrap">원문</button>
-            <button class="m-ghost" style="height: 30px; padding: 0 10px; border-radius: 8px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600; white-space: nowrap">문장 고치기</button>
-          </div>
-        </sc-for>
-      </div>
-      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
-        <sc-if value="{{ft.hasBack}}" hint-placeholder-val="{{true}}"><a href="{{ft.backHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>{{ft.back}}</a></sc-if>
-        <span style="flex-grow: 1"></span>
-        <a class="m-btn" href="{{ft.saveHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{ft.save}}</a>
-      </div>
-    </section>
-  </div>
-
-  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
-    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 50">
-      <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
-    </div>
-  </sc-if>
+<div style="width: 1440px; height: 900px; overflow: hidden">
+  <dc-import name="View" content="mi" status="new" stage="found" hint-size="1440px,900px"></dc-import>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["new","edit"],"default":"edit"},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
-  renderVals() {
-    const s = Object.assign({ tab: 0, off: { '0-3': true }, pop: false }, this.state || {});
-    const put = (p) => this.setState(Object.assign({}, s, p));
-    // [요약 문장, 출처 종류, 출처 · 날짜, 기존 v1, 수치 확인]
-    const T = [
-      ['시장', [['프라임 오피스에서 스마트 빌딩 설비 도입이 늘고 있다는 업계 분석', '리포트', '부동산 리서치 · 2026-08', true, false], ['서울 도심 신축 오피스의 임대 경쟁이 심해지고 있다는 보도 — 공실률 수치', '뉴스', '경제지 · 2026-09', false, true], ['AI를 도입한 기업이 회의 · 협업 공간을 늘리는 흐름', '리포트', '컨설팅사 · 2026-07', true, false], ['건물 에너지 효율 관련 제도가 강화되는 동향', '정부 통계', '국토교통 자료 · 2026-06', false, false], ['오피스 로비를 브랜드 공간으로 바꾸는 사례 증가', '뉴스', '건축 매체 · 2026-05', true, false]]],
-      ['고객사', [['E 자산운용의 용산 재개발 사업 개요 보도', '뉴스', '경제지 · 2026-05', true, false], ['E 자산운용 ESG 보고서의 에너지 절감 목표', '공시 · IR', '지속가능경영보고서 · 2026-04', true, true], ['E 자산운용이 보유한 오피스 포트폴리오 현황', '공시 · IR', '사업보고서 · 2026-03', true, false], ['E 자산운용의 최근 오피스 리모델링 투자 방향', '뉴스', '경제지 · 2026-08', false, false]]],
-      ['사용자', [['하이브리드 근무 확산 뒤 회의실 수요 변화 조사', '리포트', '리서치 기관 · 2026-06', true, false], ['오피스 방문객 출입 절차에 대한 불편 조사', '뉴스', 'IT 매체 · 2026-08', false, false], ['임차인이 선호하는 오피스 설비 순위', '리포트', '부동산 리서치 · 2026-07', true, false], ['오피스 근로자의 실내 쾌적성 만족도', '리포트', '리서치 기관 · 2026-05', true, true]]]
-    ];
-    let kept = 0, all = 0;
-    T.forEach(([, L], ti) => L.forEach((x, i) => { all++; if (!s.off[ti + '-' + i]) kept++; }));
-    const tabs = T.map(([t, L], ti) => { const on = s.tab === ti; return { t, n: L.filter((x, i) => !s.off[ti + '-' + i]).length + '/' + L.length, on,
-      style: 'height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; display: flex; align-items: center; white-space: nowrap;' + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0; font-weight: 700;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-weight: 500;'),
-      pick: () => put({ tab: ti }) }; });
-    const items = T[s.tab][1].map(([t, kind, src, old, tbd], i) => {
-      const key = s.tab + '-' + i;
-      const on = !s.off[key];
-      return { t, kind, src, tbd, on, label: (on ? '빼기 · ' : '담기 · ') + t,
-        tag: old ? 'v1에서 유지' : '새로 찾음',
-        tagStyle: 'height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (old ? ' background: #f0f2f5; color: #596170;' : ' background: #e6f4ee; color: #0b6e4f;'),
-        tStyle: 'font-size: 14px; font-weight: 600; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (on ? ' color: #121417;' : ' color: #8a91a0; text-decoration: line-through;'),
-        box: 'width: 22px; height: 22px; flex-shrink: 0; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #1428a0; border: none;' : ' border: 2px solid #c9d0e6; background: #ffffff;'),
-        wrap: 'display: flex; align-items: center; gap: 14px; min-height: 76px; padding: 0 16px 0 18px;' + (i ? ' border-top: 1px solid #f0f2f5;' : ''),
-        toggle: () => put({ off: Object.assign({}, s.off, { [key]: on }) }) };
-    });
-    const EDIT = this.props.mode === 'edit';
-    const HD = (R) => ({ content: 'mi', label: '정제', bg: EDIT ? 'saved' : 'new', bgDone: 2, title: EDIT ? '용산 오피스 시장 분석' : '용산 오피스 시장 분석', mode: EDIT ? 'edit' : 'new', ver: 'MI-01 v1',
-      sb: EDIT ? 'SB-01' : 'SB-01', note: EDIT ? '저장하면 MI-01 v2 · SB-01에 반영돼요' : 'MI를 저장하면 이 Storyboard에 연결돼요', current: 3, done: 2, close: EDIT ? 'MI_View.dc.html' : 'MI_Draft.dc.html', onSb: R.openPop || R.openSb || (() => {}) });
-    const FT = { hasBack: true, backHref: 'MI2.dc.html', back: '검색어 고치기', saveHref: 'MI_View.dc.html', save: EDIT ? 'MI 저장 · v2' : 'MI 저장' };
-    const R = {
-      steps: ['Storyboard', '검색', '정제'], three: 3,
-      tabs, items, countLine: '찾은 ' + all + ' · 담음 ' + kept, popOpen: s.pop,
-      openPop: () => put({ pop: true }), closePop: () => put({ pop: false })
-    };
-    R.hd = HD(R);
-    R.ft = FT;
-    return R;
-  }
+  renderVals() { return { yes: true }; }
 }
 </script>
 </body>

@@ -2833,7 +2833,7 @@
           "rq-flows"
         ],
         "summary": "Get Rq Flow",
-        "description": "id(rqf_…) 또는 코드(RQ-NN).",
+        "description": "id(rqf_…) 또는 코드(RQ-NN). changes = 마지막 저장 판과 다른 곳 수(고친 곳 n).",
         "operationId": "get_rq_flow",
         "parameters": [
           {
@@ -3072,7 +3072,7 @@
           "rq-flows"
         ],
         "summary": "Finish Rq Flow",
-        "description": "저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수.",
+        "description": "저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수.\n저장한 값을 판으로 남긴다(이 뒤로 고치면 문서 changes 가 센다).",
         "operationId": "finish_rq_flow",
         "parameters": [
           {
@@ -3092,6 +3092,59 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RFStageOut"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rq-flows/{flow_id}:revert": {
+      "post": {
+        "tags": [
+          "rq-flows"
+        ],
+        "summary": "Revert Rq Flow",
+        "description": "저장한 판으로 되돌리기(고친 곳 0) — 저장한 적 없으면 409 NOT_SAVED(「아직 저장하지 않아 되돌릴 판이 없어요」), 파일로 채우는 중이면 409 FILLING.",
+        "operationId": "revert_rq_flow",
+        "parameters": [
+          {
+            "name": "flow_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Flow Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RFDoc"
                 }
               }
             }
@@ -6268,6 +6321,12 @@
           "counts": {
             "$ref": "#/components/schemas/RFCounts"
           },
+          "changes": {
+            "type": "integer",
+            "title": "Changes",
+            "description": "마지막 저장 판과 지금 값의 다른 곳 수(고친 곳 n) — 저장한 적 없으면 0",
+            "default": 0
+          },
           "created_at": {
             "type": "string",
             "title": "Created At"
@@ -6307,6 +6366,7 @@
           "ver",
           "sb_ids",
           "counts",
+          "changes",
           "created_at",
           "updated_at",
           "saved_at"

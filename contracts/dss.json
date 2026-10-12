@@ -859,7 +859,7 @@
           "dss"
         ],
         "summary": "Accept All",
-        "description": "공간별 제품 AI 추천 모두 수락.",
+        "description": "AI 추천 모두 수락 — 본문 없음 · scope=products: 공간별 제품 추천만, scope=all: 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄).",
         "operationId": "accept_all",
         "parameters": [
           {
@@ -872,6 +872,86 @@
             }
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/DSAcceptAll"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dss/{dss_id}:dismiss": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Dismiss",
+        "description": "AI 점선 지우기(거절) — industry: 업종 추론 · space: 추천 공간 하나(name, 없으면 404) · all: 업종 · 추천 공간 · 제품 추천 모두(「모두 지우기」).",
+        "operationId": "dismiss",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DSDismiss"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -986,6 +1066,25 @@
               "type": "string",
               "title": "Dss Id"
             }
+          },
+          {
+            "name": "selected",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "솔루션 고르기 팝업에서 아직 넣기 전 고른 id(쉼표로) — 주면 그 고름으로 on · 겹침 안내. 빈 문자열 = 아무것도 안 고름",
+              "title": "Selected"
+            },
+            "description": "솔루션 고르기 팝업에서 아직 넣기 전 고른 id(쉼표로) — 주면 그 고름으로 on · 겹침 안내. 빈 문자열 = 아무것도 안 고름"
           }
         ],
         "responses": {
@@ -1138,6 +1237,59 @@
         }
       }
     },
+    "/v1/dss/{dss_id}:revert": {
+      "post": {
+        "tags": [
+          "dss"
+        ],
+        "summary": "Revert",
+        "description": "저장한 판으로 되돌리기(「고친 곳 n · 되돌리기」) → changes 0. 저장한 적 없으면 409 NOT_SAVED 「아직 저장하지 않아 되돌릴 판이 없어요」.",
+        "operationId": "revert",
+        "parameters": [
+          {
+            "name": "dss_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dss Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/dss/{dss_id}/stage": {
       "get": {
         "tags": [
@@ -1194,6 +1346,22 @@
   },
   "components": {
     "schemas": {
+      "DSAcceptAll": {
+        "properties": {
+          "scope": {
+            "type": "string",
+            "enum": [
+              "products",
+              "all"
+            ],
+            "title": "Scope",
+            "description": "products = 공간별 제품 추천만 · all = 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄 「모두 수락」)",
+            "default": "products"
+          }
+        },
+        "type": "object",
+        "title": "DSAcceptAll"
+      },
       "DSAddProduct": {
         "properties": {
           "expected_version": {
@@ -1464,6 +1632,38 @@
         ],
         "title": "DSCreate"
       },
+      "DSDismiss": {
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "industry",
+              "space",
+              "all"
+            ],
+            "title": "Kind",
+            "description": "industry = AI 업종 추론 · space = 추천 공간 하나(name) · all = 점선 모두(업종 · 추천 공간 · 제품 추천)"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 40
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "description": "kind=space 일 때 추천 공간 이름"
+          }
+        },
+        "type": "object",
+        "required": [
+          "kind"
+        ],
+        "title": "DSDismiss"
+      },
       "DSDoc": {
         "properties": {
           "id": {
@@ -1607,6 +1807,24 @@
             ],
             "title": "Ver",
             "description": "저장(완료) 판 — flow.json stages.dss.ver"
+          },
+          "saved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved At",
+            "description": "마지막 저장(:finish) 시각"
+          },
+          "changes": {
+            "type": "integer",
+            "title": "Changes",
+            "description": "마지막 저장 뒤 고친 곳 수(저장한 적 없으면 0) — AI 점선(대기) 값은 세지 않는다",
+            "default": 0
           },
           "counts": {
             "$ref": "#/components/schemas/DSCounts"
@@ -2272,6 +2490,12 @@
             "title": "Basis",
             "description": "근거(예: RQ-05 1 · 입주사 안내)"
           },
+          "ext": {
+            "type": "boolean",
+            "title": "Ext",
+            "description": "AI 가 추천한 확장 공간(요구에는 없음)을 수락한 것 — 화면 「확장 공간 · 요구에는 없음」",
+            "default": false
+          },
           "products": {
             "items": {
               "$ref": "#/components/schemas/DSProduct"
@@ -2313,6 +2537,14 @@
             "title": "Ext",
             "description": "요구에는 없는 확장 공간",
             "default": false
+          },
+          "products": {
+            "items": {
+              "$ref": "#/components/schemas/DSProduct"
+            },
+            "type": "array",
+            "title": "Products",
+            "description": "이 추천 공간의 제품 추천(점선) — 공간을 수락하면 함께 들어간다(점선 그대로)"
           }
         },
         "type": "object",
@@ -2343,6 +2575,30 @@
                 "type": "null"
               }
             ]
+          },
+          "ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ref",
+            "description": "DSS 번호(DSS-01 …)"
+          },
+          "ver": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ver",
+            "description": "저장 판(:finish 결과) — 저장 토스트 「DSS-01 v2 저장」"
           }
         },
         "type": "object",

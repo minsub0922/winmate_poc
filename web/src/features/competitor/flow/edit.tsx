@@ -1,105 +1,141 @@
 /**
- * 경쟁사 리스트업 화면의 작은 편집 조각 — 보드 모양은 그대로 두고, 눌러서 고친다.
- *   InlineText  글을 누르면 같은 글꼴의 입력칸(엔터 · 밖 누르기 = 저장, Esc = 취소)
- *   VerdictPill 판정 알약(보드 h22 r999) — 누르면 우위 · 비슷 · 열위 · 자료 없음 고르기
+ * 경쟁사 분석 본문(보드 CABody)의 작은 편집 조각 — 칸 자체는 공용 InlineInput(@/shell)을 쓰고, 여기는 고르기 · 더하기 줄만.
+ *   Pick        알약 단추 + 고르기 목록(판정 우위 · 비슷 · 열위 · 자료 없음 / 주장 축) — 보드 c-pill(aria-haspopup=listbox · ▾)
+ *   NewLine     「+ 추가」로 여는 빈 줄(칸 하나) — Enter · 칸을 떠나면 더하고, 비었거나 Esc 면 거둔다
+ *   NewPair     「+ 기준 추가」 · 「+ 주장 추가」의 빈 줄(앞 칸 + 글 칸)
  */
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { cx } from '@/ui';
-import { VERDICTS, VERDICT_LABEL, type Verdict } from './api';
+import type { Verdict } from './api';
 
 export type V = NonNullable<Verdict>;
 
-export function InlineText({ value, onCommit, className, label, placeholder, display, inline, startEditing, onCancel, editValue }: {
-  value: string;
-  onCommit: (v: string) => void;
-  className?: string;
-  /** 접근 이름(‘… 고치기’) */
-  label: string;
-  placeholder?: string;
-  /** 보이는 글(없으면 value) */
-  display?: ReactNode;
-  /** 문장 안에 끼는 글(inline) */
-  inline?: boolean;
-  /** 처음부터 입력칸(새 줄 더하기) */
-  startEditing?: boolean;
-  /** 입력칸에서 Esc · 빈 채로 나갈 때(새 줄 더하기를 거둔다) */
-  onCancel?: () => void;
-  /** 입력칸 처음 값(없으면 value) */
-  editValue?: string;
-}) {
-  const [edit, setEdit] = useState<string | null>(startEditing ? (editValue ?? value) : null);
-  const cancelled = useRef(false);
-  if (edit !== null) {
-    const commit = () => {
-      if (cancelled.current) { cancelled.current = false; return; }
-      const v = edit.replace(/\s+/g, ' ').trim();
-      setEdit(null);
-      if (v === (editValue ?? value).trim()) { if (!v) onCancel?.(); return; }
-      onCommit(v);
-    };
-    return (
-      <input autoFocus className={cx('caf-edin', inline && 'caf-edin--inline', className)} aria-label={label} value={edit} placeholder={placeholder}
-        onChange={(e) => setEdit(e.target.value)} onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.nativeEvent.isComposing) return;
-          if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
-          if (e.key === 'Escape') { e.preventDefault(); cancelled.current = true; setEdit(null); onCancel?.(); }
-        }} />
-    );
-  }
-  const shown = display ?? value;
-  return (
-    <button type="button" className={cx('caf-ed', inline && 'caf-ed--inline', !value && !display && 'caf-ed--empty', className)} aria-label={`${label} 고치기`}
-      title="눌러서 고치기" onClick={() => { cancelled.current = false; setEdit(editValue ?? value); }}>
-      {shown || placeholder}
-    </button>
-  );
-}
+const Chevron = () => (
+  <svg width={9} height={9} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M6 9l6 6 6-6" /></svg>
+);
 
-export function VerdictPill({ v, label, onPick }: { v: V; label: string; onPick: (v: V) => void }) {
+/** 알약 + 고르기 목록. className 은 알약 모양(판정 색 · 축 알약), changed 면 파란 고리(보드 CA2_Edit) */
+export function Pick<T extends string>({ value, options, labelOf, label, onPick, className, optionClass, changed }: {
+  value: T; options: readonly T[]; labelOf: (v: T) => string; label: string; onPick: (v: T) => void;
+  className: string; optionClass?: (v: T) => string; changed?: boolean;
+}) {
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLSpanElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!open) return;
     const off = (e: MouseEvent) => { if (!ref.current?.contains(e.target as Node)) setOpen(false); };
-    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') { setOpen(false); btn.current?.focus(); } };
     document.addEventListener('mousedown', off);
     document.addEventListener('keydown', esc);
     return () => { document.removeEventListener('mousedown', off); document.removeEventListener('keydown', esc); };
   }, [open]);
   return (
-    <div ref={ref} className="caf-vwrap">
-      <button type="button" className={cx('caf-pill', `caf-pill--${v}`)} aria-haspopup="menu" aria-expanded={open} aria-label={`${label} 판정 ${VERDICT_LABEL[v]} · 바꾸기`}
-        onClick={() => setOpen((o) => !o)}>{VERDICT_LABEL[v]}</button>
+    <span ref={ref} className="caf-pickwrap">
+      <button ref={btn} type="button" className={cx(className, changed && 'caf-ring')} aria-haspopup="listbox" aria-expanded={open} aria-label={`${label} · ${labelOf(value)}`}
+        onClick={() => setOpen((o) => !o)}>{labelOf(value)}<Chevron /></button>
       {open && (
-        <div className="caf-vmenu" role="menu" aria-label={`${label} 판정`}>
-          {VERDICTS.map((x) => (
-            <button key={x} type="button" role="menuitemradio" aria-checked={x === v} className={cx('caf-pill', `caf-pill--${x}`)}
-              onClick={() => { setOpen(false); if (x !== v) onPick(x); }}>{VERDICT_LABEL[x]}</button>
+        <span className="caf-pickmenu" role="listbox" aria-label={label}>
+          {options.map((x) => (
+            // 고른 뒤 포커스를 알약으로 돌린다(새 주장 줄처럼 포커스로 열림을 정하는 곳에서 줄이 닫히지 않게)
+            <button key={x} type="button" role="option" aria-selected={x === value} className={cx('caf-pickopt', optionClass?.(x))}
+              onClick={() => { btn.current?.focus(); setOpen(false); if (x !== value) onPick(x); }}>{labelOf(x)}</button>
           ))}
-        </div>
+        </span>
       )}
+    </span>
+  );
+}
+
+/** 처음부터 입력칸이 열린 빈 줄 — 글 칸 하나 */
+export function NewLine({ placeholder, label, className, onAdd, onClose }: { placeholder: string; label: string; className?: string; onAdd: (v: string) => void; onClose: () => void }) {
+  const [v, setV] = useState('');
+  const done = useRef(false);
+  const finish = (save: boolean) => {
+    if (done.current) return;
+    done.current = true;
+    const t = v.replace(/\s+/g, ' ').trim();
+    if (save && t) onAdd(t);
+    onClose();
+  };
+  return (
+    <input autoFocus className={cx('cd-in', className)} aria-label={label} placeholder={placeholder} value={v} maxLength={300}
+      onChange={(e) => setV(e.target.value)} onBlur={() => finish(true)}
+      onKeyDown={(e) => {
+        if (e.nativeEvent.isComposing) return;
+        if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+        if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+      }} />
+  );
+}
+
+/** 앞 칸(기준 이름 · 주장 축) + 글 칸으로 된 빈 줄 — 포커스가 줄을 떠나거나 Enter 면 더한다(글이 비면 거둠) */
+export function NewPair({ head, text, className, onAdd, onClose }: {
+  /** 앞 칸 — (값, 바꾸기) 를 받아 그린다 */
+  head: (v: string, set: (v: string) => void) => ReactNode;
+  text: { placeholder: string; label: string; className?: string };
+  className?: string;
+  onAdd: (head: string, text: string) => void;
+  onClose: () => void;
+}) {
+  const [h, setH] = useState('');
+  const [t, setT] = useState('');
+  const done = useRef(false);
+  const finish = (save: boolean) => {
+    if (done.current) return;
+    done.current = true;
+    const x = t.replace(/\s+/g, ' ').trim();
+    if (save && x) onAdd(h.trim(), x);
+    onClose();
+  };
+  return (
+    <div className={className} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node | null)) finish(true); }}>
+      {head(h, setH)}
+      <input autoFocus className={cx('cd-in', text.className)} aria-label={text.label} placeholder={text.placeholder} value={t} maxLength={300}
+        onChange={(e) => setT(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.nativeEvent.isComposing) return;
+          if (e.key === 'Enter') { e.preventDefault(); finish(true); }
+          if (e.key === 'Escape') { e.preventDefault(); finish(false); }
+        }} />
     </div>
   );
 }
 
-/**
- * 단계 팝업(StepModal)은 Esc 를 document 캡처 단계에서 받아 팝업을 닫는다 — 그보다 먼저(window 캡처) 이 화면 안의 Esc 를 「처리함」으로 표시해
- * 고치는 글 · 비교 쌍 더하기 · 경쟁사 이름 입력 · 판정 고르기 메뉴의 Esc 는 그것만 거두고 팝업은 그대로 둔다.
- */
-export function useHoldEscape(root: string) {
+/** 여러 줄로 감기는 짧은 메모 칸(보드 비교 메모 상자) — 글 높이만큼 자라고, Enter · 칸을 떠나면 한 번 저장(Shift+Enter 줄바꿈 없음 · Esc 취소).
+ *  공용 InlineInput(multiline)은 높이가 고정이라 여기서 따로 둔다(보고서: 공용 부품 요청) */
+export function NoteBox({ value, onCommit, label, className, changed, placeholder, maxLength = 120 }: {
+  value: string; onCommit: (v: string) => unknown; label: string; className?: string; changed?: boolean; placeholder?: string; maxLength?: number;
+}) {
+  const [v, setV] = useState(value);
+  useEffect(() => { setV(value); }, [value]);
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const fit = () => {
+    const el = ref.current;
+    if (!el) return;
+    const border = el.offsetHeight - el.clientHeight;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight + border}px`;
+  };
+  useLayoutEffect(fit, [v, changed]);
   useEffect(() => {
-    const h = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape' || e.defaultPrevented) return;
-      const t = e.target instanceof Element ? e.target : null;
-      const scr = t?.closest(root);
-      if (!scr) return;
-      const editing = t!.matches('.caf-edin, .caf-addpair input, .caf-addpair select') || (t instanceof HTMLInputElement && t.id === 'ca-add' && !!t.value);
-      if (editing || scr.querySelector('.caf-vmenu')) e.preventDefault();
-    };
-    window.addEventListener('keydown', h, true);
-    return () => window.removeEventListener('keydown', h, true);
-  }, [root]);
+    const el = ref.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    let w = el.clientWidth;
+    const ro = new ResizeObserver(() => { if (el.clientWidth !== w) { w = el.clientWidth; fit(); } });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const commit = () => { const t = v.replace(/\s+/g, ' ').trim(); if (t !== value.trim()) void onCommit(t); };
+  return (
+    <textarea ref={ref} rows={1} className={cx('caf-note', changed && 'caf-note--chg', className)} aria-label={label} value={v} placeholder={placeholder} maxLength={maxLength}
+      onChange={(e) => setV(e.target.value.replace(/\n/g, ' '))} onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.nativeEvent.isComposing) return;
+        if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); }
+        if (e.key === 'Escape') { e.preventDefault(); setV(value); requestAnimationFrame(() => ref.current?.blur()); }
+      }} />
+  );
 }
 
 /** 자리표시([위키 값] · [견적 확인] · [확인 필요] · [00])가 있는 값 */

@@ -1,7 +1,7 @@
 /**
  * Spec 시트 생성(SP) 기능 모듈 — 소유: spec 서비스 세션. 셸이 자동으로 등록한다(web/src/shell/registry.ts).
- * 새 흐름(보드 webapp1 v62 · docs/scenarios/11-content-flow.md §6 — 상세 = 최종본 한 장 + 단계 팝업) — ./flow/
- *   /spec(SP0 List) · /spec/new(빈 최종본 + ① SP1 Gate 팝업 · `?sb=&auto=1`) · /spec/flow/:id(최종본 SP_View · SP_Draft + `?step=sheet` ② SP2 · SP2_Edit 팝업)
+ * 새 흐름(2026-10-12 v63 · docs/scenarios/11-content-flow.md §6 · 보드 webapp1 SP0 · SP1 · SP2 · SP2_Edit · SP_View · SPBody) — ./flow/
+ *   /spec(SP0 List) · /spec/new(SP1 목록 위 Gate 팝업 · `?sb=&auto=1`) · /spec/flow/:id(상세 한 장 — 새로 · 작성 중 · 저장됨 · 고치는 중, 완료 화면 없음)
  * 이전 흐름(제안서 handoff 가 아직 읽는다 · 수용 기준 docs/scenarios/06-spec.md):
  *   /spec/legacy(목록) · /spec/legacy/new(/find · /requirements) — `/spec/new?models=|from=|pop=` 도 이리로 · /spec/:id/*(그대로)
  */
@@ -19,7 +19,8 @@ import ProductsPage from './ProductsPage';
 import RequirementsPage from './RequirementsPage';
 import ResultPage from './ResultPage';
 import WarningsPage from './WarningsPage';
-import { SpDetailPage, SpListScreen, SpNewPage } from './flow/FlowPages';
+import { SpGateScreen, SpListScreen } from './flow/FlowPages';
+import { SheetPage } from './flow/SheetPage';
 
 /**
  * 다른 작업으로 옮겨 가면 화면 상태를 새로 시작한다(같은 라우트 · 다른 :id).
@@ -53,8 +54,8 @@ export default feature({
   home: { section: 'plan', title: 'Spec 시트', desc: '조건으로 모델 찾기 · 스펙 대응표' },
   routes: [
     { index: true, element: <SpListScreen /> },
-    { path: 'new', element: <SpNewPage /> },
-    { path: 'flow/:id', element: <SpDetailPage /> },
+    { path: 'new', element: <SpGateScreen /> },
+    { path: 'flow/:id', element: <SheetPage /> },
     // 이전 흐름 — 목록 · 새로 만들기만 /legacy 로 옮겼다(나머지 /:id/... 그대로)
     { path: 'legacy', element: <ListPage /> },
     { path: 'legacy/new', element: k(ProductsPage) },

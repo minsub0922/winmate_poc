@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>MI · 본문 (찾은 정보를 그 자리에서 담고 고치기)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button,textarea{font-family:inherit}
+button{cursor:pointer}
+.e-in:hover{border-color:#c9d0e6}
+.e-in:focus{border-color:#1428a0;box-shadow:0 0 0 3px rgba(20,40,160,0.12)}
+.e-ghost:hover{background:#f3f5fd}
+.e-row:hover{background:#fafbfd}
+@keyframes mspin{to{transform:rotate(360deg)}}
+.m-spin{animation:mspin 1s linear infinite}
+.e-ghost:focus-visible,.e-chk:focus-visible,.e-run:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1100px; height: {{h}}px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+  <!-- 검색 조건 · 검색어: 고치려면 검색 팝업 -->
+  <div style="{{strip}}">
+    <sc-if value="{{hasQ}}" hint-placeholder-val="{{true}}">
+      <span style="font-size: 12.5px; font-weight: 700; color: #3d4452; white-space: nowrap">검색 조건</span>
+      <sc-for list="{{filters}}" as="c" hint-placeholder-count="4"><span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{c}}</span></sc-for>
+      <span style="width: 1px; height: 18px; background: #e2e5ea; margin: 0 4px; flex-shrink: 0"></span>
+      <span style="font-size: 12.5px; font-weight: 700; color: #3d4452; white-space: nowrap">검색어</span>
+      <span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-grow: 1; min-width: 0">{{queryLine}}</span>
+    </sc-if>
+    <sc-if value="{{noQ}}" hint-placeholder-val="{{false}}">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="#1428a0"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>
+      <span style="font-size: 13px; font-weight: 600; color: #3d4452; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{emptyLine}}</span>
+    </sc-if>
+    <sc-if value="{{running}}" hint-placeholder-val="{{false}}">
+      <span style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; color: #1428a0; white-space: nowrap; flex-shrink: 0"><svg class="m-spin" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2.6" stroke-linecap="round"><path d="M12 3a9 9 0 1 1-9 9"/></svg>웹에서 찾는 중 · 1–2분</span>
+    </sc-if>
+    <sc-if value="{{showRun}}" hint-placeholder-val="{{true}}"><button class="e-run" onClick="{{openSearch}}" style="{{runStyle}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>{{runLabel}}</button></sc-if>
+  </div>
+
+  <!-- 시장 · 고객사 · 사용자: 체크한 것만 담겨요 -->
+  <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+    <sc-for list="{{cols}}" as="c" hint-placeholder-count="3">
+      <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
+        <div style="height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 14px; font-weight: 700">{{c.h}}</span><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{c.n}}</span><span style="flex-grow: 1"></span><span style="font-size: 11.5px; color: #8a91a0">{{c.sub}}</span></div>
+        <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
+          <sc-if value="{{c.empty}}" hint-placeholder-val="{{false}}">
+            <div style="margin: 14px; flex-grow: 1; box-sizing: border-box; border: 1.5px dashed #d5d9e0; border-radius: 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 16px; text-align: center">
+              <span style="font-size: 13.5px; font-weight: 700; color: #3d4452">{{c.emptyHead}}</span>
+              <span style="font-size: 12px; color: #8a91a0; line-height: 1.5">{{c.emptyText}}</span>
+            </div>
+          </sc-if>
+          <sc-for list="{{c.skel}}" as="k" hint-placeholder-count="3">
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-top: 1px solid #f5f6f8">
+              <span style="height: 12px; width: 92%; border-radius: 6px; background: #eef0f4"></span>
+              <span style="height: 12px; width: 64%; border-radius: 6px; background: #eef0f4"></span>
+              <span style="height: 10px; width: 40%; border-radius: 5px; background: #f3f4f7"></span>
+            </div>
+          </sc-for>
+          <sc-for list="{{c.items}}" as="it" hint-placeholder-count="4">
+            <div class="e-row" style="{{it.wrap}}">
+              <button class="e-chk" role="checkbox" aria-checked="{{it.on}}" aria-label="{{it.label}}" style="{{it.box}}"><sc-if value="{{it.on}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if></button>
+              <span style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1; min-width: 0">
+                <sc-if value="{{it.editing}}" hint-placeholder-val="{{false}}">
+                  <label for="{{it.id}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">정리 문장</label>
+                  <textarea class="e-in" id="{{it.id}}" style="height: 62px; box-sizing: border-box; resize: none; border: 1.5px solid #1428a0; background: #f6f8fe; border-radius: 8px; padding: 7px 9px; font-size: 13px; font-weight: 600; line-height: 1.5; color: #121417; outline: none">{{it.summary}}</textarea>
+                </sc-if>
+                <sc-if value="{{it.plain}}" hint-placeholder-val="{{true}}"><span style="{{it.tStyle}}">{{it.summary}}</span></sc-if>
+                <span style="display: flex; align-items: center; gap: 6px; min-width: 0; flex-wrap: wrap">
+                  <span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #f0f2f5; color: #3d4452; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{it.type}}</span>
+                  <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{it.src}}</span>
+                  <sc-if value="{{it.check}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #fff4dc; color: #7a4f00; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">수치 원문 확인</span></sc-if>
+                  <sc-if value="{{it.hasTag}}" hint-placeholder-val="{{false}}"><span style="{{it.tagStyle}}">{{it.tag}}</span></sc-if>
+                  <span style="flex-grow: 1"></span>
+                  <a href="{{it.url}}" style="font-size: 12px; font-weight: 700; white-space: nowrap">원문</a>
+                </span>
+              </span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <span style="font-size: 11.5px; color: #8a91a0; flex-shrink: 0">체크한 것만 Storyboard에 담겨요 · 문장을 눌러 바로 고쳐요 · 문장은 원문을 줄여 쓴 것이고 수치는 원문에서 확인해요</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["saved","editing","new","draft"],"default":"saved"},"stage":{"editor":"enum","options":["empty","searching","found"],"default":"found"},"h":{"editor":"int","default":682},"onPop":{"editor":null},"$preview":{"width":1100,"height":682}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.mode ?? 'saved';
+    const SAVED = mode === 'saved' || mode === 'editing';
+    const EDIT = mode === 'editing';
+    const stage = SAVED ? 'found' : (this.props.stage ?? 'found');
+    const found = stage === 'found', running = stage === 'searching';
+    const hasQ = found || running || mode === 'draft';
+    const U = '<원문 URL>';
+    // [요약, 출처 종류, 출처 · 날짜, v1에서 유지, 수치 확인, 담음]
+    const T = [
+      ['시장', [['프라임 오피스에서 스마트 빌딩 설비 도입이 늘고 있다는 업계 분석', '리포트', '부동산 리서치 · 2026-08', 1, 0, 1], ['서울 도심 신축 오피스의 임대 경쟁이 심해지고 있다는 보도 — 공실률 수치', '뉴스', '경제지 · 2026-09', 0, 1, 1], ['AI를 도입한 기업이 회의 · 협업 공간을 늘리는 흐름', '리포트', '컨설팅사 · 2026-07', 1, 0, 1], ['오피스 로비를 브랜드 공간으로 바꾸는 사례 증가', '뉴스', '건축 매체 · 2026-05', 1, 0, 1], ['건물 에너지 효율 관련 제도가 강화되는 동향', '정부 통계', '국토교통 자료 · 2026-06', 0, 0, 0]]],
+      ['고객사', [['E 자산운용의 용산 재개발 사업 개요 보도', '뉴스', '경제지 · 2026-05', 1, 0, 1], ['E 자산운용 ESG 보고서의 에너지 절감 목표', '공시 · IR', '지속가능경영보고서 · 2026-04', 1, 1, 1], ['E 자산운용이 보유한 오피스 포트폴리오 현황', '공시 · IR', '사업보고서 · 2026-03', 1, 0, 1], ['E 자산운용의 최근 오피스 리모델링 투자 방향', '뉴스', '경제지 · 2026-08', 0, 0, 1]]],
+      ['사용자', [['하이브리드 근무 확산 뒤 회의실 수요 변화 조사', '리포트', '리서치 기관 · 2026-06', 1, 0, 1], ['오피스 방문객 출입 절차에 대한 불편 조사', '뉴스', 'IT 매체 · 2026-08', 0, 0, 1], ['임차인이 선호하는 오피스 설비 순위', '리포트', '부동산 리서치 · 2026-07', 1, 0, 1], ['오피스 근로자의 실내 쾌적성 만족도', '리포트', '리서치 기관 · 2026-05', 1, 1, 1]]]
+    ];
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+    const cols = T.map(([h, L], ci) => {
+      const items = found ? L.map(([summary, type, src, old, check, kept], i) => {
+        // 고치는 중: 고객사 4번째는 문장 고치는 중, 사용자 2번째는 뺌
+        const on = EDIT && ci === 2 && i === 1 ? false : !!kept;
+        const editing = EDIT && ci === 1 && i === 3;
+        const chgOff = EDIT && ci === 2 && i === 1;
+        const tag = SAVED ? (old ? '' : 'v2에서 찾음') : '새로 찾음';
+        return { summary: editing ? 'E 자산운용이 최근 오피스 리모델링에 투자를 늘리는 방향 — 용산 포함 여부 확인' : summary, type, src, check: !!check, on, editing, plain: !editing, id: 'mi-e' + ci + '-' + i, url: U,
+          label: (on ? '빼기 · ' : '담기 · ') + summary,
+          hasTag: !!tag || chgOff, tag: chgOff ? '이번에 뺌' : tag,
+          tagStyle: tagBase + (chgOff ? ' background: #eaeefb; color: #1428a0;' : ' background: #e6f4ee; color: #0b6e4f;'),
+          tStyle: 'font-size: 13px; font-weight: 600; line-height: 1.5;' + (on ? ' color: #121417;' : ' color: #8a91a0; text-decoration: line-through;'),
+          box: 'width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px; box-sizing: border-box; border-radius: 6px; display: flex; align-items: center; justify-content: center;' + (on ? ' background: #1428a0; border: none;' : ' border: 2px solid #c9d0e6; background: #ffffff;'),
+          wrap: 'display: flex; align-items: flex-start; gap: 10px; padding: 12px 14px 12px 14px;' + (i ? ' border-top: 1px solid #f0f2f5;' : '') + (chgOff ? ' box-shadow: inset 3px 0 0 #1428a0;' : '') };
+      }).sort((a, b) => Number(b.on) - Number(a.on)) : [];
+      const kept = items.filter((x) => x.on).length;
+      return { h, items, n: found ? kept + '/' + items.length : '', sub: found ? '담음 ' + kept : running ? '찾는 중' : '',
+        empty: !found && !running, skel: running ? [1, 2, 3] : [],
+        emptyHead: '검색하면 여기에 모여요', emptyText: h === '시장' ? '업계 · 시장 동향' : h === '고객사' ? '고객사 사업 · 공시 · 보도' : '공간을 쓰는 사람 · 수요 조사' };
+    });
+    const runPrimary = !hasQ || mode === 'draft';
+    return {
+      h: this.props.h ?? 682, cols, hasQ, noQ: !hasQ, running, showRun: !running,
+      filters: ['최근 1년', '뉴스', '공시 · IR', '리포트'],
+      queryLine: '시장 3 · 고객사 3 · 사용자 3 — 프라임 오피스 스마트 빌딩 도입 · E 자산운용 용산 재개발 · 하이브리드 근무 회의실 수요 외',
+      emptyLine: 'Storyboard를 읽고 검색어 · 검색 조건을 만드는 중이에요 — 검색 팝업에서 이어져요',
+      strip: 'flex-shrink: 0; box-sizing: border-box; height: 48px; padding: 0 6px 0 16px; border-radius: 12px; display: flex; align-items: center; gap: 8px;' + (hasQ ? ' background: #ffffff; border: 1px solid #e2e5ea;' : ' background: #fbfcff; border: 1.5px dashed #b8c2e6;'),
+      runLabel: mode === 'draft' && !found ? '검색 시작' : found ? '검색어 · 조건 고치고 다시 검색' : '검색 팝업 열기',
+      runStyle: 'height: 36px; padding: 0 12px; border-radius: 9px; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;' + (runPrimary ? ' border: none; background: #1428a0; color: #ffffff;' : ' border: 1px solid #e2e5ea; background: #ffffff; color: #121417;'),
+      openSearch: () => (this.props.onPop || (() => {}))('search')
+    };
+  }
+}
+</script>
+</body>
+</html>

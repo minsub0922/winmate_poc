@@ -1,8 +1,8 @@
 /**
- * RQ1 폼 상태(화면 쪽) — 서버 문서(RFDoc)에서 만들고, 고칠 때마다 폼 전체를 PUT 한다.
- * id 는 화면이 만든다(k_ · q_ + 8자) — 자동 저장을 여러 번 해도 요구 · 키맨 id 가 바뀌지 않게.
+ * RQBody 폼 상태(화면 쪽) — 서버 문서(RFDoc)에서 만들고, 칸을 떠날 때마다 폼 전체를 PUT 한다.
+ * id 는 화면이 만든다(k_ · q_ + 8자) — 자동 저장을 여러 번 해도 요구 · 키맨 id 가 바뀌지 않게(서버 changes 도 id 로 맞춰 센다).
+ * 가중치는 칸마다 따로 고친다(다른 키맨 값을 몰래 바꾸지 않음 — 합이 100 이 아니면 보드처럼 노란 글씨, 저장 때 서버가 비율대로 맞춘다).
  */
-import { distribute } from '../lib/weights';
 import type { By, Flag, RFDoc, RFUpdate } from './api';
 
 export interface FReq { id: string; text: string; status: 'ok' | 'check'; flag: Flag; by: By }
@@ -13,24 +13,34 @@ export interface FForm {
   keymen: FKeyman[];
 }
 
+export const MAX_KEYMEN = 8;
+export const MAX_REQS = 12;
+
 const hex = () => Math.random().toString(16).slice(2, 10).padEnd(8, '0');
 export const newId = (prefix: 'k_' | 'q_') => `${prefix}${hex()}`;
 
+export const emptyReq = (): FReq => ({ id: newId('q_'), text: '', status: 'ok', flag: 'none', by: 'manual' });
+
+/** 보드 RQBody new: 키맨 하나(가중치 100) · 빈 요구 줄 하나 */
 export function emptyForm(): FForm {
   return { title: '', customer: '', target: '', note: '', title_by: null, customer_by: null, target_by: null,
-    keymen: [{ id: newId('k_'), role: '', weight: 100, weight_by: 'manual', reqs: [] }] };
+    keymen: [{ id: newId('k_'), role: '', weight: 100, weight_by: 'manual', reqs: [emptyReq()] }] };
 }
 
+/** 서버 문서 → 폼. 요구가 없는 키맨은 빈 요구 줄 하나를 둔다(보드 new 와 같이 바로 쓸 수 있게 — 빈 줄은 저장하지 않는다) */
 export function formOf(d: RFDoc): FForm {
+  const keymen = (d.keymen ?? []).map((k) => {
+    const reqs = (k.reqs ?? []).map((r) => ({ id: r.id, text: r.text, status: r.status ?? 'ok', flag: r.flag ?? 'none', by: r.by ?? 'manual' }));
+    return { id: k.id, role: k.role ?? '', weight: k.weight ?? 0, weight_by: k.weight_by ?? 'manual', reqs: reqs.length ? reqs : [emptyReq()] };
+  });
   return {
     title: d.title ?? '', customer: d.customer ?? '', target: d.target ?? '', note: d.note ?? '',
     title_by: d.title_by ?? null, customer_by: d.customer_by ?? null, target_by: d.target_by ?? null,
-    keymen: (d.keymen ?? []).map((k) => ({ id: k.id, role: k.role ?? '', weight: k.weight ?? 0, weight_by: k.weight_by ?? 'manual',
-      reqs: (k.reqs ?? []).map((r) => ({ id: r.id, text: r.text, status: r.status ?? 'ok', flag: r.flag ?? 'none', by: r.by ?? 'manual' })) })),
+    keymen: keymen.length ? keymen : emptyForm().keymen,
   };
 }
 
-/** PUT 본문 — 빈 문장 요구는 서버가 버린다(입력 중인 빈 줄은 화면에만 남는다) */
+/** PUT 본문 — 빈 문장 요구는 보내지 않는다(입력 중인 빈 줄은 화면에만 남는다) */
 export function bodyOf(f: FForm, expected?: number): RFUpdate {
   return {
     title: f.title, customer: f.customer, target: f.target, note: f.note,
@@ -43,41 +53,61 @@ export function bodyOf(f: FForm, expected?: number): RFUpdate {
 export const isEmpty = (f: FForm) =>
   !f.title.trim() && !f.customer.trim() && !f.target.trim() && !f.note.trim() && f.keymen.every((k) => !k.role.trim() && k.reqs.every((r) => !r.text.trim()));
 
+/** 저장할 수 있는가(서버 422 EMPTY_FORM 과 같은 규칙) — 프로젝트명 · 고객사 · 요구사항 중 하나 */
+export const canFinish = (f: FForm) => !!(f.title.trim() || f.customer.trim() || f.keymen.some((k) => k.reqs.some((r) => r.text.trim())));
+
 export const weightSum = (f: FForm) => f.keymen.reduce((a, k) => a + (Number(k.weight) || 0), 0);
 
-/** 한 키맨 가중치를 바꾸면 나머지는 지금 비율대로 남은 몫을 나눈다(합 100) */
-export function setWeight(kms: FKeyman[], i: number, w: number): FKeyman[] {
-  const v = Math.max(0, Math.min(100, Math.round(w)));
-  if (kms.length === 1) return [{ ...kms[0], weight: v, weight_by: 'manual' }];
-  const others = kms.map((_, j) => j).filter((j) => j !== i);
-  const shares = distribute(others.map((j) => kms[j].weight), 100 - v, 0);
-  return kms.map((k, j) => (j === i ? { ...k, weight: v, weight_by: 'manual' }
-    : { ...k, weight: shares[others.indexOf(j)], weight_by: k.weight === shares[others.indexOf(j)] ? k.weight_by : 'manual' }));
+/** 머리 한 줄 · 본문 요약 줄의 수 — keymen 은 이름이나 요구가 있는 키맨(서버 counts 와 같다), all 은 화면의 키맨 카드 수(보드 RQBody sumLine) */
+export function countsOf(f: FForm) {
+  const reqs = f.keymen.flatMap((k) => k.reqs.filter((r) => r.text.trim()));
+  return {
+    all: f.keymen.length,
+    keymen: f.keymen.filter((k) => k.role.trim() || k.reqs.some((r) => r.text.trim())).length,
+    reqs: reqs.length,
+    check: reqs.filter((r) => r.status === 'check').length,
+    weight: weightSum(f),
+  };
 }
 
-/** 키맨 더하기 — 새 키맨은 고른 몫(100/n), 나머지는 지금 비율대로 */
+/** 키맨 더하기 — 다른 키맨 가중치는 그대로, 새 키맨은 남은 몫(합이 100 이면 0) · 빈 요구 줄 하나 */
 export function addKeyman(kms: FKeyman[]): FKeyman[] {
-  const n = kms.length + 1;
-  const mine = Math.floor(100 / n);
-  const shares = distribute(kms.map((k) => k.weight), 100 - mine, 0);
-  return [...kms.map((k, j) => ({ ...k, weight: shares[j], weight_by: (k.weight === shares[j] ? k.weight_by : 'manual') as By })),
-    { id: newId('k_'), role: '', weight: mine, weight_by: 'manual', reqs: [] }];
+  const left = Math.max(0, 100 - kms.reduce((a, k) => a + (Number(k.weight) || 0), 0));
+  return [...kms, { id: newId('k_'), role: '', weight: left, weight_by: 'manual', reqs: [emptyReq()] }];
 }
 
-/** 키맨 빼기 — 그 몫은 나머지에 비율대로 */
-export function removeKeyman(kms: FKeyman[], i: number): FKeyman[] {
-  const rest = kms.filter((_, j) => j !== i);
-  if (!rest.length) return [{ id: newId('k_'), role: '', weight: 100, weight_by: 'manual', reqs: [] }];
-  const shares = distribute(rest.map((k) => k.weight), 100, 0);
-  return rest.map((k, j) => ({ ...k, weight: shares[j], weight_by: (k.weight === shares[j] ? k.weight_by : 'manual') as By }));
+/** 키맨 빼기 — 하나도 안 남으면 빈 키맨(100) 하나 */
+export function removeKeyman(kms: FKeyman[], id: string): FKeyman[] {
+  const rest = kms.filter((k) => k.id !== id);
+  return rest.length ? rest : emptyForm().keymen;
 }
 
-/** '으로/로' — 받침 없거나 ㄹ 받침이면 '로'(숫자: 0 · 3 · 6 만 '으로') */
-export function euro(word: string) {
-  const ch = word.trim().slice(-1);
-  if (!ch) return '로';
-  const c = ch.charCodeAt(0);
-  if (c >= 0xac00 && c <= 0xd7a3) { const f = (c - 0xac00) % 28; return f === 0 || f === 8 ? '로' : '으로'; }
-  if (/[0-9]/.test(ch)) return '036'.includes(ch) ? '으로' : '로';
-  return /[mnMN]/.test(ch) ? '으로' : '로';
+// ── 이 화면에서 고친 칸(보드 RQ1_Edit: 고친 칸 cd-in--chg · 요구 줄 「고침」/「새로 씀」) ──
+// 기준(base)은 저장한 문서를 처음 열었을 때 · 저장 · 되돌리기 한 때의 폼(화면 상태로 기억 — 새로 읽으면 사라진다).
+
+export type ReqMark = 'chg' | 'add' | null;
+
+export interface Marks {
+  field: (k: 'title' | 'customer' | 'target' | 'note') => boolean;
+  role: (k: FKeyman) => boolean;
+  weight: (k: FKeyman) => boolean;
+  req: (r: FReq) => ReqMark;
+}
+
+const NO_MARKS: Marks = { field: () => false, role: () => false, weight: () => false, req: () => null };
+
+export function marksOf(base: FForm | null, f: FForm): Marks {
+  if (!base) return NO_MARKS;
+  const kms = new Map(base.keymen.map((k) => [k.id, k]));
+  const reqs = new Map(base.keymen.flatMap((k) => k.reqs.map((r) => [r.id, r] as const)));
+  return {
+    field: (k) => f[k].trim() !== base[k].trim(),
+    role: (k) => { const b = kms.get(k.id); return b ? b.role.trim() !== k.role.trim() : !!k.role.trim(); },
+    weight: (k) => { const b = kms.get(k.id); return b ? b.weight !== k.weight : false; },
+    req: (r) => {
+      const b = reqs.get(r.id);
+      if (!b || !b.text.trim()) return r.text.trim() ? 'add' : null;
+      return b.text.trim() !== r.text.trim() || b.status !== r.status ? 'chg' : null;
+    },
+  };
 }

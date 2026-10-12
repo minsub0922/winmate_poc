@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Storyboard · 목록</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+.s0-new:hover{background:#0f1f80 !important;color:#ffffff !important}
+.s0-new:focus-visible{outline:3px solid #9db4ff;outline-offset:3px}
+.s0-card:hover{border-color:#1428a0 !important;box-shadow:0 6px 18px rgba(20,40,160,0.10)}
+.s0-card:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="storyboard" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="전략 수립 Storyboard" title="" popover="none" hint-size="1180px,64px"></dc-import>
+    <section style="width: 1180px; height: 836px; box-sizing: border-box; padding: 32px 40px 40px 40px; display: flex; flex-direction: column; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em">전략 수립 Storyboard</h1>
+        <span style="font-size: 13.5px; color: #596170">제안서 흐름 전체를 담는 context예요. 고객 요구사항을 저장하면 생기고, 콘텐츠의 복제본을 만들면 분기돼요.</span>
+      </div>
+
+      <!-- 새로 만들기: Storyboard 는 고객 요구사항을 저장하면 생긴다 -->
+      <a href="RQ1.dc.html" class="s0-new" style="margin-top: 22px; width: 1100px; height: 156px; box-sizing: border-box; flex-shrink: 0; border-radius: 18px; background: #1428a0; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; box-shadow: 0 10px 28px rgba(20,40,160,0.22)">
+        <span style="display: flex; align-items: center; gap: 14px">
+          <span style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.16); display: flex; align-items: center; justify-content: center; flex-shrink: 0"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+          <span style="font-size: 25px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap">새 고객 요구사항으로 시작</span>
+        </span>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #d6ddff">
+          <sc-for list="{{flow}}" as="f" hint-placeholder-count="4">
+            <sc-if value="{{f.arrow}}" hint-placeholder-val="{{true}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9db4ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14 M13 6l6 6-6 6"/></svg></sc-if>
+            <span style="display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.18); color: #ffffff; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{f.n}}</span>{{f.t}}</span>
+          </sc-for>
+          <span style="width: 1px; height: 14px; background: rgba(255,255,255,0.28); margin: 0 4px"></span>
+          <span style="white-space: nowrap">저장하면 Storyboard가 자동으로 생겨요</span>
+        </span>
+      </a>
+
+      <div style="margin-top: 44px; display: flex; align-items: center; gap: 10px; flex-shrink: 0">
+        <span style="font-size: 16px; font-weight: 700">작업 내역</span>
+        <span style="height: 22px; min-width: 22px; box-sizing: border-box; padding: 0 7px; border-radius: 999px; background: #e9ecf1; color: #3d4452; font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{count}}</span>
+        <span style="flex-grow: 1"></span>
+        <span style="display: flex; align-items: center; gap: 14px; font-size: 12px; color: #596170">
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 6px; border-radius: 3px; background: #1428a0"></span>입력됨</span>
+          <span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 6px; border-radius: 3px; background: #e2e5ea"></span>아직</span>
+          <span style="color: #8a91a0">요구사항 → DSS → MI · 경쟁사 · VP · Spec · 시나리오 → 제안서</span>
+        </span>
+      </div>
+
+      <div style="margin-top: 16px; display: grid; grid-template-columns: repeat(4, 260px); gap: 20px; flex-shrink: 0">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+          <a href="SB1.dc.html" class="s0-card" style="width: 260px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; color: #121417">
+            <!-- 썸네일: 진행 8칸 + 요약본(summary.md) 앞부분 -->
+            <span style="position: relative; display: block; width: 258px; height: 148px; box-sizing: border-box; padding: 12px 11px 0 11px; background: #eef1f6; overflow: hidden">
+              <span style="display: block; width: 236px; height: 136px; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-bottom: none; border-radius: 8px 8px 0 0; box-shadow: 0 1px 3px rgba(18,20,23,0.06); overflow: hidden">
+                <span style="display: flex; flex-direction: column; gap: 10px; width: 472px; box-sizing: border-box; padding: 14px 14px 0 14px; transform: scale(0.5); transform-origin: top left">
+                  <span style="display: flex; gap: 3px">
+                    <sc-for list="{{r.track}}" as="t" hint-placeholder-count="8">
+                      <span style="{{t.style}}"><span style="font-size: 10px; font-weight: 700; white-space: nowrap">{{t.label}}</span><span style="font-family: Manrope, sans-serif; font-size: 9.5px; font-weight: 700; white-space: nowrap; opacity: 0.85">{{t.ref}}</span></span>
+                    </sc-for>
+                  </span>
+                  <span style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; background: #fbfbfc; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; line-height: 1.6">
+                    <sc-for list="{{r.md}}" as="m" hint-placeholder-count="8"><span style="{{m.style}}">{{m.t}}</span></sc-for>
+                  </span>
+                </span>
+              </span>
+              <sc-if value="{{r.branch}}" hint-placeholder-val="{{false}}"><span style="position: absolute; right: 10px; bottom: 10px; height: 22px; padding: 0 8px; border-radius: 6px; background: #ffffff; border: 1px solid #c9d0e6; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; box-shadow: 0 1px 2px rgba(18,20,23,0.12)">분기</span></sc-if>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 16px 16px; box-sizing: border-box">
+              <span style="display: flex; flex-direction: column; gap: 3px; min-width: 0">
+                <span style="font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                <span style="font-size: 12px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.sub}}</span>
+              </span>
+              <span style="display: flex; flex-direction: column; gap: 6px">
+                <span style="display: flex; align-items: baseline; gap: 6px; font-size: 12px; min-width: 0">
+                  <span style="font-family: Manrope, sans-serif; font-weight: 800; color: #1428a0; white-space: nowrap">{{r.stepNum}}</span>
+                  <span style="font-weight: 700; white-space: nowrap">단계</span>
+                  <span style="color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">· {{r.stage}}</span>
+                </span>
+                <span style="display: flex; gap: 3px" aria-hidden="true"><sc-for list="{{r.segs}}" as="s" hint-placeholder-count="8"><span style="{{s}}"></span></sc-for></span>
+              </span>
+              <span style="display: flex; align-items: center; gap: 8px; font-size: 12px; min-width: 0">
+                <span style="{{r.kmStyle}}">{{r.km}}</span>
+                <span style="color: #596170; white-space: nowrap; flex-shrink: 0">{{r.when}}</span>
+              </span>
+            </span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const SBS = [
+      ['SB-01', '용산 AI Ready 오피스', 'E 자산운용', '', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-01 v1' }, 'AI Ready 오피스의 새로운 모델', '오늘 13:40'],
+      ['SB-02', '용산 AI Ready 오피스 · 분기 B', 'E 자산운용', 'SB-01 · MI에서 분기', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-02 v1' }, '', '오늘 14:05'],
+      ['SB-03', 'A 커피 매장 리뉴얼', 'A 커피 프랜차이즈', '', { rq: 'RQ-03 v1', dss: 'DSS-03 v1', ca: 'CA-03 v1', sp: 'SP-03 v1' }, '', '어제'],
+      ['SB-04', '동탄 시니어 복합단지', 'F 시행사', '', { rq: 'RQ-04 v1' }, '', '오늘 11:20'],
+      ['SB-05', '판교 스타트업 단지', 'G 공사', '', { rq: 'RQ-05 v1' }, '', '11/2']
+    ];
+    const CT = [['rq', '요구사항'], ['dss', 'DSS'], ['mi', 'MI'], ['ca', '경쟁사'], ['vp', 'VP'], ['sp', 'Spec'], ['sc', '시나리오'], ['ppt', '제안서']];
+    // 요약본 절의 한 줄(보드 SBPopup SUM 과 같은 값)
+    const SUM = {
+      'RQ-01 v2': '키맨 3 · 요구 12 · 확인 필요 4', 'DSS-01 v1': '오피스 · 공간 7 · 제품 12 · 솔루션 3', 'MI-01 v1': '담은 정보 11 (시장 4 · 고객사 4 · 사용자 3)', 'MI-02 v1': '담은 정보 9 · 리테일 테넌트 관점',
+      'RQ-03 v1': '키맨 2 · 요구 9', 'DSS-03 v1': '외식 · 카페 · 공간 3 · 제품 5 · 솔루션 1', 'CA-03 v1': '경쟁사 4', 'SP-03 v1': '제품 5 · 비교표',
+      'RQ-04 v1': '키맨 2 · 요구 9 · 확인 필요 7', 'RQ-05 v1': '키맨 1 · 요구 3 · 확인 필요 1'
+    };
+    const NAMES = { rq: '요구사항', dss: 'DSS', mi: 'MI', ca: '경쟁사', vp: 'VP', sp: 'Spec', sc: '시나리오', ppt: '제안서' };
+    const stageOf = (d) => { const after = ['mi', 'ca', 'vp', 'sp', 'sc'].filter((k) => d[k]).map((k) => NAMES[k]); if (!d.dss) return '요구사항까지'; return after.length ? 'DSS + ' + after.join(' · ') : 'DSS까지'; };
+    const cell = (on, i) => 'flex: 1 1 0; min-width: 0; height: 34px; box-sizing: border-box; padding: 0 5px; border-radius: 6px; display: flex; flex-direction: column; justify-content: center; gap: 1px;' + (i === 2 || i === 7 ? ' margin-left: 4px;' : '') + (on ? ' background: #1428a0; color: #ffffff;' : ' background: #f5f6f8; color: #8a91a0; border: 1px dashed #d5d9e0;');
+    const md = (t, kind) => ({ t, style: 'white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (kind === 'h1' ? ' font-weight: 700; color: #121417;' : kind === 'h2' ? ' font-weight: 700; color: #1428a0;' : ' color: #3d4452;') });
+    const rows = SBS.map(([id, name, cust, from, done, km, when]) => {
+      const n = CT.filter(([k]) => done[k]).length;
+      const lines = [md('# ' + name, 'h1'), md('고객: ' + cust + (from ? ' · ' + from : ' · main'))];
+      if (km) lines.push(md('## Key message', 'h2'), md(km));
+      CT.forEach(([k, label]) => { if (done[k]) lines.push(md('## ' + label + ' · ' + done[k], 'h2'), md('- ' + (SUM[done[k]] || ''))); });
+      return {
+        name, sub: id + ' · ' + cust + (from ? ' · ' + from : ''), branch: !!from, when,
+        stepNum: n + '/8', stage: stageOf(done),
+        segs: CT.map(([k], i) => 'flex: 1 1 0; height: 6px; border-radius: 3px;' + (i === 2 || i === 7 ? ' margin-left: 4px;' : '') + ' background: ' + (done[k] ? '#1428a0' : '#e2e5ea') + ';'),
+        km: km ? 'Key message · ' + km : 'Key message 아직 없음',
+        kmStyle: 'flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;' + (km ? ' color: #121417; font-weight: 600;' : ' color: #8a91a0;'),
+        track: CT.map(([k, label], i) => ({ label, ref: done[k] ? done[k].split(' ')[0] : '—', style: cell(!!done[k], i) })),
+        md: lines.slice(0, 9)
+      };
+    });
+    const flow = ['고객 요구사항', 'Storyboard 생성', 'DSS · 콘텐츠', '제안서'].map((t, i) => ({ n: i + 1, t, arrow: i > 0 }));
+    return { rows, flow, count: String(rows.length) };
+  }
+}
+</script>
+</body>
+</html>

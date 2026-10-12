@@ -203,20 +203,20 @@ class Component extends DCLogic {
          ['매장 입구', '제품 1', [['옥외형 사이니지 OHC55', '']]],
          ['좌석 · 픽업', '제품 2', [['Smart Signage QB43C', ''], ['Smart Signage QB55C', '']]]]]
     };
-    // [이름, 짧은 이름, 조사, 설명, 사전, 후속, 새로 만들기 링크(빈 최종본 위 1단계 팝업), 새로 만들기 이름, 저장한 것을 여는 화면(최종본), 초안을 여는 화면(최종본 위 이어서 할 단계 팝업), 사이드바 그룹, 단계, 목록[[제목, 코드, Storyboard, 수정, 초안이면 지금 단계(저장한 것 0)]]]
+    // [이름, 짧은 이름, 조사, 설명, 사전, 후속, 새로 만들기 링크(요구사항은 빈 최종본 · 나머지는 이 목록 위 Storyboard 고르기 팝업), 새로 만들기 이름, 저장한 것을 여는 화면(최종본), 초안을 여는 화면(작성 중 최종본 · 그 자리에서 이어서), 사이드바 그룹, 단계, 목록[[제목, 코드, Storyboard, 수정, 초안이면 지금 단계(저장한 것 0)]]]
     const M = {
-      rq: ['고객 요구사항', '요구사항', '이', '가장 첫 단위예요. 저장하면 Storyboard가 자동으로 만들어져요.', '없음', 'DSS', 'RQ1.dc.html', '새 요구사항', 'RQ_View.dc.html', 'RQ1.dc.html', 'requirements', ['요구사항 입력'],
+      rq: ['고객 요구사항', '요구사항', '이', '가장 첫 단위예요. 저장하면 Storyboard가 자동으로 만들어져요.', '없음', 'DSS', 'RQ1.dc.html', '새 요구사항', 'RQ_View.dc.html', 'RQ_Draft.dc.html', 'requirements', ['요구사항 입력'],
         [['E 자산운용 · 용산 업무시설 재개발 AI Ready 오피스', 'RQ-01 v2', ['SB-01', 'SB-02'], '오늘 13:40', 0], ['F 시행사 · 동탄 시니어 복합단지', 'RQ-04 v1', ['SB-04'], '오늘 11:20', 0], ['A 커피 프랜차이즈 · 매장 리뉴얼', 'RQ-03 v1', ['SB-03'], '어제', 0], ['G 공사 · 판교 스타트업 단지', 'RQ-05 v1', ['SB-05'], '11/2', 0]]],
-      dss: ['공간별 제품 매칭 DSS', 'DSS', '가', 'Storyboard에 공간별 제품 · 솔루션을 골라 넣어요.', 'Storyboard (고객 요구사항)', '공간 시나리오 · Spec 시트', 'DS1.dc.html', '새 DSS', 'DS_View.dc.html', 'DS2.dc.html', 'dss', ['Storyboard', '공간 · 제품', '솔루션'],
+      dss: ['공간별 제품 매칭 DSS', 'DSS', '가', 'Storyboard에 공간별 제품 · 솔루션을 골라 넣어요.', 'Storyboard (고객 요구사항)', '공간 시나리오 · Spec 시트', 'DS1.dc.html', '새 DSS', 'DS_View.dc.html', 'DS_Draft.dc.html', 'dss', ['Storyboard', '공간 · 제품', '솔루션'],
         [['판교 스타트업 단지 DSS', 'DSS-05', ['SB-05'], '방금', 2], ['용산 오피스 공간별 제품', 'DSS-01 v1', ['SB-01', 'SB-02'], '오늘 10:10', 0], ['A 커피 매장 공간별 제품', 'DSS-03 v1', ['SB-03'], '어제', 0]]],
-      mi: ['Market Intelligence', 'MI', '가', 'Storyboard를 바탕으로 웹에서 시장 · 고객사 · 사용자 정보를 모아 정리해요.', '최소 DSS까지 된 Storyboard', '없음', 'MI1.dc.html', '새 MI', 'MI_View.dc.html', 'MI2.dc.html', 'market', ['Storyboard', '검색', '정제'],
+      mi: ['Market Intelligence', 'MI', '가', 'Storyboard를 바탕으로 웹에서 시장 · 고객사 · 사용자 정보를 모아 정리해요.', '최소 DSS까지 된 Storyboard', '없음', 'MI1.dc.html', '새 MI', 'MI_View.dc.html', 'MI_Draft.dc.html', 'market', ['Storyboard', '검색', '정제'],
         [['용산 오피스 시장 분석 · 리테일 테넌트 관점', 'MI-02 v1', ['SB-02'], '오늘 14:05', 0], ['용산 오피스 시장 분석', 'MI-01 v1', ['SB-01'], '오늘 12:30', 0]]],
-      ca: ['경쟁사 분석', '경쟁사 분석', '이', 'Storyboard의 제품 · 공간을 기준으로 B2B 경쟁사를 리스트업해요.', '최소 DSS까지 된 Storyboard', '없음', 'CA1.dc.html', '새 경쟁사 분석', 'CA_View.dc.html', 'CA2.dc.html', 'competitor', ['Storyboard', '경쟁사 리스트업'],
+      ca: ['경쟁사 분석', '경쟁사 분석', '이', 'Storyboard의 제품 · 공간을 기준으로 B2B 경쟁사를 리스트업해요.', '최소 DSS까지 된 Storyboard', '없음', 'CA1.dc.html', '새 경쟁사 분석', 'CA_View.dc.html', 'CA_Draft.dc.html', 'competitor', ['Storyboard', '경쟁사 리스트업'],
         [['A 커피 메뉴보드 경쟁사', 'CA-03 v1', ['SB-03'], '어제', 0]]],
-      vp: ['Value Proposition', 'VP', '가', '제품 · 솔루션마다 고객에게 줄 가치를 뽑아요.', '최소 DSS까지 된 Storyboard', '없음', 'VP1.dc.html', '새 VP', 'VP_View.dc.html', 'VP2.dc.html', 'value', ['Storyboard', '가치 · 고객의 니즈'], []],
-      sp: ['Spec 시트 생성', 'Spec 시트', '가', 'DSS에서 고른 제품의 스펙 시트를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SP1.dc.html', '새 Spec 시트', 'SP_View.dc.html', 'SP2.dc.html', 'spec', ['Storyboard', '시트 작성'],
+      vp: ['Value Proposition', 'VP', '가', '제품 · 솔루션마다 고객에게 줄 가치를 뽑아요.', '최소 DSS까지 된 Storyboard', '없음', 'VP1.dc.html', '새 VP', 'VP_View.dc.html', 'VP_Draft.dc.html', 'value', ['Storyboard', '가치 · 고객의 니즈'], []],
+      sp: ['Spec 시트 생성', 'Spec 시트', '가', 'DSS에서 고른 제품의 스펙 시트를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SP1.dc.html', '새 Spec 시트', 'SP_View.dc.html', 'SP_Draft.dc.html', 'spec', ['Storyboard', '시트 작성'],
         [['A 커피 메뉴보드 스펙', 'SP-03 v1', ['SB-03'], '어제', 0]]],
-      sc: ['공간 시나리오 생성', '공간 시나리오', '가', 'Storyboard의 공간마다 사용자 시나리오를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SC1.dc.html', '새 공간 시나리오', 'SC_View.dc.html', 'SC2.dc.html', 'scenario', ['Storyboard', '공간 · 시나리오'], []]
+      sc: ['공간 시나리오 생성', '공간 시나리오', '가', 'Storyboard의 공간마다 사용자 시나리오를 만들어요.', '최소 DSS까지 된 Storyboard', '없음', 'SC1.dc.html', '새 공간 시나리오', 'SC_View.dc.html', 'SC_Draft.dc.html', 'scenario', ['Storyboard', '공간 · 시나리오'], []]
     };
     const key = this.props.content ?? 'rq';
     const [label, short, josa, desc, pre, post, newHref, newLabel, viewHref, editHref, group, steps, L] = M[key] || M.rq;

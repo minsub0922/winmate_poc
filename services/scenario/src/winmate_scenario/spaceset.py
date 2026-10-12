@@ -17,6 +17,10 @@
   시나리오는 지우지 않는다. DSS 에서 빠진 공간은 시나리오도 제품도 없을 때만 뺀다.
 - 초안 지우기 · 같은 Storyboard 초안 이어 쓰기: 한 번도 저장하지 않은 묶음만 지운다(저장한 것은 409 `SAVED_CONTENT`).
   Gate 에서 같은 Storyboard 로 다시 만들면 저장 전 초안을 돌려준다(복제본은 새 Storyboard 라 새 묶음).
+- 최종본에서 바로 고치기(웹앱 ① v63 · 보드 SC2_Edit · SC_View): 칸을 고칠 때마다 PUT 으로 바로 저장(자동 저장 그대로), `:finish` 가 Storyboard 에
+  반영하는 「판」(`saved_snapshot` — EDIT_KEYS 값, 점선 AI 후보는 빼고)을 남긴다. 응답 `changes` = 저장한 판과 지금 값(stages.sc 모양)의 다른 곳 수,
+  `:revert` = 저장한 판으로(지금 점선 후보는 그 공간이 남아 있으면 그대로 · 저장한 적 없으면 409 NOT_SAVED). 판을 남기기 전에 저장한 묶음은
+  처음 읽을 때(또는 고칠 때) 지금 값을 판으로 남긴다(winmate_common.edits.ensure_snapshot).
 
 저장소: DocStore("scenario") 컬렉션 `space_sets`(scs_ …).
 """
@@ -31,6 +35,7 @@ from collections.abc import Callable
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+from winmate_common.edits import SNAPSHOT, changes_of, has_snapshot, snapshot_view, take_snapshot
 from winmate_common.errors import ApiError
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
@@ -43,6 +48,10 @@ log = logging.getLogger("winmate.scenario.spaceset")
 
 COLL = "space_sets"
 FIELD_PRESETS = ["시간대", "기대 효과", "연결 요구", "페인 포인트"]
+# 사람이 고치는 값 — 저장한 판(saved_snapshot)에 남기고 :revert 로 되돌린다. 공간 · 공간 제품 · 시나리오 · 장면 · 항목(spaces) 과
+# 그 공간 · 제품을 가져온 DSS(다시 가져오기가 바꾼다 — 되돌리면 「DSS가 바뀌었어요」 안내가 다시 뜬다). 점선 AI 후보(spaces[].candidates)는 판에 넣지 않는다.
+EDIT_KEYS = ("spaces", "dss_ref", "dss_ver", "dss_spaces", "dss_items")
+NOT_SAVED_MSG = "아직 저장하지 않아 되돌릴 판이 없어요"
 
 
 # ── 모델(API) ───────────────────────────────────────────
@@ -162,6 +171,8 @@ class SSDoc(BaseModel):
     spaces: list[SSSpace]
     status: Literal["draft", "done"] = "draft"
     ver: int = Field(0, description="저장(완료)한 횟수 = flow.json stages.sc.ver")
+    saved_at: str | None = Field(None, description="마지막 저장(:finish) 시각 — 보드 SC_View 머리 「오늘 17:30 저장」")
+    changes: int = Field(0, description="저장한 판과 지금 값(stages.sc)의 다른 곳 수 — 보드 SC2_Edit 「고친 곳 n」. 저장한 적 없으면 0 · 점선 AI 후보는 세지 않음")
     issues: list[SSIssue] = Field(default_factory=list, description="저장을 막는 것(공간 · 시나리오에 제품 · 솔루션 없음)")
     counts: SSCounts
     version: int
@@ -239,6 +250,7 @@ async def update(set_id: str, fn: Callable[[dict[str, Any]], None], note: str | 
                 raise ApiError(409, "VERSION_CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 저장해 주세요.",
                                {"current_version": cur["version"]})
             work = copy.deepcopy(cur)
+            ensure_snapshot(work)          # 판을 남기기 전에 저장한 묶음 — 고치기 전 값을 저장한 판으로
             fn(work)
             try:
                 return repo.store().put(COLL, set_id, work, expected_version=cur["version"], note=note)
@@ -272,7 +284,50 @@ def counts(d: dict[str, Any]) -> dict[str, int]:
 
 
 def to_api(d: dict[str, Any], dss_changed: dict[str, Any] | None = None) -> dict[str, Any]:
-    return {**d, "issues": issues(d), "counts": counts(d), "dss_changed": dss_changed}
+    return {**d, "issues": issues(d), "counts": counts(d), "dss_changed": dss_changed, "changes": changes(d)}
+
+
+# ── 저장한 판 · 고친 곳 · 되돌리기(웹앱 ① v63) ─────────────
+
+def take_saved(d: dict[str, Any]) -> dict[str, Any]:
+    """저장한 판 — EDIT_KEYS 값의 깊은 복사. 점선 AI 후보는 저장 값이 아니라 뺀다."""
+    snap = take_snapshot(d, EDIT_KEYS)
+    for sp in snap.get("spaces") or []:
+        sp["candidates"] = []
+    return snap
+
+
+def ensure_snapshot(d: dict[str, Any]) -> bool:
+    """판을 남기기 전에 저장한 묶음은 지금 값을 저장한 판으로(문서를 바꾼다 — 새로 남겼으면 True)."""
+    if ever_saved(d) and not has_snapshot(d):
+        d[SNAPSHOT] = take_saved(d)
+        return True
+    return False
+
+
+def _diff_view(st: dict[str, Any]) -> dict[str, Any]:
+    """고친 곳 세기용 stages.sc — 이름 목록(공간 제품 · 시나리오 제품) · 항목은 이름으로 맞춰 보게 바꾼다(칩 하나 빼면 1)."""
+    return {**st, "spaces": [{"name": s["name"], "products": [{"name": p} for p in s["products"]],
+                              "scenarios": [{**sc, "products": [{"name": p} for p in sc["products"]],
+                                             "fields": [{"key": f["k"], "v": f["v"]} for f in sc["fields"]]} for sc in s["scenarios"]]}
+                             for s in st["spaces"]]}
+
+
+def changes(d: dict[str, Any]) -> int:
+    """저장한 판과 지금 값(flow.json stages.sc)의 다른 곳 수. 저장한 적 없으면 0."""
+    if not has_snapshot(d):
+        return 0
+    return changes_of(_diff_view(stage(d)), _diff_view(stage(snapshot_view(d, EDIT_KEYS))))
+
+
+def restore_saved(d: dict[str, Any]) -> None:
+    """저장한 판으로(문서를 바꾼다). 지금 점선 AI 후보는 그 공간이 판에도 있으면 그대로 둔다."""
+    cands = {s["id"]: s.get("candidates") or [] for s in d.get("spaces") or []}
+    for k in EDIT_KEYS:
+        if k in d[SNAPSHOT]:
+            d[k] = copy.deepcopy(d[SNAPSHOT][k])
+    for sp in d.get("spaces") or []:
+        sp["candidates"] = cands.get(sp["id"], [])
 
 
 def _clean(d: dict[str, Any]) -> None:
@@ -404,8 +459,11 @@ async def create(body: SSCreate) -> tuple[dict[str, Any], bool]:
 
 
 async def get_with_status(set_id: str) -> dict[str, Any]:
-    """GET — 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null."""
+    """GET — 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null.
+    판을 남기기 전에 저장한 묶음은 지금 값을 저장한 판으로 한 번 남긴다(다시 쓴다)."""
     d = await load(set_id)
+    if ensure_snapshot(copy.deepcopy(d)):
+        d = await update(set_id, lambda _doc: None, "저장한 판 남김")   # update 가 ensure_snapshot 을 부른다
     flow = await get_flow(d["sb_id"]) if d.get("sb_id") and _from_dss(d) else None
     return to_api(d, dss_diff(d, flow) if flow else None)
 
@@ -731,6 +789,7 @@ async def finish(set_id: str) -> dict[str, Any]:
         doc["ver"] = int(doc.get("ver") or 0) + 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
+        doc[SNAPSHOT] = take_saved(doc)          # Storyboard 에 반영한 판 — 이 뒤로 고치면 「고친 곳 n」
     saved = await update(set_id, fn, "저장")
     c = counts(saved)
     await register_item(feature="SC", item_id=set_id, title=saved.get("title") or "공간 시나리오", status="done", route=f"/scenario/spaces/{set_id}",
@@ -742,6 +801,18 @@ async def finish(set_id: str) -> dict[str, Any]:
         sync = await push_stage(saved["sb_id"], "sc", ref=st["ref"], ver=st["ver"], res_id=set_id, title=saved.get("title"),
                                 value=value, md=md, card=card(saved, st))
     return {"stage": st, "summary_md": md, "flow_sync": {"md_added": sync["md_added"], "synced": sync.get("synced") or []} if sync else None}
+
+
+async def revert(set_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌린다(고친 곳 0 · 상태 done). 지금 점선 AI 후보는 그 공간이 판에도 있으면 그대로. 저장한 적 없으면 409 NOT_SAVED."""
+    def fn(doc: dict[str, Any]) -> None:
+        if not has_snapshot(doc):
+            raise ApiError(409, "NOT_SAVED", NOT_SAVED_MSG, {"id": set_id})
+        restore_saved(doc)
+        doc["status"] = "done"
+    saved = await update(set_id, fn, "되돌리기")
+    flow = await get_flow(saved["sb_id"]) if saved.get("sb_id") and _from_dss(saved) else None
+    return to_api(saved, dss_diff(saved, flow) if flow else None)
 
 
 async def get_stage(set_id: str) -> dict[str, Any]:

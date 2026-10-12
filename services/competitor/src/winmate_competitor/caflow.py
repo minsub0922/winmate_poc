@@ -11,6 +11,9 @@ Storyboard(사전 작업 DSS)의 제품 · 공간을 기준으로 경쟁사를 �
 - 저장(:finish) → Storyboard flow.json `stages.ca`(docs/scenarios/11-content-flow.md §6 `ca`) · 요약 md · 팝업 카드.
 - 같은 Storyboard 로 다시 만들면(Gate 를 다시 거쳐도) 그 Storyboard 의 저장 전 초안을 돌려준다(200 · 새로 만들지 않음). 복제본(분기)은 새 Storyboard → 새 분석.
 - 지우기는 한 번도 저장하지 않은 초안만(status draft · ver 없음). 저장한 분석은 Storyboard 에 연결돼 있어 409 SAVED_CONTENT.
+- 최종본에서 바로 고치기(웹앱 ① v63 · winmate_common.edits): 저장(:finish)이 저장한 판(`saved_snapshot` — 제목 · 목록에 든 경쟁사)을 남기고,
+  문서 응답 `changes` = 지금 값과 저장한 판의 다른 곳 수(stages.ca 값 기준 — 점선 AI 후보는 저장 값이 아니라 세지 않는다).
+  `:revert` 는 저장한 판으로(지금 점선 후보는 그대로 둔다), 저장한 적 없으면 409 NOT_SAVED. 판을 남기기 전에 저장한 문서는 처음 읽거나 고칠 때 지금 값을 판으로.
 
 저장소: competitor DocStore 컬렉션 `ca_flows`(cflow_ …, 코드 CA-NN). 쓰기는 낙관적 잠금 + 재시도, expected_version 을 주면 다르면 409.
 """
@@ -25,6 +28,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 from winmate_common.client import ServiceClient
+from winmate_common.edits import SNAPSHOT, changes_of, has_snapshot, snapshot_view, take_snapshot
 from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
@@ -181,6 +185,8 @@ class CFDoc(BaseModel):
     competitors: list[CFCompetitor] = Field(default_factory=list)
     status: Literal["draft", "done"] = "draft"
     ver: int | None = Field(None, description="저장(완료) 판 — flow.json stages.ca.ver")
+    saved_at: str | None = Field(None, description="마지막 저장 시각(저장한 적 없으면 없음)")
+    changes: int = Field(0, description="저장한 뒤 고친 곳 수(저장한 판과 지금 값의 차이 · 점선 AI 후보는 세지 않음, 저장한 적 없으면 0)")
     counts: CFCounts
     version: int
     created_at: str
@@ -298,6 +304,7 @@ async def update(fid: str, fn: Callable[[dict[str, Any]], None], note: str | Non
                 raise ApiError(409, "CONFLICT", "다른 곳에서 먼저 고쳤어요. 새로 불러온 뒤 다시 고쳐 주세요.",
                                {"current_version": cur["version"]})
             work = copy.deepcopy(cur)
+            ensure_saved_snapshot(work)          # 판을 남기기 전에 저장한 문서 — 고치기 전 값이 저장한 판
             fn(work)
             try:
                 return store().put(COLL, fid, work, expected_version=cur["version"], note=note)
@@ -330,7 +337,80 @@ def counts(d: dict[str, Any]) -> dict[str, Any]:
 
 
 def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    return {**d, "counts": counts(d)}
+    return {**d, "counts": counts(d), "changes": changes(d)}
+
+
+# ── 저장한 판 · 고친 곳 · 되돌리기(winmate_common.edits) ─────────
+
+# 사람이 고치는 문서 키 — 제목 · 경쟁사(기본 정보 · 선별 기준 · 비교 쌍 · 장단점 · 주장). 비교 기준(DSS) · 메타 · 판 번호는 빼고,
+# 점선 AI 후보(ai-pending)는 저장 값이 아니라 판에 담지 않는다.
+EDIT_KEYS = ("title", "competitors")
+
+
+def _snap(d: dict[str, Any]) -> dict[str, Any]:
+    s = take_snapshot(d, EDIT_KEYS)
+    s["competitors"] = [c for c in s.get("competitors") or [] if _in_list(c)]
+    return s
+
+
+def ensure_saved_snapshot(d: dict[str, Any]) -> bool:
+    """예전에 저장한 문서(판을 남기기 전)는 지금 값을 저장한 판으로 — 새로 남겼으면 True(edits.ensure_snapshot 과 같고 점선 후보만 뺀다)."""
+    if is_saved(d) and not has_snapshot(d):
+        d[SNAPSHOT] = _snap(d)
+        return True
+    return False
+
+
+def saved_value(d: dict[str, Any]) -> dict[str, Any]:
+    """Storyboard 에 반영되는 값(push_stage 의 title · value) — 고친 곳 수를 이 값으로 센다.
+    비교 쌍에는 id 를 붙여 맞춰 본다(가운데 쌍 하나를 빼도 뒤 쌍이 모두 바뀐 것으로 세지 않게)."""
+    st = stage(d)
+    comps = [c for c in d.get("competitors") or [] if _in_list(c)]
+    for sc, c in zip(st["competitors"], comps):
+        for sm, m in zip(sc["matches"], c.get("matches") or []):
+            sm["id"] = m.get("id")
+    return {"title": d.get("title"), **st}
+
+
+def changes(d: dict[str, Any]) -> int:
+    if not is_saved(d) or not has_snapshot(d):
+        return 0
+    return changes_of(saved_value(d), saved_value(snapshot_view(d, EDIT_KEYS)))
+
+
+async def get(fid: str) -> dict[str, Any]:
+    """문서 읽기 — 판 없이 저장된 예전 문서는 지금 값을 판으로 한 번 남긴다."""
+    d = await load(fid)
+    if is_saved(d) and not has_snapshot(d):
+        d = await update(fid, lambda _doc: None, "저장한 판 남김")
+    return to_api(d)
+
+
+NOT_SAVED_MSG = "아직 저장하지 않아 되돌릴 판이 없어요"
+
+
+async def revert(fid: str) -> dict[str, Any]:
+    """저장한 판으로 되돌린다(고친 곳 0). 지금 점선 AI 후보는 그대로 둔다(이름이 겹치면 빼고, 글자가 겹치면 새 글자). 저장한 적 없으면 409 NOT_SAVED."""
+    d0 = await load(fid)
+    if not is_saved(d0):
+        raise ApiError(409, "NOT_SAVED", NOT_SAVED_MSG, {"id": fid})
+
+    def fn(d: dict[str, Any]) -> None:
+        snap = d.get(SNAPSHOT) or _snap(d)
+        pend = [c for c in d.get("competitors") or [] if not _in_list(c)]
+        d["title"] = snap.get("title") or d.get("title")
+        d["competitors"] = copy.deepcopy(snap.get("competitors") or [])
+        for c in pend:
+            if any(_norm(x["name"]).lower() == _norm(c["name"]).lower() for x in d["competitors"]):
+                continue
+            if any(x["id"] == c["id"] for x in d["competitors"]):
+                c = {**c, "id": _letter(d)}
+            d["competitors"].append(c)
+    saved = await update(fid, fn, "저장한 판으로 되돌림")
+    if saved.get("title") != d0.get("title"):
+        await register_item(feature="CA", item_id=fid, title=saved.get("title") or "경쟁사 분석", status="done", route=f"/competitor/flow/{fid}",
+                            summary=f"경쟁사 {counts(saved)['competitors']} · 비교 쌍 {counts(saved)['matches']}")
+    return to_api(saved)
 
 
 # ── DSS → 비교 기준 ─────────────────────────────────────
@@ -998,6 +1078,7 @@ async def finish(fid: str) -> dict[str, Any]:
         doc["ver"] = int(doc.get("ver") or 0) + 1 if doc.get("saved_at") else 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
+        doc[SNAPSHOT] = _snap(doc)           # 저장한 판 — 이 뒤로 고치면 「고친 곳 n」 · 되돌리기
     saved = await update(fid, fn, "저장")
     cnt = counts(saved)
     await register_item(feature="CA", item_id=fid, title=saved.get("title") or "경쟁사 분석", status="done", route=f"/competitor/flow/{fid}",

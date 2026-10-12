@@ -4,11 +4,11 @@
  * Storyboard 목록(SB0)도 같은 부품(ListHero · HistoryHead · ThumbFrame · StepMeter)을 쓴다.
  */
 import { Fragment, useMemo, useState, type ReactNode } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useShellPage } from '../ShellContext';
 import { ErrorState, Icon, PathIcon, Skeleton, cx, josa, toast, useConfirm } from '@/ui';
 import { CONTENT, useFlowContents, useFlowsById, type ContentKey, type FlowCard } from './api';
-import { SBPopup, whenText } from './parts';
+import { GateDialog, SBPopup, whenText, type GateStart } from './parts';
 import './flow.css';
 
 const SB_ICON = 'M4 5h16v14H4z M4 11h16 M10 11v8';
@@ -144,10 +144,27 @@ function SbChips({ sbs, onOpen }: { sbs: Row['sbs']; onOpen: (id: string) => voi
   );
 }
 
-/** 콘텐츠 목록(보드 List v61) — 저장된 콘텐츠(허브 · 썸네일 = 보기 팝업 카드)와 아직 저장 전 초안(drafts · 지금 단계) */
-export function ContentListScreen({ content, drafts = [], extra }: { content: ContentKey; drafts?: DraftRow[]; extra?: ReactNode }) {
+export interface GateProps {
+  onStart: (s: GateStart) => Promise<string>;
+  initialSb?: string | null;
+  autoStart?: boolean;
+}
+
+/**
+ * `/<base>/new` — 목록 위에 사전 작업 Storyboard 고르기 팝업(보드 v63 Gate · DS1 · MI1 · CA1 · VP1 · SP1 · SC1).
+ * 목록의 「새 ○○ 만들기」가 이 주소로 오므로 누르는 즉시 팝업이 뜬다. 고르면 그 콘텐츠 화면으로, 닫으면 목록(`/<base>`)으로.
+ */
+export function GateScreen({ content, onStart, initialSb, autoStart, drafts = [] }: { content: Exclude<ContentKey, 'rq'>; drafts?: DraftRow[] } & GateProps) {
+  return <ContentListScreen content={content} drafts={drafts} gate={{ onStart, initialSb, autoStart }} />;
+}
+
+/** 콘텐츠 목록(보드 List v61) — 저장된 콘텐츠(허브 · 썸네일 = 보기 팝업 카드)와 아직 저장 전 초안(drafts · 지금 단계).
+ *  gate 를 주면 목록 위에 사전 작업 고르기 팝업을 띄운다(`/<base>/new`). */
+export function ContentListScreen({ content, drafts = [], extra, gate }: { content: ContentKey; drafts?: DraftRow[]; extra?: ReactNode; gate?: GateProps }) {
   const m = CONTENT[content];
-  useShellPage({ section: m.label, title: '', hasTask: false });
+  const nav = useNavigate();
+  // 목록 위 Gate 팝업(`/<base>/new`)이면 브레드크럼 마지막 조각 = 「새 ○○」
+  useShellPage({ section: m.label, title: gate && content !== 'rq' ? `새 ${m.short}` : '', hasTask: false });
   const q = useFlowContents(content);
   const [pop, setPop] = useState<string | null>(null);
   const { confirm, dialog } = useConfirm();
@@ -215,6 +232,10 @@ export function ContentListScreen({ content, drafts = [], extra }: { content: Co
       )}
       <SBPopup id={pop} onClose={() => setPop(null)} />
       {dialog}
+      {gate && content !== 'rq' && (
+        <GateDialog content={content} drafts={drafts} onStart={gate.onStart} initialSb={gate.initialSb} autoStart={gate.autoStart}
+          onClose={() => nav(`/${m.base}`, { replace: true })} />
+      )}
     </div>
   );
 }

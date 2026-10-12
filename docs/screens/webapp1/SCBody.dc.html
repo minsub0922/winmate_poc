@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>공간 시나리오 · 본문 (공간 → 시나리오 → 장면을 그 자리에서 쓰고 고치기)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#a3a9b5}
+.e-in:hover{border-color:#c9d0e6}
+.e-in:focus{border-color:#1428a0;box-shadow:0 0 0 3px rgba(20,40,160,0.12)}
+.e-ghost:hover{background:#f3f5fd}
+.e-aib:hover{background:#eaeefb}
+.e-space:hover{background:#f7f8fd}
+.e-x:hover{color:#121417;background:#f0f2f5}
+.e-ghost:focus-visible,.e-aib:focus-visible,.e-space:focus-visible,.e-x:focus-visible,.e-ok:focus-visible,.e-tog:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1100px; height: {{h}}px; box-sizing: border-box; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 14px; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+  <!-- 공간 -->
+  <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; min-height: 0">
+    <span style="font-size: 12px; font-weight: 700; color: #596170; padding: 6px 10px">공간 · DSS-01</span>
+    <sc-for list="{{spaces}}" as="x" hint-placeholder-count="7">
+      <button class="e-space" aria-pressed="{{x.on}}" onClick="{{x.pick}}" style="{{x.wrap}}"><span style="font-size: 14px; font-weight: 600">{{x.name}}</span><span style="{{x.subStyle}}">{{x.sub}}</span></button>
+    </sc-for>
+    <span style="margin-top: auto; padding: 8px 10px; font-size: 11.5px; color: #8a91a0; line-height: 1.5">공간마다 제품 · 솔루션이 하나 이상 있어야 저장돼요</span>
+  </div>
+
+  <!-- 고른 공간 -->
+  <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; min-width: 0; min-height: 0">
+    <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px 12px 18px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+      <span style="display: flex; align-items: center; gap: 10px">
+        <span style="font-size: 18px; font-weight: 700; white-space: nowrap">{{cur.name}}</span>
+        <span style="font-size: 12px; color: #596170; white-space: nowrap">시나리오 {{cur.n}}</span>
+        <span style="flex-grow: 1"></span>
+        <button class="e-aib" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 시나리오 3안</button>
+      </span>
+      <span style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap">
+        <span style="font-size: 11.5px; font-weight: 700; color: #596170; margin-right: 2px">공간 제품 · 솔루션</span>
+        <sc-for list="{{cur.products}}" as="p" hint-placeholder-count="4">
+          <span style="height: 28px; box-sizing: border-box; padding: 0 2px 0 5px; border-radius: 7px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 5px; white-space: nowrap"><span style="{{p.kindStyle}}">{{p.kind}}</span><span style="font-size: 12px; font-weight: 600">{{p.name}}</span><button class="e-x" aria-label="{{p.xLabel}}" style="width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent; color: #b8bec8; display: flex; align-items: center; justify-content: center"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></span>
+        </sc-for>
+        <sc-if value="{{cur.noProd}}" hint-placeholder-val="{{false}}"><span style="height: 26px; padding: 0 9px; border-radius: 999px; background: #fff4dc; color: #7a4f00; font-size: 11.5px; font-weight: 700; display: flex; align-items: center">하나 이상 골라야 저장돼요</span></sc-if>
+        <button class="e-ghost" onClick="{{openPick}}" style="height: 28px; padding: 0 10px; border-radius: 7px; border: 1px dashed #b8c2e6; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; white-space: nowrap">+ 추가 · 변경</button>
+      </span>
+    </div>
+    <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 14px 16px">
+      <sc-if value="{{cur.empty}}" hint-placeholder-val="{{false}}">
+        <div style="box-sizing: border-box; border: 1.5px dashed #c9d0e6; border-radius: 12px; padding: 22px; margin-bottom: 12px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+          <span style="font-size: 14px; font-weight: 700">이 공간은 시나리오가 없어요</span>
+          <span style="font-size: 12.5px; color: #596170">아래 「+ 시나리오 추가」로 바로 쓰거나 「AI 시나리오 3안」으로 후보를 받아요 · 없어도 저장돼요</span>
+        </div>
+      </sc-if>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start">
+        <sc-for list="{{cur.scenarios}}" as="c" hint-placeholder-count="2">
+          <div style="{{c.wrap}}">
+            <span style="display: flex; align-items: center; gap: 6px">
+              <input class="e-in" aria-label="시나리오 이름" value="{{c.title}}" placeholder="시나리오 이름" style="{{c.titleStyle}}">
+              <span style="{{c.byStyle}}">{{c.by}}</span>
+              <sc-if value="{{c.cand}}" hint-placeholder-val="{{false}}"><button class="e-ok" style="height: 26px; padding: 0 9px; border-radius: 6px; border: none; background: #1428a0; color: #ffffff; font-size: 11.5px; font-weight: 700; white-space: nowrap">수락</button></sc-if>
+              <button class="e-x" aria-label="{{c.xLabel}}" style="width: 24px; height: 24px; flex-shrink: 0; border-radius: 6px; border: none; background: transparent; color: #b8bec8; display: flex; align-items: center; justify-content: center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+            </span>
+            <span style="display: flex; align-items: center; gap: 8px">
+              <span style="width: 52px; flex-shrink: 0; font-size: 12px; font-weight: 700; color: #596170">사용자</span>
+              <input class="e-in" aria-label="사용자" value="{{c.user}}" placeholder="누가 쓰나요" style="{{c.userStyle}}">
+            </span>
+            <span style="display: flex; align-items: flex-start; gap: 8px">
+              <span style="width: 52px; flex-shrink: 0; font-size: 12px; font-weight: 700; color: #596170; padding-top: 4px">제품</span>
+              <span style="display: flex; flex-wrap: wrap; gap: 5px">
+                <sc-for list="{{c.prods}}" as="p" hint-placeholder-count="3"><button class="e-tog" aria-pressed="{{p.on}}" style="{{p.style}}">{{p.t}}</button></sc-for>
+              </span>
+            </span>
+            <span style="display: flex; flex-direction: column; gap: 5px; padding-top: 2px">
+              <span style="font-size: 12px; font-weight: 700; color: #596170">장면 흐름 <span style="font-weight: 500; color: #8a91a0">· 단계 수 자유 · 단계마다 쓰인 제품</span></span>
+              <sc-for list="{{c.steps}}" as="t" hint-placeholder-count="3">
+                <span style="display: flex; align-items: center; gap: 6px">
+                  <span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{t.n}}</span>
+                  <input class="e-in" aria-label="{{t.label}}" value="{{t.text}}" placeholder="장면" style="{{t.style}}">
+                  <button class="e-tog" aria-haspopup="listbox" style="{{t.prodStyle}}">{{t.product}}</button>
+                </span>
+              </sc-for>
+              <button class="e-ghost" style="align-self: flex-start; height: 24px; margin-left: 24px; padding: 0 6px; border-radius: 6px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 700">+ 단계</button>
+            </span>
+            <sc-for list="{{c.fields}}" as="f" hint-placeholder-count="1">
+              <span style="display: flex; align-items: center; gap: 8px">
+                <span style="width: 52px; flex-shrink: 0; font-size: 12px; font-weight: 700; color: #596170; white-space: nowrap">{{f.k}}</span>
+                <input class="e-in" aria-label="{{f.k}}" value="{{f.v}}" style="flex-grow: 1; min-width: 0; height: 30px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; border: 1px solid #eef0f4; background: #ffffff; font-size: 12.5px; color: #121417; outline: none">
+              </span>
+            </sc-for>
+            <span style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap; padding-top: 2px">
+              <span style="font-size: 11.5px; color: #8a91a0; margin-right: 2px">항목 추가</span>
+              <sc-for list="{{c.more}}" as="m" hint-placeholder-count="3"><button class="e-ghost" style="height: 24px; padding: 0 8px; border-radius: 999px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 600; white-space: nowrap">+ {{m}}</button></sc-for>
+            </span>
+          </div>
+        </sc-for>
+        <button class="e-ghost" style="box-sizing: border-box; min-height: 96px; border-radius: 12px; border: 1.5px dashed #c9d0e6; background: #fbfbfc; color: #1428a0; font-size: 13.5px; font-weight: 700">+ 시나리오 추가</button>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"mode":{"editor":"enum","options":["saved","editing","new","draft"],"default":"saved"},"ai":{"editor":"boolean","default":false},"space":{"editor":"int","default":1,"min":0,"max":6},"h":{"editor":"int","default":682},"onPop":{"editor":null},"$preview":{"width":1100,"height":682}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const mode = this.props.mode ?? 'saved';
+    const SAVED = mode === 'saved' || mode === 'editing';
+    const EDIT = mode === 'editing';
+    const AI = !!this.props.ai && !SAVED;
+    const K = mode + String(AI) + (this.props.space ?? 1);
+    const s = Object.assign({ space: this.props.space ?? 1 }, (this.state && this.state.k === K) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: K }));
+    const SOL = { MagicINFO: 1, 'SmartThings Pro': 1, 'b.IoT': 1 };
+    const st = (text, product, chg) => ({ text, product: product || '', chg: chg || '' });
+    // 공간: [이름, 공간 제품 · 솔루션, 시나리오 [이름, 사용자, 제품, 장면, 항목 [이름, 값], 출처]]
+    const SV = [
+      ['사무실 · R&D', ['스마트 모니터', 'Smart Signage QB43C', 'SmartThings Pro'], [['출근 후 하루 계획', '연구원', ['스마트 모니터', 'Smart Signage QB43C'], [st('아침 출근 후 자리 확인'), st('좌석 모니터로 오늘 일정 확인', '스마트 모니터'), st('회의실 예약 현황이 함께 뜸', '스마트 모니터'), st('이동 없이 하루 계획 완료')], [], 'manual']]],
+      ['로비', ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'MagicINFO'], [
+        ['예약 방문객의 첫 5분', '사전 예약한 외부 방문객', ['The Wall IAB 146"', 'Smart Signage QM55C', 'MagicINFO'], [st('방문 전날 예약 알림과 QR을 받음'), st('로비 게이트에 QR을 대면 자동으로 열림'), st('The Wall에 회사 소개와 환영 문구가 뜸', 'The Wall IAB 146"'), st('안내 사이니지가 회의실까지 길을 알려 줌', 'Smart Signage QM55C')], [['시간대', '오전 10시 전후'], ['기대 효과', '안내 인력 없이 방문 응대']], 'ai-candidate-A'],
+        ['출근 혼잡 시간의 로비', EDIT ? '오전 9시 전후 임직원 · 방문객' : '오전 9시 전후 임직원', ['Smart Signage QM55C', 'MagicINFO'], [st('출근 인원이 몰려 게이트 앞이 혼잡해짐'), st(EDIT ? '층별 엘리베이터 대기 시간이 실시간으로 뜸' : '층별 엘리베이터 대기 안내가 뜸', 'Smart Signage QM55C', EDIT ? 'chg' : ''), st('혼잡이 풀리면 사이니지가 공지로 돌아감', 'MagicINFO')].concat(EDIT ? [st('방문객은 키오스크로 따로 안내', 'Smart Signage QM55C', 'add')] : []), [], 'manual', EDIT ? 'user' : ''],
+        ['미등록 방문객 응대', '예약 없이 온 방문객', ['삼성 키오스크', 'Smart Signage QM55C'], [st('안내 데스크 없이 키오스크로 방문 등록', '삼성 키오스크'), st('담당자에게 도착 알림이 감'), st('라운지 대기를 안내', 'Smart Signage QM55C'), st('담당자가 내려와 함께 입장')], [['기대 효과', '대기 시간 단축']], 'ai-candidate-A']]],
+      ['회의실', ['Flip Pro WA75D', 'Smart Signage QB55C', 'SmartThings Pro'], [['하이브리드 회의', '프로젝트 팀', ['Flip Pro WA75D', 'Smart Signage QB55C'], [st('[확인 필요]')], [], 'manual']]],
+      ['라운지', ['Smart Signage QM55C'], []],
+      ['주차장', ['옥외형 사이니지 OHC55'], []],
+      ['중앙관제실', ['비디오월 VM55B', 'b.IoT'], [['설비 이상 대응', '시설 관리자', ['비디오월 VM55B', 'b.IoT'], [st('공조 설비 이상 징후를 감지', 'b.IoT'), st('비디오월에 해당 층 · 설비가 강조됨', '비디오월 VM55B'), st('담당자에게 점검 요청이 감'), st('고장 전에 부품 교체')], [['기대 효과', '유지보수 비용 절감']], 'manual']]],
+      ['공용공간', ['SmartThings 센서', 'Smart Signage QB43C', 'SmartThings Pro'], []]
+    ];
+    // 새로 만들 때: DSS 공간 · 제품만 가져오고 시나리오는 비어 있음 / 작성 중: 시나리오 5 / AI: 고른 공간에 3안 후보
+    const SPACES = SV.map(([name, prods, scs], i) => {
+      if (SAVED) return [name, prods, scs];
+      if (mode === 'new') return [name, prods, []];
+      const draft = i === 1 ? scs.slice(0, 2) : i === 0 || i === 2 || i === 5 ? scs : [];
+      const cand = AI && i === 1 ? [
+        ['사내 행사 날 로비', '행사 참석 임직원', ['The Wall IAB 146"', 'MagicINFO'], [st('행사 시작 30분 전 로비 화면이 행사 모드로 바뀜', 'MagicINFO'), st('The Wall에 행사 무대 화면이 뜸', 'The Wall IAB 146"'), st('끝나면 평소 콘텐츠로 돌아감', 'MagicINFO')], [], 'pend-B'],
+        ['퇴근 후 보안 모드', '야간 보안 요원', ['Smart Signage QM55C', 'MagicINFO'], [st('오후 8시 이후 사이니지가 절전 · 보안 안내로 전환', 'MagicINFO'), st('출입 기록이 안내 화면에 요약됨', 'Smart Signage QM55C'), st('아침에 자동으로 환영 화면 복귀')], [['시간대', '오후 8시 ~ 오전 7시']], 'pend-C']] : [];
+      return [name, prods, draft.concat(cand)];
+    });
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const CHG = ' border: 1.5px solid #1428a0; background: #f6f8fe;';
+    const si = Math.max(0, Math.min(SPACES.length - 1, s.space));
+    const spaces = SPACES.map(([name, prods, scs], i) => {
+      const n = scs.filter((c) => (c[5] || '').indexOf('pend') < 0).length;
+      return { name, on: i === si, sub: prods.length ? (n ? '시나리오 ' + n + ' · 제품 ' + prods.length : '시나리오 없음 · 제품 ' + prods.length) : '제품 없음 · 저장 안 됨',
+        subStyle: 'font-size: 11.5px;' + (!prods.length ? ' color: #7a4f00; font-weight: 700;' : n ? ' color: #596170;' : ' color: #8a91a0;'),
+        wrap: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; box-sizing: border-box; min-height: 52px; padding: 7px 12px; border-radius: 10px; border: none; text-align: left; color: #121417; flex-shrink: 0;' + (i === si ? ' background: #eaeefb;' : ' background: transparent;'),
+        pick: () => put({ space: i }) };
+    });
+    const [cname, cprods, cscs] = SPACES[si];
+    const scenarios = cscs.map(([title, user, prods, steps, fields, by, chg], j) => {
+      const pend = by.indexOf('pend') === 0;
+      const letter = by.slice(-1);
+      return { title, user, cand: pend, xLabel: (pend ? '후보 지우기 · ' : '시나리오 빼기 · ') + title,
+        by: by === 'manual' ? '직접' : pend ? 'AI ' + letter + '안' : 'AI ' + letter + '안 · 수락',
+        byStyle: tagBase + (by === 'manual' ? ' background: #f0f2f5; color: #3d4452;' : pend ? ' border: 1px dashed #1428a0; color: #1428a0;' : ' background: #e6f4ee; color: #0b6e4f;'),
+        titleStyle: 'flex-grow: 1; min-width: 0; height: 32px; box-sizing: border-box; padding: 0 8px; margin-left: -8px; border-radius: 7px; border: 1px solid transparent; background: transparent; font-size: 15px; font-weight: 700; color: #121417; outline: none;',
+        userStyle: 'flex-grow: 1; min-width: 0; height: 30px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; font-size: 12.5px; color: #121417; outline: none;' + (chg === 'user' ? CHG : ' border: 1px solid #eef0f4; background: #ffffff;'),
+        prods: cprods.map((t) => { const on = prods.indexOf(t) >= 0; return { t, on, style: 'height: 24px; padding: 0 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; white-space: nowrap;' + (on ? ' border: 1px solid #1428a0; background: #eaeefb; color: #1428a0;' : ' border: 1px dashed #c9d0e6; background: #ffffff; color: #8a91a0;') }; }),
+        steps: steps.map((t, k) => ({ n: k + 1, text: t.text, label: '장면 ' + (k + 1), product: t.product || '+ 쓰인 제품',
+          style: 'flex-grow: 1; min-width: 0; height: 30px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; font-size: 12.5px; outline: none;' + (t.chg ? CHG + ' color: #121417;' : t.text === '[확인 필요]' ? ' border: 1px solid #f1dfb3; background: #fff8e6; color: #7a4f00; font-weight: 600;' : ' border: 1px solid #eef0f4; background: #ffffff; color: #121417;'),
+          prodStyle: 'height: 24px; max-width: 132px; padding: 0 7px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;' + (t.product ? ' border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0;' : ' border: 1px dashed #c9d0e6; background: #ffffff; color: #8a91a0;') })),
+        fields: fields.map(([k, v]) => ({ k, v })),
+        more: ['시간대', '기대 효과', '연결 요구', '페인 포인트', '직접 이름 짓기'].filter((m) => !fields.some((f) => f[0] === m)).slice(0, 4),
+        wrap: 'box-sizing: border-box; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; min-width: 0;' + (pend ? ' border: 1.5px dashed #1428a0; background: #fbfcff;' : ' border: 1px solid #e2e5ea; background: #ffffff;') };
+    });
+    const real = cscs.filter((c) => (c[5] || '').indexOf('pend') < 0).length;
+    return {
+      h: this.props.h ?? 682, spaces,
+      cur: { name: cname, n: real, empty: !cscs.length, noProd: !cprods.length,
+        products: cprods.map((p) => ({ name: p, kind: SOL[p] ? '솔루션' : '제품', xLabel: '빼기 · ' + p, kindStyle: 'height: 18px; padding: 0 5px; border-radius: 4px; font-size: 10.5px; font-weight: 700; display: flex; align-items: center;' + (SOL[p] ? ' background: #eaeefb; color: #1428a0;' : ' background: #f0f2f5; color: #3d4452;') })),
+        scenarios },
+      openPick: () => (this.props.onPop || (() => {}))('pick')
+    };
+  }
+}
+</script>
+</body>
+</html>

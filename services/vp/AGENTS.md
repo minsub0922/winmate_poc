@@ -30,27 +30,26 @@ make contracts SERVICE=vp    # contracts/vp.json 갱신 + 깨지는 변경 검�
 
 ## 현재 상태
 
-### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
-상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/vp/new` 빈 최종본 + ① Gate 팝업 · `/vp/values/:id` 최종본(VP_View · `VpView.tsx`) · `?step=values` 팝업 · `/vp/values/new` 는 옛 주소(이어 줌).
-완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+### 상세 한 장 · 최종본에서 바로 고치기 (2026-10-12 · 웹앱 ① v63 · `docs/handoff/2026-10-12-content-detail-v63.md` · 보드 View content=vp + VPBody)
+- 백엔드(`valuemap.py` · `api_values.py`): `EDIT_KEYS = ("items",)`. `:finish` 가 저장한 판 `saved_snapshot` 을 남긴다(점선 ai-pending 가치 · 니즈는 빼고).
+  `VMDoc.changes` = 저장한 판과 지금 stages.vp.items 의 차이 수(`winmate_common.edits.changes_of` — 니즈는 글만 견준다 · 점선은 세지 않음 · 저장 전 0) · `saved_at`.
+  판을 남기기 전에 저장한 맵은 GET(또는 첫 고침) 때 지금 값을 판으로 남긴다. 새 경로 `POST …/{id}:revert`(저장한 적 없으면 409 `NOT_SAVED`) ·
+  `POST …/{id}:clear-pending`(점선 모두 지우기 — PendingBar 「모두 지우기」). mock `mocks/ai-tools/vp.values_suggest.v1.json`(보드 VP2_AI 후보 — when: E 자산운용 + 제품 키 3개, 아니면 빈 답 → kb_only).
+- 화면 `values/ValuesPage.tsx` = 셸 `ContentDetail` + VPBody: 흰 띠 48(「DSS-01에서 n개를 골랐어요 · 고르지 않은 k — …」 · 제품 · 솔루션 고르기 · n · AI 가치 매칭 추천 36)
+  → PendingBar → 흰 패널(안에서만 스크롤)에 제품 · 솔루션 줄(그리드 200 | 1fr): 공간 칩 · 가치 메시지(14/700) · 연결 요구 칩(Storyboard 요구사항에서 고르기 · 직접 쓰기) ·
+  고객의 니즈 칸(빈 칸 주황 점선 · AI 점선 파랑) · 직접 / AI 추론 · 수락 · AI 니즈 추론 · + 가치 추가(바로 빈 가치 칸 → 가치 메시지를 쓰면 만든다). 칩 고르기는 `ChipSelect.tsx`.
+  저장 → 그 자리에서 saved + 토스트(완료 화면 없음) · 저장 뒤 고친 칸은 `cd-in--chg`(칩 · 줄도) · 되돌리기. 쓰기는 `useVmActions` 가 한 줄로 세워 보낸다(저장 · 되돌리기는 앞 고침 뒤).
+  `/vp/new` = GateScreen(목록 위 팝업) 그대로 · DSS 다시 가져오기 안내 줄(AiBar)은 본문 맨 위.
+- 시험 pytest 38(+2: 고친 곳 · 되돌리기 · 409 NOT_SAVED · 점선 제외 · v2 / 판 없는 예전 저장분) · e2e `values.spec.ts`(목록 → 팝업 → 상세 → 입력 · AI 수락 · 고르기 → 저장 → 고친 곳 1 → 되돌리기 → v2 · VpDetail,
+  폭 1180 · 1100 · 200 · 846 · 띠 48 · 줄 38 · 팝업 760×640 · 900×720) · `vp-resync.spec.ts`. 캡처 `web/e2e/vp/__screens__/VP1 · VP2 · VP_Draft · VP2_AI · VP2_Pick · VP_View · VP2_Edit · VP2_Detail · VP2-resync(ed).png`.
 
-
-> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
-
-### 새 흐름 · 가치 · 고객의 니즈 (2026-10-08 · `docs/scenarios/11-content-flow.md` §2 · 보드 webapp1 VP2*)
+### 새 흐름 · 가치 · 고객의 니즈 (2026-10-08 · `docs/scenarios/11-content-flow.md` §2 · 보드 webapp1 VP2*) — 화면은 위 v63 으로 바뀜
 - 백엔드 `valuemap.py` + `api_values.py` — `/v1/value-maps*`(DocStore `value_maps`, 코드 `VP-NN`). 스키마는 모두 `VM*` 접두(기존 스키마 이름과 겹치지 않게).
   - 만들기: KB S1(공간별 후보)로 후보 목록. 항목 고르기 `PUT …/items` · 가치 더하기/고치기/지우기 · `:accept-all` · 다른 제안의 가치 `values:import`.
   - AI: `:suggest`(`vp.values_suggest.v1`, 모델이 없으면 KB E1 원문 메시지 → 니즈 없는 점선 후보 `mode=kb_only`) · `values/{id}:infer-need`(`vp.need_infer.v1`, 못 쓰면 빈 값).
   - `items/{key}/linked`: 이 제안 · 같은 제품을 쓴 다른 제안 · KB 공식 메시지(E1). `:finish` → `stage`(= flow.json `stages.vp`) + `summary_md`. 점선 값은 빠진다.
-- 화면 `web/src/features/vp/values/`(`/vp/values/new` · `/vp/values/:id`, 목록 머리 「가치 · 고객의 니즈」). `@/ui` FlowScreen · ProductPickerDialog 사용.
-- **보기(2026-10-12 · 보드 webapp1 View content=vp · VP_View)**: 저장한 맵(`status done` · `ver`)을 `?edit` 없이 열면 완료 화면 대신 `VpView`(셸 `FlowContentView`) —
-  머리 메타 「… 저장 · 제품 · 솔루션 n · 가치 n · 고객의 니즈 n/n」(저장 시각은 허브 history 의 그 VP 반영) · 띠 h44 「DSS-xx에서 n개를 골랐어요 · 고르지 않은 n — …」
-  (DSS 밖에서 더함 · DSS에서 빠짐은 있을 때만 덧붙임) · 흰 판 하나에 고른 제품 · 솔루션마다 줄(210 | 1fr · gap 18 · 16 20): 종류 꼬리표 · 이름 · 공간 · 「가치 n · 니즈 n/n」 |
-  가치마다 공간 · 메시지 · 연결 요구 + 니즈 줄(직접 / AI 추론 · 수락, 비면 주황 점선 「비어 있어요 · …」). 수락한 가치 · 니즈만(stages.vp 와 같다). 후속 작업 없음.
-  저장 뒤 · 목록 「열기」 · 작업 내역 · 새로고침 모두 같은 보기(「저장했어요」 문구 없음). 「편집」 → `?edit=1`(VP2) → 저장하면 `?edit` 를 떼고 보기로(문서 캐시 갱신 · 목록 · 허브 무효화).
-  저장 전 초안은 그 경로에서 바로 편집 화면. DSS 다시 가져오기 안내 줄(dss_changed)은 편집 화면에만 있다(보기에는 없음).
-- 시험: `tests/test_value_maps.py` 3개 · e2e `web/e2e/vp/values.spec.ts`(VP2 폭 280 · 1180 · 저장 → 보기: 완료 문구 0 · 값 · 본문 1100 · 띠 h44 · 왼쪽 210 · 오른쪽 830 · flow.json · 편집 `?edit=1` · 목록 열기 · 새로고침,
-  캡처 `__screens__/VP_View-new.png`). mock `mocks/ai-tools/vp.need_infer.v1.json`.
+- 화면 `web/src/features/vp/values/`(`/vp/values/new` · `/vp/values/:id`, 목록 머리 「가치 · 고객의 니즈」). `@/ui` FlowScreen · ProductPickerDialog · FlowDone 사용.
+- 시험: `tests/test_value_maps.py` 3개 · e2e `web/e2e/vp/values.spec.ts`(폭 280 · 1180 도 잰다). mock `mocks/ai-tools/vp.need_infer.v1.json`.
 - 남은 것: Storyboard `flow.json` 에 `stage` 를 써 넣는 일(storyboard 단계 1) · Gate. 이전 VP 화면(VP0~)은 그대로 둔다.
 - **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
   - Storyboard(Gate · `sb_id` 만)로 만든 맵은 `dss_ref` · `dss_ver` 를 남기고 `candidates` 가 DSS 후보다(후보를 직접 준 맵은 `dss_ref` null → 대상 아님).

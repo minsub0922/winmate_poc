@@ -1,4 +1,4 @@
-"""Spec 시트 새 흐름(보드 webapp1 SP0 · SP1 · SP2 · SP_Done) — `/v1/spec-flows*`. 본체: spec_flow.py."""
+"""Spec 시트 새 흐름(보드 webapp1 v63 SP0 · SP1 · SP2 · SP2_Edit · SP_View · SPBody) — `/v1/spec-flows*`. 본체: spec_flow.py."""
 from __future__ import annotations
 
 from typing import Any
@@ -6,7 +6,7 @@ from typing import Any
 from fastapi import APIRouter, Query, Response
 
 from .. import spec_flow as F
-from ..spec_flow import SFCreate, SFDoc, SFList, SFModelOptions, SFPatch, SFRowPatch, SFStageOut
+from ..spec_flow import SFCreate, SFDoc, SFList, SFModelOptions, SFPatch, SFRowAdd, SFRowPatch, SFStageOut
 
 router = APIRouter(prefix="/v1", tags=["spec-flows"])
 
@@ -31,8 +31,16 @@ async def create_spec_flow(body: SFCreate, response: Response) -> dict[str, Any]
 
 @router.get("/spec-flows/{flow_id}", response_model=SFDoc)
 async def get_spec_flow(flow_id: str) -> dict[str, Any]:
-    """시트 하나 + `dss_changed`(Storyboard 의 DSS 가 시트를 만든 뒤 바뀌었으면 그 차이, 아니면 null)."""
+    """시트 하나 + `dss_changed`(Storyboard 의 DSS 가 시트를 만든 뒤 바뀌었으면 그 차이, 아니면 null) + `changes`(저장한 뒤 고친 곳 수).
+    판을 남기기 전에 저장한 시트는 처음 읽을 때 지금 값을 저장한 판으로 남긴다."""
     return await F.get_with_status(flow_id)
+
+
+@router.post("/spec-flows/{flow_id}:revert", response_model=SFDoc)
+async def revert_spec_flow(flow_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기(머리 「고친 곳 n · 되돌리기」) — changes 0 인 시트. 형식 · 표기 · 항목 · 제품 넣기/빼기 · 모델 · 수량 · 직접 적은 칸 · 가져온 DSS 판이 돌아간다.
+    아직 저장하지 않았으면 409 `NOT_SAVED` 「아직 저장하지 않아 되돌릴 판이 없어요」."""
+    return await F.revert(flow_id)
 
 
 @router.delete("/spec-flows/{flow_id}", status_code=204)
@@ -55,15 +63,23 @@ async def resync_spec_flow_dss(flow_id: str) -> dict[str, Any]:
     return await F.resync(flow_id)
 
 
+@router.post("/spec-flows/{flow_id}/rows", response_model=SFDoc)
+async def add_spec_flow_row(flow_id: str, body: SFRowAdd) -> dict[str, Any]:
+    """DSS 밖 제품을 카탈로그에서 더한다(제품 고르기 팝업 · 행 `source: catalog`) — 모델은 ref → 이름 속 모델명으로 맞추고 값은 카탈로그에서.
+    같은 이름의 행이 이미 있으면 시트에 넣기만 한다. 카탈로그에 없으면 행은 더하고 칸은 [확인 필요](경고 「카탈로그에 없음」)."""
+    return await F.add_row(flow_id, body)
+
+
 @router.patch("/spec-flows/{flow_id}/rows/{row_key}", response_model=SFDoc)
 async def patch_spec_flow_row(flow_id: str, row_key: str, body: SFRowPatch) -> dict[str, Any]:
-    """행 넣기 · 빼기 · 수량 · 다른 모델 고르기(카탈로그에 없는 모델이면 422 `MODEL_NOT_IN_CATALOG`) · 모델 비우기."""
+    """행 넣기 · 빼기 · 수량 · 다른 모델 고르기(카탈로그에 없는 모델이면 422 `MODEL_NOT_IN_CATALOG`) · 모델 비우기 ·
+    [확인 필요] 칸에 원문 값 적기(`cells` — 카탈로그 값이 있는 칸이면 422 `CELL_FROM_CATALOG`, 모델을 바꾸면 그 행의 적은 값은 지운다)."""
     return await F.patch_row(flow_id, row_key, body)
 
 
 @router.delete("/spec-flows/{flow_id}/rows/{row_key}", response_model=SFDoc)
 async def delete_spec_flow_row(flow_id: str, row_key: str) -> dict[str, Any]:
-    """DSS 에서 빠진 행 지우기(경고 「DSS에서 빠짐」). DSS 에 있는 제품 행이면 422 `ROW_IN_DSS`(체크를 빼서 시트에서 뺀다)."""
+    """DSS 에서 빠진 행(경고 「DSS에서 빠짐」) · DSS 밖에서 더한 행 지우기. DSS 에 있는 제품 행이면 422 `ROW_IN_DSS`(체크를 빼서 시트에서 뺀다)."""
     return await F.delete_row(flow_id, row_key)
 
 
@@ -75,7 +91,7 @@ async def spec_flow_row_models(flow_id: str, row_key: str, q: str | None = Query
 
 @router.post("/spec-flows/{flow_id}:finish", response_model=SFStageOut)
 async def finish_spec_flow(flow_id: str) -> dict[str, Any]:
-    """저장(시트 만들기) → Storyboard flow.json stages.sp · 요약본 · 팝업 카드. 넣은 제품이 없으면 422 `NO_MODELS`, 항목이 없으면 422 `NO_COLUMNS`."""
+    """저장 → XLSX · Storyboard flow.json stages.sp · 요약본 · 팝업 카드 · 저장한 판(이 뒤로 고치면 `changes`). 넣은 제품이 없으면 422 `NO_MODELS`, 항목이 없으면 422 `NO_COLUMNS`."""
     return await F.finish(flow_id)
 
 

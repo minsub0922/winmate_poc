@@ -103,9 +103,15 @@ async def delete_product(dss_id: str, product_id: str, expected_version: int | N
 
 
 @router.post("/dss/{dss_id}:accept-all", response_model=ds.DSDoc, tags=T)
-async def accept_all(dss_id: str) -> dict[str, Any]:
-    """공간별 제품 AI 추천 모두 수락."""
-    return await ds.accept_all(dss_id)
+async def accept_all(dss_id: str, body: ds.DSAcceptAll | None = None) -> dict[str, Any]:
+    """AI 추천 모두 수락 — 본문 없음 · scope=products: 공간별 제품 추천만, scope=all: 업종 추론 · 추천 공간 · 제품 추천 모두(보드 DSBody 점선 줄)."""
+    return await ds.accept_all(dss_id, body)
+
+
+@router.post("/dss/{dss_id}:dismiss", response_model=ds.DSDoc, tags=T)
+async def dismiss(dss_id: str, body: ds.DSDismiss) -> dict[str, Any]:
+    """AI 점선 지우기(거절) — industry: 업종 추론 · space: 추천 공간 하나(name, 없으면 404) · all: 업종 · 추천 공간 · 제품 추천 모두(「모두 지우기」)."""
+    return await ds.dismiss(dss_id, body)
 
 
 @router.put("/dss/{dss_id}/solutions", response_model=ds.DSDoc, tags=T)
@@ -115,9 +121,11 @@ async def set_solutions(dss_id: str, body: ds.DSSetSolutions) -> dict[str, Any]:
 
 
 @router.get("/dss/{dss_id}/solution-options", response_model=ds.DSSolutionOptions, tags=T)
-async def solution_options(dss_id: str) -> dict[str, Any]:
+async def solution_options(dss_id: str, selected: str | None = Query(
+        None, max_length=2000, description="솔루션 고르기 팝업에서 아직 넣기 전 고른 id(쉼표로) — 주면 그 고름으로 on · 겹침 안내. 빈 문자열 = 아무것도 안 고름")) -> dict[str, Any]:
     """솔루션 고르기 카드 — 카탈로그 전체(관련 높은 순) · 함께 쓰는 제품 · 고름 · AI 추천 · 겹침 안내."""
-    return await ds.solution_options(dss_id)
+    sel = None if selected is None else [x.strip() for x in selected.split(",") if x.strip()]
+    return await ds.solution_options(dss_id, sel)
 
 
 @router.post("/dss/{dss_id}:suggest", response_model=ds.DSSuggestResult, tags=T)
@@ -131,6 +139,12 @@ async def suggest(dss_id: str, body: ds.DSSuggestBody) -> dict[str, Any]:
 async def finish(dss_id: str) -> dict[str, Any]:
     """저장 → Storyboard flow.json stages.dss · 요약본 · 팝업 카드(허브 push_stage). 공간 · 제품이 없으면 422."""
     return await ds.finish(dss_id)
+
+
+@router.post("/dss/{dss_id}:revert", response_model=ds.DSDoc, tags=T)
+async def revert(dss_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기(「고친 곳 n · 되돌리기」) → changes 0. 저장한 적 없으면 409 NOT_SAVED 「아직 저장하지 않아 되돌릴 판이 없어요」."""
+    return await ds.revert(dss_id)
 
 
 @router.get("/dss/{dss_id}/stage", response_model=ds.DSStageOut, tags=T)

@@ -215,3 +215,90 @@ async def test_value_map_draft_delete_and_dedupe(client, apps):
         br = (await sb.post(f"/v1/flows/{f['id']}:branch", json={"stage": "vp"})).json()
         r = await client.post("/v1/value-maps", json={"sb_id": br["id"]})
         assert r.status_code == 201 and r.json()["sb_id"] == br["id"]
+
+
+# ── 최종본에서 바로 고치기(웹앱 ① v63) — 저장한 판 · 고친 곳 · 되돌리기 ──
+
+async def test_value_map_changes_and_revert(client):
+    d = await _new(client)
+    mid = d["id"]
+    wall = d["items"][0]["key"]
+    flip = d["items"][1]["key"]
+    assert d["changes"] == 0 and d["saved_at"] is None
+    # 저장 전에는 되돌릴 판이 없다
+    r = await client.post(f"/v1/value-maps/{mid}:revert")
+    assert r.status_code == 409 and r.json()["error"]["code"] == "NOT_SAVED"
+    assert r.json()["error"]["message"] == "아직 저장하지 않아 되돌릴 판이 없어요"
+    d = (await client.post(f"/v1/value-maps/{mid}/items/{wall}/values",
+                           json={"space": "로비", "message": "들어서는 순간 회사의 AI 비전을 보여 줌", "need": "첫인상으로 각인시키고 싶어요", "req": "RQ-01 최초 AI Ready"})).json()
+    d = (await client.post(f"/v1/value-maps/{mid}/items/{wall}/values", json={"space": "로비", "message": "사내 행사 때 로비를 무대로 바꿈"})).json()
+    assert d["changes"] == 0                                  # 저장 전에는 늘 0
+    # 저장해 둔 맵에 점선(AI 추천)이 있어도 저장한 판에는 들어가지 않는다
+    v2 = d["items"][0]["values"][1]["id"]
+    await client.post(f"/v1/value-maps/{mid}/values/{v2}:infer-need")
+    sug = (await client.post(f"/v1/value-maps/{mid}:suggest", json={})).json()
+    assert sug["map"]["counts"]["pending"] >= 2
+    assert (await client.post(f"/v1/value-maps/{mid}:finish")).status_code == 200
+    d = (await client.get(f"/v1/value-maps/{mid}")).json()
+    assert d["ver"] == 1 and d["saved_at"] and d["changes"] == 0
+    from winmate_vp import valuemap as vm
+    snap = vm._get(mid)[vm.SNAPSHOT]
+    assert snap["items"][0]["values"][1]["need"] is None
+    assert all(v["by"] != "ai-pending" for it in snap["items"] for v in it["values"])
+
+    # 칸 하나 고치기 → 1 · 앞에 가치 하나 끼우기(목록 앞)도 1 → 2 · 점선 수락(니즈 한 칸) → 3
+    v1 = d["items"][0]["values"][0]["id"]
+    d = (await client.patch(f"/v1/value-maps/{mid}/values/{v1}", json={"message": "들어서는 순간 회사의 AI 비전을 크게 보여 줌"})).json()
+    assert d["changes"] == 1
+    d = (await client.post(f"/v1/value-maps/{mid}/items/{flip}/values", json={"space": "회의실", "message": "케이블 없이 바로 화면 공유"})).json()
+    assert d["changes"] == 2
+    d = (await client.patch(f"/v1/value-maps/{mid}/values/{v2}", json={"accept_need": True})).json()
+    assert d["changes"] == 3
+    # AI 추천 · 수락 니즈의 글을 고쳐도(출처가 직접으로) 칸 하나
+    d = (await client.patch(f"/v1/value-maps/{mid}/values/{v2}", json={"need": "행사 때마다 외부 장소를 빌리지 않았으면 좋겠어요"})).json()
+    assert d["changes"] == 3
+    # 점선 모두 지우기 — 저장 값이 아니라 고친 곳은 그대로, 사람이 쓴 값도 그대로
+    d = (await client.post(f"/v1/value-maps/{mid}:clear-pending")).json()
+    assert d["counts"]["pending"] == 0 and d["changes"] == 3 and len(d["items"][0]["values"]) == 2
+
+    # 되돌리기 → 저장한 판 그대로 · changes 0
+    d = (await client.post(f"/v1/value-maps/{mid}:revert")).json()
+    assert d["changes"] == 0 and d["ver"] == 1
+    wall_vals = d["items"][0]["values"]
+    assert [v["message"] for v in wall_vals] == ["들어서는 순간 회사의 AI 비전을 보여 줌", "사내 행사 때 로비를 무대로 바꿈"]
+    assert wall_vals[1]["need"] is None and d["items"][1]["values"] == []
+    assert d["counts"] == {"items": 4, "values": 2, "needs": 1, "needs_missing": 1, "pending": 0}
+
+    # 제품 · 솔루션 빼기도 고친 곳 → 다시 고쳐 저장하면 v2 · changes 0 · 허브 판도 v2
+    sel = [{"name": i["name"], "kind": i["kind"], "ref": i["ref"], "spaces": i["spaces"]} for i in d["items"] if i["name"] != "Smart Signage QB43C"]
+    d = (await client.put(f"/v1/value-maps/{mid}/items", json={"items": sel})).json()
+    assert d["changes"] == 1
+    d = (await client.patch(f"/v1/value-maps/{mid}/values/{v2}", json={"need": "행사 때마다 외부 장소를 빌리지 않았으면 해요"})).json()
+    assert d["changes"] == 2
+    out = (await client.post(f"/v1/value-maps/{mid}:finish")).json()
+    assert out["stage"]["counts"]["values"] == 2 and out["stage"]["selection"]["excluded"] == ["Smart Signage QB43C"]
+    d = (await client.get(f"/v1/value-maps/{mid}")).json()
+    assert d["ver"] == 2 and d["changes"] == 0
+
+
+async def test_value_map_saved_before_snapshot_gets_one_lazily(client):
+    """판을 남기기 전에 저장한 맵(saved_snapshot 없음)은 읽을 때 지금 값을 판으로 남긴다 — 고친 곳 0 에서 시작."""
+    from winmate_vp import valuemap as vm
+    d = await _new(client)
+    wall = d["items"][0]["key"]
+    await client.post(f"/v1/value-maps/{d['id']}/items/{wall}/values", json={"space": "로비", "message": "가치 하나", "need": "니즈 하나"})
+    assert (await client.post(f"/v1/value-maps/{d['id']}:finish")).status_code == 200
+    raw = vm._get(d["id"])
+    raw.pop(vm.SNAPSHOT)
+    vm._store().put(vm.COLL, d["id"], raw, expected_version=raw["version"])
+    assert vm.SNAPSHOT not in vm._get(d["id"])
+    g = (await client.get(f"/v1/value-maps/{d['id']}")).json()
+    assert g["changes"] == 0 and vm._get(d["id"])[vm.SNAPSHOT]["items"][0]["values"][0]["message"] == "가치 하나"
+    v = g["items"][0]["values"][0]["id"]
+    assert (await client.patch(f"/v1/value-maps/{d['id']}/values/{v}", json={"need": ""})).json()["changes"] == 1
+    # 판 없이 곧바로 고쳐도(읽기 전) 고치기 전 값이 판이 된다
+    raw = vm._get(d["id"])
+    raw.pop(vm.SNAPSHOT)
+    vm._store().put(vm.COLL, d["id"], raw, expected_version=raw["version"])
+    r = (await client.patch(f"/v1/value-maps/{d['id']}/values/{v}", json={"space": "전체"})).json()
+    assert r["changes"] == 1 and vm._get(d["id"])[vm.SNAPSHOT]["items"][0]["values"][0]["space"] == "로비"

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>전략 수립 · Key message 팝업</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#a3a9b5}
+.k-ghost:hover{background:#f3f5fd}
+.k-ai:hover{background:#0f1f80}
+.k-ghost:focus-visible,.k-btn:focus-visible,.k-ai:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div role="dialog" aria-modal="true" aria-label="전략 수립 · Key message" style="{{rootStyle}}">
+  <div style="display: flex; flex-direction: column; min-width: 0; flex-grow: 1">
+    <div style="display: flex; align-items: center; gap: 12px; padding: 18px 16px 14px 24px; border-bottom: 1px solid #eef0f3; flex-shrink: 0">
+      <div style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+        <span style="font-size: 12px; font-weight: 600; color: #596170">용산 AI Ready 오피스 · 전략 수립</span>
+        <span style="font-size: 19px; font-weight: 700">Key message</span>
+      </div>
+      <sc-if value="{{aiClosed}}" hint-placeholder-val="{{true}}">
+        <button class="k-ai" onClick="{{openAi}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: none; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z M19 15l.9 2.1 2.1.9-2.1.9L19 21l-.9-2.1L16 18l2.1-.9z"/></svg>연결된 콘텐츠로 수립</button>
+      </sc-if>
+      <button class="k-ghost" onClick="{{close}}" aria-label="닫기" style="width: 36px; height: 36px; border-radius: 10px; border: none; background: transparent; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+
+    <div style="flex-grow: 1; min-height: 0; overflow: hidden; padding: 16px 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap">
+        <span style="font-size: 12px; font-weight: 600; color: #596170; margin-right: 4px">근거로 쓸 콘텐츠</span>
+        <sc-for list="{{srcs}}" as="c" hint-placeholder-count="3"><span style="height: 26px; padding: 0 9px; border-radius: 7px; background: #ffffff; border: 1px solid #e2e5ea; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="width: 8px; height: 8px; border-radius: 2px; background: #1428a0"></span>{{c}}</span></sc-for>
+      </div>
+      <div style="box-sizing: border-box; border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; {{kmBorder}}">
+        <label for="sp-km" style="font-size: 12.5px; font-weight: 700; color: #1428a0; display: flex; align-items: center; gap: 6px">한 줄 메시지<sc-if value="{{kmAi}}" hint-placeholder-val="{{false}}"><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #e6f4ee; color: #0b6e4f; font-size: 10.5px; font-weight: 700; display: flex; align-items: center">AI 후보에서 고름</span></sc-if></label>
+        <input id="sp-km" value="{{km}}" placeholder="제안 전체를 한 줄로" style="height: 46px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 10px; padding: 0 14px; font-size: 17px; font-weight: 700; color: #121417; outline: none">
+      </div>
+      <span style="font-size: 13.5px; font-weight: 700">받쳐 줄 메시지 3</span>
+      <sc-for list="{{pillars}}" as="p" hint-placeholder-count="3">
+        <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; align-items: center; gap: 10px">
+            <span style="width: 22px; height: 22px; flex-shrink: 0; border-radius: 6px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{p.n}}</span>
+            <label for="{{p.id}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">메시지 {{p.n}}</label>
+            <input id="{{p.id}}" value="{{p.t}}" placeholder="메시지를 적어 주세요" style="flex-grow: 1; min-width: 0; height: 34px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 8px; padding: 0 10px; font-size: 13.5px; font-weight: 600; color: #121417; outline: none">
+          </div>
+          <div style="display: flex; align-items: center; gap: 6px; padding-left: 32px; flex-wrap: wrap">
+            <span style="font-size: 11.5px; color: #8a91a0">근거</span>
+            <sc-for list="{{p.ev}}" as="e" hint-placeholder-count="2"><span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f5f6f8; font-size: 11.5px; color: #3d4452; display: flex; align-items: center; white-space: nowrap">{{e}}</span></sc-for>
+            <button class="k-ghost" style="height: 22px; padding: 0 8px; border-radius: 6px; border: 1px dashed #c9d0e6; background: #ffffff; color: #1428a0; font-size: 11.5px; font-weight: 600">+ 근거</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; padding: 14px 18px 16px 24px; border-top: 1px solid #eef0f3; background: #fbfbfc; flex-shrink: 0">
+      <span style="font-size: 12.5px; color: #596170; flex-grow: 1">저장하면 요약본의 Key message 섹션이 바로 바뀌어요</span>
+      <button class="k-btn" onClick="{{close}}" style="height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600">취소</button>
+      <button class="k-btn" onClick="{{close}}" style="height: 42px; padding: 0 18px; border-radius: 10px; border: none; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 700">저장</button>
+    </div>
+  </div>
+
+  <sc-if value="{{aiOpen}}" hint-placeholder-val="{{false}}">
+    <aside aria-label="AI Key message 후보" style="width: 360px; flex-shrink: 0; border-left: 1px solid #e2e5ea; background: #fbfcff; display: flex; flex-direction: column">
+      <div style="display: flex; align-items: center; gap: 8px; height: 62px; padding: 0 12px 0 18px; border-bottom: 1px solid #eef0f3; flex-shrink: 0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#1428a0"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>
+        <span style="font-size: 14px; font-weight: 700; flex-grow: 1">AI 후보 3안</span>
+        <button class="k-ghost" onClick="{{closeAi}}" aria-label="후보 닫기" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <div style="flex-grow: 1; min-height: 0; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; overflow: hidden">
+        <span style="font-size: 11.5px; color: #596170">RQ-01 · DSS-01 · MI-01을 읽고 만들었어요</span>
+        <sc-for list="{{cands}}" as="c" hint-placeholder-count="3">
+          <div style="{{c.style}}">
+            <span style="display: flex; align-items: center; gap: 6px"><span style="font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; color: #1428a0">{{c.id}}</span><span style="font-size: 14px; font-weight: 700">{{c.km}}</span></span>
+            <sc-for list="{{c.ps}}" as="p" hint-placeholder-count="3"><span style="font-size: 12px; color: #3d4452; line-height: 1.4">· {{p}}</span></sc-for>
+            <button class="k-btn" onClick="{{c.use}}" style="align-self: flex-end; height: 30px; padding: 0 11px; border-radius: 8px; border: none; background: {{c.btnBg}}; color: {{c.btnFg}}; font-size: 12px; font-weight: 700">{{c.btn}}</button>
+          </div>
+        </sc-for>
+      </div>
+    </aside>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"onClose":{"editor":null},"$preview":{"width":1100,"height":700}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pai = !!this.props.ai;
+    const s = Object.assign({ ai: pai, use: -1 }, (this.state && this.state.k === String(pai)) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: String(pai) }));
+    const BASE = ['AI Ready 오피스의 새로운 모델', [['사용자를 먼저 알아보는 공간', ['RQ-01 대표이사 1', 'DSS-01 로비']], ['운영비를 줄이는 오피스', ['RQ-01 개발사업팀장 2', 'DSS-01 b.IoT']], ['', []]]];
+    const C = [
+      ['A', '공간이 먼저 알아보는 오피스', ['로비에서 시작되는 AI Ready 경험', '하나의 플랫폼으로 모든 공간 관리', '용산 최초 사례로 임대 가치 제고'], ['RQ-01 1 · DSS-01 로비', 'DSS-01 솔루션 3', 'MI-01 시장 2']],
+      ['B', 'AI Ready 오피스의 새로운 모델', ['사용자를 먼저 알아보는 공간', '운영비를 줄이는 오피스', '설계 단계부터 준비된 인프라'], ['RQ-01 1', 'RQ-01 3 · b.IoT', 'MI-01 고객사 1']],
+      ['C', '일하는 방식이 보이는 오피스', ['회의 · 협업이 끊기지 않는 공간', '데이터로 증명하는 에너지 절감', '테넌트가 머무르고 싶은 건물'], ['DSS-01 회의실', 'RQ-01 3', 'MI-01 사용자 3']]
+    ];
+    const picked = s.use >= 0 ? C[s.use] : null;
+    const pillars = (picked ? picked[2].map((t, i) => [t, [picked[3][i]]]) : BASE[1]).map(([t, ev], i) => ({ n: i + 1, t, ev, id: 'sp-p' + i }));
+    const cands = C.map(([id, km, ps], i) => { const on = s.use === i; return { id, km, ps, btn: on ? '쓰는 중' : '이 안 쓰기', btnBg: on ? '#e6f4ee' : '#1428a0', btnFg: on ? '#0b6e4f' : '#ffffff',
+      style: 'box-sizing: border-box; padding: 10px 12px; border-radius: 12px; display: flex; flex-direction: column; gap: 4px;' + (on ? ' border: 2px solid #0b6e4f; background: #f3faf6;' : ' border: 1px dashed #1428a0; background: #ffffff;'),
+      use: () => put({ use: i }) }; });
+    const noop = () => {};
+    const ai = s.ai;
+    return {
+      rootStyle: 'width: 1100px; height: 700px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 28px 72px rgba(18,20,23,0.28); display: flex; overflow: hidden; font-family: \'Noto Sans KR\', system-ui, sans-serif; color: #121417;',
+      srcs: ['요구사항 RQ-01 v2', 'DSS-01 v1', 'MI-01 v1'],
+      km: picked ? picked[1] : BASE[0], kmAi: !!picked,
+      kmBorder: picked ? 'border: 1.5px solid #0b6e4f;' : 'border: 1.5px solid #1428a0;',
+      pillars, cands, aiOpen: ai, aiClosed: !ai,
+      openAi: () => put({ ai: true }), closeAi: () => put({ ai: false }),
+      close: this.props.onClose || noop
+    };
+  }
+}
+</script>
+</body>
+</html>

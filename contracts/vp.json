@@ -4305,13 +4305,66 @@
         }
       }
     },
+    "/v1/value-maps/{map_id}:clear-pending": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Clear Pending",
+        "description": "점선(AI 추천) 모두 지우기 — 가치 후보는 빼고 AI 니즈 추론은 비운다(사람이 쓴 값 · 수락한 값은 그대로).",
+        "operationId": "clear_pending",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/value-maps/{map_id}:finish": {
       "post": {
         "tags": [
           "value-maps"
         ],
         "summary": "Finish",
-        "description": "저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다.",
+        "description": "저장 — status=done, Storyboard flow.json 의 stages.vp 와 요약 md 를 돌려준다. 이 값이 「저장한 판」이 된다(고친 곳 · 되돌리기의 기준).",
         "operationId": "finish",
         "parameters": [
           {
@@ -4354,6 +4407,62 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/v1/value-maps/{map_id}:revert": {
+      "post": {
+        "tags": [
+          "value-maps"
+        ],
+        "summary": "Revert Value Map",
+        "description": "저장한 판으로 되돌리기 — 고른 제품 · 솔루션과 가치 · 니즈를 마지막 저장 값으로(changes 0, 점선 AI 추천도 사라진다).\n한 번도 저장하지 않았으면 409 `NOT_SAVED`.",
+        "operationId": "revert_value_map",
+        "parameters": [
+          {
+            "name": "map_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Map Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VMDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없음"
           }
         }
       }
@@ -10909,6 +11018,24 @@
             ],
             "title": "Ver",
             "description": "저장(완료) 판 — flow.json stages.vp.ver"
+          },
+          "saved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved At",
+            "description": "마지막 저장(:finish) 시각"
+          },
+          "changes": {
+            "type": "integer",
+            "title": "Changes",
+            "description": "저장한 판과 지금 값의 다른 곳 수(저장한 적 없으면 0) — 화면 머리 「고친 곳 n · 되돌리기」",
+            "default": 0
           },
           "counts": {
             "$ref": "#/components/schemas/VMCounts"

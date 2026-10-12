@@ -1,4 +1,4 @@
-"""고객 요구사항 새 흐름 API(/v1/rq-flows) — 보드 webapp1 RQ0 · RQ1 · RQ_Done. 처리 본체는 rqflow.py."""
+"""고객 요구사항 새 흐름 API(/v1/rq-flows) — 보드 webapp1 RQ0 · RQ1 · RQ_Draft · RQ1_Edit · RQ_View(v63 상세 한 장). 처리 본체는 rqflow.py."""
 from __future__ import annotations
 
 from typing import Any
@@ -25,8 +25,8 @@ async def create_rq_flow(body: rf.RFCreate | None = None) -> dict[str, Any]:
 
 @router.get("/rq-flows/{flow_id}", response_model=rf.RFDoc)
 async def get_rq_flow(flow_id: str) -> dict[str, Any]:
-    """id(rqf_…) 또는 코드(RQ-NN)."""
-    return rf.to_api(await rf.load(flow_id))
+    """id(rqf_…) 또는 코드(RQ-NN). changes = 마지막 저장 판과 다른 곳 수(고친 곳 n)."""
+    return await rf.load_api(flow_id)
 
 
 @router.put("/rq-flows/{flow_id}", response_model=rf.RFDoc)
@@ -51,5 +51,12 @@ async def fill_rq_flow(flow_id: str, body: rf.RFFillIn) -> dict[str, Any]:
 
 @router.post("/rq-flows/{flow_id}:finish", response_model=rf.RFStageOut)
 async def finish_rq_flow(flow_id: str) -> dict[str, Any]:
-    """저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수."""
+    """저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수.
+    저장한 값을 판으로 남긴다(이 뒤로 고치면 문서 changes 가 센다)."""
     return await rf.finish(flow_id)
+
+
+@router.post("/rq-flows/{flow_id}:revert", response_model=rf.RFDoc)
+async def revert_rq_flow(flow_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기(고친 곳 0) — 저장한 적 없으면 409 NOT_SAVED(「아직 저장하지 않아 되돌릴 판이 없어요」), 파일로 채우는 중이면 409 FILLING."""
+    return await rf.revert(flow_id)

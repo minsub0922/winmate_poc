@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>사전 작업 · Storyboard 고르기</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button{font-family:inherit;cursor:pointer}
+.g-row:hover{border-color:#1428a0}
+.g-ghost:hover{background:#f3f5fd}
+.g-row:focus-visible,.g-ghost:focus-visible,.g-btn:focus-visible,.g-opt:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="{{group}}" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="{{label}}" title="{{newTitle}}" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{one}}" hint-size="1180px,56px"></dc-import>
+    <section style="width: 1180px; height: 780px; box-sizing: border-box; padding: 28px 160px 28px 160px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
+      <div style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+        <h1 style="margin: 0; font-size: 25px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.35">어느 Storyboard로 만들까요?</h1>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #596170">
+          <span style="height: 24px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">사전 작업</span>
+          <span>{{pre}}이 있어야 시작할 수 있어요. 없으면 먼저 만들고 와 주세요.</span>
+        </div>
+      </div>
+
+      <div role="radiogroup" aria-label="Storyboard" style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
+        <sc-for list="{{rows}}" as="r" hint-placeholder-count="5">
+          <div style="{{r.wrap}}">
+            <button class="g-row" role="radio" aria-checked="{{r.on}}" aria-disabled="{{r.off}}" onClick="{{r.pick}}" style="display: flex; align-items: center; gap: 14px; flex-grow: 1; min-width: 0; height: 64px; padding: 0 0 0 16px; border: none; background: transparent; text-align: left; color: inherit">
+              <span style="{{r.radio}}"></span>
+              <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0; flex-grow: 1">
+                <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
+                  <span style="font-size: 14.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                  <sc-if value="{{r.branch}}" hint-placeholder-val="{{false}}"><span style="height: 18px; padding: 0 6px; border-radius: 4px; background: #f0f2f5; color: #3d4452; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0">분기</span></sc-if>
+                </span>
+                <span style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #596170; white-space: nowrap">
+                  <span>{{r.cust}}</span>
+                  <span style="display: flex; gap: 2px"><sc-for list="{{r.dots}}" as="d" hint-placeholder-count="8"><span style="{{d}}"></span></sc-for></span>
+                  <span>{{r.stage}}</span>
+                </span>
+              </span>
+              <span style="{{r.pill}}">{{r.status}}</span>
+            </button>
+            <sc-if value="{{r.off}}" hint-placeholder-val="{{false}}">
+              <a href="{{r.preHref}}" style="height: 32px; margin-right: 8px; padding: 0 10px; border-radius: 8px; color: #1428a0; font-size: 12.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{r.preShort}} 하러 가기</a>
+            </sc-if>
+            <button class="g-ghost" onClick="{{r.view}}" aria-label="{{r.viewLabel}}" style="height: 32px; margin-right: 12px; padding: 0 10px; border-radius: 8px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; white-space: nowrap; flex-shrink: 0">요약</button>
+          </div>
+        </sc-for>
+      </div>
+
+      <!-- 이미 같은 콘텐츠가 있을 때: 수정 / 복제본(분기) -->
+      <sc-if value="{{hasExisting}}" hint-placeholder-val="{{false}}">
+        <div style="box-sizing: border-box; flex-shrink: 0; border: 1px solid #e2e5ea; border-radius: 14px; background: #ffffff; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 13.5px; font-weight: 700">이 Storyboard에는 {{short}} {{exRef}}가 이미 있어요</span>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+            <sc-for list="{{opts}}" as="o" hint-placeholder-count="2">
+              <button class="g-opt" role="radio" aria-checked="{{o.on}}" onClick="{{o.pick}}" style="{{o.style}}">
+                <span style="display: flex; align-items: center; gap: 8px"><span style="{{o.radio}}"></span><span style="font-size: 14px; font-weight: 700">{{o.t}}</span></span>
+                <span style="font-size: 12.5px; color: #596170; line-height: 1.5; padding-left: 26px">{{o.d}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <div style="margin-top: auto; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+        <a href="{{listHref}}" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>목록</a>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">{{footLine}}</span>
+        <a class="g-btn" href="{{workHref}}" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; white-space: nowrap">{{cta}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="{{pop}}" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["dss","mi","ca","vp","sp","sc"],"default":"mi"},"sel":{"editor":"text","default":""},"choice":{"editor":"enum","options":["edit","branch"],"default":"edit"},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const SBS = {
+      'SB-01': ['용산 AI Ready 오피스', 'E 자산운용', '', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-01 v1' }],
+      'SB-02': ['용산 AI Ready 오피스 · 분기 B', 'E 자산운용', 'SB-01 · MI에서 분기', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-02 v1' }],
+      'SB-03': ['A 커피 매장 리뉴얼', 'A 커피 프랜차이즈', '', { rq: 'RQ-03 v1', dss: 'DSS-03 v1', ca: 'CA-03 v1', sp: 'SP-03 v1' }],
+      'SB-04': ['동탄 시니어 복합단지', 'F 시행사', '', { rq: 'RQ-04 v1' }],
+      'SB-05': ['판교 스타트업 단지', 'G 공사', '', { rq: 'RQ-05 v1' }]
+    };
+    const ORDER = ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'];
+    const stageOf = (d) => { const n = ['mi', 'ca', 'vp', 'sp', 'sc'].filter((k) => d[k]).length; if (d.ppt) return '제안서까지'; if (!d.dss) return '요구사항까지'; return n ? 'DSS + 콘텐츠 ' + n + '/5' : 'DSS까지'; };
+    // [이름, 짧은 이름, 사전 작업 키, 사전 작업 설명, 사전 작업 짧은 이름, 사전 작업 링크, 목록, 작업 화면, 단계, 사이드바 그룹]
+    const META = {
+      dss: ['공간별 제품 매칭 DSS', 'DSS', 'rq', '고객 요구사항이 연결된 Storyboard', '요구사항', 'RQ1.dc.html', 'DS0.dc.html', 'DS2.dc.html', ['Storyboard', '공간 · 제품', '솔루션'], 'dss'],
+      mi: ['Market Intelligence', 'MI', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'MI0.dc.html', 'MI2.dc.html', ['Storyboard', '검색', '정제'], 'market'],
+      ca: ['경쟁사 분석', '경쟁사 분석', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'CA0.dc.html', 'CA2.dc.html', ['Storyboard', '경쟁사 리스트업'], 'competitor'],
+      vp: ['Value Proposition', 'VP', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'VP0.dc.html', 'VP2.dc.html', ['Storyboard', '가치 추출'], 'value'],
+      sp: ['Spec 시트 생성', 'Spec 시트', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'SP0.dc.html', 'SP2.dc.html', ['Storyboard', '시트 작성'], 'spec'],
+      sc: ['공간 시나리오 생성', '공간 시나리오', 'dss', '최소 DSS까지 완료된 Storyboard', 'DSS', 'DS1.dc.html', 'SC0.dc.html', 'SC2.dc.html', ['Storyboard', '공간별 시나리오'], 'scenario']
+    };
+    const DEF = { dss: 'SB-05', mi: 'SB-01', ca: 'SB-01', vp: 'SB-01', sp: 'SB-01', sc: 'SB-01' };
+    const key = this.props.content ?? 'mi';
+    const [label, short, preKey, pre, preShort, preHref, listHref, workHref, steps, group] = META[key] || META.mi;
+    const psel = this.props.sel || DEF[key];
+    const s = Object.assign({ sel: psel, choice: this.props.choice ?? 'edit', pop: '' }, (this.state && this.state.k === key + psel) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: key + psel }));
+    const ids = Object.keys(SBS);
+    const ok = (id) => !!SBS[id][3][preKey];
+    const sorted = ids.filter(ok).concat(ids.filter((id) => !ok(id)));
+    const rows = sorted.map((id) => {
+      const [name, cust, from, done] = SBS[id];
+      const can = ok(id);
+      const has = done[key];
+      const on = can && s.sel === id;
+      return {
+        name, cust, branch: !!from, stage: stageOf(done), on, off: !can, viewLabel: name + ' 요약 보기', preHref, preShort,
+        status: !can ? preShort + ' 먼저' : has ? has + ' 있음' : '이어서 만들기',
+        dots: ORDER.map((k, i) => 'width: 7px; height: 12px; border-radius: 2px;' + (i === 2 || i === 7 ? ' margin-left: 3px;' : '') + (done[k] ? ' background: #1428a0;' : ' background: #e2e5ea;')),
+        wrap: 'display: flex; align-items: center; box-sizing: border-box; border-radius: 14px;' + (!can ? ' background: #f5f6f8; border: 1px dashed #d5d9e0; color: #8a91a0;' : on ? ' background: #ffffff; border: 2px solid #1428a0; box-shadow: 0 4px 14px rgba(20,40,160,0.10);' : ' background: #ffffff; border: 1px solid #e2e5ea;'),
+        radio: 'width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box;' + (!can ? ' border: 2px dashed #d5d9e0;' : on ? ' border: 6px solid #1428a0;' : ' border: 2px solid #c9d0e6;'),
+        pill: 'height: 24px; box-sizing: border-box; padding: 0 9px; border-radius: 999px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0; margin-right: 10px;' + (!can ? ' border: 1px dashed #b8bec8; color: #8a91a0;' : has ? ' background: #fff4dc; color: #7a4f00;' : ' background: #eaeefb; color: #1428a0;'),
+        pick: () => { if (can) put({ sel: id }); },
+        view: () => put({ pop: id })
+      };
+    });
+    const selD = SBS[s.sel] ? SBS[s.sel][3] : {};
+    const exRef = selD[key] || '';
+    const shared = exRef ? ids.filter((id) => SBS[id][3][key] === exRef) : [];
+    const optBase = 'display: flex; flex-direction: column; gap: 6px; box-sizing: border-box; padding: 12px 14px; border-radius: 12px; background: #ffffff; text-align: left; color: #121417;';
+    const radio = (on) => 'width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box;' + (on ? ' border: 5px solid #1428a0;' : ' border: 2px solid #c9d0e6;');
+    const O = [
+      ['edit', '수정', exRef + '를 고쳐요.' + (shared.length > 1 ? ' 연결된 Storyboard ' + shared.length + '개 모두에 반영돼요.' : ' 이 Storyboard에만 연결돼 있어요.')],
+      ['branch', '복제본 만들기', 'Storyboard를 분기해 새 ' + short + '를 만들어요. 앞 단계는 그대로 공유하고, 원본 ' + exRef + '는 바뀌지 않아요.']
+    ];
+    const opts = O.map(([id, t, d]) => { const on = s.choice === id; return { t, d, on, style: optBase + (on ? ' border: 2px solid #1428a0;' : ' border: 1px solid #e2e5ea;'), radio: radio(on), pick: () => put({ choice: id }) }; });
+    const selName = SBS[s.sel] ? SBS[s.sel][0] : '';
+    const cta = !exRef ? '이 Storyboard로 시작' : s.choice === 'edit' ? exRef.split(' ')[0] + ' 수정하기' : '분기 만들고 시작';
+    const footLine = !exRef ? selName + '에 ' + short + '가 연결돼요' : s.choice === 'edit' ? '수정 내용은 요약본에 바로 반영돼요' : '‘' + selName + ' · 분기 C’가 새로 생겨요';
+    return {
+      label, short, pre, preShort, preHref, listHref, workHref, steps, group, one: 1, newTitle: '새 ' + short,
+      rows, hasExisting: !!exRef, exRef, opts, cta, footLine,
+      popOpen: !!s.pop, pop: s.pop || 'SB-01', closePop: () => put({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

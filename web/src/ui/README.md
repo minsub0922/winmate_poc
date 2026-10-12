@@ -191,8 +191,10 @@ h38 r10 돋보기 입력(§2.8). 라벨은 시각적으로 숨김(접근 이름)
 | `title` · `ariaLabel` | 머리 제목 / 접근 이름 |
 | `variant` | `'sheet'`(r18, 기본) · `'dialog'`(작은 확인창) · `'side'`(오른쪽에 붙는 높이 100% 시트 — 왼쪽 모서리만 r18, 밀려 들어옴) |
 | `width = 720` · `height` · `footer` · `bodyStyle` | `side` 는 `width` 가 시트 폭(높이는 언제나 100%) |
+| `className` | 상자(`.wm-modal`)에 더할 클래스 — 보드마다 다른 그림자 · 모서리 |
 
-포커스는 창 안에 갇히고(`useFocusTrap`), 닫으면 연 요소로 돌아간다.
+포커스는 창 안에 갇히고(`useFocusTrap`), 닫으면 연 요소로 돌아간다. 딤(`.wm-scrim`)은 어디에 두어도 화면 전체를 덮는다(셸 본문 폭 규칙을 받지 않음).
+여러 겹이 떠 있으면 Esc 는 맨 위(가장 나중에 연) 겹창 하나만 닫는다(`useEscape` 순서).
 
 ### `SideSheet`
 읽기 전용 오른쪽 시트(VPR 라우팅 규칙 · 상세 보기) — `Modal variant="side"` 와 같고 폭 기본 560. Esc · 딤 클릭 · 닫기 버튼.
@@ -214,7 +216,7 @@ return <>{/* 화면 */}{dialog}</>;
 `toast(message, { action?: { label, onClick }, duration = 3200 })` — 화면을 떠나는 알림에만(보드에 없음, Q-UI-2). `ToastHost` 는 셸 Layout 에 이미 있다.
 
 ### `useFocusTrap(ref, active, { initialFocus?, restoreFocus? })` · `useEscape(onEscape, enabled)` · `focusablesIn(root)`
-직접 만든 겹창에 쓴다. Esc 는 끌기 취소 → 시트 → 팝오버 순서로 먼저 잡은 쪽이 처리한다.
+직접 만든 겹창에 쓴다. Esc 는 끌기 취소 → 시트 → 팝오버 순서로 먼저 잡은 쪽이 처리한다. `useEscape` 끼리는 가장 나중에 켜진 것 하나만 받는다(팝업 위 시트 · 팝업 안 목록).
 
 ## 5. 미디어 (`media.tsx`)
 
@@ -312,10 +314,21 @@ return <>{/* 화면 */}{dialog}</>;
 | `ProductPickerDialog` | `groups: { label, items: PickItem[] }[]`, `picked`, `onToggle`, `min?` | 제품 · 솔루션 고르기 760×640 — KB 카탈로그 검색 + 「직접 추가 · KB 에 없음 · 확인 필요」 |
 
 **셸 흐름 화면(`@/shell`, `web/src/shell/flow/` — 허브 `/v1/flows*` 를 읽는다)**: `ContentListScreen({content, drafts})`(보드 List v61 — 가운데 「새 ○○ 만들기」 · 작업 내역 그리드 · 썸네일 = 허브 `card` · n/N 단계, `DraftRow.step` 으로 초안의 지금 단계 · 초안 카드의 Storyboard 칩도 이름) · 목록 부품 `ListHero({to, label, steps, note})` · `HistoryHead({count, legend})` · `SegLegend` · `StepMeter({n, total, text, segs, gaps})` · `ThumbFrame({to?, badge, tone})` · `CardMini({card, note})`(SB0 도 쓴다) ·
-`GateScreen({content, onStart, initialSb, autoStart, drafts?, openStep?})`(보드 Gate · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다 · 단계 팝업 안이면 「목록」 링크를 숨기고 `openStep` 으로 그 단계 팝업을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup — 단계 팝업 안에서는 그리지 않는다) ·
-`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다 · 「콘텐츠 열기 · 단계별로 고치기」 = 최종본) ·
-**상세 = 최종본 + 단계 팝업(보드 v62 · CF-12 · `shell/flow/detail.tsx`)**: `ContentDetail({content, status: 'saved'|'new'|'draft', title, refVer, meta, sbIds, steps, done, onStep, actions?, json?, notice?, follow?, children})`(보드 View — 머리의 단계 칩 = 「단계별 고치기」) · `StepModal({open, content, title, mode: 'new'|'edit', ver, sbId, note, steps, current, done, onStep, onClose, children})`(1180×800 · 머리 StepHead 72 · 안의 FlowScreen 은 SB 바 없음 · `useShellPage` 는 작업 추가 맥락만 얹는다 · Esc 는 맨 위 것만) · `StepSlot({n, label, what, next, cta, onOpen, big?})`(빈 칸 자리표시 · 「이어서」) · `DetailFollow({items})` · `useStepParam(keys)`(`?step=<키>` → `{step, open, close}`) · `useEditGuard(open, version)` · `useCloseAsk()`(계속 고치기 · 저장하지 않고 닫기 · 저장 · vN) · `useInStepPopup()`(`@/ui`) ·
+`GateScreen({content, onStart, initialSb, autoStart, drafts?})`(보드 Gate v63 — 목록(`ContentListScreen`) 위 880×780 팝업 `GateDialog`, 닫으면 목록으로 · 고르면 `onStart` 가 준 주소로 · 이미 있으면 수정 / 복제본 · 줄 목록 안에서만 스크롤 · 조사 자동 · `drafts` 를 주면 저장 전 초안이 있는 줄에 「작성 중 초안 있음」 · 시작 버튼 「초안 이어 쓰기」 = 그 초안을 연다) · `FlowBar({sbIds, current, note})`(SBBar + SBPopup) ·
+`SBPopup` · `ContentPopup`(820×680, 머리 · 바닥은 보드 값이라 Modal 머리를 쓰지 않는다 · 「콘텐츠 열기」 = 그 콘텐츠 상세) ·
 `CONTENT`(콘텐츠별 이름 · base · 스텝 이름 = 보드 Gate META) · `useFlow` · `useFlows` · `FlowDots` · `whenText`.
+
+**콘텐츠 상세(v63 · `web/src/shell/flow/detail.tsx` · `docs/scenarios/11-content-flow.md` §7)** — 최종본 한 장에서 바로 입력 · 수정 · 저장:
+
+| 부품 | props | 설명 |
+|---|---|---|
+| `ContentDetail<T>` | `content` · `saved` · `changes` · `empty` · `title` · `refCode` · `ver` · `savedAt` · `updatedAt` · `facts[]` · `sbIds[]` · `onSave(): Promise<T>` · `onRevert?` · `saveLabel?` · `actions?` · `nexts?: NextCard[]` · `canSave?: boolean \| 이유` · `savedToast?(out: T)` · `shell?`(셸에 더 넘길 값 — hasTask · onAdd · addable · added · taskContext · accepts) · `children`(본문) | 틀: SBBar · 머리(상태 알약 · 한 줄 · 「고친 곳 n」 · 되돌리기 · flow.json · 저장) · 본문(높이 채움) · 후속 작업 카드 · JsonPopup · 고치다 나가면 묻기(useBlocker) |
+| `detailMode({saved, changes, empty})` | | `'saved' \| 'editing' \| 'new' \| 'draft'` |
+| `InlineInput` | `value` · `onCommit` · `label` · `placeholder?` · `className?` · `changed?`(`cd-in--chg`) · `multiline?` · `autosize?` · `maxLength = 300` · `disabled?` · `required?` · `id?` · `inputRef?` · `onKeyDown?` · `inputMode?` · `autoFocus?` | 떠날 때 · Enter 에 한 번 저장(multiline 은 Ctrl/⌘+Enter), Esc 는 원래 값 |
+| `AiButton` | `size = 32`(28 · 32 · 36) · `busy?` · `disabled?` | ✦ AI 추가기능(`cd-aib`) |
+| `PendingBar` | `count` · `text?` · `onAcceptAll?` · `onClearAll?` | 점선 일괄 줄(38) |
+
+인라인 편집 클래스(`detail.css`): `cd-in`(`--soft` · `--bare` · `--warn` · `--chg`) · `cd-chgrow` · `cd-pend` · `cd-ok` · `cd-x` · `cd-add` · `cd-link` · `cd-tag--man|manline|ai|pend|warn|chg` · `cd-strip` · `cd-panel`.
 
 **폭 규칙**: 셸이 `.sh-content` 의 직계 자식을 `--wm-main-w`(1180px) 가운데 열로 맞춘다. 화면은 자기 max-width 를 주지 않는다.
 고정 칸은 보드 px, 나머지는 `minmax(0, 1fr)`. 작업 화면은 `FlowScreen` 으로 높이를 채우고 패널 안에서만 스크롤한다.
@@ -433,6 +446,7 @@ const open = useOpenDetail();
 | `shortFileUrl(url)` | `images.samsung.com/kdp/goods/2023/08/29/cc897d99….png` |
 | `displayUrl(url)` · `hostOf(url)` | `samsung.com/sec/business/…` · `samsung.com` |
 | `josa(word, 받침, 없음)` | `josa('MagicINFO', '이', '가')` → `가` |
+| `josaRo(word)` | '으로/로' — `josaRo('v3')` → `으로`, `josaRo('v2')` → `로`(ㄹ 받침 · 숫자 1 · 7 · 8 은 '로') |
 
 ## 12. 선택 카드 · Q 상자 (`choice.tsx`)
 

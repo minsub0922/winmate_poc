@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>VP · 가치 · 고객의 니즈</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#f5f6f8}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button,input{font-family:inherit}
+button{cursor:pointer}
+input::placeholder{color:#a3a9b5}
+.v-ghost:hover,.v-item:hover{background:#f3f5fd}
+.v-aib:hover{background:#eaeefb}
+.v-ghost:focus-visible,.v-btn:focus-visible,.v-aib:focus-visible,.v-item:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
+  <dc-import name="Sidebar" group="value" current="" hint-size="260px,900px"></dc-import>
+  <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
+    <dc-import name="TopBar" section="Value Proposition" title="새 VP" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="Stepper" steps="{{steps}}" current="{{two}}" hint-size="1180px,56px"></dc-import>
+    <dc-import name="SBBar" ids="SB-01" cur="SB-01" note="Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨" on-open="{{openSb}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 728px; box-sizing: border-box; padding: 18px 40px 18px 40px; display: flex; flex-direction: column; gap: 12px; overflow: hidden">
+      <div style="display: flex; align-items: center; gap: 10px; flex-shrink: 0">
+        <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+          <h1 style="margin: 0; font-size: 23px; font-weight: 700; letter-spacing: -0.02em">제품 · 솔루션마다 가치와 고객의 니즈를 적어요</h1>
+          <span style="font-size: 13px; color: #596170">가치 하나에 고객이 실제로 할 말 같은 니즈 하나 · 예: 학교 · 교실 · 에어컨 → “여름에도 쾌적한 교실 환경이 필요해요”</span>
+        </div>
+        <button class="v-ghost" onClick="{{openPick}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h7"/></svg>제품 · 솔루션 고르기 · {{nSel}}</button>
+        <button class="v-aib" onClick="{{runAi}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 가치 매칭 추천</button>
+      </div>
+      <sc-if value="{{aiBar}}" hint-placeholder-val="{{false}}">
+        <div role="status" style="flex-shrink: 0; display: flex; align-items: center; gap: 10px; height: 38px; box-sizing: border-box; padding: 0 8px 0 14px; border-radius: 10px; background: #f7f8fd; border: 1px dashed #b8c2e6; font-size: 12.5px; color: #1428a0">
+          <span style="flex-grow: 1">Storyboard context(요구 · 공간 · MI)로 가치 {{pendV}}개와 니즈 {{pendN}}개를 추천했어요. 점선은 수락해야 들어가요.</span>
+          <button class="v-ghost" onClick="{{acceptAll}}" style="height: 28px; padding: 0 10px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700">모두 수락</button>
+        </div>
+      </sc-if>
+
+      <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 14px">
+        <!-- 고른 제품 · 솔루션 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 8px 0 14px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 14px; font-weight: 700; flex-grow: 1">고른 제품 · 솔루션 {{nSel}}</span><button class="v-ghost" onClick="{{openPick}}" style="height: 28px; padding: 0 8px; border-radius: 7px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 700">고르기 · 바꾸기</button></div>
+          <div style="flex-grow: 1; min-height: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto">
+            <sc-for list="{{items}}" as="r" hint-placeholder-count="9">
+              <button class="v-item" onClick="{{r.pick}}" aria-pressed="{{r.on}}" style="{{r.wrap}}">
+                <span style="{{r.kindStyle}}">{{r.kindShort}}</span>
+                <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0; flex-grow: 1">
+                  <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                  <span style="{{r.countStyle}}">{{r.count}}</span>
+                </span>
+                <sc-if value="{{r.hasPend}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 6px; border-radius: 999px; border: 1px dashed #1428a0; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">추천 {{r.pend}}</span></sc-if>
+              </button>
+            </sc-for>
+          </div>
+        </div>
+
+        <!-- 선택한 제품 · 솔루션의 가치 -->
+        <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px 14px 12px 18px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0">
+            <span style="display: flex; flex-direction: column; gap: 3px; flex-grow: 1; min-width: 0">
+              <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 18px; font-weight: 700; white-space: nowrap">{{cur.name}}</span><span style="{{cur.kindStyle}}">{{cur.kind}}</span></span>
+              <span style="font-size: 12px; color: #596170">DSS-01 공간 · {{cur.where}}</span>
+            </span>
+            <button class="v-ghost" onClick="{{openDetail}}" style="height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 12.5px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px">연결된 가치 전체 보기<span style="height: 18px; padding: 0 6px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center">{{cur.linked}}</span></button>
+          </div>
+          <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 12px 14px 12px 14px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{cur.empty}}" hint-placeholder-val="{{false}}">
+              <div style="box-sizing: border-box; border: 1px dashed #c9d0e6; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+                <span style="font-size: 14px; font-weight: 700">아직 적은 가치가 없어요</span>
+                <span style="font-size: 12.5px; color: #596170">아래에서 직접 적거나, 위의 AI 가치 매칭 추천으로 후보를 받아 보세요.</span>
+              </div>
+            </sc-if>
+            <sc-for list="{{cur.values}}" as="v" hint-placeholder-count="3">
+              <div style="{{v.wrap}}">
+                <div style="display: flex; align-items: center; gap: 6px">
+                  <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{v.space}}</span>
+                  <span style="{{v.tagStyle}}">{{v.tag}}</span>
+                  <span style="flex-grow: 1"></span>
+                  <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{v.rq}}</span>
+                  <sc-if value="{{v.pend}}" hint-placeholder-val="{{false}}">
+                    <button class="v-ghost" onClick="{{v.accept}}" style="height: 26px; padding: 0 10px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700">수락</button>
+                    <button class="v-ghost" onClick="{{v.drop}}" style="height: 26px; padding: 0 8px; border-radius: 7px; border: none; background: transparent; color: #596170; font-size: 12px; font-weight: 600">빼기</button>
+                  </sc-if>
+                  <sc-if value="{{v.fixed}}" hint-placeholder-val="{{true}}"><button class="v-ghost" style="height: 26px; padding: 0 8px; border-radius: 7px; border: none; background: transparent; color: #1428a0; font-size: 12px; font-weight: 600">고치기</button></sc-if>
+                </div>
+                <span style="{{v.valueStyle}}">{{v.value}}</span>
+                <div style="display: flex; align-items: center; gap: 10px; min-height: 38px; box-sizing: border-box; padding: 6px 8px 6px 10px; border-radius: 9px; background: #f7f8fa">
+                  <span style="width: 66px; flex-shrink: 0; font-size: 11.5px; font-weight: 700; color: #596170">고객의 니즈</span>
+                  <sc-if value="{{v.needFilled}}" hint-placeholder-val="{{true}}">
+                    <span style="font-size: 13px; color: #121417; flex-grow: 1; line-height: 1.45">“{{v.need}}”</span>
+                    <span style="{{v.needTagStyle}}">{{v.needTag}}</span>
+                  </sc-if>
+                  <sc-if value="{{v.needPend}}" hint-placeholder-val="{{false}}">
+                    <span style="font-size: 13px; color: #1428a0; flex-grow: 1; line-height: 1.45; border-bottom: 1px dashed #1428a0">“{{v.need}}”</span>
+                    <span style="height: 20px; padding: 0 6px; border-radius: 5px; border: 1px dashed #1428a0; color: #1428a0; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">AI 추론</span>
+                    <button class="v-ghost" onClick="{{v.needAccept}}" style="height: 26px; padding: 0 10px; border-radius: 7px; border: none; background: #1428a0; color: #ffffff; font-size: 12px; font-weight: 700; white-space: nowrap">수락</button>
+                  </sc-if>
+                  <sc-if value="{{v.needEmpty}}" hint-placeholder-val="{{false}}">
+                    <label for="{{v.inputId}}" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">고객의 니즈</label>
+                    <input id="{{v.inputId}}" placeholder="고객이 할 말처럼 적어요 · 예: 여름에도 쾌적한 교실 환경이 필요해요" style="flex-grow: 1; min-width: 0; height: 30px; box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 7px; padding: 0 10px; font-size: 12.5px; color: #121417; background: #ffffff; outline: none">
+                    <button class="v-aib" onClick="{{v.needAi}}" style="height: 30px; padding: 0 10px; border-radius: 7px; border: 1px solid #c9d1f2; background: #ffffff; color: #1428a0; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 5px; white-space: nowrap; flex-shrink: 0"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z"/></svg>AI 니즈 추론</button>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+            <button class="v-ghost" style="flex-shrink: 0; height: 40px; border-radius: 10px; border: 1px dashed #b8bec8; background: #ffffff; color: #1428a0; font-size: 13px; font-weight: 700">+ 가치 추가 · 공간 · 가치 · 니즈 · 요구</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0">
+        <a href="SB1.dc.html" style="display: flex; align-items: center; gap: 5px; font-size: 13.5px; font-weight: 600; color: #596170; white-space: nowrap"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>Storyboard</a>
+        <span style="flex-grow: 1"></span>
+        <span style="font-size: 13px; color: #596170; white-space: nowrap">{{fillLine}}</span>
+        <a class="v-btn" href="VP_View.dc.html" style="height: 48px; padding: 0 24px; border-radius: 12px; background: #1428a0; color: #ffffff; font-size: 15px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">저장</a>
+      </div>
+    </section>
+  </main>
+
+  <sc-if value="{{sbOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SBPopup" sb="SB-01" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{pickOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="ProdPicker" title="VP에 넣을 제품 · 솔루션 고르기" sub="DSS-01에서 고른 것 중 가치를 적을 것을 고르세요. DSS에 없는 제품 · 솔루션도 카탈로그에서 더할 수 있어요." picked="{{picked}}" min="{{one}}" on-toggle="{{togglePick}}" on-close="{{closePop}}" hint-size="760px,640px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{detailOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="VpDetail" name-of="{{cur.name}}" kind="{{cur.kind}}" where="{{cur.where}}" values="{{cur.plain}}" on-close="{{closePop}}" hint-size="900px,720px"></dc-import>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"ai":{"editor":"boolean","default":false},"pop":{"editor":"enum","options":["","pick","detail"],"default":""},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const pai = !!this.props.ai;
+    const ppop = this.props.pop ?? '';
+    const KEY = String(pai) + ppop;
+    const s = Object.assign({ ai: pai, sel: 0, picked: null, accV: {}, dropV: {}, accN: {}, needAi: {}, pop: ppop }, (this.state && this.state.k === KEY) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: KEY }));
+    // 제품 · 솔루션 → { 종류, 공간, 직접 쓴 가치 [공간, 가치, 니즈, 요구], AI 가치 추천 [공간, 가치, 니즈, 요구], 빈 니즈의 AI 추론 { 가치 번호: 니즈 } }
+    const DB = {
+      'The Wall IAB 146"': ['제품', '로비', [
+        ['로비', '들어서는 순간 회사의 AI 비전을 보여 줌', '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', 'RQ-01 최초 AI Ready'],
+        ['로비', '사내 행사 때 로비를 무대로 바꿈', '', 'RQ-01 업무환경 플랫폼']],
+        [['로비', '베젤 없는 큰 화면으로 콘텐츠에 몰입', '로비 화면이 광고판처럼 보이지 않았으면 해요', 'RQ-01 최초 AI Ready']],
+        { 1: '행사 때마다 외부 장소를 빌리지 않았으면 해요' }],
+      'Smart Signage QM55C': ['제품', '로비 · 라운지', [], [
+        ['로비', '방문 안내와 환영을 사람 손 없이', '안내 데스크 인력 없이도 방문객을 맞고 싶어요', 'RQ-01 인식 · 반응'],
+        ['라운지', '층별 공지 · 비상 안내를 한 번에', '긴급할 때 모든 층에 바로 알리고 싶어요', 'RQ-01 유지보수 최소화']], {}],
+      '삼성 키오스크': ['제품', '로비', [], [['로비', '방문객 등록 대기를 줄임', '예약 없이 온 손님도 기다리지 않게 하고 싶어요', 'RQ-01 인식 · 반응']], {}],
+      'Flip Pro WA75D': ['제품', '회의실', [
+        ['회의실', '회의 내용이 끊기지 않고 이어짐', '회의 끝나도 판서 내용이 사라지지 않았으면 해요', 'RQ-01 업무환경 플랫폼'],
+        ['회의실', '케이블 없이 바로 화면 공유', '', 'RQ-01 업무환경 플랫폼']],
+        [['회의실', '원격 참석자와 같은 화면에 함께 판서', '재택 인원도 회의에 똑같이 참여했으면 해요', 'RQ-01 업무환경 플랫폼']],
+        { 1: '회의 시작할 때 케이블 찾느라 시간 버리고 싶지 않아요' }],
+      '비디오월 VM55B': ['제품', '중앙관제실', [], [['중앙관제실', '건물 상태를 한 화면에서 보고 바로 대응', '설비 문제를 사고 나기 전에 알고 싶어요', 'RQ-01 유지보수 최소화']], {}],
+      'SmartThings 센서': ['제품', '공용공간', [], [
+        ['공용공간', '재실에 맞춰 냉난방 · 조명을 줄여 에너지 절감', '빈 회의실에 에어컨이 켜져 있지 않았으면 해요', 'RQ-01 에너지 20% 절감'],
+        ['라운지', '온습도를 자동으로 맞춰 늘 쾌적하게', '여름에도 쾌적한 라운지가 필요해요', 'RQ-01 예측 · 반응형 공간']], {}],
+      'MagicINFO': ['솔루션', '사이니지 공간 전체', [['전체', '모든 화면 콘텐츠를 한 곳에서 바꿈', '', 'RQ-01 업무환경 플랫폼']],
+        [['로비', '시간대별 콘텐츠 자동 예약', '출근 · 점심 · 퇴근 시간에 맞는 안내가 나왔으면 해요', 'RQ-01 인식 · 반응']],
+        { 0: '층마다 돌아다니며 화면을 바꾸지 않았으면 해요' }],
+      'SmartThings Pro': ['솔루션', '공간 기기 전체', [], [['전체', '공간 기기를 하나의 앱으로 자동화', '조명 · 공조 · 화면을 따로 관리하지 않았으면 해요', 'RQ-01 예측 · 반응형 공간']], {}],
+      'b.IoT': ['솔루션', '중앙관제실', [['중앙관제실', '에너지 사용을 실측 데이터로 증빙', '에너지 20% 절감을 숫자로 보여 줘야 해요', 'RQ-01 에너지 20% 절감']],
+        [['중앙관제실', '설비 이상을 미리 알려 유지보수 비용을 줄임', '고장 나고서야 수리하는 일을 줄이고 싶어요', 'RQ-01 유지보수 최소화']], {}],
+      'Smart Signage QB55C': ['제품', '회의실', [], [['회의실', '회의실 예약 현황을 문 앞에서 확인', '빈 회의실을 찾아 헤매지 않았으면 해요', 'RQ-01 업무환경 플랫폼']], {}],
+      'Smart Signage QB43C': ['제품', '사무실 · 공용공간', [], [['공용공간', '층별 소식을 자리 근처에서', '전사 공지를 메일로만 받지 않았으면 해요', 'RQ-01 업무환경 플랫폼']], {}],
+      '스마트 모니터': ['제품', '사무실 · R&D', [], [['사무실 · R&D', '자리에서 일정 · 회의실을 한눈에', '아침마다 여러 앱을 열지 않았으면 해요', 'RQ-01 업무환경 플랫폼']], {}],
+      '옥외형 사이니지 OHC55': ['제품', '주차장', [], [['주차장', '빈 주차면과 동선을 안내', '주차장에서 빙빙 돌지 않았으면 해요', 'RQ-01 인식 · 반응']], {}],
+      'VXT': ['솔루션', '카탈로그', [], [], {}], 'Knox Suite': ['솔루션', '카탈로그', [], [], {}]
+    };
+    const DEF = ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', '비디오월 VM55B', 'SmartThings 센서', 'MagicINFO', 'SmartThings Pro', 'b.IoT'];
+    const picked = Array.isArray(s.picked) ? s.picked : DEF;
+    const kindStyle = (k) => 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; flex-shrink: 0; white-space: nowrap;' + (k === '제품' ? ' background: #f0f2f5; color: #3d4452;' : ' background: #eaeefb; color: #1428a0;');
+    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap;';
+    let PV = 0, PN = 0, NV = 0, NN = 0;
+    // 한 제품의 가치 카드 목록
+    const build = (name) => {
+      const [kind, where, man, ai, inf] = DB[name] || ['제품', '—', [], [], {}];
+      const out = [];
+      man.forEach(([space, value, need, rq], j) => {
+        const key = name + '|m' + j;
+        const infN = inf[j];
+        const nAcc = !!s.accN[key];
+        const nPend = !need && !!infN && !nAcc && (s.ai || !!s.needAi[key]);
+        out.push({ space, value, rq, by: 'manual', pend: false, need: need || ((nAcc || nPend) ? infN : ''), needBy: need ? 'manual' : nAcc ? 'ai-accepted' : nPend ? 'ai-pending' : '', key });
+      });
+      ai.forEach(([space, value, need, rq], j) => {
+        const key = name + '|a' + j;
+        if (!s.ai || s.dropV[key]) return;
+        const acc = !!s.accV[key];
+        out.push({ space, value, rq, by: acc ? 'ai-accepted' : 'ai-pending', pend: !acc, need, needBy: acc ? 'ai-accepted' : 'ai-pending', key });
+      });
+      return { kind, where, vals: out };
+    };
+    const ALLB = {};
+    picked.forEach((n) => { ALLB[n] = build(n); ALLB[n].vals.forEach((v) => { if (v.pend) PV++; else NV++; if (!v.pend && v.needBy === 'ai-pending') PN++; if (!v.pend && v.needBy && v.needBy !== 'ai-pending') NN++; }); });
+    const selName = picked[Math.min(s.sel, picked.length - 1)] || picked[0];
+    const items = picked.map((name, i) => {
+      const b = ALLB[name]; const on = name === selName;
+      const done = b.vals.filter((v) => !v.pend);
+      const needs = done.filter((v) => v.needBy && v.needBy !== 'ai-pending').length;
+      const pend = b.vals.filter((v) => v.pend || v.needBy === 'ai-pending').length;
+      return { name, kindShort: b.kind === '제품' ? '제품' : '솔루션', kindStyle: kindStyle(b.kind), on, pend, hasPend: pend > 0,
+        count: done.length ? '가치 ' + done.length + ' · 니즈 ' + needs + '/' + done.length : '가치 없음',
+        countStyle: 'font-size: 11.5px; white-space: nowrap;' + (done.length ? ' color: #596170;' : ' color: #7a4f00;'),
+        wrap: 'display: flex; align-items: center; gap: 10px; width: 100%; box-sizing: border-box; min-height: 52px; padding: 6px 10px; border-radius: 10px; border: none; text-align: left; color: #121417; flex-shrink: 0;' + (on ? ' background: #eaeefb;' : ' background: transparent;'),
+        pick: () => put({ sel: i }) };
+    });
+    const cb = ALLB[selName];
+    const values = cb.vals.map((v) => {
+      const key = v.key;
+      const tag = v.by === 'manual' ? '직접' : v.by === 'ai-accepted' ? 'AI 추천 · 수락' : 'AI 추천';
+      return { space: v.space, value: v.value, rq: v.rq, need: v.need, pend: v.pend, fixed: !v.pend, tag,
+        tagStyle: tagBase + (v.by === 'manual' ? ' background: #f0f2f5; color: #3d4452;' : v.by === 'ai-accepted' ? ' background: #e6f4ee; color: #0b6e4f;' : ' border: 1px dashed #1428a0; color: #1428a0;'),
+        valueStyle: 'font-size: 15px; font-weight: 700; line-height: 1.45;' + (v.pend ? ' color: #1428a0;' : ''),
+        wrap: 'box-sizing: border-box; border-radius: 12px; padding: 10px 12px 10px 14px; display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; background: #ffffff;' + (v.pend ? ' border: 1.5px dashed #1428a0;' : ' border: 1px solid #e2e5ea;'),
+        needFilled: !!v.need && (v.needBy === 'manual' || v.needBy === 'ai-accepted' || (v.pend && v.needBy === 'ai-pending')),
+        needPend: !v.pend && v.needBy === 'ai-pending',
+        needEmpty: !v.need,
+        needTag: v.needBy === 'manual' ? '직접' : v.pend ? 'AI 추론' : 'AI 추론 · 수락',
+        needTagStyle: tagBase + ' flex-shrink: 0;' + (v.needBy === 'manual' ? ' background: #f0f2f5; color: #3d4452;' : v.pend ? ' border: 1px dashed #1428a0; color: #1428a0;' : ' background: #e6f4ee; color: #0b6e4f;'),
+        inputId: 'vp-need-' + key.replace(/[^a-z0-9]/gi, ''),
+        accept: () => put({ accV: Object.assign({}, s.accV, { [key]: true }) }),
+        drop: () => put({ dropV: Object.assign({}, s.dropV, { [key]: true }) }),
+        needAccept: () => put({ accN: Object.assign({}, s.accN, { [key]: true }) }),
+        needAi: () => put({ needAi: Object.assign({}, s.needAi, { [key]: true }) }) };
+    });
+    const plain = cb.vals.filter((v) => !v.pend).map((v) => ({ space: v.space, value: v.value, need: v.needBy === 'ai-pending' ? '' : v.need, rq: v.rq, by: v.by }));
+    const acceptAll = () => {
+      const accV = Object.assign({}, s.accV), accN = Object.assign({}, s.accN);
+      picked.forEach((n) => ALLB[n].vals.forEach((v) => { if (v.pend) accV[v.key] = true; else if (v.needBy === 'ai-pending') accN[v.key] = true; }));
+      put({ accV, accN });
+    };
+    const togglePick = (n) => { const has = picked.indexOf(n) >= 0; const next = has ? picked.filter((x) => x !== n) : picked.concat([n]); if (next.length) put({ picked: next, sel: Math.min(s.sel, next.length - 1) }); };
+    return {
+      steps: ['Storyboard', '가치 · 고객의 니즈'], two: 2, one: 1,
+      nSel: picked.length, items, picked,
+      cur: { name: selName, kind: cb.kind, kindStyle: kindStyle(cb.kind), where: cb.where, values, plain, empty: values.length === 0, linked: '이 제안 ' + plain.length },
+      aiBar: s.ai && (PV + PN) > 0, pendV: PV, pendN: PN,
+      fillLine: '제품 · 솔루션 ' + picked.length + ' · 가치 ' + NV + ' · 니즈 ' + NN + '/' + NV,
+      sbOpen: s.pop === 'sb', pickOpen: s.pop === 'pick', detailOpen: s.pop === 'detail',
+      runAi: () => put({ ai: true }), acceptAll, togglePick,
+      openSb: () => put({ pop: 'sb' }), openPick: () => put({ pop: 'pick' }), openDetail: () => put({ pop: 'detail' }), closePop: () => put({ pop: '' })
+    };
+  }
+}
+</script>
+</body>
+</html>

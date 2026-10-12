@@ -30,32 +30,29 @@ make contracts SERVICE=requirements    # contracts/requirements.json 갱신 + �
 
 ## 현재 상태 (2026-10-12)
 
-### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
-상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/requirements/new` 빈 최종본 + ① 요구사항 입력 팝업(첫 입력에 문서가 생기면 `/requirements/flow/:id?step=input` 로 바꿔치기) · `/requirements/flow/:id` 최종본(RQ_View) · `?step=input` 팝업.
-완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
-
-
-> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
-
-### 새 흐름(2026-10-08) — 보드 webapp1 RQ0 · RQ1 · RQ_View(아티팩트 v60) · `docs/scenarios/11-content-flow.md` §6
-- **AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다** — 사용자 결정. `deep-questions` · `…:answer` · `deep-questions:close` 경로, `RFDeep*` · `RFAnswer` 스키마,
-  `RFDoc.deep` · `RFDoc.target_ask` · `counts.pending`, task `rq.deep_questions.v1`(mock 포함), 웹 `DeepPanel`(RQ1_AI 380 패널) · 「AI 심층 질의로 폼 완성」 버튼 · 「AI 질의로 채움」 표시를 지웠다.
-  예전 문서에 남은 `deep` · `target_ask` 칸은 읽을 때 버리고(`_DROPPED`), 출처 `by` 의 `ai-pending | ai-accepted` 는 예전 값 읽기용으로만 남겼다. RQ1 머리 줄은 높이 40(보드 그대로 — 아래 칸 위치 유지).
+### 새 흐름 — 보드 webapp1 v63 RQ0 · RQ1 · RQ_Draft · RQ1_Edit · RQ_View · 본문 RQBody(2026-10-12) · `docs/scenarios/11-content-flow.md` §6 · `docs/handoff/2026-10-12-content-detail-v63.md`
+- **상세는 최종본 한 장**(v63): 완료 화면(RQ_Done · FlowDoneView) · RQ1 자체 푸터 · 스텝바는 없앴다. 작성 중 · 저장됨 · 고치는 중이 같은 화면이고, 저장하면 그 자리에서 저장됨으로 바뀐다.
+- **AI 심층 질의(폼 개선 과정)는 2026-10-12 에 뺐다** — 사용자 결정. `deep-questions` 경로 · `RFDeep*` 스키마 · `rq.deep_questions.v1` · 웹 DeepPanel 없음.
+  예전 문서에 남은 `deep` · `target_ask` 칸은 읽을 때 버리고(`_DROPPED`), 출처 `by` 의 `ai-pending | ai-accepted` 는 예전 값 읽기용으로만 남겼다.
 - **API** `/v1/rq-flows*`(rqflow.py · api_flow.py, 스키마 `RF*`, DocStore `rq_flows`, id `rqf_…`, 코드 `RQ-NN` — 허브 rq ref 최대값 다음 번호):
   만들기 · 목록 · 읽기(id 또는 코드) · `PUT` 폼 전체(`expected_version` 409, 채우는 중 409 FILLING) · `:fill` 202(잡 `rq.flow.fill`, 빈 칸만 · 사람 값 보호 · 숫자 가드) ·
   `:finish`(처음 = `create_flow` 로 Storyboard 자동 생성 · 다음 = `push_stage("rq")`, ver = 저장 횟수, 제작자 의견은 stage · 요약 · 카드에서 빠짐) ·
-  `DELETE /v1/rq-flows/{id}`(2026-10-10 · 저장 전 초안만 204 — status draft · ver 0 · sb_ids 없음. 저장한 것은 409 `SAVED_CONTENT`
-  「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」, `?expected_version=` 이 다르면 409 VERSION_CONFLICT, 없으면 404.
-  소프트 삭제 + `unregister_item`, 채우는 잡이 있으면 취소 — 워커는 문서가 사라졌으면 되살리지 않고 잡을 canceled 로 끝냄. 번호 카운터는 그대로라 지운 번호를 다시 쓰지 않음).
-  요구사항은 만들 때 Storyboard 가 없어 같은 Storyboard 중복 막기는 해당 없음.
-- **웹** `web/src/features/requirements/flow/`: `/requirements`(RQ0 = `ContentListScreen content="rq"`, 작성 중 = rq-flows 중 내용 있는 초안 — 저장 전 초안 줄은 `onDelete`(손을 올리면 × · 확인 → `useRfDelete` → 목록 · 사이드바 색인 새로)) ·
-  `/requirements/new`(Gate 없이 바로 RQ1 — 첫 입력 때 만들고 주소를 `/requirements/flow/:id` 로, 빈 초안은 만들지 않음) · `/requirements/flow/:id`(저장한 것 = RQ_View 보기 `RqView`(`FlowContentView` · 개요 340 | 키맨별 요구 · 후속 DSS — 있으면 「열기」, 없으면 `/dss/new?sb=&auto=1`) · 저장 전 초안 = RQ1 · `?edit=1` = RQ1 → 저장하면 다시 보기 — 완료 화면 없음, 2026-10-12).
-  폼은 화면이 원본(id 를 화면이 만듦 `k_ · q_`) · 600ms 자동 저장(PUT 응답으로 글자를 덮어쓰지 않음, 파일 채우기만 폼을 바꿈). 보드 px 그대로 `rqflow.css`(접두어 `rqf-`, 왼쪽 400 · 머리 줄 40).
-  보기 본문 CSS 는 `rqflow.css` RQ_View 절(접두어 `rqv-`).
+  `DELETE /v1/rq-flows/{id}`(저장 전 초안만 204 — 저장한 것은 409 `SAVED_CONTENT`, `?expected_version=` 이 다르면 409 VERSION_CONFLICT, 없으면 404 · 채우는 잡 취소 · 번호 다시 안 씀).
+- **고친 곳 · 되돌리기(v63)**: `:finish` 가 사람이 고치는 값 `EDIT_KEYS`(title · customer · target · note · keymen · *_by)를 판으로 남긴다(`winmate_common.edits`, 문서 `saved_snapshot` — 응답에는 안 실음).
+  `RFDoc.changes` = 저장한 판과 지금 값의 다른 곳 수(저장 전 0) — 칸 하나 = 1(프로젝트명 · 고객사 · 최종 제안대상 · 제작자 의견 · 키맨 이름 · 가중치 · 요구 문장 · 확인 필요),
+  키맨 · 요구는 id 로 맞춰 앞에 끼워도 1, 빈 키맨 자리는 세지 않음. stage(…) 는 요구 문장이 needs · goals · requirements 에 겹쳐 한 번 고쳐도 여러 번 세므로 쓰지 않고 `_edit_view` 로 센다.
+  `POST /v1/rq-flows/{id}:revert` → 저장한 판으로 되돌린 문서(changes 0 · ver · 연결 그대로), 저장한 적 없으면 409 `NOT_SAVED`(「아직 저장하지 않아 되돌릴 판이 없어요」), 채우는 중 409 FILLING.
+  예전에 저장해 판이 없는 문서는 읽을 때(`load_api`) · 고치기 · 채우기 · 되돌리기 전에 지금 값을 판으로 남긴다(`ensure_snapshot`, 한 번 다시 씀).
+- **웹** `web/src/features/requirements/flow/`: `/requirements`(RQ0 = `ContentListScreen content="rq"`, 작성 중 = rq-flows 중 내용 있는 초안 — 저장 전 초안 카드 × → `useRfDelete`) ·
+  `/requirements/new`(RQ1 — 팝업 없이 바로 빈 최종본, 처음 내용이 들어간 칸을 떠날 때 초안을 만들고 주소를 `/requirements/flow/:id` 로 replace · 들어오기만 해선 안 만듦 · 이번에 만든 것은 저장 전까지 「새로 만들기」, 다시 열면 「작성 중」) ·
+  `/requirements/flow/:id`(상세 = 공용 `ContentDetail` + `RqBody`). 본문은 보드 RQBody px 그대로(`rqflow.css` 접두어 `rqb-`): 파일 띠(새로 60 점선 · 나머지 46) · 그리드 `340px | 1fr`(간격 14) ·
+  개요(입력 38 · 제작자 의견 남은 높이 · 「모두 선택 항목이에요 · 비어 있어도 저장돼요」) · 키맨별 요구사항(머리 50 · 「키맨 n · 요구 m · 가중치 합 x%」 100 아니면 노랑 · 키맨 카드 `176px | 1fr` · 요구 줄 n · 칸 32 · 확인 필요 · ×).
+  칸은 공용 `InlineInput`(떠날 때 · Enter 에 저장 → 폼 전체 PUT · 60ms 안의 고침은 묶음). 가중치는 칸마다 따로(다른 키맨 값을 바꾸지 않음 — 저장 때 서버가 합 100 으로 맞춤).
+  저장된 것을 이 화면에서 고친 칸은 `cd-in--chg` + 「고침」/「새로 씀」(기준 = 연 때 · 저장 · 되돌리기 한 때의 폼, 화면 상태). 저장 = `:finish`(토스트에 Storyboard 만듦 · 반영), 되돌리기 = `:revert`.
+  후속 작업(저장된 것만): 그 Storyboard 에 DSS 가 있으면 「DSS-nn vN · 열기」(허브 cell route), 없으면 `/dss/new?sb=<id>&auto=1`. 보드에 없는 것: 키맨 빼기(카드 오른쪽 위 ×) · 요구 줄 「확인 필요로 표시」(손을 올리면) · Enter 새 줄 · 빈 줄 Backspace 빼기.
 - **이전 흐름 이동**: 목록 · 새로 만들기만 `/requirements/legacy` · `/requirements/legacy/new`. 나머지 `/requirements/:rqId/...` 는 그대로(제안서 handoff).
-- **테스트** `test_requirements_flow.py` 7개(전체 39 — 지우기 · 채우기 잡 취소 · 심층 질의 경로 없음 · 예전 문서 읽기 포함) · e2e `web/e2e/requirements/rq-flow.spec.ts` 3개(목록 → 파일 → 직접 입력 → 저장 → 보기(완료 문구 없음 · 값 · 폭 340/746 · flow.json · 편집 `?edit=1` · 목록 열기 · 새로고침) · Storyboard 자동 생성 · AI 버튼 없음 · 1920) ·
-  `rq-draft.spec.ts` 1개(첫 입력 초안 → 목록 × → 확인 → 빠짐 · 저장한 것은 × 없음 + API 409) ·
-  캡처 `__screens__/RQ0-new · RQ1-new · RQ1-empty-new · RQ_View-new · RQ0-draft-delete.png`.
+- **테스트** `test_requirements_flow.py` 10개(전체 42 — 고친 곳 · 되돌리기 · 판 없는 예전 문서 포함) · e2e `rq-flow.spec.ts` 4개(목록 → 빈 최종본 → 입력 → 저장 → 저장됨 → 고친 곳 1 → 되돌리기 → v2 ·
+  파일 빈 칸만 · 작성 중 · 빈 폼 · 1920 · 폭 340 · 746 · 176 · 1100 · 1180, 높이 보드 좌표 그대로) · `rq-draft.spec.ts` 1개 · 캡처 `__screens__/RQ1 · RQ_Draft · RQ_View · RQ1_Edit · RQ0-draft-delete.png`.
 
 ### 이전 흐름(`/v1/requirements*`, 2026-10-06)
 

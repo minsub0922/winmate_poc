@@ -1,21 +1,10 @@
 /**
- * DSS 화면 → 셸 맥락(상단바 · 스텝바 · 「현재 작업에 추가」). 화면마다 한 곳에서만 useShellPage 를 부른다.
- * 셸 제품 · 솔루션 상세 시트와 팝오버의 「현재 작업에 추가」: 제품은 지금 고른 공간에, 솔루션은 고른 솔루션에 더한다.
+ * DSS 상세 → 셸 「현재 작업에 추가」(셸 제품 · 솔루션 상세 시트와 팝오버): 제품은 첫 공간에, 솔루션은 고른 솔루션에 더한다.
  */
-import { CONTENT, kb, type DragType, type ShellPageConfig } from '@/shell';
+import { kb, type DragType } from '@/shell';
 import { toast } from '@/ui';
 import type { DSAddProduct, DSDoc, DsActions } from './api';
 import { addBodyOf, modelCodeOf } from './parts';
-
-const M = CONTENT.dss;
-
-export function dsShell(d: DSDoc | undefined, step: 2 | 3, extra: Partial<ShellPageConfig> = {}): ShellPageConfig {
-  return {
-    section: M.label, title: d?.title ?? M.short, hasTask: true, stepper: { steps: M.steps, current: step },
-    taskContext: d ? { products: d.spaces.flatMap((s) => s.products.filter((p) => p.by !== 'ai-pending' && p.ref).map((p) => ({ ref: p.ref!, label: p.name }))) } : undefined,
-    ...extra,
-  };
-}
 
 /** 이미 이 DSS 에 있는 참조(팝오버 「✓ 추가됨」) — 제품 ref · `kb:solution:<카탈로그 id>` */
 export function addedRefs(d: DSDoc): string[] {
@@ -53,7 +42,7 @@ export function dsOnAdd(d: DSDoc, actions: DsActions, space: { key: string; name
       try { await actions.addProduct(space.key, body); added.push(r); } catch (e) { toast((e as Error).message || '제품을 넣지 못했어요'); }
     }
     if (added.length) toast(`${space.name}에 제품 ${added.length}개를 넣었어요`);
-    else if (refs.length) toast('KB 에서 그 제품을 찾지 못했어요. 아래 검색으로 넣어 주세요.');
+    else if (refs.length) toast('KB 에서 그 제품을 찾지 못했어요. 공간 카드의 「+ 제품」으로 넣어 주세요.');
     return { added };
   };
 }

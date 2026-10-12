@@ -13,6 +13,10 @@ Storyboard(최소 DSS 까지)를 고르면 AI 가 먼저 Storyboard 를 읽고(C
 - 같은 Storyboard 로 다시 만들면(「‹ Storyboard」 → Gate → 다시 시작) 그 Storyboard 의 저장 전 초안을 돌려준다(200 · 분석을 다시 돌리지 않음).
   복제본(분기)은 Storyboard 가 새로 생기므로 새 MI 가 된다.
 - 지우기는 한 번도 저장하지 않은 초안만(status draft · ver 없음) — 돌고 있는 분석 · 검색 잡은 취소한다. 저장한 MI 는 409 SAVED_CONTENT.
+- 최종본에서 바로 고치기(웹앱 ① v63 · winmate_common.edits): 화면은 한 장(검색 팝업만 따로)이고 담기 · 빼기 · 문장 고치기는 바로 저장된다.
+  저장(:finish)이 저장한 판(`saved_snapshot` — EDIT_KEYS)을 남기고, 응답 `changes` = 저장한 판과 지금 값의 차이(Storyboard 에 들어가는 값으로 센다 —
+  담은 정보 · 검색어 · 조건). `:revert` 는 저장한 판으로 되돌린다(저장한 적 없으면 409 NOT_SAVED). 판 없이 저장된 예전 문서는 읽을 때 판을 남긴다.
+  저장한 MI 를 다시 검색하면(「검색어 · 조건 고치고 다시 검색」) 지금 담은 정보를 유지하고 새로 찾은 것만 더한다(addedIn = 다음 판).
 
 저장소: DocStore("mi") 컬렉션 `mi_flows`(mif_ …). 쓰기는 낙관적 잠금 + 재시도.
 """
@@ -27,6 +31,7 @@ from typing import Any, Literal
 
 from pydantic import BaseModel, Field
 from winmate_common.client import ServiceClient
+from winmate_common.edits import IGNORE, SNAPSHOT, changes_of, ensure_snapshot, has_snapshot, restore_snapshot, snapshot_view, take_snapshot
 from winmate_common.errors import ApiError, not_found
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.ids import new_id, now_iso
@@ -165,6 +170,8 @@ class MFDoc(BaseModel):
     counts: MFCounts
     progress: MFProgress | None = None
     warnings: list[str] = Field(default_factory=list)
+    changes: int = Field(0, description="저장한 판과 다른 곳 수(담은 정보 · 문장 · 검색어 · 조건) — 저장한 적 없으면 0. 화면 머리 「고친 곳 n」")
+    saved_at: str | None = Field(None, description="마지막 저장(:finish) 시각")
     version: int
     created_at: str
     updated_at: str
@@ -272,7 +279,64 @@ def counts(d: dict[str, Any]) -> dict[str, Any]:
 
 
 def to_api(d: dict[str, Any]) -> dict[str, Any]:
-    return {**d, "counts": counts(d)}
+    return {**d, "counts": counts(d), "changes": changes(d)}
+
+
+# ── 저장한 판 · 고친 곳 · 되돌리기(winmate_common.edits · 웹앱 ① v63) ─────────
+
+# 사람이 고치는 문서 키 — 찾은 정보(담기 · 빼기 · 문장) · 검색어 · 검색 조건. results(검색 결과 글)는 고친 곳으로 세지 않지만
+# 되돌린 정보의 「원문」이 남도록 판에 함께 둔다. 메타 · 판 번호 · 진행 · 분석 근거는 뺀다.
+EDIT_KEYS = ("items", "queries", "filters", "results")
+
+
+def _keyed(vals: list[str]) -> list[dict[str, str]]:
+    """글 목록 → id 로 맞춰 볼 수 있게(앞에 하나 끼우거나 빼도 1로 센다)."""
+    return [{"key": v} for v in vals]
+
+
+def diff_value(d: dict[str, Any]) -> dict[str, Any]:
+    """고친 곳을 세는 값 = Storyboard 에 들어가는 stages.mi 값. numberCheck 는 문장에서 나오는 값이라 세지 않는다."""
+    st = stage(d, None)
+    st["queries"] = {g: _keyed(v) for g, v in (st.get("queries") or {}).items()}
+    st["filters"] = {**st["filters"], "sourceTypes": _keyed(st["filters"].get("sourceTypes") or [])}
+    st["items"] = [{k: v for k, v in x.items() if k != "numberCheck"} for x in st.get("items") or []]
+    return st
+
+
+def changes(d: dict[str, Any]) -> int:
+    """저장한 판과 다른 곳 수 — 저장한 적 없거나 판이 없으면 0."""
+    if not is_saved(d) or not has_snapshot(d):
+        return 0
+    return changes_of(diff_value(d), diff_value(snapshot_view(d, EDIT_KEYS)), IGNORE)
+
+
+async def get(fid: str) -> dict[str, Any]:
+    """문서 읽기 — 판 없이 저장된 예전 문서(v58)는 지금 값을 저장한 판으로 한 번 남긴다."""
+    d = await load(fid)
+    if is_saved(d) and not has_snapshot(d):
+        d = await update(fid, lambda doc: ensure_snapshot(doc, EDIT_KEYS, saved=True), "저장한 판 남김")
+    return to_api(d)
+
+
+NOT_SAVED_MSG = "아직 저장하지 않아 되돌릴 판이 없어요"
+
+
+async def revert(fid: str) -> dict[str, Any]:
+    """저장한 판으로 되돌린다(고친 곳 0) — 다시 검색해 더한 정보 · 빼기 · 고친 문장 · 검색어 · 조건 모두. 저장한 적 없으면 409 NOT_SAVED, AI 가 일하는 중이면 409 BUSY."""
+    d0 = await load(fid)
+    if not is_saved(d0):
+        raise ApiError(409, "NOT_SAVED", NOT_SAVED_MSG, {"id": fid})
+    if d0.get("phase") in ("analyzing", "searching") and await _job_active((d0.get("progress") or {}).get("job_id")):
+        raise ApiError(409, "BUSY", "AI가 아직 일하고 있어요. 끝나면 되돌릴 수 있어요.")
+
+    def fn(d: dict[str, Any]) -> None:
+        ensure_snapshot(d, EDIT_KEYS, saved=True)
+        restore_snapshot(d, EDIT_KEYS)
+        d["phase"] = "done"
+        d["editing"] = False
+        d["progress"] = None
+        d["warnings"] = []
+    return to_api(await update(fid, fn, "저장한 판으로 되돌림"))
 
 
 # ── 텍스트 도우미(검색 결과 → 찾은 정보) ───────────────────
@@ -823,6 +887,7 @@ async def finish(fid: str) -> dict[str, Any]:
         doc["saved_items"] = [x for x in doc.get("items") or [] if x.get("kept")]
         doc["saved_queries"] = copy.deepcopy(doc.get("queries"))
         doc["progress"] = None
+        doc[SNAPSHOT] = take_snapshot(doc, EDIT_KEYS)      # 저장한 판 — 다시 고치면 이 판과 견줘 「고친 곳 n」 · 되돌리기
     saved = await update(fid, fn, f"저장 v{ver}")
     st, md = stage(saved, prev_ver), summary_md(saved, ver, prev_kept)
     await register_item(feature="MI", item_id=fid, title=saved.get("title") or "MI", status="done", route=f"/mi/flow/{fid}",

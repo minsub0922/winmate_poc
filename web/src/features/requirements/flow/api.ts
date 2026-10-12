@@ -1,6 +1,6 @@
 /**
  * 고객 요구사항 새 흐름 API — contracts/requirements.json `/v1/rq-flows*` → @/api/gen/requirements(RF* 스키마).
- * 화면은 문서 하나(RFDoc)를 읽고, 바꾸는 호출은 모두 고친 문서를 돌려준다.
+ * 화면은 문서 하나(RFDoc)를 읽고, 바꾸는 호출은 모두 고친 문서를 돌려준다. RFDoc.changes = 마지막 저장 판과 다른 곳 수(머리 「고친 곳 n」).
  */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, unwrap } from '@/api/client';
@@ -40,6 +40,8 @@ export const rfApi = {
   put: async (id: string, body: RFUpdate) => unwrap(await rq.PUT('/v1/rq-flows/{flow_id}', { ...P(id), body })),
   fill: async (id: string, fileIds: string[]) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}:fill', { ...P(id), body: { file_ids: fileIds } })),
   finish: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}:finish', P(id))),
+  /** 저장한 판으로 되돌리기(고친 곳 0) — 저장한 적 없으면 409 NOT_SAVED */
+  revert: async (id: string) => unwrap(await rq.POST('/v1/rq-flows/{flow_id}:revert', P(id))),
   /** 저장 전 초안 지우기(204) — 저장한 것은 409 SAVED_CONTENT */
   remove: async (id: string) => { unwrap(await rq.DELETE('/v1/rq-flows/{flow_id}', P(id))); },
 };

@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>콘텐츠 보기</title>
+<title>콘텐츠 상세</title>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -15,21 +15,19 @@ a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
 button{font-family:inherit;cursor:pointer}
 .v-btn:hover{border-color:#1428a0}
 .v-next:hover{border-color:#1428a0;box-shadow:0 6px 18px rgba(20,40,160,0.10)}
-.v-space:hover{background:#f7f8fd}
-.v-step:hover{background:#f3f5fd}
-.v-ph:hover{background:#0f1f80}
-.v-btn:focus-visible,.v-next:focus-visible,.v-space:focus-visible,.v-step:focus-visible,.v-ph:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+.v-save:hover{background:#0f1f80}
+.v-btn:focus-visible,.v-next:focus-visible,.v-save:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
 </style>
 </helmet>
 <div style="position: relative; width: 1440px; height: 900px; box-sizing: border-box; display: flex; background: #f5f6f8; color: #121417; font-family: 'Noto Sans KR', system-ui, sans-serif; overflow: hidden">
   <dc-import name="Sidebar" group="{{group}}" current="{{sideCur}}" hint-size="260px,900px"></dc-import>
   <main style="width: 1180px; height: 900px; display: flex; flex-direction: column">
-    <dc-import name="TopBar" section="{{label}}" title="{{refId}}" popover="none" hint-size="1180px,64px"></dc-import>
-    <dc-import name="SBBar" ids="{{sbIds}}" cur="{{sbCur}}" hi="{{hi}}" note="{{sbNote}}" empty-text="{{sbEmpty}}" on-open="{{openPop}}" hint-size="1180px,52px"></dc-import>
-    <section style="width: 1180px; height: 784px; box-sizing: border-box; padding: 22px 40px 24px 40px; display: flex; flex-direction: column; gap: 16px; overflow: hidden">
+    <dc-import name="TopBar" section="{{label}}" title="{{crumb}}" popover="none" hint-size="1180px,64px"></dc-import>
+    <dc-import name="SBBar" ids="{{sbIds}}" cur="{{sbCur}}" hi="{{hi}}" note="{{sbNote}}" empty-text="{{sbEmpty}}" on-open="{{openSb}}" hint-size="1180px,52px"></dc-import>
+    <section style="width: 1180px; height: 784px; box-sizing: border-box; padding: 20px 40px 22px 40px; display: flex; flex-direction: column; gap: 14px; overflow: hidden">
 
-      <!-- 머리: 콘텐츠 이름 · 버전 · 저장 시각 · 수 -->
-      <div style="display: flex; align-items: center; gap: 14px; flex-shrink: 0">
+      <!-- 머리: 이름 · 버전 · 저장 상태 · 저장 -->
+      <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; height: 46px">
         <span style="width: 44px; height: 44px; flex-shrink: 0; border-radius: 13px; background: #eaeefb; display: flex; align-items: center; justify-content: center"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#1428a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{icon}}"/></svg></span>
         <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
           <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
@@ -38,346 +36,34 @@ button{font-family:inherit;cursor:pointer}
           </span>
           <span style="font-size: 13px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{meta}}</span>
         </span>
+        <sc-if value="{{isSaved}}" hint-placeholder-val="{{true}}">
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #8a91a0; white-space: nowrap; flex-shrink: 0"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg>눌러서 바로 고쳐요</span>
+        </sc-if>
+        <sc-if value="{{isEditing}}" hint-placeholder-val="{{false}}">
+          <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: #fff4dc; color: #7a4f00; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><span style="width: 7px; height: 7px; border-radius: 50%; background: #c98a00"></span>{{chgLine}}</span>
+          <button class="v-btn" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 13px; font-weight: 600; white-space: nowrap; flex-shrink: 0">되돌리기</button>
+        </sc-if>
         <sc-if value="{{spSaved}}" hint-placeholder-val="{{false}}">
           <button class="v-btn" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11 M7 10l5 5 5-5 M5 20h14"/></svg>XLSX 내려받기</button>
         </sc-if>
-        <nav aria-label="단계" style="height: 38px; box-sizing: border-box; padding: 0 4px 0 10px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; display: flex; align-items: center; gap: 2px; flex-shrink: 0">
-          <span style="font-size: 11.5px; font-weight: 700; color: #596170; white-space: nowrap; margin-right: 4px">{{stepsLabel}}</span>
-          <sc-for list="{{steps}}" as="t" hint-placeholder-count="3">
-            <sc-if value="{{t.gap}}" hint-placeholder-val="{{true}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b8bec8" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M9 6l6 6-6 6"/></svg></sc-if>
-            <sc-if value="{{t.btn}}" hint-placeholder-val="{{false}}">
-              <button class="v-step" onClick="{{t.open}}" title="{{t.tip}}" style="{{t.wrap}}"><span style="{{t.circle}}"><sc-if value="{{t.check}}" hint-placeholder-val="{{true}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{t.num}}" hint-placeholder-val="{{false}}">{{t.n}}</sc-if></span><span style="{{t.label}}">{{t.text}}</span></button>
-            </sc-if>
-            <sc-if value="{{t.link}}" hint-placeholder-val="{{true}}">
-              <a class="v-step" href="{{t.href}}" title="{{t.tip}}" style="{{t.wrap}}"><span style="{{t.circle}}"><sc-if value="{{t.check}}" hint-placeholder-val="{{true}}"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></sc-if><sc-if value="{{t.num}}" hint-placeholder-val="{{false}}">{{t.n}}</sc-if></span><span style="{{t.label}}">{{t.text}}</span><sc-if value="{{t.pen}}" hint-placeholder-val="{{true}}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8a91a0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0"><path d="M4 20h4L19 9l-4-4L4 16v4z"/></svg></sc-if></a>
-            </sc-if>
-            <sc-if value="{{t.still}}" hint-placeholder-val="{{false}}">
-              <span title="{{t.tip}}" style="{{t.wrap}}"><span style="{{t.circle}}">{{t.n}}</span><span style="{{t.label}}">{{t.text}}</span></span>
-            </sc-if>
-          </sc-for>
-        </nav>
-        <sc-if value="{{saved}}" hint-placeholder-val="{{true}}">
+        <sc-if value="{{hasJson}}" hint-placeholder-val="{{true}}">
           <button class="v-btn" onClick="{{openJson}}" style="height: 38px; padding: 0 13px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0"><span style="font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; color: #1428a0">{ }</span>flow.json</button>
         </sc-if>
-      </div>
-
-      <!-- 본문: 콘텐츠 그 자체 -->
-      <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column">
-
-        <!-- 고객 요구사항 -->
-        <sc-if value="{{rqPh}}" hint-placeholder-val="{{false}}">
-          <div style="{{phRq.wrap}}">
-            <span style="{{phRq.circle}}">{{phRq.n}}</span>
-            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phRq.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phRq.text}}</span></span>
-            <sc-if value="{{phRq.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phRq.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phRq.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-          </div>
-        </sc-if>
-        <sc-if value="{{rqShow}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 14px">
-            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 6px 18px; display: flex; flex-direction: column; overflow: hidden">
-              <sc-for list="{{rq.facts}}" as="f" hint-placeholder-count="5">
-                <div style="{{f.wrap}}">
-                  <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #596170">{{f.k}}<sc-if value="{{f.hasHint}}" hint-placeholder-val="{{false}}"><span style="font-weight: 500; color: #8a91a0">· {{f.hint}}</span></sc-if></span>
-                  <span style="display: flex; align-items: center; gap: 8px"><span style="{{f.vStyle}}">{{f.v}}</span><sc-if value="{{f.hasTag}}" hint-placeholder-val="{{false}}"><span style="{{f.tagStyle}}">{{f.tag}}</span></sc-if></span>
-                </div>
-              </sc-for>
-            </div>
-            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
-              <div style="height: 48px; display: flex; align-items: center; gap: 8px; padding: 0 18px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 14px; font-weight: 700; flex-grow: 1">키맨별 요구사항</span><span style="font-size: 12px; color: #596170">{{rq.sumLine}}</span></div>
-              <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px">
-                <sc-for list="{{rq.keymen}}" as="k" hint-placeholder-count="3">
-                  <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 12px 16px; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 14px; flex-shrink: 0">
-                    <span style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start"><span style="font-size: 14.5px; font-weight: 700">{{k.name}}</span><span style="height: 22px; padding: 0 8px; border-radius: 999px; background: #eaeefb; color: #1428a0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 800; display: flex; align-items: center">{{k.weight}}</span></span>
-                    <span style="display: flex; flex-direction: column">
-                      <sc-for list="{{k.reqs}}" as="r" hint-placeholder-count="3">
-                        <span style="display: flex; align-items: center; gap: 10px; min-height: 28px"><span style="width: 14px; flex-shrink: 0; font-family: Manrope, sans-serif; font-size: 11.5px; font-weight: 700; color: #8a91a0">{{r.n}}</span><span style="font-size: 13.5px; line-height: 1.45; flex-grow: 1; min-width: 0">{{r.t}}</span><sc-if value="{{r.warn}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 999px; background: #fff4dc; color: #7a4f00; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">확인 필요</span></sc-if></span>
-                      </sc-for>
-                    </span>
-                  </div>
-                </sc-for>
-              </div>
-            </div>
-          </div>
-        </sc-if>
-
-        <!-- DSS -->
-        <sc-if value="{{isDss}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px; overflow-y: auto">
-            <div style="display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 12px; flex-shrink: 0">
-              <sc-for list="{{ds.facts}}" as="f" hint-placeholder-count="4">
-                <div style="box-sizing: border-box; height: 60px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; flex-direction: column; justify-content: center; gap: 3px; min-width: 0">
-                  <span style="font-size: 11.5px; font-weight: 600; color: #596170">{{f.k}}</span>
-                  <span style="display: flex; align-items: center; gap: 8px"><span style="{{f.vStyle}}">{{f.v}}</span><sc-if value="{{f.hasTag}}" hint-placeholder-val="{{false}}"><span style="{{f.tagStyle}}">{{f.tag}}</span></sc-if><sc-if value="{{f.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap">{{f.note}}</span></sc-if></span>
-                </div>
-              </sc-for>
-            </div>
-            <sc-if value="{{ds.spPh}}" hint-placeholder-val="{{false}}">
-              <div style="{{ds.phSp.wrap}}">
-                <span style="{{ds.phSp.circle}}">{{ds.phSp.n}}</span>
-                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{ds.phSp.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{ds.phSp.text}}</span></span>
-                <sc-if value="{{ds.phSp.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{ds.phSp.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{ds.phSp.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-              </div>
-            </sc-if>
-            <sc-if value="{{ds.spOn}}" hint-placeholder-val="{{true}}">
-            <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; flex-shrink: 0">
-              <sc-for list="{{ds.spaces}}" as="sp" hint-placeholder-count="7">
-                <div style="box-sizing: border-box; padding: 12px 14px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; flex-direction: column; gap: 8px; min-width: 0">
-                  <span style="display: flex; align-items: baseline; gap: 8px"><span style="font-size: 14px; font-weight: 700; flex-grow: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{sp.name}}</span><span style="font-size: 11.5px; color: #596170; white-space: nowrap">제품 {{sp.n}}</span></span>
-                  <span style="{{sp.basisStyle}}">{{sp.basis}}</span>
-                  <span style="display: flex; flex-direction: column; gap: 6px">
-                    <sc-for list="{{sp.products}}" as="p" hint-placeholder-count="2">
-                      <span style="display: flex; align-items: center; gap: 6px; min-width: 0">
-                        <span style="font-size: 12.5px; font-weight: 600; flex-grow: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.model}}</span>
-                        <span style="{{p.qtyStyle}}">{{p.qty}}</span>
-                        <span style="{{p.byStyle}}">{{p.by}}</span>
-                      </span>
-                    </sc-for>
-                  </span>
-                </div>
-              </sc-for>
-            </div>
-            </sc-if>
-            <sc-if value="{{ds.solPh}}" hint-placeholder-val="{{false}}">
-              <div style="{{ds.phSol.wrap}}">
-                <span style="{{ds.phSol.circle}}">{{ds.phSol.n}}</span>
-                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{ds.phSol.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{ds.phSol.text}}</span></span>
-                <sc-if value="{{ds.phSol.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{ds.phSol.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{ds.phSol.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-              </div>
-            </sc-if>
-            <sc-if value="{{ds.solOn}}" hint-placeholder-val="{{true}}">
-            <div style="box-sizing: border-box; padding: 12px 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 14px; flex-shrink: 0">
-              <span style="font-size: 13.5px; font-weight: 700; white-space: nowrap">솔루션 {{ds.nSol}}</span>
-              <span style="display: flex; flex-wrap: wrap; gap: 8px">
-                <sc-for list="{{ds.solutions}}" as="o" hint-placeholder-count="3">
-                  <span style="height: 34px; box-sizing: border-box; padding: 0 10px 0 12px; border-radius: 9px; border: 1px solid #e2e5ea; background: #fbfbfc; display: flex; align-items: center; gap: 8px"><span style="font-size: 13px; font-weight: 700">{{o.name}}</span><span style="font-size: 11.5px; color: #596170; white-space: nowrap">{{o.basis}}</span><span style="{{o.byStyle}}">{{o.by}}</span></span>
-                </sc-for>
-              </span>
-            </div>
-            </sc-if>
-          </div>
-        </sc-if>
-
-        <!-- Market Intelligence -->
-        <sc-if value="{{isMi}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
-            <sc-if value="{{mi.qPh}}" hint-placeholder-val="{{false}}">
-              <div style="{{mi.phQ.wrap}}">
-                <span style="{{mi.phQ.circle}}">{{mi.phQ.n}}</span>
-                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{mi.phQ.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{mi.phQ.text}}</span></span>
-                <sc-if value="{{mi.phQ.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{mi.phQ.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{mi.phQ.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-              </div>
-            </sc-if>
-            <sc-if value="{{mi.qOn}}" hint-placeholder-val="{{true}}">
-            <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 10px; flex-shrink: 0">
-              <span style="font-size: 12.5px; font-weight: 700; color: #3d4452">검색 조건</span>
-              <sc-for list="{{mi.filters}}" as="c" hint-placeholder-count="4"><span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{c}}</span></sc-for>
-              <span style="width: 1px; height: 18px; background: #e2e5ea; margin: 0 4px"></span>
-              <span style="font-size: 12.5px; font-weight: 700; color: #3d4452">검색어</span>
-              <span style="font-size: 12.5px; color: #596170; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{mi.queryLine}}</span>
-            </div>
-            </sc-if>
-            <sc-if value="{{mi.colPh}}" hint-placeholder-val="{{false}}">
-              <div style="{{mi.phCol.wrap}}">
-                <span style="{{mi.phCol.circle}}">{{mi.phCol.n}}</span>
-                <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{mi.phCol.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{mi.phCol.text}}</span></span>
-                <sc-if value="{{mi.phCol.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{mi.phCol.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{mi.phCol.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-              </div>
-            </sc-if>
-            <sc-if value="{{mi.colOn}}" hint-placeholder-val="{{true}}">
-            <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
-              <sc-for list="{{mi.cols}}" as="c" hint-placeholder-count="3">
-                <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
-                  <div style="height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0"><span style="font-size: 14px; font-weight: 700">{{c.h}}</span><span style="font-family: Manrope, sans-serif; font-size: 12px; font-weight: 800; color: #1428a0">{{c.n}}</span></div>
-                  <div style="flex-grow: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column">
-                    <sc-for list="{{c.items}}" as="it" hint-placeholder-count="4">
-                      <div style="{{it.wrap}}">
-                        <span style="font-size: 13.5px; font-weight: 600; line-height: 1.5">{{it.summary}}</span>
-                        <span style="display: flex; align-items: center; gap: 6px; min-width: 0">
-                          <span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #f0f2f5; color: #3d4452; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{it.type}}</span>
-                          <span style="font-size: 11.5px; color: #8a91a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0">{{it.src}}</span>
-                          <sc-if value="{{it.check}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 5px; background: #fff4dc; color: #7a4f00; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">수치 원문 확인</span></sc-if>
-                          <a href="{{it.url}}" style="margin-left: auto; padding-left: 4px; font-size: 12px; font-weight: 700; white-space: nowrap; flex-shrink: 0">원문</a>
-                        </span>
-                      </div>
-                    </sc-for>
-                  </div>
-                </div>
-              </sc-for>
-            </div>
-            <span style="font-size: 11.5px; color: #8a91a0; flex-shrink: 0">문장은 원문을 줄여 쓴 것이에요 · 수치는 원문에서 확인해요</span>
-            </sc-if>
-          </div>
-        </sc-if>
-
-        <!-- 경쟁사 분석 -->
-        <sc-if value="{{caPh}}" hint-placeholder-val="{{false}}">
-          <div style="{{phCa.wrap}}">
-            <span style="{{phCa.circle}}">{{phCa.n}}</span>
-            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phCa.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phCa.text}}</span></span>
-            <sc-if value="{{phCa.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phCa.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phCa.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-          </div>
-        </sc-if>
-        <sc-if value="{{caShow}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
-            <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
-              <span style="font-size: 12.5px; font-weight: 700; color: #3d4452; white-space: nowrap">비교 기준 · {{ca.from}}</span>
-              <sc-for list="{{ca.cats}}" as="c" hint-placeholder-count="5"><span style="height: 24px; padding: 0 9px; border-radius: 6px; border: 1px solid #e2e5ea; background: #ffffff; color: #3d4452; font-size: 11.5px; font-weight: 600; display: flex; align-items: center; white-space: nowrap">{{c}}</span></sc-for>
-              <span style="flex-grow: 1"></span>
-              <sc-for list="{{ca.tally}}" as="t" hint-placeholder-count="4"><span style="display: flex; align-items: center; gap: 5px; font-size: 12px; color: #596170; white-space: nowrap"><span style="{{t.chip}}">{{t.k}}</span>{{t.n}}</span></sc-for>
-            </div>
-            <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
-              <div style="display: grid; grid-template-columns: 236px repeat(5, 82px) minmax(0, 1fr); column-gap: 10px; align-items: center; height: 40px; padding: 0 18px; background: #fbfbfc; border-bottom: 1px solid #f0f2f5; font-size: 12px; font-weight: 700; color: #596170; flex-shrink: 0">
-                <span>경쟁사 · 겹치는 공간</span>
-                <sc-for list="{{ca.dims}}" as="d" hint-placeholder-count="5"><span>{{d}}</span></sc-for>
-                <span>우리 주장 포인트</span>
-              </div>
-              <div style="flex-grow: 1; min-height: 0; overflow-y: auto">
-                <sc-for list="{{ca.rows}}" as="r" hint-placeholder-count="5">
-                  <div style="display: grid; grid-template-columns: 236px repeat(5, 82px) minmax(0, 1fr); column-gap: 10px; align-items: start; box-sizing: border-box; min-height: 92px; padding: 14px 18px; border-top: 1px solid #f0f2f5">
-                    <span style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
-                      <span style="display: flex; align-items: center; gap: 7px"><span style="font-size: 14.5px; font-weight: 700; white-space: nowrap">{{r.name}}</span><span style="{{r.byStyle}}">{{r.by}}</span></span>
-                      <span style="font-size: 11.5px; color: #596170; line-height: 1.45">{{r.wiki}}</span>
-                      <span style="font-size: 11.5px; font-weight: 600; color: #1428a0; line-height: 1.45">{{r.space}}</span>
-                    </span>
-                    <sc-for list="{{r.cells}}" as="c" hint-placeholder-count="5">
-                      <span style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px"><span style="{{c.chip}}">{{c.k}}</span><span style="font-size: 11px; color: #8a91a0; white-space: nowrap">{{c.n}}</span></span>
-                    </sc-for>
-                    <span style="display: flex; flex-direction: column; gap: 5px; min-width: 0">
-                      <sc-for list="{{r.claims}}" as="m" hint-placeholder-count="2">
-                        <span style="display: flex; gap: 7px; font-size: 12.5px; line-height: 1.45"><span style="height: 19px; padding: 0 6px; border-radius: 5px; background: #eaeefb; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{m.axis}}</span><span style="min-width: 0">{{m.text}}</span></span>
-                      </sc-for>
-                    </span>
-                  </div>
-                </sc-for>
-              </div>
-            </div>
-            <span style="font-size: 11.5px; color: #8a91a0; flex-shrink: 0">판정은 우리 제품 기준 · 경쟁사마다 비교 쌍의 판정을 모은 것 · 수치와 견적은 원문 · 사내 자료로 확인</span>
-          </div>
-        </sc-if>
-
-        <!-- Value Proposition -->
-        <sc-if value="{{vpPh}}" hint-placeholder-val="{{false}}">
-          <div style="{{phVp.wrap}}">
-            <span style="{{phVp.circle}}">{{phVp.n}}</span>
-            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phVp.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phVp.text}}</span></span>
-            <sc-if value="{{phVp.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phVp.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phVp.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-          </div>
-        </sc-if>
-        <sc-if value="{{vpShow}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
-            <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0; font-size: 12.5px; color: #596170">
-              <span style="font-weight: 700; color: #3d4452; white-space: nowrap">{{vp.fromLine}}</span>
-              <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{vp.outLine}}</span>
-            </div>
-            <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow-y: auto">
-              <sc-for list="{{vp.items}}" as="it" hint-placeholder-count="4">
-                <div style="{{it.wrap}}">
-                  <span style="display: flex; flex-direction: column; gap: 5px; align-items: flex-start; min-width: 0">
-                    <span style="{{it.kindStyle}}">{{it.kind}}</span>
-                    <span style="font-size: 14.5px; font-weight: 700; line-height: 1.35">{{it.name}}</span>
-                    <span style="font-size: 12px; color: #596170">{{it.spaces}}</span>
-                    <span style="font-size: 11.5px; color: #8a91a0">{{it.count}}</span>
-                  </span>
-                  <span style="display: flex; flex-direction: column; gap: 10px; min-width: 0">
-                    <sc-for list="{{it.values}}" as="v" hint-placeholder-count="2">
-                      <span style="display: flex; flex-direction: column; gap: 6px">
-                        <span style="display: flex; align-items: center; gap: 8px; min-width: 0">
-                          <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #f0f2f5; color: #3d4452; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{v.space}}</span>
-                          <span style="font-size: 14.5px; font-weight: 700; line-height: 1.45; flex-grow: 1; min-width: 0">{{v.message}}</span>
-                          <span style="height: 22px; padding: 0 8px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{v.req}}</span>
-                        </span>
-                        <span style="{{v.needWrap}}">
-                          <span style="width: 66px; flex-shrink: 0; font-size: 11.5px; font-weight: 700; color: #596170">고객의 니즈</span>
-                          <span style="{{v.needStyle}}">{{v.need}}</span>
-                          <sc-if value="{{v.hasNeed}}" hint-placeholder-val="{{true}}"><span style="{{v.needTagStyle}}">{{v.needTag}}</span></sc-if>
-                        </span>
-                      </span>
-                    </sc-for>
-                  </span>
-                </div>
-              </sc-for>
-            </div>
-          </div>
-        </sc-if>
-
-        <!-- Spec 시트 -->
-        <sc-if value="{{spPh}}" hint-placeholder-val="{{false}}">
-          <div style="{{phSp.wrap}}">
-            <span style="{{phSp.circle}}">{{phSp.n}}</span>
-            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phSp.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phSp.text}}</span></span>
-            <sc-if value="{{phSp.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phSp.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phSp.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-          </div>
-        </sc-if>
-        <sc-if value="{{spShow}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: flex; flex-direction: column; gap: 12px">
-            <div style="box-sizing: border-box; height: 44px; padding: 0 16px; border-radius: 12px; background: #ffffff; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 8px; flex-shrink: 0">
-              <sc-for list="{{sp.opts}}" as="o" hint-placeholder-count="3"><span style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #596170; white-space: nowrap; margin-right: 10px"><b style="font-weight: 700; color: #3d4452">{{o.k}}</b>{{o.v}}</span></sc-for>
-              <span style="flex-grow: 1"></span>
-              <sc-for list="{{sp.warns}}" as="w" hint-placeholder-count="1"><span style="height: 24px; padding: 0 9px; border-radius: 999px; background: #fff4dc; color: #7a4f00; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{w}}</span></sc-for>
-            </div>
-            <div style="flex-grow: 1; min-height: 0; box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; overflow: auto">
-              <div style="display: grid; grid-template-columns: 190px 160px repeat(6, minmax(0, 1fr)); font-size: 12.5px">
-                <sc-for list="{{sp.grid}}" as="g" hint-placeholder-count="40"><span style="{{g.style}}">{{g.t}}</span></sc-for>
-              </div>
-            </div>
-            <span style="font-size: 11.5px; color: #8a91a0; flex-shrink: 0">값은 공식 카탈로그에서 채워요 · 카탈로그에 없는 값은 [확인 필요]로 남겨요</span>
-          </div>
-        </sc-if>
-
-        <!-- 공간 시나리오 -->
-        <sc-if value="{{scPh}}" hint-placeholder-val="{{false}}">
-          <div style="{{phSc.wrap}}">
-            <span style="{{phSc.circle}}">{{phSc.n}}</span>
-            <span style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0"><span style="font-size: 14px; font-weight: 700; color: #3d4452">{{phSc.head}}</span><span style="font-size: 12.5px; color: #596170; line-height: 1.5">{{phSc.text}}</span></span>
-            <sc-if value="{{phSc.hasCta}}" hint-placeholder-val="{{false}}"><a class="v-ph" href="{{phSc.href}}" style="height: 38px; padding: 0 14px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0">{{phSc.cta}}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></sc-if>
-          </div>
-        </sc-if>
-        <sc-if value="{{scShow}}" hint-placeholder-val="{{false}}">
-          <div style="flex-grow: 1; min-height: 0; display: grid; grid-template-columns: 236px minmax(0, 1fr); gap: 14px">
-            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; overflow-y: auto">
-              <span style="font-size: 12px; font-weight: 700; color: #596170; padding: 6px 10px 6px 10px">공간 · {{sc.from}}</span>
-              <sc-for list="{{sc.spaces}}" as="x" hint-placeholder-count="7">
-                <button class="v-space" aria-pressed="{{x.on}}" onClick="{{x.pick}}" style="{{x.wrap}}"><span style="font-size: 14px; font-weight: 600">{{x.name}}</span><span style="{{x.subStyle}}">{{x.sub}}</span></button>
-              </sc-for>
-            </div>
-            <div style="box-sizing: border-box; background: #ffffff; border: 1px solid #e2e5ea; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; min-width: 0">
-              <div style="display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0; flex-wrap: wrap">
-                <span style="font-size: 18px; font-weight: 700; white-space: nowrap">{{sc.cur.name}}</span>
-                <span style="font-size: 12px; color: #596170; white-space: nowrap">시나리오 {{sc.cur.n}}</span>
-                <span style="flex-grow: 1"></span>
-                <sc-for list="{{sc.cur.products}}" as="p" hint-placeholder-count="4"><span style="height: 26px; box-sizing: border-box; padding: 0 8px; border-radius: 7px; border: 1px solid #e2e5ea; display: flex; align-items: center; gap: 6px; white-space: nowrap"><span style="{{p.kindStyle}}">{{p.kind}}</span><span style="font-size: 12px; font-weight: 600">{{p.name}}</span></span></sc-for>
-              </div>
-              <div style="flex-grow: 1; min-height: 0; overflow-y: auto; padding: 14px 16px">
-                <sc-if value="{{sc.cur.empty}}" hint-placeholder-val="{{false}}">
-                  <div style="box-sizing: border-box; border: 1px dashed #c9d0e6; border-radius: 12px; padding: 22px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
-                    <span style="font-size: 14px; font-weight: 700">이 공간은 시나리오가 없어요</span>
-                    <span style="font-size: 12.5px; color: #596170">편집에서 시나리오를 더할 수 있어요.</span>
-                  </div>
-                </sc-if>
-                <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start">
-                  <sc-for list="{{sc.cur.scenarios}}" as="c" hint-placeholder-count="2">
-                    <div style="box-sizing: border-box; border: 1px solid #e2e5ea; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; min-width: 0">
-                      <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 15px; font-weight: 700; flex-grow: 1; min-width: 0">{{c.title}}</span><span style="{{c.byStyle}}">{{c.by}}</span></span>
-                      <span style="display: flex; gap: 10px; font-size: 12.5px"><span style="width: 58px; flex-shrink: 0; font-weight: 700; color: #596170; white-space: nowrap">사용자</span><span>{{c.user}}</span></span>
-                      <span style="display: flex; gap: 10px; font-size: 12.5px"><span style="width: 58px; flex-shrink: 0; font-weight: 700; color: #596170; white-space: nowrap">제품</span><span style="display: flex; flex-wrap: wrap; gap: 5px"><sc-for list="{{c.products}}" as="p" hint-placeholder-count="2"><span style="height: 22px; padding: 0 7px; border-radius: 6px; background: #eaeefb; color: #1428a0; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">{{p}}</span></sc-for></span></span>
-                      <span style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
-                        <sc-for list="{{c.steps}}" as="t" hint-placeholder-count="4">
-                          <span style="display: flex; align-items: flex-start; gap: 8px"><span style="width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; background: #f0f2f5; color: #3d4452; font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center">{{t.n}}</span><span style="{{t.textStyle}}">{{t.text}}</span><sc-if value="{{t.hasProduct}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 6px; border-radius: 5px; border: 1px solid #c9d1f2; color: #1428a0; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0">{{t.product}}</span></sc-if></span>
-                        </sc-for>
-                      </span>
-                      <sc-for list="{{c.fields}}" as="f" hint-placeholder-count="1">
-                        <span style="display: flex; gap: 10px; font-size: 12.5px"><span style="width: 58px; flex-shrink: 0; font-weight: 700; color: #596170; white-space: nowrap">{{f.k}}</span><span>{{f.v}}</span></span>
-                      </sc-for>
-                    </div>
-                  </sc-for>
-                </div>
-              </div>
-            </div>
-          </div>
+        <sc-if value="{{canSave}}" hint-placeholder-val="{{false}}">
+          <a class="v-save" href="{{saveHref}}" style="height: 42px; padding: 0 20px; border-radius: 11px; background: #1428a0; color: #ffffff; font-size: 14.5px; font-weight: 700; display: flex; align-items: center; gap: 7px; white-space: nowrap; flex-shrink: 0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg>{{saveLabel}}</a>
         </sc-if>
       </div>
 
-      <!-- 후속 작업: 후속이 있는 콘텐츠만 -->
+      <!-- 본문: 콘텐츠 그 자체 · 그 자리에서 입력 · 수정 -->
+      <sc-if value="{{isRq}}" hint-placeholder-val="{{false}}"><dc-import name="RQBody" mode="{{mode}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+      <sc-if value="{{isDss}}" hint-placeholder-val="{{false}}"><dc-import name="DSBody" mode="{{mode}}" ai="{{ai}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+      <sc-if value="{{isMi}}" hint-placeholder-val="{{false}}"><dc-import name="MIBody" mode="{{mode}}" stage="{{stage}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+      <sc-if value="{{isCa}}" hint-placeholder-val="{{false}}"><dc-import name="CABody" mode="{{mode}}" ai="{{ai}}" tab="{{tab}}" view="{{caView}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+      <sc-if value="{{isVp}}" hint-placeholder-val="{{false}}"><dc-import name="VPBody" mode="{{mode}}" ai="{{ai}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+      <sc-if value="{{isSp}}" hint-placeholder-val="{{false}}"><dc-import name="SPBody" mode="{{mode}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+      <sc-if value="{{isSc}}" hint-placeholder-val="{{false}}"><dc-import name="SCBody" mode="{{mode}}" ai="{{ai}}" space="{{space}}" h="{{bodyH}}" on-pop="{{openPop}}" hint-size="1100px,682px"></dc-import></sc-if>
+
+      <!-- 후속 작업: 저장된 콘텐츠 중 후속이 있는 것만 -->
       <sc-if value="{{hasNext}}" hint-placeholder-val="{{false}}">
         <div style="display: flex; flex-direction: column; gap: 10px; flex-shrink: 0">
           <span style="font-size: 13.5px; font-weight: 700">후속 작업</span>
@@ -397,396 +83,145 @@ button{font-family:inherit;cursor:pointer}
     </section>
   </main>
 
-  <sc-if value="{{jsonOpen}}" hint-placeholder-val="{{false}}">
+  <!-- 팝업은 따로 하는 일에만: flow.json · Storyboard 요약 · 고르기 · MI 검색 · 연결된 가치 -->
+  <sc-if value="{{popJson}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
-      <dc-import name="JsonPopup" lines="{{jsonLines}}" title="{{jsonTitle}}" sub="{{jsonSub}}" legend="이 콘텐츠가 담긴 줄" only-label="이 콘텐츠만" on-close="{{closeJson}}" hint-size="900px,780px"></dc-import>
+      <dc-import name="JsonPopup" lines="{{jsonLines}}" title="{{jsonTitle}}" sub="{{jsonSub}}" legend="이 콘텐츠가 담긴 줄" only-label="이 콘텐츠만" on-close="{{closePop}}" hint-size="900px,780px"></dc-import>
     </div>
   </sc-if>
-  <sc-if value="{{popOpen}}" hint-placeholder-val="{{false}}">
+  <sc-if value="{{popSb}}" hint-placeholder-val="{{false}}">
     <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
-      <dc-import name="SBPopup" sb="{{pop}}" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+      <dc-import name="SBPopup" sb="{{sbPop}}" on-close="{{closePop}}" hint-size="760px,660px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{popPick}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="ProdPicker" title="{{pick.title}}" sub="{{pick.sub}}" picked="{{pick.picked}}" min="{{pick.min}}" on-close="{{closePop}}" hint-size="760px,640px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{popSol}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="SolPicker" mode="{{mode}}" ai="{{ai}}" on-close="{{closePop}}" hint-size="820px,700px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{popSearch}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="MISearch" mode="{{mode}}" phase="{{phase}}" on-close="{{closePop}}" hint-size="1040px,740px"></dc-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{popDetail}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; left: 0; top: 0; width: 1440px; height: 900px; background: rgba(18,20,23,0.42); display: flex; align-items: center; justify-content: center; z-index: 30">
+      <dc-import name="VpDetail" name-of="The Wall IAB 146&quot;" kind="제품" where="로비" on-close="{{closePop}}" hint-size="900px,720px"></dc-import>
     </div>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"dss"},"status":{"editor":"enum","options":["saved","new","draft"],"default":"saved"},"done":{"editor":"int","default":1,"min":0,"max":3},"showJson":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":900}}'>
+<script type="text/x-dc" data-dc-script data-props='{"content":{"editor":"enum","options":["rq","dss","mi","ca","vp","sp","sc"],"default":"dss"},"status":{"editor":"enum","options":["saved","editing","new","draft"],"default":"saved"},"pop":{"editor":"enum","options":["","json","sb","pick","sol","search","detail"],"default":""},"ai":{"editor":"boolean","default":false},"tab":{"editor":"enum","options":["info","cmp","pc"],"default":"cmp"},"caView":{"editor":"enum","options":["list","table"],"default":"list"},"stage":{"editor":"enum","options":["empty","found"],"default":"found"},"phase":{"editor":"enum","options":["loading","ready"],"default":"ready"},"space":{"editor":"int","default":1,"min":0,"max":6},"$preview":{"width":1440,"height":900}}'>
 class Component extends DCLogic {
   renderVals() {
     const key = this.props.content ?? 'dss';
-    // ---- 상태: saved(저장됨) · new(새로 만드는 중 — 단계 팝업 뒤) · draft(작성 중으로 닫음) ----
-    const st = ['saved', 'new', 'draft'].indexOf(this.props.status) >= 0 ? this.props.status : 'saved';
-    const saved = st === 'saved';
-    // 단계: [이름, 새로 만들 때 팝업 보드, 고칠 때 팝업 보드(Storyboard 는 요약 팝업)]
-    const STEPS = {
-      rq: [['요구사항 입력', 'RQ1.dc.html', 'RQ1_Edit.dc.html']],
-      dss: [['Storyboard', 'DS1.dc.html', ''], ['공간 · 제품', 'DS2.dc.html', 'DS2_Edit.dc.html'], ['솔루션', 'DS4.dc.html', 'DS4_Edit.dc.html']],
-      mi: [['Storyboard', 'MI1.dc.html', ''], ['검색', 'MI2.dc.html', 'MI2.dc.html'], ['정제', 'MI3.dc.html', 'MI3.dc.html']],
-      ca: [['Storyboard', 'CA1.dc.html', ''], ['경쟁사 리스트업', 'CA2.dc.html', 'CA2_Edit.dc.html']],
-      vp: [['Storyboard', 'VP1.dc.html', ''], ['가치 · 고객의 니즈', 'VP2.dc.html', 'VP2_Edit.dc.html']],
-      sp: [['Storyboard', 'SP1.dc.html', ''], ['시트 작성', 'SP2.dc.html', 'SP2_Edit.dc.html']],
-      sc: [['Storyboard', 'SC1.dc.html', ''], ['공간 · 시나리오', 'SC2.dc.html', 'SC2_Edit.dc.html']]
-    };
-    const ST = STEPS[key] || STEPS.dss;
-    const nSt = ST.length;
-    const done = saved ? nSt : Math.max(0, Math.min(nSt, Number(this.props.done ?? 1)));
-    const on = (k) => saved || done >= k;
-    const onC = (c, k) => key !== c || on(k);   // 다른 콘텐츠 칸은 계산만(보이지 않음)
-    const CIRC = ['①', '②', '③', '④'];
-    const s = Object.assign({ json: !!this.props.showJson, pop: '', space: 1 }, this.state || {});
-    const put = (p) => this.setState(Object.assign({}, s, p));
-    const U = '<원문 URL>';
-    const tagBase = 'height: 20px; padding: 0 7px; border-radius: 5px; font-size: 11px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
-    const T_MAN = ' background: #f0f2f5; color: #3d4452;';
-    const T_AI = ' background: #e6f4ee; color: #0b6e4f;';
-    const T_WARN = ' background: #fff4dc; color: #7a4f00;';
+    const ST = ['saved', 'editing', 'new', 'draft'];
+    const mode = ST.indexOf(this.props.status) >= 0 ? this.props.status : 'saved';
+    const saved = mode === 'saved' || mode === 'editing';
+    const K = key + mode + (this.props.pop || '');
+    const s = Object.assign({ pop: this.props.pop || '', sb: '' }, (this.state && this.state.k === K) ? this.state : {});
+    const put = (p) => this.setState(Object.assign({}, s, p, { k: K }));
     const IC = {
       rq: 'M9 4h6v3H9z M7 5.5H5V21h14V5.5h-2 M8.5 12h7 M8.5 16h5', dss: 'M3 21h18 M5 21V9l7-5 7 5v12 M9 21v-6h6v6', mi: 'M4 20V10 M10 20V4 M16 20v-8 M22 20H2',
       ca: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z M12 11a1 1 0 1 0 0 2 1 1 0 0 0 0-2z', vp: 'M6 4h12l3 5-9 11L3 9l3-5z M3 9h18 M9.5 9L12 20l2.5-11',
       sp: 'M6 3h8l5 5v13H6V3z M14 3v5h5 M9 13h7 M9 17h7', sc: 'M4 6h16v12H4z M10 9l5 3-5 3V9z'
     };
-
-    // ---- 콘텐츠 값: Storyboard flow.json 의 stages.<콘텐츠> 와 같은 모양 ----
-    const RQ = { ref: 'RQ-01', ver: 2, project: '용산 업무시설 재개발 AI Ready 오피스', customer: 'E 자산운용', target: '대표이사', note: null, sources: [],
-      keymen: [
-        { name: '대표이사', weight: 50, reqs: [{ text: '사용자를 인식하고 반응하는 AI Ready 오피스' }, { text: '최초 AI Ready 공간으로 알리기' }, { text: '에너지 사용량 20% 절감 · 실측 증빙' }] },
-        { name: '공간컨텐츠실장', weight: 30, reqs: [{ text: '오피스를 업무환경 플랫폼으로', status: '확인 필요' }, { text: '예측 · 반응형 공간' }, { text: '건물 가치 · 임대 선호도 제고' }] },
-        { name: '개발사업팀장', weight: 20, reqs: [{ text: 'AI 인프라를 설계 단계에 반영' }, { text: '시공 · 운영 유지보수 부담 최소화' }] }],
-      sharedWith: ['SB-02'] };
-    const pr = (model, qty, by) => (qty ? { model, qty, by } : { model, qty: null, qtyStatus: '확인 필요', by });
-    const DSS = { ref: 'DSS-01', ver: 1, industry: { value: '오피스 · 업무시설', by: 'ai-accepted', basis: 'RQ-01' }, spaces: [
-      { name: '사무실 · R&D', basis: 'RQ-01 업무환경 플랫폼', products: [pr('스마트 모니터', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] },
-      { name: '로비', basis: 'RQ-01 최초 AI Ready', products: [pr('The Wall IAB 146"', '1식', 'manual'), pr('Smart Signage QM55C', '2대', 'manual'), pr('삼성 키오스크', '1대', 'ai-accepted')] },
-      { name: '회의실', basis: 'RQ-01 업무환경 플랫폼', products: [pr('Flip Pro WA75D', null, 'ai-accepted'), pr('Smart Signage QB55C', '실당 1대', 'ai-accepted')] },
-      { name: '라운지', basis: 'ai-space', products: [pr('Smart Signage QM55C', '1대', 'ai-accepted')] },
-      { name: '주차장', basis: 'extension', products: [pr('옥외형 사이니지 OHC55', '1대', 'manual')] },
-      { name: '중앙관제실', basis: 'RQ-01 유지보수 최소화', products: [pr('비디오월 VM55B', '2×2', 'ai-accepted')] },
-      { name: '공용공간', basis: 'RQ-01 에너지 20% 절감', products: [pr('SmartThings 센서', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] }],
-      solutions: [{ name: 'MagicINFO', by: 'ai-accepted', basis: 'RQ-01 업무환경 플랫폼' }, { name: 'SmartThings Pro', by: 'ai-accepted', basis: 'RQ-01 예측 · 반응형 공간' }, { name: 'b.IoT', by: 'manual', basis: 'RQ-01 에너지 20% 절감' }],
-      sharedWith: ['SB-02'] };
-    const DSS_NEW = { ref: 'DSS-02', ver: 0, industry: { value: '오피스 · 업무시설', by: 'ai-accepted', basis: 'RQ-05' }, spaces: [
-      { name: '로비', basis: 'RQ-05 1 · 입주사 안내', products: [pr('Smart Signage QM55C', '2대', 'manual'), pr('삼성 키오스크', null, 'ai-accepted')] },
-      { name: '공용 회의실', basis: 'RQ-05 1 · 공용 회의실 예약', products: [pr('Flip Pro WA75D', null, 'ai-accepted'), pr('Smart Signage QB43C', '실당 1대', 'ai-accepted')] },
-      { name: '라운지', basis: 'ai-space', products: [pr('Smart Signage QM55C', '1대', 'ai-accepted')] },
-      { name: '전시 공간', basis: 'RQ-05 2 · 반도체 박물관 협업 전시', products: [pr('The Wall IAB 146"', '1식', 'ai-accepted')] },
-      { name: '통합 관제실', basis: 'RQ-05 3 · 단지 에너지 모니터링', products: [pr('비디오월 VM55B', '2×2', 'ai-accepted')] },
-      { name: '공용 공간', basis: 'ai-space', products: [pr('SmartThings 센서', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] }],
-      solutions: [] };
-    const MI_ITEMS = [
-      ['시장', '프라임 오피스에서 스마트 빌딩 설비 도입이 늘고 있다는 업계 분석', '리포트', '부동산 리서치', '2026-08', false],
-      ['시장', '서울 도심 신축 오피스의 임대 경쟁 심화 보도 — 공실률 수치', '뉴스', '경제지', '2026-09', true],
-      ['시장', 'AI를 도입한 기업이 회의 · 협업 공간을 늘리는 흐름', '리포트', '컨설팅사', '2026-07', false],
-      ['시장', '오피스 로비를 브랜드 공간으로 바꾸는 사례 증가', '뉴스', '건축 매체', '2026-05', false],
-      ['고객사', 'E 자산운용의 용산 재개발 사업 개요', '뉴스', '경제지', '2026-05', false],
-      ['고객사', 'E 자산운용 ESG 보고서의 에너지 절감 목표', '공시 · IR', '지속가능경영보고서', '2026-04', true],
-      ['고객사', 'E 자산운용 보유 오피스 포트폴리오', '공시 · IR', '사업보고서', '2026-03', false],
-      ['고객사', 'E 자산운용의 최근 오피스 리모델링 투자 방향', '뉴스', '경제지', '2026-08', false],
-      ['사용자', '하이브리드 근무 확산 뒤 회의실 수요 변화 조사', '리포트', '리서치 기관', '2026-06', false],
-      ['사용자', '오피스 방문객 출입 절차에 대한 불편 조사', '뉴스', 'IT 매체', '2026-08', false],
-      ['사용자', '임차인이 선호하는 오피스 설비 순위', '리포트', '부동산 리서치', '2026-07', false],
-      ['사용자', '오피스 근로자의 실내 쾌적성 만족도', '리포트', '리서치 기관', '2026-05', true]
-    ].map(([group, summary, type, name, date, numberCheck], i) => ({ id: 'mi-' + (i + 1), group, summary, source: { type, name, date, url: U }, kept: true, numberCheck: numberCheck ? '원문 확인 필요' : null }));
-    const MI = { ref: 'MI-01', ver: 2, queries: { market: ['프라임 오피스 스마트 빌딩 도입', '서울 도심 신축 오피스 임대 동향', 'AI 도입 기업 업무 공간 변화'], customer: ['E 자산운용 용산 재개발', 'E 자산운용 ESG 에너지 목표', 'E 자산운용 오피스 포트폴리오'], user: ['하이브리드 근무 회의실 수요', '오피스 방문객 출입 경험', '임차인 선호 오피스 설비'] }, filters: { period: '최근 1년', sourceTypes: ['뉴스', '공시 · IR', '리포트'] }, counts: { found: 13, kept: 12, numberCheck: 3 }, items: MI_ITEMS };
-    const VJ = { '+': 'ours-better', '=': 'similar', '-': 'ours-worse', '?': 'no-data' };
-    const DK = ['spec', 'price', 'cases', 'esg', 'brand'];
-    const pair = (space, ours, theirs, d) => { const dims = {}; d.forEach(([j, note], i) => { dims[DK[i]] = { verdict: VJ[j], note }; }); return { space, ours, theirs, dims }; };
-    const wiki = (hq, size, industry) => ({ hq, size, industry, source: { type: 'Wikipedia', url: U } });
-    const CA = { ref: 'CA-01', ver: 1, basis: { from: 'DSS-01', categories: ['사이니지', 'LED', '협업 디스플레이', '비디오월', 'IoT · 솔루션'] }, competitors: [
-      { id: 'A', name: '경쟁사 A', by: 'manual', wiki: wiki('국내', '대기업', '전자 · 디스플레이'), spaces: ['로비', '라운지', '공용공간'],
-        matches: [pair('로비 미디어월', 'The Wall IAB 146"', '올인원 LED 월', [['=', ''], ['-', ''], ['+', ''], ['+', ''], ['=', '']]), pair('로비 안내 사이니지', 'Smart Signage QM55C', '55" 보급형 사이니지', [['+', ''], ['-', ''], ['=', ''], ['=', ''], ['+', '']]), pair('콘텐츠 관리', 'MagicINFO', '자사 CMS', [['+', ''], ['=', ''], ['+', ''], ['?', ''], ['=', '']])],
-        claims: [{ axis: '통합', text: 'MagicINFO · SmartThings Pro · b.IoT 하나의 플랫폼으로 공간 7개를 묶음' }, { axis: '가격', text: '초기가는 높지만 원격 관리로 운영비 절감' }] },
-      { id: 'B', name: '경쟁사 B', by: 'manual', wiki: wiki('해외', '중견', '전자 · 협업 디스플레이'), spaces: ['회의실'],
-        matches: [pair('회의실 협업 보드', 'Flip Pro WA75D', '75" 인터랙티브 보드', [['=', ''], ['=', ''], ['-', ''], ['=', ''], ['=', '']]), pair('회의실 화상 화면', 'Smart Signage QB55C', '회의실 디스플레이', [['=', ''], ['+', ''], ['=', ''], ['?', ''], ['+', '']])],
-        claims: [{ axis: '통합', text: '회의실만이 아니라 건물 전체를 같은 플랫폼으로' }, { axis: '사례', text: '오피스 전체 도입사례로 범위 차별화' }] },
-      { id: 'C', name: '경쟁사 C', by: 'ai-web', wiki: wiki('국내', '중견', '산업용 디스플레이 · 관제'), spaces: ['중앙관제실'],
-        matches: [pair('중앙관제실', '비디오월 VM55B', '55" 관제 비디오월', [['=', ''], ['-', ''], ['=', ''], ['?', ''], ['+', '']]), pair('관제 데이터', 'b.IoT', '상황실 소프트웨어', [['+', ''], ['=', ''], ['+', ''], ['+', ''], ['=', '']])],
-        claims: [{ axis: 'ESG', text: 'b.IoT 실측 데이터로 에너지 20% 절감 증빙' }, { axis: '통합', text: '관제 화면과 공간 기기를 한 플랫폼에서' }] },
-      { id: 'D', name: '경쟁사 D', by: 'ai-web', wiki: wiki('해외', '대기업', '빌딩 자동화'), spaces: ['공용공간', '중앙관제실'],
-        matches: [pair('공간 IoT · 에너지', 'b.IoT · SmartThings Pro', '빌딩 관리 플랫폼', [['=', ''], ['=', ''], ['-', ''], ['=', ''], ['=', '']])],
-        claims: [{ axis: '통합', text: '디스플레이 · 사이니지까지 한 번에 — 사용자가 보는 화면과 설비를 연결' }] },
-      { id: 'E', name: '경쟁사 E', by: 'ai-web', wiki: wiki('국내', '중소', '사이니지 SI'), spaces: ['로비', '공용공간'],
-        matches: [pair('사이니지 + CMS', 'QM55C + MagicINFO', '타사 패널 + 자체 CMS', [['+', ''], ['-', ''], ['=', ''], ['?', ''], ['+', '']])],
-        claims: [{ axis: '브랜드', text: '패널부터 CMS까지 같은 제조사 · 한 곳에서 지원' }] }] };
-    const vv = (space, message, need, needBy, req, by) => ({ space, message, need: need ? { text: need, by: needBy } : null, req, by });
-    const VP = { ref: 'VP-01', ver: 1, from: 'DSS-01', selection: { fromDss: 9, excluded: ['Smart Signage QB55C', 'Smart Signage QB43C', '스마트 모니터', '옥외형 사이니지 OHC55'] }, items: [
-      { name: 'The Wall IAB 146"', kind: 'product', spaces: ['로비'], values: [vv('로비', '들어서는 순간 회사의 AI 비전을 보여 줌', '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', 'manual', 'RQ-01 최초 AI Ready', 'manual'), vv('로비', '사내 행사 때 로비를 무대로 바꿈', '행사 때마다 외부 장소를 빌리지 않았으면 해요', 'ai-accepted', 'RQ-01 업무환경 플랫폼', 'manual'), vv('로비', '베젤 없는 큰 화면으로 콘텐츠에 몰입', '로비 화면이 광고판처럼 보이지 않았으면 해요', 'ai-accepted', 'RQ-01 최초 AI Ready', 'ai-accepted')] },
-      { name: 'Smart Signage QM55C', kind: 'product', spaces: ['로비', '라운지'], values: [vv('로비', '방문 안내와 환영을 사람 손 없이', '안내 데스크 인력 없이도 방문객을 맞고 싶어요', 'ai-accepted', 'RQ-01 인식 · 반응', 'ai-accepted'), vv('라운지', '층별 공지 · 비상 안내를 한 번에', '긴급할 때 모든 층에 바로 알리고 싶어요', 'ai-accepted', 'RQ-01 유지보수 최소화', 'ai-accepted')] },
-      { name: '삼성 키오스크', kind: 'product', spaces: ['로비'], values: [vv('로비', '방문객 등록 대기를 줄임', '예약 없이 온 손님도 기다리지 않게 하고 싶어요', 'ai-accepted', 'RQ-01 인식 · 반응', 'ai-accepted')] },
-      { name: 'Flip Pro WA75D', kind: 'product', spaces: ['회의실'], values: [vv('회의실', '회의 내용이 끊기지 않고 이어짐', '회의 끝나도 판서 내용이 사라지지 않았으면 해요', 'manual', 'RQ-01 업무환경 플랫폼', 'manual'), vv('회의실', '케이블 없이 바로 화면 공유', null, null, 'RQ-01 업무환경 플랫폼', 'manual'), vv('회의실', '원격 참석자와 같은 화면에 함께 판서', '재택 인원도 회의에 똑같이 참여했으면 해요', 'ai-accepted', 'RQ-01 업무환경 플랫폼', 'ai-accepted')] },
-      { name: '비디오월 VM55B', kind: 'product', spaces: ['중앙관제실'], values: [vv('중앙관제실', '건물 상태를 한 화면에서 보고 바로 대응', '설비 문제를 사고 나기 전에 알고 싶어요', 'ai-accepted', 'RQ-01 유지보수 최소화', 'ai-accepted')] },
-      { name: 'SmartThings 센서', kind: 'product', spaces: ['공용공간', '라운지'], values: [vv('공용공간', '재실에 맞춰 냉난방 · 조명을 줄여 에너지 절감', '빈 회의실에 에어컨이 켜져 있지 않았으면 해요', 'ai-accepted', 'RQ-01 에너지 20% 절감', 'ai-accepted'), vv('라운지', '온습도를 자동으로 맞춰 늘 쾌적하게', '여름에도 쾌적한 라운지가 필요해요', 'ai-accepted', 'RQ-01 예측 · 반응형 공간', 'ai-accepted')] },
-      { name: 'MagicINFO', kind: 'solution', spaces: ['전체'], values: [vv('전체', '모든 화면 콘텐츠를 한 곳에서 바꿈', '층마다 돌아다니며 화면을 바꾸지 않았으면 해요', 'ai-accepted', 'RQ-01 업무환경 플랫폼', 'manual'), vv('로비', '시간대별 콘텐츠 자동 예약', '출근 · 점심 · 퇴근 시간에 맞는 안내가 나왔으면 해요', 'ai-accepted', 'RQ-01 인식 · 반응', 'ai-accepted')] },
-      { name: 'SmartThings Pro', kind: 'solution', spaces: ['전체'], values: [vv('전체', '공간 기기를 하나의 앱으로 자동화', '조명 · 공조 · 화면을 따로 관리하지 않았으면 해요', 'ai-accepted', 'RQ-01 예측 · 반응형 공간', 'ai-accepted')] },
-      { name: 'b.IoT', kind: 'solution', spaces: ['중앙관제실'], values: [vv('중앙관제실', '에너지 사용을 실측 데이터로 증빙', '에너지 20% 절감을 숫자로 보여 줘야 해요', 'manual', 'RQ-01 에너지 20% 절감', 'manual'), vv('중앙관제실', '설비 이상을 미리 알려 유지보수 비용을 줄임', '고장 나고서야 수리하는 일을 줄이고 싶어요', 'ai-accepted', 'RQ-01 유지보수 최소화', 'ai-accepted')] }] };
-    const SP = { ref: 'SP-01', ver: 1, from: 'DSS-01', format: '비교표', lang: 'ko', unit: 'mm', valuesFrom: '공식 카탈로그', file: 'SP-01_v1.xlsx',
-      fields: ['화면 크기 · 해상도', '밝기 · 명암비', '입출력 단자', '소비전력', '크기 · 무게', '설치 방식'],
-      models: [['The Wall IAB 146"', '로비', '1식'], ['Smart Signage QM55C', '로비 · 라운지', '3대'], ['삼성 키오스크', '로비', '1대'], ['Flip Pro WA75D', '회의실', null], ['Smart Signage QB55C', '회의실', '실당 1대'], ['Smart Signage QB43C', '사무실 · 공용공간', '층당 1대'], ['비디오월 VM55B', '중앙관제실', '2×2'], ['옥외형 사이니지 OHC55', '주차장', '1대'], ['SmartThings 센서', '공용공간', null]].map(([name, space, qty]) => ({ name, space, qty })),
-      warnings: [{ model: '삼성 키오스크', text: '모델 코드 확인 필요' }] };
-    const sst = (text, product) => ({ text, product: product || null });
-    const SC = { ref: 'SC-01', ver: 1, from: 'DSS-01', spaces: [
-      { name: '사무실 · R&D', products: ['스마트 모니터', 'Smart Signage QB43C', 'SmartThings Pro'], scenarios: [
-        { title: '출근 후 하루 계획', user: '연구원', products: ['스마트 모니터', 'Smart Signage QB43C'], steps: [sst('아침 출근 후 자리 확인'), sst('좌석 모니터로 오늘 일정 확인', '스마트 모니터'), sst('회의실 예약 현황이 함께 뜸', '스마트 모니터'), sst('이동 없이 하루 계획 완료')], fields: [], by: 'manual' }] },
-      { name: '로비', products: ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'MagicINFO'], scenarios: [
-        { title: '예약 방문객의 첫 5분', user: '사전 예약한 외부 방문객', products: ['The Wall IAB 146"', 'Smart Signage QM55C', 'MagicINFO'], steps: [sst('방문 전날 예약 알림과 QR을 받음'), sst('로비 게이트에 QR을 대면 자동으로 열림'), sst('The Wall에 회사 소개와 환영 문구가 뜸', 'The Wall IAB 146"'), sst('안내 사이니지가 회의실까지 길을 알려 줌', 'Smart Signage QM55C')], fields: [{ k: '시간대', v: '오전 10시 전후' }, { k: '기대 효과', v: '안내 인력 없이 방문 응대' }], by: 'ai-candidate-A' },
-        { title: '출근 혼잡 시간의 로비', user: '오전 9시 전후 임직원', products: ['Smart Signage QM55C', 'MagicINFO'], steps: [sst('출근 인원이 몰려 게이트 앞이 혼잡해짐'), sst('층별 엘리베이터 대기 안내가 뜸', 'Smart Signage QM55C'), sst('혼잡이 풀리면 사이니지가 공지로 돌아감', 'MagicINFO')], fields: [], by: 'manual' },
-        { title: '미등록 방문객 응대', user: '예약 없이 온 방문객', products: ['삼성 키오스크', 'Smart Signage QM55C'], steps: [sst('안내 데스크 없이 키오스크로 방문 등록', '삼성 키오스크'), sst('담당자에게 도착 알림이 감'), sst('라운지 대기를 안내', 'Smart Signage QM55C'), sst('담당자가 내려와 함께 입장')], fields: [{ k: '기대 효과', v: '대기 시간 단축' }], by: 'ai-candidate-A' }] },
-      { name: '회의실', products: ['Flip Pro WA75D', 'Smart Signage QB55C', 'SmartThings Pro'], scenarios: [
-        { title: '하이브리드 회의', user: '프로젝트 팀', products: ['Flip Pro WA75D', 'Smart Signage QB55C'], steps: [sst('[확인 필요]')], fields: [], by: 'manual' }] },
-      { name: '라운지', products: ['Smart Signage QM55C'], scenarios: [] },
-      { name: '주차장', products: ['옥외형 사이니지 OHC55'], scenarios: [] },
-      { name: '중앙관제실', products: ['비디오월 VM55B', 'b.IoT'], scenarios: [
-        { title: '설비 이상 대응', user: '시설 관리자', products: ['비디오월 VM55B', 'b.IoT'], steps: [sst('공조 설비 이상 징후를 감지', 'b.IoT'), sst('비디오월에 해당 층 · 설비가 강조됨', '비디오월 VM55B'), sst('담당자에게 점검 요청이 감'), sst('고장 전에 부품 교체')], fields: [{ k: '기대 효과', v: '유지보수 비용 절감' }], by: 'manual' }] },
-      { name: '공용공간', products: ['SmartThings 센서', 'Smart Signage QB43C', 'SmartThings Pro'], scenarios: [] }] };
-    const DATA = { rq: RQ, dss: DSS, mi: MI, ca: CA, vp: VP, sp: SP, sc: SC };
-    const SOL = { MagicINFO: 1, 'SmartThings Pro': 1, 'b.IoT': 1 };
-
-    // ---- 콘텐츠마다 이름 · 저장 시각 · 연결된 Storyboard · 편집 화면 · 사이드바 ----
-    // [이름, 제목, 저장, 연결된 Storyboard, 편집 화면, 사이드바 그룹, 사이드바에서 고른 항목]
+    // [이름, 저장된 제목, 참조, 버전, 저장 시각 · 수, 연결된 Storyboard, 사이드바 그룹, 사이드바 항목, 고친 곳(editing), 새 제목, 새 Storyboard, 작성 중 사이드바 항목, 작성 중 진행]
     const M = {
-      rq: ['고객 요구사항', '용산 업무시설 재개발 AI Ready 오피스', '오늘 13:40 저장', 'SB-01,SB-02', 'RQ1.dc.html', 'requirements', 'E 자산운용 · 용산 오피스'],
-      dss: ['공간별 제품 매칭 DSS', '용산 오피스 공간별 제품', '오늘 10:10 저장', 'SB-01,SB-02', 'DS2.dc.html', 'dss', '용산 오피스 공간별 제품'],
-      mi: ['Market Intelligence', '용산 오피스 시장 분석', '오늘 15:20 저장', 'SB-01', 'MI2.dc.html', 'market', '용산 오피스 시장 분석'],
-      ca: ['경쟁사 분석', '용산 오피스 경쟁사', '오늘 16:05 저장', 'SB-01', 'CA2.dc.html', 'competitor', ''],
-      vp: ['Value Proposition', '용산 오피스 가치 제안', '오늘 16:40 저장', 'SB-01', 'VP2.dc.html', 'value', ''],
-      sp: ['Spec 시트 생성', '용산 오피스 제품 스펙', '오늘 17:10 저장', 'SB-01', 'SP2.dc.html', 'spec', ''],
-      sc: ['공간 시나리오 생성', '용산 오피스 공간 시나리오', '오늘 17:30 저장', 'SB-01', 'SC2.dc.html', 'scenario', '']
+      rq: ['고객 요구사항', '용산 업무시설 재개발 AI Ready 오피스', 'RQ-01', 2, '오늘 13:40 저장 · 키맨 3 · 요구 8 · 확인 필요 1', 'SB-01,SB-02', 'requirements', 'E 자산운용 · 용산 오피스', 2, '새 요구사항', '', 'K 리츠 · 성수 플래그십', '키맨 2 · 요구 5'],
+      dss: ['공간별 제품 매칭 DSS', '용산 오피스 공간별 제품', 'DSS-01', 1, '오늘 10:10 저장 · 공간 7 · 제품 12 · 솔루션 3', 'SB-01,SB-02', 'dss', '용산 오피스 공간별 제품', 3, '판교 스타트업 단지', 'SB-05', '판교 스타트업 단지 DSS', '공간 6 · 제품 9 · 솔루션 0'],
+      mi: ['Market Intelligence', '용산 오피스 시장 분석', 'MI-01', 2, '오늘 15:20 저장 · 담은 정보 12 (찾은 13) · 수치 원문 확인 3', 'SB-01', 'market', '용산 오피스 시장 분석', 2, '용산 오피스 시장 분석', 'SB-01', '용산 오피스 시장 분석', '검색 전'],
+      ca: ['경쟁사 분석', '용산 오피스 경쟁사', 'CA-01', 1, '오늘 16:05 저장 · 경쟁사 5 · 비교 쌍 9', 'SB-01', 'competitor', '용산 오피스 경쟁사', 2, '용산 오피스 경쟁사', 'SB-01', '용산 오피스 경쟁사', '경쟁사 2 · 비교 쌍 5'],
+      vp: ['Value Proposition', '용산 오피스 가치 제안', 'VP-01', 1, '오늘 16:40 저장 · 제품 · 솔루션 9 · 가치 17 · 고객의 니즈 16/17', 'SB-01', 'value', '용산 오피스 가치 제안', 2, '용산 오피스 가치 제안', 'SB-01', '용산 오피스 가치 제안', '가치 6 · 니즈 3/6'],
+      sp: ['Spec 시트 생성', '용산 오피스 제품 스펙', 'SP-01', 1, '오늘 17:10 저장 · 제품 9 · 항목 6 · 비교표', 'SB-01', 'spec', '용산 오피스 제품 스펙', 2, '용산 오피스 제품 스펙', 'SB-01', '용산 오피스 제품 스펙', '제품 9 · 확인 필요 1'],
+      sc: ['공간 시나리오 생성', '용산 오피스 공간 시나리오', 'SC-01', 1, '오늘 17:30 저장 · 공간 7 · 시나리오 6 · 시나리오 없는 공간 3', 'SB-01', 'scenario', '용산 오피스 공간 시나리오', 3, '용산 오피스 공간 시나리오', 'SB-01', '용산 오피스 공간 시나리오', '공간 7 · 시나리오 5']
     };
-    const [label, title0, savedAt, sbIds0, , group, sideCur0] = M[key] || M.dss;
-    // 새로 만들 때: [이름, 사전 작업 Storyboard, 사이드바 작업 내역에 보이는 이름]
-    const NEW = { rq: ['새 요구사항', '', ''], dss: ['판교 스타트업 단지', 'SB-05', '판교 스타트업 단지 DSS'], mi: [title0, 'SB-01', ''], ca: [title0, 'SB-01', ''], vp: [title0, 'SB-01', ''], sp: [title0, 'SB-01', ''], sc: [title0, 'SB-01', ''] };
-    const [newTitle, newSb, newSide] = NEW[key] || NEW.dss;
+    const [label, title0, ref, ver, savedLine, sbSaved, group, sideSaved, nChg, newTitle, newSb, sideDraft, draftLine] = M[key] || M.dss;
+    const SBN = { 'SB-01': 'SB-01', 'SB-05': 'SB-05' };
+    const sbIds = saved ? sbSaved : newSb;
+    const nSb = sbIds ? sbIds.split(',').length : 0;
     const title = saved ? title0 : newTitle;
-    const sbOn = saved || (key !== 'rq' && done >= 1);
-    const sbIds = saved ? sbIds0 : sbOn ? newSb : '';
-    const sideCur = saved ? sideCur0 : (st === 'draft' ? newSide : '');
-    const DSX = saved ? DSS : DSS_NEW;
-    const d = DATA[key] || DSS;
-    const sum = (a, f) => a.reduce((n, x) => n + f(x), 0);
+    const isNew = mode === 'new', isDraft = mode === 'draft';
+    const linkLine = key === 'rq' ? '저장하면 이 요구사항으로 Storyboard가 만들어져요' : '저장하면 ' + (SBN[newSb] || newSb) + '에 연결돼요';
+    const meta = mode === 'saved' ? savedLine
+      : mode === 'editing' ? ref + ' v' + ver + ' 고치는 중 · 저장하면 v' + (ver + 1) + (nSb > 1 ? ' · 연결된 Storyboard ' + nSb + '개에 모두 반영돼요' : ' · ' + sbIds + '에 반영돼요')
+      : isNew ? '새로 만드는 중 · 쓰는 대로 작성 중으로 남아요 · ' + linkLine
+      : '작성 중 · ' + draftLine + ' · 오늘 11:20 자동 저장 · ' + linkLine;
+    const pill = 'height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11.5px; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;';
+    const refVer = mode === 'saved' ? ref + ' v' + ver : mode === 'editing' ? ref + ' v' + ver + ' · 고치는 중' : isNew ? '새로 만들기' : '작성 중';
+    const refVerStyle = pill + (mode === 'saved' ? ' font-family: Manrope, sans-serif; font-weight: 800; background: #f0f2f5; color: #3d4452;' : mode === 'editing' ? ' font-weight: 700; background: #eaeefb; color: #1428a0;' : isNew ? ' font-weight: 700; background: #eaeefb; color: #1428a0;' : ' font-weight: 700; background: #fff4dc; color: #7a4f00;');
+    const viewOf = { rq: 'RQ_View', dss: 'DS_View', mi: 'MI_View', ca: 'CA_View', vp: 'VP_View', sp: 'SP_View', sc: 'SC_View' };
 
-    // 고객 요구사항
-    const nReq = sum(RQ.keymen, (k) => k.reqs.length);
-    const nWarn = sum(RQ.keymen, (k) => k.reqs.filter((r) => r.status).length);
-    const fact = (k, v, opt) => Object.assign({ k, v, hint: '', hasHint: false, tag: '', hasTag: false, tagStyle: '', vStyle: 'font-size: 14.5px; font-weight: 600; line-height: 1.45;' }, opt || {});
-    const rqFacts = [
-      fact('프로젝트명', RQ.project), fact('고객사', RQ.customer), fact('최종 제안대상', RQ.target),
-      fact('제작자 의견', RQ.note || '적지 않았어요', { hint: '고객 문서에서 빠져요', hasHint: true, vStyle: 'font-size: 14px; line-height: 1.45;' + (RQ.note ? '' : ' color: #8a91a0;') }),
-      fact('읽은 자료', RQ.sources.length ? RQ.sources.join(' · ') : '직접 입력', { vStyle: 'font-size: 14px; line-height: 1.45; color: #3d4452;' })
-    ].map((f, i) => Object.assign(f, { wrap: 'display: flex; flex-direction: column; gap: 5px; padding: 13px 0;' + (i ? ' border-top: 1px solid #f0f2f5;' : '') }));
-    const rq = {
-      facts: rqFacts, sumLine: '키맨 ' + RQ.keymen.length + ' · 가중치 합 ' + sum(RQ.keymen, (k) => k.weight) + '%',
-      keymen: RQ.keymen.map((k) => ({ name: k.name, weight: k.weight + '%', reqs: k.reqs.map((r, i) => ({ n: i + 1, t: r.text, warn: !!r.status })) }))
-    };
-
-    // DSS
-    const nProd = sum(DSX.spaces, (x) => x.products.length);
-    const nQty = sum(DSX.spaces, (x) => x.products.filter((p) => !p.qty).length);
-    const V_ON = 'font-size: 15px; font-weight: 700; white-space: nowrap;';
-    const V_OFF = 'font-size: 15px; font-weight: 700; white-space: nowrap; color: #b8bec8;';
-    const dsFact = (k, v, tag, note, k0) => (onC('dss', k0) ? { k, v, vStyle: V_ON, tag: tag || '', hasTag: !!tag, tagStyle: tagBase + T_AI, note: note || '', hasNote: !!note }
-      : { k, v: '—', vStyle: V_OFF, tag: '', hasTag: false, tagStyle: '', note: CIRC[k0 - 1] + ' ' + STEPS.dss[k0 - 1][0] + ' 단계에서', hasNote: true });
-    const ds = {
-      facts: [dsFact('업종', DSX.industry.value, DSX.industry.by === 'ai-accepted' ? 'AI 추론 · 수락' : '', '근거 ' + DSX.industry.basis, 2), dsFact('공간', String(DSX.spaces.length), '', '', 2), dsFact('제품', String(nProd), '', nQty ? '수량 확인 필요 ' + nQty : '', 2), dsFact('솔루션', String(DSX.solutions.length), '', '', 3)],
-      spaces: DSX.spaces.map((x) => {
-        const ext = x.basis === 'extension';
-        const aiSp = x.basis === 'ai-space';
-        return { name: x.name, n: x.products.length,
-          basis: ext ? '확장 공간' : aiSp ? 'AI 추천 공간 · 수락' : '근거 · ' + x.basis,
-          basisStyle: 'font-size: 11.5px; line-height: 1.4;' + (ext ? ' align-self: flex-start; height: 20px; padding: 0 7px; border-radius: 999px; border: 1px solid #121417; color: #121417; font-weight: 700; display: flex; align-items: center;' : aiSp ? ' color: #0b6e4f; font-weight: 600;' : ' color: #8a91a0;'),
-          products: x.products.map((p) => ({ model: p.model, qty: p.qty || '확인 필요',
-            qtyStyle: tagBase + (p.qty ? T_MAN : T_WARN),
-            by: p.by === 'manual' ? '직접' : 'AI',
-            byStyle: tagBase + ' padding: 0 6px;' + (p.by === 'manual' ? ' border: 1px solid #e2e5ea; color: #596170;' : T_AI) })) };
-      }),
-      nSol: DSX.solutions.length,
-      solutions: DSX.solutions.map((o) => ({ name: o.name, basis: '근거 · ' + o.basis, by: o.by === 'manual' ? '직접' : 'AI 추천', byStyle: tagBase + (o.by === 'manual' ? T_MAN : T_AI) }))
-    };
-
-    // MI
-    const GR = [['시장', 'market'], ['고객사', 'customer'], ['사용자', 'user']];
-    const mi = {
-      filters: [MI.filters.period].concat(MI.filters.sourceTypes),
-      queryLine: GR.map(([h, k]) => h + ' ' + MI.queries[k].length).join(' · ') + ' · ' + MI.queries.market[0] + ' 외',
-      cols: GR.map(([h]) => {
-        const its = MI.items.filter((it) => it.group === h && it.kept);
-        return { h, n: String(its.length), items: its.map((it, i) => ({ summary: it.summary, type: it.source.type, src: it.source.name + ' · ' + it.source.date, url: it.source.url, check: !!it.numberCheck,
-          wrap: 'display: flex; flex-direction: column; gap: 7px; padding: 12px 16px;' + (i ? ' border-top: 1px solid #f0f2f5;' : '') })) };
-      })
-    };
-
-    // 경쟁사 분석
-    const VLAB = { 'ours-better': '우위', similar: '비슷', 'ours-worse': '열위', 'no-data': '자료 없음', mixed: '엇갈림' };
-    const VST = { 'ours-better': ' background: #e6f4ee; color: #0b6e4f;', similar: ' background: #f0f2f5; color: #3d4452;', 'ours-worse': ' background: #fff4dc; color: #7a4f00;', 'no-data': ' border: 1px dashed #b8bec8; color: #8a91a0;', mixed: ' border: 1px solid #c9d0e6; color: #3d4452;' };
-    const chip = (v) => 'height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap; box-sizing: border-box;' + VST[v];
-    const tally = { 'ours-better': 0, similar: 0, 'ours-worse': 0, 'no-data': 0 };
-    CA.competitors.forEach((c) => c.matches.forEach((m) => DK.forEach((k) => { tally[m.dims[k].verdict]++; })));
-    const ca = {
-      from: CA.basis.from, cats: CA.basis.categories, dims: ['스펙', '가격', '유관 사례', 'ESG', '브랜드 평판'],
-      tally: ['ours-better', 'similar', 'ours-worse', 'no-data'].map((v) => ({ k: VLAB[v], n: String(tally[v]), chip: chip(v) })),
-      rows: CA.competitors.map((c) => ({
-        name: c.name, by: c.by === 'manual' ? '직접' : 'AI 웹 탐색', byStyle: tagBase + (c.by === 'manual' ? T_MAN : T_AI),
-        wiki: c.wiki.industry + ' · ' + c.wiki.size + ' · ' + c.wiki.hq, space: c.spaces.join(' · ') + ' 겹침',
-        cells: DK.map((k) => {
-          const n = { 'ours-better': 0, similar: 0, 'ours-worse': 0, 'no-data': 0 };
-          c.matches.forEach((m) => { n[m.dims[k].verdict]++; });
-          const tot = c.matches.length;
-          const v = n['ours-better'] && n['ours-worse'] ? (n['ours-better'] === n['ours-worse'] ? 'mixed' : n['ours-better'] > n['ours-worse'] ? 'ours-better' : 'ours-worse')
-            : n['ours-better'] ? 'ours-better' : n['ours-worse'] ? 'ours-worse' : n.similar ? 'similar' : 'no-data';
-          return { k: VLAB[v], chip: chip(v), n: v === 'mixed' ? '우위 ' + n['ours-better'] + ' · 열위 ' + n['ours-worse'] : n[v] + ' / ' + tot + '쌍' };
-        }),
-        claims: c.claims.slice(0, 2)
-      }))
-    };
-
-    // VP
-    const nVal = sum(VP.items, (it) => it.values.length);
-    const nNeed = sum(VP.items, (it) => it.values.filter((v) => v.need).length);
-    const vp = {
-      fromLine: VP.from + '에서 ' + VP.selection.fromDss + '개를 골랐어요',
-      outLine: '· 고르지 않은 ' + VP.selection.excluded.length + ' — ' + VP.selection.excluded.join(' · '),
-      items: VP.items.map((it, i) => {
-        const needs = it.values.filter((v) => v.need).length;
-        return { name: it.name, kind: it.kind === 'product' ? '제품' : '솔루션', kindStyle: tagBase + (it.kind === 'product' ? T_MAN : ' background: #eaeefb; color: #1428a0;'),
-          spaces: it.spaces.join(' · '), count: '가치 ' + it.values.length + ' · 니즈 ' + needs + '/' + it.values.length,
-          wrap: 'display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 18px; padding: 16px 20px;' + (i ? ' border-top: 1px solid #f0f2f5;' : ''),
-          values: it.values.map((v) => ({ space: v.space, message: v.message, req: v.req, hasNeed: !!v.need,
-            need: v.need ? '“' + v.need.text + '”' : '비어 있어요 · 편집에서 적거나 AI 니즈 추론으로 채워요',
-            needStyle: 'font-size: 13px; line-height: 1.45; flex-grow: 1; min-width: 0;' + (v.need ? ' color: #121417;' : ' color: #7a4f00; font-weight: 600;'),
-            needWrap: 'display: flex; align-items: center; gap: 10px; min-height: 36px; box-sizing: border-box; padding: 6px 10px; border-radius: 9px;' + (v.need ? ' background: #f7f8fa;' : ' background: #fffaf0; border: 1px dashed #e8c77a;'),
-            needTag: v.need && v.need.by === 'manual' ? '직접' : 'AI 추론 · 수락',
-            needTagStyle: tagBase + (v.need && v.need.by === 'manual' ? T_MAN : T_AI) })) };
-      })
-    };
-
-    // Spec 시트
-    const cell = 'box-sizing: border-box; min-height: 44px; padding: 0 12px; display: flex; align-items: center; border-top: 1px solid #f0f2f5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;';
-    const head = cell + ' min-height: 40px; border-top: none; background: #fbfbfc; font-size: 12px; font-weight: 700; color: #596170; position: sticky; top: 0;';
-    const warnModels = SP.warnings.map((w) => w.model);
-    const grid = [{ t: '제품', style: head }, { t: '공간 · 수량', style: head }].concat(SP.fields.map((t) => ({ t, style: head })));
-    SP.models.forEach((m) => {
-      const warn = warnModels.indexOf(m.name) >= 0;
-      const sensor = m.name.indexOf('센서') >= 0;
-      grid.push({ t: m.name, style: cell + ' font-weight: 700;' + (warn ? ' color: #7a4f00;' : '') });
-      grid.push({ t: m.space + ' · ' + (m.qty || '[확인 필요]'), style: cell + ' color: #596170; font-size: 12px;' });
-      SP.fields.forEach((f, fi) => {
-        const na = sensor && fi < 2;
-        grid.push({ t: warn ? '[확인 필요]' : na ? '해당 없음' : '카탈로그 값', style: cell + (warn ? ' color: #7a4f00; font-weight: 600;' : ' color: #8a91a0;') });
-      });
-    });
-    const sp = {
-      opts: [{ k: '형식', v: SP.format }, { k: '표기', v: '한국어 · ' + SP.unit }, { k: '값', v: SP.valuesFrom }, { k: '파일', v: SP.file }],
-      warns: SP.warnings.map((w) => w.model + ' · ' + w.text), grid
-    };
-
-    // 공간 시나리오
-    const nSc = sum(SC.spaces, (x) => x.scenarios.length);
-    const noSc = SC.spaces.filter((x) => !x.scenarios.length).length;
-    const si = Math.max(0, Math.min(SC.spaces.length - 1, s.space));
-    const cs = SC.spaces[si];
-    const sc = {
-      from: SC.from,
-      spaces: SC.spaces.map((x, i) => ({ name: x.name, on: i === si, sub: x.scenarios.length ? '시나리오 ' + x.scenarios.length + ' · 제품 ' + x.products.length : '시나리오 없음 · 제품 ' + x.products.length,
-        subStyle: 'font-size: 11.5px;' + (x.scenarios.length ? ' color: #596170;' : ' color: #8a91a0;'),
-        wrap: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; box-sizing: border-box; min-height: 52px; padding: 7px 12px; border-radius: 10px; border: none; text-align: left; color: #121417; flex-shrink: 0;' + (i === si ? ' background: #eaeefb;' : ' background: transparent;'),
-        pick: () => put({ space: i }) })),
-      cur: { name: cs.name, n: cs.scenarios.length, empty: !cs.scenarios.length,
-        products: cs.products.map((p) => ({ name: p, kind: SOL[p] ? '솔루션' : '제품', kindStyle: 'font-size: 10.5px; font-weight: 700;' + (SOL[p] ? ' color: #1428a0;' : ' color: #8a91a0;') })),
-        scenarios: cs.scenarios.map((c) => ({ title: c.title, user: c.user, products: c.products,
-          by: c.by === 'manual' ? '직접' : 'AI ' + c.by.split('-').pop() + '안 · 수락', byStyle: tagBase + (c.by === 'manual' ? T_MAN : T_AI),
-          steps: c.steps.map((t, j) => ({ n: j + 1, text: t.text, product: t.product || '', hasProduct: !!t.product, textStyle: 'font-size: 13px; line-height: 1.5; flex-grow: 1; min-width: 0;' + (t.text === '[확인 필요]' ? ' color: #7a4f00; font-weight: 600;' : '') })),
-          fields: c.fields })) }
-    };
-
-    // ---- 아직 비어 있는 칸: 그 칸을 채우는 단계 ----
-    const ph = (c, k, what, big) => {
-      const S = STEPS[c];
-      const next = key === c && k === done + 1;
-      return { n: String(k), head: S[k - 1][0] + ' 단계', href: S[k - 1][1],
-        text: what + (next ? ' — 이 단계를 마치면 여기에 채워져요' : ' — 앞 단계를 마치면 열려요'),
-        hasCta: next && st === 'draft', cta: '이어서 · ' + S[k - 1][0],
-        wrap: 'box-sizing: border-box; border: 1.5px dashed ' + (next ? '#b8c2e6' : '#d5d9e0') + '; border-radius: 14px; background: ' + (next ? '#fbfcff' : '#fafbfc') + '; display: flex; align-items: center; gap: 16px; padding: 18px 22px; min-width: 0;' + (big ? ' flex-grow: 1; min-height: 0;' : ' flex-shrink: 0;'),
-        circle: 'width: 30px; height: 30px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center;' + (next ? ' border: 2px solid #1428a0; color: #1428a0; background: #ffffff;' : ' border: 1.5px dashed #b8bec8; color: #8a91a0;') };
-    };
-    const phRq = ph('rq', 1, '프로젝트명 · 고객사 · 최종 제안대상 · 키맨별 요구사항', true);
-    ds.spOn = onC('dss', 2); ds.spPh = !ds.spOn; ds.phSp = ph('dss', 2, '업종 · 공간 · 공간별 제품', true);
-    ds.solOn = onC('dss', 3); ds.solPh = !ds.solOn; ds.phSol = ph('dss', 3, '솔루션 0개 이상', false);
-    mi.qOn = onC('mi', 2); mi.qPh = !mi.qOn; mi.phQ = ph('mi', 2, 'Storyboard를 읽고 만든 검색어 · 검색 조건', false);
-    mi.colOn = onC('mi', 3); mi.colPh = !mi.colOn; mi.phCol = ph('mi', 3, '시장 · 고객사 · 사용자별로 담은 정보', true);
-    const phCa = ph('ca', 2, '경쟁사 · 제안 기준 비교 판정 · 주장 포인트', true);
-    const phVp = ph('vp', 2, '제품 · 솔루션별 가치 · 고객의 니즈', true);
-    const phSp = ph('sp', 2, 'DSS 제품의 스펙 비교표 · XLSX', true);
-    const phSc = ph('sc', 2, '공간 → 시나리오 → 장면', true);
-
-    // ---- 머리의 단계: 누르면 그 단계 팝업이 이 화면 위에 열린다(페이지 이동 없음) ----
-    const STEP_BASE = 'height: 30px; box-sizing: border-box; padding: 0 9px 0 5px; border-radius: 7px; border: none; background: transparent; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;';
-    const C_BASE = 'width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%; box-sizing: border-box; font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 800; display: flex; align-items: center; justify-content: center;';
-    const steps = ST.map(([text, hNew, hEdit], i) => {
-      const k = i + 1;
-      const isDone = on(k);
-      const next = !saved && k === done + 1;
-      const sbStep = text === 'Storyboard';
-      const btn = saved && sbStep;
-      const link = !btn && (isDone || next);
-      return { text, n: String(k), gap: i > 0, btn, link, still: !btn && !link, check: isDone, num: !isDone, pen: saved && !sbStep,
-        href: saved ? hEdit : hNew,
-        tip: btn ? '연결된 Storyboard 요약' : saved ? text + ' 단계를 팝업으로 열어 고쳐요' : isDone ? text + ' 단계로 돌아가요' : next ? '이 단계를 팝업으로 열어요' : '앞 단계를 마치면 열려요',
-        open: () => put({ pop: sbIds.split(',')[0] || 'SB-01', json: false }),
-        wrap: STEP_BASE + (next ? ' background: #eaeefb;' : ''),
-        circle: C_BASE + (isDone ? ' background: #1428a0; color: #ffffff;' : next ? ' border: 1.5px solid #1428a0; color: #1428a0; background: #ffffff;' : ' border: 1.5px solid #d5d9e0; color: #8a91a0;'),
-        label: 'font-size: 12.5px; font-weight: ' + (next ? '700' : '600') + ';' + (isDone ? ' color: #121417;' : next ? ' color: #1428a0;' : ' color: #8a91a0;') };
-    });
-
-    // ---- 머리 한 줄 ----
-    const META = {
-      rq: [savedAt, '키맨 ' + RQ.keymen.length, '요구 ' + nReq, nWarn ? '확인 필요 ' + nWarn : ''],
-      dss: [savedAt, '공간 ' + DSX.spaces.length, '제품 ' + nProd, '솔루션 ' + DSX.solutions.length],
-      mi: [savedAt, '담은 정보 ' + MI.counts.kept + ' (찾은 ' + MI.counts.found + ')', '수치 원문 확인 ' + MI.counts.numberCheck],
-      ca: [savedAt, '경쟁사 ' + CA.competitors.length, '비교 쌍 ' + sum(CA.competitors, (c) => c.matches.length)],
-      vp: [savedAt, '제품 · 솔루션 ' + VP.items.length, '가치 ' + nVal, '고객의 니즈 ' + nNeed + '/' + nVal],
-      sp: [savedAt, '제품 ' + SP.models.length, '항목 ' + SP.fields.length, SP.format],
-      sc: [savedAt, '공간 ' + SC.spaces.length, '시나리오 ' + nSc, '시나리오 없는 공간 ' + noSc]
-    };
-    const meta = saved ? (META[key] || META.dss).filter(Boolean).join(' · ')
-      : st === 'new' ? '아직 저장 전 · 단계 ' + Math.min(nSt, done + 1) + '/' + nSt + ' 진행 중 · 팝업을 닫아도 작성 중으로 남아요'
-      : '작성 중 · ' + nSt + '단계 중 ' + done + '단계 마침 · 오늘 11:20 · 저장하면 ' + (key === 'rq' ? 'Storyboard가 만들어져요' : sbIds + '에 연결돼요');
-
-    // ---- 후속 작업: 이미 있으면 그 콘텐츠를 열고, 없으면 바로 새로 만든다 ----
+    // 후속 작업: 이미 있으면 열고, 없으면 사전 작업 고르기 없이 바로 새로 만든다
     const NEXT = {
-      rq: [['dss', '공간별 제품 매칭 DSS', '공간 ' + DSS.spaces.length + ' · 제품 ' + nProd + ' · 솔루션 ' + DSS.solutions.length, 'DSS-01 v1', 'DS_View.dc.html']],
-      dss: [['sc', '공간 시나리오 생성', '공간 ' + DSS.spaces.length + '개에서 사용자가 겪는 장면을 만들어요', '', 'SC2.dc.html'], ['sp', 'Spec 시트 생성', '매칭한 제품 ' + nProd + '개를 스펙 시트로', '', 'SP2.dc.html']]
+      rq: [['dss', '공간별 제품 매칭 DSS', '공간 7 · 제품 12 · 솔루션 3', 'DSS-01 v1', 'DS_View.dc.html']],
+      dss: [['sc', '공간 시나리오 생성', '공간 7개에서 사용자가 겪는 장면을 만들어요', '', 'SC2.dc.html'], ['sp', 'Spec 시트 생성', '매칭한 제품 12개를 스펙 시트로', '', 'SP2.dc.html']]
     };
-    const nexts = (saved ? (NEXT[key] || []) : []).map(([k, t, dd, ref, href]) => ({ t, d: dd, ref, has: !!ref, cta: ref ? '열기' : '만들기', href, icon: IC[k] }));
+    const nexts = (saved ? (NEXT[key] || []) : []).map(([k, t, d, r, href]) => ({ t, d, ref: r, has: !!r, cta: r ? '열기' : '만들기', href, icon: IC[k] }));
+    const bodyH = nexts.length ? 562 : 682;
 
-    // ---- flow.json: 이 콘텐츠가 담긴 stages.<콘텐츠> 를 강조 ----
+    // flow.json: 이 콘텐츠가 담긴 stages.<콘텐츠> 줄을 강조
+    const pr = (model, qty, by) => (qty ? { model, qty, by } : { model, qty: null, qtyStatus: '확인 필요', by });
+    const STAGE = {
+      rq: { ref: 'RQ-01', ver: 2, project: '용산 업무시설 재개발 AI Ready 오피스', customer: 'E 자산운용', target: '대표이사', keymen: ['대표이사 50%', '공간컨텐츠실장 30%', '개발사업팀장 20%'], sharedWith: ['SB-02'] },
+      dss: { ref: 'DSS-01', ver: 1, industry: { value: '오피스 · 업무시설', by: 'ai-accepted', basis: 'RQ-01' }, spaces: [
+        { name: '사무실 · R&D', products: [pr('스마트 모니터', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] },
+        { name: '로비', products: [pr('The Wall IAB 146"', '1식', 'manual'), pr('Smart Signage QM55C', '2대', 'manual'), pr('삼성 키오스크', '1대', 'ai-accepted')] },
+        { name: '회의실', products: [pr('Flip Pro WA75D', null, 'ai-accepted'), pr('Smart Signage QB55C', '실당 1대', 'ai-accepted')] },
+        { name: '라운지', products: [pr('Smart Signage QM55C', '1대', 'ai-accepted')] },
+        { name: '주차장', basis: 'extension', products: [pr('옥외형 사이니지 OHC55', '1대', 'manual')] },
+        { name: '중앙관제실', products: [pr('비디오월 VM55B', '2×2', 'ai-accepted')] },
+        { name: '공용공간', products: [pr('SmartThings 센서', null, 'ai-accepted'), pr('Smart Signage QB43C', '층당 1대', 'ai-accepted')] }],
+        solutions: [{ name: 'MagicINFO', by: 'ai-accepted' }, { name: 'SmartThings Pro', by: 'ai-accepted' }, { name: 'b.IoT', by: 'manual' }], sharedWith: ['SB-02'] },
+      mi: { ref: 'MI-01', ver: 2, counts: { found: 13, kept: 12, numberCheck: 3 } },
+      ca: { ref: 'CA-01', ver: 1, counts: { competitors: 5, matches: 9 } },
+      vp: { ref: 'VP-01', ver: 1, counts: { items: 9, values: 17, needs: 16 } },
+      sp: { ref: 'SP-01', ver: 1, format: '비교표', file: 'SP-01_v1.xlsx' },
+      sc: { ref: 'SC-01', ver: 1, counts: { spaces: 7, scenarios: 6 } }
+    };
     const brief = { rq: { ref: 'RQ-01', ver: 2, customer: 'E 자산운용', sharedWith: ['SB-02'] }, dss: { ref: 'DSS-01', ver: 1, sharedWith: ['SB-02'] }, mi: { ref: 'MI-01', ver: 2 } };
     const stages = {};
-    ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'].forEach((k) => { stages[k] = k === key ? d : (brief[k] || null); });
-    const nDone = ['mi', 'ca', 'vp', 'sp', 'sc'].filter((k) => stages[k]).length;
-    const flow = { id: 'SB-01', name: '용산 AI Ready 오피스', parent: null, branches: ['SB-02'], keyMessage: 'AI Ready 오피스의 새로운 모델', stages, progress: 'dss+' + nDone + '/5', summary: 'storyboards/SB-01/summary.md', updatedAt: '2026-10-12T17:30:00+09:00' };
+    ['rq', 'dss', 'mi', 'ca', 'vp', 'sp', 'sc', 'ppt'].forEach((k) => { stages[k] = k === key ? STAGE[k] : (brief[k] || null); });
+    const flow = { id: 'SB-01', name: '용산 AI Ready 오피스', parent: null, branches: ['SB-02'], keyMessage: 'AI Ready 오피스의 새로운 모델', stages, progress: 'dss+1/5', summary: 'storyboards/SB-01/summary.md', updatedAt: '2026-10-12T17:30:00+09:00' };
     const full = JSON.stringify(flow, null, 2).split('\n');
     const startI = full.findIndex((l) => l.indexOf('    "' + key + '": {') === 0);
     let endI = startI;
     while (endI < full.length - 1 && !/^    \},?$/.test(full[endI])) endI++;
     const jsonLines = full.map((t, i) => ({ t, add: i >= startI && i <= endI }));
 
+    // 고르기 팝업 — 콘텐츠마다 무엇을 고르는지
+    const PICK = {
+      vp: ['VP에 넣을 제품 · 솔루션 고르기', 'DSS-01에서 고른 것 중 가치를 적을 것을 고르세요. DSS에 없는 제품 · 솔루션도 카탈로그에서 더할 수 있어요.', ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', '비디오월 VM55B', 'SmartThings 센서', 'MagicINFO', 'SmartThings Pro', 'b.IoT'], 1],
+      sc: ['로비 · 공간 제품 · 솔루션 고르기', '공간에 쓸 제품 · 솔루션을 고르세요. 하나 이상 있어야 하고, 고른 것 중에서 시나리오마다 다시 골라요.', ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'MagicINFO'], 1],
+      sp: ['스펙 시트에 넣을 제품 고르기', 'DSS-01 제품을 모두 가져왔어요. 시트에서 뺄 것은 끄고, DSS 밖 제품도 카탈로그에서 더할 수 있어요.', ['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', 'Smart Signage QB55C', 'Smart Signage QB43C', '비디오월 VM55B', '옥외형 사이니지 OHC55', 'SmartThings 센서'], 1]
+    };
+    const pk = PICK[key] || PICK.vp;
+
+    const canSave = mode !== 'saved';
     return {
-      label, title, refId: saved ? d.ref : st === 'new' ? '새로 만들기' : title, meta, icon: IC[key], group, sideCur, sbIds, hi: key, saved,
-      refVer: saved ? d.ref + ' v' + d.ver : st === 'new' ? '새로 만들기' : '작성 중 ' + done + '/' + nSt,
-      refVerStyle: 'height: 22px; padding: 0 8px; border-radius: 6px; font-family: ' + (saved ? 'Manrope, sans-serif' : 'inherit') + '; font-size: 11.5px; font-weight: ' + (saved ? '800' : '700') + '; display: flex; align-items: center; white-space: nowrap; flex-shrink: 0;' + (saved ? ' background: #f0f2f5; color: #3d4452;' : st === 'new' ? ' background: #eaeefb; color: #1428a0;' : ' background: #fff4dc; color: #7a4f00;'),
-      sbEmpty: key === 'rq' ? '저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요' : '① Storyboard 단계에서 골라요',
-      sbNote: saved ? '' : sbOn ? '저장하면 이 Storyboard에 연결돼요' : '',
-      sbCur: sbIds.split(',')[0] || '',
-      steps, stepsLabel: saved ? '단계별 고치기' : '단계 ' + Math.min(nSt, done + (st === 'new' ? 1 : 0)) + '/' + nSt,
-      spSaved: key === 'sp' && saved,
+      label, title, icon: IC[key], group, sideCur: saved ? sideSaved : (isDraft ? sideDraft : ''),
+      crumb: saved ? ref : isNew ? '새로 만들기' : title,
+      sbIds, sbCur: sbIds.split(',')[0] || '', hi: key,
+      sbNote: mode === 'editing' ? (nSb > 1 ? '저장하면 모두 반영' : '저장하면 반영돼요') : (isNew || isDraft) && key !== 'rq' ? '저장하면 이 Storyboard에 연결돼요 · 사전 작업에서 골랐어요' : '',
+      sbEmpty: '저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요',
+      refVer, refVerStyle, meta, mode,
+      isSaved: mode === 'saved', isEditing: mode === 'editing', chgLine: '고친 곳 ' + nChg,
+      spSaved: key === 'sp' && saved, hasJson: saved, canSave,
+      saveLabel: mode === 'editing' ? '저장 · v' + (ver + 1) : key === 'rq' ? '저장 · Storyboard 만들기' : '저장',
+      saveHref: (viewOf[key] || 'DS_View') + '.dc.html',
       isRq: key === 'rq', isDss: key === 'dss', isMi: key === 'mi', isCa: key === 'ca', isVp: key === 'vp', isSp: key === 'sp', isSc: key === 'sc',
-      rqShow: key === 'rq' && on(1), rqPh: key === 'rq' && !on(1), phRq,
-      caShow: key === 'ca' && on(2), caPh: key === 'ca' && !on(2), phCa,
-      vpShow: key === 'vp' && on(2), vpPh: key === 'vp' && !on(2), phVp,
-      spShow: key === 'sp' && on(2), spPh: key === 'sp' && !on(2), phSp,
-      scShow: key === 'sc' && on(2), scPh: key === 'sc' && !on(2), phSc,
-      rq, ds, mi, ca, vp, sp, sc,
-      nexts, hasNext: nexts.length > 0, nextGrid: 'display: grid; grid-template-columns: repeat(' + Math.max(1, nexts.length) + ', minmax(0, 1fr)); gap: 12px;',
+      ai: !!this.props.ai, tab: this.props.tab ?? 'cmp', caView: this.props.caView ?? 'list', stage: this.props.stage ?? 'found', phase: this.props.phase ?? 'ready', space: this.props.space ?? 1,
+      bodyH, nexts, hasNext: nexts.length > 0, nextGrid: 'display: grid; grid-template-columns: repeat(' + Math.max(1, nexts.length) + ', minmax(0, 1fr)); gap: 12px;',
       jsonLines, jsonTitle: 'SB-01/flow.json', jsonSub: '초록 줄이 이 콘텐츠(stages.' + key + ')예요 · 전체 ' + full.length + '줄',
-      jsonOpen: !!s.json, openJson: () => put({ json: true }), closeJson: () => put({ json: false }),
-      popOpen: !!s.pop, pop: s.pop || 'SB-01', openPop: (id) => put({ pop: id, json: false }), closePop: () => put({ pop: '' })
+      pick: { title: pk[0], sub: pk[1], picked: pk[2], min: pk[3] },
+      popJson: s.pop === 'json', popSb: s.pop === 'sb', popPick: s.pop === 'pick', popSol: s.pop === 'sol', popSearch: s.pop === 'search', popDetail: s.pop === 'detail',
+      sbPop: s.sb || sbIds.split(',')[0] || 'SB-01',
+      openJson: () => put({ pop: 'json' }), openSb: (id) => put({ pop: 'sb', sb: id }), openPop: (p) => put({ pop: p }), closePop: () => put({ pop: '' })
     };
   }
 }

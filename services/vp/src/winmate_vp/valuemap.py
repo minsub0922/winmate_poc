@@ -13,6 +13,10 @@
   골라 둔 것이 DSS 에서 빠지면 가치와 함께 남기고 「DSS에서 빠짐」 표시. 고르지 않은 빠진 후보는 후보에서 뺀다.
 - 초안 지우기 · 같은 Storyboard 초안 이어 쓰기: 한 번도 저장하지 않은 맵만 지운다(저장한 것은 409 `SAVED_CONTENT`).
   Gate 에서 같은 Storyboard 로 다시 만들면 저장 전 초안을 돌려준다(복제본은 새 Storyboard 라 새 맵).
+- 최종본에서 바로 고치기(웹앱 ① v63 · winmate_common.edits): 칸은 고칠 때마다 바로 저장(지금처럼), 저장(`:finish`)이 「판」(`saved_snapshot`)을 남긴다.
+  사람이 고치는 값 = `items`(고른 제품 · 솔루션과 그 가치 · 니즈 · 공간 · 연결 요구). 판에는 점선(ai-pending) 가치 · 니즈를 넣지 않는다(저장 값이 아니다).
+  응답 `changes` = 저장한 판과 지금 값(stages.vp 의 items — 파생 값 selection 은 items 에서 나오므로 세지 않는다)의 차이 수. `:revert` 는 판으로 되돌린다.
+  판을 남기기 전에 저장한 맵은 처음 읽거나 고칠 때 지금 값을 판으로 남긴다(한 번 다시 쓴다).
 
 저장소: DocStore("vp") 컬렉션 `value_maps`(vmap_ …). 쓰기는 낙관적 잠금 + 재시도.
 """
@@ -26,6 +30,7 @@ from collections.abc import Callable
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
+from winmate_common.edits import SNAPSHOT, changes_of, has_snapshot, restore_snapshot, snapshot_view, take_snapshot
 from winmate_common.flow import get_flow, push_stage
 from winmate_common.errors import ApiError, not_found
 from winmate_common.ids import new_id, now_iso
@@ -39,6 +44,8 @@ log = logging.getLogger("winmate.vp.valuemap")
 COLL = "value_maps"
 MAX_VALUES_PER_ITEM = 8
 SUGGEST_PER_ITEM = 2
+# 사람이 고치는 문서 키(저장한 판 · 고친 곳 · 되돌리기) — 후보(candidates)는 DSS 에서 오고, 메타 · 판 번호는 고치지 않는다
+EDIT_KEYS = ("items",)
 
 By = Literal["manual", "ai-pending", "ai-accepted"]
 
@@ -127,6 +134,8 @@ class VMDoc(BaseModel):
     items: list[VMItem] = Field(default_factory=list, description="고른 제품 · 솔루션(이 순서로 보인다)")
     status: Literal["draft", "done"] = "draft"
     ver: int | None = Field(None, description="저장(완료) 판 — flow.json stages.vp.ver")
+    saved_at: str | None = Field(None, description="마지막 저장(:finish) 시각")
+    changes: int = Field(0, description="저장한 판과 지금 값의 다른 곳 수(저장한 적 없으면 0) — 화면 머리 「고친 곳 n · 되돌리기」")
     counts: VMCounts
     version: int
     created_at: str
@@ -262,6 +271,7 @@ async def update(map_id: str, fn: Callable[[dict[str, Any]], None], note: str | 
         for _ in range(5):
             cur = _get(map_id)
             work = copy.deepcopy(cur)
+            _ensure_snapshot(work)          # 판을 남기기 전에 저장한 맵 — 고치기 전 값을 저장한 판으로
             fn(work)
             try:
                 return _store().put(COLL, map_id, work, expected_version=cur["version"], note=note)
@@ -280,7 +290,48 @@ def counts(d: dict[str, Any]) -> dict[str, int]:
 
 
 def to_api(d: dict[str, Any], dss_changed: dict[str, Any] | None = None) -> dict[str, Any]:
-    return {**d, "counts": counts(d), "dss_changed": dss_changed}
+    return {**d, "counts": counts(d), "changes": changes(d), "dss_changed": dss_changed}
+
+
+# ── 저장한 판 · 고친 곳 · 되돌리기(winmate_common.edits) ──────────
+
+def snapshot_of(d: dict[str, Any]) -> dict[str, Any]:
+    """저장한 판 — 사람이 고치는 값(items)만, 점선(ai-pending) 가치 · 니즈는 뺀다(저장 값이 아니다)."""
+    snap = take_snapshot(d, EDIT_KEYS)
+    for it in snap.get("items") or []:
+        vals = []
+        for v in it.get("values") or []:
+            if v.get("by") == "ai-pending":
+                continue
+            if (v.get("need") or {}).get("by") == "ai-pending":
+                v["need"] = None
+            vals.append(v)
+        it["values"] = vals
+    return snap
+
+
+def _ensure_snapshot(d: dict[str, Any]) -> bool:
+    """예전에 저장해 판이 없는 맵은 지금 값을 저장한 판으로 남긴다(edits.ensure_snapshot 과 같고, 점선만 뺀다). 남겼으면 True."""
+    if ever_saved(d) and not has_snapshot(d):
+        d[SNAPSHOT] = snapshot_of(d)
+        return True
+    return False
+
+
+def _cmp_items(d: dict[str, Any]) -> list[dict[str, Any]]:
+    """고친 곳을 셀 값 — stages.vp.items 에서 니즈는 글만 본다(AI 추론 · 수락 니즈의 글을 고치면 출처도 '직접'이 되지만 칸 하나를 고친 것)."""
+    out = []
+    for it in stage_items(d):
+        out.append({**it, "values": [{**v, "need": (v.get("need") or {}).get("text")} for v in it["values"]]})
+    return out
+
+
+def changes(d: dict[str, Any]) -> int:
+    """저장한 판과 지금 값의 다른 곳 수 — flow.json stages.vp 의 items 로 센다(selection · counts 는 items 에서 나오는 파생 값이라 세지 않는다).
+    점선(AI 추천)은 저장 값이 아니라 세지 않는다 — 수락하면 그때 가치 하나(또는 니즈 한 칸)가 고친 곳이 된다."""
+    if not ever_saved(d) or not has_snapshot(d):
+        return 0
+    return changes_of(_cmp_items(d), _cmp_items(snapshot_view(d, EDIT_KEYS)))
 
 
 def _item_from(c: dict[str, Any], keep: dict[str, dict[str, Any]], from_dss: bool) -> dict[str, Any]:
@@ -405,10 +456,35 @@ async def create(body: VMCreate) -> tuple[dict[str, Any], bool]:
 
 
 async def get_with_status(map_id: str) -> dict[str, Any]:
-    """GET — Storyboard(Gate)로 만든 맵이면 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null."""
+    """GET — Storyboard(Gate)로 만든 맵이면 허브의 지금 DSS 와 견준 차이(dss_changed)를 함께. 허브가 안 되면 null.
+    판을 남기기 전에 저장한 맵이면 지금 값을 저장한 판으로 남긴다(한 번 다시 쓴다)."""
     d = await load(map_id)
+    if ever_saved(d) and not has_snapshot(d):
+        d = await update(map_id, lambda _doc: None, "저장한 판 남김")
     flow = await get_flow(d["sb_id"]) if d.get("sb_id") and d.get("dss_ref") else None
     return to_api(d, dss_diff(d, flow) if flow else None)
+
+
+async def revert(map_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기 — 고른 제품 · 솔루션과 가치 · 니즈를 마지막 저장 값으로(점선 AI 추천도 사라진다). 저장한 적 없으면 409 `NOT_SAVED`."""
+    d = await load(map_id)
+    if not ever_saved(d):
+        raise ApiError(409, "NOT_SAVED", "아직 저장하지 않아 되돌릴 판이 없어요", {"ref": d.get("code")})
+
+    def fn(doc: dict[str, Any]) -> None:
+        restore_snapshot(doc, EDIT_KEYS)
+    return to_api(await update(map_id, fn, "저장한 판으로 되돌림"))
+
+
+async def clear_pending(map_id: str) -> dict[str, Any]:
+    """점선(AI 추천)을 모두 지운다 — 가치 후보는 빼고, AI 니즈 추론은 비운다(사람이 쓴 값은 그대로)."""
+    def fn(doc: dict[str, Any]) -> None:
+        for it in doc.get("items") or []:
+            it["values"] = [v for v in it.get("values") or [] if v.get("by") != "ai-pending"]
+            for v in it["values"]:
+                if (v.get("need") or {}).get("by") == "ai-pending":
+                    v["need"] = None
+    return to_api(await update(map_id, fn, "AI 추천 모두 지움"))
 
 
 async def delete(map_id: str) -> None:
@@ -783,9 +859,8 @@ async def import_value(map_id: str, item_key: str, body: VMImportValue) -> dict[
 
 # ── 저장 · flow.json ────────────────────────────────────
 
-def stage(d: dict[str, Any]) -> dict[str, Any]:
-    dss = {slug(c["name"]) for c in d.get("candidates") or []}
-    chosen = {it["key"] for it in d.get("items") or []}
+def stage_items(d: dict[str, Any]) -> list[dict[str, Any]]:
+    """stages.vp.items — 고른 제품 · 솔루션과 저장 값(점선 가치 · 니즈는 빠진다)."""
     items = []
     for it in d.get("items") or []:
         vals = []
@@ -796,6 +871,13 @@ def stage(d: dict[str, Any]) -> dict[str, Any]:
             vals.append({"id": v["id"], "space": v.get("space"), "message": v["message"],
                          "need": {"text": need["text"], "by": need["by"]} if need else None, "req": v.get("req"), "by": v["by"]})
         items.append({"name": it["name"], "kind": it["kind"], "ref": it.get("ref"), "spaces": it.get("spaces") or [], "values": vals})
+    return items
+
+
+def stage(d: dict[str, Any]) -> dict[str, Any]:
+    dss = {slug(c["name"]) for c in d.get("candidates") or []}
+    chosen = {it["key"] for it in d.get("items") or []}
+    items = stage_items(d)
     c = counts(d)
     return {"ref": d.get("code") or d["id"], "id": d["id"], "ver": d.get("version"), "from": d.get("sb_id"),
             "selection": {"fromDss": len(chosen & dss), "excluded": [x["name"] for x in d.get("candidates") or [] if slug(x["name"]) not in chosen],
@@ -838,6 +920,7 @@ async def finish(map_id: str) -> dict[str, Any]:
         doc["ver"] = int(doc.get("ver") or 0) + 1 if doc.get("status") == "done" or doc.get("saved_at") else 1
         doc["status"] = "done"
         doc["saved_at"] = now_iso()
+        doc[SNAPSHOT] = snapshot_of(doc)          # 저장한 판(고친 곳 · 되돌리기의 기준)
     saved = await update(map_id, fn, "저장")
     await register_item(feature="VP", item_id=map_id, title=saved.get("title") or "VP", status="done", route=f"/vp/values/{map_id}",
                         summary=f"가치 {c['values']} · 니즈 {c['needs']}/{c['values']}")

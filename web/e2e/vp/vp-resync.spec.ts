@@ -1,9 +1,8 @@
 /**
- * 새 VP 흐름 — DSS 다시 가져오기 · 초안 지우기 · 같은 Storyboard 초안 이어 쓰기(2026-10-10 · 보드에 없음) — 보드 v62 팝업 모델.
- * Storyboard(rq → dss) → `/vp/new?sb=&auto=1` → 최종본 위 ② 가치 · 고객의 니즈 팝업(DSS 제품 · 솔루션 모두 고른 채로) → 허브에 바뀐 DSS(판 +1: 삼성 키오스크 빠짐 · Smart Signage QH55C 새로)를 넣고 →
- * 팝업 머리 아래 안내 줄(AiBar) · 「다시 가져오기」 → 골라 둔 키오스크는 남기고 「DSS에서 빠짐」 · QH55C 는 고르기 대화상자의 새 후보(자동으로 고르지 않음) → 목록에서 초안 지우기.
- * 안내 줄만큼(38 + 사이 12) 작업 그리드가 줄고 왼쪽 280 · 본문 1180 은 그대로(팝업 기준 x 170 · 1100). 팝업을 닫으면 최종본 머리 아래에도 같은 문장(ContentDetail notice).
- * 캡처 `__screens__/VP2-resync-new.png` · `VP2-resynced-new.png` · `VP_Draft-resync-new.png`.
+ * 새 VP 흐름 — DSS 다시 가져오기 · 초안 지우기 · 같은 Storyboard 초안 이어 쓰기(2026-10-10 · 보드에 없음).
+ * Storyboard(rq → dss) → `/vp/new?sb=&auto=1` → VP2(DSS 제품 · 솔루션 모두 고른 채로) → 허브에 바뀐 DSS(판 +1: 삼성 키오스크 빠짐 · Smart Signage QH55C 새로)를 넣고 →
+ * 본문 맨 위 안내 줄(AiBar) · 「다시 가져오기」 → 골라 둔 키오스크는 남기고 「DSS에서 빠짐」 · QH55C 는 고르기 대화상자의 새 후보(자동으로 고르지 않음) → 목록에서 초안 지우기.
+ * v63 상세 한 장: 안내 줄만큼(38 + 사이 12) 흰 패널이 줄고 줄 그리드 200 | 1fr · 본문 1100 · 열 1180 은 그대로. 캡처 `__screens__/VP2-resync.png` · `VP2-resynced.png`.
  * 실행: cd web && PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers WM_E2E_SUITE=vp WM_E2E_DEV=1 WM_E2E_PORT=5205 npx playwright test e2e/vp/vp-resync.spec.ts --workers=1
  */
 import { test, type Locator } from '@playwright/test';
@@ -29,19 +28,19 @@ test('VP — DSS 다시 가져오기(안내 줄 · 새 후보 · DSS에서 빠�
   const dss0 = (await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json()).stages.dss as { ref: string; ver: number };
 
   await page.goto(`/vp/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(/\/vp\/values\/vmap_[0-9A-Za-z]+\?step=values$/, { timeout: 30_000 });
-  const mapId = page.url().split('/').pop()!.split('?')[0];
-  const dlg = page.locator('.fl-stepdlg');
-  await expect(dlg.getByRole('heading', { name: '제품 · 솔루션마다 가치와 고객의 니즈를 적어요' })).toBeVisible();
-  await expect(dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ })).toBeVisible();          // DSS 제품 6 + 솔루션 2
+  await expect(page).toHaveURL(/\/vp\/values\/vmap_[0-9A-Za-z]+$/, { timeout: 30_000 });
+  const mapId = page.url().split('/').pop()!;
+  await expect(page.locator('.cd-head .cd-ref')).toHaveText('새로 만들기');
+  await expect(page.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ })).toBeVisible();          // DSS 제품 6 + 솔루션 2
   await expect(page.getByTestId('vv-dss-changed')).toHaveCount(0);
-  const left = dlg.locator('.wm-flow__grid > .wm-flow__panel').first();
+  const left = page.locator('.vb-panel');
   const left0 = await box(left);
-  expect(left0).toMatchObject({ x: 170, w: 280 });
+  expect(left0.w).toBe(1100);
+  expect((await box(page.locator('.vb-row .vb-left').first())).w).toBe(200);
 
-  // 같은 Storyboard 로 다시 시작(Gate · 자동) → 저장 전 초안으로(② 팝업이 열린 채)
+  // 같은 Storyboard 로 다시 시작(Gate · 자동) → 저장 전 초안으로
   await page.goto(`/vp/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(new RegExp(`/vp/values/${mapId}\\?step=values$`), { timeout: 30_000 });
+  await expect(page).toHaveURL(new RegExp(`/vp/values/${mapId}$`), { timeout: 30_000 });
 
   // 허브의 DSS 가 바뀜(판 +1)
   const put = await request.put(`/api/storyboard/v1/flows/${sb.id}/stages/dss`, {
@@ -49,52 +48,40 @@ test('VP — DSS 다시 가져오기(안내 줄 · 새 후보 · DSS에서 빠�
     data: { ref: dss0.ref, ver: dss0.ver + 1, value: dssV2(), md: '- 업종: 오피스 · 업무시설 · 공간 3' },
   });
   expect(put.ok()).toBe(true);
-  const changed = `Storyboard의 DSS가 바뀌었어요 · ${dss0.ref} v${dss0.ver} → v${dss0.ver + 1} · 제품 1 추가 · 1 빠짐`;
   await page.reload();
-  // 최종본(팝업 뒤 · 작성 중) — 팝업을 닫으면 머리 아래에도 같은 문장
-  await expect(dlg).toBeVisible();
-  await dlg.getByRole('button', { name: '팝업 닫기' }).click();
-  await expect(dlg).toHaveCount(0);
-  const viewLine = page.getByTestId('vpv-dss-changed');
-  await expect(viewLine).toContainText(changed);
-  expect(await box(viewLine)).toMatchObject({ x: 300, w: 1100, h: 38 });
-  await page.mouse.move(0, 0);
-  await shot(page, 'VP_Draft-resync-new');
-  await page.locator('[data-slot="2"]').getByRole('button', { name: '이어서 · 가치 · 고객의 니즈' }).click();
-  await expect(page).toHaveURL(/step=values/);
-  // 팝업 안 안내 줄(AiBar) — 팝업 기준 x 170 · 1100
-  const line = dlg.getByTestId('vv-dss-changed');
-  await expect(line).toHaveText(changed);
-  await expect(page.getByTestId('vpv-dss-changed')).toHaveCount(0);
-  const bar = dlg.locator('.wm-aibar').filter({ has: page.getByTestId('vv-dss-changed') });
-  expect(await box(bar)).toMatchObject({ x: 170, w: 1100, h: 38 });
+  const line = page.getByTestId('vv-dss-changed');
+  await expect(line).toHaveText(`Storyboard의 DSS가 바뀌었어요 · ${dss0.ref} v${dss0.ver} → v${dss0.ver + 1} · 제품 1 추가 · 1 빠짐`);
+  const bar = page.locator('.wm-aibar').filter({ has: line });
+  expect(await box(bar)).toMatchObject({ x: 300, w: 1100, h: 38 });
   expect(await box(left)).toEqual({ ...left0, y: left0.y + 50, h: left0.h - 50 });
-  expect(Math.round((await dlg.locator('.fl-sbody .wm-flow').boundingBox())!.width)).toBe(1180);
+  expect(Math.round((await page.locator('.wm-flow').boundingBox())!.width)).toBe(1180);
+  expect((await box(page.locator('.vb-row .vb-left').first())).w).toBe(200);
   await page.mouse.move(0, 0);
-  await shot(page, 'VP2-resync-new');
+  await shot(page, 'VP2-resync');
 
   // 다시 가져오기 → 골라 둔 키오스크는 남기고 「DSS에서 빠짐」 · QH55C 는 고르지 않은 새 후보
   await bar.getByRole('button', { name: '다시 가져오기' }).click();
   await expect(page.locator('.wm-toast').filter({ hasText: 'DSS를 다시 가져왔어요 · 새 후보 1(고르기에서) · 고른 것 1개 「DSS에서 빠짐」' }))
     .toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId('vv-dss-changed')).toHaveCount(0);
-  const kiosk = dlg.getByRole('button', { name: /삼성 키오스크/ });
-  await expect(kiosk).toContainText('가치 없음 · DSS에서 빠짐');
-  await expect(dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ })).toBeVisible();          // 자동으로 고르지 않음
+  const kiosk = page.getByRole('group', { name: '삼성 키오스크', exact: true });
+  await expect(kiosk.locator('.vb-where')).toHaveText('로비 · DSS에서 빠짐');
+  await expect(kiosk.locator('.vb-count')).toHaveText('가치 없음');
+  await expect(page.locator('.vb-out')).toContainText('DSS에서 빠짐 1 — 삼성 키오스크');
+  await expect(page.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ })).toBeVisible();          // 자동으로 고르지 않음
   expect(await box(left)).toEqual(left0);
-  await kiosk.click();
-  await expect(dlg.locator('.vv-rhead__where')).toContainText('DSS에서 빠짐');
   await page.mouse.move(0, 0);
-  await shot(page, 'VP2-resynced-new');
-  await dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ }).click();
-  const pick = page.getByRole('dialog', { name: 'VP에 넣을 제품 · 솔루션 고르기' });
-  const qh = pick.getByRole('checkbox', { name: /Smart Signage QH55C/ });
+  await expect(page.locator('.wm-toast')).toHaveCount(0, { timeout: 8_000 });
+  await shot(page, 'VP2-resynced');
+  await page.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ }).click();
+  const dlg = page.getByRole('dialog', { name: 'VP에 넣을 제품 · 솔루션 고르기' });
+  const qh = dlg.getByRole('checkbox', { name: /Smart Signage QH55C/ });
   await expect(qh).toHaveAttribute('aria-checked', 'false');
-  await expect(qh).toContainText('DSS · 로비 · 새로');
+  await expect(qh).toContainText(`${dss0.ref} · 로비 · 새로`);
   await qh.click();
   await expect(qh).toHaveAttribute('aria-checked', 'true');
-  await pick.getByRole('button', { name: '완료' }).click();
-  await expect(dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 9/ })).toBeVisible();
+  await dlg.getByRole('button', { name: '완료' }).click();
+  await expect(page.getByRole('button', { name: /제품 · 솔루션 고르기 · 9/ })).toBeVisible();
   const doc = await (await request.get(`/api/vp/v1/value-maps/${mapId}`)).json();
   expect(doc).toMatchObject({ dss_ref: dss0.ref, dss_ver: dss0.ver + 1, dss_changed: null });
   expect(doc.last_resync).toMatchObject({ added: ['Smart Signage QH55C'], kept: ['삼성 키오스크'] });

@@ -1,255 +1,234 @@
 /**
- * VP 새 흐름(보드 webapp1 v62 — VP0 · 최종본 View content=vp + 단계 팝업 VP1 · VP2 · VP2_AI · VP2_Pick · VP2_Detail · VP2_Edit · VP_Draft)
- * — 실제 스택(MODEL_MODE=mock · mocks/ai-tools/vp.need_infer.v1 · KB 실데이터).
- * Storyboard(요구사항 + DSS)를 API 로 만들고 → 새로 만들기(빈 최종본 + ① Gate 팝업) → ② 가치 · 고객의 니즈 팝업(직접 · AI 니즈 추론 · AI 가치 매칭 · 고르기 · 연결된 가치)
- * → 저장하면 팝업이 닫히고 같은 주소의 최종본(허브 stages.vp 확인 · 완료 화면 없음) → 단계 칩으로 고치기 팝업(저장 · v2 · 닫기 물음).
- * 팝업은 1440×900 에서 (130, 50) 1180×800 — 칸 좌표는 팝업 기준(예전 page 좌표 x −130 · y −50).
- * 실행: cd web && PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers WM_E2E_SUITE=vp WM_E2E_DEV=1 WM_E2E_PORT=5205 npx playwright test e2e/vp/values.spec.ts --workers=1
+ * VP 상세 한 장(웹앱 ① v63 — 보드 webapp1 View content=vp + VPBody · VP1 · VP2 · VP_Draft · VP2_AI · VP2_Pick · VP2_Edit · VP_View · VP2_Detail).
+ * Storyboard(rq → dss, API) → 목록 → 「새 VP 만들기」→ 목록 위 팝업에서 Storyboard 고르기 → 상세(새로 만들기 · DSS 제품 · 솔루션 가져옴 · 가치 없음)
+ * → 그 자리에서 가치 · 니즈 쓰기 · AI 니즈 추론 · AI 가치 매칭 추천(점선 → 수락) · 제품 · 솔루션 고르기(ProdPicker) → 저장 → 저장됨(완료 화면 없음)
+ * → 한 칸 고치기 → 「고친 곳 1」 → 되돌리기 → 두 칸 고치기(VP2_Edit) → 저장 · v2 → 연결된 가치 전체(VpDetail).
+ * 보드 고정 칸(줄 그리드 200 | 1fr · 본문 1100 · 띠 48 · 줄 38 · 팝업 760×640 · 900×720)을 숫자로 재고 `__screens__/<보드>.png` 를 남긴다.
+ * 실행: make e2e-feature SERVICE=vp (또는 cd web && WM_E2E_SUITE=vp WM_E2E_DEV=1 WM_E2E_PORT=5205 npx playwright test e2e/vp/values.spec.ts --workers=1)
  */
-import { test, type Locator } from '@playwright/test';
+import { test, type Locator, type Page } from '@playwright/test';
 import { makeStoryboard, tag } from '../shell/flowkit';
 import { expect, shot } from './helpers';
 
 const box = async (l: Locator) => { const b = (await l.boundingBox())!; return { x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height) }; };
+const w = async (l: Locator) => (await box(l)).w;
+const h = async (l: Locator) => (await box(l)).h;
+const row = (page: Page, name: string) => page.getByRole('group', { name, exact: true });
+/** 그 줄의 n번째 가치 칸 */
+const val = (page: Page, name: string, i: number) => row(page, name).locator('.vb-val').nth(i);
+/** 캡처 전: 마우스를 치우고 토스트가 사라질 때까지 */
+const rest = async (page: Page) => { await page.mouse.move(10, 890); await expect(page.locator('.wm-toast')).toHaveCount(0, { timeout: 8_000 }); };
 
-test('VP 새 흐름 — Gate 팝업 · 가치 · 고객의 니즈 팝업(직접 · AI · 고르기 · 연결된 가치) · 저장 → 최종본 · 고치기 v2', async ({ page, request }) => {
-  test.setTimeout(240_000);
+test('VP 상세 한 장 — 팝업에서 Storyboard → 바로 입력 · AI 점선 수락 · 고르기 → 저장 → 고친 곳 · 되돌리기 → v2 · 연결된 가치', async ({ page, request }) => {
+  test.setTimeout(300_000);
   await page.setViewportSize({ width: 1440, height: 900 });
   const name = `용산 AI Ready 오피스 ${tag()}`;
   const sb = await makeStoryboard(request, { dss: true, name });
-  const dssRef = (await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json()).stages.dss.ref as string;
+  const hub = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
+  const dssRef = hub.stages.dss.ref as string;
+  const rqRef = hub.stages.rq.ref as string;
 
-  // VP1 — 빈 최종본(새로 만들기 · ② 자리표시) 위 ① Storyboard 팝업(보드 Gate content=vp)
-  await page.goto('/vp/new');
-  const gate = page.getByRole('dialog', { name: '새 VP · Storyboard' });
-  await expect(gate).toBeVisible();
-  expect(await box(gate)).toMatchObject({ x: 130, y: 50, w: 1180, h: 800 });
-  await expect(page.locator('.fl-detail .fl-dver')).toHaveText('새로 만들기');
-  await expect(page.locator('.fl-detail [data-slot="2"]')).toBeVisible();
-  await expect(gate.locator('.fl-shead__pos')).toHaveText('단계 1/2');
+  // VP0 → 「새 VP 만들기」 → 목록 위 팝업(보드 VP1 = Gate)
+  await page.goto('/vp');
+  await expect(page.getByRole('heading', { name: 'Value Proposition', exact: true })).toBeVisible();
+  await page.getByRole('link', { name: /새 VP 만들기/ }).click();
+  await expect(page).toHaveURL(/\/vp\/new$/);
+  const gate = page.getByRole('dialog', { name: '새 VP 만들기 · Storyboard 고르기' });
   await expect(gate.getByRole('heading', { name: '어느 Storyboard로 만들까요?' })).toBeVisible();
-  await expect(gate.locator('.wm-flow__back')).toHaveCount(0);
-  const row = gate.getByRole('radio', { name: new RegExp(name) });
-  await row.click();
-  await expect(row).toHaveAttribute('aria-checked', 'true');
+  const radio = gate.getByRole('radio', { name: new RegExp(name) });
+  await radio.click();
+  await expect(radio).toHaveAttribute('aria-checked', 'true');
   await page.mouse.move(10, 890);
-  await shot(page, 'VP1-new');
-  await gate.getByRole('button', { name: '이 Storyboard로 시작' }).click();
+  await shot(page, 'VP1');
+  await gate.getByRole('button', { name: /이 Storyboard로 시작/ }).click();
 
-  // VP2 — ② 가치 · 고객의 니즈 팝업(같은 최종본 위 · 주소는 ?step=values)
-  await expect(page).toHaveURL(/\/vp\/values\/vmap_[0-9A-Za-z]+\?step=values$/, { timeout: 30_000 });
-  const mapId = page.url().split('/').pop()!.split('?')[0];
-  const dlg = page.locator('.fl-stepdlg');
-  await expect(dlg.getByRole('heading', { name: '제품 · 솔루션마다 가치와 고객의 니즈를 적어요' })).toBeVisible();
-  await expect(dlg.locator('.fl-shead__sb')).toContainText(name);
-  await expect(dlg.locator('.fl-shead__note')).toHaveText('Storyboard를 그대로 가져왔어요 · 사전 작업 DSS 확인됨');
-  await expect(dlg.locator('.fl-shead__mode')).toHaveText('새로 만들기');
-  await expect(dlg.locator('.fl-shead__pos')).toHaveText('단계 2/2');
-  await expect(dlg.locator('.wm-sbbar')).toHaveCount(0);
-  await expect(dlg.locator('.wm-flow__back')).toHaveCount(0);
-  await expect(dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ })).toBeVisible();          // DSS 제품 6 + 솔루션 2
-  // 가치가 없으면 저장이 막힌다(주황 안내)
-  await expect(dlg.getByRole('button', { name: '저장', exact: true })).toBeDisabled();
-  await expect(dlg.getByText('가치를 하나 이상 적어야 저장할 수 있어요')).toBeVisible();
+  // VP2 — 새로 만들기(DSS 제품 6 · 솔루션 2 를 가져왔고 가치는 없음) · 단계 · 완료 화면 없음
+  await expect(page).toHaveURL(/\/vp\/values\/vmap_[0-9A-Za-z]+$/, { timeout: 30_000 });
+  const mapId = page.url().split('/').pop()!;
+  const head = page.locator('.cd-head');
+  await expect(head.locator('.cd-h1')).toHaveText(name);
+  await expect(head.locator('.cd-ref')).toHaveText('새로 만들기');
+  await expect(head.locator('.cd-meta')).toHaveText(`새로 만드는 중 · 쓰는 대로 작성 중으로 남아요 · 저장하면 ${sb.id}에 연결돼요`);
+  await expect(page.getByText('저장하면 이 Storyboard에 연결돼요 · 사전 작업에서 골랐어요')).toBeVisible();
+  await expect(page.locator('.vb-from')).toHaveText(`${dssRef}에서 8개를 골랐어요`);
+  await expect(page.locator('.vb-out')).toHaveText('· 고르지 않은 것 없음');
+  await expect(page.getByRole('button', { name: '제품 · 솔루션 고르기 · 8' })).toBeVisible();
+  await expect(page.locator('.vb-row .vb-name')).toHaveText(['The Wall IAB 146"', 'Smart Signage QM55C', '삼성 키오스크', 'Flip Pro WA75D', 'Smart Signage QB55C', '옥외형 사이니지 OHC55', 'MagicINFO', 'SmartThings Pro']);
+  const wall = row(page, 'The Wall IAB 146"');
+  await expect(wall.locator('.vb-where')).toHaveText('로비');
+  await expect(wall.locator('.vb-count')).toHaveText('가치 없음');
+  await expect(wall.locator('.vb-count')).toHaveCSS('color', 'rgb(122, 79, 0)');
+  await expect(row(page, 'MagicINFO').locator('.wm-kindtag')).toHaveText('솔루션');
+  await expect(wall.locator('.vb-add')).toHaveText('+ 가치 추가 · 공간 · 가치 · 니즈 · 요구 — 또는 위의 AI 가치 매칭 추천');
+  await expect(page.locator('.cd-pendbar')).toHaveCount(0);
+  // 보드 VPBody: 본문 열 1180 → 본문 1100 · 띠 48 · 줄 그리드 200 | 1fr(gap 16 · 좌우 18 → 1100 − 2 − 36 − 216 = 846) · 버튼 36 · 더하기 34 · 저장 42
+  expect(await w(page.locator('.wm-flow'))).toBe(1180);
+  expect(await w(page.locator('.cd-body'))).toBe(1100);
+  expect(await h(page.locator('.vb-strip'))).toBe(48);
+  expect(await w(wall.locator('.vb-left'))).toBe(200);
+  expect(await w(wall.locator('.vb-right'))).toBe(846);
+  expect(await h(page.getByRole('button', { name: '제품 · 솔루션 고르기 · 8' }))).toBe(36);
+  expect(await h(page.getByRole('button', { name: 'AI 가치 매칭 추천', exact: true }))).toBe(36);
+  expect(await h(wall.locator('.vb-add'))).toBe(34);
+  expect(await h(head.getByRole('button', { name: '저장', exact: true }))).toBe(42);
+  expect((await box(page.locator('.vb-panel'))).y + (await h(page.locator('.vb-panel')))).toBe(900 - 22);   // 높이를 채운다(아래 22)
+  await rest(page);
+  await shot(page, 'VP2');
 
-  // 직접 적은 가치 둘(API) → 다시 읽기(새로 고침해도 같은 팝업)
-  const doc0 = await (await request.get(`/api/vp/v1/value-maps/${mapId}`)).json();
-  const wall = doc0.items.find((i: { name: string }) => i.name === 'The Wall IAB 146"').key as string;
-  await request.post(`/api/vp/v1/value-maps/${mapId}/items/${wall}/values`, { data: { space: '로비', message: '들어서는 순간 회사의 AI 비전을 보여 줌', need: '방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요', req: 'RQ-01 최초 AI Ready' } });
-  await request.post(`/api/vp/v1/value-maps/${mapId}/items/${wall}/values`, { data: { space: '로비', message: '사내 행사 때 로비를 무대로 바꿈', req: 'RQ-01 업무환경 플랫폼' } });
-  await page.reload();
-  await expect(page).toHaveURL(/step=values/);
-  await expect(dlg.getByRole('button', { name: /The Wall IAB 146"/ })).toContainText('가치 2 · 니즈 1/2');
-  // 보드 VP2(팝업 1180 × 800): 본문 1180 · 왼쪽 280 | 오른쪽 806 · 아래 저장 h48 (y784)
-  expect(Math.round((await dlg.locator('.fl-sbody .wm-flow').boundingBox())!.width)).toBe(1180);
-  const left = dlg.locator('.wm-flow__grid > .wm-flow__panel').first();
-  const left0 = await box(left);
-  expect(left0).toMatchObject({ x: 170, w: 280 });
-  expect(await box(dlg.locator('.wm-flow__grid > .wm-flow__panel').nth(1))).toMatchObject({ x: 464, w: 806 });
-  expect(await box(dlg.getByRole('button', { name: '저장', exact: true }))).toMatchObject({ y: 784, h: 48 });
-  await page.mouse.move(10, 890);
-  await shot(page, 'VP2-new');
+  // 바로 입력 — The Wall: 가치 + 니즈(직접) + 연결 요구(Storyboard 요구사항에서 고르기)
+  await wall.locator('.vb-add').click();
+  const v0 = val(page, 'The Wall IAB 146"', 0);
+  await expect(v0.getByLabel('가치 메시지')).toBeFocused();
+  await v0.getByLabel('가치 메시지').fill('들어서는 순간 회사의 AI 비전을 보여 줌');
+  await v0.getByLabel('가치 메시지').press('Enter');
+  await expect(wall.locator('.vb-count')).toHaveText('가치 1 · 니즈 0/1');
+  await expect(head.locator('.cd-ref')).toHaveText('작성 중');
+  await v0.getByLabel('고객의 니즈').fill('방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요');
+  await v0.getByLabel('고객의 니즈').press('Enter');
+  await expect(v0.locator('.cd-tag')).toHaveText('직접');
+  await v0.getByRole('button', { name: '연결 요구 · 없음' }).click();
+  const reqList = page.getByRole('listbox', { name: '연결 요구' });
+  await reqList.getByRole('option', { name: `${rqRef} 최초 AI Ready 오피스` }).click();
+  await expect(v0.getByRole('button', { name: `연결 요구 · ${rqRef} 최초 AI Ready 오피스` })).toBeVisible();
+  await expect(wall.locator('.vb-count')).toHaveText('가치 1 · 니즈 1/1');
+  // 둘째 가치(니즈 비움 → 주황 점선 칸 + AI 니즈 추론)
+  await wall.getByRole('button', { name: '+ 가치 추가', exact: true }).click();
+  const v1 = val(page, 'The Wall IAB 146"', 1);
+  await v1.getByLabel('가치 메시지').fill('사내 행사 때 로비를 무대로 바꿈');
+  await v1.getByLabel('가치 메시지').press('Enter');
+  await expect(wall.locator('.vb-count')).toHaveText('가치 2 · 니즈 1/2');
+  await expect(v1.getByLabel('고객의 니즈')).toHaveClass(/vb-need--empty/);
+  await expect(v1.getByLabel('고객의 니즈')).toHaveAttribute('placeholder', '고객이 할 말처럼 적어요 · 예) 여름에도 쾌적한 교실 환경이 필요해요');
+  expect(await w(v0.getByRole('button', { name: /^공간/ })) > 30).toBe(true);
+  expect(await h(v0.getByLabel('가치 메시지'))).toBe(32);
+  expect(await h(v1.getByRole('button', { name: 'AI 니즈 추론' }))).toBe(28);
+  // Flip Pro — 니즈 없는 가치 하나(저장 뒤 VP2_Edit 에서 채운다)
+  const flip = row(page, 'Flip Pro WA75D');
+  await flip.locator('.vb-add').click();
+  await val(page, 'Flip Pro WA75D', 0).getByLabel('가치 메시지').fill('케이블 없이 바로 화면 공유');
+  await val(page, 'Flip Pro WA75D', 0).getByLabel('가치 메시지').press('Enter');
+  await expect(flip.locator('.vb-count')).toHaveText('가치 1 · 니즈 0/1');
+  await expect(head.locator('.cd-meta')).toContainText('작성 중 · 가치 3 · 니즈 1/3 · ');
+  await page.locator('.vb-panel').evaluate((el) => { el.scrollTop = 0; });
+  await rest(page);
+  await shot(page, 'VP_Draft');
 
-  // AI 니즈 추론(mock: '행사' → 고정 문장) → 점선 → 수락
-  await dlg.getByRole('button', { name: 'AI 니즈 추론' }).click();
-  await expect(dlg.getByText('“행사 때마다 외부 장소를 빌리지 않았으면 해요”')).toBeVisible();
-  await dlg.locator('.vv-need').getByRole('button', { name: '수락' }).click();
-  await expect(dlg.getByRole('button', { name: /The Wall IAB 146"/ })).toContainText('가치 2 · 니즈 2/2');
+  // AI 니즈 추론(mock: '행사' → 고정 문장) → 점선 칸 · 수락(VP2_AI 에서 그대로 둔다)
+  await v1.getByRole('button', { name: 'AI 니즈 추론' }).click();
+  await expect(v1.getByLabel('고객의 니즈')).toHaveValue('행사 때마다 외부 장소를 빌리지 않았으면 해요', { timeout: 30_000 });
+  await expect(v1.getByLabel('고객의 니즈')).toHaveClass(/vb-need--pend/);
+  await expect(v1.getByRole('button', { name: '수락' })).toBeVisible();
+  await expect(page.locator('.cd-pendbar')).toContainText('AI 추천 1개');
 
-  // AI 가치 매칭 추천(mock 은 LLM 없이 KB 원문 메시지 → 점선 후보)
-  await dlg.getByRole('button', { name: /AI 가치 매칭 추천/ }).click();
-  const aiBar = dlg.getByRole('status').filter({ hasText: '점선은 수락해야 들어가요' });
-  await expect(aiBar).toBeVisible({ timeout: 30_000 });
-  await dlg.getByRole('button', { name: /MagicINFO/ }).first().click();
-  await expect(dlg.locator('.vv-card--pend').first()).toBeVisible();
-  // 보드 VP2_AI: 안내 줄 1100 × 38 · 그리드가 50 아래로
-  expect(await box(aiBar)).toMatchObject({ x: 170, w: 1100, h: 38 });
-  expect(await box(left)).toMatchObject({ x: 170, w: 280, y: left0.y + 50, h: left0.h - 50 });
-  await page.mouse.move(10, 890);
-  await shot(page, 'VP2_AI-new');
+  // AI 가치 매칭 추천(mock vp.values_suggest.v1 — 보드 VP2_AI 의 후보) → 점선 가치 칸 + 일괄 줄
+  await page.getByRole('button', { name: 'AI 가치 매칭 추천', exact: true }).click();
+  const pend = page.locator('.cd-pendbar');
+  await expect(pend).toHaveText(/AI 추천 5개 — 가치 후보와 빈 니즈 추론이 점선으로 들어왔어요 · 수락해야 들어가요/, { timeout: 30_000 });
+  expect(await box(pend)).toMatchObject({ x: 300, w: 1100, h: 38 });
+  const v2 = val(page, 'The Wall IAB 146"', 2);
+  await expect(v2).toHaveClass(/vb-val--pend/);
+  await expect(v2.getByLabel('가치 메시지')).toHaveValue('베젤 없는 큰 화면으로 콘텐츠에 몰입');
+  await expect(v2.getByLabel('고객의 니즈')).toHaveValue('로비 화면이 광고판처럼 보이지 않았으면 해요');
+  await expect(wall.locator('.vb-count')).toHaveText('가치 2 · 니즈 1/2');
+  await expect(row(page, 'Smart Signage QM55C').locator('.vb-val--pend')).toHaveCount(2);
+  await expect(row(page, 'Smart Signage QM55C').locator('.vb-count')).toHaveText('가치 없음');
+  await expect(head.locator('.cd-meta')).toContainText('작성 중 · 가치 3 · 니즈 1/3');
+  await page.locator('.vb-panel').evaluate((el) => { el.scrollTop = 0; });
+  await rest(page);
+  await shot(page, 'VP2_AI');
+  // 하나씩 수락(니즈 · 가치) → 나머지 모두 수락
+  await v1.getByRole('button', { name: '수락' }).click();
+  await expect(v1.locator('.cd-tag')).toHaveText('AI 추론 · 수락');
+  await v2.getByRole('button', { name: '수락' }).click();
+  await expect(v2).not.toHaveClass(/vb-val--pend/);
+  await expect(wall.locator('.vb-count')).toHaveText('가치 3 · 니즈 3/3');
+  await expect(pend).toContainText('AI 추천 3개');
+  await pend.getByRole('button', { name: '모두 수락' }).click();
+  await expect(page.locator('.cd-pendbar')).toHaveCount(0);
+  await expect(row(page, 'Smart Signage QM55C').locator('.vb-count')).toHaveText('가치 2 · 니즈 2/2');
 
-  // VP2_Pick — 제품 · 솔루션 고르기(팝업 위에 겹침) · 옥외형 사이니지 빼기
-  await dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 8/ }).click();
+  // 제품 · 솔루션 고르기(ProdPicker 760×640) — QB55C · OHC55 빼기
+  await page.getByRole('button', { name: '제품 · 솔루션 고르기 · 8' }).click();
   const pick = page.getByRole('dialog', { name: 'VP에 넣을 제품 · 솔루션 고르기' });
-  await expect(pick).toBeVisible();
-  expect(await box(pick)).toMatchObject({ w: 760, h: 640 });
+  await expect(pick.getByText(`${dssRef} · 제품`, { exact: true })).toBeVisible();
+  await expect(pick.getByRole('checkbox', { name: /The Wall IAB 146"/ })).toContainText(`${dssRef} · 로비`);
+  await pick.getByRole('checkbox', { name: /Smart Signage QB55C/ }).click();
   await pick.getByRole('checkbox', { name: /옥외형 사이니지 OHC55/ }).click();
-  await expect(pick.getByText('7개 골랐어요')).toBeVisible();
-  await shot(page, 'VP2_Pick-new');
-  await page.keyboard.press('Escape');                                     // 고르기만 닫힌다(단계 팝업은 그대로)
-  await expect(pick).toHaveCount(0);
-  await expect(dlg).toBeVisible();
-  await expect(dlg.getByRole('button', { name: /제품 · 솔루션 고르기 · 7/ })).toBeVisible();
+  await expect(pick.getByText('6개 골랐어요')).toBeVisible();
+  expect(await box(pick)).toMatchObject({ w: 760, h: 640 });
+  await rest(page);
+  await shot(page, 'VP2_Pick');
+  await pick.getByRole('button', { name: '완료' }).click();
+  await expect(page.locator('.vb-from')).toHaveText(`${dssRef}에서 6개를 골랐어요`);
+  await expect(page.locator('.vb-out')).toHaveText('· 고르지 않은 2 — Smart Signage QB55C · 옥외형 사이니지 OHC55');
+  await expect(page.locator('.vb-row')).toHaveCount(6);
 
-  // VP2_Detail — 연결된 가치 전체 보기(KB 공식 메시지)
-  await dlg.getByRole('button', { name: /연결된 가치 전체 보기/ }).click();
-  const det = page.getByRole('dialog', { name: /MagicINFO.*연결된 가치/ });
-  await expect(det.getByText('삼성 공식 메시지')).toBeVisible();
+  // 저장 → 그 자리에서 저장됨(보드 VP_View) · 완료 화면 없음
+  await head.getByRole('button', { name: '저장', exact: true }).click();
+  await expect(page.locator('.wm-toast').filter({ hasText: new RegExp(`VP-\\d+ v1 저장 · ${sb.id}에 반영했어요`) })).toBeVisible({ timeout: 30_000 });
+  await expect(head.locator('.cd-ref')).toHaveText(/^VP-\d+ v1$/);
+  const code = (await head.locator('.cd-ref').textContent())!.replace(' v1', '');
+  await expect(head.locator('.cd-meta')).toHaveText(/^오늘 \d\d:\d\d 저장 · 제품 · 솔루션 6 · 가치 7 · 고객의 니즈 6\/7$/);
+  await expect(head.getByText('눌러서 바로 고쳐요')).toBeVisible();
+  await expect(head.getByRole('button', { name: /flow\.json/ })).toBeVisible();
+  await expect(head.getByRole('button', { name: '저장', exact: true })).toHaveCount(0);
+  await expect(page).toHaveURL(new RegExp(`/vp/values/${mapId}$`));
+  const flow1 = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
+  expect(flow1.stages.vp).toMatchObject({ ref: code, ver: 1, selection: { fromDss: 6, excluded: ['Smart Signage QB55C', '옥외형 사이니지 OHC55'] } });
+  expect(flow1.stages.vp.counts).toMatchObject({ items: 6, values: 7, needs: 6 });
+  await page.locator('.vb-panel').evaluate((el) => { el.scrollTop = 0; });
+  await rest(page);
+  await shot(page, 'VP_View');
+
+  // 한 칸 고치기 → 「고친 곳 1」 · 그 칸은 cd-in--chg · 저장 · v2 → 되돌리기
+  await v1.getByLabel('가치 메시지').fill('사내 행사 · 투자자 설명회 때 로비를 무대로 바꿈');
+  await v1.getByLabel('가치 메시지').press('Enter');
+  await expect(head.locator('.cd-chg')).toHaveText('고친 곳 1');
+  await expect(head.locator('.cd-ref')).toHaveText(`${code} v1 · 고치는 중`);
+  await expect(head.locator('.cd-meta')).toHaveText(`${code} v1 고치는 중 · 저장하면 v2 · ${sb.id}에 반영돼요`);
+  await expect(v1.getByLabel('가치 메시지')).toHaveClass(/cd-in--chg/);
+  await expect(head.getByRole('button', { name: '저장 · v2' })).toBeVisible();
+  await head.getByRole('button', { name: '되돌리기' }).click();
+  await expect(page.locator('.wm-toast').filter({ hasText: `${code} v1로 되돌렸어요` })).toBeVisible();
+  await expect(head.locator('.cd-ref')).toHaveText(`${code} v1`);
+  await expect(v1.getByLabel('가치 메시지')).toHaveValue('사내 행사 때 로비를 무대로 바꿈');
+  await expect(v1.getByLabel('가치 메시지')).not.toHaveClass(/cd-in--chg/);
+  expect((await (await request.get(`/api/vp/v1/value-maps/${mapId}`)).json()).changes).toBe(0);
+
+  // 두 칸 고치기(보드 VP2_Edit: 가치 메시지 · 빈 니즈) → 고친 곳 2 → 저장 · v2
+  await v1.getByLabel('가치 메시지').fill('사내 행사 · 투자자 설명회 때 로비를 무대로 바꿈');
+  await v1.getByLabel('가치 메시지').press('Enter');
+  await expect(head.locator('.cd-chg')).toHaveText('고친 곳 1');
+  const fv = val(page, 'Flip Pro WA75D', 0);
+  await fv.getByLabel('고객의 니즈').fill('회의 시작할 때 케이블 찾느라 시간 버리고 싶지 않아요');
+  await fv.getByLabel('고객의 니즈').press('Enter');
+  await expect(head.locator('.cd-chg')).toHaveText('고친 곳 2');
+  await expect(fv.getByLabel('고객의 니즈')).toHaveClass(/cd-in--chg/);
+  await expect(page.locator('.cd-in--chg')).toHaveCount(2);
+  await page.locator('.vb-panel').evaluate((el) => { el.scrollTop = 0; });
+  await rest(page);
+  await shot(page, 'VP2_Edit');
+  await head.getByRole('button', { name: '저장 · v2' }).click();
+  await expect(page.locator('.wm-toast').filter({ hasText: `${code} v2 저장` })).toBeVisible({ timeout: 30_000 });
+  await expect(head.locator('.cd-ref')).toHaveText(`${code} v2`);
+  await expect(page.locator('.cd-in--chg')).toHaveCount(0);
+  await expect(head.locator('.cd-meta')).toHaveText(/저장 · 제품 · 솔루션 6 · 가치 7 · 고객의 니즈 7\/7$/);
+  const flow2 = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
+  expect(flow2.stages.vp.ver).toBe(2);
+
+  // 연결된 가치 전체 보기(VpDetail 900×720)
+  await wall.getByRole('button', { name: '연결된 가치 전체 보기 →' }).click();
+  const det = page.getByRole('dialog', { name: /The Wall IAB 146".*연결된 가치/ });
+  await expect(det).toContainText(`이 제안 · ${code}`);
+  await expect(det).toContainText('들어서는 순간 회사의 AI 비전을 보여 줌');
+  await expect(det).toContainText('고객의 니즈 · “방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요”');
   expect(await box(det)).toMatchObject({ w: 900, h: 720 });
-  await shot(page, 'VP2_Detail-new');
+  await rest(page);
+  await shot(page, 'VP2_Detail');
   await det.getByRole('button', { name: '닫기' }).last().click();
   await expect(det).toHaveCount(0);
-  await expect(dlg).toBeVisible();
 
-  // 모두 수락 → 저장 → 팝업이 닫히고 같은 주소의 최종본(보드 VP_View · 완료 안내 화면 없음)
-  await dlg.getByRole('button', { name: '모두 수락' }).click();
-  await expect(aiBar).toHaveCount(0);
-  await dlg.getByRole('button', { name: '저장', exact: true }).click();
-  await expect(dlg).toHaveCount(0, { timeout: 20_000 });
-  await expect(page).toHaveURL(new RegExp(`/vp/values/${mapId}$`));
-  await expect(page.getByRole('heading', { name: '가치 제안을 저장했어요' })).toHaveCount(0);
-  const doc = await (await request.get(`/api/vp/v1/value-maps/${mapId}`)).json();
-  const c = doc.counts as { items: number; values: number; needs: number };
-  const ref = doc.code as string;
-  expect(doc).toMatchObject({ status: 'done', ver: 1 });
-  expect(c.items).toBe(7);
-  const view = page.locator('.fl-detail');
-  await expect(view).toHaveAttribute('data-status', 'saved');
-  await expect(view.locator('.fl-dver')).toHaveText(`${ref} v1`);
-  await expect(view.locator('.fl-dhead__meta')).toHaveText(new RegExp(` 저장 · 제품 · 솔루션 7 · 가치 ${c.values} · 고객의 니즈 ${c.needs}/${c.values}$`));
-  await expect(view.locator('.fl-dnav__label')).toHaveText('단계별 고치기');
-  await expect(view.locator('.vpv-bar__from')).toHaveText(`${dssRef}에서 7개를 골랐어요`);
-  await expect(view.locator('.vpv-bar__out')).toHaveText('· 고르지 않은 1 — 옥외형 사이니지 OHC55');
-  await expect(view.locator('.vpv-item')).toHaveCount(7);
-  const wallRow = view.locator('[data-vitem="The Wall IAB 146\\""]');
-  await expect(wallRow.locator('.vpv-item__n')).toHaveText('가치 2 · 니즈 2/2');
-  await expect(wallRow.locator('.vpv-item__sp')).toHaveText('로비');
-  await expect(wallRow.locator('.fl-vtag').first()).toHaveText('제품');
-  await expect(wallRow.locator('.vpv-msg')).toHaveText(['들어서는 순간 회사의 AI 비전을 보여 줌', '사내 행사 때 로비를 무대로 바꿈']);
-  await expect(wallRow.locator('.vpv-req').first()).toHaveText('RQ-01 최초 AI Ready');
-  await expect(wallRow.locator('.vpv-need__t')).toHaveText(['“방문객에게 첫인상으로 우리 회사를 각인시키고 싶어요”', '“행사 때마다 외부 장소를 빌리지 않았으면 해요”']);
-  await expect(wallRow.locator('.vpv-need .fl-vtag')).toHaveText(['직접', 'AI 추론 · 수락']);
-  await expect(view.locator('[data-vitem="MagicINFO"] .fl-vtag').first()).toHaveText('솔루션');
-  // KB 원문 메시지로 넣은 가치(니즈 비움) → 주황 점선 「비어 있어요」
-  if (c.needs < c.values) {
-    await expect(view.locator('.vpv-need--empty').first()).toContainText('비어 있어요 · 고치기에서 적거나 AI 니즈 추론으로 채워요');
-    expect(await box(view.locator('.vpv-need--empty').first())).toMatchObject({ h: 36 });
-  }
-  // 보드 View(content=vp): 본문 1100 · 줄 칸 h44 · 줄 210 | 1fr(사이 18 · 안쪽 20) · 니즈 줄 h36
-  expect(await box(view.locator('.vpv-bar'))).toMatchObject({ x: 300, w: 1100, h: 44 });
-  expect(await box(view.locator('.vpv-panel'))).toMatchObject({ x: 300, w: 1100 });
-  expect(await box(view.locator('.vpv-item__l').first())).toMatchObject({ x: 321, w: 210 });
-  expect(await box(view.locator('.vpv-vals').first())).toMatchObject({ x: 549, w: 830 });
-  expect(await box(wallRow.locator('.vpv-need').first())).toMatchObject({ h: 36 });
-  await expect(view.locator('.fl-dfollow')).toHaveCount(0);                // 후속 작업 없음
-
-  // 허브 flow.json stages.vp(점선 대기 값은 빠진다) · 칸 경로
-  const flow = await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json();
-  const st = flow.stages.vp;
-  expect(st).toMatchObject({ ref, selection: { fromDss: 7, excluded: ['옥외형 사이니지 OHC55'] } });
-  expect(st.counts).toMatchObject({ items: 7, values: c.values, needs: c.needs });
-  expect(flow.cells.find((x: { key: string }) => x.key === 'vp')).toMatchObject({ state: 'done', ref, route: `/vp/values/${mapId}` });
-  await page.mouse.move(10, 890);
-  await shot(page, 'VP_View-new');
-  await view.getByRole('button', { name: 'flow.json' }).click();
-  const json = page.getByRole('dialog', { name: /flow\.json/ });
-  await expect(json.getByText('"vp": {').first()).toBeVisible();
-  await shot(page, 'VP_ViewJson-new');
-  await json.getByRole('button', { name: '닫기' }).last().click();
-
-  // 단계 칩 「가치 · 고객의 니즈」 → 고치기 팝업(VP2_Edit: VP-nn v1 고치기 · 저장 · v2 · 이전 단계 링크 없음) — 고치지 않고 닫으면 묻지 않는다
-  await view.getByRole('button', { name: /^가치 · 고객의 니즈 · / }).click();
-  await expect(page).toHaveURL(/step=values/);
-  await expect(dlg.locator('.fl-shead__mode')).toHaveText(`${ref} v1 고치기`);
-  await expect(dlg.locator('.fl-shead__note')).toHaveText(`저장하면 ${ref} v2 · ${sb.id}에 반영돼요`);
-  await expect(dlg.getByRole('button', { name: '저장 · v2' })).toBeVisible();
-  await expect(dlg.locator('.wm-flow__back')).toHaveCount(0);
-  await page.mouse.move(10, 890);
-  await shot(page, 'VP2_Edit-new');
-  await dlg.getByRole('button', { name: '팝업 닫기' }).click();
-  await expect(dlg).toHaveCount(0);
-  await expect(page.getByRole('dialog', { name: '고친 내용을 저장할까요?' })).toHaveCount(0);
-  // 고친 뒤(가치 하나 더) 닫으면 저장할지 묻는다 → 「저장 · v2」 → 최종본 v2
-  await view.getByRole('button', { name: /^가치 · 고객의 니즈 · / }).click();
-  await dlg.getByRole('button', { name: /The Wall IAB 146"/ }).click();
-  await dlg.getByRole('button', { name: /가치 추가/ }).click();
-  await dlg.locator('[data-add-value]').getByLabel('가치 메시지').fill('베젤 없는 큰 화면으로 콘텐츠에 몰입');
-  await dlg.locator('[data-add-value]').getByRole('button', { name: '추가' }).click();
-  await expect(dlg.getByRole('button', { name: /The Wall IAB 146"/ })).toContainText('가치 3 · 니즈 2/3');
-  await dlg.getByRole('button', { name: '팝업 닫기' }).click();
-  const ask = page.getByRole('dialog', { name: '고친 내용을 저장할까요?' });
-  await expect(ask).toBeVisible();
-  await ask.getByRole('button', { name: '저장 · v2' }).click();
-  await expect(dlg).toHaveCount(0, { timeout: 20_000 });
-  await expect(view.locator('.fl-dver')).toHaveText(`${ref} v2`);
-  await expect(wallRow.locator('.vpv-item__n')).toHaveText('가치 3 · 니즈 2/3');
-  await expect(wallRow.locator('.vpv-need--empty')).toHaveCount(1);
-  expect((await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json()).stages.vp).toMatchObject({ ref });
+  // 목록 — 저장한 것은 「완성」 카드
   await page.goto('/vp');
-  const listRow = page.locator('.fl-card').filter({ hasText: name });
-  await expect(listRow).toContainText(`${ref} v2`);
-});
-
-test('VP — Storyboard 「만들기」(?sb=&auto=1)는 Gate 를 건너뛰고 바로 ② 팝업 · 닫으면 작성 중 최종본 · 예전 주소 /vp/values/new', async ({ page, request }) => {
-  test.setTimeout(120_000);
-  await page.setViewportSize({ width: 1440, height: 900 });
-  const name = `용산 바로 만들기 ${tag()}`;
-  const sb = await makeStoryboard(request, { dss: true, name });
-  await page.goto(`/vp/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(/\/vp\/values\/vmap_[0-9A-Za-z]+\?step=values$/, { timeout: 30_000 });
-  const mapId = page.url().split('/').pop()!.split('?')[0];
-  const dlg = page.locator('.fl-stepdlg');
-  await expect(dlg.getByRole('heading', { name: '제품 · 솔루션마다 가치와 고객의 니즈를 적어요' })).toBeVisible();
-  await expect(dlg.locator('.fl-shead__sb')).toContainText(name);
-  // 1920 × 1080: 팝업은 가운데 1180 × 800 그대로
-  await page.setViewportSize({ width: 1920, height: 1080 });
-  expect(await box(dlg)).toMatchObject({ x: 370, y: 140, w: 1180, h: 800 });
-  await page.setViewportSize({ width: 1440, height: 900 });
-  // 빈 최종본(뒤) — 새로 만들기 · ② 자리표시
-  await expect(page.locator('.fl-detail')).toHaveAttribute('data-status', 'new');
-  // 닫으면 작성 중 최종본(채운 칸 없음 → ② 자리표시에 「이어서 · 가치 · 고객의 니즈」)
-  await dlg.getByRole('button', { name: '팝업 닫기' }).click();
-  await expect(dlg).toHaveCount(0);
-  await expect(page).toHaveURL(new RegExp(`/vp/values/${mapId}$`));
-  const view = page.locator('.fl-detail');
-  await expect(view).toHaveAttribute('data-status', 'draft');
-  await expect(view.locator('.fl-dver')).toHaveText('작성 중 1/2');
-  await expect(view.locator('.fl-dhead__meta')).toHaveText(`작성 중 · 2단계 중 1단계 마침 · 저장하면 ${sb.id}에 연결돼요`);
-  const slot = view.locator('[data-slot="2"]');
-  await expect(slot).toContainText('가치 · 고객의 니즈 단계');
-  await expect(slot).toContainText('제품 · 솔루션별 가치 · 고객의 니즈 — 이 단계를 마치면 여기에 채워져요');
-  expect(await box(slot)).toMatchObject({ x: 300, w: 1100 });
-  await page.mouse.move(10, 890);
-  await shot(page, 'VP_Draft-new');
-  await slot.getByRole('button', { name: '이어서 · 가치 · 고객의 니즈' }).click();
-  await expect(page).toHaveURL(/step=values/);
-  await expect(dlg).toBeVisible();
-  // 목록 · 작업 내역에서 작성 중을 열면(주소에 step 없음) ② 팝업이 열린 채로
-  await page.goto(`/vp/values/${mapId}`);
-  await expect(page).toHaveURL(/step=values/);
-  await expect(dlg.getByRole('heading', { name: '제품 · 솔루션마다 가치와 고객의 니즈를 적어요' })).toBeVisible();
-
-  // 예전 주소 — /vp/values/new(요구 문장 없음) → /vp/new(Gate 팝업) · ?text= → Storyboard 없이 맵을 만들어 ② 팝업
-  await page.goto('/vp/values/new');
-  await expect(page).toHaveURL(/\/vp\/new$/);
-  await expect(page.getByRole('dialog', { name: '새 VP · Storyboard' })).toBeVisible();
-  await page.goto(`/vp/values/new?title=${encodeURIComponent(`요구로 시작 ${tag()}`)}&text=${encodeURIComponent('로비 미디어월과 회의실 전자칠판')}`);
-  await expect(page).toHaveURL(/\/vp\/values\/vmap_[0-9A-Za-z]+\?step=values$/, { timeout: 30_000 });
-  const freeId = page.url().split('/').pop()!.split('?')[0];
-  await expect(dlg.locator('.fl-shead__note')).toHaveText('요구 문장으로 시작했어요 · 연결된 Storyboard가 없어요');
-  await expect(dlg.locator('.fl-shead__sb')).toHaveCount(0);
-  await dlg.getByRole('button', { name: '팝업 닫기' }).click();
-  await expect(page.locator('.fl-detail .wm-sbbar')).toContainText('연결된 Storyboard가 없어요 · 요구 문장으로 시작했어요');
-  // 정리 — 저장 전 초안 지우기
-  for (const id of [mapId, freeId]) expect((await request.delete(`/api/vp/v1/value-maps/${id}`)).status()).toBe(204);
+  await expect(page.locator('.fl-card').filter({ hasText: name })).toContainText('완성');
 });

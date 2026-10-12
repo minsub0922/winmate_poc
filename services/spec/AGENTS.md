@@ -30,33 +30,38 @@ make contracts SERVICE=spec    # contracts/spec.json 갱신 + 깨지는 변경 �
 
 ## 현재 상태
 
-### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
-상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/spec/new` 빈 최종본 + ① Gate 팝업 · `/spec/flow/:id` 최종본(SP_View · `SpView.tsx` · XLSX 내려받기) · `?step=sheet` 팝업(`SheetStep.tsx`).
-완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
+### 최종본에서 바로 고치기(2026-10-12 · 웹앱 ① v63 · 보드 SPBody · SP2 · SP_Draft · SP2_Pick · SP2_Edit · SP_View · docs/handoff/2026-10-12-content-detail-v63.md)
+- 상세 `/spec/flow/:id` 한 장 = `@/shell` `ContentDetail` + SPBody(`flow/SheetPage.tsx` · CSS `sheet.css` 접두어 `spd-` — 이전 흐름 spec.css 의 `sp-` 와 겹치지 않게).
+  새로 · 작성 중 · 저장됨 · 고치는 중 모두 같은 화면, SheetPage 단계 · SP_Done(FlowDoneView) 없음. 저장하면 그 자리에서 저장됨 + 토스트(`SP-01 v1 저장 · SP-01_v1.xlsx 만들었어요`),
+  저장됨은 머리 `actions` 에 「XLSX 내려받기」(마지막 저장 판 파일). `/spec/new` 는 GateScreen(목록 위 팝업) 그대로 · `?sb=&auto=1` 은 바로 상세.
+  - 본문: 옵션 띠(형식 · 표기 세그먼트 · 항목 「n개 고름」 목록 · 값 공식 카탈로그 · 경고 칩 · 「제품 고르기 · k/n」) → 표(190 · 160 · repeat(minmax(116px, 1fr)) · 머리 40 고정 · 줄 44)
+    → 「시트에서 뺀 제품」(점선 40 · 다시 넣기) → 각주. 카탈로그 값은 읽기 전용, `[확인 필요]` 칸은 노란 칸(`cd-in--warn` · InlineInput — 떠날 때 저장).
+  - 제품 고르기 = `@/ui` ProductPickerDialog(DSS 제품 체크 = 시트에 넣기 · DSS 솔루션 · 카탈로그 검색 → `POST …/rows`). 제품 이름을 누르면 ModelDialog(모델 · 수량 — 보드에 없음).
+  - 저장한 뒤 이 화면에서 고친 것은 보드 표시(세그먼트 2px 테두리 · 항목 버튼 `--chg` · 새 항목 열 파란 밑줄 · 칸 `cd-in--chg` · 줄 `cd-chgrow`) — 저장 · 되돌리기 · 고친 곳 0 이면 지운다.
+- API(+2 · pytest 65): `SFDoc.changes`(저장한 뒤 고친 곳 · `edit_view` 로 셈: 형식 · 표기 · 항목 하나 · 제품 넣기/빼기 · 모델 · 수량 · 공간 · 적은 칸 하나 = 1) · `saved_at` · `file`.
+  `:finish` 가 `saved_snapshot`(EDIT_KEYS = title · format · notation · items · rows · dss_ref · dss_ver · last_resync)을 남기고, 판 없는 옛 저장 문서는 GET · 고침 때 지금 값을 판으로(`ensure_snapshot`).
+  `POST /v1/spec-flows/{id}:revert` → 저장한 판(changes 0) · 저장 전 409 `NOT_SAVED`.
+  행 PATCH `cells{항목: 글|null}` — 카탈로그 값이 없는 칸에만(아니면 422 `CELL_FROM_CATALOG`), 모델을 바꾸거나 비우면 그 행의 적은 값은 지운다. 행 `manual` · `editable` · `qty_text`(3대 · 1식 · 실당 1대 · [확인 필요]).
+  `POST /v1/spec-flows/{id}/rows {name, ref, kind}` — DSS 밖 제품 · 솔루션(행 `source: catalog` · 지울 수 있음 · DSS 다시 가져오기가 건드리지 않음). stages.sp 모델에 `manualSpecs` · `source`, XLSX 각주에 직접 적은 칸.
+- e2e(`web/e2e/spec` 11): `sp-flow.spec.ts` 2(목록 → 팝업 → SP2 → 형식 · 항목 → 노란 칸 → ProdPicker 빼기 → 저장 → SP_View XLSX 내려받기 → 고친 곳 1 → 되돌리기 → 고친 곳 2 · 나가기 확인 → v2 /
+  auto · 1920 · 저장 막힘 · 옛 `?step=`) · `sp-resync.spec.ts` 1. 캡처 `__screens__/SP2 · SP2_Pick · SP_View · SP2_Edit · SP2-1920 · SP2-resync · SP2-resynced.png`.
+- 보드와 다름: 항목 목록(보드엔 버튼만) · 제품 이름 → 모델 · 수량 팝업 · 경고 칩 「외 n」 · 제품별 1장 각주 한 마디 · 「공간 · 수량」 칸은 개수(+원문 단위) 또는 DSS 원문 ·
+  DSS 다시 가져오기 안내 줄(본문 맨 위) · 직접 적은 칸은 연한 노랑 바탕 + 검은 글.
 
-
-> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
-
-### 새 흐름(2026-10-08 · 보드 webapp1 SP0 · SP1 · SP2 · SP_View(2026-10-12) · docs/scenarios/11-content-flow.md §6 `sp`)
+### 새 흐름(2026-10-08 · 이전 v58 화면 — 위 v63 으로 바뀜 · 보드 webapp1 SP0 · SP1 · SP2 · SP_Done · docs/scenarios/11-content-flow.md §6 `sp`)
 - API `/v1/spec-flows*`(스키마 접두어 `SF*`, 본체 `spec_flow.py` · `routes/flows.py`, 저장 컬렉션 `spec_flows` sfl_ …):
   만들기 `POST {sb_id}`(get_flow → stages.dss 제품 = 행, 솔루션은 행 아님 · 없으면 404 / DSS 없으면 422 `PREREQUISITE_MISSING`) · 고치기 PATCH(형식 · 항목 8칩 · 표기, expected_version 409) ·
   행 PATCH(넣기/빼기 · 수량 · 모델 바꾸기 — 카탈로그에 없으면 422 `MODEL_NOT_IN_CATALOG` · 모델 비우기) · 행 모델 후보 GET(같은 제품군 / q 검색) · `:finish` · `/stage`.
 - 모델 맞춤은 결정적(DSS ref → 이름 속 모델명 → 없음). 칸 값은 KB 원문에서만, 없으면 `[확인 필요]`(영문 `[To be confirmed]`). 경고: 카탈로그에 없음 · 단종(예정) · 품절 · DSS 이름과 불일치 · 제품군 대표 모델.
 - 수량은 DSS 원문(`2대` · `1식` · `실당 1대` · null)에서 개수가 분명한 것만 더하고, 하나라도 모르면 null(= [확인 필요]) — 원문은 `qty_note`.
 - `:finish` → XLSX(export `POST /v1/exports` xlsx · `SP-01_v1.xlsx`, 못 만들면 null — 저장은 된다) → `push_stage(sp)` 값 = §6 `{from, models[{space, name, model_code, ref, qty, specs, by}], columns, warnings[{model, kind, text}], counts}`
-  + 보드 View 키 `format · lang · unit · valuesFrom · catalogVersion · file · fileId`. 응답 `{stage, summary_md, flow_sync, file{id, name, url}}`(`GET …/{id}/stage` 도 같은 file). register_item(feature=SP, route=`/spec/flow/{id}`).
-- 화면 `web/src/features/spec/flow/`: `/spec`(SP0 = ContentListScreen) · `/spec/new`(SP1 = GateScreen · `?sb=&auto=1`) · `/spec/flow/:id`(SheetPage: 저장한 시트 + `?edit` 없음 = SP_View 보기 `SpView.tsx`,
-  저장 전 초안 · `?edit=1` = SP2 시트 작성 → 「시트 만들기」(저장) → 문서 · stage 캐시 갱신 · 목록 · 허브 무효화 → 같은 주소의 보기 — 완료 화면 · 토스트 없음) ·
+  + 보드 Done 키 `format · lang · unit · valuesFrom · catalogVersion · file · fileId`. 응답 `{stage, summary_md, flow_sync, file{id, name, url}}`. register_item(feature=SP, route=`/spec/flow/{id}`).
+- 화면 `web/src/features/spec/flow/`: `/spec`(SP0 = ContentListScreen) · `/spec/new`(SP1 = GateScreen · `?sb=&auto=1`) · `/spec/flow/:id`(SheetPage: SP2 → SP_Done = FlowDoneView) ·
   ModelDialog(보드에 없음 — ProdPicker 760×640 모양: 같은 제품군 · 카탈로그 검색 · 수량 · 모델 비우기). CSS `sheet.css`(접두어 sf-).
   이전 흐름 목록 · 새로 만들기는 `/spec/legacy` · `/spec/legacy/new(/find · /requirements)`, `/spec/new?models=|from=|pop=` 와 옛 `/spec/new/find|requirements` 도 그리로. `/spec/:id/*` 는 그대로.
 - 보드와 다름: 제품 줄 오른쪽 모델 칩 · 공간 줄 뒤 경고 이름(주황) · 아래 줄 「확인 필요 값 n · 경고 m」 · 미리보기 제품 4개부터 3칸 폭 유지 + 가로 스크롤 · 「제품별 1장」 미리보기 ·
-  SP_View: 저장 시각은 허브 history(sp · 같은 참조 · 판)에서(문서에 saved_at 이 없다), 경고 알약은 2개 + 「+n」(나머지는 title) · 알약 글은 「모델 · 경고 짧은 이름」,
-  공간 · 수량은 개수가 있으면 개수 + DSS 원문 단위(1식 · 3대), 개수가 없고 공간 하나면 DSS 원문(실당 1대), 그 밖 [확인 필요] · 「XLSX 내려받기」는 a(download) — 파일 없으면 꺼진 버튼.
-- SP_View(보드 View content=sp): 머리(이름 · 코드 v · 「저장 시각 · 제품 n · 항목 n · 형식」 · XLSX 내려받기 · flow.json · 편집 → `?edit=1`) · 띠 h44(형식 · 표기 · 값 · 파일 | 주황 경고 알약) ·
-  흰 판 표(190 · 160 · 항목 n × 1fr · 머리 h40 고정 · 줄 h44 · 경고 있는 제품 이름 · [확인 필요] 칸 주황) · 아래 안내 11.5. 후속 작업 없음. CSS `sheet.css` 의 `spv-`.
-- 테스트 pytest 60(새 흐름 4: 허브 연동 · 저장 조건 · 수량 원문 · XLSX) · e2e `web/e2e/spec/sp-flow.spec.ts` 2(저장 → 보기: 완료 문구 0 · 문서 값 · 폭 190 · 160 · 띠 44 · 머리 40 · 줄 44 ·
-  XLSX 내려받기 · flow.json · 편집 `?edit=1` → 다시 저장 v2 → 보기 · 목록 「열기」 · 새로고침 · Gate 「수정하기」 → `?edit=1`.
-  캡처 `__screens__/SP0 · SP1 · SP2 · SP2_Model · SP2_PerProduct · SP_View · SP_ViewJson · SP2-1920-new.png`).
+  Done 설명의 「XLSX로 내보낼 수 있어요」는 내려받기 링크 · 요약 줄에 「확인 필요 값 · 경고」 한 줄 더.
+- 테스트 pytest 60(새 흐름 4: 허브 연동 · 저장 조건 · 수량 원문 · XLSX) · e2e `web/e2e/spec/sp-flow.spec.ts` 2(캡처 `__screens__/SP0 · SP1 · SP2 · SP2_Model · SP2_PerProduct · SP_Done · SP_DoneJson · SP2-1920-new.png`).
 - **DSS 다시 가져오기 · 초안 지우기 · 초안 이어 쓰기(2026-10-10 · 보드에 없음)**:
   - 시트는 만든(다시 가져온) DSS 의 `dss_ref` · `dss_ver` 를 남긴다. `GET /v1/spec-flows/{id}` 는 허브(`get_flow`)의 지금 stages.dss 와 행을 견줘
     `dss_changed{from: "DSS-01 v1", to: "DSS-01 v2", ref_changed, added, removed, changed, added_names, removed_names}`(바뀐 것 없으면 null — 판만 올랐으면 null,

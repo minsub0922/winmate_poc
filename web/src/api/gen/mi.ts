@@ -1178,7 +1178,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get Mi Flow */
+        /**
+         * Get Mi Flow
+         * @description 문서(진행 · 고친 곳 `changes`). 판 없이 저장된 예전 문서는 지금 값을 저장한 판으로 한 번 남긴다.
+         */
         get: operations["get_mi_flow"];
         put?: never;
         post?: never;
@@ -1222,6 +1225,26 @@ export interface paths {
         put?: never;
         /** Finish Mi Flow */
         post: operations["finish_mi_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/mi-flows/{flow_id}:revert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revert Mi Flow
+         * @description 저장한 판으로 되돌리기(화면 머리 「고친 곳 n · 되돌리기」) — 찾은 정보(담기 · 빼기 · 문장) · 검색어 · 조건을 마지막 저장 때로, changes 0.
+         */
+        post: operations["revert_mi_flow"];
         delete?: never;
         options?: never;
         head?: never;
@@ -3583,6 +3606,12 @@ export interface components {
              */
             basis?: components["schemas"]["MFBasis"][];
             /**
+             * Changes
+             * @description 저장한 판과 다른 곳 수(담은 정보 · 문장 · 검색어 · 조건) — 저장한 적 없으면 0. 화면 머리 「고친 곳 n」
+             * @default 0
+             */
+            changes: number;
+            /**
              * Code
              * @description 화면 · flow.json 에 쓰는 짧은 번호(MI-01 …)
              */
@@ -3617,6 +3646,11 @@ export interface components {
             queries?: components["schemas"]["MFQueries"];
             /** Results */
             results?: components["schemas"]["MFResult"][];
+            /**
+             * Saved At
+             * @description 마지막 저장(:finish) 시각
+             */
+            saved_at?: string | null;
             /**
              * Saved Kept
              * @description 마지막 저장 때 담은 정보 수
@@ -8794,6 +8828,53 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["MFStageOut"];
                 };
+            };
+        };
+    };
+    revert_mi_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MFDoc"];
+                };
+            };
+            /** @description NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없어요 · BUSY — AI 가 일하는 중 */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

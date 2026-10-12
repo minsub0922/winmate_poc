@@ -295,3 +295,92 @@ async def test_list_and_branch_gets_new_code(flow_env):
     assert a["code"] != c["code"] and c["sb_id"] == b["id"]
     items = (await env.c.get("/v1/mi-flows")).json()["items"]
     assert {i["id"] for i in items} >= {a["id"], c["id"]}
+
+
+async def test_changes_and_revert_after_save(flow_env):
+    """웹앱 ① v63 — 저장한 판(saved_snapshot) · 고친 곳 changes · :revert(저장한 적 없으면 409 NOT_SAVED) · 다시 검색은 지금 정보를 유지하고 새로 찾은 것만 더한다."""
+    env = flow_env
+    sb = await _storyboard(env.sb)
+    d = await _ready(env, sb)
+    fid = d["id"]
+    assert d["changes"] == 0 and d["saved_at"] is None
+    r = await env.c.post(f"/v1/mi-flows/{fid}:revert")
+    assert r.status_code == 409 and r.json()["error"]["code"] == "NOT_SAVED" and r.json()["error"]["message"] == "아직 저장하지 않아 되돌릴 판이 없어요"
+    await env.c.post(f"/v1/mi-flows/{fid}:search")
+    await env.drain()
+    d = (await env.c.get(f"/v1/mi-flows/{fid}")).json()
+    assert d["phase"] == "refine" and d["changes"] == 0                       # 저장 전에는 늘 0
+    out = (await env.c.post(f"/v1/mi-flows/{fid}:finish")).json()
+    assert out["stage"]["ver"] == 1
+    d = (await env.c.get(f"/v1/mi-flows/{fid}")).json()
+    assert d["phase"] == "done" and d["changes"] == 0 and d["saved_at"]
+    items = {x["summary"][:8]: x for x in d["items"]}
+
+    # 고치기: 하나 빼기 → 1 · 문장 고치기 → 2 · 검색어 맨 앞에 하나 끼우기 → 3(뒤 검색어가 다 바뀐 것으로 세지 않는다) · 조건 → 4
+    a, b = d["items"][0], d["items"][1]
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}/items/{a['id']}", json={"kept": False})).json()
+    assert d["changes"] == 1
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}/items/{b['id']}", json={"summary": b["summary"] + " — 확인"})).json()
+    assert d["changes"] == 2
+    qs = d["queries"]
+    qs["market"].insert(0, {"text": "오피스 리모델링 투자", "on": True, "by": "manual"})
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}", json={"queries": qs})).json()
+    assert d["changes"] == 3
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}", json={"filters": {"period": "최근 3년", "sourceTypes": d["filters"]["sourceTypes"]}})).json()
+    assert d["changes"] == 4 and d["phase"] == "done"
+
+    # 되돌리기 → 저장한 판 그대로 · changes 0
+    d = (await env.c.post(f"/v1/mi-flows/{fid}:revert")).json()
+    assert d["changes"] == 0 and d["phase"] == "done"
+    back = {x["id"]: x for x in d["items"]}
+    assert back[a["id"]]["kept"] is True and back[b["id"]]["summary"] == b["summary"]
+    assert [q["text"] for q in d["queries"]["market"]][0] != "오피스 리모델링 투자" and d["filters"]["period"] == "최근 1년"
+
+    # 저장한 MI 화면에서 바로 다시 검색(「검색어 · 조건 고치고 다시 검색」 · :analyze 없이) — 뺀 것 · 고친 문장 유지 + 새로 찾은 것만 v2 로
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}/items/{a['id']}", json={"kept": False})).json()
+    WEB["회의실 수요"] += " 리서치 기관 2026-07 조사에 따르면 오피스 라운지 이용 시간이 늘었다."
+    try:
+        r = await env.c.post(f"/v1/mi-flows/{fid}:search")
+        assert r.json()["phase"] == "searching"
+        await env.drain()
+    finally:
+        WEB["회의실 수요"] = WEB["회의실 수요"].replace(" 리서치 기관 2026-07 조사에 따르면 오피스 라운지 이용 시간이 늘었다.", "")
+    d = (await env.c.get(f"/v1/mi-flows/{fid}")).json()
+    byid = {x["id"]: x for x in d["items"]}
+    assert byid[a["id"]]["kept"] is False                                     # 화면에서 뺀 것은 그대로
+    new = [x for x in d["items"] if x["addedIn"] == "v2"]
+    assert [x["summary"] for x in new] == ["오피스 라운지 이용 시간이 늘었다."]
+    assert d["changes"] == 2 and d["status"] == "done" and d["ver"] == 1          # 뺀 것 1 + 새로 찾음 1
+    assert len(d["items"]) == len(items) + 1
+
+    # 저장 v2 → changes 0, 다시 고치고 되돌리면 v2 판으로
+    out = (await env.c.post(f"/v1/mi-flows/{fid}:finish")).json()
+    assert out["stage"]["ver"] == 2 and out["stage"]["prevVer"] == 1
+    d = (await env.c.get(f"/v1/mi-flows/{fid}")).json()
+    assert d["changes"] == 0 and d["phase"] == "done"
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}/items/{new[0]['id']}", json={"kept": False})).json()
+    assert d["changes"] == 1
+    d = (await env.c.post(f"/v1/mi-flows/{fid}:revert")).json()
+    assert d["changes"] == 0 and {x["id"]: x for x in d["items"]}[new[0]["id"]]["kept"] is True
+    flow = (await env.sb.get(f"/v1/flows/{sb}")).json()
+    assert flow["stages"]["mi"]["ver"] == 2
+
+
+async def test_old_saved_doc_gets_snapshot_on_read(flow_env):
+    """판 없이 저장된 예전 문서(v58)는 읽을 때 지금 값을 저장한 판으로 한 번 남긴다 → changes 0, 고치면 센다."""
+    env = flow_env
+    from winmate_mi import miflow as F
+
+    d = await _ready(env, await _storyboard(env.sb))
+    fid = d["id"]
+    await env.c.post(f"/v1/mi-flows/{fid}:search")
+    await env.drain()
+    await env.c.post(f"/v1/mi-flows/{fid}:finish")
+    raw = F._st().get(F.COLL, fid)
+    raw.pop(F.SNAPSHOT)
+    F._st().put(F.COLL, fid, raw, expected_version=raw["version"], keep_history=False)
+    assert F.SNAPSHOT not in F._st().get(F.COLL, fid)
+    d = (await env.c.get(f"/v1/mi-flows/{fid}")).json()
+    assert d["changes"] == 0 and F.SNAPSHOT in F._st().get(F.COLL, fid)
+    d = (await env.c.patch(f"/v1/mi-flows/{fid}/items/{d['items'][0]['id']}", json={"kept": False})).json()
+    assert d["changes"] == 1

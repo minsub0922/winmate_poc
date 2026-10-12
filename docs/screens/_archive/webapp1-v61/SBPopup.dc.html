@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>Storyboard 요약 팝업</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Noto+Sans+KR:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#1428a0;text-decoration:none}a:hover{color:#0f1f80}
+button{font-family:inherit;cursor:pointer}
+.sp-btn:focus-visible{outline:2px solid #1428a0;outline-offset:2px}
+</style>
+</helmet>
+<div role="dialog" aria-modal="true" aria-label="Storyboard 요약" style="width: 760px; height: 660px; box-sizing: border-box; background: #ffffff; border-radius: 18px; box-shadow: 0 28px 72px rgba(18,20,23,0.28); display: flex; flex-direction: column; overflow: hidden; font-family: 'Noto Sans KR', system-ui, sans-serif; color: #121417">
+  <div style="display: flex; align-items: flex-start; gap: 14px; padding: 20px 18px 14px 24px; flex-shrink: 0">
+    <span style="width: 38px; height: 38px; flex-shrink: 0; border-radius: 11px; background: #1428a0; display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4z M4 11h16 M10 11v8"/></svg></span>
+    <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1; min-width: 0">
+      <span style="font-size: 12px; font-weight: 600; color: #596170">Storyboard · {{id}}</span>
+      <span style="font-size: 19px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{name}}</span>
+      <span style="font-size: 12.5px; color: #596170">{{sub}}</span>
+    </div>
+    <button class="sp-btn" onClick="{{close}}" aria-label="닫기" style="width: 36px; height: 36px; flex-shrink: 0; border-radius: 10px; border: none; background: transparent; color: #596170; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div style="display: flex; gap: 4px; padding: 0 24px 14px 24px; flex-shrink: 0">
+    <sc-for list="{{track}}" as="t" hint-placeholder-count="8">
+      <div style="{{t.style}}">
+        <span style="font-size: 11px; font-weight: 700; white-space: nowrap">{{t.label}}</span>
+        <span style="font-family: Manrope, sans-serif; font-size: 10.5px; font-weight: 700; white-space: nowrap; opacity: 0.85">{{t.ref}}</span>
+      </div>
+    </sc-for>
+  </div>
+  <div style="flex-grow: 1; min-height: 0; margin: 0 24px; border: 1px solid #e2e5ea; border-radius: 12px; background: #fbfbfc; display: flex; flex-direction: column; overflow: hidden">
+    <div style="display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-bottom: 1px solid #eef0f3; flex-shrink: 0">
+      <span style="font-family: Manrope, sans-serif; font-size: 11px; font-weight: 800; color: #1428a0; letter-spacing: 0.06em">SUMMARY.MD</span>
+      <span style="font-size: 11.5px; color: #8a91a0">콘텐츠가 바뀔 때마다 자동 갱신</span>
+    </div>
+    <pre style="margin: 0; padding: 12px 14px; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 12.5px; line-height: 1.7; color: #121417; white-space: pre-wrap; overflow: hidden">{{md}}</pre>
+  </div>
+  <div style="display: flex; align-items: center; gap: 10px; padding: 14px 18px 16px 24px; flex-shrink: 0">
+    <span style="font-size: 12.5px; color: #596170; flex-grow: 1">{{when}}</span>
+    <button class="sp-btn" onClick="{{close}}" style="height: 42px; padding: 0 16px; border-radius: 10px; border: 1px solid #e2e5ea; background: #ffffff; color: #121417; font-size: 13.5px; font-weight: 600">닫기</button>
+    <a class="sp-btn" href="SB1.dc.html" style="height: 42px; padding: 0 18px; border-radius: 10px; background: #1428a0; color: #ffffff; font-size: 13.5px; font-weight: 700; display: flex; align-items: center; white-space: nowrap">Storyboard 열기</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"sb":{"editor":"enum","options":["SB-01","SB-02","SB-03","SB-04","SB-05","SB-06"],"default":"SB-01"},"onClose":{"editor":null},"$preview":{"width":760,"height":660}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const SBS = {
+      'SB-01': ['용산 AI Ready 오피스', 'E 자산운용', '', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-01 v1' }, '오늘 13:40', 'AI Ready 오피스의 새로운 모델'],
+      'SB-02': ['용산 AI Ready 오피스 · 분기 B', 'E 자산운용', 'SB-01 · MI에서 분기', { rq: 'RQ-01 v2', dss: 'DSS-01 v1', mi: 'MI-02 v1' }, '오늘 14:05', ''],
+      'SB-03': ['A 커피 매장 리뉴얼', 'A 커피 프랜차이즈', '', { rq: 'RQ-03 v1', dss: 'DSS-03 v1', ca: 'CA-03 v1', sp: 'SP-03 v1' }, '어제', ''],
+      'SB-04': ['동탄 시니어 복합단지', 'F 시행사', '', { rq: 'RQ-04 v1' }, '오늘 11:20', ''],
+      'SB-05': ['판교 스타트업 단지', 'G 공사', '', { rq: 'RQ-05 v1' }, '11/2', ''],
+      'SB-06': ['성수 플래그십 리테일', 'K 리츠', '', { rq: 'RQ-06 v1' }, '방금', '']
+    };
+    const CT = [['rq', '요구사항'], ['dss', 'DSS'], ['mi', 'MI'], ['ca', '경쟁사'], ['vp', 'VP'], ['sp', 'Spec'], ['sc', '시나리오'], ['ppt', '제안서']];
+    const SUM = {
+      'RQ-01 v2': '키맨 3 · 요구 12 · 확인 필요 4', 'DSS-01 v1': '오피스 · 공간 7 · 제품 12 · 솔루션 3', 'MI-01 v1': '담은 정보 11 (시장 4 · 고객사 4 · 사용자 3)', 'MI-02 v1': '담은 정보 9 · 리테일 테넌트 관점',
+      'RQ-03 v1': '키맨 2 · 요구 9', 'DSS-03 v1': '외식 · 카페 · 공간 3 · 제품 5 · 솔루션 1', 'CA-03 v1': '경쟁사 4', 'SP-03 v1': '제품 5 · 비교표',
+      'RQ-04 v1': '키맨 2 · 요구 9 · 확인 필요 7', 'RQ-05 v1': '키맨 1 · 요구 3 · 확인 필요 1', 'RQ-06 v1': '키맨 2 · 요구 5'
+    };
+    const id = this.props.sb ?? 'SB-01';
+    const [name, cust, from, done, when, km] = SBS[id] || SBS['SB-01'];
+    const track = CT.map(([k, label], i) => ({
+      label, ref: done[k] ? done[k].split(' ')[0] : '—',
+      style: 'flex: 1 1 0; min-width: 0; height: 46px; box-sizing: border-box; padding: 0 8px; border-radius: 8px; display: flex; flex-direction: column; justify-content: center; gap: 1px;' + (i === 2 || i === 7 ? ' margin-left: 6px;' : '') + (done[k] ? ' background: #1428a0; color: #ffffff;' : ' background: #f5f6f8; color: #8a91a0; border: 1px dashed #d5d9e0;')
+    }));
+    const lines = ['# ' + name, '고객: ' + cust + (from ? ' · ' + from : ''), ''];
+    if (km) lines.push('## Key message', km, '');
+    CT.forEach(([k, label]) => { if (done[k]) lines.push('## ' + label + ' · ' + done[k], '- ' + (SUM[done[k]] || ''), ''); });
+    const next = CT.filter(([k]) => !done[k]).map(([, l]) => l);
+    lines.push('## 남은 것', '- ' + next.join(' · '));
+    const noop = () => {};
+    return { id, name, sub: cust + (from ? ' · ' + from : ' · main'), track, md: lines.join('\n'), when: '마지막 갱신 · ' + when, close: this.props.onClose || noop };
+  }
+}
+</script>
+</body>
+</html>

@@ -343,3 +343,114 @@ async def test_spec_flow_draft_delete_and_dedupe(client, env):
         br = (await sb.post(f"/v1/flows/{f['id']}:branch", json={"stage": "sp"})).json()
         r = await client.post("/v1/spec-flows", json={"sb_id": br["id"]})
         assert r.status_code == 201 and r.json()["id"] not in (b["id"], c["id"])
+
+
+# ── 최종본에서 바로 고치기(2026-10-12 · 웹앱 ① v63 · 보드 SPBody · SP2_Edit) ──
+
+async def test_spec_flow_changes_revert_and_manual_cells(client, env):
+    """[확인 필요] 칸에 원문 값 적기 · 저장 → 판 · 고친 곳 n(항목 하나 = 1 · 제품 하나 더하면 1) · 되돌리기 · 다시 저장 v2(XLSX 도)."""
+    async with testing.api_client(env["storyboard"]) as sb:
+        f = await _sb(sb)
+        d = (await client.post("/v1/spec-flows", json={"sb_id": f["id"]})).json()
+        fid = d["id"]
+        assert d["changes"] == 0 and d["ver"] is None and d["file"] is None
+        # 저장 전 되돌리기 → 409 NOT_SAVED
+        r = await client.post(f"/v1/spec-flows/{fid}:revert")
+        assert r.status_code == 409 and r.json()["error"] == {"code": "NOT_SAVED", "message": "아직 저장하지 않아 되돌릴 판이 없어요", "details": {"id": fid}}
+        rows = {x["name"]: x for x in d["rows"]}
+        wall, qm = rows["The Wall IAB 146\""], rows["Smart Signage QM55C"]
+        # 수량 글(표 「공간 · 수량」): 개수 + 단위 · 카탈로그에 없는 행은 칸 전부 노란 칸, 카탈로그 값이 있는 칸은 아니다
+        assert qm["qty_text"] == "3대" and wall["qty_text"] == "1대"
+        assert wall["editable"] == list(wall["cells"]) and wall["manual"] == {}
+        assert "size_resolution" not in qm["editable"] and "warranty" in qm["editable"]
+        # [확인 필요] 칸에 원문 값 → 표시 · pending 에서 빠짐 / 카탈로그 값이 있는 칸은 422 / 빈 글은 지움
+        d = (await client.patch(f"/v1/spec-flows/{fid}/rows/{wall['key']}", json={"cells": {"size_resolution": '  146" ·  4K ', "power": "[확인 필요]"}})).json()
+        w2 = next(x for x in d["rows"] if x["key"] == wall["key"])
+        assert w2["cells"]["size_resolution"] == '146" · 4K' and w2["manual"] == {"size_resolution": '146" · 4K'}
+        assert "size_resolution" not in w2["pending"] and "power" in w2["pending"]
+        r = await client.patch(f"/v1/spec-flows/{fid}/rows/{qm['key']}", json={"cells": {"size_resolution": "65\""}})
+        assert r.status_code == 422 and r.json()["error"]["code"] == "CELL_FROM_CATALOG"
+        assert (await client.patch(f"/v1/spec-flows/{fid}/rows/{qm['key']}", json={"cells": {"nope": "x"}})).status_code == 422
+        d = (await client.patch(f"/v1/spec-flows/{fid}/rows/{qm['key']}", json={"cells": {"warranty": "3년"}})).json()
+        assert next(x for x in d["rows"] if x["key"] == qm["key"])["cells"]["warranty"] == "3년"
+        assert d["changes"] == 0                                  # 저장 전에는 세지 않는다
+
+        # 저장 → 판 · XLSX · stages.sp 에 직접 적은 값(manualSpecs)
+        out = (await client.post(f"/v1/spec-flows/{fid}:finish")).json()
+        assert out["file"]["name"] == "SP-01_v1.xlsx"
+        m_wall = next(m for m in out["stage"]["models"] if m["name"].startswith("The Wall"))
+        assert m_wall["specs"]["size_resolution"] == '146" · 4K' and m_wall["manualSpecs"] == ["size_resolution"]
+        assert "manualSpecs" not in next(m for m in out["stage"]["models"] if m["name"] == "Smart Signage QM55C")   # 보증은 고른 항목 밖
+        d = (await client.get(f"/v1/spec-flows/{fid}")).json()
+        assert d["ver"] == 1 and d["changes"] == 0 and d["file"]["name"] == "SP-01_v1.xlsx" and d["saved_at"]
+
+        # 고치기: 항목 하나 더함(보증) = 1 · 형식 = 1 · 칸 하나 = 1 · 제품 빼기 = 1
+        d = (await client.patch(f"/v1/spec-flows/{fid}", json={"items": d["items"] + ["warranty"]})).json()
+        assert d["changes"] == 1
+        d = (await client.patch(f"/v1/spec-flows/{fid}", json={"format": "per_product"})).json()
+        assert d["changes"] == 2
+        d = (await client.patch(f"/v1/spec-flows/{fid}/rows/{wall['key']}", json={"cells": {"power": "800 W"}})).json()
+        assert d["changes"] == 3
+        qb = rows["Smart Signage QB43C"]
+        d = (await client.patch(f"/v1/spec-flows/{fid}/rows/{qb['key']}", json={"on": False})).json()
+        assert d["changes"] == 4 and (await client.get(f"/v1/spec-flows/{fid}")).json()["changes"] == 4
+
+        # 되돌리기 → 저장한 판 · changes 0
+        d = (await client.post(f"/v1/spec-flows/{fid}:revert")).json()
+        assert d["changes"] == 0 and d["format"] == "compare" and "warranty" not in d["items"] and d["ver"] == 1
+        back = {x["key"]: x for x in d["rows"]}
+        assert back[qb["key"]]["on"] is True and back[wall["key"]]["manual"] == {"size_resolution": '146" · 4K'}
+        assert (await client.get(f"/v1/spec-flows/{fid}")).json()["changes"] == 0
+
+        # 앞에 제품 하나 더해도(DSS 밖 · 카탈로그) 1 — 모델은 이름 속 모델명으로 맞추고 값은 카탈로그에서
+        d = (await client.post(f"/v1/spec-flows/{fid}/rows", json={"name": "Smart Signage QH55C", "ref": None})).json()
+        qh = next(x for x in d["rows"] if x["name"] == "Smart Signage QH55C")
+        assert qh["source"] == "catalog" and qh["display_name"] == "QH55C" and qh["cells"]["size_resolution"].startswith('55"')
+        assert qh["spaces"] == [] and qh["qty"] is None and qh["qty_text"] == "[확인 필요]"
+        assert d["changes"] == 1
+        # 같은 이름을 다시 더하면 행이 늘지 않는다 · 카탈로그 행은 지울 수 있다(DSS 행은 422)
+        assert len((await client.post(f"/v1/spec-flows/{fid}/rows", json={"name": "Smart Signage QH55C"})).json()["rows"]) == len(d["rows"])
+        assert (await client.delete(f"/v1/spec-flows/{fid}/rows/{qm['key']}")).status_code == 422
+        # 모델을 바꾸면 그 행의 직접 적은 값은 지운다(다른 제품 값이 남지 않게)
+        other = (await client.get(f"/v1/spec-flows/{fid}/rows/{qm['key']}/models", params={"q": "QM65C"})).json()
+        code65 = next(o["model_code"] for o in other["items"] if o["display_name"] == "QM65C")
+        d = (await client.patch(f"/v1/spec-flows/{fid}/rows/{qm['key']}", json={"model_code": code65})).json()
+        assert next(x for x in d["rows"] if x["key"] == qm["key"])["manual"] == {}
+        assert d["changes"] == 3                                   # QH55C 행 · QM 모델 · QM 보증 칸
+        # DSS 다시 가져오기는 카탈로그 행을 「DSS에서 빠짐」으로 만들지 않는다
+        assert (await client.get(f"/v1/spec-flows/{fid}")).json()["dss_changed"] is None
+
+        # 다시 저장 → v2 · 판이 새로 · changes 0 · XLSX v2
+        out2 = (await client.post(f"/v1/spec-flows/{fid}:finish")).json()
+        assert out2["stage"]["ver"] == 2 and out2["file"]["name"] == "SP-01_v2.xlsx"
+        assert out2["stage"]["models"][-1] == {**out2["stage"]["models"][-1], "name": "Smart Signage QH55C", "source": "catalog"}
+        d = (await client.get(f"/v1/spec-flows/{fid}")).json()
+        assert d["ver"] == 2 and d["changes"] == 0
+        d = (await client.delete(f"/v1/spec-flows/{fid}/rows/{qh['key']}")).json()
+        assert d["changes"] == 1 and all(x["name"] != "Smart Signage QH55C" for x in d["rows"])
+
+
+async def test_spec_flow_old_saved_doc_gets_snapshot_lazily(client, env):
+    """판을 남기기 전에 저장한 시트 — 처음 읽을 때 지금 값을 판으로(고친 곳 0), 그 뒤로 고치면 센다 · 되돌리면 그 값."""
+    from winmate_spec import repo
+    async with testing.api_client(env["storyboard"]) as sb:
+        f = await _sb(sb)
+        d = (await client.post("/v1/spec-flows", json={"sb_id": f["id"]})).json()
+        assert (await client.post(f"/v1/spec-flows/{d['id']}:finish")).status_code == 200
+    st = repo.store()
+    doc = st.get("spec_flows", d["id"])
+    doc.pop("saved_snapshot")
+    doc["format"] = "per_product"                     # 판 없이 저장된 뒤 고쳐진 값 — 이것이 저장한 판으로 남는다
+    st.put("spec_flows", d["id"], doc)
+    g = (await client.get(f"/v1/spec-flows/{d['id']}")).json()
+    assert g["changes"] == 0 and "saved_snapshot" in st.get("spec_flows", d["id"])
+    g = (await client.patch(f"/v1/spec-flows/{d['id']}", json={"format": "compare", "notation": "en_inch"})).json()
+    assert g["changes"] == 2
+    g = (await client.post(f"/v1/spec-flows/{d['id']}:revert")).json()
+    assert g["changes"] == 0 and g["format"] == "per_product" and g["notation"] == "ko_mm"
+    # 고치기(update) 경로도 판을 남긴다 — GET 을 거치지 않은 옛 문서
+    doc = st.get("spec_flows", d["id"])
+    doc.pop("saved_snapshot")
+    st.put("spec_flows", d["id"], doc)
+    g = (await client.patch(f"/v1/spec-flows/{d['id']}", json={"items": ["power"]})).json()
+    assert g["changes"] == 5                          # 앞 6개 항목 중 power 만 남김 — 빠진 항목 하나 = 1

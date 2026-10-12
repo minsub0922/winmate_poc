@@ -149,3 +149,13 @@ export function josa(word: string, withFinal: string, withoutFinal: string) {
   if (/[0-9]/.test(ch)) return '0136780'.includes(ch) ? withFinal : withoutFinal;
   return /[lmnrLMNR]/.test(ch) ? withFinal : withoutFinal;
 }
+
+/** '으로/로' — 받침이 없거나 ㄹ 받침이면 '로'(숫자: 0 · 3 · 6 만 '으로', 영문: M · N 만 '으로'). `${ref}${josaRo(ref)} 되돌렸어요` */
+export function josaRo(word: string) {
+  const ch = word.trim().slice(-1);
+  if (!ch) return '로';
+  const c = ch.charCodeAt(0);
+  if (c >= 0xac00 && c <= 0xd7a3) { const f = (c - 0xac00) % 28; return f === 0 || f === 8 ? '로' : '으로'; }
+  if (/[0-9]/.test(ch)) return '036'.includes(ch) ? '으로' : '로';
+  return /[mnMN]/.test(ch) ? '으로' : '로';
+}

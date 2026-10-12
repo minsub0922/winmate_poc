@@ -1,6 +1,7 @@
 /**
  * 새 MI 흐름 API — contracts/mi.json `/v1/mi-flows*` → @/api/gen/mi(MF* 스키마). 화면은 문서 하나(MFDoc)를 읽고,
  * 바꾸는 호출은 모두 고친 문서를 돌려준다(캐시에 그대로 넣는다). AI 가 일하는 동안(analyzing · searching)은 문서를 폴링한다.
+ * 저장한 뒤 고친 곳 수는 문서 `changes`(서버가 저장한 판과 견줌) · 되돌리기 `:revert`(웹앱 ① v63).
  */
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, unwrap } from '@/api/client';
@@ -9,7 +10,6 @@ import type { components } from '@/api/gen/mi';
 type S = components['schemas'];
 export type MFDoc = S['MFDoc'];
 export type MFItem = S['MFItem'];
-export type MFSource = S['MFSource'];
 export type MFQuery = S['MFQuery'];
 export type MFQueries = S['MFQueries'];
 export type MFFilters = S['MFFilters'];
@@ -71,8 +71,13 @@ export const mfApi = {
   item: async (id: string, itemId: string, body: S['MFItemPatch']) =>
     unwrap(await mi.PATCH('/v1/mi-flows/{flow_id}/items/{item_id}', { params: { path: { flow_id: id, item_id: itemId } }, body })),
   finish: async (id: string) => unwrap(await mi.POST('/v1/mi-flows/{flow_id}:finish', P(id))),
+  /** 저장한 판으로 되돌리기(고친 곳 0) — 저장한 적 없으면 409 NOT_SAVED */
+  revert: async (id: string) => unwrap(await mi.POST('/v1/mi-flows/{flow_id}:revert', P(id))),
   stage: async (id: string) => unwrap(await mi.GET('/v1/mi-flows/{flow_id}/stage', P(id))),
 };
+
+/** 이 탭에서 방금 만든 MI(보드 View status=new — 들어오자마자 검색 팝업). 새로 고침하거나 팝업을 검색 전에 닫으면 작성 중(draft)으로 본다 */
+export const freshMi = new Set<string>();
 
 /** 목록 줄 × — 초안을 지우고 목록 · 사이드바 작업 이력(workspace 색인)을 새로 읽게 한다 */
 export function useMfDelete() {
@@ -98,13 +103,15 @@ export function useMfActions(id: string) {
     analyze: () => run(() => mfApi.analyze(id)),
     search: () => run(() => mfApi.search(id)),
     item: (itemId: string, body: S['MFItemPatch']) => run(() => mfApi.item(id, itemId, body)),
+    /** 저장 → 저장한 문서를 다시 읽어 캐시에 넣는다(화면이 그 자리에서 저장됨으로 바뀐다) */
     finish: async () => {
       const out = await mfApi.finish(id);
-      void qc.invalidateQueries({ queryKey: mfKey(id) });
+      put(await mfApi.get(id));
       void qc.invalidateQueries({ queryKey: mfListKey });
       void qc.invalidateQueries({ queryKey: ['storyboard'] });
       return out;
     },
+    revert: () => run(() => mfApi.revert(id)),
     refresh: async () => put(await mfApi.get(id)),
   };
 }

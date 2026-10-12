@@ -29,42 +29,41 @@ make contracts SERVICE=dss    # contracts/dss.json 갱신 + 깨지는 변경 검
 
 ## 현재 상태
 
-### 화면: 상세 = 최종본 한 장 + 단계 팝업(2026-10-12 · 보드 webapp1 v62)
-상세에는 페이지 이동이 없다(`docs/scenarios/11-content-flow.md` CF-09 · CF-12). `/dss/new` 빈 최종본 + ① Gate 팝업 · `/dss/:id` 최종본(DS_View · 본문 `DsView.tsx`) · `?step=space|solution` 팝업.
-완료 화면(FlowDoneView)은 없다 — 저장하면 팝업이 닫히고 최종본. 작성 중은 처음 열 때 이어서 할 단계 팝업, 저장된 것은 머리의 단계 칩 → 고치기 팝업(「저장 · vN+1」 · 고친 뒤 닫으면 물음). 공용 부품 `@/shell` ContentDetail · StepModal · StepSlot · useStepParam.
-
-
-> v62(2026-10-12)부터 아래 기록의 「편집 화면 · `?edit=1` · FlowContentView(보기)」는 위 「최종본 + 단계 팝업」으로 바뀌었다 — 고치기는 최종본 머리의 단계 칩 → `?step=` 팝업.
-
-### 새 흐름(2026-10-08 · 보드 webapp1 v58 DS0 · DS1 · DS2 · DS2_AI · DS4 · DS4_AI · 2026-10-12 v60 DS_View)
-수용 기준 `docs/scenarios/11-content-flow.md` §1 · §4 · §6. Storyboard(고객 요구사항까지) → 업종 · 공간 · 공간별 제품 → 솔루션(0개 이상) → 저장하면 허브 `stages.dss`.
+### 웹앱 ① v63 — 상세 한 장 · 최종본에서 바로 고치기(2026-10-12 · 보드 DS0 · DS1 · DS2 · DS2_AI · DS_Draft · DS2_Edit · DS_View · DS_ViewJson · DS4 · DS4_AI · 본문 DSBody · 팝업 SolPicker)
+공통 지침 `docs/handoff/2026-10-12-content-detail-v63.md`. 수용 기준 `docs/scenarios/11-content-flow.md` §1 · §4 · §6. Storyboard(고객 요구사항까지) → 업종 · 공간 · 공간별 제품 · 솔루션(0개 이상) → 저장하면 허브 `stages.dss`.
+단계 페이지(`?step=solution`) · 완료 화면(FlowDoneView)은 없앴다 — 새로 만들기 · 작성 중 · 저장됨 · 고치는 중이 모두 `/dss/:id` 한 화면.
 
 **API**(`contracts/dss.json` · 본체 `src/winmate_dss/dss.py`, 저장소 DocStore `dss`, 쓰기는 낙관적 잠금 · `expected_version` 이면 409)
 | 경로 | 하는 일 |
 |---|---|
-| `GET/POST /v1/dss` | 목록(보드 List 초안 줄) · 만들기 `{sb_id}` — `get_flow` 로 rq 요구 문장을 문맥으로(없으면 404 · rq 없으면 422 `PREREQUISITE_MISSING`). 번호 `DSS-nn` 은 허브 ref 와 겹치지 않게. **같은 Storyboard 의 저장 전 초안이 있으면 그 초안을 200 으로**(새로 만들면 201 · Gate 를 다시 거쳐도 초안이 늘지 않음 · 같은 Storyboard 동시 만들기는 잠금). 복제본은 분기 Storyboard 라 새 DSS |
-| `GET /v1/dss/{id}` | 한 건. 허브에만 있는 DSS(`DSS-<영숫자>` = 허브 ref)는 그 `stages.dss` 로 편집본을 만들어 준다(Gate 「수정」 · 목록 「열기」) |
-| `DELETE /v1/dss/{id}` | 저장 전 초안 지우기 204(소프트 삭제 + `unregister_item`) — 저장한 것(status done · ver · 허브에서 가져온 것)은 409 `SAVED_CONTENT` 「저장한 콘텐츠는 Storyboard에 연결돼 있어 지울 수 없어요」 · `?expected_version=` 다르면 409 VERSION_CONFLICT · 없으면 404 |
-| `PUT …/industry` | 업종 고르기 `{value}` · AI 추론 적용 `{accept_ai: true}` |
-| `POST/PATCH/DELETE …/spaces[/{key}]` | 공간 넣기(추천에 있던 이름이면 ai-accepted · 근거 유지, 직접 넣으면 이름 낱말이 모두 나오는 요구 문장을 근거로 — 없으면 null) · 이름 · 빼기 |
-| `GET …/spaces/{key}/candidates` | 이 공간의 KB S1 후보 제품군(제품 고르기 팝업 「KB 추천」) |
-| `POST …/spaces/{key}/products` · `PATCH/DELETE …/products/{pid}` | 제품 넣기(KB ref 또는 직접 = 「KB 에 없음 · 확인 필요」) · 수량(빈 값 → `[확인 필요]`) · 수락 · 빼기(추천 거절) |
-| `POST …:accept-all` | 공간별 제품 추천 모두 수락 |
-| `PUT …/solutions` · `GET …/solution-options` | 고른 솔루션(카탈로그 id) · 카드(관련 높은 순 · 함께 쓰는 제품 · AI 추천 · `relevant` · 겹침 안내 `overlap`) |
-| `POST …:suggest {scope}` | AI 추가기능(점선 → 수락): industry · spaces · products(`ds.industry_spaces.v1`) · solutions(`ds.solutions.v1`). 모델이 없거나 빈 답이면 KB 로 결정적(`mode=kb_only`) |
-| `POST …:finish` · `GET …/stage` | 저장 → `push_stage(sb, "dss", ref=DSS-nn, ver=저장 횟수, value=§6, md, card)` · `register_item(DS, /dss/{id})`. 공간 · 제품(수락한 것)이 없으면 422 |
+| `GET/POST /v1/dss` | 목록(보드 List 초안 카드) · 만들기 `{sb_id}` — `get_flow` 로 rq 요구 문장을 문맥으로(없으면 404 · rq 없으면 422 `PREREQUISITE_MISSING`). 번호 `DSS-nn` 은 허브 ref 와 겹치지 않게. **같은 Storyboard 의 저장 전 초안이 있으면 그 초안을 200 으로**(새로 만들면 201 · 같은 Storyboard 동시 만들기는 잠금). 복제본은 분기 Storyboard 라 새 DSS |
+| `GET /v1/dss/{id}` | 한 건(`changes` · `saved_at` 포함). 허브에만 있는 DSS(`DSS-<영숫자>` = 허브 ref)는 그 `stages.dss` 로 편집본을 만든다(저장한 판도 함께). 판 없이 예전에 저장한 문서는 읽을 때 지금 값을 판으로 남긴다(한 번 다시 씀) |
+| `DELETE /v1/dss/{id}` | 저장 전 초안 지우기 204 — 저장한 것 409 `SAVED_CONTENT` · `?expected_version=` 다르면 409 VERSION_CONFLICT · 없으면 404 |
+| `PUT …/industry` | 업종 고르기 `{value}` · AI 추론 수락 `{accept_ai: true}` |
+| `POST/PATCH/DELETE …/spaces[/{key}]` | 공간 넣기(추천 공간 이름이면 그 추천을 수락 = ai-accepted · 추천 근거 · `ext` · 그 공간의 제품 추천(점선)도 함께, 직접 넣으면 이름 낱말이 모두 나오는 요구 문장을 근거로) · 이름 · 빼기 |
+| `GET …/spaces/{key}/candidates` | 이 공간의 KB S1 후보 제품군(카드 안 제품 찾기의 「KB 추천」 · 제품 탐색 팝업) |
+| `POST …/spaces/{key}/products` · `PATCH/DELETE …/products/{pid}` | 제품 넣기(KB ref 또는 직접) · 수량(빈 값 → `[확인 필요]`) · 수락(추천 공간 안 제품을 수락하면 그 공간도 수락) · 빼기(추천 거절 · 추천 공간 안 제품도) |
+| `POST …:accept-all {scope}` | AI 추천 모두 수락 — 본문 없음 · `products`: 제품 추천만, `all`: 업종 추론 · 추천 공간 · 제품 추천 모두(점선 줄 「모두 수락」) |
+| `POST …:dismiss {kind, name}` | 점선 지우기 — `industry` · `space`(추천 공간 하나 · 없으면 404) · `all`(「모두 지우기」) |
+| `PUT …/solutions` · `GET …/solution-options[?selected=a,b]` | 고른 솔루션(카탈로그 id) · 카드(관련 높은 순 · 함께 쓰는 제품 · AI 추천 · `relevant` · 겹침 `overlap`). `selected` 를 주면 그 고름으로 on · 겹침(솔루션 고르기 팝업 — 넣기 전) |
+| `POST …:suggest {scope}` | AI 추가기능(점선 → 수락): industry · spaces · products(`ds.industry_spaces.v1` — 추천 공간에도 제품 추천을 붙인다) · solutions(`ds.solutions.v1`). 모델이 없거나 빈 답이면 KB 로 결정적(`mode=kb_only`) |
+| `POST …:finish` · `GET …/stage` | 저장 → `push_stage(sb, "dss", ref=DSS-nn, ver=저장 횟수, value=§6, md, card)` · `register_item` · **저장한 판(`saved_snapshot`, EDIT_KEYS = industry · spaces · solutions, 점선 제품은 뺌)**. 응답에 `ref` · `ver`. 공간 · 제품(수락한 것)이 없으면 422 |
+| `POST …:revert` | 저장한 판으로 되돌리기(changes 0 · 점선 제품도 빠짐) — 저장한 적 없으면 409 `NOT_SAVED` 「아직 저장하지 않아 되돌릴 판이 없어요」 |
 
-**웹**(`web/src/features/dss/`, CSS `dss.css` 접두어 `ds-`, 보드 인라인 px 그대로)
-- `/dss` DS0 = 셸 `ContentListScreen`(초안 = `GET /v1/dss` 의 draft, 줄마다 `onDelete` — 손을 올리면 × · 확인 → `useDsDelete` → 목록 · 사이드바 색인 새로) ·
-  `/dss/new` DS1 = 셸 `GateScreen`(`?sb=&auto=1` 이면 바로 만든다 · 서버가 기존 초안을 돌려주면(200) 「작성 중이던 DSS-nn 초안을 이어서 열어요」 알림)
-- `/dss/:id` 저장한 DSS(status done · ver) = DS_View 보기(`DsView.tsx`) · 저장 전 초안 · `?edit=1` = DS2 편집(`SpacesStep.tsx`): 머리(업종 220 목록 · AI 업종 추론 → 점선 줄 「적용」) · 공간 270 | 제품 1fr(직접 · AI 추천 점선 → 수락 · 추천 모두 수락 · 수량 눌러 고치기 · 상세 = 셸 제품 시트 · 빼기) ·
-  제품 검색 줄(결과는 위로) · 「제품 탐색에서 고르기」= `ProductPickerDialog`(KB 추천 + 카탈로그 + 직접) · 공간 빼기는 손을 올리면 ×
-- `&step=solution` DS4(`SolutionsStep.tsx`): 카드 2열(940 · 465) · AI 솔루션 추천(점선 · 근거) · 겹침 안내 · 상세 = 셸 솔루션 시트 · 관련 없는 것은 「솔루션 n개 더 보기」
-- 저장 → 문서 다시 읽어 캐시 · 목록 · 허브 무효화 → `?edit` · `?step` 을 떼고 같은 주소의 DS_View(완료 안내 · 토스트 없음 · 목록 「열기」 · 작업 내역 · 새로고침도 같은 보기).
-  DS_View = 셸 `FlowContentView`(SB 바 · 머리 `DSS-nn vN` · `… 저장 · 공간 n · 제품 n · 솔루션 n` · flow.json 팝업 · 「편집」 → `?edit=1` DS2) +
-  본문(CSS `dsv-`: 사실 4칸 업종 2fr | 공간 · 제품 · 솔루션 1fr · h60 · 공간 카드 4열(근거 · 제품 · 수량 — 비면 주황 「확인 필요」 · 직접/AI) · 솔루션 띠(근거 · 직접/AI 추천)) +
-  후속 작업 공간 시나리오 · Spec 시트(허브에 있으면 「열기」, 없으면 「만들기」 `/scenario/new?sb=&auto=1` · `/spec/new?sb=&auto=1`)
-- 셸 상세 시트 · 팝오버의 「현재 작업에 추가」: 제품 → 지금 고른 공간, 솔루션 → 고른 솔루션(`shellcfg.ts`)
+- **고친 곳(`changes`)**: `winmate_common.edits.changes_of` 로 지금과 저장한 판을 견준다 — 업종 값 · 공간(key 로 맞춤) 이름 · 제품(id 로 맞춤) 이름 · 수량 · 솔루션 id 만 센다
+  (함께 쓰는 제품 · qtyStatus · 직접 공간 근거 · 출처는 파생이라 세지 않음, 앞에 하나 끼워도 1). AI 점선(대기) 값은 수락해야 센다. 저장 전은 늘 0.
+- stage 의 공간에 `ext: true`(확장 공간 · 요구에는 없음)를 더했다(§6 값 모양은 그대로 — 더한 키).
 
-**테스트**: `make test SERVICE=dss` 12개(허브 연동 · AI mock · KB 대체 · 겹침 · 저장 · 허브 가져오기 · 같은 Storyboard 초안 다시 쓰기 · 지우기) · e2e `web/e2e/dss/dss-flow.spec.ts` 2개(저장 → DS_View · flow.json · 편집 → 다시 저장 v2 · 새로고침 · 목록 「열기」 · 캡처 DS_View-new · DS_ViewJson-new · `make e2e-feature SERVICE=dss`, 캡처 `web/e2e/dss/__screens__/<보드>-new.png`) ·
-`dss-draft.spec.ts` 1개(Gate 다시 시작 = 같은 초안 → 목록 × → 확인 → 빠짐 → 다시 시작 = 새 초안, 캡처 `DS0-draft-delete.png`)
+**웹**(`web/src/features/dss/`, CSS `dss.css` 접두어 `ds-`, 보드 인라인 px 그대로 · 틀은 셸 `ContentDetail` cd-*)
+- `/dss` DS0 = 셸 `ContentListScreen`(초안 카드 × → `useDsDelete`) · `/dss/new` DS1 = 셸 `GateScreen`(목록 위 팝업 · `?sb=&auto=1` 은 바로 만든다 · 기존 초안(200)이면 「작성 중이던 DSS-nn 초안을 이어서 열어요」)
+- `/dss/:id`(`DsPages.tsx` `DsDetail`) = `ContentDetail`(saved=`ver` 있음 · changes · empty = 이번 방문에 팝업으로 막 만든 것이거나 아무것도 없음 · 저장 토스트 「DSS-01 v2 저장 · …」
+  · 저장 막힘 이유 · 후속 작업 공간 시나리오 · Spec 시트 = 그 Storyboard 에 있으면 「SC-nn vN · 열기」, 없으면 `/scenario/new?sb=&auto=1` · `/spec/new?sb=&auto=1`) + 본문 `DsBody.tsx`(보드 DSBody):
+  요약 칸(업종 2.2fr: 근거 · 고르기 220 목록 · AI 추론 태그 · 수락 · AI 업종 추론 | 공간 | 제품 「수량 확인 필요 n」 | 솔루션) · 머리 줄(AI 공간 추천 · AI 공간별 제품 자동 매칭) · `PendingBar`(모두 지우기 = `:dismiss all` · 모두 수락 = `:accept-all all`)
+  · 공간 카드 4열(이름 `InlineInput` · 제품 n · 「+ 제품」 → 카드 안 찾기 칸(비면 KB 추천 · 쓰면 KB 검색 · 직접) · 「제품 탐색」 = `ProductPickerDialog` · × · 근거 · 제품 줄 「모델(누르면 셸 제품 시트) · 수량 60 · 직접/AI · 점선이면 수락 ×」)
+  · 「+ 공간 추가」 점선 카드 · 솔루션 띠(칩 최대 236 · 근거 · 출처 · × · 「+ 고르기」 · AI 솔루션 추천) → `SolPicker.tsx`(820×700 · 고른 것은 「고른 솔루션 넣기」를 눌러야 들어감 · 「AI 솔루션 추천」으로 열면 바로 추천)
+- 저장한 뒤 이 화면에서 고친 칸은 `cd-in--chg`(수량 · 공간 이름 · 업종), 더한 제품 줄은 `cd-chgrow` — 화면 상태(저장 · 되돌리기 하면 지움, 고친 곳 0 이면 안 보임)
+- 셸 상세 시트 · 팝오버의 「현재 작업에 추가」: 제품 → 첫 공간, 솔루션 → 고른 솔루션(`shellcfg.ts`)
+
+**테스트**: `make test SERVICE=dss` 18개(허브 연동 · AI mock · KB 대체 · 겹침 · 저장 · 허브 가져오기 · 초안 다시 쓰기 · 지우기 · **고친 곳 · 되돌리기 · v2 · 판 없는 예전 문서 · 허브 가져온 판 · 추천 공간의 제품 · 모두 수락/지우기 · 팝업 고름 미리보기**) ·
+e2e `web/e2e/dss/dss-flow.spec.ts` 2개(목록 → 팝업 → 상세(새로 만들기) → 입력 → AI → 솔루션 팝업 → 저장 → 저장됨 → 고친 곳 → 나가기 확인 → 되돌리기 → v2 · `?sb=&auto=1` · 1920 · 업종 목록 · 저장 막힘,
+캡처 `web/e2e/dss/__screens__/DS1 · DS2 · DS2_AI · DS4 · DS4_AI · DS_View · DS_ViewJson · DS2_Edit.png`) · `dss-draft.spec.ts` 1개(팝업 다시 시작 = 같은 초안(작성 중) → 목록 × → 확인 → 빠짐 → 다시 시작 = 새 초안, 캡처 `DS0-draft-delete.png`)

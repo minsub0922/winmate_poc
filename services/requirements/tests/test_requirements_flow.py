@@ -230,3 +230,104 @@ async def test_finish_without_hub_keeps_saving(ai, app):
         d = await _put(c, await _new(c), BOARD_FORM)
         out = (await c.post(f"/v1/rq-flows/{d['id']}:finish")).json()
         assert out["flow_sync"] is None and out["sb_id"] is None and out["doc"]["status"] == "done" and out["doc"]["sb_ids"] == []
+
+
+async def test_changes_and_revert_after_save(hub, app):
+    """v63 상세 한 장 — 저장 → 고치기 → changes(앞에 끼워도 1) → :revert(값 · changes 0) → 다시 고쳐 저장 v2(changes 0)."""
+    async with testing.api_client(app) as c, testing.api_client(hub.rec["storyboard"].app) as sb:
+        d = await _put(c, await _new(c), BOARD_FORM)
+        assert d["changes"] == 0                                         # 저장 전에는 세지 않는다
+        r = await c.post(f"/v1/rq-flows/{d['id']}:revert")
+        assert r.status_code == 409 and r.json()["error"] == {"code": "NOT_SAVED", "message": "아직 저장하지 않아 되돌릴 판이 없어요", "details": {"code": d["code"]}}
+
+        out = (await c.post(f"/v1/rq-flows/{d['id']}:finish")).json()
+        sb_id = out["sb_id"]
+        s = out["doc"]
+        assert s["ver"] == 1 and s["changes"] == 0 and "saved_snapshot" not in s
+        assert (await c.get(f"/v1/rq-flows/{d['id']}")).json()["changes"] == 0
+
+        # 요구 문장 하나 고치기 → 1
+        km0 = s["keymen"][0]
+        reqs = [{**km0["reqs"][0]}, {**km0["reqs"][1], "text": "테넌트별 콘텐츠 원격 운영"}, km0["reqs"][2]]
+        e1 = await _put(c, s, {**BOARD_FORM, "keymen": [{**km0, "reqs": reqs}, s["keymen"][1]]})
+        assert e1["changes"] == 1
+        # 첫 키맨 요구 목록 맨 앞에 하나 끼우기 → 2(뒤 요구들을 다 바뀐 것으로 세지 않는다)
+        e2 = await _put(c, e1, {**BOARD_FORM, "keymen": [{**km0, "reqs": [{"text": "입주 전 시범 운영 공간"}, *reqs]}, e1["keymen"][1]]})
+        assert e2["changes"] == 2
+        # 최종 제안대상 · 제작자 의견도 사람이 고치는 칸 → 4
+        e3 = await _put(c, e2, {**BOARD_FORM, "target": "자산관리본부장", "note": "스펙인 목표 · 야간 운영 강조", "keymen": e2["keymen"]})
+        assert e3["changes"] == 4
+        # 빈 문장으로 되돌리면(같은 값) 세지 않는다 · 같은 값으로 다시 써도 그대로
+        assert (await c.get(f"/v1/rq-flows/{d['id']}")).json()["changes"] == 4
+        # Storyboard 는 저장 전이라 그대로(v1)
+        assert (await sb.get(f"/v1/flows/{sb_id}")).json()["stages"]["rq"]["target"] == ""
+
+        # 되돌리기 → 저장한 판 값 · changes 0 · 판 번호(ver) · 연결은 그대로
+        rv = await c.post(f"/v1/rq-flows/{d['id']}:revert")
+        assert rv.status_code == 200, rv.text
+        back = rv.json()
+        assert back["changes"] == 0 and back["ver"] == 1 and back["sb_ids"] == [sb_id] and back["status"] == "done"
+        assert back["target"] == "" and back["note"] == BOARD_FORM["note"]
+        assert [r["text"] for r in back["keymen"][0]["reqs"]] == ["1층 파사드 미디어로 집객", "테넌트별 콘텐츠 운영", "시설 원격 관리"]
+        assert [r["id"] for r in back["keymen"][0]["reqs"]] == [r["id"] for r in km0["reqs"]]
+        assert back["counts"] == {"keymen": 2, "reqs": 5, "check": 1, "weight_sum": 100}
+        assert (await c.get(f"/v1/rq-flows/{d['id']}")).json()["changes"] == 0
+
+        # 다시 고쳐 저장 → v2 · changes 0 · Storyboard 반영
+        e4 = await _put(c, back, {**BOARD_FORM, "target": "대표이사", "keymen": back["keymen"]})
+        assert e4["changes"] == 1
+        out2 = (await c.post(f"/v1/rq-flows/{d['id']}:finish")).json()
+        assert out2["doc"]["ver"] == 2 and out2["doc"]["changes"] == 0 and out2["created"] is False
+        assert (await sb.get(f"/v1/flows/{sb_id}")).json()["stages"]["rq"]["target"] == "대표이사"
+        # 저장 직후 되돌리기는 바뀌는 것 없음(v2 판)
+        same = (await c.post(f"/v1/rq-flows/{d['id']}:revert")).json()
+        assert same["target"] == "대표이사" and same["changes"] == 0 and same["ver"] == 2
+
+
+async def test_changes_keyman_add_remove_and_weights(hub, app):
+    """키맨 더하기 · 빼기 · 가중치 · 확인 필요 — 화면의 칸 하나 = 1. 빈 키맨 자리 · 빈 요구 줄은 세지 않는다."""
+    async with testing.api_client(app) as c:
+        s = (await c.post(f"/v1/rq-flows/{(await _put(c, await _new(c), BOARD_FORM))['id']}:finish")).json()["doc"]
+        k0, k1 = s["keymen"]
+        # 빈 키맨 자리(이름 · 요구 없음)만 더하면 0 — 가중치는 그대로 둔다
+        e = await _put(c, s, {**BOARD_FORM, "keymen": [k0, k1, {"role": "", "weight": 0, "reqs": []}]})
+        assert e["changes"] == 0
+        # 이름을 쓰면 키맨 하나 더함 = 1
+        e = await _put(c, e, {**BOARD_FORM, "keymen": [k0, k1, {**e["keymen"][2], "role": "개발사업팀장"}]})
+        assert e["changes"] == 1
+        # 가중치 하나 바꾸기 + 확인 필요 표시 하나 → 3
+        e = await _put(c, e, {**BOARD_FORM, "keymen": [{**k0, "weight": 50, "reqs": [{**k0["reqs"][0], "flag": "ask", "status": "check"}, *k0["reqs"][1:]]}, k1, e["keymen"][2]]})
+        assert e["changes"] == 3
+        # 두 번째 키맨 빼기 → 4
+        e = await _put(c, e, {**BOARD_FORM, "keymen": [e["keymen"][0], e["keymen"][2]]})
+        assert e["changes"] == 4
+        back = (await c.post(f"/v1/rq-flows/{s['id']}:revert")).json()
+        assert [(k["role"], k["weight"]) for k in back["keymen"]] == [("자산관리팀장", 60), ("마케팅 리드", 40)] and back["changes"] == 0
+        assert back["keymen"][0]["reqs"][0]["status"] == "ok"
+
+
+async def test_old_saved_doc_gets_snapshot_on_read(hub, app):
+    """예전에 저장해 판이 없는 문서 — 읽을 때 지금 값을 판으로 남기고(한 번 다시 씀), 그 뒤 고친 곳을 센다. 고치기 · 되돌리기만 먼저 와도 같다."""
+    from winmate_requirements import rqflow
+    async with testing.api_client(app) as c:
+        s = (await c.post(f"/v1/rq-flows/{(await _put(c, await _new(c), BOARD_FORM))['id']}:finish")).json()["doc"]
+        await rqflow.update(s["id"], lambda x: x.pop("saved_snapshot", None))     # 판을 남기기 전에 저장한 문서 흉내
+        raw = rqflow._store().get(rqflow.COLL, s["id"])
+        assert "saved_snapshot" not in raw
+        g = (await c.get(f"/v1/rq-flows/{s['id']}")).json()
+        assert g["changes"] == 0 and g["version"] == raw["version"] + 1
+        assert rqflow._store().get(rqflow.COLL, s["id"])["saved_snapshot"]["title"] == BOARD_FORM["title"]
+        g2 = (await c.get(f"/v1/rq-flows/{s['id']}")).json()
+        assert g2["version"] == g["version"]                                   # 한 번만 다시 쓴다
+        e = await _put(c, g2, {**BOARD_FORM, "customer": "K 리츠 자산운용", "keymen": g2["keymen"]})
+        assert e["changes"] == 1
+        assert (await c.post(f"/v1/rq-flows/{s['id']}:revert")).json()["customer"] == "K 리츠"
+
+        # 읽기 없이 바로 고친 경우(PUT 이 먼저) — 고치기 전 값이 판이 된다
+        s2 = (await c.post(f"/v1/rq-flows/{(await _put(c, await _new(c), BOARD_FORM))['id']}:finish")).json()["doc"]
+        await rqflow.update(s2["id"], lambda x: x.pop("saved_snapshot", None))
+        cur = rqflow.to_api(rqflow._store().get(rqflow.COLL, s2["id"]))
+        assert cur["changes"] == 0
+        e2 = await _put(c, cur, {**BOARD_FORM, "target": "대표이사", "keymen": cur["keymen"]})
+        assert e2["changes"] == 1
+        assert (await c.post(f"/v1/rq-flows/{s2['id']}:revert")).json()["target"] == ""

@@ -1,12 +1,10 @@
 /**
- * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`,
- * 콘텐츠 상세(최종본 View + 단계 팝업 · 보드 v62)는 `./detail`.
+ * 콘텐츠 흐름 공통 화면(보드 webapp1 SBBar · SBPopup · ContentPopup · Gate) — 데이터는 Storyboard 허브(`./api`). 목록(List)은 `./list`, 상세(최종본 한 장 · 보드 v63 View)는 `./detail`.
  * 기능 화면은 이것만 조합한다. 보드 px 그대로(본문 열 1180 안에서).
  */
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router';
-import { useShellPage } from '../ShellContext';
-import { ErrorState, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast, useInStepPopup } from '@/ui';
+import { ErrorState, Icon, LinkedStoryboardBar, Modal, PathIcon, Skeleton, cx, josa, toast } from '@/ui';
 import {
   CONTENT, ORDER, STAGE_LABEL, branchFlow, doneKeys, useFlow, useFlowInvalidate, useFlows, useFlowsById,
   type ContentKey, type FlowCell, type FlowDoc, type FlowListItem, type StageKey,
@@ -124,7 +122,7 @@ export function ContentPopup({ flow, stage, onClose }: { flow: FlowDoc | undefin
         {!card && <span className="fl-muted">이 콘텐츠의 요약 카드가 아직 없어요 · 콘텐츠에서 다시 저장하면 생겨요</span>}
       </div>
       <div className="fl-popfoot fl-popfoot--cp"><span>{card?.foot ?? ''}</span>
-        {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={cell.route} onClick={onClose}>콘텐츠 열기 · 단계별로 고치기</Link>}
+        {cell?.route && <Link className="wm-btn wm-btn--h42 fl-popbtn14" to={cell.route} onClick={onClose}>콘텐츠 열기</Link>}
         <button type="button" className="wm-btn wm-btn--primary wm-btn--h42 fl-popbtn18" onClick={onClose}>닫기</button></div>
     </Modal>
   );
@@ -135,24 +133,21 @@ export function ContentPopup({ flow, stage, onClose }: { flow: FlowDoc | undefin
 export interface GateStart { sbId: string; flow: FlowListItem }
 
 /**
- * 사전 작업 Storyboard 고르기(보드 Gate · MI1 · MI1_Branch) — 고를 수 없는 Storyboard 는 아래(점선), 같은 콘텐츠가 있으면 수정 / 복제본.
- * onStart: 새로 만들 때(새 Storyboard 또는 분기 뒤) 콘텐츠 자원을 만들고 그 편집 경로를 돌려준다.
+ * 사전 작업 Storyboard 고르기 팝업(보드 v63 Gate · MI1 · MI1_Branch — 목록 위 880×780). 목록에서 「새 ○○ 만들기」를 누르면 바로 뜨고,
+ * 고르면 그 콘텐츠 화면으로 넘어간다. 고를 수 없는 Storyboard 는 점선(막힘), 같은 콘텐츠가 있으면 「열어 고치기」/ 「분기 만들고 시작」.
+ * onStart: 새로 만들 때(새 Storyboard 또는 분기 뒤) 콘텐츠 자원을 만들고 그 화면 경로를 돌려준다. 닫으면 onClose(목록 그대로).
  */
-export function GateScreen({ content, onStart, initialSb, autoStart, drafts = [], openStep }: {
+export function GateDialog({ content, onStart, initialSb, autoStart, drafts = [], onClose }: {
   content: Exclude<ContentKey, 'rq'>; onStart: (s: GateStart) => Promise<string>; initialSb?: string | null;
-  /** 이미 있는 콘텐츠 「수정」 · 초안 이어 쓰기로 열 때 붙일 단계(`?step=<키>`) — 최종본 위에 그 단계 팝업이 열린다(보드 v62) */
-  openStep?: string;
-  /** Storyboard 화면의 「만들기」(`?sb=&auto=1`) — 그 Storyboard 에 아직 이 콘텐츠가 없으면 고르기를 건너뛰고 바로 만든다(CF-07) */
+  /** Storyboard 화면 · 후속 작업의 「만들기」(`?sb=&auto=1`) — 그 Storyboard 에 아직 이 콘텐츠가 없으면 고르기를 건너뛰고 바로 만든다(CF-07) */
   autoStart?: boolean;
-  /** 이 기능의 저장 전 초안(목록과 같은 모양) — 그 Storyboard 줄에 「작성 중 초안」을 띄우고 시작 버튼은 「초안 이어 쓰기」(새로 만들지 않고 그 초안을 연다) */
+  /** 이 기능의 저장 전 초안 — 그 Storyboard 줄에 「작성 중 초안」, 시작 버튼은 「초안 이어 쓰기」(새로 만들지 않고 그 초안을 연다) */
   drafts?: DraftRow[];
+  onClose: () => void;
 }) {
   const m = CONTENT[content];
   const nav = useNavigate();
   const inval = useFlowInvalidate();
-  const inPop = useInStepPopup();
-  const withStep = (to: string) => (openStep ? `${to}${to.includes('?') ? '&' : '?'}step=${openStep}` : to);
-  useShellPage({ section: m.label, title: `새 ${m.short}`, hasTask: false, stepper: { steps: m.steps, current: 1 } });
   const q = useFlows(content);
   const items = q.data?.items ?? [];
   const firstOk = items.find((x) => x.eligible)?.id ?? null;
@@ -166,17 +161,19 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
   const dr = ex ? null : draftOf(cur?.id);
   const exRef = ex ? `${ex.ref} v${ex.ver}` : '';
   const sharedN = useMemo(() => (ex ? 1 + (ex.shared?.length ?? 0) : 0), [ex]);
-  const cta = !cur ? '이 Storyboard로 시작' : dr ? '초안 이어 쓰기' : !ex ? '이 Storyboard로 시작' : choice === 'edit' ? `${ex.ref} 수정하기` : '분기 만들고 시작';
+  const cta = !cur ? '이 Storyboard로 시작' : dr ? '초안 이어 쓰기' : !ex ? '이 Storyboard로 시작' : choice === 'edit' ? `${ex.ref} 열어 고치기` : '분기 만들고 시작';
   const nextLetter = 'BCDEFGH'[Math.min(items.filter((x) => x.parent === cur?.id).length, 6)];
-  const foot = !cur ? '' : dr ? `작성 중이던 ${dr.ref ?? m.short} 초안을 이어서 열어요` : !ex ? `${cur.name}에 ${m.short}${josa(m.short, '이', '가')} 연결돼요` : choice === 'edit' ? '수정 내용은 요약본에 바로 반영돼요' : `‘${cur.name} · 분기 ${nextLetter}’가 새로 생겨요`;
+  const foot = !cur ? '' : dr ? `작성 중이던 ${dr.ref ?? m.short} 초안을 이어서 열어요` : !ex ? `고르면 바로 ${m.short} 화면으로 넘어가요`
+    : choice === 'edit' ? `${ex.ref} 화면을 열어 그 자리에서 고쳐요` : `‘${cur.name} · 분기 ${nextLetter}’가 생기고 새 ${m.short} 화면으로 넘어가요`;
   const autoRef = useRef(false);
+  const auto = !!(autoStart && initialSb);
   useEffect(() => {
     if (!autoStart || autoRef.current || !initialSb || !q.data) return;
     const it = q.data.items.find((x) => x.id === initialSb);
-    if (!it || !it.eligible || it.existing) return;
+    if (!it || !it.eligible || it.existing) { autoRef.current = true; return; }
     autoRef.current = true;
     const d0 = draftOf(it.id);
-    if (d0) { nav(withStep(d0.to), { replace: true }); return; }
+    if (d0) { nav(d0.to, { replace: true }); return; }
     setBusy(true);
     onStart({ sbId: it.id, flow: it }).then((to) => nav(to, { replace: true })).catch((e) => { toast((e as Error).message || '시작하지 못했어요'); setBusy(false); });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- 초안 목록은 첫 자동 시작 때 한 번만 본다
@@ -185,71 +182,81 @@ export function GateScreen({ content, onStart, initialSb, autoStart, drafts = []
     if (!cur || busy) return;
     setBusy(true);
     try {
-      if (dr) { nav(withStep(dr.to), { replace: inPop }); return; }
-      if (ex && choice === 'edit' && ex.route) { nav(withStep(ex.route), { replace: inPop }); return; }
+      if (dr) { nav(dr.to); return; }
+      if (ex && choice === 'edit' && ex.route) { nav(ex.route); return; }
       if (ex && choice === 'branch') {
         const b = await branchFlow(cur.id, content);
         inval();
         const to = await onStart({ sbId: b.id, flow: { ...cur, id: b.id, name: b.name, parent: cur.id, is_branch: true } });
-        nav(to, { replace: inPop });
+        nav(to);
         return;
       }
-      nav(await onStart({ sbId: cur.id, flow: cur }), { replace: inPop });
+      nav(await onStart({ sbId: cur.id, flow: cur }));
     } catch (e) { toast((e as Error).message || '시작하지 못했어요'); } finally { setBusy(false); }
   };
   return (
-    <div className={cx('fl-gate', inPop && 'fl-gate--pop')}>
-      <div className="fl-gatehead">
-        <h1>어느 Storyboard로 만들까요?</h1>
-        <div className="fl-gatedesc"><span className="fl-tag fl-tag--brand fl-tag--h24">사전 작업</span><span>{m.preDesc}이 있어야 시작할 수 있어요. 없으면 먼저 만들고 와 주세요.</span></div>
-      </div>
-      {q.isLoading && <Skeleton h={300} r={14} />}
-      {q.isError && <ErrorState message="Storyboard 목록을 불러오지 못했어요" onRetry={() => q.refetch()} />}
-      {!q.isLoading && !items.length && (
-        <div className="fl-empty"><b>아직 Storyboard가 없어요</b><span>고객 요구사항을 저장하면 Storyboard가 자동으로 만들어져요.</span><Link className="fl-emptybtn" to="/requirements/new">새 요구사항</Link></div>
-      )}
-      <div className="fl-gaterows" role="radiogroup" aria-label="Storyboard">
-        {items.map((r) => {
-          const can = !!r.eligible;
-          const on = can && cur?.id === r.id;
-          const has = r.existing;
-          const rd = has ? null : draftOf(r.id);
-          return (
-            <div key={r.id} className={cx('fl-grow', !can && 'fl-grow--off', on && 'fl-grow--on')}>
-              <button type="button" className="fl-growbtn" role="radio" aria-checked={on} aria-disabled={!can} onClick={() => { if (can) { setSel(r.id); setChoice('edit'); } }}>
-                <span className={cx('fl-radio', !can && 'fl-radio--off', on && 'fl-radio--on')} />
-                <span className="fl-growtxt">
-                  <span className="fl-growname"><b>{r.name}</b>{r.is_branch && <span className="fl-branch">분기</span>}</span>
-                  <span className="fl-growmeta"><span>{r.customer ?? ''}</span><FlowDots cells={r.cells} /><span>{r.progress}</span></span>
-                </span>
-                <span className={cx('fl-pill', !can ? 'fl-pill--off' : has ? 'fl-pill--has' : rd ? 'fl-pill--draft' : 'fl-pill--go')}>{!can ? `${m.preShort} 먼저` : has ? `${has.ref} v${has.ver} 있음` : rd ? '작성 중 초안 있음' : '이어서 만들기'}</span>
-              </button>
-              {!can && <Link className="fl-prego" to={m.preHref}>{m.preShort} 하러 가기</Link>}
-              <button type="button" className="fl-ghost" onClick={() => setPop(r.id)} aria-label={`${r.name} 요약 보기`}>요약</button>
+    <>
+      <Modal open onClose={onClose} width={880} height={780} ariaLabel={`새 ${m.short} 만들기 · Storyboard 고르기`}
+        bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div className="fl-pophead fl-pophead--gate">
+          <span className="fl-popic"><PathIcon d={m.icon} size={19} color="var(--wm-brand)" /></span>
+          <span className="fl-poptitles"><span className="fl-popname">{m.newLabel} 만들기</span>
+            <span className="fl-popsub">사전 작업 · 고른 Storyboard에 {m.short}{josa(m.short, '이', '가')} 연결돼요 · 닫으면 목록 그대로</span></span>
+          <PopX onClose={onClose} />
+        </div>
+        <div className="fl-gate fl-gate--pop" aria-busy={(auto && busy) || undefined}>
+          <div className="fl-gatehead">
+            <h1>어느 Storyboard로 만들까요?</h1>
+            <div className="fl-gatedesc"><span className="fl-tag fl-tag--brand fl-tag--h24">사전 작업</span><span>{m.preDesc}이 있어야 시작할 수 있어요. 없으면 먼저 만들고 와 주세요.</span></div>
+          </div>
+          {q.isLoading && <Skeleton h={300} r={14} />}
+          {q.isError && <ErrorState message="Storyboard 목록을 불러오지 못했어요" onRetry={() => q.refetch()} />}
+          {!q.isLoading && !items.length && (
+            <div className="fl-empty"><b>아직 Storyboard가 없어요</b><span>고객 요구사항을 저장하면 Storyboard가 자동으로 만들어져요.</span><Link className="fl-emptybtn" to="/requirements/new">새 요구사항</Link></div>
+          )}
+          <div className="fl-gaterows" role="radiogroup" aria-label="Storyboard">
+            {items.map((r) => {
+              const can = !!r.eligible;
+              const on = can && cur?.id === r.id;
+              const has = r.existing;
+              const rd = has ? null : draftOf(r.id);
+              return (
+                <div key={r.id} className={cx('fl-grow', !can && 'fl-grow--off', on && 'fl-grow--on')}>
+                  <button type="button" className="fl-growbtn" role="radio" aria-checked={on} aria-disabled={!can} onClick={() => { if (can) { setSel(r.id); setChoice('edit'); } }}>
+                    <span className={cx('fl-radio', !can && 'fl-radio--off', on && 'fl-radio--on')} />
+                    <span className="fl-growtxt">
+                      <span className="fl-growname"><b>{r.name}</b>{r.is_branch && <span className="fl-branch">분기</span>}</span>
+                      <span className="fl-growmeta"><span>{r.customer ?? ''}</span><FlowDots cells={r.cells} /><span>{r.progress}</span></span>
+                    </span>
+                    <span className={cx('fl-pill', !can ? 'fl-pill--off' : has ? 'fl-pill--has' : rd ? 'fl-pill--draft' : 'fl-pill--go')}>{!can ? `${m.preShort} 먼저` : has ? `${has.ref} v${has.ver} 있음` : rd ? '작성 중 초안 있음' : '이어서 만들기'}</span>
+                  </button>
+                  {!can && <Link className="fl-prego" to={m.preHref}>{m.preShort} 하러 가기</Link>}
+                  <button type="button" className="fl-ghost" onClick={() => setPop(r.id)} aria-label={`${r.name} 요약 보기`}>요약</button>
+                </div>
+              );
+            })}
+          </div>
+          {ex && (
+            <div className="fl-exist">
+              <b>이 Storyboard에는 {m.short} {exRef}{josa(exRef, '이', '가')} 이미 있어요</b>
+              <div className="fl-opts" role="radiogroup">
+                {([['edit', '수정', `${exRef}${josa(exRef, '을', '를')} 고쳐요.${sharedN > 1 ? ` 연결된 Storyboard ${sharedN}개 모두에 반영돼요.` : ' 이 Storyboard에만 연결돼 있어요.'}`],
+                  ['branch', '복제본 만들기', `Storyboard를 분기해 새 ${m.short}${josa(m.short, '을', '를')} 만들어요. 앞 단계는 그대로 공유하고, 원본 ${exRef}는 바뀌지 않아요.`]] as const).map(([id, t, d]) => (
+                  <button key={id} type="button" role="radio" aria-checked={choice === id} className={cx('fl-opt', choice === id && 'fl-opt--on')} onClick={() => setChoice(id)}>
+                    <span className="fl-optt"><span className={cx('fl-radio fl-radio--18', choice === id && 'fl-radio--on18')} /><b>{t}</b></span><span className="fl-optd">{d}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          );
-        })}
-      </div>
-      {ex && (
-        <div className="fl-exist">
-          <b>이 Storyboard에는 {m.short} {exRef}{josa(exRef, '이', '가')} 이미 있어요</b>
-          <div className="fl-opts" role="radiogroup">
-            {([['edit', '수정', `${exRef}${josa(exRef, '을', '를')} 고쳐요.${sharedN > 1 ? ` 연결된 Storyboard ${sharedN}개 모두에 반영돼요.` : ' 이 Storyboard에만 연결돼 있어요.'}`],
-              ['branch', '복제본 만들기', `Storyboard를 분기해 새 ${m.short}${josa(m.short, '을', '를')} 만들어요. 앞 단계는 그대로 공유하고, 원본 ${exRef}는 바뀌지 않아요.`]] as const).map(([id, t, d]) => (
-              <button key={id} type="button" role="radio" aria-checked={choice === id} className={cx('fl-opt', choice === id && 'fl-opt--on')} onClick={() => setChoice(id)}>
-                <span className="fl-optt"><span className={cx('fl-radio fl-radio--18', choice === id && 'fl-radio--on18')} /><b>{t}</b></span><span className="fl-optd">{d}</span>
-              </button>
-            ))}
+          )}
+          <div className="fl-gatefoot">
+            <span style={{ flex: 1 }} />
+            <span className="fl-footline">{foot}</span>
+            <button type="button" className="fl-cta" onClick={go} disabled={!cur || busy} aria-busy={busy || undefined}>{busy ? '여는 중…' : cta}<Icon name="arrowRight" size={16} strokeWidth={2.2} /></button>
           </div>
         </div>
-      )}
-      <div className="fl-gatefoot">
-        {!inPop && <Link className="wm-flow__back" to={`/${m.base}`}><Icon name="chevronLeft" size={14} strokeWidth={2.4} />목록</Link>}
-        <span style={{ flex: 1 }} />
-        <span className="fl-footline">{foot}</span>
-        <button type="button" className="fl-cta" onClick={go} disabled={!cur || busy} aria-busy={busy || undefined}>{busy ? '여는 중…' : cta}<Icon name="arrowRight" size={16} strokeWidth={2.2} /></button>
-      </div>
+      </Modal>
       <SBPopup id={pop} onClose={() => setPop(null)} />
-    </div>
+    </>
   );
 }

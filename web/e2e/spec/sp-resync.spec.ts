@@ -1,10 +1,8 @@
 /**
  * Spec 시트 새 흐름 — DSS 다시 가져오기 · 초안 지우기 · 같은 Storyboard 초안 이어 쓰기(2026-10-10 · 보드에 없음).
- * Storyboard(rq → dss) → `/spec/new?sb=&auto=1` → 최종본 위 ② 시트 작성 팝업(SP2) → 허브에 바뀐 DSS(판 +1: 삼성 키오스크 빠짐 · Smart Signage QH55C 새로)를 넣고 →
- * 팝업 머리 아래 안내 줄(AiBar) · 「다시 가져오기」 → 행 더함(DSS에서 새로) · 빠진 행 경고(DSS에서 빠짐) · 지우기 → 목록에서 초안 지우기.
- * 안내 줄은 팝업 안에 있고(다시 가져오기는 팝업에서), 팝업을 닫으면 최종본 머리 아래에도 같은 줄이 보인다(「시트 작성에서 다시 가져오기」 → ② 팝업).
- * 안내 줄이 있으면 그 줄(38 + 사이 12)만큼 작업 그리드가 줄고 칸 폭(330 · 756)은 그대로다. 팝업 좌표는 1440×900 에서 (130, 50) 기준.
- * 캡처 `__screens__/SP2-resync-new.png` · `SP_Draft-resync-new.png` · `SP2-resynced-new.png`.
+ * Storyboard(rq → dss) → `/spec/new?sb=&auto=1` → SP2 → 허브에 바뀐 DSS(판 +1: 삼성 키오스크 빠짐 · Smart Signage QH55C 새로)를 넣고 →
+ * 상세(보드 v63 SPBody) 본문 맨 위 안내 줄(AiBar) · 「다시 가져오기」 → 행 더함(DSS에서 새로) · 빠진 행 경고(DSS에서 빠짐) · 지우기 → 목록에서 초안 지우기.
+ * 안내 줄이 있으면 그 줄(38 + 사이 12)만큼 띠 · 표가 내려가고 칸 폭(190 · 160)은 그대로다. 캡처 `__screens__/SP2-resync.png` · `SP2-resynced.png`.
  * 실행: cd web && PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers WM_E2E_SUITE=spec WM_E2E_DEV=1 WM_E2E_PORT=5206 npx playwright test e2e/spec/sp-resync.spec.ts --workers=1
  */
 import path from 'node:path';
@@ -13,8 +11,9 @@ import { expect, test, type Locator, type Page } from '@playwright/test';
 import { DSS_VALUE, internalHeaders, makeStoryboard, shotTo, tag } from '../shell/flowkit';
 
 const DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), '__screens__');
-const shot = async (page: Page, name: string) => { await page.mouse.move(10, 890); await shotTo(page, DIR, name); };
+const shot = async (page: Page, name: string) => { await page.mouse.move(10, 890); await expect(page.locator('.wm-toast')).toHaveCount(0, { timeout: 10_000 }); await shotTo(page, DIR, name); };
 const box = async (l: Locator) => { const b = (await l.boundingBox())!; return { x: Math.round(b.x), y: Math.round(b.y), w: Math.round(b.width), h: Math.round(b.height) }; };
+const w = async (l: Locator) => Math.round((await l.boundingBox())!.width);
 
 /** DSS_VALUE 에서 로비의 삼성 키오스크를 빼고 Smart Signage QH55C 를 더한 판 */
 function dssV2() {
@@ -33,19 +32,17 @@ test('Spec 시트 — DSS 다시 가져오기(안내 줄 · 행 추가 · DSS에
   const dss0 = (await (await request.get(`/api/storyboard/v1/flows/${sb.id}`)).json()).stages.dss as { ref: string; ver: number };
 
   await page.goto(`/spec/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(/\/spec\/flow\/sfl_[0-9A-Za-z]+\?step=sheet$/, { timeout: 30_000 });
-  const fid = page.url().split('/').pop()!.split('?')[0];
-  const rows = page.getByTestId('sf-row');
+  await expect(page).toHaveURL(/\/spec\/flow\/sfl_[0-9A-Za-z]+$/, { timeout: 30_000 });
+  const fid = page.url().split('/').pop()!;
+  const rows = page.getByTestId('spd-row');
   await expect(rows).toHaveCount(6);
   await expect(page.getByTestId('sf-dss-changed')).toHaveCount(0);
-  await expect(page.getByTestId('spv-dss-changed')).toHaveCount(0);
-  const before = await box(page.getByTestId('sf-products'));
-  expect(before).toEqual({ x: 170, y: 211, w: 330, h: 559 });     // 보드 SP2 팝업 그대로(sp-flow.spec 과 같은 값)
+  const strip0 = await box(page.getByTestId('spd-strip'));
+  expect(strip0).toEqual({ x: 300, y: 196, w: 1100, h: 48 });     // 보드 SP2 그대로(sp-flow.spec 과 같은 값)
 
-  // 같은 Storyboard 로 다시 시작(Gate · 자동) → 새 시트가 아니라 저장 전 초안으로(② 팝업이 열린 채로)
+  // 같은 Storyboard 로 다시 시작(팝업 · 자동) → 새 시트가 아니라 저장 전 초안으로
   await page.goto(`/spec/new?sb=${sb.id}&auto=1`);
-  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}\\?step=sheet$`), { timeout: 30_000 });
-  await expect(page.locator('.fl-stepdlg')).toBeVisible();
+  await expect(page).toHaveURL(new RegExp(`/spec/flow/${fid}$`), { timeout: 30_000 });
 
   // 허브의 DSS 가 바뀜(판 +1)
   const put = await request.put(`/api/storyboard/v1/flows/${sb.id}/stages/dss`, {
@@ -58,43 +55,28 @@ test('Spec 시트 — DSS 다시 가져오기(안내 줄 · 행 추가 · DSS에
   await expect(line).toHaveText(`Storyboard의 DSS가 바뀌었어요 · ${dss0.ref} v${dss0.ver} → v${dss0.ver + 1} · 제품 1 추가 · 1 빠짐`);
   const bar = page.locator('.wm-aibar').filter({ has: line });
   await expect(bar.getByRole('button', { name: '다시 가져오기' })).toBeVisible();
-  // 안내 줄(38 · 팝업 안 머리 아래) — 작업 그리드만 그만큼(38 + 12) 줄고 칸 폭 · 시트 만들기 버튼 자리는 그대로
-  await expect(page.locator('.fl-stepdlg').locator('.wm-aibar')).toHaveCount(1);
-  expect(await box(bar)).toMatchObject({ x: 170, w: 1100, h: 38 });
-  expect(await box(page.getByTestId('sf-products'))).toEqual({ x: 170, y: 211 + 50, w: 330, h: 559 - 50 });
-  expect((await box(page.getByTestId('sf-preview'))).w).toBe(756);
-  expect(await box(page.getByRole('button', { name: '시트 만들기' }))).toMatchObject({ y: 782, h: 48 });
+  // 안내 줄(38 · 본문 맨 위) — 띠 · 표만 그만큼(38 + 12) 내려가고 칸 폭 · 저장 버튼 자리는 그대로
+  expect(await box(bar)).toMatchObject({ x: 300, y: 196, w: 1100, h: 38 });
+  expect(await box(page.getByTestId('spd-strip'))).toEqual({ ...strip0, y: strip0.y + 50 });
+  expect(await w(page.getByTestId('spd-table').getByRole('columnheader').first())).toBe(190);
   await expect(rows).toHaveCount(6);                                 // 다시 가져오기 전에는 그대로
-  await shot(page, 'SP2-resync-new');
-
-  // 팝업을 닫으면 작성 중 최종본 머리 아래에도 같은 안내(보드에 없음) — 「시트 작성에서 다시 가져오기」 → ② 팝업
-  await page.getByRole('button', { name: '팝업 닫기' }).click();
-  await expect(page.locator('.fl-stepdlg')).toHaveCount(0);
-  const vline = page.getByTestId('spv-dss-changed');
-  await expect(vline).toHaveText(`Storyboard의 DSS가 바뀌었어요 · ${dss0.ref} v${dss0.ver} → v${dss0.ver + 1} · 제품 1 추가 · 1 빠짐`);
-  const vbar = page.locator('.fl-detail .wm-aibar').filter({ has: vline });
-  expect(await box(vbar)).toMatchObject({ x: 300, w: 1100, h: 38 });
-  await shot(page, 'SP_Draft-resync-new');
-  await vbar.getByRole('button', { name: '시트 작성에서 다시 가져오기' }).click();
-  await expect(page).toHaveURL(/step=sheet/);
-  await expect(line).toBeVisible();
+  await shot(page, 'SP2-resync');
 
   // 다시 가져오기 → 토스트 · 안내 줄 사라짐 · QH55C 행 더함(DSS에서 새로 · KB 모델) · 키오스크는 남기고 「DSS에서 빠짐」
   await bar.getByRole('button', { name: '다시 가져오기' }).click();
   await expect(page.locator('.wm-toast').filter({ hasText: 'DSS를 다시 가져왔어요 · 제품 1 추가 · 1개 「DSS에서 빠짐」 표시' })).toBeVisible({ timeout: 30_000 });
   await expect(page.getByTestId('sf-dss-changed')).toHaveCount(0);
-  await expect(page.getByTestId('spv-dss-changed')).toHaveCount(0);   // 최종본 머리 아래 줄도 함께 사라진다
   await expect(rows).toHaveCount(7);
   const qh = page.locator('[data-row="Smart Signage QH55C"]');
   await expect(qh).toHaveAttribute('data-dss', 'added');
-  await expect(qh.locator('.sf-row__sp')).toHaveText('로비 · DSS에서 새로');
-  await expect(qh.locator('.sf-model')).toHaveText('QH55C');
+  await expect(qh.locator('.spd-space')).toHaveText('로비 · 1대 · DSS에서 새로');
+  await expect(qh.getByRole('cell').nth(1)).toHaveText(/^55"/);      // KB 모델 값
   const kiosk = page.locator('[data-row="삼성 키오스크"]');
   await expect(kiosk).toHaveAttribute('data-dss', 'removed');
-  await expect(kiosk.locator('.sf-row__sp')).toHaveText('로비 · DSS에서 빠짐');
-  await expect(page.getByTestId('sf-preview').locator('.sf-cell--head')).toContainText(['Smart Signage QH55C']);
-  expect(await box(page.getByTestId('sf-products'))).toEqual(before);   // 안내 줄이 없어지면 보드 자리로
-  await shot(page, 'SP2-resynced-new');
+  await expect(kiosk.locator('.spd-space')).toHaveText('로비 · 1대 · DSS에서 빠짐');
+  await expect(page.getByTestId('spd-strip').getByTestId('spd-warn')).toHaveText(/^삼성 키오스크 · DSS에서 빠짐/);
+  expect(await box(page.getByTestId('spd-strip'))).toEqual(strip0);   // 안내 줄이 없어지면 보드 자리로
+  await shot(page, 'SP2-resynced');
   const doc = await (await request.get(`/api/spec/v1/spec-flows/${fid}`)).json();
   expect(doc).toMatchObject({ dss_ref: dss0.ref, dss_ver: dss0.ver + 1, dss_changed: null });
   expect(doc.last_resync).toMatchObject({ added: ['Smart Signage QH55C'], removed: ['삼성 키오스크'] });

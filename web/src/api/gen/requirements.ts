@@ -600,7 +600,7 @@ export interface paths {
         };
         /**
          * Get Rq Flow
-         * @description id(rqf_…) 또는 코드(RQ-NN).
+         * @description id(rqf_…) 또는 코드(RQ-NN). changes = 마지막 저장 판과 다른 곳 수(고친 곳 n).
          */
         get: operations["get_rq_flow"];
         /**
@@ -652,8 +652,29 @@ export interface paths {
         /**
          * Finish Rq Flow
          * @description 저장 — 처음이면 Storyboard 자동 생성(create_flow), 다음부터는 stages.rq 반영(push_stage). ver = 저장 횟수.
+         *     저장한 값을 판으로 남긴다(이 뒤로 고치면 문서 changes 가 센다).
          */
         post: operations["finish_rq_flow"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/rq-flows/{flow_id}:revert": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Revert Rq Flow
+         * @description 저장한 판으로 되돌리기(고친 곳 0) — 저장한 적 없으면 409 NOT_SAVED(「아직 저장하지 않아 되돌릴 판이 없어요」), 파일로 채우는 중이면 409 FILLING.
+         */
+        post: operations["revert_rq_flow"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2057,6 +2078,12 @@ export interface components {
         };
         /** RFDoc */
         RFDoc: {
+            /**
+             * Changes
+             * @description 마지막 저장 판과 지금 값의 다른 곳 수(고친 곳 n) — 저장한 적 없으면 0
+             * @default 0
+             */
+            changes: number;
             /** Code */
             code: string;
             counts: components["schemas"]["RFCounts"];
@@ -4776,6 +4803,46 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RFStageOut"];
+                };
+            };
+        };
+    };
+    revert_rq_flow: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                flow_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 요청 오류 */
+            "4XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description 서버 오류 */
+            "5XX": {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RFDoc"];
                 };
             };
         };

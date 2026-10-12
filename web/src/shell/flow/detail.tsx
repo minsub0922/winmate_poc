@@ -1,336 +1,252 @@
 /**
- * 콘텐츠 상세 = 최종본 한 장 + 단계 팝업(보드 webapp1 v62 — View · StepHead · *_Draft · *_Edit · 단계 보드는 모두 View 위 팝업).
+ * 콘텐츠 상세(보드 webapp1 v63 View · *_View · *_Edit · *_Draft) — 최종본 한 장에서 바로 입력 · 수정 · 저장한다. 단계 팝업은 없다.
  *
- *   콘텐츠 상세에는 페이지 이동이 없다. 늘 최종본(ContentDetail)이고, 단계 화면은 그 위에 뜨는 StepModal 이다.
- *   - 새로 만들기: 빈 최종본(status="new", 칸마다 StepSlot) + 1단계 팝업 → 「다음」은 팝업 안에서 다음 단계로 → 마지막 「저장」에서 팝업이 닫히고 최종본이 채워진다.
- *   - 중간에 닫으면 작성 중(status="draft") — 채운 칸만 보이고 다음 단계 칸에 「이어서」.
- *   - 저장된 콘텐츠: 머리의 단계 칩을 누르면 그 단계 팝업만 열려 고치고(저장하면 버전 +1) 닫힌다.
+ *   <ContentDetail content="dss" saved={!!doc.ver} changes={doc.changes} empty={…} title={doc.title} refCode={doc.code} ver={doc.ver}
+ *     savedAt={doc.saved_at} updatedAt={doc.updated_at} facts={['공간 7', '제품 12', '솔루션 3']} sbIds={[doc.sb_id]}
+ *     onSave={save} onRevert={revert} nexts={[…]}>
+ *     {본문 — 높이를 채우고 패널 안에서만 스크롤}
+ *   </ContentDetail>
  *
- *   <ContentDetail content="dss" status="saved" title="…" refVer="DSS-01 v1" meta="…" sbIds={[…]} steps={CONTENT.dss.steps}
- *     done={3} onStep={(k) => open(k)} json="dss" follow={<DetailFollow … />}>…최종본 본문…</ContentDetail>
- *   <StepModal open={step != null} content="dss" title="…" mode="new" sbId="SB-05" note="…" steps={…} current={step} done={1}
- *     onStep={open} onClose={close}><SpacesStep … /></StepModal>
+ * 상태(보드 View status): saved(저장됨 · 고친 곳 없음) · editing(저장됨 · 고친 곳 n — 머리에 「고친 곳 n · 되돌리기 · 저장 · vN+1」)
+ *   · new(아직 저장 전 · 비어 있음) · draft(아직 저장 전 · 무언가 씀 — 작성 중으로 자동 저장).
+ * 저장된 것을 고치다 다른 화면으로 가면 저장할지 묻는다(useBlocker). 팝업은 기능이 따로 하는 일(고르기 · MI 검색)에만 쓴다.
+ * 인라인 편집 공용 클래스(detail.css): cd-in · cd-in--chg · cd-pend · cd-aib · cd-ok · cd-x · cd-add · cd-tag--*.
  */
-import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router';
-import { Button, Icon, JsonPopup, Modal, PathIcon, StepPopupContext, cx, focusablesIn } from '@/ui';
-import { CONTENT, useFlow, useFlowsById, type ContentKey } from './api';
-import { FlowBar, SBPopup, whenText } from './parts';
+import { useEffect, useLayoutEffect, useRef, useState, type ChangeEvent, type FocusEvent, type HTMLAttributes, type KeyboardEvent, type MutableRefObject, type ReactNode, type Ref } from 'react';
+import { Link, useBlocker } from 'react-router';
+import { useShellPage } from '../ShellContext';
+import type { ShellPageConfig } from '../types';
+import { FlowScreen, Icon, JsonPopup, Modal, PathIcon, cx, josaRo, toast } from '@/ui';
+import { CONTENT, useFlow, useFlowInvalidate, type ContentKey } from './api';
+import { FlowBar, whenText } from './parts';
 import './detail.css';
 
-export type DetailStatus = 'saved' | 'new' | 'draft';
+export type DetailMode = 'saved' | 'editing' | 'new' | 'draft';
 
-const SB_ICON = 'M4 5h16v14H4z M4 11h16 M10 11v8';
-const CHECK = 'M5 12l5 5L20 7';
-
-// ── 단계 칩(최종본 머리) ─────────────────────────────
-
-/** 최종본 머리의 단계 칩(보드 View nav) — 저장됨: 「단계별 고치기」 · Storyboard 는 요약 팝업, 나머지는 그 단계 팝업.
- *  새로 · 작성 중: 「단계 n/N」 · 마친 단계와 다음 단계만 누를 수 있다. */
-function StepNav({ steps, done, status, onStep, onSb }: { steps: readonly string[]; done: number; status: DetailStatus; onStep: (k: number) => void; onSb: (() => void) | null }) {
-  const saved = status === 'saved';
-  const n = steps.length;
-  return (
-    <nav className="fl-dnav" aria-label="단계">
-      <span className="fl-dnav__label">{saved ? '단계별 고치기' : `단계 ${Math.min(n, done + (status === 'new' ? 1 : 0))}/${n}`}</span>
-      {steps.map((label, i) => {
-        const k = i + 1;
-        const isDone = saved || k <= done;
-        const next = !saved && k === done + 1;
-        const sb = label === 'Storyboard';
-        const can = saved || isDone || next;
-        // 사전 작업(Storyboard)을 고른 뒤에는 그 칩이 연결된 Storyboard 요약 팝업이다(콘텐츠를 만든 뒤 Storyboard 는 바꾸지 않는다)
-        const sbPop = sb && isDone && onSb;
-        const tip = sbPop ? '연결된 Storyboard 요약' : saved ? `${label} 단계를 팝업으로 열어 고쳐요` : isDone ? `${label} 단계로 돌아가요` : next ? '이 단계를 팝업으로 열어요' : '앞 단계를 마치면 열려요';
-        return (
-          <span key={label} className="fl-dnav__item">
-            {i > 0 && <Icon name="chevronRight" size={12} color="#b8bec8" strokeWidth={2.4} />}
-            <button type="button" className={cx('fl-dstep', next && 'fl-dstep--next', !can && 'fl-dstep--off')} title={tip} disabled={!can}
-              aria-label={`${label} · ${tip}`} data-step={k} onClick={() => (sbPop ? onSb() : onStep(k))}>
-              <span className={cx('fl-dstep__c', isDone ? 'fl-dstep__c--done' : next ? 'fl-dstep__c--next' : 'fl-dstep__c--todo')}>
-                {isDone ? <PathIcon d={CHECK} size={9} color="#fff" strokeWidth={3.4} /> : k}
-              </span>
-              <span className="fl-dstep__t">{label}</span>
-              {saved && !sb && <PathIcon d="M4 20h4L19 9l-4-4L4 16v4z" size={11} color="#8a91a0" strokeWidth={2.4} />}
-            </button>
-          </span>
-        );
-      })}
-    </nav>
-  );
+export interface NextCard {
+  /** 후속 콘텐츠 키(아이콘) */
+  key: ContentKey;
+  title: string;
+  desc: string;
+  /** 그 Storyboard 에 이미 있으면 「참조 vN」 · 열기, 없으면 만들기 */
+  ref?: string | null;
+  to: string;
 }
 
-// ── 최종본 ───────────────────────────────────────────
+export function detailMode({ saved, changes, empty }: { saved: boolean; changes?: number | null; empty?: boolean }): DetailMode {
+  if (saved) return (changes ?? 0) > 0 ? 'editing' : 'saved';
+  return empty ? 'new' : 'draft';
+}
 
-export interface ContentDetailProps {
+const PILL: Record<DetailMode, string> = { saved: 'cd-ref--saved', editing: 'cd-ref--editing', new: 'cd-ref--new', draft: 'cd-ref--draft' };
+
+export function ContentDetail<T = unknown>({
+  content, saved, changes = 0, empty = false, title, refCode, ver, savedAt, updatedAt, facts, sbIds, onSave, onRevert,
+  saveLabel, actions, nexts = [], canSave = true, children, savedToast, shell,
+}: {
   content: ContentKey;
-  status: DetailStatus;
-  /** 콘텐츠 이름(보드 View h1) */
+  /** 한 번이라도 저장했는가(ver 있음) */
+  saved: boolean;
+  /** 저장 뒤 고친 곳 수(서버 changes) */
+  changes?: number | null;
+  /** 저장 전인데 아직 비어 있으면 「새로 만들기」, 무언가 있으면 「작성 중」 */
+  empty?: boolean;
   title: string;
-  /** 저장됨: `DSS-01 v1` · 새로 · 작성 중이면 비워 둔다(칩은 「새로 만들기」 · 「작성 중 n/N」) */
-  refVer?: string | null;
-  /** 머리 한 줄(저장 시각 · 수) — 비우면 상태 문구 */
-  meta?: ReactNode;
-  /** 연결된 Storyboard(첫째가 지금 Storyboard) — 비면 sbEmpty */
-  sbIds: string[];
-  sbNote?: ReactNode;
-  sbEmpty?: string;
-  /** 단계 이름(CONTENT[content].steps) */
-  steps: readonly string[];
-  /** 마친 단계 수(저장됨이면 무시 — 전부) */
-  done: number;
-  /** 단계 칩 · 자리표시 「이어서」 → 그 단계 팝업 */
-  onStep: (k: number) => void;
-  /** 머리 오른쪽 추가 버튼(Spec XLSX 내려받기 등 — 저장됨일 때만) */
-  actions?: ReactNode;
-  /** flow.json 버튼(저장됨 · Storyboard 가 있을 때) — 이 키의 stages 줄을 강조 */
-  json?: ContentKey;
-  /** 머리 아래 안내 줄(DSS 바뀜 · 저장하지 않은 고침 등) */
-  notice?: ReactNode;
-  /** 작성 중 머리 줄의 마지막 손댄 시각 */
+  refCode?: string | null;
+  ver?: number | null;
+  savedAt?: string | null;
   updatedAt?: string | null;
-  /** 후속 작업 카드(저장됨일 때만 · DetailFollow) */
-  follow?: ReactNode;
+  /** 머리 한 줄의 수(저장됨: 「오늘 10:10 저장 · 공간 7 · 제품 12」, 작성 중: 「작성 중 · 공간 6 · 제품 9 · …」) */
+  facts: string[];
+  sbIds: string[];
+  /** 저장(완료) — 끝나면 상위가 문서를 새로 읽는다 */
+  onSave: () => Promise<T>;
+  /** 저장한 판으로 되돌리기(고친 곳이 있을 때) */
+  onRevert?: () => Promise<unknown>;
+  saveLabel?: string;
+  /** 머리 오른쪽에 더할 버튼(Spec 시트 XLSX 내려받기 등) */
+  actions?: ReactNode;
+  nexts?: NextCard[];
+  /** false 거나 이유 문구면 저장 버튼을 막는다(예: 제품 없는 공간이 있어요) */
+  canSave?: boolean | string;
+  /** 저장 뒤 토스트(기본 「저장했어요」) */
+  savedToast?: (out: T) => string;
+  /** 셸에 더 넘길 값 — 셸 시트 · 팝오버의 「현재 작업에 추가」(hasTask · onAdd · addable · added · taskContext) · 끌어 놓기(accepts). section · title 은 이 틀이 정한다 */
+  shell?: Omit<ShellPageConfig, 'section' | 'title'>;
   children: ReactNode;
-}
-
-/** 콘텐츠 상세(보드 View) — 최종본 한 장. 본문은 기능이 그린다(칸이 비면 StepSlot). */
-export function ContentDetail({ content, status, title, refVer, meta, sbIds, sbNote, sbEmpty, steps, done, onStep, actions, json, notice, follow, updatedAt, children }: ContentDetailProps) {
-  const m = CONTENT[content];
-  const saved = status === 'saved';
-  const n = steps.length;
-  const [sbPop, setSbPop] = useState<string | null>(null);
-  const [jsonOpen, setJsonOpen] = useState(false);
-  const sbId = sbIds[0] ?? null;
-  const flow = useFlow(saved && json && jsonOpen ? sbId : null);
-  const chip = saved ? (refVer ?? '') : status === 'new' ? '새로 만들기' : `작성 중 ${done}/${n}`;
-  const metaLine = meta ?? (saved ? '' : status === 'new'
-    ? `아직 저장 전 · 단계 ${Math.min(n, done + 1)}/${n} 진행 중 · 팝업을 닫아도 작성 중으로 남아요`
-    : `작성 중 · ${n}단계 중 ${done}단계 마침${updatedAt ? ` · ${whenText(updatedAt)}` : ''} · 저장하면 ${content === 'rq' ? 'Storyboard가 만들어져요' : sbId ? `${sbId}에 연결돼요` : 'Storyboard에 연결돼요'}`);
-  return (
-    <div className="wm-flow fl-detail" data-status={status} data-content={content}>
-      <FlowBar sbIds={sbIds} current={content} note={sbNote ?? (!saved && sbIds.length ? '저장하면 이 Storyboard에 연결돼요' : undefined)}
-        emptyText={sbEmpty ?? (content === 'rq' ? '저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요' : '① Storyboard 단계에서 골라요')} />
-      <section className="fl-dsec">
-        <div className="fl-dhead">
-          <span className="fl-dhead__ic" aria-hidden><PathIcon d={m.icon} size={21} color="var(--wm-brand)" strokeWidth={2} /></span>
-          <span className="fl-dhead__t">
-            <span className="fl-dhead__row"><h1>{title}</h1>{chip && <span className={cx('fl-dver', saved ? 'fl-dver--saved' : status === 'new' ? 'fl-dver--new' : 'fl-dver--draft')}>{chip}</span>}</span>
-            {metaLine && <span className="fl-dhead__meta">{metaLine}</span>}
-          </span>
-          {saved && actions}
-          <StepNav steps={steps} done={saved ? n : done} status={status} onStep={onStep} onSb={sbId ? () => setSbPop(sbId) : null} />
-          {saved && json && sbId && (
-            <button type="button" className="fl-dbtn" onClick={() => setJsonOpen(true)}><span className="fl-dbtn__mono">{'{ }'}</span>flow.json</button>
-          )}
-        </div>
-        {notice}
-        <div className="fl-dbody">{children}</div>
-        {saved && follow && <div className="fl-dfollow"><span className="fl-dfollow__h">후속 작업</span>{follow}</div>}
-      </section>
-      <SBPopup id={sbPop} onClose={() => setSbPop(null)} />
-      {json && <JsonPopup open={jsonOpen} onClose={() => setJsonOpen(false)} json={flow.data?.flow_json ?? {}} highlightKey={json}
-        title={sbId ? `${sbId}/flow.json` : 'flow.json'} sub={`초록 줄이 이 콘텐츠(stages.${json})예요`} />}
-    </div>
-  );
-}
-
-/** 아직 비어 있는 칸(보드 View 자리표시) — 그 칸을 채우는 단계 · 다음 단계면 진한 테두리, 작성 중이면 「이어서 · 단계」 */
-export function StepSlot({ n, label, what, next, cta, onOpen, big }: {
-  n: number; label: string; what: string; next: boolean; cta?: boolean; onOpen?: () => void; big?: boolean;
 }) {
-  return (
-    <div className={cx('fl-slot', next && 'fl-slot--next', big && 'fl-slot--big')} data-slot={n}>
-      <span className="fl-slot__c">{n}</span>
-      <span className="fl-slot__t"><b>{label} 단계</b><span>{what}{next ? ' — 이 단계를 마치면 여기에 채워져요' : ' — 앞 단계를 마치면 열려요'}</span></span>
-      {next && cta && onOpen && <button type="button" className="fl-slot__cta" onClick={onOpen}>이어서 · {label}<Icon name="arrowRight" size={14} strokeWidth={2.2} /></button>}
-    </div>
-  );
-}
-
-/** 후속 작업 카드(보드 View: min-h 76 r14 · 아이콘 38 · 15/700 · 설명 12.5 · 이미 있으면 ref 칩 + 「열기」, 없으면 「만들기」) */
-export function DetailFollow({ items }: { items: { to: string; icon: string; title: string; desc: string; ref?: string | null }[] }) {
-  return (
-    <div className="fl-dfollow__grid" style={{ gridTemplateColumns: `repeat(${Math.max(1, items.length)}, minmax(0, 1fr))` }}>
-      {items.map((it) => (
-        <Link key={it.title} className="fl-dnext" to={it.to}>
-          <span className="fl-dnext__ic" aria-hidden><PathIcon d={it.icon} size={18} color="#fff" strokeWidth={2} /></span>
-          <span className="fl-dnext__t"><b>{it.title}</b><span>{it.desc}</span></span>
-          {it.ref && <span className="fl-dnext__ref">{it.ref}</span>}
-          <span className="fl-dnext__cta">{it.ref ? '열기' : '만들기'}</span>
-          <Icon name="arrowRight" size={16} color="var(--wm-brand)" strokeWidth={2.2} />
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-// ── 단계 팝업 ────────────────────────────────────────
-
-export interface StepModalProps {
-  open: boolean;
-  content: ContentKey;
-  /** 팝업 머리 이름 */
-  title: string;
-  /** new: 「새로 만들기」 · 지난 단계로만 돌아간다 / edit: 「DSS-01 v1 고치기」 · Storyboard 밖 모든 단계로 옮겨 다닌다 */
-  mode: 'new' | 'edit';
-  /** edit 일 때 `DSS-01 v1` */
-  ver?: string | null;
-  /** 머리의 연결 Storyboard 칩(누르면 요약 팝업) */
-  sbId?: string | null;
-  note?: ReactNode;
-  steps: readonly string[];
-  /** 지금 단계(1부터) */
-  current: number;
-  /** 마친 단계 수(new) — edit 이면 전부 */
-  done: number;
-  onStep: (k: number) => void;
-  onClose: () => void;
-  children: ReactNode;
-}
-
-/**
- * 단계 팝업(보드 단계 보드 공통: 최종본 위 딤 · 1180×800 r18 · 머리 StepHead 72 · 본문 728).
- * 본문 안의 FlowScreen 은 Storyboard 바를 그리지 않고, useShellPage 는 팝업 맥락(작업 추가)만 얹는다(StepPopupContext).
- * 딤을 눌러도 닫히지 않는다(여러 단계 입력을 잃지 않게) — × · Esc(위에 다른 팝업이 없을 때)로 닫는다.
- */
-export function StepModal({ open, content, title, mode, ver, sbId, note, steps, current, done, onStep, onClose, children }: StepModalProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [sbPop, setSbPop] = useState<string | null>(null);
-  const sbq = useFlowsById(open && sbId ? [sbId] : []);
-  const close = useRef(onClose);
-  close.current = onClose;
-  useEffect(() => {
-    if (!open) return;
-    const root = ref.current;
-    const opener = document.activeElement as HTMLElement | null;
-    const t = window.setTimeout(() => { if (root && !root.contains(document.activeElement)) (focusablesIn(root)[0] ?? root).focus({ preventScroll: true }); }, 0);
-    // 이 팝업이 맨 위 대화상자일 때만(제품 고르기 · 확인창 등이 위에 있으면 그쪽이 처리)
-    const top = () => { const all = Array.from(document.querySelectorAll('[role="dialog"][aria-modal="true"]')); return all[all.length - 1] === ref.current; };
-    const onKey = (e: KeyboardEvent) => {
-      const r = ref.current;
-      if (!r || !top()) return;
-      // 상단바 팝오버 · 상세 시트가 열려 있으면 그쪽이 Esc 를 받는다(이 팝업은 그대로)
-      if (e.key === 'Escape' && !e.defaultPrevented && !e.isComposing && !document.querySelector('.sh-sheet, [data-popover]:not([aria-hidden="true"])')) { close.current(); return; }
-      if (e.key !== 'Tab') return;
-      const list = focusablesIn(r);
-      if (!list.length) return;
-      const cur = document.activeElement as HTMLElement | null;
-      if (!cur || !r.contains(cur)) { e.preventDefault(); list[0].focus(); return; }
-      if (e.shiftKey && cur === list[0]) { e.preventDefault(); list[list.length - 1].focus(); }
-      else if (!e.shiftKey && cur === list[list.length - 1]) { e.preventDefault(); list[0].focus(); }
-    };
-    document.addEventListener('keydown', onKey, true);
-    return () => {
-      window.clearTimeout(t);
-      document.removeEventListener('keydown', onKey, true);
-      if (opener?.isConnected) window.setTimeout(() => opener.focus({ preventScroll: true }), 0);
-    };
-  }, [open]);
-  if (!open) return null;
   const m = CONTENT[content];
-  const edit = mode === 'edit';
-  const n = steps.length;
-  const fin = edit ? n : done;
-  const sbName = sbId ? sbq[0]?.data?.name ?? sbId : null;
+  const mode = detailMode({ saved, changes, empty });
+  const sb = sbIds[0] ?? null;
+  const nSb = sbIds.length;
+  const inval = useFlowInvalidate();
+  const [busy, setBusy] = useState<'save' | 'revert' | null>(null);
+  const [json, setJson] = useState(false);
+  const flow = useFlow(json ? sb : null);
+  const refText = refCode ? `${refCode}${ver ? ` v${ver}` : ''}` : m.short;
+  useShellPage({ hasTask: false, ...shell, section: m.label, title: saved ? (refCode ?? m.short) : mode === 'new' ? '새로 만들기' : title || m.short });
+
+  const link = content === 'rq' ? '저장하면 이 요구사항으로 Storyboard가 만들어져요' : sb ? `저장하면 ${sb}에 연결돼요` : '저장하면 Storyboard에 연결돼요';
+  const meta = mode === 'saved' ? [savedAt ? `${whenText(savedAt)} 저장` : '저장됨', ...facts].join(' · ')
+    : mode === 'editing' ? `${refText} 고치는 중 · 저장하면 v${(ver ?? 0) + 1} · ${nSb > 1 ? `연결된 Storyboard ${nSb}개에 모두 반영돼요` : sb ? `${sb}에 반영돼요` : '요약본에 반영돼요'}`
+      : mode === 'new' ? `새로 만드는 중 · 쓰는 대로 작성 중으로 남아요 · ${link}`
+        : ['작성 중', ...facts, updatedAt ? `${whenText(updatedAt)} 자동 저장` : '', link].filter(Boolean).join(' · ');
+  const pill = mode === 'saved' ? refText : mode === 'editing' ? `${refText} · 고치는 중` : mode === 'new' ? '새로 만들기' : '작성 중';
+  const label = saveLabel ?? (mode === 'editing' ? `저장 · v${(ver ?? 0) + 1}` : content === 'rq' && !saved ? '저장 · Storyboard 만들기' : '저장');
+  const blockReason = typeof canSave === 'string' ? canSave : canSave ? null : '저장할 수 없어요';
+
+  const save = async () => {
+    if (busy || blockReason) { if (blockReason) toast(blockReason); return false; }
+    setBusy('save');
+    try {
+      const out = await onSave();
+      inval();
+      toast(savedToast ? savedToast(out) : '저장했어요');
+      return true;
+    } catch (e) {
+      toast((e as Error)?.message || '저장하지 못했어요');
+      return false;
+    } finally { setBusy(null); }
+  };
+  const revert = async () => {
+    if (!onRevert || busy) return false;
+    setBusy('revert');
+    try { await onRevert(); toast(`${refText}${josaRo(refText)} 되돌렸어요`); return true; } catch (e) { toast((e as Error)?.message || '되돌리지 못했어요'); return false; } finally { setBusy(null); }
+  };
+
+  // 저장된 것을 고치다 나가면 묻는다(같은 화면 안 주소 바뀜 — 쿼리 · 탭 — 은 묻지 않음)
+  const blocker = useBlocker(({ currentLocation, nextLocation }) => mode === 'editing' && currentLocation.pathname !== nextLocation.pathname);
+  useEffect(() => {
+    if (mode !== 'editing') return;
+    const h = (e: BeforeUnloadEvent) => { e.preventDefault(); };
+    window.addEventListener('beforeunload', h);
+    return () => window.removeEventListener('beforeunload', h);
+  }, [mode]);
+
+  const sbNote = mode === 'editing' ? (nSb > 1 ? '저장하면 모두 반영' : '저장하면 반영돼요')
+    : !saved && content !== 'rq' ? '저장하면 이 Storyboard에 연결돼요 · 사전 작업에서 골랐어요' : undefined;
   return (
-    <div className="wm-scrim fl-stepscrim">
-      <div ref={ref} className="fl-stepdlg" role="dialog" aria-modal="true" tabIndex={-1} aria-label={`${title} · ${steps[current - 1] ?? ''}`} data-step={current}>
-        <div className="fl-shead">
-          <span className="fl-shead__ic" aria-hidden><PathIcon d={m.icon} size={18} color="var(--wm-brand)" strokeWidth={2} /></span>
-          <span className="fl-shead__t">
-            <span className="fl-shead__row"><b>{title}</b><span className={cx('fl-shead__mode', edit && 'fl-shead__mode--edit')}>{edit ? `${ver ?? m.short} 고치기` : '새로 만들기'}</span></span>
-            <span className="fl-shead__row fl-shead__sub">
-              {sbId && <button type="button" className="fl-shead__sb" onClick={() => setSbPop(sbId)} aria-label={`${sbName} 요약 보기`}><PathIcon d={SB_ICON} size={11} color="currentColor" strokeWidth={2.2} />{sbName}</button>}
-              {note && <span className="fl-shead__note">{note}</span>}
-            </span>
-          </span>
-          <span className="fl-shead__pos">단계 {current}/{n}</span>
-          <nav className="fl-shead__steps" aria-label="단계">
-            {steps.map((label, i) => {
-              const k = i + 1;
-              const active = k === current;
-              const isDone = !active && k <= fin;
-              // 사전 작업(Storyboard)은 콘텐츠를 만든 뒤 바꾸지 않는다 — 머리의 Storyboard 칩으로 요약만 본다
-              const fixed = label === 'Storyboard';
-              const can = !active && isDone && !fixed;
-              return (
-                <span key={label} className="fl-shead__item">
-                  {i > 0 && <span className={cx('fl-shead__line', (k <= current || (edit && k <= n)) && 'fl-shead__line--on')} />}
-                  <button type="button" className={cx('fl-sstep', active ? 'fl-sstep--on' : isDone ? 'fl-sstep--done' : 'fl-sstep--todo')} disabled={!can} aria-current={active ? 'step' : undefined}
-                    title={active ? '지금 단계' : fixed ? '사전 작업은 여기서 바꾸지 않아요' : can ? '이 단계로 옮겨요' : '앞 단계를 마치면 열려요'} onClick={() => can && onStep(k)}>
-                    <span className="fl-sstep__c">{isDone ? <PathIcon d={CHECK} size={10} color="#fff" strokeWidth={3.2} /> : k}</span>
-                    <span className="fl-sstep__t">{label}</span>
-                  </button>
-                </span>
-              );
-            })}
-          </nav>
-          <button type="button" className="fl-shead__x" onClick={onClose} aria-label="팝업 닫기" title={edit ? '닫기 — 저장하지 않은 고침이 있으면 물어요' : '닫아도 작성 중으로 남아요'}>
-            <Icon name="x" size={17} strokeWidth={2.2} />
+    <FlowScreen className="cd" pad="20px 40px 22px" gap={14}
+      bar={<FlowBar sbIds={sbIds} current={content} note={sbNote} emptyText="저장하면 이 요구사항으로 Storyboard가 자동으로 만들어져요" />}>
+      <div className="cd-head" data-mode={mode}>
+        <span className="cd-ic" aria-hidden><PathIcon d={m.icon} size={21} color="var(--wm-brand)" strokeWidth={2} /></span>
+        <span className="cd-titles">
+          <span className="cd-titlerow"><h1 className="cd-h1">{title || m.newLabel}</h1><span className={cx('cd-ref', PILL[mode])}>{pill}</span></span>
+          <span className="cd-meta">{meta}</span>
+        </span>
+        {mode === 'saved' && <span className="cd-hint"><Icon name="edit" size={13} strokeWidth={2.2} />눌러서 바로 고쳐요</span>}
+        {mode === 'editing' && <>
+          <span className="cd-chg" role="status"><i aria-hidden />고친 곳 {changes}</span>
+          {onRevert && <button type="button" className="cd-btn" onClick={() => void revert()} disabled={!!busy}>{busy === 'revert' ? '되돌리는 중…' : '되돌리기'}</button>}
+        </>}
+        {actions}
+        {saved && <button type="button" className="cd-btn" onClick={() => setJson(true)} disabled={!sb}><span className="cd-json" aria-hidden>{'{ }'}</span>flow.json</button>}
+        {mode !== 'saved' && (
+          <button type="button" className="cd-save" onClick={() => void save()} disabled={!!busy} aria-disabled={!!blockReason || undefined} title={blockReason ?? undefined}>
+            <Icon name="check" size={15} strokeWidth={2.4} />{busy === 'save' ? '저장하는 중…' : label}
           </button>
-        </div>
-        <div className="fl-sbody">
-          <StepPopupContext.Provider value>{children}</StepPopupContext.Provider>
-        </div>
+        )}
       </div>
-      <SBPopup id={sbPop} onClose={() => setSbPop(null)} />
+      <div className="cd-body">{children}</div>
+      {saved && nexts.length > 0 && (
+        <div className="cd-next">
+          <span className="cd-nexth">후속 작업</span>
+          <div className="cd-nextgrid" style={{ gridTemplateColumns: `repeat(${nexts.length}, minmax(0, 1fr))` }}>
+            {nexts.map((n) => (
+              <Link key={n.key} to={n.to} className="cd-nextcard">
+                <span className="cd-nextic" aria-hidden><PathIcon d={CONTENT[n.key].icon} size={18} color="#fff" strokeWidth={2} /></span>
+                <span className="cd-nexttxt"><b>{n.title}</b><span>{n.desc}</span></span>
+                {n.ref && <span className="cd-nextref">{n.ref}</span>}
+                <span className="cd-nextcta">{n.ref ? '열기' : '만들기'}</span>
+                <Icon name="arrowRight" size={16} strokeWidth={2.2} color="var(--wm-brand)" />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+      <JsonPopup open={json} onClose={() => setJson(false)} json={flow.data?.flow_json ?? {}} highlightKey={content} title={sb ? `${sb}/flow.json` : 'flow.json'}
+        sub={`초록 줄이 이 콘텐츠(stages.${content})예요`} />
+      <LeaveDialog open={blocker.state === 'blocked'} changes={changes ?? 0} busy={busy}
+        onStay={() => blocker.reset?.()}
+        onLeave={() => blocker.proceed?.()}
+        onSave={async () => { if (await save()) blocker.proceed?.(); else blocker.reset?.(); }} />
+    </FlowScreen>
+  );
+}
+
+/** 저장된 것을 고치다 나갈 때 — 저장하고 나가기 · 고친 채로 두고 나가기 · 계속 고치기 */
+function LeaveDialog({ open, changes, busy, onStay, onLeave, onSave }: { open: boolean; changes: number; busy: string | null; onStay: () => void; onLeave: () => void; onSave: () => void }) {
+  return (
+    <Modal open={open} onClose={onStay} width={460} ariaLabel="저장하지 않은 고친 곳"
+      footer={<div className="cd-leavefoot">
+        <button type="button" className="wm-btn wm-btn--h40" onClick={onStay}>계속 고치기</button>
+        <button type="button" className="wm-btn wm-btn--h40" onClick={onLeave}>고친 채로 두고 나가기</button>
+        <button type="button" className="wm-btn wm-btn--primary wm-btn--h40" onClick={onSave} disabled={!!busy}>{busy === 'save' ? '저장하는 중…' : '저장하고 나가기'}</button>
+      </div>}>
+      <div className="cd-leave"><b>고친 곳 {changes}개를 아직 저장하지 않았어요</b>
+        <span>저장해야 연결된 Storyboard에 반영돼요. 그대로 두고 나가면 다음에 이 화면을 열 때 「고치는 중」으로 이어져요.</span></div>
+    </Modal>
+  );
+}
+
+// ── 인라인 편집 조각 ─────────────────────────────────
+
+/** AI 추가기능 버튼(✦ · 파란 테두리) — 보드 cd-aib */
+export function AiButton({ children, onClick, busy, size = 32, disabled }: { children: ReactNode; onClick?: () => void; busy?: boolean; size?: 28 | 32 | 36; disabled?: boolean }) {
+  return (
+    <button type="button" className={cx('cd-aib', `cd-aib--${size}`)} onClick={onClick} disabled={disabled || busy} aria-busy={busy || undefined}>
+      <svg width={12} height={12} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z" /></svg>
+      {busy ? 'AI가 찾는 중…' : children}
+    </button>
+  );
+}
+
+/** 점선(AI 추천)을 한꺼번에 — 「AI 추천 n개 — 점선은 수락해야 들어가요」 · 모두 지우기 · 모두 수락 */
+export function PendingBar({ count, text, onAcceptAll, onClearAll }: { count: number; text?: string; onAcceptAll?: () => void; onClearAll?: () => void }) {
+  if (count <= 0) return null;
+  return (
+    <div className="cd-pendbar" role="status">
+      <svg width={13} height={13} viewBox="0 0 24 24" fill="currentColor" aria-hidden><path d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9z" /></svg>
+      <span>{text ?? `AI 추천 ${count}개 — 점선은 수락해야 들어가요 · 하나씩 수락하거나 ×로 지워요`}</span>
+      {onClearAll && <button type="button" className="cd-pendbar__clear" onClick={onClearAll}>모두 지우기</button>}
+      {onAcceptAll && <button type="button" className="cd-ok cd-ok--28" onClick={onAcceptAll}>모두 수락</button>}
     </div>
   );
 }
 
-// ── 주소의 단계(?step=) ──────────────────────────────
-
-/**
- * 팝업 단계를 주소 `?step=<키>` 에 둔다(새로 고침 · 뒤로 가기에도 같은 팝업). keys[i] = i+1 단계의 키(예: ['sb', 'space', 'solution']).
- * 단계를 바꿔도 같은 주소(쿼리만 바뀜)라 최종본은 그대로이고 팝업 안만 바뀐다.
- */
-export function useStepParam(keys: readonly string[]) {
-  const [sp, setSp] = useSearchParams();
-  const v = sp.get('step');
-  const i = v ? keys.indexOf(v) : -1;
-  const step = i >= 0 ? i + 1 : null;
-  const set = (k: number | null, replace = true) => setSp((prev) => {
-    const p = new URLSearchParams(prev);
-    if (k && keys[k - 1]) p.set('step', keys[k - 1]); else p.delete('step');
-    return p;
-  }, { replace });
-  return { step, open: (k: number) => set(k), close: () => set(null), raw: v };
-}
-
-// ── 고치기 팝업을 닫을 때 ────────────────────────────
-
-/**
- * 저장된 콘텐츠의 고치기 팝업 — 열 때의 문서 판(version)을 기억해, 닫을 때 바뀌었으면 true(저장할지 묻는다).
- * 고침은 문서에 바로 들어가지만 Storyboard(허브)에는 「저장 · vN」 때 반영된다.
- */
-export function useEditGuard(open: boolean, version: number | null | undefined) {
-  const v0 = useRef<number | null>(null);
-  useEffect(() => {
-    if (open && version != null && v0.current == null) v0.current = version;
-    if (!open) v0.current = null;
-  }, [open, version]);
-  return () => v0.current != null && version != null && version !== v0.current;
-}
-
-/** 고친 내용이 있을 때 닫기 물음 — 「계속 고치기」 · 「저장하지 않고 닫기」 · 「저장 · vN」 */
-export function useCloseAsk() {
-  const [st, setSt] = useState<{ title: string; message: ReactNode; saveLabel: string; resolve: (v: 'save' | 'leave' | 'stay') => void } | null>(null);
-  const ask = useCallback((o: { title: string; message: ReactNode; saveLabel: string }) =>
-    new Promise<'save' | 'leave' | 'stay'>((resolve) => setSt({ ...o, resolve })), []);
-  const done = (v: 'save' | 'leave' | 'stay') => { st?.resolve(v); setSt(null); };
-  const dialog = st ? (
-    <Modal open onClose={() => done('stay')} variant="dialog" width={460} ariaLabel={st.title} bodyStyle={{ padding: '20px 22px 8px' }}
-      footer={<>
-        <Button h={38} onClick={() => done('stay')}>계속 고치기</Button>
-        <Button h={38} onClick={() => done('leave')}>저장하지 않고 닫기</Button>
-        <Button h={38} variant="primary" onClick={() => done('save')}>{st.saveLabel}</Button>
-      </>}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-        <strong style={{ fontSize: 15 }}>{st.title}</strong>
-        <div style={{ fontSize: 12.5, color: 'var(--wm-text-muted)', lineHeight: 1.5 }}>{st.message}</div>
-      </div>
-    </Modal>
-  ) : null;
-  return { ask, dialog };
+/** 그 자리에서 고치는 글 칸 — 바뀔 때마다 부르지 않고 칸을 떠날 때(또는 Enter) 한 번 저장한다. Esc 는 고치기 전 값으로 되돌리고 칸을 떠난다(저장 안 함).
+ *  `required` 면 비운 채 떠날 때 저장하지 않고 원래 값으로 돌아간다. `multiline` + `autosize` 면 글 높이만큼 자란다(Enter 는 줄바꿈 · Ctrl/⌘+Enter 저장). */
+export function InlineInput({ value, onCommit, placeholder, className, changed, label, multiline, autosize, maxLength = 300, disabled, required, id, inputRef, onKeyDown, inputMode, autoFocus }: {
+  value: string; onCommit: (v: string) => unknown; placeholder?: string; className?: string; changed?: boolean; label: string; multiline?: boolean; autosize?: boolean; maxLength?: number; disabled?: boolean;
+  required?: boolean; id?: string; inputRef?: Ref<HTMLInputElement | HTMLTextAreaElement>; onKeyDown?: (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  inputMode?: HTMLAttributes<HTMLInputElement>['inputMode']; autoFocus?: boolean;
+}) {
+  const [v, setV] = useState(value);
+  const skip = useRef(false);
+  const own = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
+  useEffect(() => { setV(value); }, [value]);
+  const fit = () => { const el = own.current; if (multiline && autosize && el) { el.style.height = 'auto'; el.style.height = `${el.scrollHeight + 2}px`; } };
+  useLayoutEffect(fit, [v, multiline, autosize]);
+  const setRef = (el: HTMLInputElement | HTMLTextAreaElement | null) => {
+    own.current = el;
+    if (typeof inputRef === 'function') inputRef(el);
+    else if (inputRef) (inputRef as MutableRefObject<HTMLInputElement | HTMLTextAreaElement | null>).current = el;
+  };
+  const commit = (e: FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    if (skip.current) { skip.current = false; return; }
+    const t = e.currentTarget.value.trim();
+    if (required && !t) { setV(value); return; }
+    if (t !== value.trim()) void onCommit(t);
+  };
+  const keys = (e: KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    onKeyDown?.(e);
+    if (e.defaultPrevented || e.nativeEvent.isComposing) return;
+    const el = e.currentTarget;
+    if (e.key === 'Escape') { e.preventDefault(); skip.current = true; setV(value); el.blur(); return; }
+    if (e.key === 'Enter' && (!multiline || e.metaKey || e.ctrlKey)) { e.preventDefault(); el.blur(); }
+  };
+  const common = { id, className: cx('cd-in', changed && 'cd-in--chg', className), 'aria-label': label, value: v, placeholder, maxLength, disabled, autoFocus,
+    onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setV(e.target.value), onBlur: commit, onKeyDown: keys };
+  if (multiline) return <textarea ref={setRef} rows={autosize ? 1 : undefined} {...common} />;
+  return <input ref={setRef} inputMode={inputMode} {...common} />;
 }

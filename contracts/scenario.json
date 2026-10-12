@@ -4379,6 +4379,62 @@
         }
       }
     },
+    "/v1/space-sets/{set_id}:revert": {
+      "post": {
+        "tags": [
+          "space-sets"
+        ],
+        "summary": "Revert Space Set",
+        "description": "저장한 판으로 되돌리기(보드 SC2_Edit 「되돌리기」) — 공간 · 공간 제품 · 시나리오 · 장면 · 항목 · 가져온 DSS 를 마지막 저장 값으로(changes 0).\n지금 점선 AI 후보는 그대로 둔다. 저장한 적 없으면 409 NOT_SAVED.",
+        "operationId": "revert_space_set",
+        "parameters": [
+          {
+            "name": "set_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Set Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SSDoc"
+                }
+              }
+            }
+          },
+          "4XX": {
+            "description": "요청 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "5XX": {
+            "description": "서버 오류",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없어요"
+          }
+        }
+      }
+    },
     "/v1/space-sets/{set_id}:finish": {
       "post": {
         "tags": [
@@ -7763,6 +7819,24 @@
             "type": "integer",
             "title": "Ver",
             "description": "저장(완료)한 횟수 = flow.json stages.sc.ver",
+            "default": 0
+          },
+          "saved_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saved At",
+            "description": "마지막 저장(:finish) 시각 — 보드 SC_View 머리 「오늘 17:30 저장」"
+          },
+          "changes": {
+            "type": "integer",
+            "title": "Changes",
+            "description": "저장한 판과 지금 값(stages.sc)의 다른 곳 수 — 보드 SC2_Edit 「고친 곳 n」. 저장한 적 없으면 0 · 점선 AI 후보는 세지 않음",
             "default": 0
           },
           "issues": {

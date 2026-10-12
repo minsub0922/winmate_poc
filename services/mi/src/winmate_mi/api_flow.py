@@ -9,7 +9,8 @@
 | `POST /v1/mi-flows/{id}:analyze` | Storyboard 다시 분석(저장한 MI 를 고칠 때) |
 | `POST /v1/mi-flows/{id}:search` | 웹 검색 잡(mi.flow_search) → 정제 |
 | `PATCH /v1/mi-flows/{id}/items/{item_id}` | 담기 · 빼기 · 문장 고치기 |
-| `POST /v1/mi-flows/{id}:finish` | 저장 → Storyboard stages.mi · 요약본 |
+| `POST /v1/mi-flows/{id}:finish` | 저장 → Storyboard stages.mi · 요약본 · 저장한 판(saved_snapshot) |
+| `POST /v1/mi-flows/{id}:revert` | 저장한 판으로 되돌리기(changes 0) — 저장한 적 없으면 409 NOT_SAVED |
 | `GET /v1/mi-flows/{id}/stage` | 지금 값으로 만든 stages.mi 미리 보기 |
 """
 from __future__ import annotations
@@ -42,7 +43,8 @@ async def list_mi_flows(limit: int = Query(50, ge=1, le=200), cursor: str | None
 
 @router.get("/mi-flows/{flow_id}", response_model=MFDoc)
 async def get_mi_flow(flow_id: str) -> dict[str, Any]:
-    return F.to_api(await F.load(flow_id))
+    """문서(진행 · 고친 곳 `changes`). 판 없이 저장된 예전 문서는 지금 값을 저장한 판으로 한 번 남긴다."""
+    return await F.get(flow_id)
 
 
 @router.delete("/mi-flows/{flow_id}", status_code=204, response_class=Response)
@@ -76,6 +78,13 @@ async def patch_mi_flow_item(flow_id: str, item_id: str, body: MFItemPatch) -> d
 @router.post("/mi-flows/{flow_id}:finish", response_model=MFStageOut)
 async def finish_mi_flow(flow_id: str) -> dict[str, Any]:
     return await F.finish(flow_id)
+
+
+@router.post("/mi-flows/{flow_id}:revert", response_model=MFDoc,
+             responses={409: {"description": "NOT_SAVED — 아직 저장하지 않아 되돌릴 판이 없어요 · BUSY — AI 가 일하는 중"}})
+async def revert_mi_flow(flow_id: str) -> dict[str, Any]:
+    """저장한 판으로 되돌리기(화면 머리 「고친 곳 n · 되돌리기」) — 찾은 정보(담기 · 빼기 · 문장) · 검색어 · 조건을 마지막 저장 때로, changes 0."""
+    return await F.revert(flow_id)
 
 
 @router.get("/mi-flows/{flow_id}/stage", response_model=MFStageOut)
