@@ -3,6 +3,7 @@
  */
 import { expect, test, type Page } from '@playwright/test';
 import { devLog, setupShell } from './fixtures/mock';
+import * as D from './fixtures/kb-data';
 
 const css = (loc: import('@playwright/test').Locator, prop: string) => loc.evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), prop);
 const Q_IMG = encodeURIComponent('카페 메뉴보드');
@@ -126,6 +127,25 @@ test.describe('이미지 검색 (I)', () => {
     await expect(imgPop(page).getByText('등록된 사내 자산이 없어요.')).toBeVisible();
   });
 
+  test('I-11 검색어 없음 → 전체 목록 첫 쪽 21장 · 정보 패널 · 스크롤 끝에서 다음 쪽', async ({ page }) => {
+    await page.goto('/?pop=image');
+    const d = imgPop(page);
+    const t = tiles(page);
+    await expect(t).toHaveCount(21);
+    await expect(t.first()).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('aside[aria-label="이미지 정보"]')).toContainText('출처 페이지');
+    await expect(d.locator('[data-more]')).toHaveCount(1);
+    await t.nth(2).click();
+    await d.getByRole('list', { name: '이미지 결과' }).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+    await expect(t).toHaveCount(D.ALL_IMAGES.length);
+    await expect(d.locator('[data-more]')).toHaveCount(0);
+    await expect(t.nth(2)).toHaveAttribute('aria-pressed', 'true');
+    // 검색하면 결과로 바뀌고 스크롤은 맨 위
+    await d.getByRole('textbox', { name: '이미지 검색' }).fill('카페 메뉴보드');
+    await expect(t).toHaveCount(6);
+    expect(await d.getByRole('list', { name: '이미지 결과' }).evaluate((el) => el.scrollTop)).toBe(0);
+  });
+
   test('I-x 결과 없음 · X-05 정보 패널 aside', async ({ page }) => {
     await page.goto(`/?pop=image&q=${encodeURIComponent('없는검색어')}`);
     await expect(imgPop(page).getByText('‘없는검색어’에 맞는 이미지가 없어요.')).toBeVisible();
@@ -206,8 +226,36 @@ test.describe('유관 사례 검색 (C)', () => {
   test('C-07 작업 없음 · `호텔 객실 TV 통합 관리` → 업종: 호텔(자동 판별)', async ({ page }) => {
     await page.goto('/?pop=case');
     const d = casePop(page);
-    await expect(d.getByText('고객 · 업종 · 용도로 검색해 보세요.')).toBeVisible();
+    // 검색 전에도 전체 사례(최신 순)
+    await expect(d.locator('[data-case-card]')).toHaveCount(D.CASES.length);
+    await expect(d.getByRole('group', { name: '사례 필터' })).toContainText('최신 순');
     await d.getByRole('textbox', { name: '사례 검색' }).fill('호텔 객실 TV 통합 관리');
     await expect(d.locator('[data-filter="vertical"] .wm-chip')).toHaveText('업종: 호텔');
+  });
+
+  test('C-09 검색어 · 필터 없음 → 최신 순 전체 목록 20건 · 스크롤 끝에서 다음 쪽', async ({ page }) => {
+    // 사례 45건 — kb 둘러보기(최신순 전체) 흉내
+    const many = Array.from({ length: 45 }, (_, i) => ({ ...D.CASES[i % D.CASES.length], id: `dep_x${i}`, title: `사례 ${i + 1}` }));
+    await page.route('**/api/kb/v1/cases/search**', (route) => {
+      const sp = new URL(route.request().url()).searchParams;
+      const limit = Number(sp.get('limit') ?? 10);
+      const from = Number(sp.get('cursor') ?? 0);
+      const to = from + limit;
+      return route.fulfill({ contentType: 'application/json; charset=utf-8', body: JSON.stringify({
+        corpus: { count: many.length, checked_at: D.COLLECTED }, applied: { vertical: null }, items: many.slice(from, to),
+        next_cursor: to < many.length ? String(to) : null, total: many.length }) });
+    });
+    await page.goto('/?pop=case');
+    const d = casePop(page);
+    const cards = d.locator('[data-case-card]');
+    const list = d.getByLabel('사례 결과');
+    await expect(cards).toHaveCount(20);
+    await expect(cards.first()).toContainText('사례 1');
+    await expect(d.getByRole('group', { name: '사례 필터' })).toContainText('최신 순');
+    await list.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+    await expect(cards).toHaveCount(40);
+    await list.evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+    await expect(cards).toHaveCount(45);
+    await expect(d.locator('[data-more]')).toHaveCount(0);
   });
 });

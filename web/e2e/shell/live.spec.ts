@@ -116,14 +116,30 @@ test.describe('실제 kb', () => {
     await expect(page.locator('aside[aria-label="이미지 정보"]')).toContainText('출처 페이지');
     await imagesLoaded(page);
     await shot(page, 'pop-image');
-    // 다음 쪽(next_cursor) — `더 보기` 로 붙고 포커스는 그대로
+    // 다음 쪽(next_cursor) — 스크롤이 끝에 닿으면 붙고 포커스는 그대로
     const tiles = pop.locator('.wm-tile');
     const before = await tiles.count();
     if (r.counts.all > before) {
       await tiles.nth(2).click();
-      await pop.getByRole('button', { name: /^이미지 더 보기/ }).click();
+      await pop.getByRole('list', { name: '이미지 결과' }).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
       await expect.poll(() => tiles.count()).toBeGreaterThan(before);
       await expect(tiles.nth(2)).toHaveAttribute('aria-pressed', 'true');
+    }
+  });
+
+  test('LIVE-04b 이미지 검색어 없음 — kb 둘러보기 첫 쪽 21장 · 스크롤로 다음 쪽', async ({ page }) => {
+    const r = await api<{ counts: { all: number; official: number; case: number } }>(page, '/api/kb/v1/images/search?source=all&verified_only=true&limit=21');
+    await page.goto('/?pop=image');
+    const pop = dialog(page, '이미지 검색');
+    const tiles = pop.locator('.wm-tile');
+    await expect(tiles).toHaveCount(Math.min(21, r.counts.all));
+    await expect(pop.getByRole('tab', { name: /^유관 사례 이미지/ })).toContainText(String(r.counts.case));
+    await expect(page.locator('aside[aria-label="이미지 정보"]')).toContainText('출처 페이지');
+    await imagesLoaded(page);
+    await shot(page, 'pop-image-browse');
+    if (r.counts.all > 21) {
+      await pop.getByRole('list', { name: '이미지 결과' }).evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+      await expect.poll(() => tiles.count()).toBeGreaterThan(21);
     }
   });
 
@@ -138,11 +154,25 @@ test.describe('실제 kb', () => {
     await shot(page, 'pop-case');
     const cards = pop.locator('[data-case-card]');
     const before = await cards.count();
-    const more = pop.getByRole('button', { name: /^사례 더 보기/ });
-    if (await more.count()) {
-      await expect(more).toContainText(`${before} / `);
-      await more.click();
+    if (await pop.locator('[data-more]').count()) {
+      await pop.getByLabel('사례 결과').evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
       await expect.poll(() => cards.count()).toBeGreaterThan(before);
+    }
+  });
+
+  test('LIVE-05b 사례 검색어 · 필터 없음 — 최신 순 전체 첫 쪽 20건 · 스크롤로 다음 쪽', async ({ page }) => {
+    const r = await api<{ total: number; items: Array<{ title: string }> }>(page, '/api/kb/v1/cases/search?limit=20');
+    await page.goto('/?pop=case');
+    const pop = dialog(page, '유관 사례 검색');
+    const cards = pop.locator('[data-case-card]');
+    await expect(cards).toHaveCount(Math.min(20, r.total));
+    await expect(cards.first()).toContainText(r.items[0].title);
+    await expect(pop.getByRole('group', { name: '사례 필터' })).toContainText('최신 순');
+    await imagesLoaded(page);
+    await shot(page, 'pop-case-browse');
+    if (r.total > 20) {
+      await pop.getByLabel('사례 결과').evaluate((el) => el.scrollTo({ top: el.scrollHeight }));
+      await expect.poll(() => cards.count()).toBeGreaterThan(20);
     }
   });
 

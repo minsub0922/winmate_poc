@@ -1,6 +1,7 @@
 /**
  * 유관 사례 검색 팝오버(00-shell §5.6, 보드 HomeCase) — 780×730.
  * 필터 칩 4(업종 · 제품 · 지역 · 기간+건수) · `유사도 순` · 사례 카드(사진 3 · 태그 · 요약 · 제품 칩 · URL · 원문 열기) · 푸터.
+ * 검색어 · 필터가 없으면 전체 사례를 최신순으로(`최신 순`). 첫 쪽 20건, 스크롤이 끝에 닿으면 다음 쪽을 이어 붙인다.
  */
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { useQueries } from '@tanstack/react-query';
@@ -10,8 +11,8 @@ import type { KbCaseCard } from '../kbTypes';
 import { useShellRuntime } from '../runtime';
 import { useShellUrl } from '../urlState';
 import {
-  ADD_FAIL_TEXT, AddAllButton, DragHint, NoTaskFooter, PopoverFrame, PopSearch, useAddRunner, useAddState, useDebounced, usePopMemory, usePopoverEscape, type TrayEntry,
-  errorReason,
+  ADD_FAIL_TEXT, AddAllButton, CASE_PAGE, DragHint, NoTaskFooter, PopoverFrame, PopSearch, useAddRunner, useAddState, useDebounced, usePopMemory, usePopoverEscape,
+  useScrollPaging, useScrollTopOn, type TrayEntry, errorReason,
 } from './common';
 
 type Period = 'all' | '1y' | '3y' | '5y';
@@ -84,8 +85,8 @@ export function CasePopover({ onClose, hidden }: { onClose: () => void; hidden?:
   const vParams = mem.vertical.mode === 'pick' ? { vertical_id: mem.vertical.id }
     : mem.vertical.mode === 'all' ? { infer_vertical: false }
       : tc?.verticalId ? { vertical_id: tc.verticalId, vertical_from: 'task' as const } : { infer_vertical: true };
-  const enabled = !!q || mem.vertical.mode === 'pick' || !!mem.target || (mem.vertical.mode === 'auto' && !!tc?.verticalId);
-  const search = useCaseSearchPages({ q: q || undefined, ...vParams, target: mem.target?.value, period: mem.period === 'all' ? undefined : mem.period }, enabled);
+  // 검색어 · 필터가 없어도 받는다 — kb 가 전체 사례를 최신순으로 준다
+  const search = useCaseSearchPages({ q: q || undefined, ...vParams, target: mem.target?.value, period: mem.period === 'all' ? undefined : mem.period }, true, CASE_PAGE);
   const first = search.data?.pages[0];
   const meta = useKbMeta();
 
@@ -143,22 +144,26 @@ export function CasePopover({ onClose, hidden }: { onClose: () => void; hidden?:
   const toggleTray = (e: TrayEntry) => setMem({ tray: tray.some((t) => t.ref === e.ref) ? tray.filter((t) => t.ref !== e.ref) : [...tray, e] });
   const runner = useAddRunner('case', tray, () => setMem({ tray: [] }));
   const items = (search.data?.pages ?? []).flatMap((pg) => pg.items);
+  // 검색어 · 업종 · 제품 조건이 하나도 없으면 kb 가 최신순 전체 목록을 준다
+  const browsing = !q && !applied && !mem.target && mem.vertical.mode !== 'pick';
+
+  const listRef = useRef<HTMLDivElement>(null);
+  const sentinel = useScrollPaging(listRef, search, items.length);
+  useScrollTopOn(listRef, `${q}|${mem.vertical.mode}:${mem.vertical.id ?? ''}|${mem.target?.value ?? ''}|${mem.period}`);
 
   let body: ReactNode;
-  if (!enabled) body = <div className="sh-state">고객 · 업종 · 용도로 검색해 보세요.</div>;
-  else if (search.isError && !search.data) {
+  if (search.isError && !search.data) {
     body = <div className="sh-state" role="alert"><span>도입사례를 불러오지 못했어요.<br /><span className="sh-state__why">{errorReason(search.error)}</span><Button h={28} onClick={() => search.refetch()} style={{ marginTop: 8 }}>다시 시도</Button></span></div>;
   } else if (search.isLoading && !search.data) body = [0, 1, 2].map((i) => <Skeleton key={i} h={150} r={10} />);
-  else if (!items.length) body = <div className="sh-state">조건에 맞는 도입사례가 없어요. 필터를 줄여 보세요.</div>;
+  else if (!items.length) body = <div className="sh-state">{browsing ? '아직 도입사례가 없어요.' : '조건에 맞는 도입사례가 없어요. 필터를 줄여 보세요.'}</div>;
   else {
     body = (
       <>
         {items.map((c) => <CaseItem key={c.id} c={c} inTray={tray.some((t) => t.ref === ref.case(c.id))} onToggle={() => toggleTray({ ref: ref.case(c.id), label: c.title })} />)}
+        {/* 다음 쪽 자리 — 보이면 다음 쪽을 받는다 */}
         {search.hasNextPage && (
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '4px 0 8px', flexShrink: 0 }}>
-            <Button h={32} loading={search.isFetchingNextPage} onClick={() => search.fetchNextPage()} data-more="">
-              사례 더 보기 · {items.length} / {first?.total ?? '…'}
-            </Button>
+          <div ref={sentinel} data-more="" aria-hidden="true" style={{ flexShrink: 0 }}>
+            <Skeleton h={150} r={10} />
           </div>
         )}
       </>
@@ -175,9 +180,9 @@ export function CasePopover({ onClose, hidden }: { onClose: () => void; hidden?:
         <FilterMenu testId="period" label={`${periodLabel} · 삼성 도입사례 ${corpusN ?? '…'}건`} on={mem.period !== 'all'}
           items={PERIODS.map((p) => ({ key: p.v, label: p.label, checked: mem.period === p.v, onSelect: () => setMem({ period: p.v }) }))} />
         <span style={{ flex: 1 }} />
-        {rt.canDrag('case') ? <DragHint /> : <span style={{ color: 'var(--wm-text-muted)', whiteSpace: 'nowrap' }}>유사도 순</span>}
+        {rt.canDrag('case') ? <DragHint /> : <span style={{ color: 'var(--wm-text-muted)', whiteSpace: 'nowrap' }}>{browsing ? '최신 순' : '유사도 순'}</span>}
       </div>
-      <div className="sh-pop__list" style={{ gap: 8 }} aria-label="사례 결과">{body}</div>
+      <div ref={listRef} className="sh-pop__list" style={{ gap: 8 }} aria-label="사례 결과" aria-busy={search.isFetchingNextPage || undefined}>{body}</div>
       {rt.hasTask ? (
         <div className="sh-pop__foot" data-footer="task" style={{ justifyContent: 'space-between' }}>
           <span className={runner.failed ? 'sh-pop__foot-text sh-pop__foot-text--err' : 'sh-pop__foot-text'} role={runner.failed ? 'alert' : undefined}>

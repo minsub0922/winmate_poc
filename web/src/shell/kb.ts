@@ -79,24 +79,30 @@ export const useSolutionCases = (id?: string | null, enabled = true) =>
   useQuery({ queryKey: ['kb', 'solution', id, 'cases'], queryFn: ({ signal }) => kb.solutionCases(id!, signal), staleTime: LONG, enabled: !!id && enabled, retry: 0 });
 export const useImageSearch = (p: { q: string; source: string; verified_only: boolean }, enabled = true) =>
   useQuery({ queryKey: ['kb', 'images', p], queryFn: ({ signal }) => kb.imageSearch({ ...p, limit: 24 }, signal), staleTime: LONG, enabled: enabled && !!p.q, retry: 0, placeholderData: keepPreviousData });
-/** 이미지 검색 — 쪽 단위(`더 보기`). `data.pages[0].counts` 가 탭 숫자 */
-export const useImageSearchPages = (p: { q: string; source: string; verified_only: boolean }, enabled = true) =>
+/**
+ * 이미지 검색 — 쪽 단위(스크롤 끝에서 다음 쪽). `data.pages[0].counts` 가 탭 숫자.
+ * `q` 가 비면 kb 둘러보기 목록(최신 사례 대표 사진 → 제품군 갤러리 첫 장)을 같은 방식으로 쪽마다 받는다.
+ */
+export const useImageSearchPages = (p: { q: string; source: string; verified_only: boolean }, enabled = true, limit = 24) =>
   useInfiniteQuery({
-    queryKey: ['kb', 'images', 'pages', p],
-    queryFn: ({ signal, pageParam }) => kb.imageSearch({ ...p, limit: 24, cursor: pageParam ?? undefined }, signal),
+    queryKey: ['kb', 'images', 'pages', p, limit],
+    queryFn: ({ signal, pageParam }) => kb.imageSearch({ ...p, limit, cursor: pageParam ?? undefined }, signal),
     initialPageParam: null as string | null,
     getNextPageParam: (last) => last.next_cursor ?? null,
-    staleTime: LONG, enabled: enabled && !!p.q, retry: 0, placeholderData: keepPreviousData,
+    staleTime: LONG, enabled, retry: 0, placeholderData: keepPreviousData,
   });
 export const useImageMeta = (id?: string | null) =>
   useQuery({ queryKey: ['kb', 'image', id], queryFn: ({ signal }) => kb.image(id!, signal), staleTime: LONG, enabled: !!id, retry: 0 });
 export const useCaseSearch = (p: { q?: string; vertical_id?: string; vertical_from?: 'user' | 'task'; target?: string; period?: string; infer_vertical?: boolean }, enabled = true) =>
   useQuery({ queryKey: ['kb', 'cases', p], queryFn: ({ signal }) => kb.caseSearch({ ...p, limit: 10 }, signal), staleTime: LONG, enabled, retry: 0, placeholderData: keepPreviousData });
-/** 사례 검색 — 쪽 단위(`더 보기`). `data.pages[0]` 에 corpus · applied · total */
-export const useCaseSearchPages = (p: { q?: string; vertical_id?: string; vertical_from?: 'user' | 'task'; target?: string; period?: string; infer_vertical?: boolean }, enabled = true) =>
+/**
+ * 사례 검색 — 쪽 단위(스크롤 끝에서 다음 쪽). `data.pages[0]` 에 corpus · applied · total.
+ * 검색어 · 필터가 모두 없으면 kb 가 전체 사례를 최신순으로 준다.
+ */
+export const useCaseSearchPages = (p: { q?: string; vertical_id?: string; vertical_from?: 'user' | 'task'; target?: string; period?: string; infer_vertical?: boolean }, enabled = true, limit = 10) =>
   useInfiniteQuery({
-    queryKey: ['kb', 'cases', 'pages', p],
-    queryFn: ({ signal, pageParam }) => kb.caseSearch({ ...p, limit: 10, cursor: pageParam ?? undefined }, signal),
+    queryKey: ['kb', 'cases', 'pages', p, limit],
+    queryFn: ({ signal, pageParam }) => kb.caseSearch({ ...p, limit, cursor: pageParam ?? undefined }, signal),
     initialPageParam: null as string | null,
     getNextPageParam: (last) => last.next_cursor ?? null,
     staleTime: LONG, enabled, retry: 0, placeholderData: keepPreviousData,
@@ -104,7 +110,7 @@ export const useCaseSearchPages = (p: { q?: string; vertical_id?: string; vertic
 export const useVerticals = (enabled = true) =>
   useQuery({ queryKey: ['kb', 'verticals'], queryFn: ({ signal }) => kb.verticals(signal), staleTime: LONG, enabled, retry: 0 });
 
-/** image 서비스 `내 생성 이미지`(§7.4) — 계약이 아직 없으면 빈 목록 */
+/** image 서비스 `내 생성 이미지`(§7.4) — 계약이 아직 없으면 빈 목록. `q` 가 비면 최근 저장한 것부터 */
 export const useMyImages = (q: string, enabled = true) =>
   useQuery({
     queryKey: ['image', 'mine', q],
@@ -112,7 +118,7 @@ export const useMyImages = (q: string, enabled = true) =>
       try { return await getJson<{ items: GeneratedImage[] }>(`/api/image/v1/images${qs({ owner: 'me', q, limit: 24 })}`, signal); }
       catch { return { items: [] as GeneratedImage[] }; }
     },
-    staleTime: 60_000, enabled: enabled && !!q, retry: 0,
+    staleTime: 60_000, enabled, retry: 0,
   });
 
 /** image 서비스 `내 생성 이미지` 정보 행(`GET /api/image/v1/images/{id}/info` → `{rows: [{k, v, href?}]}` — 출처 · 원본 · 저장본 · 생성 · 사용 조건 · 사용 이력) */

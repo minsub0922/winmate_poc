@@ -2,8 +2,9 @@
  * 이미지 검색 팝오버(00-shell §5.5, 보드 HomeImage) — 820×560.
  * 탭 5(전체 · 제품 이미지 · 유관 사례 이미지 · 내 생성 이미지 · 사내 자산) · `출처 확인된 이미지만` · 3열 그리드 · 이미지 정보 패널 · 푸터.
  * 타일 클릭 = 포커스(패널), 체크 원/Space = 선택(작업 있음).
+ * 검색어가 없으면 전체 목록(kb 둘러보기)을 보여 준다. 첫 쪽 21장, 스크롤이 끝에 닿으면 다음 쪽을 이어 붙인다.
  */
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Button, Img, ImageTile, MetaRows, Skeleton, Toggle, Tabs, formatDate, formatMediaSize, shortFileUrl, useActiveDrag, useDragSource, type MetaRow,
@@ -14,8 +15,8 @@ import { useShellRuntime } from '../runtime';
 import { useAssetUsage, usageText } from '../workspace';
 import { useShellUrl } from '../urlState';
 import {
-  ADD_FAIL_TEXT, AddAllButton, DragHint, NoTaskFooter, PopoverFrame, PopSearch, useAddRunner, useDebounced, usePopMemory, usePopoverEscape,
-  errorReason,
+  ADD_FAIL_TEXT, AddAllButton, DragHint, IMAGE_PAGE, NoTaskFooter, PopoverFrame, PopSearch, useAddRunner, useDebounced, usePopMemory, usePopoverEscape,
+  useScrollPaging, useScrollTopOn, errorReason,
 } from './common';
 
 type Tab = 'all' | 'official' | 'case' | 'mine' | 'internal';
@@ -116,7 +117,8 @@ export function ImagePopover({ onClose, hidden }: { onClose: () => void; hidden?
   usePopoverEscape(onClose, !hidden);
 
   const source = mem.tab === 'official' ? 'official' : mem.tab === 'case' ? 'case' : 'all';
-  const search = useImageSearchPages({ q, source, verified_only: mem.verifiedOnly });
+  // 검색어가 없어도 받는다 — kb 가 둘러보기 목록(최신 사례 대표 사진 → 제품군 갤러리 첫 장)을 준다
+  const search = useImageSearchPages({ q, source, verified_only: mem.verifiedOnly }, true, IMAGE_PAGE);
   const mine = useMyImages(q);
   const pages = search.data?.pages;
   const counts: Partial<NonNullable<typeof pages>[number]['counts']> = pages?.[0]?.counts ?? {};
@@ -124,15 +126,22 @@ export function ImagePopover({ onClose, hidden }: { onClose: () => void; hidden?
   const nCase = counts.case ?? 0;
   const nMine = mine.data?.items.length ?? 0;
   const nInternal = 0;
+  const kbPaging = mem.tab !== 'mine' && mem.tab !== 'internal';
+  const moreKb = kbPaging && !!search.hasNextPage;
 
   const items: Item[] = useMemo(() => {
     if (mem.tab === 'mine') return (mine.data?.items ?? []).map(genItem);
     if (mem.tab === 'internal') return [];
     const kbItems = (pages ?? []).flatMap((pg) => pg.items).map(toItem);
-    return mem.tab === 'all' ? [...kbItems, ...(mine.data?.items ?? []).map(genItem)] : kbItems;
-  }, [mem.tab, pages, mine.data]);
+    // 전체 탭의 내 생성 이미지는 kb 목록을 끝까지 받은 뒤 맨 끝에(받는 중에 가운데 끼었다 밀리지 않게)
+    return mem.tab === 'all' && !moreKb ? [...kbItems, ...(mine.data?.items ?? []).map(genItem)] : kbItems;
+  }, [mem.tab, pages, mine.data, moreKb]);
 
-  // 새 결과면 첫 타일에 포커스, `더 보기` 로 뒤에 붙으면 그대로
+  const gridRef = useRef<HTMLDivElement>(null);
+  const sentinel = useScrollPaging(gridRef, search, items.length);
+  useScrollTopOn(gridRef, `${q}|${mem.tab}|${mem.verifiedOnly}`);
+
+  // 새 결과면 첫 타일에 포커스, 스크롤로 뒤에 붙으면 그대로
   const [focusKey, setFocusKey] = useState<string | null>(null);
   const firstKey = items[0]?.key ?? null;
   useEffect(() => { setFocusKey(firstKey); }, [firstKey, q, mem.tab, mem.verifiedOnly]);
@@ -170,29 +179,26 @@ export function ImagePopover({ onClose, hidden }: { onClose: () => void; hidden?
   ];
 
   let grid: ReactNode;
-  if (!q) grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }}>장면 · 공간 · 제품으로 검색해 보세요.</div>;
-  else if (search.isError && !search.data && mem.tab !== 'mine') {
+  if (kbPaging && search.isError && !search.data) {
     grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }} role="alert"><span>이미지를 불러오지 못했어요.<br /><span className="sh-state__why">{errorReason(search.error)}</span><Button h={28} onClick={() => search.refetch()} style={{ marginTop: 8 }}>다시 시도</Button></span></div>;
-  } else if ((search.isLoading && !search.data && mem.tab !== 'mine') || (mem.tab === 'mine' && mine.isLoading)) {
+  } else if ((kbPaging && search.isLoading && !search.data) || (mem.tab === 'mine' && mine.isLoading)) {
     grid = Array.from({ length: 6 }, (_, i) => <Skeleton key={i} h={160} r={10} />);
   } else if (!items.length) {
-    grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }}>{mem.tab === 'mine' ? '아직 만든 이미지가 없어요.' : mem.tab === 'internal' ? '등록된 사내 자산이 없어요.' : `‘${q}’에 맞는 이미지가 없어요.`}</div>;
+    const none = q ? `‘${q}’에 맞는 이미지가 없어요.` : '아직 이미지가 없어요.';
+    grid = <div className="sh-state" style={{ gridColumn: '1 / -1' }}>{mem.tab === 'mine' ? '아직 만든 이미지가 없어요.' : mem.tab === 'internal' ? '등록된 사내 자산이 없어요.' : none}</div>;
   } else {
-    const kbTotal = mem.tab === 'official' ? nOfficial : mem.tab === 'case' ? nCase : nOfficial + nCase;
-    const kbShown = (pages ?? []).reduce((a, pg) => a + pg.items.length, 0);
     grid = (
       <>
         {items.map((it) => (
           <Tile key={it.key} it={it} focused={focused?.key === it.key} selected={sel.some((s) => s.ref === it.ref)} selectable={selectable}
             onFocus={() => setFocusKey(it.key)} onToggle={() => toggleSel(it)} />
         ))}
-        {mem.tab !== 'mine' && search.hasNextPage && (
-          <div style={{ gridColumn: '1 / -1', display: 'flex', justifyContent: 'center', padding: '4px 0 8px' }}>
-            <Button h={32} loading={search.isFetchingNextPage} onClick={() => search.fetchNextPage()} data-more="">
-              이미지 더 보기 · {kbShown} / {kbTotal}
-            </Button>
+        {/* 다음 쪽 자리 — 첫 칸이 스크롤 끝 표시. 보이면 다음 쪽을 받는다 */}
+        {moreKb && [0, 1, 2].map((i) => (
+          <div key={`more-${i}`} ref={i === 0 ? sentinel : undefined} data-more={i === 0 ? '' : undefined} aria-hidden="true">
+            <Skeleton h={160} r={10} />
           </div>
-        )}
+        ))}
       </>
     );
   }
@@ -206,8 +212,8 @@ export function ImagePopover({ onClose, hidden }: { onClose: () => void; hidden?
         {rt.canDrag('image') ? <DragHint /> : <Toggle checked={mem.verifiedOnly} onChange={(v) => setMem({ verifiedOnly: v })}>출처 확인된 이미지만</Toggle>}
       </div>
       <div style={{ flex: 1, minHeight: 0, display: 'flex' }}>
-        <div className="sh-imggrid" role="list" aria-label="이미지 결과">{grid}</div>
-        <InfoPanel item={q && items.length ? focused : null} />
+        <div ref={gridRef} className="sh-imggrid" role="list" aria-label="이미지 결과" aria-busy={search.isFetchingNextPage || undefined}>{grid}</div>
+        <InfoPanel item={items.length ? focused : null} />
       </div>
       {rt.hasTask ? (
         <div className="sh-pop__foot" data-footer="task" style={{ justifyContent: 'space-between' }}>

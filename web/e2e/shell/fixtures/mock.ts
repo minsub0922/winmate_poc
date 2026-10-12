@@ -16,6 +16,14 @@ function svg(id: string) {
     + `<rect x="40" y="30" width="240" height="140" rx="6" fill="hsl(${h},30%,62%)"/><text x="160" y="110" font-family="sans-serif" font-size="18" text-anchor="middle" fill="#fff">${id}</text></svg>`;
 }
 
+/** kb 목록 쪽 나누기 흉내 — `limit`(기본 20) · `cursor`(앞 쪽까지 준 개수) → `next_cursor` */
+function pageOf<T>(items: T[], sp: URLSearchParams, dflt = 20): { chunk: T[]; next_cursor: string | null } {
+  const limit = Number(sp.get('limit') ?? dflt) || dflt;
+  const from = Number(sp.get('cursor') ?? 0) || 0;
+  const to = from + limit;
+  return { chunk: items.slice(from, to), next_cursor: to < items.length ? String(to) : null };
+}
+
 const lc = (s: string) => s.toLowerCase();
 const matches = (q: string, ...fields: Array<string | null | undefined>) => fields.some((f) => !!f && lc(f).includes(lc(q)));
 
@@ -122,11 +130,13 @@ export async function mockKb(page: Page, opts: KbMockOptions = {}) {
     if (p === '/images/search') {
       const q = sp.get('q') ?? '';
       const source = sp.get('source') ?? 'all';
-      const hit = q.includes('메뉴보드') || q.includes('카페') ? D.IMAGE_SEARCH : [];
+      // 검색어가 없으면 둘러보기(전체 이미지) — kb 와 같이 쪽으로 나눠 준다
+      const hit = !q.trim() ? D.ALL_IMAGES : q.includes('메뉴보드') || q.includes('카페') ? D.IMAGE_SEARCH : [];
       const off = hit.filter((i) => i.rights === 'official');
       const cas = hit.filter((i) => i.rights === 'customer_case');
       const items = source === 'official' ? off : source === 'case' ? cas : hit;
-      return json(route, { counts: { all: off.length + cas.length, official: off.length, case: cas.length }, items: items.map(D.cardOf), next_cursor: null });
+      const { chunk, next_cursor } = pageOf(items, sp, 24);
+      return json(route, { counts: { all: off.length + cas.length, official: off.length, case: cas.length }, items: chunk.map(D.cardOf), next_cursor });
     }
     m = /^\/images\/([^/]+)$/.exec(p);
     if (m) {
@@ -154,7 +164,8 @@ export async function mockKb(page: Page, opts: KbMockOptions = {}) {
         cut.setFullYear(cut.getFullYear() - years);
         items = items.filter((c) => c.date && new Date(c.date) >= cut);
       }
-      return json(route, { corpus: { count: D.CORPUS_BY_PERIOD[period] ?? 198, checked_at: D.COLLECTED }, applied: { vertical }, items, next_cursor: null });
+      const { chunk, next_cursor } = pageOf(items, sp, 10);
+      return json(route, { corpus: { count: D.CORPUS_BY_PERIOD[period] ?? 198, checked_at: D.COLLECTED }, applied: { vertical }, items: chunk, next_cursor, total: items.length });
     }
     if (p === '/verticals') return json(route, { items: D.VERTICALS });
     return notFound(route, p);

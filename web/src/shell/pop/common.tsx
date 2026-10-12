@@ -1,7 +1,7 @@
 /**
  * 팝오버 4종 공통 틀(00-shell §3.3 · §5.2.4 · §5.2.5) — 틀 · 검색 줄 · 끌기 안내 · 푸터 · 상태 기억.
  */
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { Button, CloseButton, Grip, Icon, SearchField, type AddState } from '@/ui';
 import { NO_TASK_TIP, useShellRuntime } from '../runtime';
 import type { DragType } from '../types';
@@ -71,6 +71,47 @@ export function useDebounced<T>(value: T, ms: number) {
     return () => window.clearTimeout(t);
   }, [value, ms]);
   return v;
+}
+
+/** 쪽 단위 검색 결과(react-query 무한 질의)에서 스크롤 페이징에 쓰는 것만 */
+export interface PagedQuery {
+  hasNextPage: boolean;
+  isFetching: boolean;
+  isPlaceholderData: boolean;
+  fetchNextPage: () => Promise<unknown>;
+}
+
+/** 팝오버 목록 첫 쪽 크기 — 이미지 그리드는 3열이라 21(7줄), 사례 카드는 20 */
+export const IMAGE_PAGE = 21;
+export const CASE_PAGE = 20;
+
+/**
+ * 스크롤 페이징 — 목록 끝 표시(sentinel)가 스크롤 상자 아래 320px 안으로 들어오면 다음 쪽을 받는다.
+ * 받는 동안 · 이전 검색 결과를 잠시 보여 주는 동안(placeholder)은 멈춘다(다른 검색의 cursor 로 이어 받지 않게).
+ * 받은 뒤에도 끝 표시가 보이면 곧바로 다음 쪽(첫 쪽이 상자를 못 채운 경우).
+ */
+export function useScrollPaging(root: RefObject<HTMLElement | null>, q: PagedQuery, count: number) {
+  const sentinel = useRef<HTMLDivElement>(null);
+  const fetchNext = useRef(q.fetchNextPage);
+  fetchNext.current = q.fetchNextPage;
+  const ready = q.hasNextPage && !q.isFetching && !q.isPlaceholderData;
+  useEffect(() => {
+    const el = sentinel.current;
+    if (!ready || !el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver((es) => {
+      if (!es.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      void fetchNext.current();
+    }, { root: root.current, rootMargin: '0px 0px 320px 0px' });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ready, count, root]);
+  return sentinel;
+}
+
+/** 검색어 · 필터가 바뀌면 목록 스크롤을 맨 위로 */
+export function useScrollTopOn(root: RefObject<HTMLElement | null>, key: string) {
+  useEffect(() => { root.current?.scrollTo?.({ top: 0 }); }, [root, key]);
 }
 
 /** 팝오버 상태를 같은 작업 동안 기억한다(T-12) */
